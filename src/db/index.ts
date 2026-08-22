@@ -10,7 +10,9 @@ export function getDb() {
   const connectionString = process.env.DATABASE_URL
 
   if (!connectionString) {
-    throw new Error('DATABASE_URL must be configured before creating orders.')
+    throw new Error(
+      'DATABASE_URL deve ser configurada antes de acessar os dados do Cacau.',
+    )
   }
 
   return drizzle(connectionString, { schema })

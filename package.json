@@ -12,6 +12,8 @@
     "preview": "vite preview",
     "ligar": "bash ./LIGARTUDO",
     "desligar": "bash ./DESLIGARTUDO",
+    "ligartudo": "bash ./LIGARTUDO",
+    "desligartudo": "bash ./DESLIGARTUDO",
     "lint": "eslint",
     "format": "prettier --write . && eslint --fix",
     "check": "prettier --check .",

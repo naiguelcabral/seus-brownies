@@ -11,22 +11,39 @@ if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
   exit 1
 fi
 
-if [[ -z "$(git status --porcelain)" ]]; then
-  echo "Não há alterações novas para salvar."
-  exit 0
+DEFAULT_MESSAGE="checkpoint: salvar trabalho antes de desligar"
+if [[ -n "$(git status --porcelain)" ]]; then
+  if [[ -t 0 ]]; then
+    read -r -p "Mensagem do salvamento [${DEFAULT_MESSAGE}]: " COMMIT_MESSAGE
+    COMMIT_MESSAGE="${COMMIT_MESSAGE:-$DEFAULT_MESSAGE}"
+  else
+    COMMIT_MESSAGE="$DEFAULT_MESSAGE"
+  fi
+
+  # .env.local permanece protegido pelo .gitignore e nunca deve ser enviado.
+  git add --all
+  git commit -m "$COMMIT_MESSAGE"
+else
+  echo "Não há alterações novas para criar um commit."
 fi
 
-DEFAULT_MESSAGE="checkpoint: salvar trabalho antes de desligar"
-read -r -p "Mensagem do salvamento [${DEFAULT_MESSAGE}]: " COMMIT_MESSAGE
-COMMIT_MESSAGE="${COMMIT_MESSAGE:-$DEFAULT_MESSAGE}"
-
-# .env.local permanece protegido pelo .gitignore e nunca deve ser enviado.
-git add --all
-git commit -m "$COMMIT_MESSAGE"
-
 BRANCH="$(git branch --show-current)"
-git pull --rebase origin "$BRANCH"
-git push origin "$BRANCH"
+if [[ -z "$BRANCH" ]]; then
+  echo "Não foi possível identificar a branch atual."
+  exit 1
+fi
+
+if ! git pull --rebase origin "$BRANCH"; then
+  echo
+  echo "Não foi possível atualizar antes do envio. Resolva o rebase e execute 'npm run desligar' novamente."
+  exit 1
+fi
+
+if ! git push origin "$BRANCH"; then
+  echo
+  echo "O commit foi salvo localmente, mas não pôde ser enviado ao GitHub. Execute 'npm run desligar' novamente quando a conexão voltar."
+  exit 1
+fi
 
 echo
 echo "Pronto: o trabalho foi salvo no GitHub. Agora você pode desligar o computador."
