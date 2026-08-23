@@ -1,5 +1,6 @@
 import {
   Boxes,
+  CookingPot,
   LayoutDashboard,
   Package,
   ReceiptText,
@@ -16,6 +17,7 @@ const navigation = [
   { to: '/produtos', label: 'Produtos', icon: Package },
   { to: '/compras', label: 'Compras', icon: ReceiptText },
   { to: '/estoque', label: 'Estoque', icon: Boxes },
+  { to: '/producao', label: 'Produção', icon: CookingPot },
   { to: '/vendas', label: 'Vendas', icon: ShoppingBag },
   { to: '/despesas', label: 'Despesas', icon: Wallet },
 ] as const

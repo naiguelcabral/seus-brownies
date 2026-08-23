@@ -22,7 +22,14 @@
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
     "db:pull": "drizzle-kit pull",
-    "db:studio": "drizzle-kit studio"
+    "db:studio": "drizzle-kit studio",
+    "import:preview": "python3 scripts/preview_workbook.py",
+    "import:catalog": "tsx scripts/import_catalog.ts",
+    "import:history:preview": "python3 scripts/preview_history_workbook.py",
+    "import:history": "tsx scripts/import_history.ts",
+    "production:preview": "python3 scripts/preview_production_workbook.py",
+    "production:import": "tsx scripts/import_production.ts",
+    "production:profiles:sync": "tsx scripts/sync_production_profile_components.ts"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.18",

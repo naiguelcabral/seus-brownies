@@ -1,0 +1,1 @@
+ALTER TABLE "production_batch_losses" ALTER COLUMN "reason" SET NOT NULL;

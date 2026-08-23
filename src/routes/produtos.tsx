@@ -27,7 +27,7 @@ type ProductFormValues = {
   name: string
   sku: string
   type: ProductType
-  unit: 'g' | 'kg' | 'ml' | 'l' | 'unit'
+  unit: 'g' | 'kg' | 'ml' | 'l' | 'm' | 'unit'
   categoryId: number | null
   description: string
   salePrice: string
@@ -39,7 +39,7 @@ const typeLabels: Record<ProductType, string> = {
   finished_product: 'Produto final',
 }
 
-const unitLabels = { g: 'g', kg: 'kg', ml: 'ml', l: 'l', unit: 'unidade' }
+const unitLabels = { g: 'g', kg: 'kg', ml: 'ml', l: 'l', m: 'm', unit: 'unidade' }
 
 function ProductsPage() {
   const { products, categories } = Route.useLoaderData()

@@ -1,5 +1,11 @@
 # Cacau v1
 
-A documentação da fundação atual do MVP está em [MVP-01-FUNDACAO.md](MVP-01-FUNDACAO.md).
+O retrato atual — entregas, pendências e decisões de escopo — está em
+[STATUS-PROJETO.md](STATUS-PROJETO.md).
 
-Ela substitui a descrição anterior da vitrine pública e concentra o escopo do painel operacional, o modelo de dados, as dependências externas e os próximos passos.
+A documentação detalhada da fundação do MVP está em
+[MVP-01-FUNDACAO.md](MVP-01-FUNDACAO.md).
+
+Esses documentos substituem a descrição anterior da vitrine pública e
+concentram o escopo do painel operacional, o modelo de dados, as dependências
+externas e os próximos passos.

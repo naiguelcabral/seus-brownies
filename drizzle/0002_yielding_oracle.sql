@@ -1,0 +1,1 @@
+ALTER TYPE "public"."measurement_unit" ADD VALUE 'm' BEFORE 'unit';

@@ -15,7 +15,7 @@ const productValueShape = z.object({
   name: z.string().trim().min(2, 'Informe ao menos 2 caracteres.').max(120),
   sku: z.string().trim().min(2, 'Informe um SKU.').max(64),
   type: z.enum(['ingredient', 'packaging', 'finished_product']),
-  unit: z.enum(['g', 'kg', 'ml', 'l', 'unit']),
+  unit: z.enum(['g', 'kg', 'ml', 'l', 'm', 'unit']),
   categoryId: z.number().int().positive().nullable(),
   description: z.string().trim().max(1000).optional(),
   salePrice: z.string().trim().max(32).optional(),

@@ -1,0 +1,1 @@
+ALTER TABLE "historical_import_records" ADD CONSTRAINT "historical_import_records_source_hash_unique" UNIQUE("source_hash");

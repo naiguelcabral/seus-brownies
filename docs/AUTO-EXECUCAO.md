@@ -10,6 +10,10 @@ Verificações concluídas: `npm run lint` e `npm run build`.
 
 Concluída. A rota `/compras` registra fornecedor, data, itens com quantidades decimais, custos, observações e referência futura de nota fiscal. A compra, seus itens e as entradas de estoque são gravadas em uma única transação. A rota `/estoque` calcula saldos a partir de movimentações, com filtro e histórico.
 
+## Prévia do histórico do workbook
+
+Concluída em modo somente leitura. O comando `npm run import:history:preview -- <workbook>` gera `docs/IMPORTACAO-HISTORICO-WORKBOOK-PREVIA.md` e não acessa o banco. A migration e a importação transacional foram deixadas para depois da revisão explícita das pendências de datas, aliases de compra, locais/canais e impacto histórico de estoque.
+
 Verificações concluídas: `npm run lint` e `npm run build`.
 
 ## Fase 3 — Vendas e despesas

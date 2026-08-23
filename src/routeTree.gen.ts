@@ -14,6 +14,7 @@ import { Route as CategoriasRouteImport } from './routes/categorias'
 import { Route as ComprasRouteImport } from './routes/compras'
 import { Route as DespesasRouteImport } from './routes/despesas'
 import { Route as EstoqueRouteImport } from './routes/estoque'
+import { Route as ProducaoRouteImport } from './routes/producao'
 import { Route as ProdutosRouteImport } from './routes/produtos'
 import { Route as VendasRouteImport } from './routes/vendas'
 
@@ -42,6 +43,11 @@ const EstoqueRoute = EstoqueRouteImport.update({
   path: '/estoque',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProducaoRoute = ProducaoRouteImport.update({
+  id: '/producao',
+  path: '/producao',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProdutosRoute = ProdutosRouteImport.update({
   id: '/produtos',
   path: '/produtos',
@@ -59,6 +65,7 @@ export interface FileRoutesByFullPath {
   '/compras': typeof ComprasRoute
   '/despesas': typeof DespesasRoute
   '/estoque': typeof EstoqueRoute
+  '/producao': typeof ProducaoRoute
   '/produtos': typeof ProdutosRoute
   '/vendas': typeof VendasRoute
 }
@@ -68,6 +75,7 @@ export interface FileRoutesByTo {
   '/compras': typeof ComprasRoute
   '/despesas': typeof DespesasRoute
   '/estoque': typeof EstoqueRoute
+  '/producao': typeof ProducaoRoute
   '/produtos': typeof ProdutosRoute
   '/vendas': typeof VendasRoute
 }
@@ -78,6 +86,7 @@ export interface FileRoutesById {
   '/compras': typeof ComprasRoute
   '/despesas': typeof DespesasRoute
   '/estoque': typeof EstoqueRoute
+  '/producao': typeof ProducaoRoute
   '/produtos': typeof ProdutosRoute
   '/vendas': typeof VendasRoute
 }
@@ -89,6 +98,7 @@ export interface FileRouteTypes {
     | '/compras'
     | '/despesas'
     | '/estoque'
+    | '/producao'
     | '/produtos'
     | '/vendas'
   fileRoutesByTo: FileRoutesByTo
@@ -98,6 +108,7 @@ export interface FileRouteTypes {
     | '/compras'
     | '/despesas'
     | '/estoque'
+    | '/producao'
     | '/produtos'
     | '/vendas'
   id:
@@ -107,6 +118,7 @@ export interface FileRouteTypes {
     | '/compras'
     | '/despesas'
     | '/estoque'
+    | '/producao'
     | '/produtos'
     | '/vendas'
   fileRoutesById: FileRoutesById
@@ -117,6 +129,7 @@ export interface RootRouteChildren {
   ComprasRoute: typeof ComprasRoute
   DespesasRoute: typeof DespesasRoute
   EstoqueRoute: typeof EstoqueRoute
+  ProducaoRoute: typeof ProducaoRoute
   ProdutosRoute: typeof ProdutosRoute
   VendasRoute: typeof VendasRoute
 }
@@ -158,6 +171,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EstoqueRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/producao': {
+      id: '/producao'
+      path: '/producao'
+      fullPath: '/producao'
+      preLoaderRoute: typeof ProducaoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/produtos': {
       id: '/produtos'
       path: '/produtos'
@@ -181,6 +201,7 @@ const rootRouteChildren: RootRouteChildren = {
   ComprasRoute: ComprasRoute,
   DespesasRoute: DespesasRoute,
   EstoqueRoute: EstoqueRoute,
+  ProducaoRoute: ProducaoRoute,
   ProdutosRoute: ProdutosRoute,
   VendasRoute: VendasRoute,
 }
