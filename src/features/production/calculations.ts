@@ -137,3 +137,36 @@ export function calculateWeightedAverageCost(movements: CostedMovement[]) {
   if (quantity <= 0n) return 0n
   return (valueCents * QUANTITY_SCALE + quantity / 2n) / quantity
 }
+
+/** Shared completion guards keep the UI preview and the transaction rules aligned. */
+export function assertCompletableBatchStatus(status: string) {
+  if (status !== 'draft')
+    throw new Error('Somente lotes em rascunho podem ser concluídos uma vez.')
+}
+
+export function assertLossReasons(
+  losses: Array<{ quantity: string; reason: string }>,
+) {
+  for (const loss of losses) {
+    if ((quantityToThousandths(loss.quantity) ?? 0n) <= 0n)
+      throw new Error('Quantidade de perda inválida.')
+    if (loss.reason.trim().length < 3)
+      throw new Error('Toda perda manual exige motivo.')
+  }
+}
+
+export function assertSufficientStock(
+  items: Array<{ name: string; available: bigint; required: bigint }>,
+) {
+  const insufficient = items.filter((item) => item.available < item.required)
+  if (insufficient.length) {
+    throw new Error(
+      `Estoque insuficiente: ${insufficient
+        .map(
+          (item) =>
+            `${item.name} (${thousandthsToQuantity(item.available)} disponível; ${thousandthsToQuantity(item.required)} necessário)`,
+        )
+        .join(', ')}.`,
+    )
+  }
+}

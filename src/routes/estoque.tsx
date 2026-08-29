@@ -3,6 +3,7 @@ import { createFileRoute } from '@tanstack/react-router'
 
 import { ManagementLayout } from '#/components/ManagementLayout'
 import { listInventory } from '#/features/operations/functions'
+import { formatDateTime } from '#/lib/format'
 
 export const Route = createFileRoute('/estoque')({
   loader: () => listInventory(),
@@ -108,11 +109,7 @@ function InventoryPage() {
                 <div>
                   <p className="font-bold">{movement.productName}</p>
                   <p className="text-xs text-[#896d5b]">
-                    {movementLabels[movement.type]} ·{' '}
-                    {new Intl.DateTimeFormat('pt-BR', {
-                      dateStyle: 'short',
-                      timeStyle: 'short',
-                    }).format(new Date(movement.occurredAt))}
+                    {movementLabels[movement.type]} · {formatDateTime(movement.occurredAt)}
                   </p>
                 </div>
                 <strong

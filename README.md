@@ -1,6 +1,7 @@
 # Seus Brownies — Cacau v1
 
-Painel operacional inicial para organizar produtos, compras, estoque, vendas, despesas e relatórios dos Seus Brownies.
+Painel operacional para organizar produtos, compras, estoque, produção, vendas,
+despesas e relatórios dos Seus Brownies.
 
 Consulte o [status consolidado do projeto](docs/STATUS-PROJETO.md) para saber o
 que já foi entregue, o que está pendente e quais documentos preservam o
@@ -31,6 +32,21 @@ O comando registra as alterações no Git e sincroniza a branch quando houver co
 O painel possui operações reais em `/categorias`, `/produtos`, `/compras`, `/estoque`, `/vendas` e `/despesas`. O acesso ao PostgreSQL acontece somente em Server Functions; a `DATABASE_URL` não é enviada ao navegador. Ingredientes e embalagens podem não ter preço de venda, enquanto produtos finais exigem esse preço.
 
 Compras criam entradas de estoque e vendas confirmadas ou pagas criam saídas. A visão geral mostra indicadores calculados do banco e apresenta estados vazios quando ainda não existem registros.
+
+## Testes e relatórios
+
+Execute as regras determinísticas de dinheiro, quantidade, produção, estoque e
+agregação de relatórios com:
+
+```bash
+npm test
+```
+
+A rota `/relatorios` filtra por período e apresenta faturamento confirmado por
+canal, despesas por categoria, estoque valorizado por custo médio e vendas por
+produto. Custo de lote, consumo e perdas aparecem quando a estrutura de
+produção real estiver migrada. Não há margem realizada por produto enquanto uma
+venda não for vinculada a um lote específico.
 
 ## Prévia segura do workbook
 
@@ -97,10 +113,16 @@ O cálculo de ocupação é `quantidade produzida ÷ rendimento do perfil`. A ca
 
 O custo dos itens físicos segue o custo médio ponderado perpétuo reconstituído pelas movimentações; cada consumo grava o custo efetivamente usado. Energia e mão de obra são custos operacionais, fora do estoque, com quantidade, unidade, tarifa e valor registrados no lote.
 
-As migrations incrementais abaixo preparam esse fluxo e ainda não foram aplicadas:
+As migrations incrementais que preparam esse fluxo foram aplicadas no ambiente
+autorizado em 29 de agosto de 2026. Em outro ambiente, revise-as antes de
+executar:
 
 ```bash
 npm run db:migrate
 ```
 
-Revise antes `drizzle/0008_high_rumiko_fujikawa.sql` e `drizzle/0009_lethal_pyro.sql`. Após a aplicação, use a tela **Produção** no painel; não há importação automática nem efeito sobre vendas históricas.
+Revise antes `drizzle/0008_high_rumiko_fujikawa.sql` e `drizzle/0009_lethal_pyro.sql`. Use a tela **Produção** no painel; não há importação automática nem efeito sobre vendas históricas.
+
+O roteiro seguro para homologar esse fluxo está em
+[HOMOLOGACAO-PRODUCAO-REAL.md](docs/HOMOLOGACAO-PRODUCAO-REAL.md). Ele não
+autoriza nem executa migrations.

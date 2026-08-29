@@ -24,6 +24,9 @@ import {
   calculateMoneyCents,
   calculateRecipeCapacity,
   calculateWeightedAverageCost,
+  assertCompletableBatchStatus,
+  assertLossReasons,
+  assertSufficientStock,
   centsToMoney,
   moneyToCents,
   multiplyQuantities,
@@ -172,6 +175,7 @@ async function loadPlan(tx: Transaction, input: BatchInput) {
       throw new Error('A perda deve se referir a uma saída deste lote.')
     lossByProductId.set(loss.productId, requireQuantity(loss.quantity, 'Quantidade de perda'))
   }
+  assertLossReasons(input.losses)
 
   const capacityOutputs = selectedProfiles.map(({ output, profile }) => {
     const sellable = requireQuantity(output.quantity, 'Quantidade de saída')
@@ -637,8 +641,7 @@ export const completeProductionBatch = createServerFn({ method: 'POST' })
         .select()
         .from(productionBatches)
         .where(eq(productionBatches.id, data.id))
-      if (batch.status !== 'draft')
-        throw new Error('Somente lotes em rascunho podem ser concluídos uma vez.')
+      assertCompletableBatchStatus(batch.status)
       if (!batch.recipeVersionId || !batch.plannedFor || !batch.recipeMultiplier)
         throw new Error('O rascunho não possui receita, data ou multiplicador válidos.')
 
@@ -659,6 +662,7 @@ export const completeProductionBatch = createServerFn({ method: 'POST' })
       const draftLosses = z.array(lossInput).safeParse(payload.losses ?? [])
       if (!draftLosses.success)
         throw new Error('As perdas registradas no rascunho são inválidas.')
+      assertLossReasons(draftLosses.data)
       if (completedLosses.some((loss) => !loss.reason.trim()))
         throw new Error('Toda perda manual exige motivo.')
 
@@ -687,12 +691,13 @@ export const completeProductionBatch = createServerFn({ method: 'POST' })
         )
       }
       const costs = await enrichCosts(tx, plan)
-      const insufficient = costs.costs.filter((cost) => cost.available < cost.quantity)
-      if (insufficient.length) {
-        throw new Error(
-          `Estoque insuficiente: ${insufficient.map((item) => `${item.name} (${thousandthsToQuantity(item.available)} disponível; ${thousandthsToQuantity(item.quantity)} necessário)`).join(', ')}.`,
-        )
-      }
+      assertSufficientStock(
+        costs.costs.map((cost) => ({
+          name: cost.name,
+          available: cost.available,
+          required: cost.quantity,
+        })),
+      )
 
       await tx.insert(productionBatchConsumptions).values(
         costs.costs.map((cost) => ({

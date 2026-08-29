@@ -1,5 +1,6 @@
 import {
   Boxes,
+  BarChart3,
   CookingPot,
   LayoutDashboard,
   Package,
@@ -20,6 +21,7 @@ const navigation = [
   { to: '/producao', label: 'Produção', icon: CookingPot },
   { to: '/vendas', label: 'Vendas', icon: ShoppingBag },
   { to: '/despesas', label: 'Despesas', icon: Wallet },
+  { to: '/relatorios', label: 'Relatórios', icon: BarChart3 },
 ] as const
 
 export function ManagementLayout({

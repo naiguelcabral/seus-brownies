@@ -1,0 +1,1 @@
+import './prechecagem-estoque.spec'

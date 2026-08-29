@@ -1,6 +1,6 @@
 # Status do projeto — Seus Brownies / Cacau v1
 
-> Atualizado em 23 de agosto de 2026. Este é o resumo operacional do projeto.
+> Atualizado em 29 de agosto de 2026. Este é o resumo operacional do projeto.
 > Os documentos de prévia e importação preservam o histórico e a auditoria de
 > cada etapa; não são substituídos por esta página.
 
@@ -47,6 +47,13 @@ arquivo local de ambiente deve ser versionado ou compartilhado.
 - Itens de venda guardam nome e preço praticado no momento da venda.
 - A visão geral usa dados reais e apresenta estados vazios para uma operação
   recém-iniciada.
+- A rota `/relatorios` filtra períodos e consolida faturamento confirmado por
+  canal, despesas por categoria, estoque valorizado por custo médio e vendas
+  por produto. Custos, consumo e perdas de lotes aparecem quando os dados de
+  produção real estiverem disponíveis.
+- Há testes determinísticos para arredondamento monetário, quantidades,
+  capacidade/rendimento, Bordinhas como coproduto, perdas com motivo, saldo
+  insuficiente, dupla conclusão e agregações de relatório.
 
 ### Dados, importação e produção
 
@@ -75,7 +82,7 @@ arquivo local de ambiente deve ser versionado ou compartilhado.
   e dos dados iniciais de produção já foram aplicadas no ambiente informado.
 - As migrations `0008_high_rumiko_fujikawa.sql` e
   `0009_lethal_pyro.sql`, necessárias para o fluxo completo de produção real,
-  continuam pendentes de revisão e aplicação autorizada.
+  foram aplicadas no ambiente autorizado em 29 de agosto de 2026.
 - `lint` e `build` foram registrados como concluídos nas fases de cadastros,
   compras/estoque, vendas/despesas e dashboard. Qualquer mudança posterior
   deve repetir essas verificações quando Node.js estiver disponível.
@@ -100,16 +107,14 @@ Também não foram implementados:
 
 ## Próximas etapas recomendadas
 
-1. Revisar e aplicar as migrations pendentes de produção, somente com
-   autorização e conexão ao ambiente correto.
-2. Validar o ciclo real completo: compra, lote de produção, estoque, venda e
+1. Validar o ciclo real completo: compra, lote de produção, estoque, venda e
    despesa, incluindo tratamento de falhas e saldos insuficientes.
-3. Definir os relatórios operacionais prioritários e implementá-los sobre os
-   registros reais.
-4. Definir autenticação e permissões antes de abrir o painel para mais pessoas.
-5. Decidir o canal de confirmação de pedidos e, depois, integrar o WhatsApp com
+2. Homologar os relatórios com dados representativos e decidir se margem por
+   produto deverá receber vínculo explícito entre venda e lote.
+3. Definir autenticação e permissões antes de abrir o painel para mais pessoas.
+4. Decidir o canal de confirmação de pedidos e, depois, integrar o WhatsApp com
    processamento idempotente.
-6. Se a vitrine pública voltar ao plano, especificar seu relacionamento com
+5. Se a vitrine pública voltar ao plano, especificar seu relacionamento com
    vendas, estoque, pagamento e entrega antes de implementá-la.
 
 ## Onde encontrar os detalhes
@@ -119,3 +124,5 @@ Também não foram implementados:
 - [Prévia e importação do histórico](IMPORTACAO-HISTORICO-WORKBOOK-PREVIA.md)
 - [Prévia de produção e fichas técnicas](IMPORTACAO-PRODUCAO-WORKBOOK-PREVIA.md)
 - [Registro das fases executadas](AUTO-EXECUCAO.md)
+- [Checklist de homologação de produção](HOMOLOGACAO-PRODUCAO-REAL.md)
+- [Proposta de acesso e itens futuros](ACESSO-E-ITENS-FUTUROS.md)
