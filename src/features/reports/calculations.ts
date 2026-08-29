@@ -1,6 +1,8 @@
 import {
   calculateWeightedAverageCost,
   centsToMoney,
+  calculateUnitCostCents,
+  millisToUnitCost,
   moneyToCents,
   quantityToThousandths,
   thousandthsToQuantity,
@@ -73,13 +75,13 @@ export function valueInventory(
         0n,
       )
       const unitCost = calculateWeightedAverageCost(movements)
-      const valueCents = balance > 0n ? (unitCost * balance + 500n) / 1_000n : 0n
+      const valueCents = balance > 0n ? calculateUnitCostCents(unitCost, balance) : 0n
       return {
         productId: first.productId,
         productName: first.productName,
         unit: first.unit,
         balance: thousandthsToQuantity(balance),
-        unitCost: centsToMoney(unitCost),
+        unitCost: millisToUnitCost(unitCost),
         value: centsToMoney(valueCents),
       }
     })

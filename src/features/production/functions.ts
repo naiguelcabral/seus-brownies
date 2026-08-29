@@ -28,6 +28,8 @@ import {
   assertLossReasons,
   assertSufficientStock,
   centsToMoney,
+  calculateUnitCostCents,
+  millisToUnitCost,
   moneyToCents,
   multiplyQuantities,
   quantityToThousandths,
@@ -395,7 +397,7 @@ async function enrichCosts(tx: Transaction, plan: Awaited<ReturnType<typeof load
         0n,
       ),
       unitCost,
-      totalCost: calculateMoneyCents(unitCost, consumption.quantity),
+      totalCost: calculateUnitCostCents(unitCost, consumption.quantity),
     }
   })
   const operationalTotal = plan.operational.reduce(
@@ -408,7 +410,7 @@ async function enrichCosts(tx: Transaction, plan: Awaited<ReturnType<typeof load
     plan.sellableOutputs.reduce((sum, output) => sum + output.quantity, 0n) +
     [...plan.lossByProductId.values()].reduce((sum, quantity) => sum + quantity, 0n)
   if (grossQuantity <= 0n) throw new Error('O lote não possui saídas para calcular o custo.')
-  const outputUnitCost = (totalCost * 1_000n + grossQuantity / 2n) / grossQuantity
+  const outputUnitCost = (totalCost * 10_000n + grossQuantity / 2n) / grossQuantity
   return { costs, ingredientTotal, operationalTotal, totalCost, grossQuantity, outputUnitCost }
 }
 
@@ -427,7 +429,7 @@ function previewFromPlan(
       quantity: thousandthsToQuantity(item.quantity),
       available: thousandthsToQuantity(item.available),
       unit: item.unit,
-      unitCost: centsToMoney(item.unitCost),
+      unitCost: millisToUnitCost(item.unitCost),
       totalCost: centsToMoney(item.totalCost),
       sufficient: item.available >= item.quantity,
       source: item.source,
@@ -448,7 +450,7 @@ function previewFromPlan(
       role: output.role,
     })),
     totalCost: centsToMoney(costs.totalCost),
-    unitCost: centsToMoney(costs.outputUnitCost),
+    unitCost: millisToUnitCost(costs.outputUnitCost),
   }
 }
 
@@ -707,7 +709,7 @@ export const completeProductionBatch = createServerFn({ method: 'POST' })
           recipeItemId: plan.baseRows.find((item) => item.productId === cost.id)?.id ?? null,
           productId: cost.id,
           quantity: thousandthsToQuantity(cost.quantity),
-          unitCost: centsToMoney(cost.unitCost),
+          unitCost: millisToUnitCost(cost.unitCost),
           totalCost: centsToMoney(cost.totalCost),
           sourcePayload: { origin: 'manual_production_completion', components: cost.source },
         })),
@@ -717,7 +719,7 @@ export const completeProductionBatch = createServerFn({ method: 'POST' })
           productId: cost.id,
           type: 'production' as const,
           quantityDelta: `-${thousandthsToQuantity(cost.quantity)}`,
-          unitCost: centsToMoney(cost.unitCost),
+          unitCost: millisToUnitCost(cost.unitCost),
           referenceType: 'production_consumption',
           referenceId: batch.id,
           sourceKey: `manual:production-batch:${batch.id}:stock-consumption:${cost.id}`,
@@ -745,7 +747,7 @@ export const completeProductionBatch = createServerFn({ method: 'POST' })
           productId: output.product.id,
           type: 'production' as const,
           quantityDelta: thousandthsToQuantity(output.quantity),
-          unitCost: centsToMoney(costs.outputUnitCost),
+          unitCost: millisToUnitCost(costs.outputUnitCost),
           referenceType: 'production_output',
           referenceId: batch.id,
           sourceKey: `manual:production-batch:${batch.id}:stock-output:${output.product.id}`,
@@ -759,7 +761,7 @@ export const completeProductionBatch = createServerFn({ method: 'POST' })
             .update(productionBatchOutputs)
             .set({
               actualQuantity: thousandthsToQuantity(output.quantity),
-              unitCost: centsToMoney(costs.outputUnitCost),
+              unitCost: millisToUnitCost(costs.outputUnitCost),
             })
             .where(
               and(
@@ -788,7 +790,7 @@ export const completeProductionBatch = createServerFn({ method: 'POST' })
           status: 'completed',
           actualQuantity: thousandthsToQuantity(costs.grossQuantity),
           totalCost: centsToMoney(costs.totalCost),
-          unitCost: centsToMoney(costs.outputUnitCost),
+          unitCost: millisToUnitCost(costs.outputUnitCost),
           completedAt: new Date(),
           completionPayload: {
             costMethod: 'perpetual_weighted_average',

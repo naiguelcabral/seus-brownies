@@ -71,6 +71,13 @@
       "when": 1787487709365,
       "tag": "0009_lethal_pyro",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1788014906712,
+      "tag": "0010_lying_tarantula",
+      "breakpoints": true
     }
   ]
 }

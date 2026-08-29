@@ -14,6 +14,7 @@ import {
 } from 'drizzle-orm/pg-core'
 
 const money = (name: string) => numeric(name, { precision: 12, scale: 2 })
+const unitCost = (name: string) => numeric(name, { precision: 12, scale: 3 })
 const quantity = (name: string) => numeric(name, { precision: 14, scale: 3 })
 
 export const productType = pgEnum('product_type', [
@@ -144,7 +145,7 @@ export const stockMovements = pgTable('stock_movements', {
     .references(() => products.id, { onDelete: 'restrict' }),
   type: stockMovementType().notNull(),
   quantityDelta: quantity('quantity_delta').notNull(),
-  unitCost: money('unit_cost'),
+  unitCost: unitCost('unit_cost'),
   referenceType: varchar('reference_type', { length: 40 }),
   referenceId: integer('reference_id'),
   sourceKey: varchar('source_key', { length: 160 }).unique(),
@@ -187,7 +188,7 @@ export const purchaseItems = pgTable('purchase_items', {
   }),
   itemName: varchar('item_name', { length: 160 }).notNull(),
   quantity: quantity('quantity').notNull(),
-  unitCost: money('unit_cost').notNull(),
+  unitCost: unitCost('unit_cost').notNull(),
   totalAmount: money('total_amount').notNull(),
   sourceQuantityBase: quantity('source_quantity_base'),
   sourceQuantityPurchased: quantity('source_quantity_purchased'),
@@ -436,7 +437,7 @@ export const productionBatches = pgTable('production_batches', {
   sourcePayload: jsonb('source_payload'),
   completionPayload: jsonb('completion_payload'),
   totalCost: money('total_cost'),
-  unitCost: money('unit_cost'),
+  unitCost: unitCost('unit_cost'),
   completedAt: timestamp('completed_at', { withTimezone: true }),
   notes: text(),
   createdAt: timestamp('created_at', { withTimezone: true })
@@ -464,7 +465,7 @@ export const productionBatchOutputs = pgTable(
     plannedQuantity: quantity('planned_quantity'),
     actualQuantity: quantity('actual_quantity'),
     lossQuantity: quantity('loss_quantity'),
-    unitCost: money('unit_cost'),
+    unitCost: unitCost('unit_cost'),
   },
   (table) => [
     unique('production_batch_outputs_batch_product_unique').on(
@@ -489,7 +490,7 @@ export const productionBatchConsumptions = pgTable('production_batch_consumption
     .notNull()
     .references(() => products.id, { onDelete: 'restrict' }),
   quantity: quantity('quantity').notNull(),
-  unitCost: money('unit_cost'),
+  unitCost: unitCost('unit_cost'),
   totalCost: money('total_cost'),
   sourcePayload: jsonb('source_payload').notNull(),
 })

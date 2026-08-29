@@ -6,8 +6,10 @@ import {
   assertLossReasons,
   assertSufficientStock,
   calculateRecipeCapacity,
+  calculateUnitCostCents,
   calculateWeightedAverageCost,
-  centsToMoney,
+  millisToUnitCost,
+  unitCostToMillis,
 } from '../src/features/production/calculations'
 
 test('calcula capacidade e Bordinhas como coproduto', () => {
@@ -37,5 +39,15 @@ test('reconstitui custo médio ponderado sem ponto flutuante', () => {
     { quantityDelta: '100.000', unitCost: '4.00' },
     { quantityDelta: '-50.000', unitCost: null },
   ])
-  assert.equal(centsToMoney(cost), '3.00')
+  assert.equal(millisToUnitCost(cost), '3.000')
+})
+
+test('preserva custo unitário de três casas sem arredondamento prematuro', () => {
+  const flourUnitCost = unitCostToMillis('0.005')
+  assert.equal(flourUnitCost, 5n)
+  assert.equal(calculateUnitCostCents(flourUnitCost, 240_000n), 120n)
+  const cost = calculateWeightedAverageCost([
+    { quantityDelta: '240.000', unitCost: '0.005' },
+  ])
+  assert.equal(millisToUnitCost(cost), '0.005')
 })

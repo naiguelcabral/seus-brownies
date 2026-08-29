@@ -15,6 +15,7 @@ import {
 
 const quantityPattern = /^\d+(?:[,.]\d{1,3})?$/
 const moneyPattern = /^\d+(?:[,.]\d{1,2})?$/
+const unitCostPattern = /^\d+(?:[,.]\d{1,3})?$/
 
 function decimal(value: string, pattern: RegExp, scale: number) {
   const normalized = value.trim().replace(',', '.')
@@ -25,6 +26,12 @@ function decimal(value: string, pattern: RegExp, scale: number) {
 
 function cents(value: string) {
   const normalized = decimal(value, moneyPattern, 2)
+  if (!normalized) return null
+  return BigInt(normalized.replace('.', ''))
+}
+
+function unitCostMillis(value: string) {
+  const normalized = decimal(value, unitCostPattern, 3)
   if (!normalized) return null
   return BigInt(normalized.replace('.', ''))
 }
@@ -41,8 +48,12 @@ function centsToMoney(value: bigint) {
   return `${sign}${absolute / 100n}.${String(absolute % 100n).padStart(2, '0')}`
 }
 
-function roundedCents(unitCost: bigint, quantity: bigint) {
-  return (unitCost * quantity + 500n) / 1000n
+function millisToUnitCost(value: bigint) {
+  return `${value / 1_000n}.${String(value % 1_000n).padStart(3, '0')}`
+}
+
+function roundedCents(unitCostInMillis: bigint, quantity: bigint) {
+  return (unitCostInMillis * quantity + 5_000n) / 10_000n
 }
 
 const purchaseValues = z.object({
@@ -91,7 +102,7 @@ export const createPurchase = createServerFn({ method: 'POST' })
       ...item,
       quantity: decimal(item.quantity, quantityPattern, 3),
       quantityThousandths: thousandths(item.quantity),
-      unitCost: cents(item.unitCost),
+      unitCost: unitCostMillis(item.unitCost),
     }))
 
     if (
@@ -141,7 +152,7 @@ export const createPurchase = createServerFn({ method: 'POST' })
           productId: item.productId,
           itemName: productById.get(item.productId)!.name,
           quantity: item.quantity!,
-          unitCost: centsToMoney(item.unitCost!),
+          unitCost: millisToUnitCost(item.unitCost!),
           totalAmount: centsToMoney(totals[index]),
         })),
       )
@@ -150,7 +161,7 @@ export const createPurchase = createServerFn({ method: 'POST' })
           productId: item.productId,
           type: 'purchase' as const,
           quantityDelta: item.quantity!,
-          unitCost: centsToMoney(item.unitCost!),
+          unitCost: millisToUnitCost(item.unitCost!),
           referenceType: 'purchase',
           referenceId: purchase.id,
         })),

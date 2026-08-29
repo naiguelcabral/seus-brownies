@@ -1,10 +1,12 @@
 /**
  * Cálculos determinísticos de produção. Quantidades usam milésimos e valores
- * usam centavos para não depender de ponto flutuante ao concluir um lote.
+ * usam centavos nos totais e milésimos de real nos custos unitários para não
+ * depender de ponto flutuante ao concluir um lote.
  */
 export type DecimalQuantity = string
 
 const QUANTITY_SCALE = 1_000n
+const UNIT_COST_SCALE = 1_000n
 
 export function normalizeDecimal(value: string): string | null {
   const normalized = value.trim().replace(',', '.')
@@ -55,6 +57,13 @@ export function calculateMoneyCents(
   return (unitCostCents * quantity + QUANTITY_SCALE / 2n) / QUANTITY_SCALE
 }
 
+export function calculateUnitCostCents(
+  unitCostMillis: bigint,
+  quantity: bigint,
+): bigint {
+  return (unitCostMillis * quantity + 5_000n) / 10_000n
+}
+
 export function centsToMoney(value: bigint): string {
   const sign = value < 0n ? '-' : ''
   const absolute = value < 0n ? -value : value
@@ -67,6 +76,20 @@ export function moneyToCents(value: string | null): bigint | null {
   if (!/^\d+(?:\.\d{1,2})?$/.test(normalized)) return null
   const [whole, fraction = ''] = normalized.split('.')
   return BigInt(whole) * 100n + BigInt(fraction.padEnd(2, '0'))
+}
+
+export function unitCostToMillis(value: string | null): bigint | null {
+  if (!value) return null
+  const normalized = value.trim().replace(',', '.')
+  if (!/^\d+(?:\.\d{1,3})?$/.test(normalized)) return null
+  const [whole, fraction = ''] = normalized.split('.')
+  return BigInt(whole) * UNIT_COST_SCALE + BigInt(fraction.padEnd(3, '0'))
+}
+
+export function millisToUnitCost(value: bigint): string {
+  const sign = value < 0n ? '-' : ''
+  const absolute = value < 0n ? -value : value
+  return `${sign}${absolute / UNIT_COST_SCALE}.${String(absolute % UNIT_COST_SCALE).padStart(3, '0')}`
 }
 
 export type PlannedProfileOutput = {
@@ -123,19 +146,19 @@ export function calculateWeightedAverageCost(movements: CostedMovement[]) {
     if (delta === null) throw new Error('Movimentação com quantidade inválida.')
     if (delta >= 0n) {
       quantity += delta
-      const unitCost = moneyToCents(movement.unitCost)
-      if (unitCost !== null) valueCents += calculateMoneyCents(unitCost, delta)
+      const unitCost = unitCostToMillis(movement.unitCost)
+      if (unitCost !== null) valueCents += calculateUnitCostCents(unitCost, delta)
       continue
     }
     const outgoing = -delta
-    const providedCost = moneyToCents(movement.unitCost)
-    const average = quantity > 0n ? (valueCents * QUANTITY_SCALE + quantity / 2n) / quantity : 0n
+    const providedCost = unitCostToMillis(movement.unitCost)
+    const average = quantity > 0n ? (valueCents * 10_000n + quantity / 2n) / quantity : 0n
     const unitCost = providedCost ?? average
-    valueCents -= calculateMoneyCents(unitCost, outgoing)
+    valueCents -= calculateUnitCostCents(unitCost, outgoing)
     quantity -= outgoing
   }
   if (quantity <= 0n) return 0n
-  return (valueCents * QUANTITY_SCALE + quantity / 2n) / quantity
+  return (valueCents * 10_000n + quantity / 2n) / quantity
 }
 
 /** Shared completion guards keep the UI preview and the transaction rules aligned. */
