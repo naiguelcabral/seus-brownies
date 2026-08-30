@@ -9,6 +9,7 @@ import {
   listSaleProducts,
   listSales,
 } from '#/features/operations/functions'
+import { formatDateTime } from '#/lib/format'
 
 export const Route = createFileRoute('/vendas')({
   loader: async () => ({
@@ -112,11 +113,7 @@ function SalesPage() {
                       {sale.customerName || 'Cliente não informado'}
                     </p>
                     <p className="mt-1 text-xs text-[#896d5b]">
-                      {statusLabels[sale.status]} ·{' '}
-                      {new Intl.DateTimeFormat('pt-BR', {
-                        dateStyle: 'short',
-                        timeStyle: 'short',
-                      }).format(new Date(sale.soldAt))}
+                      {statusLabels[sale.status]} · {formatDateTime(sale.soldAt)}
                     </p>
                   </div>
                   <strong>{currency.format(Number(sale.totalAmount))}</strong>

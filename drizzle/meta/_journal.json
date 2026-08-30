@@ -78,6 +78,20 @@
       "when": 1788014906712,
       "tag": "0010_lying_tarantula",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1788043052905,
+      "tag": "0011_demonic_redwing",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1788051976601,
+      "tag": "0012_fifo_cost_layers",
+      "breakpoints": true
     }
   ]
 }

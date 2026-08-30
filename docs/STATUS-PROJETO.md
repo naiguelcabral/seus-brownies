@@ -1,6 +1,6 @@
 # Status do projeto — Seus Brownies / Cacau v1
 
-> Atualizado em 29 de agosto de 2026. Este é o resumo operacional do projeto.
+> Atualizado em 30 de agosto de 2026. Este é o resumo operacional do projeto.
 > Os documentos de prévia e importação preservam o histórico e a auditoria de
 > cada etapa; não são substituídos por esta página.
 
@@ -87,6 +87,36 @@ arquivo local de ambiente deve ser versionado ou compartilhado.
   compras/estoque, vendas/despesas e dashboard. Qualquer mudança posterior
   deve repetir essas verificações quando Node.js estiver disponível.
 
+## Homologação HML em development
+
+O ciclo `compra -> estoque -> produção -> venda -> despesa -> relatórios` foi
+homologado exclusivamente em `development`; seus dados HML devem permanecer
+como trilha de auditoria.
+
+- A compra HML 1 preserva Farinha `INS004` a `0.005` por grama. O lote 18 foi
+  concluído sem perdas, com custo total `68.00` e saídas de `12.000` `PROD003`
+  e `6.000` Bordinhas.
+- O rateio alocado preserva `45.33` para `PROD003` e `22.67` para Bordinhas,
+  totalizando exatamente `68.00`.
+- As vendas HML 1 e 2 totalizam `12.00` cada; a despesa HML 1 registra `1.00`
+  em `Homologação HML` e não afeta estoque. Os saldos consolidados são
+  `10.000` `PROD003` e `6.000` Bordinhas.
+- Faturamento confirmado, despesas e resultado financeiro simples são
+  `24.00`, `1.00` e `23.00`. Isso não representa margem realizada: o modelo
+  ainda não vincula venda a lote específico.
+- As migrations chegam a `0011_demonic_redwing.sql`; `unit_cost` usa
+  `numeric(12,3)` e os custos alocados de produção usam `numeric(12,2)`.
+
+## FIFO de CMV local
+
+A primeira entrega local de FIFO está preparada, mas ainda não foi aplicada em
+nenhum banco: [FIFO-CMV-PRIMEIRA-ENTREGA.md](FIFO-CMV-PRIMEIRA-ENTREGA.md).
+Ela cria camadas somente para saídas concluídas de produção e aloca CMV para
+vendas confirmadas/pagas. A migration é portátil; o backfill HML foi separado
+em script opt-in exclusivo de development. Perdas, ajustes, devoluções,
+cancelamentos posteriores e produtos acabados comprados diretamente permanecem
+explicitamente adiados para a próxima fase.
+
 ## Não faz parte do estado entregue
 
 A ideia inicial de uma vitrine pública com carrinho, retirada/entrega e pedidos
@@ -107,9 +137,9 @@ Também não foram implementados:
 
 ## Próximas etapas recomendadas
 
-1. Validar o ciclo real completo: compra, lote de produção, estoque, venda e
-   despesa, incluindo tratamento de falhas e saldos insuficientes.
-2. Homologar os relatórios com dados representativos e decidir se margem por
+1. Preservar os dados HML em `development` como trilha de auditoria, sem
+   limpeza ou reutilização de seus prefixos.
+2. Decidir se margem por
    produto deverá receber vínculo explícito entre venda e lote.
 3. Definir autenticação e permissões antes de abrir o painel para mais pessoas.
 4. Decidir o canal de confirmação de pedidos e, depois, integrar o WhatsApp com

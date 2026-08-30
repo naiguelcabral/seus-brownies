@@ -44,9 +44,10 @@ npm test
 
 A rota `/relatorios` filtra por período e apresenta faturamento confirmado por
 canal, despesas por categoria, estoque valorizado por custo médio e vendas por
-produto. Custo de lote, consumo e perdas aparecem quando a estrutura de
-produção real estiver migrada. Não há margem realizada por produto enquanto uma
-venda não for vinculada a um lote específico.
+produto. A primeira entrega local de CMV FIFO está documentada em
+[FIFO-CMV-PRIMEIRA-ENTREGA.md](docs/FIFO-CMV-PRIMEIRA-ENTREGA.md), mas a
+migration correspondente ainda não foi aplicada; até isso ocorrer, não há
+margem realizada por produto no banco.
 
 ## Prévia segura do workbook
 
@@ -112,6 +113,8 @@ Ao concluir explicitamente um lote, o Cacau executa uma única transação: bloq
 O cálculo de ocupação é `quantidade produzida ÷ rendimento do perfil`. A capacidade restante se torna **Bordinhas** (coproduto), sem embalagem individual. Se a quantidade de Bordinhas for menor que o saldo sugerido, a diferença precisa ser declarada como perda manual com motivo; não há perda automática. Produtos PLAN importados do workbook não aparecem como lotes reais e nunca movimentam estoque.
 
 O custo dos itens físicos segue o custo médio ponderado perpétuo reconstituído pelas movimentações; cada consumo grava o custo efetivamente usado. Energia e mão de obra são custos operacionais, fora do estoque, com quantidade, unidade, tarifa e valor registrados no lote.
+
+Para uma saída de produção, o custo do lote também é persistido como total alocado em centavos. A alocação é proporcional à quantidade; centavos residuais vão primeiro para as maiores frações e, em empate, para o menor ID de produto. Assim, a soma das saídas permanece exatamente igual ao custo realizado do lote, enquanto `unit_cost` continua apenas como referência com três casas decimais.
 
 As migrations incrementais que preparam esse fluxo foram aplicadas no ambiente
 autorizado em 29 de agosto de 2026. Em outro ambiente, revise-as antes de

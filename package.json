@@ -31,7 +31,8 @@
     "import:history": "tsx scripts/import_history.ts",
     "production:preview": "python3 scripts/preview_production_workbook.py",
     "production:import": "tsx scripts/import_production.ts",
-    "production:profiles:sync": "tsx scripts/sync_production_profile_components.ts"
+    "production:profiles:sync": "tsx scripts/sync_production_profile_components.ts",
+    "fifo:backfill:hml": "tsx scripts/backfill-hml-fifo.ts"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.18",

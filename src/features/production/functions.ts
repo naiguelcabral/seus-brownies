@@ -8,6 +8,7 @@ import type { getDb } from '#/db/index'
 import {
   operationalCostRates,
   operationalCosts,
+  inventoryCostLayers,
   products,
   productionBatchConsumptions,
   productionBatchLosses,
@@ -27,6 +28,7 @@ import {
   assertCompletableBatchStatus,
   assertLossReasons,
   assertSufficientStock,
+  allocateOutputCosts,
   centsToMoney,
   calculateUnitCostCents,
   millisToUnitCost,
@@ -35,6 +37,11 @@ import {
   quantityToThousandths,
   thousandthsToQuantity,
 } from '#/features/production/calculations'
+import {
+  consumptionProductIds,
+  profileComponentToConsumption,
+  recipeItemToConsumption,
+} from '#/features/production/identities'
 
 const quantityInput = z
   .string()
@@ -143,7 +150,10 @@ async function loadPlan(tx: Transaction, input: BatchInput) {
     })
     .from(productionProfiles)
     .innerJoin(products, eq(productionProfiles.productId, products.id))
-    .leftJoin(packaging, eq(productionProfiles.packagingProductId, packaging.id))
+    .leftJoin(
+      packaging,
+      eq(productionProfiles.packagingProductId, packaging.id),
+    )
     .where(eq(productionProfiles.recipeVersionId, recipe.id))
 
   const bordinhasProfile = profileRows.find(
@@ -157,7 +167,9 @@ async function loadPlan(tx: Transaction, input: BatchInput) {
   if (new Set(outputIds).size !== outputIds.length)
     throw new Error('Não repita o mesmo produto nas saídas do lote.')
   if (outputIds.includes(bordinhasProfile.productId))
-    throw new Error('Bordinhas deve ser informada no campo próprio do coproduto.')
+    throw new Error(
+      'Bordinhas deve ser informada no campo próprio do coproduto.',
+    )
 
   const profileByProductId = new Map(
     profileRows.map((profile) => [profile.productId, profile]),
@@ -173,9 +185,15 @@ async function loadPlan(tx: Transaction, input: BatchInput) {
   for (const loss of input.losses) {
     if (lossByProductId.has(loss.productId))
       throw new Error('Agrupe cada perda em uma única linha por produto.')
-    if (!outputIds.includes(loss.productId) && loss.productId !== bordinhasProfile.productId)
+    if (
+      !outputIds.includes(loss.productId) &&
+      loss.productId !== bordinhasProfile.productId
+    )
       throw new Error('A perda deve se referir a uma saída deste lote.')
-    lossByProductId.set(loss.productId, requireQuantity(loss.quantity, 'Quantidade de perda'))
+    lossByProductId.set(
+      loss.productId,
+      requireQuantity(loss.quantity, 'Quantidade de perda'),
+    )
   }
   assertLossReasons(input.losses)
 
@@ -214,7 +232,8 @@ async function loadPlan(tx: Transaction, input: BatchInput) {
 
   const baseRows = await tx
     .select({
-      id: recipeItems.id,
+      recipeItemId: recipeItems.id,
+      id: products.id,
       quantity: recipeItems.quantity,
       productId: products.id,
       sku: products.sku,
@@ -225,11 +244,13 @@ async function loadPlan(tx: Transaction, input: BatchInput) {
     .from(recipeItems)
     .innerJoin(products, eq(recipeItems.productId, products.id))
     .where(eq(recipeItems.recipeVersionId, recipe.id))
-  if (!baseRows.length) throw new Error('A receita-base não possui itens físicos.')
+  if (!baseRows.length)
+    throw new Error('A receita-base não possui itens físicos.')
 
   const components = await tx
     .select({
       profileId: productionProfileComponents.productionProfileId,
+      id: products.id,
       quantity: productionProfileComponents.quantity,
       productId: products.id,
       sku: products.sku,
@@ -253,8 +274,11 @@ async function loadPlan(tx: Transaction, input: BatchInput) {
       throw new Error(`Item de receita inválido: ${item.name}.`)
     addConsumption(
       consumptions,
-      item,
-      multiplyQuantities(requireQuantity(item.quantity, 'Quantidade de receita'), multiplier),
+      recipeItemToConsumption(item),
+      multiplyQuantities(
+        requireQuantity(item.quantity, 'Quantidade de receita'),
+        multiplier,
+      ),
       'receita-base',
     )
   }
@@ -273,7 +297,7 @@ async function loadPlan(tx: Transaction, input: BatchInput) {
         throw new Error(`Componente de perfil inválido: ${component.name}.`)
       addConsumption(
         consumptions,
-        component,
+        profileComponentToConsumption(component),
         multiplyQuantities(
           requireQuantity(component.quantity, 'Quantidade de componente'),
           grossQuantity,
@@ -282,8 +306,15 @@ async function loadPlan(tx: Transaction, input: BatchInput) {
       )
     }
     if (profile.packagingId && profile.packagingQuantity) {
-      if (profile.packagingType !== 'packaging' || !profile.packagingUnit || !profile.packagingSku || !profile.packagingName)
-        throw new Error('A embalagem do perfil está incompatível com o catálogo.')
+      if (
+        profile.packagingType !== 'packaging' ||
+        !profile.packagingUnit ||
+        !profile.packagingSku ||
+        !profile.packagingName
+      )
+        throw new Error(
+          'A embalagem do perfil está incompatível com o catálogo.',
+        )
       addConsumption(
         consumptions,
         {
@@ -310,20 +341,41 @@ async function loadPlan(tx: Transaction, input: BatchInput) {
     .select()
     .from(operationalCostRates)
     .where(lte(operationalCostRates.effectiveFrom, input.productionDate))
-    .orderBy(desc(operationalCostRates.effectiveFrom), desc(operationalCostRates.id))
+    .orderBy(
+      desc(operationalCostRates.effectiveFrom),
+      desc(operationalCostRates.id),
+    )
   const rateByType = new Map<string, (typeof rateRows)[number]>()
-  for (const rate of rateRows) if (!rateByType.has(rate.type)) rateByType.set(rate.type, rate)
+  for (const rate of rateRows)
+    if (!rateByType.has(rate.type)) rateByType.set(rate.type, rate)
   const operational = requirements.map((requirement) => {
     const rate = rateByType.get(requirement.type)
-    if (!rate) throw new Error(`Não há tarifa vigente para ${requirement.type === 'energy' ? 'energia' : 'mão de obra'} na data do lote.`)
-    const amount = requireQuantity(requirement.quantity, 'Quantidade operacional')
+    if (!rate)
+      throw new Error(
+        `Não há tarifa vigente para ${requirement.type === 'energy' ? 'energia' : 'mão de obra'} na data do lote.`,
+      )
+    const amount = requireQuantity(
+      requirement.quantity,
+      'Quantidade operacional',
+    )
     const rateCents = moneyToCents(rate.unitAmount)
     if (rateCents === null) throw new Error('Tarifa operacional inválida.')
     const quantity = multiplyQuantities(amount, multiplier)
-    return { requirement, rate, quantity, amountCents: calculateMoneyCents(rateCents, quantity) }
+    return {
+      requirement,
+      rate,
+      quantity,
+      amountCents: calculateMoneyCents(rateCents, quantity),
+    }
   })
-  if (operational.length !== 2 || !rateByType.has('energy') || !rateByType.has('labor'))
-    throw new Error('A receita ativa precisa de energia, mão de obra e tarifas vigentes.')
+  if (
+    operational.length !== 2 ||
+    !rateByType.has('energy') ||
+    !rateByType.has('labor')
+  )
+    throw new Error(
+      'A receita ativa precisa de energia, mão de obra e tarifas vigentes.',
+    )
 
   const sellableOutputs = selectedProfiles.map(({ output, profile }) => ({
     product: {
@@ -367,14 +419,18 @@ async function loadPlan(tx: Transaction, input: BatchInput) {
   }
 }
 
-async function enrichCosts(tx: Transaction, plan: Awaited<ReturnType<typeof loadPlan>>) {
-  const ids = plan.consumptions.map((item) => item.id)
+async function enrichCosts(
+  tx: Transaction,
+  plan: Awaited<ReturnType<typeof loadPlan>>,
+) {
+  const ids = consumptionProductIds(plan.consumptions)
   const movements = ids.length
     ? await tx
         .select({
           productId: stockMovements.productId,
           quantityDelta: stockMovements.quantityDelta,
           unitCost: stockMovements.unitCost,
+          allocatedCost: stockMovements.allocatedCost,
         })
         .from(stockMovements)
         .where(inArray(stockMovements.productId, ids))
@@ -393,7 +449,8 @@ async function enrichCosts(tx: Transaction, plan: Awaited<ReturnType<typeof load
     return {
       ...consumption,
       available: (movementsByProduct.get(consumption.id) ?? []).reduce(
-        (sum, movement) => sum + (quantityToThousandths(movement.quantityDelta) ?? 0n),
+        (sum, movement) =>
+          sum + (quantityToThousandths(movement.quantityDelta) ?? 0n),
         0n,
       ),
       unitCost,
@@ -408,10 +465,22 @@ async function enrichCosts(tx: Transaction, plan: Awaited<ReturnType<typeof load
   const totalCost = ingredientTotal + operationalTotal
   const grossQuantity =
     plan.sellableOutputs.reduce((sum, output) => sum + output.quantity, 0n) +
-    [...plan.lossByProductId.values()].reduce((sum, quantity) => sum + quantity, 0n)
-  if (grossQuantity <= 0n) throw new Error('O lote não possui saídas para calcular o custo.')
-  const outputUnitCost = (totalCost * 10_000n + grossQuantity / 2n) / grossQuantity
-  return { costs, ingredientTotal, operationalTotal, totalCost, grossQuantity, outputUnitCost }
+    [...plan.lossByProductId.values()].reduce(
+      (sum, quantity) => sum + quantity,
+      0n,
+    )
+  if (grossQuantity <= 0n)
+    throw new Error('O lote não possui saídas para calcular o custo.')
+  const outputUnitCost =
+    (totalCost * 10_000n + grossQuantity / 2n) / grossQuantity
+  return {
+    costs,
+    ingredientTotal,
+    operationalTotal,
+    totalCost,
+    grossQuantity,
+    outputUnitCost,
+  }
 }
 
 function previewFromPlan(
@@ -460,7 +529,11 @@ export const getProductionWorkspace = createServerFn({ method: 'GET' }).handler(
     const database = getDb()
     const [recipes, profileRows, batches] = await Promise.all([
       database
-        .select({ id: recipeVersions.id, name: recipeVersions.name, version: recipeVersions.version })
+        .select({
+          id: recipeVersions.id,
+          name: recipeVersions.name,
+          version: recipeVersions.version,
+        })
         .from(recipeVersions)
         .where(eq(recipeVersions.status, 'active'))
         .orderBy(desc(recipeVersions.version)),
@@ -489,7 +562,10 @@ export const getProductionWorkspace = createServerFn({ method: 'GET' }).handler(
           recipeVersion: recipeVersions.version,
         })
         .from(productionBatches)
-        .leftJoin(recipeVersions, eq(productionBatches.recipeVersionId, recipeVersions.id))
+        .leftJoin(
+          recipeVersions,
+          eq(productionBatches.recipeVersionId, recipeVersions.id),
+        )
         .where(sql`${productionBatches.sourceId} is null`)
         .orderBy(desc(productionBatches.createdAt))
         .limit(60),
@@ -577,7 +653,10 @@ export const getProductionBatch = createServerFn({ method: 'GET' })
         recipeVersion: recipeVersions.version,
       })
       .from(productionBatches)
-      .leftJoin(recipeVersions, eq(productionBatches.recipeVersionId, recipeVersions.id))
+      .leftJoin(
+        recipeVersions,
+        eq(productionBatches.recipeVersionId, recipeVersions.id),
+      )
       .where(eq(productionBatches.id, data.id))
     const [outputs, consumptions, losses, costs] = await Promise.all([
       database
@@ -590,6 +669,7 @@ export const getProductionBatch = createServerFn({ method: 'GET' })
           plannedQuantity: productionBatchOutputs.plannedQuantity,
           actualQuantity: productionBatchOutputs.actualQuantity,
           unitCost: productionBatchOutputs.unitCost,
+          allocatedCost: productionBatchOutputs.allocatedCost,
         })
         .from(productionBatchOutputs)
         .innerJoin(products, eq(productionBatchOutputs.productId, products.id))
@@ -603,15 +683,28 @@ export const getProductionBatch = createServerFn({ method: 'GET' })
           totalCost: productionBatchConsumptions.totalCost,
         })
         .from(productionBatchConsumptions)
-        .innerJoin(products, eq(productionBatchConsumptions.productId, products.id))
+        .innerJoin(
+          products,
+          eq(productionBatchConsumptions.productId, products.id),
+        )
         .where(eq(productionBatchConsumptions.productionBatchId, batch.id)),
       database
-        .select({ productName: products.name, quantity: productionBatchLosses.quantity, reason: productionBatchLosses.reason })
+        .select({
+          productName: products.name,
+          quantity: productionBatchLosses.quantity,
+          reason: productionBatchLosses.reason,
+        })
         .from(productionBatchLosses)
         .innerJoin(products, eq(productionBatchLosses.productId, products.id))
         .where(eq(productionBatchLosses.productionBatchId, batch.id)),
       database
-        .select({ type: operationalCosts.type, quantity: operationalCosts.quantity, unit: operationalCosts.unit, unitAmount: operationalCosts.unitAmount, amount: operationalCosts.amount })
+        .select({
+          type: operationalCosts.type,
+          quantity: operationalCosts.quantity,
+          unit: operationalCosts.unit,
+          unitAmount: operationalCosts.unitAmount,
+          amount: operationalCosts.amount,
+        })
         .from(operationalCosts)
         .where(eq(operationalCosts.productionBatchId, batch.id)),
     ])
@@ -644,16 +737,30 @@ export const completeProductionBatch = createServerFn({ method: 'POST' })
         .from(productionBatches)
         .where(eq(productionBatches.id, data.id))
       assertCompletableBatchStatus(batch.status)
-      if (!batch.recipeVersionId || !batch.plannedFor || !batch.recipeMultiplier)
-        throw new Error('O rascunho não possui receita, data ou multiplicador válidos.')
+      if (
+        !batch.recipeVersionId ||
+        !batch.plannedFor ||
+        !batch.recipeMultiplier
+      )
+        throw new Error(
+          'O rascunho não possui receita, data ou multiplicador válidos.',
+        )
 
       const [outputs, completedLosses] = await Promise.all([
         tx
-          .select({ productId: productionBatchOutputs.productId, plannedQuantity: productionBatchOutputs.plannedQuantity, role: productionBatchOutputs.role })
+          .select({
+            productId: productionBatchOutputs.productId,
+            plannedQuantity: productionBatchOutputs.plannedQuantity,
+            role: productionBatchOutputs.role,
+          })
           .from(productionBatchOutputs)
           .where(eq(productionBatchOutputs.productionBatchId, batch.id)),
         tx
-          .select({ productId: productionBatchLosses.productId, quantity: productionBatchLosses.quantity, reason: productionBatchLosses.reason })
+          .select({
+            productId: productionBatchLosses.productId,
+            quantity: productionBatchLosses.quantity,
+            reason: productionBatchLosses.reason,
+          })
           .from(productionBatchLosses)
           .where(eq(productionBatchLosses.productionBatchId, batch.id)),
       ])
@@ -674,9 +781,13 @@ export const completeProductionBatch = createServerFn({ method: 'POST' })
         recipeMultiplier: batch.recipeMultiplier,
         outputs: outputs
           .filter((output) => output.role === 'primary')
-          .map((output) => ({ productId: output.productId, quantity: output.plannedQuantity ?? '0' })),
+          .map((output) => ({
+            productId: output.productId,
+            quantity: output.plannedQuantity ?? '0',
+          })),
         bordinhasQuantity:
-          outputs.find((output) => output.role === 'co_product')?.plannedQuantity ?? '0',
+          outputs.find((output) => output.role === 'co_product')
+            ?.plannedQuantity ?? '0',
         losses: draftLosses.data.map((loss) => ({
           productId: loss.productId,
           quantity: loss.quantity,
@@ -685,7 +796,9 @@ export const completeProductionBatch = createServerFn({ method: 'POST' })
         notes: batch.notes ?? undefined,
       }
       const plan = await loadPlan(tx, input)
-      const productIds = plan.consumptions.map((consumption) => consumption.id).sort((a, b) => a - b)
+      const productIds = consumptionProductIds(plan.consumptions).sort(
+        (a, b) => a - b,
+      )
       // Serializa conclusões concorrentes dos mesmos insumos antes de apurar saldos.
       if (productIds.length) {
         await tx.execute(
@@ -700,18 +813,33 @@ export const completeProductionBatch = createServerFn({ method: 'POST' })
           required: cost.quantity,
         })),
       )
+      const outputCosts = allocateOutputCosts(
+        costs.totalCost,
+        plan.sellableOutputs.map((output) => ({
+          productId: output.product.id,
+          quantity: output.quantity,
+        })),
+      )
+      const outputCostByProductId = new Map(
+        outputCosts.map((output) => [output.productId, output.allocatedCost]),
+      )
 
       await tx.insert(productionBatchConsumptions).values(
         costs.costs.map((cost) => ({
           sourceKey: `manual:production-batch:${batch.id}:consumption:${cost.id}`,
           sourceHash: `completed-${batch.id}-consumption-${cost.id}`,
           productionBatchId: batch.id,
-          recipeItemId: plan.baseRows.find((item) => item.productId === cost.id)?.id ?? null,
+          recipeItemId:
+            plan.baseRows.find((item) => item.productId === cost.id)
+              ?.recipeItemId ?? null,
           productId: cost.id,
           quantity: thousandthsToQuantity(cost.quantity),
           unitCost: millisToUnitCost(cost.unitCost),
           totalCost: centsToMoney(cost.totalCost),
-          sourcePayload: { origin: 'manual_production_completion', components: cost.source },
+          sourcePayload: {
+            origin: 'manual_production_completion',
+            components: cost.source,
+          },
         })),
       )
       await tx.insert(stockMovements).values(
@@ -742,34 +870,79 @@ export const completeProductionBatch = createServerFn({ method: 'POST' })
           notes: 'Tarifa vigente efetivamente aplicada ao lote.',
         })),
       )
-      await tx.insert(stockMovements).values(
-        plan.sellableOutputs.map((output) => ({
-          productId: output.product.id,
-          type: 'production' as const,
-          quantityDelta: thousandthsToQuantity(output.quantity),
-          unitCost: millisToUnitCost(costs.outputUnitCost),
-          referenceType: 'production_output',
-          referenceId: batch.id,
-          sourceKey: `manual:production-batch:${batch.id}:stock-output:${output.product.id}`,
-          sourceHash: `completed-${batch.id}-stock-output-${output.product.id}`,
-          occurredAt: new Date(`${batch.plannedFor}T12:00:00.000Z`),
-        })),
-      )
-      await Promise.all(
+      const outputMovements = await tx
+        .insert(stockMovements)
+        .values(
+          plan.sellableOutputs.map((output) => ({
+            productId: output.product.id,
+            type: 'production' as const,
+            quantityDelta: thousandthsToQuantity(output.quantity),
+            unitCost: millisToUnitCost(costs.outputUnitCost),
+            allocatedCost: centsToMoney(
+              outputCostByProductId.get(output.product.id) ?? 0n,
+            ),
+            referenceType: 'production_output',
+            referenceId: batch.id,
+            sourceKey: `manual:production-batch:${batch.id}:stock-output:${output.product.id}`,
+            sourceHash: `completed-${batch.id}-stock-output-${output.product.id}`,
+            occurredAt: new Date(`${batch.plannedFor}T12:00:00.000Z`),
+          })),
+        )
+        .returning({
+          id: stockMovements.id,
+          productId: stockMovements.productId,
+          occurredAt: stockMovements.occurredAt,
+        })
+      const completedOutputs = await Promise.all(
         plan.sellableOutputs.map((output) =>
           tx
             .update(productionBatchOutputs)
             .set({
               actualQuantity: thousandthsToQuantity(output.quantity),
               unitCost: millisToUnitCost(costs.outputUnitCost),
+              allocatedCost: centsToMoney(
+                outputCostByProductId.get(output.product.id) ?? 0n,
+              ),
             })
             .where(
               and(
                 eq(productionBatchOutputs.productionBatchId, batch.id),
                 eq(productionBatchOutputs.productId, output.product.id),
               ),
-            ),
+            )
+            .returning({
+              id: productionBatchOutputs.id,
+              productId: productionBatchOutputs.productId,
+            }),
         ),
+      )
+      const outputByProductId = new Map(
+        completedOutputs.flat().map((output) => [output.productId, output]),
+      )
+      const movementByProductId = new Map(
+        outputMovements.map((movement) => [movement.productId, movement]),
+      )
+      await tx.insert(inventoryCostLayers).values(
+        plan.sellableOutputs.map((output) => {
+          const completedOutput = outputByProductId.get(output.product.id)
+          const movement = movementByProductId.get(output.product.id)
+          if (!completedOutput || !movement)
+            throw new Error('Não foi possível criar a camada FIFO da produção.')
+          const allocatedCost = outputCostByProductId.get(output.product.id)
+          if (allocatedCost === undefined)
+            throw new Error('Saída de produção sem custo alocado.')
+          return {
+            productId: output.product.id,
+            productionBatchOutputId: completedOutput.id,
+            sourceStockMovementId: movement.id,
+            // FIFO follows completion order, not the planned production date.
+            availableAt: new Date(),
+            originalQuantity: thousandthsToQuantity(output.quantity),
+            originalCost: centsToMoney(allocatedCost),
+            remainingQuantity: thousandthsToQuantity(output.quantity),
+            remainingCost: centsToMoney(allocatedCost),
+          }
+        }),
       )
       if (draftLosses.data.length) {
         await tx.insert(productionBatchLosses).values(
@@ -805,7 +978,12 @@ export const completeProductionBatch = createServerFn({ method: 'POST' })
           },
           updatedAt: new Date(),
         })
-        .where(and(eq(productionBatches.id, batch.id), eq(productionBatches.status, 'draft')))
+        .where(
+          and(
+            eq(productionBatches.id, batch.id),
+            eq(productionBatches.status, 'draft'),
+          ),
+        )
       return { id: batch.id, totalCost: centsToMoney(costs.totalCost) }
     })
   })

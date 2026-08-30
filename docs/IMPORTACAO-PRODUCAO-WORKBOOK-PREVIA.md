@@ -5,7 +5,7 @@ Gerado em modo somente leitura por `npm run production:preview -- <caminho-do-wo
 ## Fonte e limite de reconciliação
 
 - Arquivo: `Workbook_Gerenciamento_Seus_Brownies.xlsx`
-- SHA-256: `a1946fbf1c88b1ec286022c713551ef71b4954fece5d9e36c23f1564233a6f66`
+- SHA-256: `25aa62df5fc9b2e01402e9c242142322d9c6f54a345e800cb947b77865ce5b64`
 - Abas analisadas: `01_Parametros`, `02_Cadastro_Produtos`, `03_Cadastro_Insumos` e `09_Producao_Fornadas`.
 - O cruzamento usa os IDs e nomes normalizados do catálogo-fonte que originou o catálogo já importado (17 produtos finais e 19 itens físicos), o manifesto de 23 aliases de compra e `data/receita-base-vinculos.json` (versão 3). Como esta prévia é offline, uma futura importação deve repetir a conferência por SKU no banco e interromper diante de divergência.
 

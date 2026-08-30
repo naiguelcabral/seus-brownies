@@ -35,17 +35,11 @@ export function thousandthsToQuantity(value: bigint): DecimalQuantity {
   return `${sign}${whole}.${fraction}`
 }
 
-export function multiplyQuantities(
-  left: bigint,
-  right: bigint,
-): bigint {
+export function multiplyQuantities(left: bigint, right: bigint): bigint {
   return (left * right + QUANTITY_SCALE / 2n) / QUANTITY_SCALE
 }
 
-export function divideQuantities(
-  dividend: bigint,
-  divisor: bigint,
-): bigint {
+export function divideQuantities(dividend: bigint, divisor: bigint): bigint {
   if (divisor <= 0n) throw new Error('Rendimento inválido para o perfil.')
   return (dividend * QUANTITY_SCALE + divisor / 2n) / divisor
 }
@@ -105,15 +99,27 @@ export function calculateRecipeCapacity(
 ) {
   const multiplierValue = quantityToThousandths(multiplier)
   const bordinhasYield = quantityToThousandths(bordinhasExpectedYield)
-  if (!multiplierValue || multiplierValue <= 0n || !bordinhasYield || bordinhasYield <= 0n) {
+  if (
+    !multiplierValue ||
+    multiplierValue <= 0n ||
+    !bordinhasYield ||
+    bordinhasYield <= 0n
+  ) {
     throw new Error('Multiplicador ou rendimento inválido.')
   }
   let occupied = 0n
   for (const output of outputs) {
     const outputQuantity = quantityToThousandths(output.quantity)
     const expectedYield = quantityToThousandths(output.expectedYield)
-    if (!outputQuantity || outputQuantity <= 0n || !expectedYield || expectedYield <= 0n) {
-      throw new Error('Quantidade ou rendimento inválido para um produto do lote.')
+    if (
+      !outputQuantity ||
+      outputQuantity <= 0n ||
+      !expectedYield ||
+      expectedYield <= 0n
+    ) {
+      throw new Error(
+        'Quantidade ou rendimento inválido para um produto do lote.',
+      )
     }
     occupied += divideQuantities(outputQuantity, expectedYield)
   }
@@ -132,6 +138,120 @@ export function calculateRecipeCapacity(
 export type CostedMovement = {
   quantityDelta: string
   unitCost: string | null
+  allocatedCost?: string | null
+}
+
+export type OutputCostAllocation = {
+  productId: number
+  quantity: bigint
+  allocatedCost: bigint
+}
+
+/**
+ * Allocates a batch total in cents. Remainder cents go to the largest fractional
+ * shares; equal fractions are resolved by the lowest catalog product id.
+ */
+export function allocateOutputCosts(
+  totalCost: bigint,
+  outputs: Array<{ productId: number; quantity: bigint }>,
+): OutputCostAllocation[] {
+  if (totalCost < 0n) throw new Error('Custo total inválido para alocação.')
+  if (!outputs.length)
+    throw new Error('O lote não possui saídas para alocar o custo.')
+  const totalQuantity = outputs.reduce((sum, output) => {
+    if (output.quantity <= 0n)
+      throw new Error('Quantidade de saída inválida para alocação.')
+    return sum + output.quantity
+  }, 0n)
+  if (totalQuantity <= 0n)
+    throw new Error('Quantidade total inválida para alocação.')
+
+  const shares = outputs.map((output, index) => {
+    const numerator = totalCost * output.quantity
+    return {
+      ...output,
+      index,
+      base: numerator / totalQuantity,
+      remainder: numerator % totalQuantity,
+    }
+  })
+  const remainingCents =
+    totalCost - shares.reduce((sum, share) => sum + share.base, 0n)
+  const receiveRemainder = new Set(
+    [...shares]
+      .sort((left, right) =>
+        right.remainder === left.remainder
+          ? left.productId - right.productId || left.index - right.index
+          : right.remainder > left.remainder
+            ? 1
+            : -1,
+      )
+      .slice(0, Number(remainingCents))
+      .map((share) => share.index),
+  )
+  return shares.map((share) => ({
+    productId: share.productId,
+    quantity: share.quantity,
+    allocatedCost: share.base + (receiveRemainder.has(share.index) ? 1n : 0n),
+  }))
+}
+
+/** Applies the migration backfill rule only to outputs that do not yet have a total. */
+export function backfillMissingOutputAllocations(
+  totalCost: bigint,
+  outputs: Array<{
+    productId: number
+    quantity: bigint
+    allocatedCost: bigint | null
+  }>,
+) {
+  const missing = outputs.filter((output) => output.allocatedCost === null)
+  if (!missing.length) return outputs
+  const allocations = allocateOutputCosts(
+    totalCost,
+    outputs.map((output) => ({
+      productId: output.productId,
+      quantity: output.quantity,
+    })),
+  )
+  const byProductId = new Map(
+    allocations.map((allocation) => [allocation.productId, allocation]),
+  )
+  return outputs.map((output) => ({
+    ...output,
+    allocatedCost:
+      output.allocatedCost ??
+      byProductId.get(output.productId)?.allocatedCost ??
+      null,
+  }))
+}
+
+export function calculateInventoryState(movements: CostedMovement[]) {
+  let quantity = 0n
+  let valueCents = 0n
+  for (const movement of movements) {
+    const delta = quantityToThousandths(movement.quantityDelta)
+    if (delta === null) throw new Error('Movimentação com quantidade inválida.')
+    const allocatedCost = moneyToCents(movement.allocatedCost ?? null)
+    if (delta >= 0n) {
+      quantity += delta
+      const unitCost = unitCostToMillis(movement.unitCost)
+      if (allocatedCost !== null) valueCents += allocatedCost
+      else if (unitCost !== null)
+        valueCents += calculateUnitCostCents(unitCost, delta)
+      continue
+    }
+    const outgoing = -delta
+    const providedCost = unitCostToMillis(movement.unitCost)
+    const average =
+      quantity > 0n ? (valueCents * 10_000n + quantity / 2n) / quantity : 0n
+    const unitCost = providedCost ?? average
+    valueCents -= allocatedCost ?? calculateUnitCostCents(unitCost, outgoing)
+    quantity -= outgoing
+  }
+  const unitCost =
+    quantity > 0n ? (valueCents * 10_000n + quantity / 2n) / quantity : 0n
+  return { quantity, valueCents: quantity > 0n ? valueCents : 0n, unitCost }
 }
 
 /**
@@ -139,26 +259,7 @@ export type CostedMovement = {
  * disponível naquele instante; novas conclusões sempre gravam o custo usado.
  */
 export function calculateWeightedAverageCost(movements: CostedMovement[]) {
-  let quantity = 0n
-  let valueCents = 0n
-  for (const movement of movements) {
-    const delta = quantityToThousandths(movement.quantityDelta)
-    if (delta === null) throw new Error('Movimentação com quantidade inválida.')
-    if (delta >= 0n) {
-      quantity += delta
-      const unitCost = unitCostToMillis(movement.unitCost)
-      if (unitCost !== null) valueCents += calculateUnitCostCents(unitCost, delta)
-      continue
-    }
-    const outgoing = -delta
-    const providedCost = unitCostToMillis(movement.unitCost)
-    const average = quantity > 0n ? (valueCents * 10_000n + quantity / 2n) / quantity : 0n
-    const unitCost = providedCost ?? average
-    valueCents -= calculateUnitCostCents(unitCost, outgoing)
-    quantity -= outgoing
-  }
-  if (quantity <= 0n) return 0n
-  return (valueCents * 10_000n + quantity / 2n) / quantity
+  return calculateInventoryState(movements).unitCost
 }
 
 /** Shared completion guards keep the UI preview and the transaction rules aligned. */

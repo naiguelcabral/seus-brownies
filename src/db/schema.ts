@@ -2,6 +2,7 @@ import {
   boolean,
   date,
   integer,
+  index,
   jsonb,
   numeric,
   pgEnum,
@@ -56,10 +57,10 @@ export const productionBatchStatus = pgEnum('production_batch_status', [
   'completed',
   'cancelled',
 ])
-export const productionBatchOutputRole = pgEnum('production_batch_output_role', [
-  'primary',
-  'co_product',
-])
+export const productionBatchOutputRole = pgEnum(
+  'production_batch_output_role',
+  ['primary', 'co_product'],
+)
 export const productionProfileComponentRole = pgEnum(
   'production_profile_component_role',
   ['filling'],
@@ -146,6 +147,8 @@ export const stockMovements = pgTable('stock_movements', {
   type: stockMovementType().notNull(),
   quantityDelta: quantity('quantity_delta').notNull(),
   unitCost: unitCost('unit_cost'),
+  /** Exact cost allocation for a production output; other movement types leave it null. */
+  allocatedCost: money('allocated_cost'),
   referenceType: varchar('reference_type', { length: 40 }),
   referenceId: integer('reference_id'),
   sourceKey: varchar('source_key', { length: 160 }).unique(),
@@ -201,8 +204,9 @@ export const productImportAliases = pgTable('product_import_aliases', {
   // The source row is part of the key: equal descriptions can represent distinct inputs.
   sourceId: varchar('source_id', { length: 80 }).notNull().unique(),
   sourceName: varchar('source_name', { length: 180 }).notNull(),
-  normalizedSourceName: varchar('normalized_source_name', { length: 180 })
-    .notNull(),
+  normalizedSourceName: varchar('normalized_source_name', {
+    length: 180,
+  }).notNull(),
   productId: integer('product_id')
     .notNull()
     .references(() => products.id, { onDelete: 'restrict' }),
@@ -311,19 +315,22 @@ export const recipeItems = pgTable('recipe_items', {
 })
 
 /** Energy and labor requirements are auditable recipe metadata, never inventory. */
-export const recipeOperationalRequirements = pgTable('recipe_operational_requirements', {
-  id: serial().primaryKey(),
-  sourceKey: varchar('source_key', { length: 160 }).notNull().unique(),
-  sourceHash: varchar('source_hash', { length: 64 }).notNull().unique(),
-  recipeVersionId: integer('recipe_version_id')
-    .notNull()
-    .references(() => recipeVersions.id, { onDelete: 'cascade' }),
-  type: operationalCostType().notNull(),
-  quantity: quantity('quantity').notNull(),
-  unit: varchar({ length: 24 }).notNull(),
-  historicalCost: money('historical_cost'),
-  sourcePayload: jsonb('source_payload').notNull(),
-})
+export const recipeOperationalRequirements = pgTable(
+  'recipe_operational_requirements',
+  {
+    id: serial().primaryKey(),
+    sourceKey: varchar('source_key', { length: 160 }).notNull().unique(),
+    sourceHash: varchar('source_hash', { length: 64 }).notNull().unique(),
+    recipeVersionId: integer('recipe_version_id')
+      .notNull()
+      .references(() => recipeVersions.id, { onDelete: 'cascade' }),
+    type: operationalCostType().notNull(),
+    quantity: quantity('quantity').notNull(),
+    unit: varchar({ length: 24 }).notNull(),
+    historicalCost: money('historical_cost'),
+    sourcePayload: jsonb('source_payload').notNull(),
+  },
+)
 
 /** Versioned rates are selected by type and effective date for completed future batches. */
 export const operationalCostRates = pgTable('operational_cost_rates', {
@@ -359,9 +366,12 @@ export const productionProfiles = pgTable(
     cutSize: varchar('cut_size', { length: 80 }),
     filling: varchar({ length: 120 }),
     expectedYield: quantity('expected_yield').notNull(),
-    packagingProductId: integer('packaging_product_id').references(() => products.id, {
-      onDelete: 'restrict',
-    }),
+    packagingProductId: integer('packaging_product_id').references(
+      () => products.id,
+      {
+        onDelete: 'restrict',
+      },
+    ),
     packagingQuantity: quantity('packaging_quantity'),
     sourcePayload: jsonb('source_payload').notNull(),
     createdAt: timestamp('created_at', { withTimezone: true })
@@ -424,9 +434,12 @@ export const productionBatches = pgTable('production_batches', {
     () => productionProfiles.id,
     { onDelete: 'restrict' },
   ),
-  recipeVersionId: integer('recipe_version_id').references(() => recipeVersions.id, {
-    onDelete: 'restrict',
-  }),
+  recipeVersionId: integer('recipe_version_id').references(
+    () => recipeVersions.id,
+    {
+      onDelete: 'restrict',
+    },
+  ),
   status: productionBatchStatus('status').notNull().default('planned'),
   plannedFor: date('planned_for'),
   /** Multiplier of the active base recipe used by operational batches. */
@@ -466,6 +479,8 @@ export const productionBatchOutputs = pgTable(
     actualQuantity: quantity('actual_quantity'),
     lossQuantity: quantity('loss_quantity'),
     unitCost: unitCost('unit_cost'),
+    /** Exact cents allocated to this output when its batch is completed. */
+    allocatedCost: money('allocated_cost'),
   },
   (table) => [
     unique('production_batch_outputs_batch_product_unique').on(
@@ -475,25 +490,107 @@ export const productionBatchOutputs = pgTable(
   ],
 )
 
+/**
+ * FIFO cost layers are created only for completed production outputs in the
+ * first delivery. Other incoming-stock sources are intentionally deferred.
+ */
+export const inventoryCostLayers = pgTable(
+  'inventory_cost_layers',
+  {
+    id: serial().primaryKey(),
+    productId: integer('product_id')
+      .notNull()
+      .references(() => products.id, { onDelete: 'restrict' }),
+    productionBatchOutputId: integer('production_batch_output_id')
+      .notNull()
+      .references(() => productionBatchOutputs.id, { onDelete: 'restrict' })
+      .unique(),
+    sourceStockMovementId: integer('source_stock_movement_id')
+      .notNull()
+      .references(() => stockMovements.id, { onDelete: 'restrict' })
+      .unique(),
+    availableAt: timestamp('available_at', { withTimezone: true }).notNull(),
+    originalQuantity: quantity('original_quantity').notNull(),
+    originalCost: money('original_cost').notNull(),
+    remainingQuantity: quantity('remaining_quantity').notNull(),
+    remainingCost: money('remaining_cost').notNull(),
+    createdAt: timestamp('created_at', { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp('updated_at', { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (table) => [
+    index('inventory_cost_layers_fifo_idx').on(
+      table.productId,
+      table.availableAt,
+      table.id,
+    ),
+  ],
+)
+
+/**
+ * Immutable detail of the cost consumed by an outgoing movement. A sale item
+ * may span several production-output layers while retaining exact cents.
+ */
+export const inventoryCostAllocations = pgTable(
+  'inventory_cost_allocations',
+  {
+    id: serial().primaryKey(),
+    inventoryCostLayerId: integer('inventory_cost_layer_id')
+      .notNull()
+      .references(() => inventoryCostLayers.id, { onDelete: 'restrict' }),
+    outgoingStockMovementId: integer('outgoing_stock_movement_id')
+      .notNull()
+      .references(() => stockMovements.id, { onDelete: 'restrict' }),
+    saleItemId: integer('sale_item_id').references(() => saleItems.id, {
+      onDelete: 'restrict',
+    }),
+    productId: integer('product_id')
+      .notNull()
+      .references(() => products.id, { onDelete: 'restrict' }),
+    quantity: quantity('quantity').notNull(),
+    allocatedCost: money('allocated_cost').notNull(),
+    unitCost: unitCost('unit_cost'),
+    createdAt: timestamp('created_at', { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (table) => [
+    unique('inventory_cost_allocations_layer_movement_unique').on(
+      table.inventoryCostLayerId,
+      table.outgoingStockMovementId,
+    ),
+    index('inventory_cost_allocations_sale_item_idx').on(table.saleItemId),
+    index('inventory_cost_allocations_outgoing_movement_idx').on(
+      table.outgoingStockMovementId,
+    ),
+  ],
+)
+
 /** Only completed batches can receive physical consumption entries. */
-export const productionBatchConsumptions = pgTable('production_batch_consumptions', {
-  id: serial().primaryKey(),
-  sourceKey: varchar('source_key', { length: 160 }).notNull().unique(),
-  sourceHash: varchar('source_hash', { length: 64 }).notNull().unique(),
-  productionBatchId: integer('production_batch_id')
-    .notNull()
-    .references(() => productionBatches.id, { onDelete: 'cascade' }),
-  recipeItemId: integer('recipe_item_id').references(() => recipeItems.id, {
-    onDelete: 'set null',
-  }),
-  productId: integer('product_id')
-    .notNull()
-    .references(() => products.id, { onDelete: 'restrict' }),
-  quantity: quantity('quantity').notNull(),
-  unitCost: unitCost('unit_cost'),
-  totalCost: money('total_cost'),
-  sourcePayload: jsonb('source_payload').notNull(),
-})
+export const productionBatchConsumptions = pgTable(
+  'production_batch_consumptions',
+  {
+    id: serial().primaryKey(),
+    sourceKey: varchar('source_key', { length: 160 }).notNull().unique(),
+    sourceHash: varchar('source_hash', { length: 64 }).notNull().unique(),
+    productionBatchId: integer('production_batch_id')
+      .notNull()
+      .references(() => productionBatches.id, { onDelete: 'cascade' }),
+    recipeItemId: integer('recipe_item_id').references(() => recipeItems.id, {
+      onDelete: 'set null',
+    }),
+    productId: integer('product_id')
+      .notNull()
+      .references(() => products.id, { onDelete: 'restrict' }),
+    quantity: quantity('quantity').notNull(),
+    unitCost: unitCost('unit_cost'),
+    totalCost: money('total_cost'),
+    sourcePayload: jsonb('source_payload').notNull(),
+  },
+)
 
 /** Losses are explicit completed-batch facts and produce no planned-batch stock movement. */
 export const productionBatchLosses = pgTable('production_batch_losses', {

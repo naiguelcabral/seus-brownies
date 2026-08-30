@@ -5,6 +5,8 @@ import { z } from 'zod'
 import {
   categories,
   expenses,
+  inventoryCostAllocations,
+  inventoryCostLayers,
   products,
   purchaseItems,
   purchases,
@@ -12,6 +14,16 @@ import {
   sales,
   stockMovements,
 } from '#/db/schema'
+import {
+  calculatePriceCentsTotal,
+  calculateUnitCostMillisTotal,
+} from '#/features/operations/calculations'
+import {
+  allocateFifoCost,
+  assertNoDuplicateLayerAllocations,
+  createsSaleCostAllocation,
+} from '#/features/inventory/fifo'
+import { moneyToCents, quantityToThousandths } from '#/features/production/calculations'
 
 const quantityPattern = /^\d+(?:[,.]\d{1,3})?$/
 const moneyPattern = /^\d+(?:[,.]\d{1,2})?$/
@@ -50,10 +62,6 @@ function centsToMoney(value: bigint) {
 
 function millisToUnitCost(value: bigint) {
   return `${value / 1_000n}.${String(value % 1_000n).padStart(3, '0')}`
-}
-
-function roundedCents(unitCostInMillis: bigint, quantity: bigint) {
-  return (unitCostInMillis * quantity + 5_000n) / 10_000n
 }
 
 const purchaseValues = z.object({
@@ -132,7 +140,10 @@ export const createPurchase = createServerFn({ method: 'POST' })
       }
 
       const totals = normalizedItems.map((item) =>
-        roundedCents(item.unitCost!, item.quantityThousandths!),
+        calculateUnitCostMillisTotal(
+          item.unitCost!,
+          item.quantityThousandths!,
+        ),
       )
       const total = totals.reduce((sum, item) => sum + item, 0n)
       const [purchase] = await tx
@@ -269,12 +280,52 @@ export const createSale = createServerFn({ method: 'POST' })
       )
         throw new Error('Há produto sem preço de venda disponível.')
       const totals = normalizedItems.map((item) =>
-        roundedCents(
+        calculatePriceCentsTotal(
           cents(byId.get(item.productId)!.salePrice!)!,
           thousandths(item.quantity!)!,
         ),
       )
       const subtotal = totals.reduce((sum, item) => sum + item, 0n)
+      const allocatesCost = createsSaleCostAllocation(data.status)
+      let fifoPlans: ReturnType<typeof allocateFifoCost>[] = []
+      if (allocatesCost) {
+        // Product and layer locks serialize concurrent confirmed/paid sales.
+        await tx.execute(
+          sql`select id from ${products} where ${products.id} in ${ids} order by ${products.id} for update`,
+        )
+        await tx.execute(
+          sql`select id from ${inventoryCostLayers} where ${inventoryCostLayers.productId} in ${ids} order by ${inventoryCostLayers.productId}, ${inventoryCostLayers.availableAt}, ${inventoryCostLayers.id} for update`,
+        )
+        const rows = await tx
+          .select()
+          .from(inventoryCostLayers)
+          .where(inArray(inventoryCostLayers.productId, ids))
+          .orderBy(
+            asc(inventoryCostLayers.productId),
+            asc(inventoryCostLayers.availableAt),
+            asc(inventoryCostLayers.id),
+          )
+        let layers = rows.map((layer) => ({
+          id: layer.id,
+          productId: layer.productId,
+          productionBatchOutputId: layer.productionBatchOutputId,
+          sourceStockMovementId: layer.sourceStockMovementId,
+          availableAt: layer.availableAt.toISOString(),
+          originalQuantity: quantityToThousandths(layer.originalQuantity)!,
+          originalCost: moneyToCents(layer.originalCost)!,
+          remainingQuantity: quantityToThousandths(layer.remainingQuantity)!,
+          remainingCost: moneyToCents(layer.remainingCost)!,
+        }))
+        fifoPlans = normalizedItems.map((item) => {
+          const plan = allocateFifoCost(
+            layers,
+            item.productId,
+            thousandths(item.quantity!)!,
+          )
+          layers = plan.layers
+          return plan
+        })
+      }
       const [sale] = await tx
         .insert(sales)
         .values({
@@ -286,26 +337,80 @@ export const createSale = createServerFn({ method: 'POST' })
           notes: data.notes?.trim() || null,
         })
         .returning({ id: sales.id })
-      await tx.insert(saleItems).values(
-        normalizedItems.map((item, index) => ({
+      const insertedItems = await tx
+        .insert(saleItems)
+        .values(
+          normalizedItems.map((item, index) => ({
           saleId: sale.id,
           productId: item.productId,
           productName: byId.get(item.productId)!.name,
           quantity: item.quantity!,
           unitPrice: byId.get(item.productId)!.salePrice!,
           totalAmount: centsToMoney(totals[index]),
-        })),
-      )
-      if (data.status === 'confirmed' || data.status === 'paid')
-        await tx.insert(stockMovements).values(
-          normalizedItems.map((item) => ({
+          })),
+        )
+        .returning({ id: saleItems.id })
+      if (allocatesCost) {
+        const saleMovements = await tx
+          .insert(stockMovements)
+          .values(
+            normalizedItems.map((item) => ({
             productId: item.productId,
             type: 'sale' as const,
             quantityDelta: `-${item.quantity!}`,
             referenceType: 'sale',
             referenceId: sale.id,
+            })),
+          )
+          .returning({ id: stockMovements.id })
+        const allocationRows = fifoPlans.flatMap((plan, itemIndex) =>
+          plan.allocations.map((allocation) => ({
+            inventoryCostLayerId: allocation.layerId,
+            outgoingStockMovementId: saleMovements[itemIndex].id,
+            saleItemId: insertedItems[itemIndex].id,
+            productId: allocation.productId,
+            quantity: String(allocation.quantity / 1_000n).concat(
+              '.',
+              String(allocation.quantity % 1_000n).padStart(3, '0'),
+            ),
+            allocatedCost: centsToMoney(allocation.allocatedCost),
+            unitCost: millisToUnitCost(
+              (allocation.allocatedCost * 10_000n + allocation.quantity / 2n) /
+                allocation.quantity,
+            ),
           })),
         )
+        assertNoDuplicateLayerAllocations(
+          allocationRows.map((allocation) => ({
+            layerId: allocation.inventoryCostLayerId,
+            outgoingStockMovementId: allocation.outgoingStockMovementId,
+          })),
+        )
+        await tx.insert(inventoryCostAllocations).values(allocationRows)
+        for (const [index, plan] of fifoPlans.entries()) {
+          await tx
+            .update(stockMovements)
+            .set({ allocatedCost: centsToMoney(plan.allocatedCost) })
+            .where(eq(stockMovements.id, saleMovements[index].id))
+        }
+        const updatedLayers =
+          fifoPlans.length > 0 ? fifoPlans[fifoPlans.length - 1].layers : []
+        await Promise.all(
+          updatedLayers.map((layer) =>
+            tx
+              .update(inventoryCostLayers)
+              .set({
+                remainingQuantity: String(layer.remainingQuantity / 1_000n).concat(
+                  '.',
+                  String(layer.remainingQuantity % 1_000n).padStart(3, '0'),
+                ),
+                remainingCost: centsToMoney(layer.remainingCost),
+                updatedAt: new Date(),
+              })
+              .where(eq(inventoryCostLayers.id, layer.id)),
+          ),
+        )
+      }
     })
   })
 
