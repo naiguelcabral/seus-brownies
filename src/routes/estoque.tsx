@@ -6,6 +6,7 @@ import { ManagementLayout } from '#/components/ManagementLayout'
 import { listInventory } from '#/features/operations/functions'
 import { recordLossLifecycle, recordNegativeAdjustmentLifecycle, recordPositiveAdjustmentLifecycle, returnSaleLifecycle } from '#/features/inventory/lifecycle-writers'
 import { canSubmitLifecycle, lifecycleErrorMessage, validateLifecycleForm } from '#/features/inventory/lifecycle-ui'
+import { PositiveAdjustmentForm } from '#/features/inventory/positive-adjustment-form'
 import { formatDateTime } from '#/lib/format'
 
 export const Route = createFileRoute('/estoque')({
@@ -153,11 +154,13 @@ function LifecycleActions({ products }: { products: Array<{ id: number; name: st
   const [returnValues, setReturnValues] = useState({ saleItemId: '', quantity: '', reason: '', reference: '' })
   const [negativeValues, setNegativeValues] = useState({ productId: '', quantity: '', reason: '', reference: '' })
   const [positiveValues, setPositiveValues] = useState({ productId: '', quantity: '', reason: '', reference: '', totalCost: '', originReference: '' })
+  const [positiveConfirmed, setPositiveConfirmed] = useState(false)
   async function run(kind: 'return' | 'loss' | 'negative' | 'positive', values: Record<string, string>, confirmed = false) {
     const numeric = { ...values, ...(kind === 'return' ? { saleItemId: Number(values.saleItemId) } : { productId: Number(values.productId) }) }
     const validation = validateLifecycleForm(kind, numeric)
     if (!validation.ok) { setMessage(validation.message); return }
     if ((kind === 'loss' || kind === 'negative') && !confirmed) { setMessage('Confirme a saída de estoque antes de continuar.'); return }
+    if (kind === 'positive' && !confirmed) { setMessage('Confirme o impacto do ajuste positivo no estoque e na camada FIFO antes de continuar.'); return }
     setPending(true); setMessage(null)
     try {
       if (kind === 'return') await recordReturn({ data: validation.data })
@@ -174,7 +177,7 @@ function LifecycleActions({ products }: { products: Array<{ id: number; name: st
       <form className="rounded-xl border border-[#ead9ca] p-3 space-y-2" onSubmit={(event) => { event.preventDefault(); void run('return', returnValues) }}><strong>Devolução de venda</strong>{field('ID do item da venda', returnValues.saleItemId, (value) => setReturnValues({ ...returnValues, saleItemId: value }))}{field('Quantidade', returnValues.quantity, (value) => setReturnValues({ ...returnValues, quantity: value }), '1,000')}{field('Motivo', returnValues.reason, (value) => setReturnValues({ ...returnValues, reason: value }))}{field('Referência', returnValues.reference, (value) => setReturnValues({ ...returnValues, reference: value }))}<button disabled={pending} className="action-button">Registrar devolução</button></form>
       <NegativeForm title="Perda de estoque" values={negativeValues} setValues={setNegativeValues} product={product} field={field} pending={pending} onSubmit={(confirmed) => run('loss', negativeValues, confirmed)} />
       <NegativeForm title="Ajuste negativo" values={negativeValues} setValues={setNegativeValues} product={product} field={field} pending={pending} onSubmit={(confirmed) => run('negative', negativeValues, confirmed)} />
-      <form className="rounded-xl border border-[#ead9ca] p-3 space-y-2" onSubmit={(event) => { event.preventDefault(); void run('positive', positiveValues) }}><strong>Ajuste positivo</strong>{product(positiveValues.productId, (value) => setPositiveValues({ ...positiveValues, productId: value }))}{field('Quantidade', positiveValues.quantity, (value) => setPositiveValues({ ...positiveValues, quantity: value }), '1,000')}{field('Custo total', positiveValues.totalCost, (value) => setPositiveValues({ ...positiveValues, totalCost: value }), '0,00')}{field('Origem do custo', positiveValues.originReference, (value) => setPositiveValues({ ...positiveValues, originReference: value }))}{field('Motivo', positiveValues.reason, (value) => setPositiveValues({ ...positiveValues, reason: value }))}{field('Referência', positiveValues.reference, (value) => setPositiveValues({ ...positiveValues, reference: value }))}<button disabled={pending} className="action-button">Registrar ajuste positivo</button></form>
+      <PositiveAdjustmentForm products={products} values={positiveValues} setValues={setPositiveValues} pending={pending} confirmed={positiveConfirmed} setConfirmed={setPositiveConfirmed} onSubmit={() => { void run('positive', positiveValues, positiveConfirmed) }} />
     </div></section>
 }
 

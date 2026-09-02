@@ -88,6 +88,20 @@ confirmou `0` reversões.
   reversões, receita líquida, CMV, perdas, margem e estoque FIFO; replanejar ou
   repetir conforme contrato e provar ausência de duplicidade.
 
+### Correção local da UI de ajuste positivo — 2026-09-02
+
+A tela de estoque passou a exigir confirmação explícita antes de habilitar o
+registro de ajuste positivo. O texto informa que a ação aumenta o estoque e
+cria uma camada FIFO com o custo total e a origem declarados. A habilitação do
+botão continua condicionada aos campos do contrato local (produto, quantidade,
+custo total, origem, motivo e referência) e à confirmação; a confirmação não
+é enviada ao writer e não altera a validação ou a autorização no servidor.
+
+Cobertura local verifica a renderização do controle, o estado inicial
+desabilitado, a confirmação ausente, os campos inválidos, o estado válido e a
+preservação dos demais guards de formulários de estoque. Nenhum cenário G7 foi
+executado por esta correção.
+
 ### G9 — fechamento e rollback operacional
 
 - Anexar IDs reais, valores antes/depois, payload sanitizado e artefatos.

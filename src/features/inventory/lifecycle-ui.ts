@@ -13,6 +13,19 @@ export function canSubmitLifecycle(pending: boolean, needsConfirmation = false, 
   return !pending && (!needsConfirmation || confirmed)
 }
 
+/**
+ * UI-only guard for positive adjustments. The server contract remains the
+ * authorization boundary; this merely prevents an accidental local submit.
+ */
+export function canSubmitPositiveAdjustment(
+  pending: boolean,
+  values: Record<string, unknown>,
+  confirmed: boolean,
+) {
+  return canSubmitLifecycle(pending, true, confirmed)
+    && validateLifecycleForm('positive', { ...values, productId: Number(values.productId) }).ok
+}
+
 export function lifecycleErrorMessage(error: unknown) {
   const message = error instanceof Error ? error.message : ''
   if (message.includes('0013_fifo_lifecycle'))
