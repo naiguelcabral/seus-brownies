@@ -5,34 +5,118 @@ dados, deploy ou acesso a production. `0013_fifo_lifecycle.sql` foi revisada
 estaticamente: é incremental após `0012`, não contém DML/backfill/HML/IDs ou
 dados específicos e cria apenas estruturas de ciclo de vida FIFO.
 
-## Gates
+## Restrições permanentes
 
-**Gate 1 — fechado.** Não conectar a `development`, aplicar `0013` ou criar
-dados até autorização explícita para migration.
+- Nunca acessar, consultar, migrar ou alterar `production`.
+- Nunca ler, imprimir, editar ou versionar `.env`/`.env.local`.
+- Nunca usar Vite com `--debug`, nem fazer deploy, push, alterar secrets,
+  Cloudflare ou infraestrutura.
+- Preservar todos os artefatos Playwright somente em
+  `/tmp/seus-brownies-playwright`.
+- Não avançar um gate sem evidência verificável anexada ao relatório do gate.
 
-**Gate 2 — fechado por cenário.** Depois da migration, cada cenário requer
-autorização própria. Não avançar enquanto a reconciliação do anterior não for
-aprovada. Nunca reutilizar lote HML `#18`, vendas `#1/#2` ou suas alocações.
+## Pipeline de 10 gates
 
-## Pré e pós-auditoria de migration
+| Gate | Objetivo | Estado | Evidência ou condição de avanço |
+|---|---|---|---|
+| G0 | Working tree e revisão estática | concluído localmente | árvore preservada; código, schema, `0012` e `0013` revisados |
+| G1 | Validações locais | concluído localmente | `npm test`, `npm run lint` e `npm run build` aprovados |
+| G2 | Portabilidade da migration | concluído localmente | `0013` incremental, schema-only, sem HML/DML/backfill/IDs |
+| G3 | Auditoria GET-only pré-migration | concluído | histórico `13`, schema lifecycle ausente; invariantes HML registrados |
+| G4 | Aplicação única da migration | concluído | journal reparado; `npm run db:migrate` retornou código `0` |
+| G5 | Auditoria GET-only pós-migration | concluído | runtime confirmou 14 migrations e schema lifecycle completo |
+| G6 | Pré-checagem de cenário HML isolado | fechado | requer autorização explícita por cenário |
+| G7 | Execução UI/Playwright de um cenário | proibido | requer G6 aprovado; um cenário por vez |
+| G8 | Reconciliação, idempotência e duplicidade | proibido | requer G7 aprovado e fatos auditados |
+| G9 | Fechamento, artefatos e rollback | proibido | requer G8 aprovado e documentação comprovada |
 
-Antes de `npm run db:migrate`, registrar em relatório somente leitura:
+### Evidência comprovada de G4/G5 — 2026-09-02
 
-- target confirmado como `development`, backup lógico aprovado e SHA da revisão;
-- migrations aplicadas, enums/tabelas/colunas ausentes, FKs/checks/índices e
-  unicidades previstos;
-- contagens e totais de `stock_movements`, camadas e alocações existentes;
-- amostra imutável de saldo/valor FIFO, incluindo os fatos HML protegidos.
+Após reparar o journal com a entrada `0013_fifo_lifecycle`, a aplicação única
+de `npm run db:migrate` retornou código `0`. A auditoria runtime GET-only
+posterior confirmou `14` registros em `__drizzle_migrations`,
+`inventory_cost_reversals` presente, os dois enums, as quatro colunas de ciclo
+de vida, `2` FKs, `2` checks, `2` índices e `2` unicidades. A tabela de
+reversões tinha `0` linhas, comprovando que a migration não criou fatos de
+negócio.
 
-Após aplicar **somente** `npm run db:migrate`, repetir a auditoria e exigir:
+G6--G9 permanecem fechados até autorização explícita de um cenário isolado;
+esta aplicação não criou cenários FIFO, vendas, compras, devoluções, perdas ou
+ajustes.
 
-- `inventory_cost_layer_origin`, `inventory_cost_allocation_event_type`,
-  colunas `origin`, `event_type`, referências de evento e
-  `inventory_cost_reversals` presentes;
-- FKs `RESTRICT`, checks `quantity > 0`/`restored_cost >= 0`, índices e
-  unicidades de `0013` presentes;
-- zero linhas novas nas tabelas de negócio e totais pré/pós idênticos;
-- `npm test`, `npm run lint` e `npm run build` aprovados novamente.
+### Invariantes HML preservados
+
+A leitura comprovou `2` camadas e `2` alocações FIFO existentes: camada `#1`
+preservada em `12.000`/`45.33` original e `10.000`/`37.77` remanescente;
+camada `#2` preservada em `6.000`/`22.67`; alocações `#1/#2` de
+`1.000`/`3.78` ligadas aos movimentos `#20/#21`; vendas `#1/#2` confirmadas a
+`12.00`; lote `#18` concluído com `18.000` e custo `68.00`. A auditoria também
+confirmou `0` reversões.
+
+## Checklists por gate
+
+### G0--G2 — locais e estáticos
+
+- Registrar `git status --short`, sem reverter mudanças de terceiros.
+- Revisar README, AGENTS, schema, `0012`, `0013`, contratos, writers, UI e
+  testes.
+- Confirmar que `0013` é posterior a `0012`, não possui DML, HML, backfill ou
+  IDs/dados de development e contém somente estrutura, FKs, checks, índices,
+  unicidades e comentários.
+- Anexar o diff e resultados de `npm test`, `npm run lint` e `npm run build`.
+
+### G3--G5 — migration e auditoria GET-only
+
+- G3: registrar histórico, catálogo, contagens e invariantes antes da escrita.
+- G4: obter backup aprovado e confirmação humana de que o alvo é
+  `development`; executar somente uma vez `npm run db:migrate`; registrar
+  código de saída sanitizado.
+- G5: usar rota temporária GET-only, development/loopback-only, sem payload e
+  sem APIs Node; exigir 14 migrations, tabela/enums/colunas/FKs/checks/índices/
+  unicidades presentes e zero reversões novas pela migration.
+- Parar se a contagem do histórico, o schema ou qualquer invariante divergir.
+
+### G6--G8 — cenários isolados
+
+- G6: escolher um único prefixo da matriz, nunca reutilizar lote `#18`, vendas
+  `#1/#2` ou suas alocações; registrar saldo/custo inicial e pré-condições.
+- G7: Vite loopback isolado e um único Playwright do cenário; aguardar
+  hidratação explícita, capturar console, requests, responses, trace, vídeo e
+  screenshot em `/tmp/seus-brownies-playwright`; parar diante de POST extra,
+  falha HTTP ou confirmação visual divergente.
+- G8: reconciliar centavos e milésimos, movimentos, camadas, alocações,
+  reversões, receita líquida, CMV, perdas, margem e estoque FIFO; replanejar ou
+  repetir conforme contrato e provar ausência de duplicidade.
+
+### G9 — fechamento e rollback operacional
+
+- Anexar IDs reais, valores antes/depois, payload sanitizado e artefatos.
+- Rodar novamente `npm test`, `npm run lint` e `npm run build`.
+- Atualizar a documentação somente com fatos comprovados.
+- Se houver divergência, parar writers/UI e retornar à versão anterior sem
+  apagar migrations, fatos contábeis, alocações, reversões ou dados HML.
+
+## Testes e auditorias preparados para gates posteriores
+
+Os testes locais de contratos, planejadores e writers cobrem validação,
+centavos, locks, rollback e duplicidade sem banco real. O helper de auditoria
+FIFO tem descoberta de `__drizzle_migrations` nos schemas `drizzle` e `public`,
+consultas independentes, erros sanitizados e classificação estrita
+`aplicada`/`não aplicada`/`indeterminada`.
+
+### Higiene de metadados Drizzle
+
+O journal recebeu a entrada sequencial de `0013_fifo_lifecycle`. Os snapshots
+de `0012` e `0013` continuam ausentes e exigem um plano próprio, revisado e
+isolado antes da próxima execução de `drizzle-kit generate`. Eles não impedem
+a aplicação da cadeia já existente, que é dirigida pelo journal e pelos SQLs;
+não criar snapshots manualmente durante a homologação.
+
+Para G3/G5, registrar temporariamente uma rota que apenas invoque a Server
+Function GET-only `getFifoMigrationAudit`; removê-la e regenerar rotas no fim.
+Para G6--G8, manter `e2e/fifo-lifecycle-scenarios.spec.ts` com casos
+explicitamente ignorados até autorização do cenário, executando um único
+`--grep` autorizado. Nenhum teste de cenário deve ser disparado em lote.
 
 ## Matriz isolada de cenários
 

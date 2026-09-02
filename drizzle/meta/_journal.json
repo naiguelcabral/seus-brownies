@@ -92,6 +92,13 @@
       "when": 1788051976601,
       "tag": "0012_fifo_cost_layers",
       "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1788371973551,
+      "tag": "0013_fifo_lifecycle",
+      "breakpoints": true
     }
   ]
 }
