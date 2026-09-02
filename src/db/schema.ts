@@ -41,6 +41,15 @@ export const stockMovementType = pgEnum('stock_movement_type', [
   'loss',
   'return',
 ])
+export const inventoryCostLayerOrigin = pgEnum('inventory_cost_layer_origin', [
+  'production',
+  'purchase',
+  'adjustment',
+])
+export const inventoryCostAllocationEventType = pgEnum(
+  'inventory_cost_allocation_event_type',
+  ['sale', 'loss', 'adjustment_negative'],
+)
 export const saleStatus = pgEnum('sale_status', [
   'draft',
   'confirmed',
@@ -502,13 +511,13 @@ export const inventoryCostLayers = pgTable(
       .notNull()
       .references(() => products.id, { onDelete: 'restrict' }),
     productionBatchOutputId: integer('production_batch_output_id')
-      .notNull()
       .references(() => productionBatchOutputs.id, { onDelete: 'restrict' })
       .unique(),
     sourceStockMovementId: integer('source_stock_movement_id')
       .notNull()
       .references(() => stockMovements.id, { onDelete: 'restrict' })
       .unique(),
+    origin: inventoryCostLayerOrigin('origin').notNull().default('production'),
     availableAt: timestamp('available_at', { withTimezone: true }).notNull(),
     originalQuantity: quantity('original_quantity').notNull(),
     originalCost: money('original_cost').notNull(),
@@ -547,6 +556,11 @@ export const inventoryCostAllocations = pgTable(
     saleItemId: integer('sale_item_id').references(() => saleItems.id, {
       onDelete: 'restrict',
     }),
+    eventType: inventoryCostAllocationEventType('event_type')
+      .notNull()
+      .default('sale'),
+    eventReferenceType: varchar('event_reference_type', { length: 40 }),
+    eventReferenceId: integer('event_reference_id'),
     productId: integer('product_id')
       .notNull()
       .references(() => products.id, { onDelete: 'restrict' }),
@@ -565,6 +579,42 @@ export const inventoryCostAllocations = pgTable(
     index('inventory_cost_allocations_sale_item_idx').on(table.saleItemId),
     index('inventory_cost_allocations_outgoing_movement_idx').on(
       table.outgoingStockMovementId,
+    ),
+    index('inventory_cost_allocations_event_reference_idx').on(
+      table.eventReferenceType,
+      table.eventReferenceId,
+    ),
+  ],
+)
+
+/** Immutable restorations linked to one original consumption allocation. */
+export const inventoryCostReversals = pgTable(
+  'inventory_cost_reversals',
+  {
+    id: serial().primaryKey(),
+    originalAllocationId: integer('original_allocation_id')
+      .notNull()
+      .references(() => inventoryCostAllocations.id, { onDelete: 'restrict' }),
+    incomingStockMovementId: integer('incoming_stock_movement_id')
+      .notNull()
+      .references(() => stockMovements.id, { onDelete: 'restrict' }),
+    eventType: varchar('event_type', { length: 24 }).notNull(),
+    referenceType: varchar('reference_type', { length: 40 }).notNull(),
+    referenceId: integer('reference_id').notNull(),
+    quantity: quantity('quantity').notNull(),
+    restoredCost: money('restored_cost').notNull(),
+    createdAt: timestamp('created_at', { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (table) => [
+    unique('inventory_cost_reversals_original_movement_unique').on(
+      table.originalAllocationId,
+      table.incomingStockMovementId,
+    ),
+    index('inventory_cost_reversals_reference_idx').on(
+      table.referenceType,
+      table.referenceId,
     ),
   ],
 )

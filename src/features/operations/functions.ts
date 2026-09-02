@@ -128,7 +128,7 @@ export const createPurchase = createServerFn({ method: 'POST' })
     return getDb().transaction(async (tx) => {
       const productIds = [...new Set(data.items.map((item) => item.productId))]
       const selectedProducts = await tx
-        .select({ id: products.id, name: products.name })
+        .select({ id: products.id, name: products.name, type: products.type })
         .from(products)
         .where(inArray(products.id, productIds))
       const productById = new Map(
@@ -157,7 +157,7 @@ export const createPurchase = createServerFn({ method: 'POST' })
         })
         .returning({ id: purchases.id })
 
-      await tx.insert(purchaseItems).values(
+      const insertedPurchaseItems = await tx.insert(purchaseItems).values(
         normalizedItems.map((item, index) => ({
           purchaseId: purchase.id,
           productId: item.productId,
@@ -166,8 +166,8 @@ export const createPurchase = createServerFn({ method: 'POST' })
           unitCost: millisToUnitCost(item.unitCost!),
           totalAmount: centsToMoney(totals[index]),
         })),
-      )
-      await tx.insert(stockMovements).values(
+      ).returning({ id: purchaseItems.id, productId: purchaseItems.productId })
+      const purchaseMovements = await tx.insert(stockMovements).values(
         normalizedItems.map((item) => ({
           productId: item.productId,
           type: 'purchase' as const,
@@ -176,7 +176,32 @@ export const createPurchase = createServerFn({ method: 'POST' })
           referenceType: 'purchase',
           referenceId: purchase.id,
         })),
-      )
+      ).returning({ id: stockMovements.id, productId: stockMovements.productId })
+      const availableAt = new Date(`${data.purchasedAt}T12:00:00.000Z`)
+      const finishedPurchaseLayers = normalizedItems.flatMap((item, index) => {
+        if (productById.get(item.productId)?.type !== 'finished_product') return []
+        const movement = purchaseMovements.find(
+          (row) => row.productId === item.productId,
+        )
+        const purchaseItem = insertedPurchaseItems.find(
+          (row) => row.productId === item.productId,
+        )
+        if (!movement || !purchaseItem)
+          throw new Error('Não foi possível criar camada FIFO da compra.')
+        return [{
+          productId: item.productId,
+          productionBatchOutputId: null,
+          sourceStockMovementId: movement.id,
+          origin: 'purchase' as const,
+          availableAt,
+          originalQuantity: item.quantity!,
+          originalCost: centsToMoney(totals[index]),
+          remainingQuantity: item.quantity!,
+          remainingCost: centsToMoney(totals[index]),
+        }]
+      })
+      if (finishedPurchaseLayers.length)
+        await tx.insert(inventoryCostLayers).values(finishedPurchaseLayers)
     })
   })
 
@@ -310,6 +335,7 @@ export const createSale = createServerFn({ method: 'POST' })
           productId: layer.productId,
           productionBatchOutputId: layer.productionBatchOutputId,
           sourceStockMovementId: layer.sourceStockMovementId,
+          origin: layer.origin,
           availableAt: layer.availableAt.toISOString(),
           originalQuantity: quantityToThousandths(layer.originalQuantity)!,
           originalCost: moneyToCents(layer.originalCost)!,

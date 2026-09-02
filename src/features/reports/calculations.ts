@@ -211,6 +211,33 @@ export function valueFifoLayers(
     .filter((item) => Number(item.balance) > 0)
 }
 
+/** Financial facts are separate from FIFO stock facts: returns reduce revenue, losses do not. */
+export function summarizeLifecycleFinancials(input: {
+  grossRevenue: string[]
+  returnCredits: string[]
+  cogs: string[]
+  losses: string[]
+  expenses: string[]
+}) {
+  const sum = (values: string[]) =>
+    values.reduce((total, value) => total + (moneyToCents(value) ?? 0n), 0n)
+  const grossRevenue = sum(input.grossRevenue)
+  const returns = sum(input.returnCredits)
+  const netRevenue = grossRevenue - returns
+  const cogs = sum(input.cogs)
+  const losses = sum(input.losses)
+  const expenses = sum(input.expenses)
+  return {
+    grossRevenue: centsToMoney(grossRevenue),
+    returns: centsToMoney(returns),
+    netRevenue: centsToMoney(netRevenue),
+    cogs: centsToMoney(cogs),
+    losses: centsToMoney(losses),
+    grossMargin: centsToMoney(netRevenue - cogs - losses),
+    simpleFinancialResult: centsToMoney(netRevenue - expenses),
+  }
+}
+
 export function valueInventory(
   rows: Array<{
     productId: number

@@ -7,6 +7,7 @@ import {
   groupSalesByProduct,
   summarizeFifoMargins,
   sumReportMoney,
+  summarizeLifecycleFinancials,
   valueFifoLayers,
   valueInventory,
 } from '../src/features/reports/calculations'
@@ -21,6 +22,27 @@ test('agrega faturamento preservando valores históricos por canal', () => {
     { channel: 'Feira', total: '13.00' },
     { channel: 'Sem canal', total: '5.00' },
   ])
+})
+
+test('separa receita líquida, CMV, perdas, margem e resultado financeiro', () => {
+  assert.deepEqual(
+    summarizeLifecycleFinancials({
+      grossRevenue: ['24.00'],
+      returnCredits: ['4.00'],
+      cogs: ['7.56'],
+      losses: ['1.20'],
+      expenses: ['3.00'],
+    }),
+    {
+      grossRevenue: '24.00',
+      returns: '4.00',
+      netRevenue: '20.00',
+      cogs: '7.56',
+      losses: '1.20',
+      grossMargin: '11.24',
+      simpleFinancialResult: '17.00',
+    },
+  )
 })
 
 test('agrega despesas e valoriza estoque com custo médio', () => {
