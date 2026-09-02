@@ -153,6 +153,49 @@ test('calcula CMV e margem bruta FIFO sem somar a receita duas vezes', () => {
   assert.equal(margin.byBatch[0]?.grossMargin, '16.44')
 })
 
+test('mantém o CMV integral quando não há reversão FIFO', () => {
+  const margin = summarizeFifoMargins([{
+    allocationId: 1, saleItemId: 1, productId: 3, productName: 'Brownie',
+    productionBatchId: 18, quantity: '1.000', allocatedCost: '3.78',
+    reversedCost: '0.00', saleItemRevenue: '12.00',
+  }])
+  assert.equal(margin.netRevenue, '12.00')
+  assert.equal(margin.cogs, '3.78')
+  assert.equal(margin.grossMargin, '8.22')
+})
+
+test('abate do CMV somente o custo restaurado em devolução parcial', () => {
+  const margin = summarizeFifoMargins([{
+    allocationId: 1, saleItemId: 1, productId: 3, productName: 'Brownie',
+    productionBatchId: 18, quantity: '2.000', allocatedCost: '7.56',
+    reversedCost: '3.78', saleItemRevenue: '24.00',
+  }])
+  assert.equal(margin.netRevenue, '24.00')
+  assert.equal(margin.cogs, '3.78')
+  assert.equal(margin.grossMargin, '20.22')
+})
+
+test('zera CMV após devolução total sem decidir efeito sobre receita', () => {
+  const margin = summarizeFifoMargins([{
+    allocationId: 1, saleItemId: 1, productId: 3, productName: 'Brownie',
+    productionBatchId: 18, quantity: '1.000', allocatedCost: '3.78',
+    reversedCost: '3.78', saleItemRevenue: '12.00',
+  }])
+  assert.equal(margin.netRevenue, '12.00')
+  assert.equal(margin.cogs, '0.00')
+  assert.equal(margin.grossMargin, '12.00')
+})
+
+test('zera CMV da alocação revertida em cancelamento sem alterar receita no cálculo FIFO', () => {
+  const margin = summarizeFifoMargins([{
+    allocationId: 1, saleItemId: 1, productId: 3, productName: 'Brownie',
+    productionBatchId: 18, quantity: '1.000', allocatedCost: '3.78',
+    reversedCost: '3.78', saleItemRevenue: '12.00',
+  }])
+  assert.equal(margin.netRevenue, '12.00')
+  assert.equal(margin.cogs, '0.00')
+})
+
 test('valoriza estoque FIFO pelas camadas remanescentes e não por custo médio', () => {
   assert.deepEqual(
     valueFifoLayers([

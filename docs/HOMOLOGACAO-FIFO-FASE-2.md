@@ -25,10 +25,10 @@ dados específicos e cria apenas estruturas de ciclo de vida FIFO.
 | G3 | Auditoria GET-only pré-migration | concluído | histórico `13`, schema lifecycle ausente; invariantes HML registrados |
 | G4 | Aplicação única da migration | concluído | journal reparado; `npm run db:migrate` retornou código `0` |
 | G5 | Auditoria GET-only pós-migration | concluído | runtime confirmou 14 migrations e schema lifecycle completo |
-| G6 | Pré-checagem de cenário HML isolado | fechado | requer autorização explícita por cenário |
-| G7 | Execução UI/Playwright de um cenário | proibido | requer G6 aprovado; um cenário por vez |
-| G8 | Reconciliação, idempotência e duplicidade | proibido | requer G7 aprovado e fatos auditados |
-| G9 | Fechamento, artefatos e rollback | proibido | requer G8 aprovado e documentação comprovada |
+| G6 | Pré-checagem de cenário HML isolado | concluído | aprovação GET-only registrada em 2026-09-02 |
+| G7 | Execução UI/Playwright de um cenário | concluído | um ajuste positivo autorizado e reconciliado |
+| G8 | Reconciliação, idempotência e duplicidade | concluído (GET-only) | duplicidade e invariantes auditados; sem teste POST de idempotência |
+| G9 | Fechamento, artefatos e rollback | concluído documentalmente | fatos comprovados de G7/G8 consolidados; nova escrita exige nova autorização |
 
 ### Evidência comprovada de G4/G5 — 2026-09-02
 
@@ -40,9 +40,10 @@ de vida, `2` FKs, `2` checks, `2` índices e `2` unicidades. A tabela de
 reversões tinha `0` linhas, comprovando que a migration não criou fatos de
 negócio.
 
-G6--G9 permanecem fechados até autorização explícita de um cenário isolado;
-esta aplicação não criou cenários FIFO, vendas, compras, devoluções, perdas ou
-ajustes.
+G6 foi aprovado, G7 executou o cenário autorizado e G8 o reconciliou somente
+por GET. Esta aplicação não criou cenários FIFO, vendas, compras, devoluções,
+perdas ou ajustes além do único ajuste positivo documentado na atualização
+factual ao fim deste arquivo.
 
 ### Invariantes HML preservados
 
@@ -190,3 +191,22 @@ Se houver divergência: parar a execução, preservar artefatos e IDs, desativar
 as ações de lifecycle/UI e reimplantar a versão anterior. Não apagar migrations,
 movimentos, alocações, reversões ou dados HML. Corrigir e repetir somente em um
 novo prefixo/cenário após autorização.
+
+## Atualização factual — G7 e G8, 2026-09-02
+
+G7 concluiu o único ajuste positivo autorizado para `PROD003`: `24.000`
+unidades, custo total `R$ 60,48`, origem `Ficha Técnica — Receita Base`, motivo
+`registro da fornada padrão` e referência `HML2-POS-G6-20260902`. Houve
+exatamente um POST, HTTP `200`, sem POST extra. Foram criados o movimento `#22`
+e a camada FIFO `#3`, origem `adjustment`, ambos com quantidade e custo
+originais/remanescentes de `24.000` / `R$ 60,48`.
+
+G8 concluiu somente por GET. A reconciliação confirmou saldo `34.000` de
+`PROD003` (`10.000` da camada #1 e `24.000` da camada #3), um único movimento
+com a referência autorizada, `3` camadas, `2` alocações e `0` reversões.
+Camadas #1/#2, vendas #1/#2 e lote #18 foram preservados. `/estoque` e a
+auditoria retornaram HTTP `200`, somente GET, sem falhas de requisição, banco,
+console ou hidratação. Nenhum teste POST de idempotência foi executado.
+
+G9 foi concluído documentalmente. Qualquer POST de idempotência continua
+dependente de autorização explícita, referência nova e auditoria própria.

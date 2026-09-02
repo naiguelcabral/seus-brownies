@@ -12,7 +12,7 @@ for (const scenario of [
   'ajuste positivo', 'repetição idempotente', 'falha transacional', 'duplo clique UI',
 ]) {
   test(`FIFO fase 2 — ${scenario}`, async ({ page }, testInfo) => {
-    test.skip(true, 'Gate 2 fechado: requer autorização por cenário e pré-checagem read-only.')
+    test.skip(true, 'Cenário bloqueado: requer autorização explícita, referência exclusiva e pré-checagem GET-only.')
     const events: string[] = []
     page.on('console', (message) => events.push(`console:${message.type()}:${message.text()}`))
     page.on('requestfailed', (request) => events.push(`requestfailed:${request.method()}:${request.url()}`))
@@ -20,7 +20,7 @@ for (const scenario of [
     await page.goto('/estoque', { waitUntil: 'networkidle' })
     await expect(page.getByTestId('fifo-lifecycle-client-ready')).toBeVisible()
     // Scenario data and the one authorized click are deliberately supplied only
-    // at execution time, after its separate Gate 2 approval.
+    // at execution time, after its separate, scenario-specific approval.
     await testInfo.attach('sanitized-browser-events.txt', { body: events.join('\n'), contentType: 'text/plain' })
   })
 }

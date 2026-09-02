@@ -75,7 +75,16 @@ export type FifoMarginRow = {
   productionBatchId: number
   quantity: string
   allocatedCost: string
+  reversedCost?: string | null
   saleItemRevenue: string
+}
+
+function netAllocatedCost(row: FifoMarginRow) {
+  const allocatedCost = moneyToCents(row.allocatedCost) ?? 0n
+  const reversedCost = moneyToCents(row.reversedCost ?? null) ?? 0n
+  if (reversedCost > allocatedCost)
+    throw new Error('Reversão FIFO excede o custo da alocação original.')
+  return allocatedCost - reversedCost
 }
 
 function allocateRevenueAcrossLayers(rows: FifoMarginRow[]) {
@@ -131,7 +140,7 @@ export function summarizeFifoMargins(rows: FifoMarginRow[]) {
   const totals = rows.reduce(
     (sum, row) => {
       sum.revenue += revenueByAllocation.get(row.allocationId) ?? 0n
-      sum.cogs += moneyToCents(row.allocatedCost) ?? 0n
+      sum.cogs += netAllocatedCost(row)
       return sum
     },
     { revenue: 0n, cogs: 0n },
@@ -142,7 +151,7 @@ export function summarizeFifoMargins(rows: FifoMarginRow[]) {
       const key = keyFor(row)
       const current = byKey.get(key) ?? { revenue: 0n, cogs: 0n }
       current.revenue += revenueByAllocation.get(row.allocationId) ?? 0n
-      current.cogs += moneyToCents(row.allocatedCost) ?? 0n
+      current.cogs += netAllocatedCost(row)
       byKey.set(key, current)
     }
     return byKey

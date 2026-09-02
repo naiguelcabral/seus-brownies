@@ -44,10 +44,16 @@ npm test
 
 A rota `/relatorios` filtra por período e apresenta faturamento confirmado por
 canal, despesas por categoria, estoque valorizado por custo médio e vendas por
-produto. A primeira entrega local de CMV FIFO está documentada em
-[FIFO-CMV-PRIMEIRA-ENTREGA.md](docs/FIFO-CMV-PRIMEIRA-ENTREGA.md), mas a
-migration correspondente ainda não foi aplicada; até isso ocorrer, não há
-margem realizada por produto no banco.
+produto. A homologação FIFO local está registrada em
+[HOMOLOGACAO-FIFO-FASE-2.md](docs/HOMOLOGACAO-FIFO-FASE-2.md): G6, G7 e G8
+foram concluídos e G9 foi consolidado documentalmente. O único ajuste positivo
+autorizado foi para `PROD003`, com o movimento `#22` e a camada FIFO `#3` de
+`24.000` unidades e `R$ 60,48`. O estado reconciliado possui `3` camadas, `2`
+alocações e `0` reversões.
+
+A referência `HML2-POS-G6-20260902` foi consumida e não pode ser reutilizada.
+Qualquer novo cenário FIFO, escrita ou teste POST de idempotência exige
+autorização explícita, referência inédita e auditoria própria.
 
 ## Prévia segura do workbook
 

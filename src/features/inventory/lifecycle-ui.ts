@@ -5,6 +5,17 @@ import {
   returnSaleValues,
 } from '#/features/inventory/lifecycle-contracts'
 
+export type NegativeInventoryFormValues = {
+  productId: string
+  quantity: string
+  reason: string
+  reference: string
+}
+
+export function createNegativeInventoryFormValues(): NegativeInventoryFormValues {
+  return { productId: '', quantity: '', reason: '', reference: '' }
+}
+
 export function canCancelSale(status: string) {
   return status === 'confirmed' || status === 'paid'
 }

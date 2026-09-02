@@ -250,6 +250,16 @@ export const getFifoMigrationAudit = createServerFn({ method: 'GET' }).handler(
         where source_key like ${`fifo-lifecycle:adjustment-positive:%:${positiveAdjustmentG6Prefix}`}
         order by id
       `)).rows,
+      positiveAdjustmentDetails: async () => (await database.execute(sql`
+        select movement.id as movement_id, movement.product_id, movement.quantity_delta,
+          movement.allocated_cost, movement.source_key, movement.reference_type, movement.notes,
+          layer.id as layer_id, layer.origin, layer.original_quantity, layer.original_cost,
+          layer.remaining_quantity, layer.remaining_cost
+        from public.stock_movements movement
+        join public.inventory_cost_layers layer on layer.source_stock_movement_id = movement.id
+        where movement.source_key like ${`fifo-lifecycle:adjustment-positive:%:${positiveAdjustmentG6Prefix}`}
+        order by movement.id
+      `)).rows,
       positiveAdjustmentProducts: async () => (await database.execute(sql`
         select p.id, p.sku, p.name, p.product_type, p.measurement_unit,
           count(l.id)::int as fifo_layer_count
@@ -277,6 +287,7 @@ export const getFifoMigrationAudit = createServerFn({ method: 'GET' }).handler(
       g6PositiveAdjustment: {
         prefix: positiveAdjustmentG6Prefix,
         existingMovements: facts.positiveAdjustmentPrefix,
+        details: facts.positiveAdjustmentDetails,
         activeProducts: facts.positiveAdjustmentProducts,
       },
       classification: classifyFifoMigrationAudit(audit),

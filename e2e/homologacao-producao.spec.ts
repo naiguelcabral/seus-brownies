@@ -4,14 +4,14 @@ import type { Locator } from '@playwright/test'
 async function selectByText(select: Locator, text: RegExp) { const option = select.locator('option').filter({ hasText: text }).first(); await select.selectOption((await option.getAttribute('value')) ?? '') }
 async function loggedStep(name: string, action: () => Promise<void>) { console.log(`INÍCIO: ${name}`); await test.step(name, action); console.log(`FIM: ${name}`) }
 
-test('compra e entrada no estoque', async ({ page }) => {
+test.skip('compra e entrada no estoque', async ({ page }) => {
   const prefix = 'HML-20260829-COMPRA-01'
   await loggedStep('abrir compras', async () => { await page.goto('/compras', { waitUntil: 'networkidle' }); await expect(page.locator('main').getByRole('heading', { name: 'Compras', exact: true })).toBeVisible() })
   await loggedStep('registrar compra HML', async () => { await page.getByLabel('Fornecedor *').fill(`${prefix} insumos`); const item = page.locator('form').last().locator('.rounded-xl').first(); await selectByText(item.getByLabel('Produto'), /Açúcar/); await item.getByLabel('Quantidade').fill('100'); await item.getByLabel('Custo unitário').fill('1'); await page.getByLabel('Observações').fill(prefix); await page.getByRole('button', { name: 'Registrar compra' }).click(); await expect(page.getByText('Compra registrada e estoque atualizado.')).toBeVisible(); await expect(page.getByText(`${prefix} insumos`)).toBeVisible() })
   await loggedStep('conferir entrada no estoque', async () => { await page.goto('/estoque', { waitUntil: 'networkidle' }); await expect(page.getByText(/Açúcar/).first()).toBeVisible(); await expect(page.getByText(/compra/i).first()).toBeVisible() })
 })
 
-test('criação e prévia do lote', async ({ page }) => {
+test.skip('criação e prévia do lote', async ({ page }) => {
   const prefix = 'HML-20260829-LOTE-01'
   await loggedStep('comprar insumos complementares', async () => {
     await page.goto('/compras', { waitUntil: 'networkidle' })

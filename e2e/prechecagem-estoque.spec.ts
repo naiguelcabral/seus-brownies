@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test'
 
-test('pré-checagem visual de estoque para produção', async ({ page }) => {
+test.skip('pré-checagem visual de estoque para produção', async ({ page }) => {
   const consoleMessages: Array<{ type: string; text: string; location: string }> = []
   page.on('console', (message) => {
     if (message.type() === 'error' || message.type() === 'warning') {

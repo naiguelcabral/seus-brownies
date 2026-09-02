@@ -5,7 +5,7 @@ import { useServerFn } from '@tanstack/react-start'
 import { ManagementLayout } from '#/components/ManagementLayout'
 import { listInventory } from '#/features/operations/functions'
 import { recordLossLifecycle, recordNegativeAdjustmentLifecycle, recordPositiveAdjustmentLifecycle, returnSaleLifecycle } from '#/features/inventory/lifecycle-writers'
-import { canSubmitLifecycle, lifecycleErrorMessage, validateLifecycleForm } from '#/features/inventory/lifecycle-ui'
+import { canSubmitLifecycle, createNegativeInventoryFormValues, lifecycleErrorMessage, validateLifecycleForm } from '#/features/inventory/lifecycle-ui'
 import { PositiveAdjustmentForm } from '#/features/inventory/positive-adjustment-form'
 import { formatDateTime } from '#/lib/format'
 
@@ -152,7 +152,8 @@ function LifecycleActions({ products }: { products: Array<{ id: number; name: st
   const [pending, setPending] = useState(false)
   const [message, setMessage] = useState<string | null>(null)
   const [returnValues, setReturnValues] = useState({ saleItemId: '', quantity: '', reason: '', reference: '' })
-  const [negativeValues, setNegativeValues] = useState({ productId: '', quantity: '', reason: '', reference: '' })
+  const [lossValues, setLossValues] = useState(createNegativeInventoryFormValues)
+  const [negativeAdjustmentValues, setNegativeAdjustmentValues] = useState(createNegativeInventoryFormValues)
   const [positiveValues, setPositiveValues] = useState({ productId: '', quantity: '', reason: '', reference: '', totalCost: '', originReference: '' })
   const [positiveConfirmed, setPositiveConfirmed] = useState(false)
   async function run(kind: 'return' | 'loss' | 'negative' | 'positive', values: Record<string, string>, confirmed = false) {
@@ -175,8 +176,8 @@ function LifecycleActions({ products }: { products: Array<{ id: number; name: st
   return <section className="mt-6 rounded-2xl border border-[#ecdfd4] bg-white p-5"><h2 className="font-bold">Eventos FIFO de ciclo de vida</h2><p className="mt-1 text-xs text-[#896d5b]">As ações abaixo exigem a migration 0013 e são registradas pelo servidor em uma única transação.</p>{message ? <p className="mt-3 rounded-lg bg-[#fff5e7] p-3 text-sm text-[#75411f]">{message}</p> : null}
     <div className="mt-4 grid gap-4 lg:grid-cols-2">
       <form className="rounded-xl border border-[#ead9ca] p-3 space-y-2" onSubmit={(event) => { event.preventDefault(); void run('return', returnValues) }}><strong>Devolução de venda</strong>{field('ID do item da venda', returnValues.saleItemId, (value) => setReturnValues({ ...returnValues, saleItemId: value }))}{field('Quantidade', returnValues.quantity, (value) => setReturnValues({ ...returnValues, quantity: value }), '1,000')}{field('Motivo', returnValues.reason, (value) => setReturnValues({ ...returnValues, reason: value }))}{field('Referência', returnValues.reference, (value) => setReturnValues({ ...returnValues, reference: value }))}<button disabled={pending} className="action-button">Registrar devolução</button></form>
-      <NegativeForm title="Perda de estoque" values={negativeValues} setValues={setNegativeValues} product={product} field={field} pending={pending} onSubmit={(confirmed) => run('loss', negativeValues, confirmed)} />
-      <NegativeForm title="Ajuste negativo" values={negativeValues} setValues={setNegativeValues} product={product} field={field} pending={pending} onSubmit={(confirmed) => run('negative', negativeValues, confirmed)} />
+      <NegativeForm title="Perda de estoque" values={lossValues} setValues={setLossValues} product={product} field={field} pending={pending} onSubmit={(confirmed) => run('loss', lossValues, confirmed)} />
+      <NegativeForm title="Ajuste negativo" values={negativeAdjustmentValues} setValues={setNegativeAdjustmentValues} product={product} field={field} pending={pending} onSubmit={(confirmed) => run('negative', negativeAdjustmentValues, confirmed)} />
       <PositiveAdjustmentForm products={products} values={positiveValues} setValues={setPositiveValues} pending={pending} confirmed={positiveConfirmed} setConfirmed={setPositiveConfirmed} onSubmit={() => { void run('positive', positiveValues, positiveConfirmed) }} />
     </div></section>
 }

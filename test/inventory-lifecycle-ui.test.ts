@@ -4,7 +4,7 @@ import { createElement } from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
 
 import { PositiveAdjustmentForm } from '../src/features/inventory/positive-adjustment-form'
-import { canCancelSale, canSubmitLifecycle, canSubmitPositiveAdjustment, lifecycleErrorMessage, validateLifecycleForm } from '../src/features/inventory/lifecycle-ui'
+import { canCancelSale, canSubmitLifecycle, canSubmitPositiveAdjustment, createNegativeInventoryFormValues, lifecycleErrorMessage, validateLifecycleForm } from '../src/features/inventory/lifecycle-ui'
 
 test('cancelamento só fica disponível para venda confirmada ou paga', () => {
   assert.equal(canCancelSale('draft'), false)
@@ -26,6 +26,19 @@ test('estado pendente ou confirmação ausente bloqueia reenvio local', () => {
   assert.equal(canSubmitLifecycle(true), false)
   assert.equal(canSubmitLifecycle(false, true, false), false)
   assert.equal(canSubmitLifecycle(false, true, true), true)
+})
+
+test('perda e ajuste negativo iniciam com estados independentes', () => {
+  const lossValues = createNegativeInventoryFormValues()
+  const adjustmentValues = createNegativeInventoryFormValues()
+
+  lossValues.productId = '3'
+  lossValues.quantity = '1.000'
+  lossValues.reason = 'Quebra'
+
+  assert.deepEqual(adjustmentValues, {
+    productId: '', quantity: '', reason: '', reference: '',
+  })
 })
 
 const validPositiveAdjustment = {

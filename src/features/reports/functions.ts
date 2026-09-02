@@ -6,6 +6,7 @@ import {
   expenses,
   inventoryCostAllocations,
   inventoryCostLayers,
+  inventoryCostReversals,
   operationalCosts,
   products,
   productionBatchConsumptions,
@@ -279,7 +280,7 @@ export const getOperationalReports = createServerFn({ method: 'GET' })
       }>
     } | null = null
     try {
-      const [allocationRows, layerRows] = await Promise.all([
+      const [allocationRows, reversalRows, layerRows] = await Promise.all([
         database
           .select({
             allocationId: inventoryCostAllocations.id,
@@ -321,6 +322,12 @@ export const getOperationalReports = createServerFn({ method: 'GET' })
           ),
         database
           .select({
+            originalAllocationId: inventoryCostReversals.originalAllocationId,
+            restoredCost: inventoryCostReversals.restoredCost,
+          })
+          .from(inventoryCostReversals),
+        database
+          .select({
             productId: products.id,
             productName: products.name,
             unit: products.unit,
@@ -331,8 +338,24 @@ export const getOperationalReports = createServerFn({ method: 'GET' })
           .innerJoin(products, eq(inventoryCostLayers.productId, products.id)),
       ])
       if (allocationRows.length || layerRows.length) {
+        const reversedCostByAllocation = new Map<number, bigint>()
+        for (const reversal of reversalRows) {
+          const restoredCost = moneyToCents(reversal.restoredCost) ?? 0n
+          reversedCostByAllocation.set(
+            reversal.originalAllocationId,
+            (reversedCostByAllocation.get(reversal.originalAllocationId) ?? 0n)
+              + restoredCost,
+          )
+        }
         fifo = {
-          ...summarizeFifoMargins(allocationRows),
+          ...summarizeFifoMargins(
+            allocationRows.map((row) => ({
+              ...row,
+              reversedCost: centsToMoney(
+                reversedCostByAllocation.get(row.allocationId) ?? 0n,
+              ),
+            })),
+          ),
           inventory: valueFifoLayers(layerRows),
         }
       }

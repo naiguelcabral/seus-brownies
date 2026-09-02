@@ -1,4 +1,4 @@
-# FIFO de CMV - primeira entrega local
+# FIFO de CMV - estado da entrega e homologação
 
 Esta entrega introduz camadas de custo para saídas concluídas de produção e
 alocações imutáveis de custo para vendas `confirmed` e `paid`.
@@ -17,25 +17,28 @@ alocações imutáveis de custo para vendas `confirmed` e `paid`.
 - A criação da venda bloqueia produtos e camadas em ordem determinística, sem
   `SKIP LOCKED`, e falha integralmente quando a camada não cobre a quantidade.
 
-## Migration e backfill
+## Estado aplicado em development
 
-`drizzle/0012_fifo_cost_layers.sql` ainda **não foi aplicada**. Ela é portátil:
-cria `inventory_cost_layers` e `inventory_cost_allocations` e materializa de
-forma idempotente as saídas concluídas de produção. Em banco vazio, ou sem
-produção histórica, o backfill genérico não insere linhas. A migration não cita
-HML, IDs ou dados de homologação.
+As migrations `0012_fifo_cost_layers.sql` e `0013_fifo_lifecycle.sql` estão
+aplicadas exclusivamente em `development`. A auditoria runtime GET-only
+confirmou `14` registros no histórico Drizzle e o schema lifecycle completo.
+Não há evidência nesta documentação de aplicação, auditoria ou homologação em
+`production`.
 
-O backfill HML é separado e opcional: `scripts/backfill-hml-fifo.ts`. Ele não
-é importado por migrations, startup ou painel e exige
-`--environment development --confirm`. O processo precisa já receber a conexão
-de runtime configurada; o script não lê arquivos de ambiente. Antes de escrever
-em uma única transação, exige as duas vendas HML, seus itens `PROD003` de
-`1.000` a `12.00`, dois movimentos `sale` de `-1.000` e a saída reconciliada
-do lote `#18` (`12.000` / `45.33`). O resultado é CMV `3.78` para cada venda e
-saldo `10.000` / `37.77`; estado parcial ou divergente aborta sem escrita.
+`0012` cria `inventory_cost_layers` e `inventory_cost_allocations` e
+materializa de forma idempotente as saídas concluídas de produção. O backfill
+HML separado foi executado anteriormente em `development` para preservar duas
+vendas históricas de homologação: as alocações de CMV permanecem em `R$ 3,78`
+para cada venda e a camada de `PROD003` do lote `#18` permanece em
+`10.000` unidades / `R$ 37,77`.
 
-Dados reais de production exigem uma rotina de backfill própria, aprovada e
-auditada. Eles não devem reutilizar nem depender da rotina HML.
+A migration `0013` é schema-only: não contém HML, IDs, backfill ou DML. Ela
+habilita o ciclo lifecycle com origens de camada e reversões imutáveis. Os
+snapshots Drizzle de `0012` e `0013` continuam pendentes de higiene em um plano
+separado; eles não devem ser criados manualmente durante a operação normal.
+
+Qualquer backfill de dados reais requer uma rotina própria, aprovada e
+auditada. Ele não pode reutilizar nem depender dos dados HML.
 
 ## Relatórios
 
@@ -44,18 +47,31 @@ bruta, margem por produto, margem por lote e estoque valorizado pelas camadas
 remanescentes. Resultado financeiro simples continua separado: receita menos
 despesas não é margem bruta.
 
-## Fora do escopo desta entrega
+## Limites da homologação atual
 
-Perdas, ajustes negativos, devoluções, cancelamentos posteriores e produtos
-acabados comprados diretamente ainda não consomem/restauram camadas FIFO. Eles
-devem entrar numa fase posterior com movimentos compensatórios imutáveis; até
-lá, não devem ser tratados como se tivessem CMV FIFO rastreável.
+A fase 2 possui implementação local para cancelamentos, devoluções, perdas,
+ajustes negativos, ajustes positivos e camadas de compra de produto acabado.
+Isso não equivale a homologação operacional contínua.
 
-## Fase 2 proposta (implementada localmente, não aplicada)
+O único cenário lifecycle executado por interface foi um ajuste positivo
+autorizado de `PROD003`, referência `HML2-POS-G6-20260902`: movimento `#22` e
+camada FIFO `#3`, ambos de `24.000` unidades e `R$ 60,48`. G6 foi uma
+pré-checagem GET-only, G8 reconciliou o resultado somente por GET e G9 foi
+apenas fechamento documental.
+
+Cancelamento, devolução parcial ou total, devolução acima do permitido, perda,
+ajuste negativo, compra de produto acabado, concorrência PostgreSQL, duplo
+clique e rollback operacional continuam pendentes de homologação real,
+isolada e autorizada. A devolução atualmente recompõe somente estoque/CMV no
+desenho local; crédito, reembolso ou estorno de receita continuam decisões
+financeiras pendentes e não estão implementados nem homologados.
+
+## Fase 2 — implementação local e schema aplicado
 
 `drizzle/0013_fifo_lifecycle.sql` é incremental e schema-only: não contém HML,
-IDs, backfill ou dados de development. Nesta etapa nenhuma migration, conexão
-Neon ou alteração de dados foi executada.
+IDs, backfill ou dados de development. A migration está aplicada em
+`development`, mas o comportamento abaixo, exceto pelo único ajuste positivo
+documentado, ainda requer homologação real por cenário.
 
 - Cancelamentos/devoluções criam fatos de reversão que apontam à alocação
   original; não apagam alocação, restauram a mesma camada e não podem superar
@@ -70,10 +86,10 @@ Neon ou alteração de dados foi executada.
   LOCKED`; movimento, camada, alocação/reversão e saldo pertencem à mesma
   transação. Draft/cancelled não geram nova baixa e não há delete de fatos.
 
-Aplicação futura em development: backup lógico, revisão/aplicação isolada de
-`0013`, deploy do escritor, e somente depois scripts de HML futuros separados,
-idempotentes e autorizados. Rollback é operacional: parar escritores e
-reimplantar a versão anterior; jamais apagar fatos contábeis como rollback.
+Para cada cenário futuro em `development`, exigir autorização explícita,
+referência inédita, pré-auditoria GET-only, execução isolada e reconciliação
+posterior. O rollback continua sendo operacional: parar writers/UI e
+reimplantar a versão anterior, sem apagar fatos contábeis.
 
 ### Writers transacionais locais
 
@@ -88,8 +104,10 @@ Os escritores bloqueiam produtos e camadas em ordem crescente (produto,
 `available_at`, camada), preservam alocações originais e registram reversões
 imutáveis. Perdas/ajustes negativos criam movimento e alocações no mesmo
 commit; ajuste positivo cria o movimento e sua camada de origem `adjustment`.
-Chaves de origem tornam perda e ajustes idempotentes por referência. A UI e
-qualquer homologação em banco seguem fora do escopo desta alteração local.
+Chaves de origem tornam perda e ajustes idempotentes por referência. A única
+evidência de operação real por interface é o ajuste positivo de `PROD003`
+registrado acima; os demais writers ainda não foram homologados contra
+PostgreSQL real.
 
 Os testes locais de persistência usam um mock transacional Drizzle reutilizável.
 Ele registra sonda de schema, locks, inserts, updates, commit e rollback, e
@@ -112,11 +130,13 @@ formulários separados para devolução por item de venda, perda, ajuste negativ
 e ajuste positivo. A interface valida formato e obrigatoriedade, exige
 confirmação para saídas e bloqueia novo envio enquanto há operação pendente.
 Ela nunca calcula custo FIFO nem presume êxito: o writer continua sendo a fonte
-de verdade e a ausência de `0013` recebe orientação operacional explícita.
-Esta UI não foi homologada em banco nesta etapa.
+de verdade e a ausência de `0013` recebe orientação operacional explícita. A
+interface foi usada somente no ajuste positivo autorizado; os demais fluxos
+permanecem sem homologação em banco.
 
 ## Rollback prático
 
-Em uma aplicação futura, interrompa novas confirmações/pagamentos e publique
-uma versão que ignore as tabelas FIFO. Preserve as alocações para auditoria;
-não há rollback automático que apague fatos contábeis.
+Em caso de divergência operacional, interrompa novas confirmações/pagamentos e
+publique uma versão que ignore as ações lifecycle. Preserve alocações e
+reversões para auditoria; não há rollback automático que apague fatos
+contábeis. Este procedimento ainda não foi homologado em incidente real.

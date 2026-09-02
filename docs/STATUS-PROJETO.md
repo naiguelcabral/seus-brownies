@@ -1,6 +1,6 @@
 # Status do projeto — Seus Brownies / Cacau v1
 
-> Atualizado em 30 de agosto de 2026. Este é o resumo operacional do projeto.
+> Atualizado em 2 de setembro de 2026. Este é o resumo operacional do projeto.
 > Os documentos de prévia e importação preservam o histórico e a auditoria de
 > cada etapa; não são substituídos por esta página.
 
@@ -104,18 +104,25 @@ como trilha de auditoria.
 - Faturamento confirmado, despesas e resultado financeiro simples são
   `24.00`, `1.00` e `23.00`. Isso não representa margem realizada: o modelo
   ainda não vincula venda a lote específico.
-- As migrations chegam a `0011_demonic_redwing.sql`; `unit_cost` usa
+- A migration `0013_fifo_lifecycle` está aplicada; `unit_cost` usa
   `numeric(12,3)` e os custos alocados de produção usam `numeric(12,2)`.
 
 ## FIFO de CMV local
 
-A primeira entrega local de FIFO está preparada, mas ainda não foi aplicada em
-nenhum banco: [FIFO-CMV-PRIMEIRA-ENTREGA.md](FIFO-CMV-PRIMEIRA-ENTREGA.md).
-Ela cria camadas somente para saídas concluídas de produção e aloca CMV para
-vendas confirmadas/pagas. A migration é portátil; o backfill HML foi separado
-em script opt-in exclusivo de development. Perdas, ajustes, devoluções,
-cancelamentos posteriores e produtos acabados comprados diretamente permanecem
-explicitamente adiados para a próxima fase.
+A homologação FIFO está concluída até G9 documental:
+[HOMOLOGACAO-FIFO-FASE-2.md](HOMOLOGACAO-FIFO-FASE-2.md). G6 aprovou a
+pré-checagem GET-only, G7 realizou um único ajuste positivo autorizado e G8
+reconciliou os fatos somente por GET; G9 consolidou as evidências e as
+restrições documentais.
+
+O ajuste autorizado foi para `PROD003`: o movimento `#22` e a camada FIFO
+`#3` correspondem a `24.000` unidades e `R$ 60,48`. A referência
+`HML2-POS-G6-20260902` está consumida e não pode ser reutilizada. O estado
+reconciliado possui `3` camadas, `2` alocações e `0` reversões; as camadas
+`#1/#2`, as vendas `#1/#2` e o lote `#18` permanecem preservados.
+
+Nenhum novo cenário FIFO, escrita ou teste POST de idempotência pode ser
+iniciado sem autorização explícita, referência inédita e auditoria própria.
 
 ## Não faz parte do estado entregue
 
