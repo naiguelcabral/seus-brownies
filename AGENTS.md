@@ -16,6 +16,7 @@ Manter e evoluir o Cacau v1, sistema operacional dos Seus Brownies, preservando 
 6. `docs/governance/DEFINITION-OF-DONE.md`
 7. `docs/governance/HUMAN-APPROVALS.md`
 8. `docs/governance/DEVELOPMENT-WORKFLOW.md`
+9. `docs/governance/CODEX-USAGE-POLICY.md`
 
 Documentos de homologação/importação continuam sendo evidência histórica e devem ser consultados quando a tarefa tocar o respectivo domínio.
 
@@ -75,7 +76,9 @@ Para cada tarefa:
 
 ## Regras especiais do repositório
 
-- Não executar `npm run desligar`/`DESLIGARTUDO` automaticamente, pois o script pode criar commit e sincronizar Git.
+- Não executar `npm run desligar`/`./DESLIGARTUDO` automaticamente durante trabalho normal, pois o script cria commit e sincroniza Git.
+- Exceção obrigatória: quando a franquia relevante do Codex atingir 5% restante ou menos, em branch de trabalho e após fechar o handoff, executar `./DESLIGARTUDO` conforme `docs/governance/CODEX-USAGE-POLICY.md`.
+- Nunca executar o encerramento automático na `main`.
 - `db:push` não substitui migration auditável em ambiente com dados relevantes.
 - Não remover/enfraquecer teste para fazê-lo passar.
 - Falha de integridade, segurança, estoque, dinheiro, idempotência ou lifecycle bloqueia conclusão.
