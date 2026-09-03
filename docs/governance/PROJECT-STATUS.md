@@ -62,8 +62,9 @@ Este documento é a referência canônica de alto nível para o estado atual do 
   autorização/principal/auditoria. A migration `0014` foi aplicada somente no
   branch Neon de homologação `g1-auth-hml`: criou a allowlist de acesso, o
   controle de tentativas e a auditoria, sem criar usuários nem alterar FIFO.
-  Não há integração funcional de provedor, sessão, secret ou e-mail
-  configurada.
+  O adaptador Neon Auth/TanStack, CSRF e guards das 30 Server Functions estão
+  preparados e falham fechados até a configuração externa. Não há sessão real,
+  secret, e-mail, callback, Turnstile ou usuário configurado.
 
 ## Ainda não entregue
 

@@ -2,10 +2,11 @@
 
 ## Estado
 
-Proposta técnica de 2026-09-03. Ela descreve o menor privilégio para as Server
-Functions existentes, mas **não está aplicada**. A autorização efetiva de uma
-mutação operacional só poderá ser adicionada após revisão humana desta matriz,
-conforme `HUMAN-APPROVALS.md`.
+Matriz técnica de 2026-09-03. Seus guards estruturais estão aplicados às 30
+Server Functions existentes: sem principal Neon verificado, vínculo ativo em
+`app_user_access` e papel canônico, elas falham fechadas. A integração ainda
+não está ativa em HML porque os bindings externos e secrets não foram gravados.
+Qualquer mudança material de permissões continua sujeita a `HUMAN-APPROVALS.md`.
 
 ## Princípios
 

@@ -10,6 +10,7 @@ import {
   sales,
   stockMovements,
 } from '#/db/schema'
+import { requireServerFunctionPermission } from '#/features/auth/server-function-middleware'
 import {
   cancelSaleValues,
   negativeInventoryValues,
@@ -136,7 +137,9 @@ export async function persistSaleCancellation(database: LifecycleDatabase, data:
     } catch (error) { assertFifoLifecycleSchema(error) }
   })
 }
-export const cancelSaleLifecycle = createServerFn({ method: 'POST' }).validator(cancelSaleValues).handler(async ({ data }) => {
+export const cancelSaleLifecycle = createServerFn({ method: 'POST' })
+  .middleware([requireServerFunctionPermission('cancelSaleLifecycle')])
+  .validator(cancelSaleValues).handler(async ({ data }) => {
   const { getDb } = await import('#/db/index')
   return persistSaleCancellation(getDb(), data)
 })
@@ -158,7 +161,9 @@ export async function persistSaleReturn(database: LifecycleDatabase, data: Retur
     } catch (error) { assertFifoLifecycleSchema(error) }
   })
 }
-export const returnSaleLifecycle = createServerFn({ method: 'POST' }).validator(returnSaleValues).handler(async ({ data }) => {
+export const returnSaleLifecycle = createServerFn({ method: 'POST' })
+  .middleware([requireServerFunctionPermission('returnSaleLifecycle')])
+  .validator(returnSaleValues).handler(async ({ data }) => {
   const { getDb } = await import('#/db/index')
   return persistSaleReturn(getDb(), data)
 })
@@ -176,11 +181,15 @@ export async function persistNegativeInventoryEvent(database: LifecycleDatabase,
   })
 }
 
-export const recordLossLifecycle = createServerFn({ method: 'POST' }).validator(negativeInventoryValues).handler(async ({ data }) => {
+export const recordLossLifecycle = createServerFn({ method: 'POST' })
+  .middleware([requireServerFunctionPermission('recordLossLifecycle')])
+  .validator(negativeInventoryValues).handler(async ({ data }) => {
   const { getDb } = await import('#/db/index')
   return persistNegativeInventoryEvent(getDb(), data, 'loss')
 })
-export const recordNegativeAdjustmentLifecycle = createServerFn({ method: 'POST' }).validator(negativeInventoryValues).handler(async ({ data }) => {
+export const recordNegativeAdjustmentLifecycle = createServerFn({ method: 'POST' })
+  .middleware([requireServerFunctionPermission('recordNegativeAdjustmentLifecycle')])
+  .validator(negativeInventoryValues).handler(async ({ data }) => {
   const { getDb } = await import('#/db/index')
   return persistNegativeInventoryEvent(getDb(), data, 'adjustment_negative')
 })
@@ -198,7 +207,9 @@ export async function persistPositiveInventoryAdjustment(database: LifecycleData
     } catch (error) { assertFifoLifecycleSchema(error) }
   })
 }
-export const recordPositiveAdjustmentLifecycle = createServerFn({ method: 'POST' }).validator(positiveInventoryValues).handler(async ({ data }) => {
+export const recordPositiveAdjustmentLifecycle = createServerFn({ method: 'POST' })
+  .middleware([requireServerFunctionPermission('recordPositiveAdjustmentLifecycle')])
+  .validator(positiveInventoryValues).handler(async ({ data }) => {
   const { getDb } = await import('#/db/index')
   return persistPositiveInventoryAdjustment(getDb(), data)
 })

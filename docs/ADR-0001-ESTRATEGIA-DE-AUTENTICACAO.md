@@ -3,8 +3,9 @@
 - **Status:** aceito — implementação reversível da G1 autorizada
 - **Data:** 2026-09-03
 - **Escopo:** identidade, sessão, RBAC, recuperação de senha, proteção contra
-  abuso e auditoria. Não autoriza implementação, migration, secrets, deploy ou
-  conexão com banco.
+  abuso e auditoria. A estrutura local e a migration HML autorizada foram
+  concluídas; não autoriza gravar secrets, configurar serviços externos, criar
+  usuário/Admin, deploy ou produção.
 
 ## Contexto
 
@@ -58,11 +59,10 @@ aplicação Cacau**.
 O schema gerenciado `neon_auth` pertence ao provedor e não será criado,
 alterado ou migrado pelo Cacau. A migration local `0014_puzzling_masque.sql`
 cria somente o vínculo de acesso, o estado durável de abuso e a auditoria do
-Cacau. A escolha do SDK compatível será fixada no início da integração: a
-documentação atual do Neon indica `@neondatabase/neon-js/auth` para clientes
-Neon Auth, enquanto integrações Better Auth também exigem compatibilidade de
-AsyncLocalStorage no Cloudflare Workers. Nenhum SDK, endpoint, secret ou flag
-de Worker é configurado por esta ADR.
+Cacau; ela foi aplicada somente no branch Neon HML autorizado. O SDK escolhido
+para a estrutura é `@neondatabase/neon-js/auth`, cuja camada server exige um
+contexto request-scoped compatível com AsyncLocalStorage no Cloudflare Workers.
+Nenhum endpoint, secret ou flag de Worker foi configurado por esta ADR.
 
 Em 2026-09-03, os pacotes oficiais avaliados para essa integração
 (`@neondatabase/neon-js` e `@neondatabase/auth`) estavam em versão beta. Sob a
@@ -141,13 +141,13 @@ depender apenas da ocultação de controles na UI.
 
 ## Consequências
 
-- Será necessária uma etapa posterior, autorizada, para instalar/configurar o
-  cliente compatível, provisionar o endpoint por branch e configurar secrets
-  fora do repositório.
+- Será necessária uma etapa posterior, autorizada, para gravar os bindings do
+  cliente compatível, configurar o endpoint por branch e secrets fora do
+  repositório.
 - A configuração de compatibilidade do runtime Worker e do SDK só será alterada
   após revisão humana, junto com os secrets e o ambiente de desenvolvimento.
-- A migration `0014_puzzling_masque.sql` é somente uma proposta revisável; ela
-  não autoriza aplicação em banco nem toca no schema gerenciado `neon_auth`.
+- A migration `0014_puzzling_masque.sql` foi aplicada somente em `g1-auth-hml`
+  e não toca o schema gerenciado `neon_auth`.
 - A Fase G1 deve criar testes de acesso negativo para cada Server Function de
   mutação e para escopo de leitura operacional.
 - A entrega não altera regras de quantidade, custo, origem, motivo, FIFO ou
@@ -166,13 +166,15 @@ quando aplicável.
 
 Continuam sendo gates humanos antes da integração operacional irreversível:
 
-1. provisionamento do Neon Auth e configuração de segredos;
+1. gravação dos secrets HML, origem confiável e callbacks do Neon Auth;
 2. contratação/configuração de provedor de e-mail, remetente e domínios de
    retorno;
-3. revisão da migration e sua aplicação em ambiente relevante;
-4. matriz de permissões por Server Function antes de proteger mutações
-   operacionais já existentes;
+3. configuração de Turnstile e rate limiting de HML;
+4. bootstrap auditado do primeiro Admin de homologação;
 5. retenção, minimização e acesso aos eventos de auditoria de autenticação.
+
+Os nomes, locais e ordem segura dessas configurações estão em
+[`G1-EXTERNAL-CONFIGURATION.md`](governance/G1-EXTERNAL-CONFIGURATION.md).
 
 ## Referências técnicas
 

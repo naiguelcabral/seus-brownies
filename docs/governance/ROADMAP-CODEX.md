@@ -27,9 +27,12 @@ O Codex consegue identificar estado, regras, limites e próxima tarefa sem depen
 ## Fase G1 — Segurança, autenticação e acesso
 
 - [x] Definir ADR da solução de autenticação definitiva (`ADR-0001` aceito).
-- [~] Mapear permissões, middleware e estrutura reversível de autenticação.
+- [x] Mapear permissões e aplicar guards estruturais nas 30 Server Functions,
+      com CSRF explícito e falha fechada sem principal válido.
+- [~] Configurar integração externa Neon Auth em HML (secrets, callbacks,
+  e-mail, Turnstile e rate limiting), sujeita a gate humano.
 - [x] Aplicar a migration de infraestrutura de acesso `0014` somente no branch
-  Neon de homologação autorizado, sem bootstrap de usuário.
+      Neon de homologação autorizado, sem bootstrap de usuário.
 - [ ] Implementar identidade de usuário.
 - [ ] Implementar login/logout.
 - [ ] Implementar sessão segura.
