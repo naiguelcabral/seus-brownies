@@ -14,6 +14,7 @@ Esta pasta contém a documentação canônica usada por humanos e agentes para d
 8. [`DEVELOPMENT-WORKFLOW.md`](DEVELOPMENT-WORKFLOW.md) — branch, testes, migrations, commits e PR.
 9. [`CODEX-USAGE-POLICY.md`](CODEX-USAGE-POLICY.md) — consumo, reserva obrigatória de 5%, checkpoint e regra de retomada após o reset exibido pelo Codex.
 10. [`AUTHORIZATION-MATRIX.md`](AUTHORIZATION-MATRIX.md) — proposta de menor privilégio para a G1; exige revisão humana antes de proteger mutações operacionais.
+11. [`G1-HML-EXECUTION-PLAN.md`](G1-HML-EXECUTION-PLAN.md) — procedimento controlado para a primeira integração de autenticação em homologação.
 
 O arquivo raiz [`AGENTS.md`](../../AGENTS.md) é a porta de entrada do Codex e aponta para a governança.
 
