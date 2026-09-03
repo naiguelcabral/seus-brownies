@@ -55,6 +55,15 @@ Adotar **Neon Auth gerenciado, baseado em Better Auth, como provedor de
 identidade e sessão**, e manter **RBAC e auditoria como dados e regras da
 aplicação Cacau**.
 
+O schema gerenciado `neon_auth` pertence ao provedor e não será criado,
+alterado ou migrado pelo Cacau. A migration local `0014_puzzling_masque.sql`
+cria somente o vínculo de acesso, o estado durável de abuso e a auditoria do
+Cacau. A escolha do SDK compatível será fixada no início da integração: a
+documentação atual do Neon indica `@neondatabase/neon-js/auth` para clientes
+Neon Auth, enquanto integrações Better Auth também exigem compatibilidade de
+AsyncLocalStorage no Cloudflare Workers. Nenhum SDK, endpoint, secret ou flag
+de Worker é configurado por esta ADR.
+
 O papel da aplicação não deve ser confundido com permissões da conta Neon nem
 com papéis de organizações do provedor. Cada identidade autenticada terá um
 vínculo próprio de acesso ao Cacau, usando os perfis canônicos **Admin**,
@@ -117,8 +126,12 @@ depender apenas da ocultação de controles na UI.
 ## Consequências
 
 - Será necessária uma etapa posterior, autorizada, para instalar/configurar o
-  cliente compatível, modelar o vínculo de papéis e gerar migrations
-  incrementais revisáveis.
+  cliente compatível, provisionar o endpoint por branch e configurar secrets
+  fora do repositório.
+- A configuração de compatibilidade do runtime Worker e do SDK só será alterada
+  após revisão humana, junto com os secrets e o ambiente de desenvolvimento.
+- A migration `0014_puzzling_masque.sql` é somente uma proposta revisável; ela
+  não autoriza aplicação em banco nem toca no schema gerenciado `neon_auth`.
 - A Fase G1 deve criar testes de acesso negativo para cada Server Function de
   mutação e para escopo de leitura operacional.
 - A entrega não altera regras de quantidade, custo, origem, motivo, FIFO ou
