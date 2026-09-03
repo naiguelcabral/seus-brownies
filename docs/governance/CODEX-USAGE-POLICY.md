@@ -26,9 +26,8 @@ Quando a franquia relevante exibida pelo Codex atingir **5% restante ou menos**:
 2. interromper a expansão do escopo atual no primeiro ponto consistente e reversível;
 3. preservar arquivos já corretos;
 4. executar somente verificações curtas indispensáveis para não deixar estado inconsistente, se houver cota suficiente;
-5. registrar `git status` e revisar o diff quando possível;
-6. atualizar o roadmap/status da tarefa para refletir o estado real;
-7. criar ou atualizar um handoff de retomada contendo:
+5. atualizar o roadmap/status da tarefa para refletir o estado real;
+6. criar ou atualizar um handoff de retomada contendo:
    - tarefa atual;
    - o que foi concluído;
    - arquivos alterados;
@@ -39,21 +38,50 @@ Quando a franquia relevante exibida pelo Codex atingir **5% restante ou menos**:
    - riscos/gates humanos;
    - percentual/saldo de uso mostrado pelo Codex;
    - horário de reset mostrado pelo Codex;
-8. informar ao usuário que o trabalho foi pausado por reserva de capacidade.
+7. confirmar que a branch atual é uma branch de trabalho e não `main`;
+8. executar `./DESLIGARTUDO` como checkpoint oficial de encerramento;
+9. confirmar no resultado do script que o trabalho foi salvo/sincronizado, ou registrar claramente qualquer falha de commit, rebase ou push;
+10. informar ao usuário que o trabalho foi pausado por reserva de capacidade e qual horário de reset foi exibido.
 
-A reserva de 5% não deve ser consumida para iniciar implementação adicional. Ela existe para fechamento seguro e handoff.
+A reserva de 5% não deve ser consumida para iniciar implementação adicional. Ela existe para fechamento seguro, handoff e execução do `DESLIGARTUDO`.
 
-## Retomada
+## Uso do `DESLIGARTUDO`
 
-A retomada deve ocorrer **somente no horário de reset exibido pelo Codex ou depois dele**, após confirmar que a franquia foi renovada.
+O script é o mecanismo oficial de encerramento do dispositivo/projeto:
+
+- em uso manual, pergunta `Salvar e sincronizar o trabalho antes de desligar? [S/n]`;
+- em execução não interativa pelo Codex, usa a mensagem padrão de checkpoint;
+- cria commit quando houver mudanças;
+- executa `git pull --rebase` da branch atual;
+- executa `git push` da branch atual;
+- possui defesa contra arquivos `.env*` conhecidos versionados;
+- execução automática na `main` é bloqueada.
+
+O Codex só pode usá-lo automaticamente no fechamento da reserva de 5% ou quando uma tarefa explicitamente autorizada exigir encerramento seguro. Não usá-lo no meio de uma implementação apenas para criar commits intermediários.
+
+Se `DESLIGARTUDO` falhar:
+
+- não esconder a falha;
+- não forçar push;
+- não trocar para `main`;
+- registrar o erro no handoff;
+- preservar o estado local e aguardar nova execução/decisão quando necessário.
+
+## Retomada após renovação
+
+A retomada deve ocorrer **somente no horário de reset exibido pelo Codex ou depois dele**, após confirmar que a franquia relevante foi renovada.
+
+O estado ideal de retomada é **100% da nova janela de capacidade** quando o produto assim o exibir. Se o produto renovar para outro indicador/cota sem mostrar exatamente `100%`, utilizar o estado real informado e não inventar percentual.
 
 Antes de retomar:
 
 1. consultar novamente `/status` ou `Settings → Usage`;
 2. confirmar que a janela relevante foi renovada;
-3. ler o handoff mais recente;
-4. confirmar branch e `git status`;
-5. continuar exatamente do próximo passo documentado, sem repetir operações já concluídas.
+3. registrar o novo percentual/saldo disponível;
+4. ler o handoff mais recente;
+5. confirmar branch e `git status`;
+6. se o `DESLIGARTUDO` anterior concluiu com sucesso, sincronizar/confirmar o estado remoto antes de continuar;
+7. continuar exatamente do próximo passo documentado, sem repetir operações já concluídas.
 
 ## Retorno automático x manual
 
@@ -75,6 +103,16 @@ Uso Codex
 - estado: trabalhando | encerrando | pausado por reserva | retomado
 ```
 
+Quando retomar após o reset:
+
+```text
+Uso Codex
+- capacidade após reset: XX% (idealmente 100%, se assim exibido)
+- reset confirmado: sim
+- checkpoint restaurado: sim
+- estado: retomado
+```
+
 Se o produto não expuser um percentual exato, registrar o indicador que ele realmente fornecer, sem inventar conversão para percentual.
 
 ## Falha de consulta
@@ -84,7 +122,7 @@ Se não for possível obter o estado de uso:
 - não inventar percentual;
 - informar `uso: não disponível para esta execução`;
 - seguir tarefas pequenas e com checkpoints frequentes;
-- ao aparecer aviso de limite, concluir imediatamente o handoff seguro.
+- ao aparecer aviso de limite, concluir imediatamente o handoff seguro e, em branch de trabalho, executar `./DESLIGARTUDO` se houver capacidade suficiente.
 
 ## Prioridade sobre produtividade
 
