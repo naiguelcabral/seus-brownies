@@ -64,6 +64,13 @@ Neon Auth, enquanto integrações Better Auth também exigem compatibilidade de
 AsyncLocalStorage no Cloudflare Workers. Nenhum SDK, endpoint, secret ou flag
 de Worker é configurado por esta ADR.
 
+Em 2026-09-03, os pacotes oficiais avaliados para essa integração
+(`@neondatabase/neon-js` e `@neondatabase/auth`) estavam em versão beta. Sob a
+aprovação parcial de G1, `@neondatabase/neon-js@0.7.0-beta` foi adicionado
+somente para preparação local; o adapter permanece orientado a interface e não
+instancia o SDK sem endpoint e secret provisionados. A versão deve ser
+reavaliada antes da integração real ou de qualquer atualização de dependência.
+
 O papel da aplicação não deve ser confundido com permissões da conta Neon nem
 com papéis de organizações do provedor. Cada identidade autenticada terá um
 vínculo próprio de acesso ao Cacau, usando os perfis canônicos **Admin**,

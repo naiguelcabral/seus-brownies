@@ -35,6 +35,7 @@
     "fifo:backfill:hml": "tsx scripts/backfill-hml-fifo.ts"
   },
   "dependencies": {
+    "@neondatabase/neon-js": "^0.7.0-beta",
     "@tailwindcss/vite": "^4.1.18",
     "@tanstack/react-devtools": "latest",
     "@tanstack/react-form": "latest",
