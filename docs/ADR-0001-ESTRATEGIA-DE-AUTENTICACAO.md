@@ -41,13 +41,13 @@ detalha a proposta técnica sem substituir essas fontes.
 
 ## Alternativas avaliadas
 
-| Alternativa | Vantagens | Limitações | Decisão |
-| --- | --- | --- | --- |
-| **Neon Auth gerenciado, baseado em Better Auth** | Estado de identidade, sessões, organizações e JWKS no Neon; dados ramificam junto com o banco; integra os recursos de e-mail/senha, redefinição e extensões Better Auth. | Exige provisionamento e validação da integração Worker/TanStack; depende da configuração gerenciada e de e-mail transacional. | **Recomendada** |
-| Better Auth diretamente no banco da aplicação | Controle total de schema, rotas e armazenamento; compatibilidade documentada com TanStack Start e Cloudflare Workers. | Introduz dependência, schema/migration, secret e operação própria de autenticação; duplica o que Neon Auth gerenciado já oferece. | Contingência se Neon Auth não atender aos controles aprovados. |
-| Cloudflare Access | Perímetro forte para equipe interna e integração com IdP corporativo. | Não resolve por si só contas do Cacau, recuperação de senha, auditoria de negócio ou RBAC dentro das Server Functions. | Complemento administrativo, não solução principal. |
-| Identidade própria com hash/sessões manuais | Máxima liberdade. | Maior superfície de segurança, criptografia, recuperação, revogação e manutenção. | Rejeitada. |
-| IdP externo genérico | Pode oferecer recursos maduros de identidade. | Cria outro sistema de usuários, custos e sincronização sem benefício claro para o painel atual. | Não priorizada. |
+| Alternativa                                      | Vantagens                                                                                                                                                                | Limitações                                                                                                                        | Decisão                                                        |
+| ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| **Neon Auth gerenciado, baseado em Better Auth** | Estado de identidade, sessões, organizações e JWKS no Neon; dados ramificam junto com o banco; integra os recursos de e-mail/senha, redefinição e extensões Better Auth. | Exige provisionamento e validação da integração Worker/TanStack; depende da configuração gerenciada e de e-mail transacional.     | **Recomendada**                                                |
+| Better Auth diretamente no banco da aplicação    | Controle total de schema, rotas e armazenamento; compatibilidade documentada com TanStack Start e Cloudflare Workers.                                                    | Introduz dependência, schema/migration, secret e operação própria de autenticação; duplica o que Neon Auth gerenciado já oferece. | Contingência se Neon Auth não atender aos controles aprovados. |
+| Cloudflare Access                                | Perímetro forte para equipe interna e integração com IdP corporativo.                                                                                                    | Não resolve por si só contas do Cacau, recuperação de senha, auditoria de negócio ou RBAC dentro das Server Functions.            | Complemento administrativo, não solução principal.             |
+| Identidade própria com hash/sessões manuais      | Máxima liberdade.                                                                                                                                                        | Maior superfície de segurança, criptografia, recuperação, revogação e manutenção.                                                 | Rejeitada.                                                     |
+| IdP externo genérico                             | Pode oferecer recursos maduros de identidade.                                                                                                                            | Cria outro sistema de usuários, custos e sincronização sem benefício claro para o painel atual.                                   | Não priorizada.                                                |
 
 ## Decisão proposta
 
@@ -60,6 +60,11 @@ com papéis de organizações do provedor. Cada identidade autenticada terá um
 vínculo próprio de acesso ao Cacau, usando os perfis canônicos **Admin**,
 **Gestor**, **Produção**, **Venda** e **Consulta**, com permissões
 explicitamente mapeadas por ação.
+
+A proposta detalhada de menor privilégio está em
+[`AUTHORIZATION-MATRIX.md`](governance/AUTHORIZATION-MATRIX.md). Ela não
+concede permissões automaticamente nem substitui a revisão humana das mutações
+operacionais já existentes.
 
 O TanStack Start deve carregar a sessão a partir do cookie em middleware de
 requisição e injetar um principal confiável no contexto. Um middleware de
@@ -97,12 +102,12 @@ navegador.
 
 ## Modelo mínimo de permissões
 
-| Área | Admin | Gestor | Produção | Venda | Consulta |
-| --- | --- | --- | --- | --- | --- |
-| Usuários, papéis e configurações estruturais | permitir | negar | negar | negar | negar |
-| Catálogo, preços e relatórios | permitir | proposta: gerir e consultar | leitura necessária | leitura necessária | somente leitura autorizada |
-| Compras, produção, vendas, despesas e ajustes | permitir | proposta: gerir conforme matriz final | proposta: produção e leituras necessárias | proposta: vendas e leituras necessárias | negar |
-| Estoque, FIFO e auditoria | permitir | proposta: consultar e aprovar conforme matriz final | leitura necessária | leitura necessária | somente leitura autorizada |
+| Área                                          | Admin    | Gestor                                              | Produção                                  | Venda                                   | Consulta                   |
+| --------------------------------------------- | -------- | --------------------------------------------------- | ----------------------------------------- | --------------------------------------- | -------------------------- |
+| Usuários, papéis e configurações estruturais  | permitir | negar                                               | negar                                     | negar                                   | negar                      |
+| Catálogo, preços e relatórios                 | permitir | proposta: gerir e consultar                         | leitura necessária                        | leitura necessária                      | somente leitura autorizada |
+| Compras, produção, vendas, despesas e ajustes | permitir | proposta: gerir conforme matriz final               | proposta: produção e leituras necessárias | proposta: vendas e leituras necessárias | negar                      |
+| Estoque, FIFO e auditoria                     | permitir | proposta: consultar e aprovar conforme matriz final | leitura necessária                        | leitura necessária                      | somente leitura autorizada |
 
 Os itens marcados como proposta não são autorização de operação. O mapa
 definitivo por Server Function deve ser revisado no próximo gate. Em particular,

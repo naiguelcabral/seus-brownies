@@ -90,6 +90,92 @@ export const messageProcessingStatus = pgEnum('message_processing_status', [
   'failed',
   'ignored',
 ])
+export const appAccessRole = pgEnum('app_access_role', [
+  'admin',
+  'manager',
+  'production',
+  'sales',
+  'viewer',
+])
+export const authAuditOutcome = pgEnum('auth_audit_outcome', [
+  'success',
+  'failure',
+  'blocked',
+])
+
+/**
+ * Cacau-owned access link. The identity provider remains responsible for its
+ * user and session records; this table intentionally has no foreign key into
+ * provider-managed schema.
+ */
+export const appUserAccess = pgTable(
+  'app_user_access',
+  {
+    id: serial().primaryKey(),
+    authUserId: varchar('auth_user_id', { length: 191 }).notNull().unique(),
+    role: appAccessRole('role').notNull(),
+    isActive: boolean('is_active').notNull().default(true),
+    roleUpdatedAt: timestamp('role_updated_at', { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    createdAt: timestamp('created_at', { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp('updated_at', { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (table) => [index('app_user_access_role_idx').on(table.role)],
+)
+
+/**
+ * Durable abuse state keyed by a server-derived identity hash. Raw e-mail,
+ * password, reset token and session material never belong in this table.
+ */
+export const authLoginAttempts = pgTable(
+  'auth_login_attempts',
+  {
+    id: serial().primaryKey(),
+    identityHash: varchar('identity_hash', { length: 128 }).notNull().unique(),
+    consecutiveFailures: integer('consecutive_failures').notNull().default(0),
+    cooldownUntil: timestamp('cooldown_until', { withTimezone: true }),
+    lastAttemptAt: timestamp('last_attempt_at', { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp('updated_at', { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (table) => [
+    index('auth_login_attempts_cooldown_idx').on(table.cooldownUntil),
+  ],
+)
+
+/**
+ * Authentication audit facts. Provider secrets and credentials are excluded
+ * by schema; metadata must remain sanitized by the writer.
+ */
+export const authAuditEvents = pgTable(
+  'auth_audit_events',
+  {
+    id: serial().primaryKey(),
+    actorAuthUserId: varchar('actor_auth_user_id', { length: 191 }),
+    action: varchar('action', { length: 80 }).notNull(),
+    outcome: authAuditOutcome('outcome').notNull(),
+    targetType: varchar('target_type', { length: 80 }),
+    targetId: varchar('target_id', { length: 191 }),
+    requestId: varchar('request_id', { length: 191 }),
+    networkHash: varchar('network_hash', { length: 128 }),
+    metadata: jsonb('metadata'),
+    occurredAt: timestamp('occurred_at', { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (table) => [
+    index('auth_audit_events_actor_idx').on(table.actorAuthUserId),
+    index('auth_audit_events_occurred_at_idx').on(table.occurredAt),
+  ],
+)
 
 /** Groups sellable products for reporting and menu organization. */
 export const categories = pgTable('categories', {
