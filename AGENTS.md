@@ -1,3 +1,117 @@
+# Cacau v1 — Instruções operacionais para agentes
+
+Este arquivo é a porta de entrada obrigatória para qualquer agente que trabalhe neste repositório.
+
+## Missão
+
+Manter e evoluir o Cacau v1, sistema operacional dos Seus Brownies, preservando integridade de estoque, dinheiro, produção, FIFO/CMV, histórico e trilha de auditoria.
+
+## Leitura obrigatória antes de alterar código
+
+1. `docs/governance/PROJECT-STATUS.md`
+2. `docs/governance/ARCHITECTURE.md`
+3. `docs/governance/SECURITY.md`
+4. `docs/governance/BUSINESS-RULES.md`
+5. `docs/governance/ROADMAP-CODEX.md`
+6. `docs/governance/DEFINITION-OF-DONE.md`
+7. `docs/governance/HUMAN-APPROVALS.md`
+8. `docs/governance/DEVELOPMENT-WORKFLOW.md`
+9. `docs/governance/CODEX-USAGE-POLICY.md`
+
+Documentos de homologação/importação continuam sendo evidência histórica e devem ser consultados quando a tarefa tocar o respectivo domínio.
+
+## Autoridade das fontes
+
+Em conflito, prevalece:
+
+1. este `AGENTS.md` para comportamento do agente;
+2. `SECURITY.md`;
+3. `ARCHITECTURE.md`;
+4. `BUSINESS-RULES.md`;
+5. `ROADMAP-CODEX.md`;
+6. registros históricos específicos;
+7. comentários ou documentação antiga.
+
+## Stack oficial
+
+- TypeScript / React
+- TanStack Start / Router
+- Drizzle ORM / Drizzle Kit
+- PostgreSQL / Neon
+- Tailwind CSS
+- Zod
+- Cloudflare Workers
+- Node test runner
+- Playwright
+
+Não trocar framework, ORM, banco, hospedagem ou estratégia principal de autenticação sem ADR e aprovação humana.
+
+## Fluxo de execução
+
+Para cada tarefa:
+
+1. verificar `git status`;
+2. confirmar branch de trabalho;
+3. localizar a tarefa no roadmap;
+4. ler regras do domínio e registros históricos relevantes;
+5. fazer mudança pequena e reversível;
+6. criar/atualizar testes;
+7. executar verificações aplicáveis;
+8. revisar `git diff`;
+9. atualizar documentação canônica se o estado mudou;
+10. aplicar Definition of Done;
+11. informar resultado, riscos e gate humano pendente.
+
+## Proibições absolutas sem aprovação humana
+
+- Ler, imprimir, copiar ou versionar `.env`.
+- Expor segredos, tokens, senhas ou URLs privadas.
+- Executar deploy de produção.
+- Alterar secrets, DNS ou Worker de produção.
+- Executar `DROP`, `TRUNCATE`, exclusão em massa ou migration destrutiva.
+- Limpar dados HML/auditáveis.
+- Repetir importações já aplicadas.
+- Reutilizar referências idempotentes consumidas.
+- Alterar regra financeira/estoque de alto impacto sem decisão humana.
+
+## Regras especiais do repositório
+
+- Não executar `npm run desligar`/`./DESLIGARTUDO` automaticamente durante trabalho normal, pois o script cria commit e sincroniza Git.
+- Exceção obrigatória: quando a franquia relevante do Codex atingir 5% restante ou menos, em branch de trabalho e após fechar o handoff, executar `./DESLIGARTUDO` conforme `docs/governance/CODEX-USAGE-POLICY.md`.
+- Nunca executar o encerramento automático na `main`.
+- `db:push` não substitui migration auditável em ambiente com dados relevantes.
+- Não remover/enfraquecer teste para fazê-lo passar.
+- Falha de integridade, segurança, estoque, dinheiro, idempotência ou lifecycle bloqueia conclusão.
+- Dados HML e homologações FIFO existentes são trilha de auditoria.
+
+## Verificações padrão
+
+Conforme aplicabilidade:
+
+```bash
+npm test
+npm run lint
+npm run build
+npm run check
+```
+
+`npm run test:e2e` somente quando o cenário e o ambiente estiverem autorizados, respeitando as referências/idempotência documentadas.
+
+## Commits
+
+Usar mensagens semânticas, por exemplo:
+
+- `feat(auth): add secure session middleware`
+- `fix(inventory): prevent duplicate fifo allocation`
+- `test(production): cover insufficient stock rollback`
+- `docs(governance): update codex roadmap`
+
+Evitar mensagens genéricas como `S`, `s`, `update` ou `fix` sem escopo.
+
+## TanStack Intent
+
+A orientação técnica automática do TanStack continua válida. Antes de editar uma área coberta por uma skill abaixo, carregue a orientação correspondente.
+
 <!-- intent-skills:start -->
 # TanStack Intent - before editing files, run the matching guidance command.
 tanstackIntent:

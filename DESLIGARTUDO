@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 
 # Salva o estado atual do projeto no GitHub antes de encerrar o trabalho.
+# Uso manual: pede confirmação S/N antes de qualquer alteração no Git.
+# Uso não interativo (ex.: Codex): permitido somente em branch de trabalho;
+# prossegue automaticamente e usa a mensagem padrão.
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -11,7 +14,53 @@ if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
   exit 1
 fi
 
+BRANCH="$(git branch --show-current)"
+if [[ -z "$BRANCH" ]]; then
+  echo "Não foi possível identificar a branch atual."
+  exit 1
+fi
+
 DEFAULT_MESSAGE="checkpoint: salvar trabalho antes de desligar"
+
+# Em execução não interativa, nunca publicar automaticamente a main.
+if [[ ! -t 0 && "$BRANCH" == "main" ]]; then
+  echo "ERRO: DESLIGARTUDO não pode executar commit/push automático na branch main."
+  echo "Crie ou use uma branch de trabalho antes do checkpoint automático."
+  exit 1
+fi
+
+# Confirmação real para uso manual. Antes, um 'S' digitado no primeiro prompt
+# era interpretado como mensagem de commit, gerando commits chamados apenas 'S'.
+if [[ -t 0 ]]; then
+  read -r -p "Salvar e sincronizar o trabalho antes de desligar? [S/n]: " CONFIRM
+  CONFIRM="${CONFIRM:-S}"
+  case "${CONFIRM,,}" in
+    s|sim|y|yes)
+      ;;
+    *)
+      echo "Operação cancelada. Nenhum commit/pull/push foi executado."
+      exit 0
+      ;;
+  esac
+fi
+
+# Defesa adicional: arquivos de ambiente/segredo conhecidos não podem ser
+# adicionados por este fluxo, mesmo se a configuração local do Git mudar.
+SENSITIVE_PATHS=(
+  ".env"
+  ".env.local"
+  ".env.development"
+  ".env.production"
+  ".env.test"
+)
+for sensitive in "${SENSITIVE_PATHS[@]}"; do
+  if git ls-files --error-unmatch "$sensitive" >/dev/null 2>&1; then
+    echo "ERRO: arquivo sensível versionado detectado: $sensitive"
+    echo "Remova-o do índice Git antes de usar DESLIGARTUDO."
+    exit 1
+  fi
+done
+
 if [[ -n "$(git status --porcelain)" ]]; then
   if [[ -t 0 ]]; then
     read -r -p "Mensagem do salvamento [${DEFAULT_MESSAGE}]: " COMMIT_MESSAGE
@@ -20,28 +69,21 @@ if [[ -n "$(git status --porcelain)" ]]; then
     COMMIT_MESSAGE="$DEFAULT_MESSAGE"
   fi
 
-  # .env.local permanece protegido pelo .gitignore e nunca deve ser enviado.
   git add --all
   git commit -m "$COMMIT_MESSAGE"
 else
   echo "Não há alterações novas para criar um commit."
 fi
 
-BRANCH="$(git branch --show-current)"
-if [[ -z "$BRANCH" ]]; then
-  echo "Não foi possível identificar a branch atual."
-  exit 1
-fi
-
 if ! git pull --rebase origin "$BRANCH"; then
   echo
-  echo "Não foi possível atualizar antes do envio. Resolva o rebase e execute 'npm run desligar' novamente."
+  echo "Não foi possível atualizar antes do envio. Resolva o rebase e execute './DESLIGARTUDO' novamente."
   exit 1
 fi
 
 if ! git push origin "$BRANCH"; then
   echo
-  echo "O commit foi salvo localmente, mas não pôde ser enviado ao GitHub. Execute 'npm run desligar' novamente quando a conexão voltar."
+  echo "O commit foi salvo localmente, mas não pôde ser enviado ao GitHub. Execute './DESLIGARTUDO' novamente quando a conexão voltar."
   exit 1
 fi
 
