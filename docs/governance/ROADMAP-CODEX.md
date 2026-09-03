@@ -16,9 +16,9 @@ Legenda:
 - [x] Criar Definition of Done.
 - [x] Criar gates de aprovação humana.
 - [x] Criar roadmap executável.
-- [ ] Atualizar `AGENTS.md` com governança do Cacau preservando TanStack Intent.
-- [ ] Padronizar workflow Git e mensagens de commit.
-- [ ] Criar índice documental canônico.
+- [x] Atualizar `AGENTS.md` com governança do Cacau preservando TanStack Intent.
+- [x] Padronizar workflow Git e mensagens de commit.
+- [x] Criar índice documental canônico.
 
 ### Saída da fase
 
@@ -137,7 +137,7 @@ A definição de margem realizada e vínculo venda-lote é decisão de negócio/
 
 ## Prioridade imediata
 
-1. Finalizar G0.
-2. Iniciar G1 por ADR e desenho de autenticação/RBAC.
+1. Iniciar G1 por ADR e desenho de autenticação/RBAC.
+2. Depois consolidar G2 (CMV/margem) antes de ampliar os relatórios gerenciais.
 3. Não iniciar G4/G5 antes de segurança básica e idempotência estarem consolidadas.
 4. Preservar todos os dados HML e evidências FIFO existentes.
