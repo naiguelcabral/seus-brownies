@@ -38,4 +38,10 @@ test('guarda retorna somente principal autorizado pelo servidor', () => {
   assert.throws(() =>
     assertPrincipalPermission(salesPrincipal, 'expenses:write'),
   )
+  assert.throws(() =>
+    assertPrincipalPermission(
+      { ...salesPrincipal, role: 'manager' },
+      'access:manage',
+    ),
+  )
 })

@@ -41,3 +41,39 @@ test('adapter Neon falha fechado sem sessão ou vínculo ativo', async () => {
   assert.equal(await noSession(), null)
   assert.equal(await inactive(), null)
 })
+
+test('identidade Neon válida sem app_user_access não recebe principal', async () => {
+  const resolvePrincipal = createNeonPrincipalResolver(
+    {
+      getSession: async () => ({
+        data: {
+          user: {
+            id: 'neon-without-access',
+            email: 'externo@example.test',
+            emailVerified: true,
+          },
+        },
+      }),
+    },
+    async () => null,
+  )
+  assert.equal(await resolvePrincipal(), null)
+})
+
+test('adapter Neon nega vínculo sem papel canônico válido', async () => {
+  const resolvePrincipal = createNeonPrincipalResolver(
+    {
+      getSession: async () => ({
+        data: {
+          user: {
+            id: 'neon-1',
+            email: 'a@example.test',
+            emailVerified: true,
+          },
+        },
+      }),
+    },
+    async () => ({ role: 'administrator', isActive: true }),
+  )
+  assert.equal(await resolvePrincipal(), null)
+})

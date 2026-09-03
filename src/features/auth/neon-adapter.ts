@@ -1,4 +1,4 @@
-import type { AppRole } from './authorization'
+import { isAppRole } from './authorization'
 import type { AppPrincipal } from './principal'
 
 export type NeonAuthSessionClient = {
@@ -8,7 +8,7 @@ export type NeonAuthSessionClient = {
 }
 
 export type CacauAccessReader = (authUserId: string) => Promise<{
-  role: AppRole
+  role: unknown
   isActive: boolean
 } | null>
 
@@ -25,7 +25,7 @@ export function createNeonPrincipalResolver(
     const { data } = await sessionClient.getSession()
     if (!data) return null
     const access = await readAccess(data.user.id)
-    if (!access?.isActive) return null
+    if (!access?.isActive || !isAppRole(access.role)) return null
     return { ...data.user, role: access.role }
   }
 }

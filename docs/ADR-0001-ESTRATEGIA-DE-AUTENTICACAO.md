@@ -77,6 +77,15 @@ vínculo próprio de acesso ao Cacau, usando os perfis canônicos **Admin**,
 **Gestor**, **Produção**, **Venda** e **Consulta**, com permissões
 explicitamente mapeadas por ação.
 
+### Restrição de cadastro no Neon Auth Beta
+
+O painel Neon Auth Beta informa que qualquer pessoa na web pode criar uma
+identidade e que cadastros restritos ainda não são suportados. Logo, Neon Auth
+não é a allowlist do Cacau. O modelo “somente por convite” é aplicado pelo
+vínculo ativo em `app_user_access`: uma identidade autenticada sem esse vínculo,
+com vínculo inativo ou com papel inválido falha fechada. Nenhuma Server Function
+protegida poderá aceitar apenas `session != null` como autorização.
+
 A proposta detalhada de menor privilégio está em
 [`AUTHORIZATION-MATRIX.md`](governance/AUTHORIZATION-MATRIX.md). Ela não
 concede permissões automaticamente nem substitui a revisão humana das mutações
