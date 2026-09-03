@@ -27,10 +27,12 @@
 - Não misturar refactor não relacionado com feature/fix.
 - Preferir funções de domínio testáveis.
 - Toda alteração crítica de estoque, dinheiro, produção ou idempotência precisa de teste.
-- Não executar `npm run desligar` automaticamente porque esse script pode realizar commit/sincronização.
+- Não executar `npm run desligar`/`./DESLIGARTUDO` automaticamente durante trabalho normal, porque o script cria commit/sincroniza Git.
+- Exceção obrigatória: ao atingir 5% restante ou menos, em branch de trabalho e após fechar o handoff, executar `./DESLIGARTUDO` conforme `CODEX-USAGE-POLICY.md`.
+- Nunca executar o encerramento automático na `main`.
 - Em tarefas longas, registrar o consumo de Codex nos checkpoints sempre que o produto disponibilizar o dado.
-- Ao atingir 5% restante ou menos da franquia relevante, aplicar imediatamente `CODEX-USAGE-POLICY.md`: não iniciar novo trabalho, fechar um checkpoint seguro e pausar.
-- Só retomar no horário de reset exibido pelo Codex ou depois dele, após confirmar a renovação da franquia.
+- Ao atingir 5% restante ou menos da franquia relevante, não iniciar novo trabalho; fechar checkpoint seguro, executar o encerramento controlado e pausar.
+- Só retomar no horário de reset exibido pelo Codex ou depois dele, após confirmar a renovação da franquia; preferir 100% quando esse percentual for exibido.
 - Não afirmar que haverá retomada automática se nenhuma Automation do Codex estiver configurada.
 
 ## Verificações padrão
@@ -101,4 +103,4 @@ Se o produto não fornecer percentual exato, registrar somente o indicador real 
 
 O agente pode preparar branch, código, testes, documentação, commit e PR quando autorizado. Merge, deploy, escrita crítica em ambiente compartilhado ou qualquer gate listado em `HUMAN-APPROVALS.md` permanece humano.
 
-A política de reserva em `CODEX-USAGE-POLICY.md` é obrigatória para trabalhos prolongados: os últimos 5% são destinados a fechamento seguro, documentação e handoff, não a expansão de escopo.
+A política de reserva em `CODEX-USAGE-POLICY.md` é obrigatória para trabalhos prolongados: os últimos 5% são destinados a fechamento seguro, documentação, handoff e `./DESLIGARTUDO`, não a expansão de escopo.
