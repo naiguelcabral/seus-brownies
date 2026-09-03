@@ -58,6 +58,9 @@ Este documento é a referência canônica de alto nível para o estado atual do 
 - Testes determinísticos em `test/`.
 - Testes E2E em `e2e/`.
 - `lint`, `build`, `test` e `test:e2e` são verificações oficiais.
+- G1 possui ADR aceito, matriz de menor privilégio, contratos locais de
+  autorização/principal/auditoria e migration `0014` somente para revisão; não
+  há integração funcional com provedor, sessão ou banco aplicada.
 
 ## Ainda não entregue
 
@@ -66,6 +69,8 @@ Este documento é a referência canônica de alto nível para o estado atual do 
 - Auditoria vinculada a identidade de usuário.
 - Recuperação de senha e gestão de sessão.
 - Proteções específicas de login, incluindo limite de tentativas e desafio adicional quando aplicável.
+- Provisionamento do Neon Auth, secrets de autenticação, provedor de e-mail e
+  configuração de compatibilidade do Worker.
 - WhatsApp Cloud API e webhook.
 - Processamento idempotente completo para mensageria externa.
 - OCR e armazenamento de documentos/notas.
