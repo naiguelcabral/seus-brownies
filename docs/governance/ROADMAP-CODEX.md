@@ -28,6 +28,8 @@ O Codex consegue identificar estado, regras, limites e próxima tarefa sem depen
 
 - [x] Definir ADR da solução de autenticação definitiva (`ADR-0001` aceito).
 - [~] Mapear permissões, middleware e estrutura reversível de autenticação.
+- [x] Aplicar a migration de infraestrutura de acesso `0014` somente no branch
+  Neon de homologação autorizado, sem bootstrap de usuário.
 - [ ] Implementar identidade de usuário.
 - [ ] Implementar login/logout.
 - [ ] Implementar sessão segura.

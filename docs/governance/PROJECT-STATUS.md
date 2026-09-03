@@ -58,9 +58,12 @@ Este documento é a referência canônica de alto nível para o estado atual do 
 - Testes determinísticos em `test/`.
 - Testes E2E em `e2e/`.
 - `lint`, `build`, `test` e `test:e2e` são verificações oficiais.
-- G1 possui ADR aceito, matriz de menor privilégio, contratos locais de
-  autorização/principal/auditoria e migration `0014` somente para revisão; não
-  há integração funcional com provedor, sessão ou banco aplicada.
+- G1 possui ADR aceito, matriz de menor privilégio e contratos locais de
+  autorização/principal/auditoria. A migration `0014` foi aplicada somente no
+  branch Neon de homologação `g1-auth-hml`: criou a allowlist de acesso, o
+  controle de tentativas e a auditoria, sem criar usuários nem alterar FIFO.
+  Não há integração funcional de provedor, sessão, secret ou e-mail
+  configurada.
 
 ## Ainda não entregue
 

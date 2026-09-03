@@ -2,10 +2,34 @@
 
 ## Estado e alvo
 
-Este procedimento é exclusivo para o branch Neon **`g1-auth-hml`**. Não é
-autorização para produção, outros branches, criação de usuário, escrita de
-secret ou aplicação de migration. A execução começa somente após a confirmação
-humana do identificador/endpoint exato do branch alvo.
+Este procedimento é exclusivo para o branch Neon **`g1-auth-hml`**. Em 3 de
+setembro de 2026, após confirmação humana do alvo, a migration `0014` foi
+aplicada exclusivamente nesse branch não padrão. Não é autorização para
+produção, outros branches, criação de usuário, escrita de secret ou nova
+operação de banco.
+
+Identificação registrada sem credenciais: projeto `steep-brook-51659857`,
+branch `g1-auth-hml`, branch ID `br-patient-lake-ac2t0cvq`, Neon Auth ativo e
+branch não padrão.
+
+### Resultado da aplicação de 0014
+
+- Histórico Drizzle: 15 migrations, com `0014_puzzling_masque.sql` registrada
+  pelo hash local revisado.
+- Criadas somente as tabelas `app_user_access`, `auth_login_attempts` e
+  `auth_audit_events`, seus dois tipos de enumeração e quatro índices.
+- Confirmadas as unicidades de `app_user_access.auth_user_id` e
+  `auth_login_attempts.identity_hash`, além dos índices de papel, cooldown,
+  ator e data de auditoria.
+- As três tabelas estavam vazias imediatamente após a aplicação: nenhum
+  usuário, vínculo de acesso, tentativa ou evento de auditoria foi criado.
+- As estruturas FIFO existentes permaneceram presentes sem alteração:
+  `inventory_cost_layers`, `inventory_cost_allocations` e
+  `inventory_cost_reversals` mantiveram suas contagens de colunas auditadas.
+
+O próximo gate externo é configurar secrets/integração real e executar o
+bootstrap manual, único e auditado do primeiro Admin de homologação. Nenhuma
+dessas ações está autorizada por esta aplicação de schema.
 
 ## Revisão de migration 0014
 
@@ -40,22 +64,16 @@ uma migration corretiva somente após revisão humana.
 
 Nenhum valor deve entrar em Git, logs, documentação ou conversa.
 
-## Ordem segura após confirmação humana
+## Ordem segura após a aplicação de schema
 
-1. Confirmar que o alvo é exatamente o branch Neon `g1-auth-hml`, nunca
-   production, e registrar o identificador sem expor URL privada.
-2. Confirmar backup/rollback e que `0014` ainda não aparece no histórico do
-   alvo.
-3. Revisar o hash local de `0014_puzzling_masque.sql` e executar somente a
-   aplicação autorizada.
-4. Consultar o histórico de migrations e as três tabelas criadas; confirmar a
-   ausência de alteração FIFO.
-5. Provisionar/configurar Neon Auth e secrets fora do Git, com e-mail e
+1. Manter a evidência da aplicação: alvo `g1-auth-hml`, hash revisado,
+   histórico de migrations, tabelas, constraints, índices e invariantes FIFO.
+2. Provisionar/configurar a integração real e secrets fora do Git, com e-mail e
    callbacks aprovados.
-6. Criar a identidade Neon do primeiro Admin por fluxo humano controlado.
-7. Inserir **um único** vínculo ativo `app_user_access` com papel `admin`, por
+3. Criar a identidade Neon do primeiro Admin por fluxo humano controlado.
+4. Inserir **um único** vínculo ativo `app_user_access` com papel `admin`, por
    operação administrativa auditada e autorizada.
-8. Executar a suíte integrada de homologação e reconciliar os eventos de
+5. Executar a suíte integrada de homologação e reconciliar os eventos de
    auditoria antes de liberar qualquer outro convite.
 
 ## Bootstrap do primeiro Admin
