@@ -78,10 +78,19 @@ Antes de retomar:
 1. consultar novamente `/status` ou `Settings → Usage`;
 2. confirmar que a janela relevante foi renovada;
 3. registrar o novo percentual/saldo disponível;
-4. ler o handoff mais recente;
-5. confirmar branch e `git status`;
-6. se o `DESLIGARTUDO` anterior concluiu com sucesso, sincronizar/confirmar o estado remoto antes de continuar;
-7. continuar exatamente do próximo passo documentado, sem repetir operações já concluídas.
+4. confirmar a branch de trabalho correta e o `git status`;
+5. executar `./LIGARTUDO` como procedimento oficial de retomada;
+6. confirmar que a atualização Git ocorreu por fast-forward ou foi adiada de
+   forma segura por alterações locais;
+7. confirmar que Node.js, npm e as dependências estão disponíveis;
+8. ler o handoff mais recente;
+9. reler `AGENTS.md` e a governança aplicável;
+10. continuar exatamente do próximo passo documentado, sem repetir operações
+    já concluídas.
+
+`./LIGARTUDO` nunca substitui aprovação humana, não deve ser usado para
+descartar alterações locais e não pode ser usado para alterar automaticamente a
+`main`. `./DESLIGARTUDO` continua sendo o procedimento oficial de encerramento.
 
 ## Retorno automático x manual
 

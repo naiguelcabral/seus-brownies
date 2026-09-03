@@ -26,7 +26,8 @@ O Codex consegue identificar estado, regras, limites e próxima tarefa sem depen
 
 ## Fase G1 — Segurança, autenticação e acesso
 
-- [ ] Definir ADR da solução de autenticação definitiva.
+- [x] Definir ADR da solução de autenticação definitiva (`ADR-0001` aceito).
+- [~] Mapear permissões, middleware e estrutura reversível de autenticação.
 - [ ] Implementar identidade de usuário.
 - [ ] Implementar login/logout.
 - [ ] Implementar sessão segura.
@@ -43,7 +44,9 @@ O Codex consegue identificar estado, regras, limites e próxima tarefa sem depen
 
 ### Gate
 
-A escolha final do provedor/estratégia de autenticação exige aprovação humana antes de integração irreversível.
+A estratégia Neon Auth baseada em Better Auth está aprovada. Provisionamento,
+secrets, configuração de e-mail, revisão/aplicação de migrations e autorização
+final por Server Function continuam sujeitos aos gates de `HUMAN-APPROVALS.md`.
 
 ## Fase G2 — Consolidação financeira, FIFO/CMV e margem
 
