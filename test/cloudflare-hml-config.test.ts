@@ -13,6 +13,7 @@ type WranglerConfig = {
       secrets: { required: string[] }
     }
   }
+  routes?: unknown
 }
 
 function parseJsonc(text: string) {
@@ -30,11 +31,13 @@ test('Worker HML é separado e preserva a compatibilidade do Worker principal', 
   assert.equal(config.compatibility_date, '2025-09-02')
   assert.deepEqual(config.compatibility_flags, ['nodejs_compat'])
   assert.equal(config.env.hml.name, 'cacau-v1-hml')
-  assert.equal(config.env.hml.workers_dev, false)
+  assert.equal(config.env.hml.workers_dev, true)
+  assert.equal(config.routes, undefined)
   assert.deepEqual(config.env.hml.secrets.required, [
     'DATABASE_URL',
     'NEON_AUTH_BASE_URL',
     'NEON_AUTH_COOKIE_SECRET',
     'TURNSTILE_SECRET_KEY',
+    'AUTH_LOGIN_HASH_PEPPER',
   ])
 })
