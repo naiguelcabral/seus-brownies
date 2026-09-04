@@ -35,6 +35,8 @@ run_isolated() {
     HOME="$HOME" \
     XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}" \
     TMPDIR="${TMPDIR:-/tmp}" \
+    WRANGLER_LOG_PATH="$temporary_directory/wrangler.log" \
+    WRANGLER_LOG_SANITIZE=true \
     CLOUDFLARE_ENV=hml \
     CLOUDFLARE_LOAD_DEV_VARS_FROM_DOT_ENV=false \
     "$@"

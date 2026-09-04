@@ -46,10 +46,11 @@ sem environment. `secret:hml` fixa `--env hml`, portanto não altera `cacau-v1`.
 O Wrangler 4.125.0 ainda emite, durante `vite build`, um aviso nominal de
 `Missing required secrets` para os secrets remotos ausentes do processo local.
 O script define `CLOUDFLARE_LOAD_DEV_VARS_FROM_DOT_ENV=false`, portanto não
-lê `.env*`; o aviso não contém valores e não impede o deploy quando os nomes
-já existem no Worker. Não silenciar esse diagnóstico com valores fictícios ou
-copiando secrets para o build. Reavaliar somente em atualização futura e
-aprovada do Wrangler.
+lê `.env*`, e direciona logs sanitizados do Wrangler ao diretório temporário;
+o aviso não contém valores e não impede o deploy quando os nomes já existem no
+Worker. Não silenciar esse diagnóstico com valores fictícios ou copiando
+secrets para o build. Reavaliar somente em atualização futura e aprovada do
+Wrangler.
 
 ## Bindings e configurações exigidos antes do deploy
 
@@ -116,5 +117,15 @@ deploy às cegas: o próximo passo é confirmar no dashboard se o acesso a
 `workers.dev` está desabilitado ou protegido por Cloudflare Access no nível da
 conta/Worker. Essa configuração externa precisa ser ajustada antes do smoke de
 auth e do bootstrap do primeiro Admin.
+
+O aviso pós-upload `Could not apply service and environment tags` não tem, até
+o momento, evidência de falha funcional: a versão HML publicada permaneceu
+ativa a 100% com o handler, a data de compatibilidade, a flag e os nomes dos
+secrets esperados. Ele é tratado como limitação de metadados/agrupamento visual
+até que o dashboard mostre impacto concreto; não justifica redeploy. O
+`fetch failed` observado após o upload também não invalida o deploy, mas o 403
+do smoke é uma falha externa real que precisa ser resolvida antes de prosseguir.
+Não atualizar o Wrangler automaticamente; reavaliar apenas com aprovação.
+
 Após o 403 estar resolvido, ainda será necessária a aprovação do namespace e da
 política de `AUTH_RATE_LIMITER` antes de criar o binding HML.
