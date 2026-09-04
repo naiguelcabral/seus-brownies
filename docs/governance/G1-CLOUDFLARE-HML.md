@@ -47,6 +47,13 @@ fixa `--env hml`, portanto não altera `cacau-v1`.
 pelo servidor. Não registrar valores públicos em `wrangler.jsonc` sem uma
 necessidade concreta da UI e uma revisão do pipeline HML.
 
+`secrets.required` documenta nomes para tipagem e avisa sobre ausências no
+desenvolvimento local; não é um bloqueio de deploy nem cria valores no
+Worker. O primeiro deploy HML pode ocorrer sem os cinco valores porque o
+resolvedor de principal retorna anônimo quando a configuração Neon Auth está
+ausente e os guards das Server Functions falham fechados antes de consultar o
+banco. Não habilita operação, login ou acesso a dados até o gate de secrets.
+
 ## Ordem segura do próximo gate
 
 1. Revisar o diff e autorizar o primeiro deploy isolado de `cacau-v1-hml`.
