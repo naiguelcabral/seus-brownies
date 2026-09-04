@@ -31,8 +31,9 @@ O Codex consegue identificar estado, regras, limites e próxima tarefa sem depen
       com CSRF explícito e falha fechada sem principal válido.
 - [~] Configurar integração externa Neon Auth em HML (secrets, callbacks,
   e-mail, Turnstile e rate limiting), sujeita a gate humano.
-- [x] Preparar configuração versionada do Worker Cloudflare HML separado, sem
-      deploy, secrets, rota ou DNS.
+- [x] Publicar Worker Cloudflare HML separado em `workers.dev`, sem DNS, rota
+      customizada ou alteração no Worker principal; smoke externo ainda está
+      bloqueado por resposta 403 na borda.
 - [x] Aplicar a migration de infraestrutura de acesso `0014` somente no branch
       Neon de homologação autorizado, sem bootstrap de usuário.
 - [ ] Implementar identidade de usuário.

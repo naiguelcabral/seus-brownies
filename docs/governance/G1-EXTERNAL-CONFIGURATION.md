@@ -14,7 +14,7 @@ em Git, em logs ou no chat.
 | `DATABASE_URL`                             | secret do Worker HML                      | acesso do Cacau ao banco do branch `g1-auth-hml`, inclusive allowlist e auditoria | somente servidor                        |
 | `NEON_AUTH_BASE_URL`                       | secret/variável server-side do Worker HML | endpoint do Neon Auth exclusivo do branch HML                                     | somente servidor                        |
 | `NEON_AUTH_COOKIE_SECRET`                  | secret do Worker HML                      | assina o cookie de dados de sessão do proxy; mínimo de 32 caracteres              | somente servidor                        |
-| `VITE_NEON_AUTH_URL`                       | variável de build HML                     | endpoint público usado pelo cliente Neon Auth, quando a UI de login for ativada   | client-safe, não é segredo              |
+| `VITE_NEON_AUTH_URL`                       | variável de build HML                     | dispensado enquanto Neon Auth for mediado pelo servidor                           | não configurar sem necessidade de UI    |
 | `TURNSTILE_SECRET_KEY`                     | secret do Worker HML                      | validação server-side de desafios Turnstile                                       | somente servidor                        |
 | `VITE_TURNSTILE_SITE_KEY`                  | variável de build HML                     | renderização do widget Turnstile                                                  | client-safe, não é segredo              |
 | origem confiável/callbacks                 | Neon Auth Console, branch HML             | permite apenas as origens e URLs de retorno HML aprovadas                         | configuração externa                    |
@@ -31,10 +31,12 @@ fluxo real de login no próximo gate.
 
 1. Confirmar que todos os bindings pertencem ao Worker e banco de
    `g1-auth-hml`, nunca a production.
-2. Criar os secrets server-side e a variável pública de build, sem imprimir
-   valores; validar somente presença e comprimento do cookie secret.
-3. Configurar no Neon Auth HML a origem confiável, callbacks, verificação de
-   e-mail e o provedor de e-mail escolhido.
+2. Confirmar os secrets server-side HML somente por nome; nenhum valor deve
+   entrar no build, Git ou chat.
+3. Configurar no Neon Auth HML, sem wildcard, as origens confiáveis e callbacks
+   `http://localhost:3000` e
+   `https://cacau-v1-hml.naiguelcabral.workers.dev`, além da verificação de
+   e-mail e do provedor escolhido.
 4. Configurar Turnstile e rate limiting de HML, limitados às rotas de auth.
 5. Executar testes integrados sem bootstrapar acesso Cacau: sessão sem
    allowlist, vínculo inativo, papel inválido e e-mail não verificado devem
@@ -53,6 +55,9 @@ fluxo real de login no próximo gate.
   Server Function protegida.
 - Verificar os eventos de auditoria por ação/resultado/timestamp, sem senha,
   token, e-mail bruto, cookie ou segredo.
+- Adicionar `cacau-v1-hml.naiguelcabral.workers.dev` ao widget Turnstile
+  `cacau-v1-hml`, preservando `localhost`; validar o token exclusivamente no
+  servidor.
 
 ## Provedor de e-mail
 

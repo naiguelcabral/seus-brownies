@@ -63,8 +63,11 @@ Este documento é a referência canônica de alto nível para o estado atual do 
   branch Neon de homologação `g1-auth-hml`: criou a allowlist de acesso, o
   controle de tentativas e a auditoria, sem criar usuários nem alterar FIFO.
   O adaptador Neon Auth/TanStack, CSRF e guards das 30 Server Functions estão
-  preparados e falham fechados até a configuração externa. Não há sessão real,
-  secret, e-mail, callback, Turnstile ou usuário configurado.
+  preparados e falham fechados até a configuração externa. O Worker HML
+  `cacau-v1-hml` foi publicado exclusivamente em `workers.dev`, com os cinco
+  secrets HML confirmados somente por nome. O smoke público ainda retorna 403
+  na borda; callbacks/trusted origins, Turnstile HML, e-mail e rate limiting
+  permanecem pendentes. Não há usuário/Admin configurado.
 
 ## Ainda não entregue
 
