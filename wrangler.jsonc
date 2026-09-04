@@ -3,5 +3,19 @@
   "name": "cacau-v1",
   "compatibility_date": "2025-09-02",
   "compatibility_flags": ["nodejs_compat"],
-  "main": "@tanstack/react-start/server-entry"
+  "main": "@tanstack/react-start/server-entry",
+  "env": {
+    "hml": {
+      "name": "cacau-v1-hml",
+      "workers_dev": false,
+      "secrets": {
+        "required": [
+          "DATABASE_URL",
+          "NEON_AUTH_BASE_URL",
+          "NEON_AUTH_COOKIE_SECRET",
+          "TURNSTILE_SECRET_KEY",
+        ],
+      },
+    },
+  },
 }

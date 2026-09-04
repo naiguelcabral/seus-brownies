@@ -7,6 +7,7 @@
   },
   "scripts": {
     "dev": "vite dev --port 3000",
+    "dev:hml": "CLOUDFLARE_ENV=hml vite dev --port 3000",
     "generate-routes": "tsr generate",
     "build": "vite build",
     "preview": "vite preview",
@@ -20,6 +21,8 @@
     "format": "prettier --write . && eslint --fix",
     "check": "prettier --check .",
     "deploy": "npm run build && wrangler deploy",
+    "deploy:hml": "CLOUDFLARE_ENV=hml npm run build && wrangler deploy --env hml",
+    "secret:hml": "wrangler secret put --env hml",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
