@@ -13,12 +13,14 @@ O environment HML preserva `compatibility_date: 2025-09-02` e
 `cacau-v1-hml.<conta>.workers.dev`. Não há rota, DNS nem custom domain
 declarado; qualquer um deles continua sendo um gate posterior e explícito.
 
-Em 4 de setembro de 2026, o primeiro `npm run deploy:hml` foi executado a
-partir de uma cópia temporária do `HEAD`, sem arquivos locais não versionados.
-O build terminou com sucesso e reportou somente os cinco nomes de secrets
-ausentes. O Wrangler interrompeu antes do upload por não haver autenticação
-Cloudflare disponível em modo não interativo. Portanto, `cacau-v1-hml` ainda
-não foi criado nem atualizado e `cacau-v1` não foi tocado.
+Em 4 de setembro de 2026, uma tentativa de `npm run deploy:hml` executada a
+partir de uma cópia temporária do `HEAD`, sem arquivos locais não versionados,
+terminou o build e parou antes do upload por ausência de autenticação
+Cloudflare. A sessão OAuth foi confirmada posteriormente. A documentação atual
+do Wrangler estabelece que `secrets.required` também valida os nomes no deploy;
+portanto, o primeiro deploy permanece bloqueado até os cinco secrets HML serem
+gravados. `cacau-v1-hml` ainda não foi criado nem atualizado e `cacau-v1` não
+foi tocado.
 
 ## Scripts preparados
 
@@ -54,21 +56,21 @@ fixa `--env hml`, portanto não altera `cacau-v1`.
 pelo servidor. Não registrar valores públicos em `wrangler.jsonc` sem uma
 necessidade concreta da UI e uma revisão do pipeline HML.
 
-`secrets.required` documenta nomes para tipagem e avisa sobre ausências no
-desenvolvimento local; não é um bloqueio de deploy nem cria valores no
-Worker. O primeiro deploy HML pode ocorrer sem os cinco valores porque o
-resolvedor de principal retorna anônimo quando a configuração Neon Auth está
-ausente e os guards das Server Functions falham fechados antes de consultar o
-banco. Não habilita operação, login ou acesso a dados até o gate de secrets.
+`secrets.required` documenta nomes para tipagem, limita o carregamento local e
+valida ausências no deploy; não cria valores no Worker. Assim, os cinco secrets
+devem ser gravados antes do primeiro deploy. Enquanto estiverem ausentes, o
+resolvedor de principal retorna anônimo e os guards das Server Functions falham
+fechados antes de consultar o banco, mas esse comportamento não substitui a
+validação do Wrangler.
 
 ## Ordem segura do próximo gate
 
-1. Revisar o diff e autorizar o primeiro deploy isolado de `cacau-v1-hml`.
-2. Registrar o hostname `workers.dev` resultante, sem criar custom domain.
-3. Configurar o hostname no Neon Auth HML e no widget Turnstile, preservando
-   `localhost`.
-4. Criar os cinco secrets declarados apenas no environment `hml`, sem exibir
+1. Criar os cinco secrets declarados apenas no environment `hml`, sem exibir
    valores, e confirmar a presença pelos nomes.
+2. Executar o primeiro deploy isolado de `cacau-v1-hml`.
+3. Registrar o hostname `workers.dev` resultante, sem criar custom domain.
+4. Configurar o hostname no Neon Auth HML e no widget Turnstile, preservando
+   `localhost`.
 5. Configurar e-mail e Rate Limiting; registrar o
    namespace HML real de rate limit na configuração versionada.
 6. Validar o Worker HML sem criar Admin ou dados de negócio.
@@ -76,17 +78,9 @@ banco. Não habilita operação, login ou acesso a dados até o gate de secrets.
 Nenhum comando deste documento autoriza produção, DNS, rota de produção,
 secrets de produção ou bootstrap do Admin.
 
-## Gate externo atual: autenticação Cloudflare para HML
+## Gate externo atual: secrets exclusivos de HML
 
-Um humano deve autenticar o CLI localmente por fluxo de navegador, sem colar
-token no chat ou no repositório:
-
-```bash
-npx wrangler login
-npx wrangler whoami
-```
-
-Depois da confirmação humana de que a conta Cloudflare correta está ativa, o
-Codex pode repetir `npm run deploy:hml` a partir da cópia Git isolada. Não usar
-`--temporary`, não configurar `CLOUDFLARE_API_TOKEN` em arquivo e não criar
-secrets antes de o hostname HML existir.
+A sessão OAuth do Wrangler está confirmada. Um humano deve inserir cada valor
+somente no prompt interativo, sem colá-lo no chat, shell history, `.env` ou Git.
+Depois da confirmação de todos os cinco nomes, o Codex pode repetir
+`npm run deploy:hml` a partir da cópia Git isolada.
