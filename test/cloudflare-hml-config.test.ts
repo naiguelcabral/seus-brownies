@@ -15,12 +15,16 @@ type WranglerConfig = {
   }
 }
 
+function parseJsonc(text: string) {
+  return JSON.parse(text.replace(/,\s*([}\]])/g, '$1')) as WranglerConfig
+}
+
 test('Worker HML é separado e preserva a compatibilidade do Worker principal', async () => {
   const text = await readFile(
     new URL('../wrangler.jsonc', import.meta.url),
     'utf8',
   )
-  const config = JSON.parse(text) as WranglerConfig
+  const config = parseJsonc(text)
 
   assert.equal(config.name, 'cacau-v1')
   assert.equal(config.compatibility_date, '2025-09-02')
