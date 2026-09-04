@@ -75,15 +75,32 @@ else
   echo "Não há alterações novas para criar um commit."
 fi
 
-if ! git pull --rebase origin "$BRANCH"; then
-  echo
-  echo "Não foi possível atualizar antes do envio. Resolva o rebase e execute './DESLIGARTUDO' novamente."
-  exit 1
-fi
+REMOTE_BRANCH_STATUS=0
+git ls-remote --exit-code --heads origin "$BRANCH" >/dev/null 2>&1 || REMOTE_BRANCH_STATUS=$?
 
-if ! git push origin "$BRANCH"; then
+if [[ "$REMOTE_BRANCH_STATUS" -eq 0 ]]; then
+  if ! git pull --rebase origin "$BRANCH"; then
+    echo
+    echo "Não foi possível atualizar antes do envio. Resolva o rebase e execute './DESLIGARTUDO' novamente."
+    exit 1
+  fi
+
+  if ! git push origin "$BRANCH"; then
+    echo
+    echo "O commit foi salvo localmente, mas não pôde ser enviado ao GitHub. Execute './DESLIGARTUDO' novamente quando a conexão voltar."
+    exit 1
+  fi
+elif [[ "$REMOTE_BRANCH_STATUS" -eq 2 ]]; then
+  echo "A branch remota origin/$BRANCH ainda não existe; publicando-a pela primeira vez."
+  if ! git push -u origin "$BRANCH"; then
+    echo
+    echo "O commit foi salvo localmente, mas a primeira publicação não pôde ser enviada ao GitHub. Execute './DESLIGARTUDO' novamente quando a conexão voltar."
+    exit 1
+  fi
+else
   echo
-  echo "O commit foi salvo localmente, mas não pôde ser enviado ao GitHub. Execute './DESLIGARTUDO' novamente quando a conexão voltar."
+  echo "Não foi possível verificar se origin/$BRANCH existe (git ls-remote retornou $REMOTE_BRANCH_STATUS)."
+  echo "Nenhum pull ou push foi executado. Verifique a conexão/autorização e execute './DESLIGARTUDO' novamente."
   exit 1
 fi
 

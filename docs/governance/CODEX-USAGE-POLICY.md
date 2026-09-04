@@ -52,8 +52,12 @@ O script é o mecanismo oficial de encerramento do dispositivo/projeto:
 - em uso manual, pergunta `Salvar e sincronizar o trabalho antes de desligar? [S/n]`;
 - em execução não interativa pelo Codex, usa a mensagem padrão de checkpoint;
 - cria commit quando houver mudanças;
-- executa `git pull --rebase` da branch atual;
-- executa `git push` da branch atual;
+- consulta `origin/$BRANCH` com `git ls-remote --exit-code --heads` antes da
+  sincronização;
+- se a branch remota existir, executa `git pull --rebase origin "$BRANCH"` e
+  depois `git push origin "$BRANCH"`;
+- se for a primeira publicação, não executa pull e usa
+  `git push -u origin "$BRANCH"`;
 - possui defesa contra arquivos `.env*` conhecidos versionados;
 - execução automática na `main` é bloqueada.
 
@@ -80,12 +84,15 @@ Antes de retomar:
 3. registrar o novo percentual/saldo disponível;
 4. confirmar a branch de trabalho correta e o `git status`;
 5. executar `./LIGARTUDO` como procedimento oficial de retomada;
-6. confirmar que a atualização Git ocorreu por fast-forward ou foi adiada de
-   forma segura por alterações locais;
-7. confirmar que Node.js, npm e as dependências estão disponíveis;
-8. ler o handoff mais recente;
-9. reler `AGENTS.md` e a governança aplicável;
-10. continuar exatamente do próximo passo documentado, sem repetir operações
+6. com árvore limpa, consultar `origin/$BRANCH`: atualizar somente por
+   `git pull --ff-only origin "$BRANCH"` se ela existir; se ainda não tiver
+   sido publicada, não executar pull e continuar localmente;
+7. com árvore suja, não consultar/puxar atualizações e registrar que a
+   atualização foi adiada de forma segura;
+8. confirmar que Node.js, npm e as dependências estão disponíveis;
+9. ler o handoff mais recente;
+10. reler `AGENTS.md` e a governança aplicável;
+11. continuar exatamente do próximo passo documentado, sem repetir operações
     já concluídas.
 
 `./LIGARTUDO` nunca substitui aprovação humana, não deve ser usado para
