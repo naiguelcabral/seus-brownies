@@ -20,7 +20,7 @@ em Git, em logs ou no chat.
 | origem confiável/callbacks                 | Neon Auth Console, branch HML             | permite apenas as origens e URLs de retorno HML aprovadas                         | configuração externa                    |
 | verificação de e-mail obrigatória          | Neon Auth Console, branch HML             | impede principal não verificado de avançar                                        | configuração externa                    |
 | provedor de e-mail, remetente e credencial | Neon Auth Console/serviço escolhido       | entrega de verificação e recuperação                                              | server-only; nomes dependem do provedor |
-| rate limit volumétrico                     | Cloudflare, ambiente HML                  | camada complementar por rota de login/recuperação                                 | configuração externa                    |
+| `AUTH_RATE_LIMITER`                        | Cloudflare, ambiente HML                  | limite volumétrico por chave; exige namespace e política HML aprovados            | configuração externa                    |
 
 `AUTH_LOGIN_HASH_PEPPER` é recomendado caso o Cacau persista hash de e-mail
 para `auth_login_attempts`; ele deve ser um secret server-side distinto, usando
@@ -37,7 +37,10 @@ fluxo real de login no próximo gate.
    `http://localhost:3000` e
    `https://cacau-v1-hml.naiguelcabral.workers.dev`, além da verificação de
    e-mail e do provedor escolhido.
-4. Configurar Turnstile e rate limiting de HML, limitados às rotas de auth.
+4. Configurar Turnstile e `AUTH_RATE_LIMITER` de HML, limitados às rotas de
+   auth. O namespace deve ser inteiro positivo exclusivo; a política deve
+   declarar limite e janela de 10 ou 60 segundos. Isso não substitui o contador
+   persistente de cinco falhas no banco.
 5. Executar testes integrados sem bootstrapar acesso Cacau: sessão sem
    allowlist, vínculo inativo, papel inválido e e-mail não verificado devem
    permanecer negados.

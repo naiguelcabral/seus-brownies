@@ -36,6 +36,7 @@ run_isolated() {
     XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}" \
     TMPDIR="${TMPDIR:-/tmp}" \
     CLOUDFLARE_ENV=hml \
+    CLOUDFLARE_LOAD_DEV_VARS_FROM_DOT_ENV=false \
     "$@"
 }
 

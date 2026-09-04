@@ -43,6 +43,14 @@ consultam `.env*` nem passam secrets server-side ao build. `deploy:hml` fixa
 `CLOUDFLARE_ENV=hml` e usa `wrangler deploy --env hml`; nunca chama o Worker
 sem environment. `secret:hml` fixa `--env hml`, portanto não altera `cacau-v1`.
 
+O Wrangler 4.125.0 ainda emite, durante `vite build`, um aviso nominal de
+`Missing required secrets` para os secrets remotos ausentes do processo local.
+O script define `CLOUDFLARE_LOAD_DEV_VARS_FROM_DOT_ENV=false`, portanto não
+lê `.env*`; o aviso não contém valores e não impede o deploy quando os nomes
+já existem no Worker. Não silenciar esse diagnóstico com valores fictícios ou
+copiando secrets para o build. Reavaliar somente em atualização futura e
+aprovada do Wrangler.
+
 ## Bindings e configurações exigidos antes do deploy
 
 | Área             | Binding/configuração                                                                               | Estado                                                           |
@@ -65,6 +73,13 @@ devem ser gravados antes do primeiro deploy. Enquanto estiverem ausentes, o
 resolvedor de principal retorna anônimo e os guards das Server Functions falham
 fechados antes de consultar o banco, mas esse comportamento não substitui a
 validação do Wrangler.
+
+`AUTH_RATE_LIMITER` permanece pendente porque o namespace é uma identificação
+numérica positiva definida pela conta e não existe valor aprovado para HML. A
+decisão precisa definir namespace exclusivo, limite e janela permitida (10 ou
+60 segundos). A API Cloudflare é apenas volumétrica e eventualmente
+consistente; o contador persistente de cinco falhas no Neon continua sendo a
+fonte de verdade para cooldown e desafio adicional.
 
 ## Origens permitidas de autenticação
 
@@ -101,3 +116,5 @@ deploy às cegas: o próximo passo é confirmar no dashboard se o acesso a
 `workers.dev` está desabilitado ou protegido por Cloudflare Access no nível da
 conta/Worker. Essa configuração externa precisa ser ajustada antes do smoke de
 auth e do bootstrap do primeiro Admin.
+Após o 403 estar resolvido, ainda será necessária a aprovação do namespace e da
+política de `AUTH_RATE_LIMITER` antes de criar o binding HML.

@@ -15,6 +15,7 @@ test('build HML usa HEAD limpo e ambiente isolado', async () => {
   assert.match(script, /git -C "\$repository_root" archive --format=tar HEAD/)
   assert.match(script, /env -i/)
   assert.match(script, /CLOUDFLARE_ENV=hml/)
+  assert.match(script, /CLOUDFLARE_LOAD_DEV_VARS_FROM_DOT_ENV=false/)
   assert.match(script, /wrangler deploy --env hml/)
   assert.doesNotMatch(script, /dotenv|source\s+.*\.env/)
   assert.equal(scripts['build:hml'], 'bash scripts/build-hml-isolated.sh')
