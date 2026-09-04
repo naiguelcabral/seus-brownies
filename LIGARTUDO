@@ -45,5 +45,9 @@ if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
 fi
 
 echo
+echo "Abrindo configuração dos MCPs da Cloudflare..."
+code "$ROOT_DIR/.vscode/mcp.json" --reuse-window >/dev/null 2>&1 &
+
+echo
 echo "Iniciando o projeto. Abra http://localhost:3000 no navegador."
 exec npm run dev
