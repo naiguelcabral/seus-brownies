@@ -129,6 +129,35 @@ chamado com o suporte Cloudflare, informando somente a URL HML, o horário UTC,
 o `cf-ray` e que o Worker público habilitado não recebeu a invocação. Não
 anexar cookies, tokens, headers de autorização ou valores de secrets.
 
+### Leitura da conta pela API Cloudflare (4 de setembro de 2026)
+
+Consulta estritamente de leitura pelo conector autenticado confirmou os fatos
+abaixo, sem novo smoke, deploy ou alteração de configuração:
+
+- `cacau-v1-hml` continua com handler `fetch`, assets e módulos habilitados,
+  sem rota; o `workers.dev` do script está habilitado.
+- A versão `892dcad0-9d21-4701-8b6e-d54bc346c192` continua ativa a 100% no
+  deployment mais recente. A configuração continua em `2025-09-02` com
+  `nodejs_compat` e modelo `standard`.
+- A API de Cloudflare Access retornou que Access não está habilitado para a
+  conta. Logo, não há aplicação ou política Access desta conta aplicável ao
+  hostname HML.
+- A listagem de regras de acesso IP de conta retornou vazia.
+- A conta contém somente o ruleset gerenciado `Cloudflare Managed Free
+  Ruleset`, na fase `http_request_firewall_managed`, com 31 regras ativas de
+  ação `block`. A API não forneceu evento, trace, regra correspondente ou
+  identificação de match para o `cf-ray` do 403; isso **não atribui** o
+  bloqueio ao ruleset.
+- Não há consultas salvas de Workers Observability. O conector não expõe um
+  trace de borda nem uma correlação de regra para a requisição já observada.
+
+Com isso, Access e regras IP de conta foram descartados com evidência. A causa
+do 403 segue **inconclusiva**: o conector não expõe a política/evento de borda
+responsável. O gate humano continua sendo abrir chamado ao suporte Cloudflare
+com a URL HML, o horário UTC do smoke anterior, `cf-ray:
+a359fcdd3da0bba0-GRU` e a evidência de zero invocações no `wrangler tail`.
+Não anexar informações de autenticação, cookies, headers ou secrets.
+
 O aviso pós-upload `Could not apply service and environment tags` não tem, até
 o momento, evidência de falha funcional: a versão HML publicada permaneceu
 ativa a 100% com o handler, a data de compatibilidade, a flag e os nomes dos
