@@ -65,9 +65,11 @@ Este documento é a referência canônica de alto nível para o estado atual do 
   O adaptador Neon Auth/TanStack, CSRF e guards das 30 Server Functions estão
   preparados e falham fechados até a configuração externa. O Worker HML
   `cacau-v1-hml` foi publicado exclusivamente em `workers.dev`, com os cinco
-  secrets HML confirmados somente por nome. O smoke público ainda retorna 403
-  na borda; callbacks/trusted origins, Turnstile HML, e-mail e rate limiting
-  permanecem pendentes. Não há usuário/Admin configurado.
+  secrets HML confirmados somente por nome. Trusted origins do Neon Auth e o
+  hostname Turnstile HML foram configurados sem wildcard. O smoke público ainda
+  retorna 403 antes de invocar o Worker, apesar de `workers.dev` público e da
+  versão HML ativa; rate limiting e a investigação externa da borda permanecem
+  pendentes. Não há usuário/Admin configurado.
 
 ## Ainda não entregue
 

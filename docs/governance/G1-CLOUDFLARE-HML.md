@@ -96,27 +96,38 @@ secret permanece somente no Worker.
 
 ## Ordem segura do próximo gate
 
-1. Configurar as duas origens explícitas no Neon Auth HML e no Turnstile,
-   preservando `localhost` e sem wildcard.
-2. Investigar a resposta `403` atual do hostname `workers.dev` antes de novo
+1. Investigar a resposta `403` atual do hostname `workers.dev` antes de novo
    deploy; o upload e a versão ativa foram confirmados, mas a aplicação ainda
    não respondeu publicamente.
-3. Configurar e-mail e Rate Limiting; registrar o
+2. Configurar e-mail e Rate Limiting; registrar o
    namespace HML real de rate limit na configuração versionada.
-4. Validar o Worker HML sem criar Admin ou dados de negócio.
+3. Validar o Worker HML sem criar Admin ou dados de negócio.
 
 Nenhum comando deste documento autoriza produção, DNS, rota de produção,
 secrets de produção ou bootstrap do Admin.
 
 ## Smoke e gate externo atual
 
-O deployment ativo e os cinco nomes de secrets foram confirmados sem expor
-valores. Contudo, o GET sem sessão à URL estável retornou `403 Forbidden` na
-borda antes de HTML, cookie ou execução visível da aplicação. Não fazer novo
-deploy às cegas: o próximo passo é confirmar no dashboard se o acesso a
-`workers.dev` está desabilitado ou protegido por Cloudflare Access no nível da
-conta/Worker. Essa configuração externa precisa ser ajustada antes do smoke de
-auth e do bootstrap do primeiro Admin.
+As origens confiáveis do Neon Auth HML e o hostname do widget Turnstile HML
+foram atualizados para incluir a URL estável, preservando `localhost` e sem
+wildcard. O deployment ativo e os cinco nomes de secrets também foram
+confirmados sem expor valores.
+
+Em 4 de setembro de 2026, um GET sem sessão à URL estável retornou
+`403 Forbidden`, `text/plain;charset=UTF-8`, corpo de 9 bytes e
+`cf-ray: a359fcdd3da0bba0-GRU`. O painel do Worker confirma `workers.dev`
+habilitado e público, sem Cloudflare Access. A versão
+`892dcad0-9d21-4701-8b6e-d54bc346c192` está ativa a 100%, com handler `fetch`,
+`compatibility_date: 2025-09-02`, `nodejs_compat`, sem rota e sem custom
+domain. Um `wrangler tail` sanitizado, filtrado para GET e para essa versão,
+não registrou invocação durante um GET correlacionado que também retornou 403.
+
+O diagnóstico é, portanto, bloqueio na borda antes do Worker, com alta
+confiança; não é evidência de middleware TanStack, CSRF, RBAC, Neon Auth ou
+Turnstile. Não fazer novo deploy às cegas. O próximo gate humano é abrir
+chamado com o suporte Cloudflare, informando somente a URL HML, o horário UTC,
+o `cf-ray` e que o Worker público habilitado não recebeu a invocação. Não
+anexar cookies, tokens, headers de autorização ou valores de secrets.
 
 O aviso pós-upload `Could not apply service and environment tags` não tem, até
 o momento, evidência de falha funcional: a versão HML publicada permaneceu
