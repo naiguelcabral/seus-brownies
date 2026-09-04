@@ -13,6 +13,13 @@ O environment HML preserva `compatibility_date: 2025-09-02` e
 `cacau-v1-hml.<conta>.workers.dev`. Não há rota, DNS nem custom domain
 declarado; qualquer um deles continua sendo um gate posterior e explícito.
 
+Em 4 de setembro de 2026, o primeiro `npm run deploy:hml` foi executado a
+partir de uma cópia temporária do `HEAD`, sem arquivos locais não versionados.
+O build terminou com sucesso e reportou somente os cinco nomes de secrets
+ausentes. O Wrangler interrompeu antes do upload por não haver autenticação
+Cloudflare disponível em modo não interativo. Portanto, `cacau-v1-hml` ainda
+não foi criado nem atualizado e `cacau-v1` não foi tocado.
+
 ## Scripts preparados
 
 ```bash
@@ -68,3 +75,18 @@ banco. Não habilita operação, login ou acesso a dados até o gate de secrets.
 
 Nenhum comando deste documento autoriza produção, DNS, rota de produção,
 secrets de produção ou bootstrap do Admin.
+
+## Gate externo atual: autenticação Cloudflare para HML
+
+Um humano deve autenticar o CLI localmente por fluxo de navegador, sem colar
+token no chat ou no repositório:
+
+```bash
+npx wrangler login
+npx wrangler whoami
+```
+
+Depois da confirmação humana de que a conta Cloudflare correta está ativa, o
+Codex pode repetir `npm run deploy:hml` a partir da cópia Git isolada. Não usar
+`--temporary`, não configurar `CLOUDFLARE_API_TOKEN` em arquivo e não criar
+secrets antes de o hostname HML existir.
