@@ -37,6 +37,14 @@ test('working tree suja adia atualização antes da consulta ao remoto', async (
   assert.ok(dirtyTree < remoteCheck)
   assert.match(
     script,
-    /Há alterações locais\. A atualização do GitHub foi adiada/,
+    /Há alterações locais\."\n\s*echo "A atualização do GitHub foi adiada/,
   )
+})
+
+test('não abre configuração do VS Code e inicia o runtime HML', async () => {
+  const script = await readScript()
+
+  assert.doesNotMatch(script, /\bcode\s+.*\.vscode\/mcp\.json/)
+  assert.match(script, /codex mcp list 2>\/dev\/null/)
+  assert.match(script, /exec npm run dev:hml/)
 })

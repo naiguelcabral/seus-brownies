@@ -41,22 +41,122 @@ test('hash HMAC muda por escopo e não contém o e-mail', async () => {
   assert.doesNotMatch(loginHash, /admin|example/i)
 })
 
-test('ambiente não local sem pepper falha fechado para ação pública', async () => {
-  assert.deepEqual(
-    await protectPublicAuthAction(
-      { scope: 'login', email: 'admin@example.test' },
-      { NODE_ENV: 'production' },
-    ),
-    { allowed: false, requiresChallenge: false },
-  )
+test('DEV sem pepper permite todas as ações públicas sem desafio', async () => {
+  for (const scope of [
+    'login',
+    'sign-up',
+    'verification-otp',
+    'password-reset',
+  ] as const) {
+    assert.deepEqual(
+      await protectPublicAuthAction(
+        { scope, email: 'admin@example.test' },
+        {},
+        { isDevelopment: true },
+      ),
+      { allowed: true, requiresChallenge: false },
+    )
+  }
 })
 
-test('desenvolvimento local permanece utilizável sem secret de desenvolvimento', async () => {
-  assert.deepEqual(
-    await protectPublicAuthAction(
-      { scope: 'login', email: 'admin@example.test' },
-      { NODE_ENV: 'development' },
-    ),
-    { allowed: true, requiresChallenge: false },
+test('produção sem pepper falha fechado para todas as ações públicas', async () => {
+  for (const scope of [
+    'login',
+    'sign-up',
+    'verification-otp',
+    'password-reset',
+  ] as const) {
+    assert.deepEqual(
+      await protectPublicAuthAction(
+        { scope, email: 'admin@example.test' },
+        {},
+        { isDevelopment: false },
+      ),
+      { allowed: false, requiresChallenge: false },
+    )
+  }
+})
+
+test('DEV com pepper e abaixo do limite permite sem invocar Turnstile', async () => {
+  let turnstileCalls = 0
+  const result = await protectPublicAuthAction(
+    { scope: 'password-reset', email: 'admin@example.test' },
+    { AUTH_LOGIN_HASH_PEPPER: 'pepper-only-for-test' },
+    {
+      isDevelopment: true,
+      limiter: createInMemoryAuthRateLimiter(),
+      verifyTurnstile: async () => {
+        turnstileCalls += 1
+        return true
+      },
+    },
   )
+
+  assert.equal(result.allowed, true)
+  assert.equal(result.requiresChallenge, false)
+  assert.equal(turnstileCalls, 0)
+})
+
+test('desafio não requerido não invoca Turnstile em DEV nem produção', async () => {
+  for (const isDevelopment of [true, false]) {
+    let turnstileCalls = 0
+    const result = await protectPublicAuthAction(
+      { scope: 'login', email: 'admin@example.test' },
+      { AUTH_LOGIN_HASH_PEPPER: 'pepper-only-for-test' },
+      {
+        isDevelopment,
+        limiter: createInMemoryAuthRateLimiter(),
+        verifyTurnstile: async () => {
+          turnstileCalls += 1
+          return true
+        },
+      },
+    )
+
+    assert.equal(result.allowed, true)
+    assert.equal(result.requiresChallenge, false)
+    assert.equal(turnstileCalls, 0)
+  }
+})
+
+test('desafio requerido sem secret ou token falha fechado sem invocar Turnstile', async () => {
+  for (const input of [{}, { TURNSTILE_SECRET_KEY: 'turnstile-test-key' }]) {
+    const limiter = createInMemoryAuthRateLimiter()
+    const email = 'admin@example.test'
+    const environment = {
+      AUTH_LOGIN_HASH_PEPPER: 'pepper-only-for-test',
+      ...input,
+    }
+    let turnstileCalls = 0
+
+    for (
+      let attempt = 0;
+      attempt < authRateLimitPolicies.login.limit;
+      attempt += 1
+    ) {
+      await protectPublicAuthAction({ scope: 'login', email }, environment, {
+        limiter,
+        verifyTurnstile: async () => {
+          turnstileCalls += 1
+          return true
+        },
+      })
+    }
+
+    const blocked = await protectPublicAuthAction(
+      { scope: 'login', email },
+      environment,
+      {
+        limiter,
+        verifyTurnstile: async () => {
+          turnstileCalls += 1
+          return true
+        },
+      },
+    )
+
+    assert.equal(blocked.allowed, false)
+    assert.equal(blocked.requiresChallenge, true)
+    assert.equal(turnstileCalls, 0)
+  }
 })

@@ -9,6 +9,8 @@ import type {
 import { getRequest, getResponseHeaders } from '@tanstack/react-start/server'
 
 import type { NeonAuthRuntimeConfig } from './runtime-config.server'
+import { requestNeonPasswordReset } from './neon-password-reset-provider.server'
+import type { PasswordResetProviderResult } from './neon-password-reset-provider.server'
 
 export type TanStackRequestBindings = {
   getRequest: () => Request
@@ -21,6 +23,15 @@ function defaultBindings(): TanStackRequestBindings {
     appendSetCookie: (value) =>
       getResponseHeaders().append('set-cookie', value),
   }
+}
+
+export function requestTanStackNeonPasswordReset(
+  config: NeonAuthRuntimeConfig,
+  input: { email: string; redirectTo: string },
+): Promise<PasswordResetProviderResult> {
+  return requestNeonPasswordReset(config, input, {
+    bindings: defaultBindings(),
+  })
 }
 
 /**

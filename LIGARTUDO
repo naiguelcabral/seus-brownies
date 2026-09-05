@@ -1,53 +1,136 @@
 #!/usr/bin/env bash
 
-# Atualiza o projeto quando for seguro e inicia o painel local dos Seus Brownies.
+# Atualiza o projeto quando for seguro, verifica os MCPs e inicia o painel local dos Seus Brownies.
+
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$ROOT_DIR"
 
+echo
+echo "========================================"
+echo " Seus Brownies - Inicialização local"
+echo "========================================"
+echo
+
+# 1. Verifica Node.js e npm
 if ! command -v node >/dev/null 2>&1 || ! command -v npm >/dev/null 2>&1; then
   echo "Node.js e npm não estão disponíveis neste terminal."
   echo "Feche e abra um novo terminal do VS Code e tente novamente."
   exit 1
 fi
 
+echo "✓ Node.js e npm disponíveis"
+
+# 2. Instala dependências se necessário
 if [[ ! -d node_modules ]]; then
+  echo
   echo "Instalando as dependências do projeto..."
   npm ci
 fi
 
+# 3. Atualiza Git somente quando for seguro
 if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
   BRANCH="$(git branch --show-current)"
 
+  echo
+  echo "Verificando repositório Git..."
+
   if [[ -z "$BRANCH" ]]; then
-    echo "Não foi possível identificar a branch atual. O painel será iniciado com o estado local."
+    echo "⚠ Não foi possível identificar a branch atual."
+    echo "O painel será iniciado com o estado local."
+
   elif ! git remote get-url origin >/dev/null 2>&1; then
-    echo "O remoto origin não está configurado. O painel será iniciado com o estado local."
+    echo "⚠ O remoto origin não está configurado."
+    echo "O painel será iniciado com o estado local."
+
   elif [[ -n "$(git status --porcelain)" ]]; then
-    echo "Há alterações locais. A atualização do GitHub foi adiada para não sobrescrever seu trabalho."
+    echo "⚠ Há alterações locais."
+    echo "A atualização do GitHub foi adiada para não sobrescrever seu trabalho."
+
   else
     REMOTE_BRANCH_STATUS=0
-    git ls-remote --exit-code --heads origin "$BRANCH" >/dev/null 2>&1 || REMOTE_BRANCH_STATUS=$?
+
+    git ls-remote --exit-code --heads origin "$BRANCH" >/dev/null 2>&1 \
+      || REMOTE_BRANCH_STATUS=$?
 
     if [[ "$REMOTE_BRANCH_STATUS" -eq 0 ]]; then
       echo "Buscando atualizações do GitHub..."
-      if ! git pull --ff-only origin "$BRANCH"; then
-        echo "Não foi possível atualizar agora. O painel será iniciado com a versão local."
+
+      if git pull --ff-only origin "$BRANCH"; then
+        echo "✓ Repositório atualizado"
+      else
+        echo "⚠ Não foi possível atualizar agora."
+        echo "O painel será iniciado com a versão local."
       fi
+
     elif [[ "$REMOTE_BRANCH_STATUS" -eq 2 ]]; then
-      echo "A branch $BRANCH ainda não foi publicada em origin. O painel será iniciado com o estado local."
+      echo "⚠ A branch $BRANCH ainda não foi publicada em origin."
+      echo "O painel será iniciado com o estado local."
+
     else
-      echo "Não foi possível verificar se origin/$BRANCH existe (git ls-remote retornou $REMOTE_BRANCH_STATUS)."
-      echo "A atualização foi adiada. O painel será iniciado com a versão local."
+      echo "⚠ Não foi possível verificar origin/$BRANCH."
+      echo "git ls-remote retornou: $REMOTE_BRANCH_STATUS"
+      echo "A atualização foi adiada."
     fi
   fi
 fi
 
+# 4. Verifica configuração MCP do VS Code sem abrir arquivos
 echo
-echo "Abrindo configuração dos MCPs da Cloudflare..."
-code "$ROOT_DIR/.vscode/mcp.json" --reuse-window >/dev/null 2>&1 &
+echo "Verificando MCPs do VS Code..."
 
+MCP_CONFIG="$ROOT_DIR/.vscode/mcp.json"
+
+if [[ -f "$MCP_CONFIG" ]]; then
+  echo "✓ .vscode/mcp.json encontrado"
+
+  for MCP in \
+    "cloudflare-docs" \
+    "cloudflare-observability" \
+    "cloudflare-builds"
+  do
+    if grep -q "\"$MCP\"" "$MCP_CONFIG"; then
+      echo "✓ $MCP configurado"
+    else
+      echo "⚠ $MCP não encontrado no mcp.json"
+    fi
+  done
+else
+  echo "⚠ .vscode/mcp.json não encontrado"
+fi
+
+# 5. Verifica MCPs disponíveis no Codex CLI
 echo
-echo "Iniciando o projeto. Abra http://localhost:3000 no navegador."
-exec npm run dev
+echo "Verificando MCPs do Codex..."
+
+if command -v codex >/dev/null 2>&1; then
+  CODEX_MCP_LIST="$(codex mcp list 2>/dev/null || true)"
+
+  for MCP in \
+    "cloudflare-docs" \
+    "cloudflare-observability" \
+    "cloudflare-builds" \
+    "neon"
+  do
+    if grep -q "$MCP" <<< "$CODEX_MCP_LIST"; then
+      echo "✓ $MCP disponível no Codex"
+    else
+      echo "⚠ $MCP não encontrado no Codex"
+    fi
+  done
+else
+  echo "⚠ Codex CLI não encontrado neste terminal"
+fi
+
+# 6. Inicia o ambiente HML local
+echo
+echo "========================================"
+echo "Iniciando o projeto HML local"
+echo "========================================"
+echo
+echo "Abra no navegador:"
+echo "http://localhost:3000"
+echo
+
+exec npm run dev:hml

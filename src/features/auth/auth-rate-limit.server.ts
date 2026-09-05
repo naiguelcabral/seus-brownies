@@ -4,8 +4,17 @@ import type { AuthRateLimitScope } from './auth-rate-limit'
 
 const limiter = createInMemoryAuthRateLimiter()
 
-function isDevelopment(environment: Record<string, string | undefined>) {
-  return environment.NODE_ENV === 'development'
+type PublicAuthProtectionDependencies = {
+  isDevelopment?: boolean
+  limiter?: Pick<ReturnType<typeof createInMemoryAuthRateLimiter>, 'consume'>
+  verifyTurnstile?: (input: {
+    secretKey: string
+    token: string
+  }) => Promise<boolean>
+}
+
+function isDevelopment() {
+  return import.meta.env.DEV === true
 }
 
 export async function hashAuthIdentity(
@@ -46,10 +55,14 @@ export type PublicAuthProtectionInput = {
 export async function protectPublicAuthAction(
   input: PublicAuthProtectionInput,
   environment: Record<string, string | undefined>,
+  dependencies: PublicAuthProtectionDependencies = {},
 ) {
   const pepper = environment.AUTH_LOGIN_HASH_PEPPER
   if (!pepper) {
-    return { allowed: isDevelopment(environment), requiresChallenge: false }
+    return {
+      allowed: dependencies.isDevelopment ?? isDevelopment(),
+      requiresChallenge: false,
+    }
   }
 
   const opaqueIdentity = await hashAuthIdentity(
@@ -57,7 +70,10 @@ export async function protectPublicAuthAction(
     input.email,
     pepper,
   )
-  const decision = limiter.consume(input.scope, opaqueIdentity)
+  const decision = (dependencies.limiter ?? limiter).consume(
+    input.scope,
+    opaqueIdentity,
+  )
   if (decision.allowed) return decision
 
   const secretKey = environment.TURNSTILE_SECRET_KEY
@@ -66,12 +82,17 @@ export async function protectPublicAuthAction(
   }
 
   try {
-    const verified = await createCloudflareTurnstileVerifier({
-      secretKey,
-    }).verify({
-      token: input.turnstileToken,
-    })
-    return { ...decision, allowed: verified.success }
+    const verified = dependencies.verifyTurnstile
+      ? await dependencies.verifyTurnstile({
+          secretKey,
+          token: input.turnstileToken,
+        })
+      : (
+          await createCloudflareTurnstileVerifier({ secretKey }).verify({
+            token: input.turnstileToken,
+          })
+        ).success
+    return { ...decision, allowed: verified }
   } catch {
     return { ...decision, allowed: false }
   }

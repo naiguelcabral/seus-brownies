@@ -17,7 +17,6 @@ import {
   invalidPasswordResetMessage,
   otpSentMessage,
   passwordResetRequestMessage,
-  requestPasswordReset,
   resendEmailVerificationOtp,
   resetPasswordWithToken,
   signInWithEmailPassword,
@@ -26,7 +25,13 @@ import {
   unavailableLoginMessage,
   verifyEmailVerificationOtp,
 } from './login-actions'
-import { executeAuditedPasswordReset } from './password-reset-audit'
+import {
+  executeAuditedPasswordReset,
+  isAuditedPasswordResetSuccessful,
+} from './password-reset-audit'
+import { createPasswordResetTelemetry } from './password-reset-telemetry.server'
+import { requestTanStackNeonPasswordReset } from './neon-tanstack-adapter.server'
+import { readNeonAuthRuntimeConfig } from './runtime-config.server'
 
 const localPasswordResetRedirectTo =
   'http://localhost:3000/login/redefinir-senha'
@@ -70,8 +75,8 @@ const verifyOtpWithProtectionInput = verifyOtpInput.merge(publicAuthInput)
 const passwordResetWithProtectionInput =
   passwordResetInput.merge(publicAuthInput)
 
-function passwordResetRedirectTo(environment: NodeJS.ProcessEnv) {
-  return environment.NODE_ENV === 'development'
+function passwordResetRedirectTo() {
+  return import.meta.env.DEV
     ? localPasswordResetRedirectTo
     : hmlPasswordResetRedirectTo
 }
@@ -195,6 +200,8 @@ export const verifyEmailVerificationOtpFn = createServerFn({ method: 'POST' })
 export const requestPasswordResetFn = createServerFn({ method: 'POST' })
   .validator(passwordResetWithProtectionInput)
   .handler(async ({ data }) => {
+    const requestId = crypto.randomUUID()
+    const telemetry = createPasswordResetTelemetry()
     const protection = await getPublicAuthProtection('password-reset', data)
     if (!protection.allowed) {
       return {
@@ -203,26 +210,49 @@ export const requestPasswordResetFn = createServerFn({ method: 'POST' })
         requiresChallenge: protection.requiresChallenge,
       }
     }
-    const auth = createConfiguredNeonAuthServer(process.env)
-    if (!auth) {
+    let config
+    try {
+      config = readNeonAuthRuntimeConfig(process.env)
+    } catch {
+      telemetry.emit({
+        requestId,
+        stage: 'runtime_config_missing',
+      })
+      return { ok: false, message: passwordResetRequestMessage }
+    }
+    if (!config) {
+      telemetry.emit({
+        requestId,
+        stage: 'runtime_config_missing',
+      })
       return { ok: false, message: passwordResetRequestMessage }
     }
 
     const writer = await getPasswordResetAuditWriter()
-    if (!writer) return { ok: false, message: passwordResetRequestMessage }
+    if (!writer) {
+      telemetry.emit({
+        requestId,
+        stage: 'initial_audit_failed',
+      })
+      return { ok: false, message: passwordResetRequestMessage }
+    }
 
     const audit = await executeAuditedPasswordReset({
       action: 'password_reset_requested',
+      requestId,
+      telemetry,
       writer,
       execute: () =>
-        requestPasswordReset(auth, {
+        requestTanStackNeonPasswordReset(config, {
           email: data.email,
-          redirectTo: passwordResetRedirectTo(process.env),
+          redirectTo: passwordResetRedirectTo(),
         }),
       getOutcome: (result) => (result.ok ? 'success' : 'failure'),
+      getFailureReasonCode: (result) =>
+        result.ok ? undefined : result.reasonCode,
     })
     return {
-      ok: audit.auditComplete,
+      ok: isAuditedPasswordResetSuccessful(audit),
       message: passwordResetRequestMessage,
     }
   })

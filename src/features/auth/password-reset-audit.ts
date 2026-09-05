@@ -1,5 +1,6 @@
 import type { AuthAuditAction, AuthAuditOutcome } from './audit'
 import type { AuthAuditWriter } from './audit-writer.server'
+import type { PasswordResetTelemetry } from './password-reset-telemetry.server'
 
 export type PasswordResetAuditAction = Extract<
   AuthAuditAction,
@@ -10,7 +11,15 @@ type PasswordResetAuditOperation<T> = {
   action: PasswordResetAuditAction
   execute: () => Promise<T>
   getOutcome: (result: T) => Extract<AuthAuditOutcome, 'success' | 'failure'>
+  getFailureReasonCode?: (
+    result: T,
+  ) =>
+    | 'provider_timeout'
+    | 'provider_network_error'
+    | 'provider_http_error'
+    | undefined
   requestId?: string
+  telemetry?: PasswordResetTelemetry
   writer: AuthAuditWriter
 }
 
@@ -32,6 +41,15 @@ export async function executeAuditedPasswordReset<T>(
   operation: PasswordResetAuditOperation<T>,
 ): Promise<AuditedPasswordResetResult<T>> {
   const requestId = operation.requestId ?? crypto.randomUUID()
+  const emit = (
+    stage: Parameters<PasswordResetTelemetry['emit']>[0]['stage'],
+    reasonCode?: Parameters<PasswordResetTelemetry['emit']>[0]['reasonCode'],
+  ) =>
+    operation.telemetry?.emit({
+      requestId,
+      stage,
+      ...(reasonCode ? { reasonCode } : {}),
+    })
   const baseEvent = {
     action: operation.action,
     targetType: 'identity' as const,
@@ -49,18 +67,40 @@ export async function executeAuditedPasswordReset<T>(
       },
     })
   } catch {
+    emit('initial_audit_failed')
     return { auditComplete: false, stage: 'before-provider' }
   }
 
+  emit('provider_request_started')
   const result = await operation.execute()
+  const outcome = operation.getOutcome(result)
+  const failureReasonCode =
+    outcome === 'failure' ? operation.getFailureReasonCode?.(result) : undefined
+  emit(
+    outcome === 'success'
+      ? 'provider_request_succeeded'
+      : 'provider_request_failed',
+    failureReasonCode,
+  )
 
   try {
     await operation.writer.append({
       ...baseEvent,
-      outcome: operation.getOutcome(result),
+      outcome,
+      metadata: failureReasonCode
+        ? { ...baseEvent.metadata, reasonCode: failureReasonCode }
+        : baseEvent.metadata,
     })
+    if (outcome === 'success') emit('completed')
     return { auditComplete: true, result }
   } catch {
+    emit('final_audit_failed')
     return { auditComplete: false, result, stage: 'after-provider' }
   }
+}
+
+export function isAuditedPasswordResetSuccessful(
+  result: AuditedPasswordResetResult<{ ok: boolean }>,
+) {
+  return result.auditComplete && result.result.ok
 }
