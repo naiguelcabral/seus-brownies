@@ -36,11 +36,12 @@ O Codex consegue identificar estado, regras, limites e próxima tarefa sem depen
       bloqueado por resposta 403 na borda.
 - [x] Aplicar a migration de infraestrutura de acesso `0014` somente no branch
       Neon de homologação autorizado, sem bootstrap de usuário.
-- [ ] Implementar identidade de usuário.
+- [~] Implementar identidade de usuário (cadastro e verificação OTP por
+  e-mail disponíveis; bootstrap de acesso e RBAC permanecem pendentes).
 - [~] Implementar login/logout por e-mail/senha via proxy server-side Neon Auth;
-      validação operacional depende de identidade autorizada em HML.
+  validação operacional depende de identidade autorizada em HML.
 - [~] Implementar sessão segura para SSR via cookies Neon Auth e adaptador
-      request-scoped; validação operacional depende de identidade autorizada em HML.
+  request-scoped; validação operacional depende de identidade autorizada em HML.
 - [ ] Implementar recuperação de senha sem enumeração.
 - [ ] Implementar limite de tentativas de login (máximo 5 antes de controle adicional).
 - [ ] Implementar rate limiting de autenticação.
