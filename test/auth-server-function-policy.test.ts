@@ -39,10 +39,14 @@ test('as 30 Server Functions inventariadas aplicam o middleware no servidor', as
   }
 })
 
-test('a instância global declara CSRF explicitamente', async () => {
+test('a instância global declara CSRF para métodos mutáveis', async () => {
   const source = await readFile(
     new URL('../src/start.ts', import.meta.url),
     'utf8',
   )
-  assert.match(source, /createCsrfMiddleware\(\)/)
+  assert.match(source, /createCsrfMiddleware\(\{/)
+  assert.match(
+    source,
+    /\['POST', 'PUT', 'PATCH', 'DELETE'\]\.includes\(request\.method\)/,
+  )
 })

@@ -1,8 +1,22 @@
-import { HeadContent, Scripts, createRootRoute } from '@tanstack/react-router'
+import {
+  HeadContent,
+  Scripts,
+  createRootRoute,
+  redirect,
+} from '@tanstack/react-router'
 
+import { getSessionStatus } from '#/features/auth/session-status.functions'
 import appCss from '../styles.css?url'
 
 export const Route = createRootRoute({
+  beforeLoad: async ({ location }) => {
+    if (location.pathname === '/login') return
+
+    const { authenticated } = await getSessionStatus()
+    if (!authenticated) {
+      throw redirect({ to: '/login', throw: true })
+    }
+  },
   head: () => ({
     meta: [
       {

@@ -5,5 +5,10 @@ import { createCsrfMiddleware, createStart } from '@tanstack/react-start'
  * authorization remains separate and server-side.
  */
 export const startInstance = createStart(() => ({
-  requestMiddleware: [createCsrfMiddleware()],
+  requestMiddleware: [
+    createCsrfMiddleware({
+      filter: ({ request }) =>
+        ['POST', 'PUT', 'PATCH', 'DELETE'].includes(request.method),
+    }),
+  ],
 }))

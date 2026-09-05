@@ -3,14 +3,19 @@ import {
   BarChart3,
   CookingPot,
   LayoutDashboard,
+  LogOut,
   Package,
   ReceiptText,
   ShoppingBag,
   Tags,
   Wallet,
 } from 'lucide-react'
-import { Link } from '@tanstack/react-router'
+import { Link, useRouter } from '@tanstack/react-router'
+import { useServerFn } from '@tanstack/react-start'
+import { useState } from 'react'
 import type { ReactNode } from 'react'
+
+import { logout } from '#/features/auth/functions'
 
 const navigation = [
   { to: '/', label: 'Visão geral', icon: LayoutDashboard },
@@ -33,6 +38,28 @@ export function ManagementLayout({
   description: string
   children: ReactNode
 }) {
+  const router = useRouter()
+  const signOut = useServerFn(logout)
+  const [signingOut, setSigningOut] = useState(false)
+  const [signOutError, setSignOutError] = useState<string | null>(null)
+
+  async function leave() {
+    setSigningOut(true)
+    setSignOutError(null)
+    try {
+      const result = await signOut()
+      if (!result.ok) {
+        setSignOutError(result.message)
+        return
+      }
+      await router.navigate({ to: '/login' })
+    } catch {
+      setSignOutError('Não foi possível encerrar a sessão. Tente novamente.')
+    } finally {
+      setSigningOut(false)
+    }
+  }
+
   return (
     <main className="min-h-screen bg-[#f8f4ee] text-[#321b13]">
       <div className="mx-auto max-w-6xl px-4 py-6 sm:px-8 sm:py-10">
@@ -73,7 +100,19 @@ export function ManagementLayout({
                 {label}
               </Link>
             ))}
+            <button
+              className="inline-flex items-center gap-2 rounded-lg bg-white px-3 py-2 text-sm font-bold text-[#725443] transition hover:bg-[#f5e9df] disabled:opacity-60"
+              type="button"
+              onClick={() => void leave()}
+              disabled={signingOut}
+            >
+              <LogOut size={16} />
+              {signingOut ? 'Saindo...' : 'Sair'}
+            </button>
           </nav>
+          {signOutError ? (
+            <p className="text-sm text-[#75411f]">{signOutError}</p>
+          ) : null}
         </header>
 
         <section className="mt-8">

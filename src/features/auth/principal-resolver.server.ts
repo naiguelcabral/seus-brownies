@@ -4,9 +4,8 @@ import { getDb } from '#/db/index'
 import { appUserAccess } from '#/db/schema'
 
 import { createNeonPrincipalResolver } from './neon-adapter'
-import { createTanStackNeonAuthServer } from './neon-tanstack-adapter.server'
+import { createConfiguredNeonAuthServer } from './configured-neon-auth.server'
 import type { PrincipalResolver } from './guard'
-import { readNeonAuthRuntimeConfig } from './runtime-config.server'
 
 async function readCacauAccess(authUserId: string) {
   const [access] = await getDb()
@@ -25,10 +24,8 @@ async function readCacauAccess(authUserId: string) {
 export function createConfiguredPrincipalResolver(
   environment: Record<string, string | undefined>,
 ): PrincipalResolver {
-  const config = readNeonAuthRuntimeConfig(environment)
-  if (!config) return async () => null
-
-  const auth = createTanStackNeonAuthServer(config)
+  const auth = createConfiguredNeonAuthServer(environment)
+  if (!auth) return async () => null
   return createNeonPrincipalResolver(
     {
       getSession: async () => {
