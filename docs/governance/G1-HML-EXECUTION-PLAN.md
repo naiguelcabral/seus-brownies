@@ -27,9 +27,12 @@ branch não padrão.
   `inventory_cost_layers`, `inventory_cost_allocations` e
   `inventory_cost_reversals` mantiveram suas contagens de colunas auditadas.
 
-O próximo gate externo é configurar secrets/integração real e executar o
-bootstrap manual, único e auditado do primeiro Admin de homologação. Nenhuma
-dessas ações está autorizada por esta aplicação de schema.
+O bootstrap manual, único e auditado do primeiro Admin de homologação foi
+executado posteriormente sob autorização humana: criou um único vínculo ativo
+`app_user_access` com papel `admin` e seu evento `role_changed`. Nenhuma
+identidade Neon Auth, schema gerenciado ou dado operacional foi alterado nessa
+operação. O próximo gate externo é a validação integrada dos fluxos de sessão,
+recuperação e controles antiabuso.
 
 ## Revisão de migration 0014
 

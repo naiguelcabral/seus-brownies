@@ -13,6 +13,12 @@ export const invalidOtpMessage =
 export const otpSentMessage =
   'Se o endereço puder ser verificado, enviaremos um código para o seu e-mail.'
 
+export const passwordResetRequestMessage =
+  'Se houver uma conta compatível, enviaremos instruções para o e-mail informado.'
+
+export const invalidPasswordResetMessage =
+  'Não foi possível redefinir a senha. Solicite um novo link e tente novamente.'
+
 type NeonAuthResult = Promise<{ error: unknown | null }>
 
 export type NeonAuthCredentialsClient = {
@@ -36,6 +42,17 @@ export type NeonAuthCredentialsClient = {
   signOut: () => NeonAuthResult
 }
 
+export type NeonAuthPasswordResetClient = {
+  requestPasswordReset: (input: {
+    email: string
+    redirectTo: string
+  }) => NeonAuthResult
+  resetPassword: (input: {
+    newPassword: string
+    token: string
+  }) => NeonAuthResult
+}
+
 export async function signInWithEmailPassword(
   auth: NeonAuthCredentialsClient,
   input: { email: string; password: string },
@@ -55,19 +72,19 @@ export async function signUpWithEmailPassword(
   input: { name: string; email: string; password: string },
 ) {
   try {
-    const signUp = await auth.signUp.email(input)
-    if (signUp.error) return { ok: false, message: invalidSignUpMessage }
-
-    const otp = await auth.emailOtp.sendVerificationOtp({
+    // Always attempt the same OTP delivery step. An existing unverified
+    // identity can continue here, while the visible response stays identical.
+    await auth.signUp.email(input)
+    await auth.emailOtp.sendVerificationOtp({
       email: input.email,
       type: 'email-verification',
     })
-    return otp.error
-      ? { ok: false, message: invalidSignUpMessage }
-      : { ok: true, message: otpSentMessage }
   } catch {
-    return { ok: false, message: unavailableLoginMessage }
+    // Intentionally opaque: provider failures and account existence must not
+    // select a different message, status, or next screen.
   }
+
+  return { ok: true, message: otpSentMessage }
 }
 
 export async function resendEmailVerificationOtp(
@@ -109,5 +126,38 @@ export async function signOutCurrentSession(auth: NeonAuthCredentialsClient) {
       : { ok: true }
   } catch {
     return { ok: false, message: unavailableLoginMessage }
+  }
+}
+
+/**
+ * Keeps the request response identical whether or not the address is known.
+ * Provider and transport failures are deliberately not exposed to the caller.
+ */
+export async function requestPasswordReset(
+  auth: NeonAuthPasswordResetClient,
+  input: { email: string; redirectTo: string },
+) {
+  try {
+    const result = await auth.requestPasswordReset(input)
+    return {
+      ok: !result.error,
+      message: passwordResetRequestMessage,
+    }
+  } catch {
+    return { ok: false, message: passwordResetRequestMessage }
+  }
+}
+
+export async function resetPasswordWithToken(
+  auth: NeonAuthPasswordResetClient,
+  input: { newPassword: string; token: string },
+) {
+  try {
+    const result = await auth.resetPassword(input)
+    return result.error
+      ? { ok: false, message: invalidPasswordResetMessage }
+      : { ok: true }
+  } catch {
+    return { ok: false, message: invalidPasswordResetMessage }
   }
 }

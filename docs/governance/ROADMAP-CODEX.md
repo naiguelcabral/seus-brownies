@@ -30,27 +30,41 @@ O Codex consegue identificar estado, regras, limites e próxima tarefa sem depen
 - [x] Mapear permissões e aplicar guards estruturais nas 30 Server Functions,
       com CSRF explícito e falha fechada sem principal válido.
 - [~] Configurar integração externa Neon Auth em HML (secrets, callbacks,
-  e-mail, Turnstile e rate limiting), sujeita a gate humano.
+  e-mail, Turnstile e rate limiting), sujeita a gate humano. E-mail/senha,
+  provedor compartilhado e origens confiáveis foram confirmados em leitura;
+  limite distribuído, widget e smoke público seguem pendentes.
 - [x] Publicar Worker Cloudflare HML separado em `workers.dev`, sem DNS, rota
       customizada ou alteração no Worker principal; smoke externo ainda está
       bloqueado por resposta 403 na borda.
 - [x] Aplicar a migration de infraestrutura de acesso `0014` somente no branch
       Neon de homologação autorizado, sem bootstrap de usuário.
 - [~] Implementar identidade de usuário (cadastro e verificação OTP por
-  e-mail disponíveis; bootstrap de acesso e RBAC permanecem pendentes).
+  e-mail disponíveis; primeiro Admin HML bootstrapado e auditado; RBAC
+  operacional permanece pendente de homologação).
 - [~] Implementar login/logout por e-mail/senha via proxy server-side Neon Auth;
   validação operacional depende de identidade autorizada em HML.
 - [~] Implementar sessão segura para SSR via cookies Neon Auth e adaptador
   request-scoped; validação operacional depende de identidade autorizada em HML.
-- [ ] Implementar recuperação de senha sem enumeração.
-- [ ] Implementar limite de tentativas de login (máximo 5 antes de controle adicional).
-- [ ] Implementar rate limiting de autenticação.
-- [ ] Definir e implementar CAPTCHA/desafio adicional em fluxos suspeitos quando aplicável.
+- [~] Implementar recuperação de senha sem enumeração: fluxo por link/token,
+  rota pública, token removido do histórico, auditoria sanitizada obrigatória
+  em duas etapas e contratos/testes locais preparados; falta validação
+  integrada controlada do Neon Auth e dos controles antiabuso.
+- [~] Implementar limite de tentativas de login (máximo 5 antes de controle adicional):
+  cooldown durável e limite local por identidade HMAC preparados; falta
+  homologação com banco e limite distribuído.
+- [~] Implementar rate limiting de autenticação: limite local para login,
+  cadastro, OTP e reset preparado; binding distribuído HML permanece pendente.
+- [~] Definir e implementar CAPTCHA/desafio adicional em fluxos suspeitos:
+  verificador server-side e bloqueio fail-closed quando o desafio é exigido;
+  UI do widget pronta, mas configuração e validação integrada pendentes.
 - [ ] Criar RBAC inicial: Admin, Gestor, Produção, Venda e Consulta, sujeito a validação humana.
 - [ ] Proteger Server Functions por permissão.
 - [x] Proteger rotas de UI com redirecionamento SSR para a rota pública de login.
-- [ ] Criar auditoria de autenticação e mudança de privilégio.
-- [ ] Testes unitários/integrados de auth.
+- [~] Criar auditoria de autenticação e mudança de privilégio: bootstrap Admin
+  e reset por senha possuem eventos sanitizados; falta validação integrada e
+  cobertura dos demais eventos.
+- [~] Testes unitários/integrados de auth: testes unitários locais existem;
+  testes integrados e E2E permanecem pendentes.
 - [ ] Testes E2E de acesso.
 
 ### Gate

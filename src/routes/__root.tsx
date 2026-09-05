@@ -10,7 +10,12 @@ import appCss from '../styles.css?url'
 
 export const Route = createRootRoute({
   beforeLoad: async ({ location }) => {
-    if (location.pathname === '/login') return
+    if (
+      location.pathname === '/login' ||
+      location.pathname === '/login/redefinir-senha'
+    ) {
+      return
+    }
 
     const { authenticated } = await getSessionStatus()
     if (!authenticated) {

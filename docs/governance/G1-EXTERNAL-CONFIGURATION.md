@@ -7,6 +7,52 @@ adaptadores, CSRF e guards que falham fechados, mas a integração real permanec
 inativa até este gate humano. Nenhum valor deve ser registrado neste documento,
 em Git, em logs ou no chat.
 
+### Recuperação de senha por link/token
+
+O código local encaminha a solicitação pelo proxy server-side do Neon Auth e
+usa a rota pública `/login/redefinir-senha`. Em desenvolvimento, o retorno é
+fixado em `http://localhost:3000/login/redefinir-senha`; no Worker HML, em
+`https://cacau-v1-hml.naiguelcabral.workers.dev/login/redefinir-senha`.
+O token e a senha não são registrados, persistidos pelo Cacau ou incluídos em
+eventos de auditoria. Antes de chamar o provedor, o Cacau exige um evento
+sanitizado com estado `blocked` e motivo `provider_outcome_pending`; após a
+resposta do provedor, exige um segundo evento com `success` ou `failure` e o
+mesmo `request_id`. Não há transação distribuída com o Neon Auth: se a
+gravação inicial falhar, a chamada ao provedor não é feita; se a gravação final
+falhar, a rota devolve falha controlada e o evento pendente permanece como
+evidência de resultado indeterminado. Portanto, o Cacau nunca responde sucesso
+de reset sem o evento final, e nunca inventa `actor_auth_user_id`.
+
+Ao carregar a rota, o token é copiado apenas para memória do componente e a
+query string é substituída sem o token. A rota emite `Referrer-Policy`
+`no-referrer` via meta tag. Isso reduz a exposição no navegador, mas não remove
+o token da URL que o provedor, o navegador ou a borda já receberam antes da
+resposta da aplicação.
+
+Ainda falta validar, em uma execução integrada controlada e sem expor valores:
+
+- entrega do e-mail e consumo único/expiração do token;
+- limite de taxa específico para recuperação;
+- homologação do Turnstile para solicitações repetidas ou suspeitas;
+- comportamento de revogação de sessões após a redefinição, que não deve ser
+  presumido sem confirmação explícita do Neon Auth;
+- presença dos eventos `password_reset_requested` e
+  `password_reset_completed`, sem token, senha, e-mail bruto ou cookie.
+
+### Controles locais já preparados
+
+- Login, cadastro, OTP e reset usam limite por identidade HMAC em memória por
+  isolate. Nenhum e-mail, token, senha ou cookie é usado como chave ou log.
+- O login grava o estado durável em `auth_login_attempts` e entra em cooldown
+  após cinco falhas consecutivas, quando `DATABASE_URL` e
+  `AUTH_LOGIN_HASH_PEPPER` estão disponíveis.
+- Ao exceder o limite local, um token Turnstile válido passa a ser obrigatório.
+  A UI renderiza o widget somente quando há uma `VITE_TURNSTILE_SITE_KEY`
+  pública; sem site key, secret ou token quando o desafio é exigido, a operação
+  falha fechada. A configuração e homologação do widget continuam externas.
+- Esses controles não substituem o binding `AUTH_RATE_LIMITER` distribuído da
+  Cloudflare; esse continua requisito externo antes da abertura operacional.
+
 ## Bindings e configurações necessários
 
 | Nome/configuração                          | Local de criação                          | Finalidade                                                                        | Exposição                               |

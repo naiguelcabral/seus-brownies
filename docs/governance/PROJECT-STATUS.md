@@ -1,6 +1,6 @@
 # Estado canônico do projeto — Cacau v1
 
-Atualizado em 3 de setembro de 2026.
+Atualizado em 5 de setembro de 2026.
 
 Este documento é a referência canônica de alto nível para o estado atual do sistema. Registros históricos de homologação, importação e decisões específicas permanecem válidos como evidência, mas não substituem este resumo.
 
@@ -69,14 +69,28 @@ Este documento é a referência canônica de alto nível para o estado atual do 
   hostname Turnstile HML foram configurados sem wildcard. O smoke público ainda
   retorna 403 antes de invocar o Worker, apesar de `workers.dev` público e da
   versão HML ativa; rate limiting e a investigação externa da borda permanecem
-  pendentes. Não há usuário/Admin configurado.
+  pendentes. A primeira identidade Neon Auth verificada possui um único
+  vínculo ativo `app_user_access` com papel `admin`, criado no branch HML por
+  bootstrap manual autorizado e acompanhado de evento `role_changed`.
+- O fluxo local de recuperação por link/token está preparado em
+  `/login/redefinir-senha`: solicitação não enumerável, senha entre 8 e 128
+  caracteres, token mantido somente em memória durante a submissão e removido
+  da URL/histórico. A auditoria sanitizada é obrigatória: intenção persistida
+  antes do provedor e resultado persistido depois; sem evento final, a rota
+  devolve falha controlada. Cadastro envia a mesma resposta e segue para OTP
+  tanto para identidade nova quanto já existente. Os endpoints públicos possuem
+  limite local por identidade HMAC e o login usa cooldown durável após cinco
+  falhas quando `AUTH_LOGIN_HASH_PEPPER` e o banco estão disponíveis. A UI de
+  Turnstile está preparada e falha fechada sem site key/token; limite
+  distribuído, homologação do widget e confirmação de revogação de sessões
+  permanecem pendentes de gate/configuração externa.
 
 ## Ainda não entregue
 
-- Autenticação.
-- Perfis e permissões (RBAC).
-- Auditoria vinculada a identidade de usuário.
-- Recuperação de senha e gestão de sessão.
+- Validação integrada de autenticação.
+- RBAC operacional homologado.
+- Auditoria integrada de todos os eventos de autenticação.
+- Validação integrada de recuperação de senha e gestão de sessão.
 - Proteções específicas de login, incluindo limite de tentativas e desafio adicional quando aplicável.
 - Provisionamento do Neon Auth, secrets de autenticação, provedor de e-mail e
   configuração de compatibilidade do Worker.

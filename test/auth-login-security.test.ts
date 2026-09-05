@@ -5,6 +5,7 @@ import {
   decideLoginAttempt,
   maxConsecutiveLoginFailures,
 } from '../src/features/auth/login-security'
+import { isLoginAttemptAllowed } from '../src/features/auth/login-attempts.server'
 
 const now = new Date('2026-09-03T12:00:00.000Z')
 const policy = { cooldownMs: 15 * 60 * 1000 }
@@ -46,4 +47,22 @@ test('cooldown bloqueia inclusive tentativa correta até expirar e sucesso zera 
     consecutiveFailures: 0,
     cooldownUntil: null,
   })
+})
+
+test('verificação prévia bloqueia tentativa durante cooldown sem modificar o estado', async () => {
+  const state = {
+    consecutiveFailures: maxConsecutiveLoginFailures,
+    cooldownUntil: new Date('2026-09-03T12:15:00.000Z'),
+  }
+  const store = { read: async () => state }
+
+  assert.equal(await isLoginAttemptAllowed(store, 'opaque-id', now), false)
+  assert.equal(
+    await isLoginAttemptAllowed(
+      store,
+      'opaque-id',
+      new Date('2026-09-03T12:15:00.000Z'),
+    ),
+    true,
+  )
 })

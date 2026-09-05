@@ -15,3 +15,9 @@ export const passwordResetRequestResponse = {
   message:
     'Se houver uma conta compatível, enviaremos instruções para o e-mail informado.',
 } as const
+
+/** Reset credentials are accepted only for the in-flight provider request. */
+export type PasswordResetCompletion = {
+  newPassword: string
+  token: string
+}
