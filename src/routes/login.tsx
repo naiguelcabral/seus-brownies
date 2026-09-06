@@ -15,7 +15,20 @@ import { TurnstileChallenge } from '#/features/auth/turnstile-challenge'
 const turnstileSiteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY
 
 export const Route = createFileRoute('/login')({
-  beforeLoad: async () => {
+  validateSearch: (search) => ({
+    token: typeof search.token === 'string' ? search.token : undefined,
+  }),
+  beforeLoad: async ({ search }) => {
+    // Better Auth appends the reset token to the configured redirect URL. Keep
+    // this compatibility path for links generated with /login before the
+    // dedicated reset route was configured.
+    if (search.token) {
+      throw redirect({
+        to: '/login/redefinir-senha',
+        search: { token: search.token },
+        throw: true,
+      })
+    }
     const { authenticated } = await getSessionStatus()
     if (authenticated) throw redirect({ to: '/', throw: true })
   },

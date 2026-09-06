@@ -42,6 +42,10 @@ test('a rota de login é pública e não carrega dados operacionais', async () =
 
   assert.match(source, /createFileRoute\('\/login'\)/)
   assert.doesNotMatch(source, /loader:/)
+  assert.match(source, /validateSearch: \(search\)/)
+  assert.match(source, /search\.token/)
+  assert.match(source, /to: '\/login\/redefinir-senha'/)
+  assert.match(source, /search: \{ token: search\.token \}/)
   assert.match(source, /await getSessionStatus\(\)/)
   assert.match(source, /redirect\(\{ to: '\/', throw: true \}\)/)
 })
