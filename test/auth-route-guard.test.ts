@@ -44,6 +44,11 @@ test('a rota de login é pública e não carrega dados operacionais', async () =
   assert.doesNotMatch(source, /loader:/)
   assert.match(source, /validateSearch: \(search\)/)
   assert.match(source, /search\.token/)
+  assert.match(source, /location\.pathname === '\/login' && search\.token/)
+  assert.match(
+    source,
+    /if \(location\.pathname === '\/login'\) \{\n {6}const \{ authenticated \} = await getSessionStatus\(\)/,
+  )
   assert.match(source, /to: '\/login\/redefinir-senha'/)
   assert.match(source, /search: \{ token: search\.token \}/)
   assert.match(source, /await getSessionStatus\(\)/)

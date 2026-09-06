@@ -18,19 +18,27 @@ export const Route = createFileRoute('/login')({
   validateSearch: (search) => ({
     token: typeof search.token === 'string' ? search.token : undefined,
   }),
-  beforeLoad: async ({ search }) => {
+  beforeLoad: async ({ location, search }) => {
     // Better Auth appends the reset token to the configured redirect URL. Keep
     // this compatibility path for links generated with /login before the
     // dedicated reset route was configured.
-    if (search.token) {
+    // `login.tsx` is also the parent route of `/login/redefinir-senha`.
+    // Restrict this legacy redirect to the exact `/login` URL; otherwise the
+    // parent's beforeLoad re-applies the same redirect after the child route
+    // has been matched, creating a 307 loop.
+    if (location.pathname === '/login' && search.token) {
       throw redirect({
         to: '/login/redefinir-senha',
         search: { token: search.token },
         throw: true,
       })
     }
-    const { authenticated } = await getSessionStatus()
-    if (authenticated) throw redirect({ to: '/', throw: true })
+    // The reset form is a public child route. Do not let an existing session
+    // send a password-reset link to the operational dashboard.
+    if (location.pathname === '/login') {
+      const { authenticated } = await getSessionStatus()
+      if (authenticated) throw redirect({ to: '/', throw: true })
+    }
   },
   component: LoginPage,
 })
