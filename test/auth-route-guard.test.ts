@@ -23,6 +23,10 @@ test('a rota de recuperação é pública, remove token da URL e não o persiste
 
   assert.match(source, /createFileRoute\('\/login\/redefinir-senha'\)/)
   assert.match(source, /resetPasswordWithTokenFn/)
+  assert.match(
+    source,
+    /token: typeof search\.token === 'string' \? search\.token : undefined/,
+  )
   assert.match(source, /autoComplete="new-password"/)
   assert.match(source, /const \[token\] = useState\(tokenFromUrl\)/)
   assert.match(source, /if \(!token\)/)

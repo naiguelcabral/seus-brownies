@@ -4,10 +4,10 @@
 
 As migrations `0014`, `0015` e `0016` já existem exclusivamente em
 `g1-auth-hml`. O código possui adaptadores, CSRF e guards que falham fechados,
-e os fluxos locais de recuperação e login foram exercitados. A homologação real
-em HML permanece pendente porque o hostname público recebe `403` na borda e o
-Worker ativo antecede o RBAC atual. Nenhum valor deve ser registrado neste
-documento, em Git, em logs ou no chat.
+e os fluxos locais de recuperação e login foram exercitados. Em 6 de setembro,
+o Worker HML recebeu o código atual e a navegação pública deixou de receber
+`403`; a homologação real de autenticação permanece pendente. Nenhum valor deve
+ser registrado neste documento, em Git, em logs ou no chat.
 
 ### Recuperação de senha por link/token
 

@@ -90,14 +90,13 @@ Este documento é a referência canônica de alto nível para o estado atual do 
   estoque, despesas, produção ou administração. Papéis anteriores permanecem
   somente como compatibilidade de transição, sem concessão a novas contas.
 - O Worker HML `cacau-v1-hml` permanece publicado exclusivamente em
-  `workers.dev`, mas uma requisição pública sem sessão em 6 de setembro ainda
-  recebeu `403` na borda antes de invocar o Worker. Ele também não recebeu o
-  deploy do código que reconhece `owner`. Portanto, a autenticação HML
-  end-to-end e o novo papel Dono não estão homologados no Worker.
+  `workers.dev`. Em 6 de setembro, o código atual foi publicado e o `403` de
+  navegação pública foi corrigido: `/login` responde `200` e `/` sem sessão
+  redireciona para `/login`. A homologação end-to-end ainda depende de login,
+  OTP, sessão e autorização por papel reais.
 
 ## Ainda não entregue ou não homologado
 
-- Resolução do `403` de borda e novo deploy HML do código atual.
 - Verificação OTP das identidades pendentes e vínculo auditado do segundo
   Gerente após essa verificação.
 - Homologação integrada/E2E de login, logout, OTP, reset, cookie, sessão,

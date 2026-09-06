@@ -34,9 +34,9 @@ O Codex consegue identificar estado, regras, limites e próxima tarefa sem depen
   provedor compartilhado e origens confiáveis foram confirmados em leitura;
   limite distribuído, widget e homologação pública seguem pendentes.
 - [x] Publicar Worker Cloudflare HML separado em `workers.dev`, sem DNS, rota
-      customizada ou alteração no Worker principal. O smoke externo continua
-      bloqueado por resposta 403 na borda; a versão publicada também antecede
-      o código atual de RBAC e precisa de novo deploy HML após esse bloqueio.
+  customizada ou alteração no Worker principal. Em 6 de setembro, o Worker
+  recebeu o código atual e o smoke público confirmou `/login` com `200` e `/`
+  sem sessão redirecionando para `/login`.
 - [x] Aplicar a migration de infraestrutura de acesso `0014` somente no branch
       Neon de homologação autorizado, sem bootstrap de usuário.
 - [~] Implementar identidade de usuário (cadastro e verificação OTP por
@@ -173,11 +173,9 @@ A definição de margem realizada e vínculo venda-lote é decisão de negócio/
 
 ## Prioridade imediata
 
-1. Resolver o `403` de borda do Worker HML; só então revisar e autorizar o
-   deploy HML do código atual, sem tocar em produção.
-2. Concluir a verificação OTP das identidades pendentes e criar, após ela, o
+1. Concluir a verificação OTP das identidades pendentes e criar, após ela, o
    vínculo auditado do segundo Gerente.
-3. Executar a homologação integrada/E2E de G1, inclusive reset, login, sessão,
+2. Executar a homologação integrada/E2E de G1, inclusive reset, login, sessão,
    negações por papel, cooldown e auditoria.
-4. Depois consolidar G2 (CMV/margem) antes de ampliar os relatórios gerenciais.
-5. Preservar todos os dados HML e evidências FIFO existentes.
+3. Depois consolidar G2 (CMV/margem) antes de ampliar os relatórios gerenciais.
+4. Preservar todos os dados HML e evidências FIFO existentes.

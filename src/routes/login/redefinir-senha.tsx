@@ -6,7 +6,9 @@ import { resetPasswordWithTokenFn } from '#/features/auth/functions'
 
 export const Route = createFileRoute('/login/redefinir-senha')({
   validateSearch: (search) => ({
-    token: typeof search.token === 'string' ? search.token : '',
+    // Keep an absent token absent. Serializing it as an empty string causes
+    // the router to canonicalize the public route to `?token=` repeatedly.
+    token: typeof search.token === 'string' ? search.token : undefined,
   }),
   head: () => ({
     meta: [{ name: 'referrer', content: 'no-referrer' }],
