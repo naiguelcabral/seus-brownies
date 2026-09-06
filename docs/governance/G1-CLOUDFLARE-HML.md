@@ -101,12 +101,20 @@ secret permanece somente no Worker.
    não respondeu publicamente.
 2. Configurar e-mail e Rate Limiting; registrar o
    namespace HML real de rate limit na configuração versionada.
-3. Validar o Worker HML sem criar Admin ou dados de negócio.
+3. Validar o Worker HML sem criar Dono, Gerente, Funcionário ou dados de
+   negócio.
 
 Nenhum comando deste documento autoriza produção, DNS, rota de produção,
-secrets de produção ou bootstrap do Admin.
+secrets de produção ou bootstrap de papéis.
 
 ## Smoke e gate externo atual
+
+### Revalidação em 6 de setembro de 2026
+
+Um novo GET público sem sessão continuou retornando `403` na borda antes de
+qualquer invocação do Worker. Portanto, o bloqueio permanece ativo e não foi
+feito novo deploy HML para o código que adiciona o papel `owner`. O diagnóstico
+e o gate de suporte abaixo continuam válidos; não fazer redeploy às cegas.
 
 As origens confiáveis do Neon Auth HML e o hostname do widget Turnstile HML
 foram atualizados para incluir a URL estável, preservando `localhost` e sem
@@ -144,7 +152,7 @@ abaixo, sem novo smoke, deploy ou alteração de configuração:
   hostname HML.
 - A listagem de regras de acesso IP de conta retornou vazia.
 - A conta contém somente o ruleset gerenciado `Cloudflare Managed Free
-  Ruleset`, na fase `http_request_firewall_managed`, com 31 regras ativas de
+Ruleset`, na fase `http_request_firewall_managed`, com 31 regras ativas de
   ação `block`. A API não forneceu evento, trace, regra correspondente ou
   identificação de match para o `cf-ray` do 403; isso **não atribui** o
   bloqueio ao ruleset.

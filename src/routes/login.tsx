@@ -1,5 +1,11 @@
 import { useState } from 'react'
-import { createFileRoute, redirect, useRouter } from '@tanstack/react-router'
+import {
+  Outlet,
+  createFileRoute,
+  redirect,
+  useLocation,
+  useRouter,
+} from '@tanstack/react-router'
 import { useServerFn } from '@tanstack/react-start'
 
 import {
@@ -9,6 +15,10 @@ import {
   signUpWithEmailPasswordFn,
   verifyEmailVerificationOtpFn,
 } from '#/features/auth/functions'
+import {
+  accessDeniedLoginMessage,
+  emailVerificationRequiredMessage,
+} from '#/features/auth/login-actions'
 import { getSessionStatus } from '#/features/auth/session-status.functions'
 import { TurnstileChallenge } from '#/features/auth/turnstile-challenge'
 
@@ -40,8 +50,14 @@ export const Route = createFileRoute('/login')({
       if (authenticated) throw redirect({ to: '/', throw: true })
     }
   },
-  component: LoginPage,
+  component: LoginRoute,
 })
+
+function LoginRoute() {
+  const { pathname } = useLocation()
+
+  return pathname === '/login' ? <LoginPage /> : <Outlet />
+}
 
 function LoginPage() {
   const router = useRouter()
@@ -50,6 +66,7 @@ function LoginPage() {
   const resendOtp = useServerFn(resendEmailVerificationOtpFn)
   const verifyOtp = useServerFn(verifyEmailVerificationOtpFn)
   const requestPasswordReset = useServerFn(requestPasswordResetFn)
+  const getSession = useServerFn(getSessionStatus)
   const [mode, setMode] = useState<
     'sign-in' | 'sign-up' | 'verify-email' | 'request-password-reset'
   >('sign-in')
@@ -120,6 +137,20 @@ function LoginPage() {
       if (mode === 'sign-up') {
         setMode('verify-email')
         setMessage(result.message)
+        return
+      }
+      const session = await getSession()
+      if (!session.authenticated) {
+        if (session.sessionPresent && !session.emailVerified) {
+          setMode('verify-email')
+          setMessage(emailVerificationRequiredMessage)
+          return
+        }
+        setMessage(
+          session.sessionPresent
+            ? accessDeniedLoginMessage
+            : 'Não foi possível iniciar a sessão. Tente novamente.',
+        )
         return
       }
       await router.navigate({ to: '/' })

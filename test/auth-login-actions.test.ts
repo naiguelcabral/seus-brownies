@@ -2,6 +2,8 @@ import assert from 'node:assert/strict'
 import test from 'node:test'
 
 import {
+  accessDeniedLoginMessage,
+  emailVerificationRequiredMessage,
   invalidLoginMessage,
   invalidPasswordResetMessage,
   invalidOtpMessage,
@@ -60,6 +62,16 @@ test('login e logout bem-sucedidos não expõem dados de sessão', async () => {
     { ok: true },
   )
   assert.deepEqual(await signOutCurrentSession(auth), { ok: true })
+})
+
+test('acesso negado após autenticação tem mensagem orientativa sem dados da sessão', () => {
+  assert.match(accessDeniedLoginMessage, /conta foi autenticada/i)
+  assert.doesNotMatch(accessDeniedLoginMessage, /token|cookie|sessão/i)
+})
+
+test('e-mail não verificado pede confirmação sem expor dados da sessão', () => {
+  assert.match(emailVerificationRequiredMessage, /Verifique seu e-mail/i)
+  assert.doesNotMatch(emailVerificationRequiredMessage, /token|cookie|sessão/i)
 })
 
 test('falha de transporte no logout recebe mensagem controlada', async () => {

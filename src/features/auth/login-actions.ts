@@ -4,6 +4,12 @@ export const invalidLoginMessage =
 export const unavailableLoginMessage =
   'A autenticação não está disponível neste ambiente. Tente novamente mais tarde.'
 
+export const accessDeniedLoginMessage =
+  'Sua conta foi autenticada, mas ainda não possui acesso ao Cacau. Peça a um administrador para liberar seu acesso.'
+
+export const emailVerificationRequiredMessage =
+  'Verifique seu e-mail antes de acessar o Cacau. Use o código enviado ou solicite um novo.'
+
 export const invalidSignUpMessage =
   'Não foi possível concluir o cadastro. Confira os dados e tente novamente.'
 

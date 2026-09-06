@@ -3,6 +3,9 @@
  * person; only Cacau decides which operational action that person may perform.
  */
 export const appRoles = [
+  'owner',
+  'employee',
+  // Legacy roles remain recognized until all existing links are migrated.
   'admin',
   'manager',
   'production',
@@ -41,6 +44,11 @@ const allPermissions = new Set<Permission>(permissions)
  * deliberately grant nothing until a human decision is recorded.
  */
 const rolePermissions: Readonly<Record<AppRole, ReadonlySet<Permission>>> = {
+  owner: allPermissions,
+  // A staff member can select catalog items and register purchases and sales,
+  // but receives no operational reading, dashboard, report or access control.
+  employee: new Set(['catalog:read', 'purchases:write', 'sales:write']),
+  // Compatibility for links created before the Owner role migration.
   admin: allPermissions,
   manager: new Set([
     'catalog:read',

@@ -2,6 +2,20 @@
 
 ## Estado e alvo
 
+### Atualização de 6 de setembro de 2026 — transição de papéis
+
+As migrations `0015` e `0016` foram aplicadas e registradas no histórico
+Drizzle do mesmo branch HML. Elas adicionam os papéis `owner` e `employee` e
+convertem o vínculo legado `admin` para `owner`, com evento de auditoria para a
+transição. Um vínculo de Gerente foi criado por operação humana autorizada e
+auditada, depois de a respectiva identidade estar verificada.
+
+Identidades ainda sem e-mail verificado não receberam vínculo de acesso. A
+próxima liberação só poderá ocorrer depois da verificação OTP e de nova
+operação auditada. Essas alterações são exclusivas do banco HML: não resolvem o
+`403` de borda do Worker nem substituem a homologação e o deploy HML do código
+que reconhece a política atual.
+
 Este procedimento é exclusivo para o branch Neon **`g1-auth-hml`**. Em 3 de
 setembro de 2026, após confirmação humana do alvo, a migration `0014` foi
 aplicada exclusivamente nesse branch não padrão. Não é autorização para
@@ -12,7 +26,7 @@ Identificação registrada sem credenciais: projeto `steep-brook-51659857`,
 branch `g1-auth-hml`, branch ID `br-patient-lake-ac2t0cvq`, Neon Auth ativo e
 branch não padrão.
 
-### Resultado da aplicação de 0014
+### Resultado original da aplicação de 0014 (3 de setembro de 2026)
 
 - Histórico Drizzle: 15 migrations, com `0014_puzzling_masque.sql` registrada
   pelo hash local revisado.
@@ -27,11 +41,11 @@ branch não padrão.
   `inventory_cost_layers`, `inventory_cost_allocations` e
   `inventory_cost_reversals` mantiveram suas contagens de colunas auditadas.
 
-O bootstrap manual, único e auditado do primeiro Admin de homologação foi
-executado posteriormente sob autorização humana: criou um único vínculo ativo
-`app_user_access` com papel `admin` e seu evento `role_changed`. Nenhuma
-identidade Neon Auth, schema gerenciado ou dado operacional foi alterado nessa
-operação. O próximo gate externo é a validação integrada dos fluxos de sessão,
+O bootstrap manual, único e auditado do primeiro Dono de homologação foi
+executado posteriormente sob autorização humana. A migration `0016` o
+converteu para Dono e registrou o evento correspondente. Nenhuma identidade
+Neon Auth, schema gerenciado ou dado operacional foi alterado nessa operação.
+O próximo gate externo é a validação integrada dos fluxos de sessão,
 recuperação e controles antiabuso.
 
 ## Revisão de migration 0014
@@ -73,18 +87,18 @@ Nenhum valor deve entrar em Git, logs, documentação ou conversa.
    histórico de migrations, tabelas, constraints, índices e invariantes FIFO.
 2. Provisionar/configurar a integração real e secrets fora do Git, com e-mail e
    callbacks aprovados.
-3. Criar a identidade Neon do primeiro Admin por fluxo humano controlado.
-4. Inserir **um único** vínculo ativo `app_user_access` com papel `admin`, por
+3. Criar a identidade Neon do primeiro Dono por fluxo humano controlado.
+4. Inserir **um único** vínculo ativo `app_user_access` com papel `owner`, por
    operação administrativa auditada e autorizada.
 5. Executar a suíte integrada de homologação e reconciliar os eventos de
    auditoria antes de liberar qualquer outro convite.
 
-## Bootstrap do primeiro Admin
+## Bootstrap do primeiro Dono
 
 Não haverá endpoint público de bootstrap nem autoatribuição de papel. Depois
 de a identidade Neon existir e o e-mail estar verificado, uma operação manual
 única, aprovada e auditada associa o `auth_user_id` dessa identidade ao papel
-`admin` em `app_user_access`. O operador deve registrar ator humano, motivo,
+`owner` em `app_user_access`. O operador deve registrar ator humano, motivo,
 timestamp e `request_id` em `auth_audit_events`.
 
 Qualquer mudança posterior de papel exige `access:manage`, principal ativo,
@@ -97,7 +111,7 @@ inválido permanece negado.
 - allowlist inativa ou papel inválido → 401;
 - e-mail não verificado → 403;
 - papel insuficiente → 403;
-- Admin ativo → acesso conforme matriz;
+- Dono ativo → acesso conforme matriz;
 - quinta falha → auditoria, Turnstile e cooldown;
 - reset → resposta sem enumeração;
 - tentativa de autoatribuir papel por endpoint público → 403/ausência de rota.

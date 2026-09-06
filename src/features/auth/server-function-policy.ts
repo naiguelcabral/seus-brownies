@@ -1,8 +1,9 @@
 import type { Permission } from './authorization'
 
 /**
- * Declarative inventory of existing Server Functions. Wiring this map into
- * middleware remains pending provider provisioning and the operational review.
+ * Declarative inventory of Server Functions protected by the shared server
+ * authorization middleware. Runtime HML validation remains pending while the
+ * public Worker is blocked at the edge and awaits a deploy of this source.
  */
 export const serverFunctionPolicies = {
   listCategories: 'catalog:read',

@@ -21,3 +21,27 @@ test('migration G1 cria somente estruturas de autenticação Cacau', async () =>
   assert.doesNotMatch(migration, /CREATE TABLE "inventory_cost_allocations"/)
   assert.doesNotMatch(migration, /CREATE TABLE "inventory_cost_reversals"/)
 })
+
+test('migrations de papéis adicionam Dono e Funcionário e auditam a transição', async () => {
+  const [roles, transition] = await Promise.all([
+    readFile(
+      new URL(
+        '../drizzle/0015_add-owner-and-employee-roles.sql',
+        import.meta.url,
+      ),
+      'utf8',
+    ),
+    readFile(
+      new URL('../drizzle/0016_migrate-admin-to-owner.sql', import.meta.url),
+      'utf8',
+    ),
+  ])
+
+  assert.match(roles, /ADD VALUE 'owner'/)
+  assert.match(roles, /ADD VALUE 'employee'/)
+  assert.match(transition, /UPDATE "public"\."app_user_access"/)
+  assert.match(transition, /'admin'.*'owner'/s)
+  assert.match(transition, /INSERT INTO "public"\."auth_audit_events"/)
+  assert.match(transition, /'role_changed'/)
+  assert.doesNotMatch(transition, /DROP |TRUNCATE |DELETE FROM /)
+})

@@ -32,15 +32,17 @@ O Codex consegue identificar estado, regras, limites e próxima tarefa sem depen
 - [~] Configurar integração externa Neon Auth em HML (secrets, callbacks,
   e-mail, Turnstile e rate limiting), sujeita a gate humano. E-mail/senha,
   provedor compartilhado e origens confiáveis foram confirmados em leitura;
-  limite distribuído, widget e smoke público seguem pendentes.
+  limite distribuído, widget e homologação pública seguem pendentes.
 - [x] Publicar Worker Cloudflare HML separado em `workers.dev`, sem DNS, rota
-      customizada ou alteração no Worker principal; smoke externo ainda está
-      bloqueado por resposta 403 na borda.
+      customizada ou alteração no Worker principal. O smoke externo continua
+      bloqueado por resposta 403 na borda; a versão publicada também antecede
+      o código atual de RBAC e precisa de novo deploy HML após esse bloqueio.
 - [x] Aplicar a migration de infraestrutura de acesso `0014` somente no branch
       Neon de homologação autorizado, sem bootstrap de usuário.
 - [~] Implementar identidade de usuário (cadastro e verificação OTP por
-  e-mail disponíveis; primeiro Admin HML bootstrapado e auditado; RBAC
-  operacional permanece pendente de homologação).
+  e-mail disponíveis; a transição para Dono e um vínculo de Gerente foram
+  auditados em HML; identidades ainda não verificadas permanecem sem liberação;
+  RBAC operacional depende de homologação em runtime).
 - [~] Implementar login/logout por e-mail/senha via proxy server-side Neon Auth;
   validação operacional depende de identidade autorizada em HML.
 - [~] Implementar sessão segura para SSR via cookies Neon Auth e adaptador
@@ -57,12 +59,16 @@ O Codex consegue identificar estado, regras, limites e próxima tarefa sem depen
 - [~] Definir e implementar CAPTCHA/desafio adicional em fluxos suspeitos:
   verificador server-side e bloqueio fail-closed quando o desafio é exigido;
   UI do widget pronta, mas configuração e validação integrada pendentes.
-- [ ] Criar RBAC inicial: Admin, Gestor, Produção, Venda e Consulta, sujeito a validação humana.
-- [ ] Proteger Server Functions por permissão.
+- [~] Reestruturar RBAC inicial em Dono, Gerente e Funcionário: política,
+  testes e migrations de transição aplicados em HML; o Dono e um Gerente
+  possuem vínculos auditados. A verificação de e-mail e a liberação das demais
+  identidades permanecem pendentes.
+- [x] Proteger Server Functions por permissão no código versionado, por mapa
+      central e middleware compartilhado; validar em HML após o deploy atual.
 - [x] Proteger rotas de UI com redirecionamento SSR para a rota pública de login.
-- [~] Criar auditoria de autenticação e mudança de privilégio: bootstrap Admin
-  e reset por senha possuem eventos sanitizados; falta validação integrada e
-  cobertura dos demais eventos.
+- [~] Criar auditoria de autenticação e mudança de privilégio: reset por senha,
+  transição de papel e liberações manuais possuem eventos sanitizados; falta
+  validação integrada e cobertura dos demais eventos.
 - [~] Testes unitários/integrados de auth: testes unitários locais existem;
   testes integrados e E2E permanecem pendentes.
 - [ ] Testes E2E de acesso.
@@ -145,6 +151,8 @@ A definição de margem realizada e vínculo venda-lote é decisão de negócio/
 
 - [x] Configuração Cloudflare versionada.
 - [x] Build/deploy command disponível.
+- [~] Worker HML isolado publicado, mas indisponível publicamente por `403` de
+  borda e ainda sem deploy do RBAC atual.
 - [ ] Definir ambientes development/staging/production formalmente.
 - [ ] Configurar secrets por ambiente.
 - [ ] Definir estratégia de backup Neon.
@@ -165,7 +173,11 @@ A definição de margem realizada e vínculo venda-lote é decisão de negócio/
 
 ## Prioridade imediata
 
-1. Iniciar G1 por ADR e desenho de autenticação/RBAC.
-2. Depois consolidar G2 (CMV/margem) antes de ampliar os relatórios gerenciais.
-3. Não iniciar G4/G5 antes de segurança básica e idempotência estarem consolidadas.
-4. Preservar todos os dados HML e evidências FIFO existentes.
+1. Resolver o `403` de borda do Worker HML; só então revisar e autorizar o
+   deploy HML do código atual, sem tocar em produção.
+2. Concluir a verificação OTP das identidades pendentes e criar, após ela, o
+   vínculo auditado do segundo Gerente.
+3. Executar a homologação integrada/E2E de G1, inclusive reset, login, sessão,
+   negações por papel, cooldown e auditoria.
+4. Depois consolidar G2 (CMV/margem) antes de ampliar os relatórios gerenciais.
+5. Preservar todos os dados HML e evidências FIFO existentes.

@@ -91,6 +91,9 @@ export const messageProcessingStatus = pgEnum('message_processing_status', [
   'ignored',
 ])
 export const appAccessRole = pgEnum('app_access_role', [
+  'owner',
+  'employee',
+  // Retained while migration 0016 converts the existing HML Admin link.
   'admin',
   'manager',
   'production',

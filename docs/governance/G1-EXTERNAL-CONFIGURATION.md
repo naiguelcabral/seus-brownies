@@ -2,10 +2,12 @@
 
 ## Estado
 
-A migration `0014` já existe exclusivamente em `g1-auth-hml`. O código possui
-adaptadores, CSRF e guards que falham fechados, mas a integração real permanece
-inativa até este gate humano. Nenhum valor deve ser registrado neste documento,
-em Git, em logs ou no chat.
+As migrations `0014`, `0015` e `0016` já existem exclusivamente em
+`g1-auth-hml`. O código possui adaptadores, CSRF e guards que falham fechados,
+e os fluxos locais de recuperação e login foram exercitados. A homologação real
+em HML permanece pendente porque o hostname público recebe `403` na borda e o
+Worker ativo antecede o RBAC atual. Nenhum valor deve ser registrado neste
+documento, em Git, em logs ou no chat.
 
 ### Recuperação de senha por link/token
 
@@ -91,7 +93,7 @@ fluxo real de login no próximo gate.
    allowlist, vínculo inativo, papel inválido e e-mail não verificado devem
    permanecer negados.
 6. Solicitar um gate separado para criar a identidade e o único vínculo do
-   primeiro Admin, com auditoria.
+   primeiro Dono, com auditoria.
 
 ## Validação sem expor valores
 

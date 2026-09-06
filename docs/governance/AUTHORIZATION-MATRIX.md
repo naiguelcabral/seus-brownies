@@ -2,11 +2,19 @@
 
 ## Estado
 
-Matriz técnica de 2026-09-03. Seus guards estruturais estão aplicados às 30
+Matriz atualizada em 2026-09-06. Seus guards estruturais estão aplicados às 30
 Server Functions existentes: sem principal Neon verificado, vínculo ativo em
-`app_user_access` e papel canônico, elas falham fechadas. A integração ainda
-não está ativa em HML porque os bindings externos e secrets não foram gravados.
-Qualquer mudança material de permissões continua sujeita a `HUMAN-APPROVALS.md`.
+`app_user_access` e papel canônico, elas falham fechadas. A política e as
+migrations de transição para Dono, Gerente e Funcionário já estão versionadas;
+as migrations `0015` e `0016` foram aplicadas no banco HML, com a transição de
+papel e os vínculos liberados registrados em auditoria.
+
+Isso não equivale à homologação em runtime: o Worker HML público continua
+recebendo `403` na borda e a versão ali ativa ainda não recebeu o código que
+reconhece `owner`. O acesso HML end-to-end, inclusive as negações por papel,
+segue pendente de resolver esse bloqueio e fazer um deploy HML autorizado.
+Qualquer mudança material de permissões continua sujeita a
+`HUMAN-APPROVALS.md`.
 
 ## Princípios
 
@@ -24,60 +32,48 @@ Qualquer mudança material de permissões continua sujeita a `HUMAN-APPROVALS.md
 
 ## Papéis
 
-| Papel    | Finalidade proposta                                                                |
-| -------- | ---------------------------------------------------------------------------------- |
-| Admin    | Administração do acesso, configuração e toda a operação autorizada.                |
-| Gestor   | Gestão diária, sem administração de identidades ou papéis.                         |
-| Produção | Planejar, registrar e concluir produção; consultar catálogo e estoque necessários. |
-| Venda    | Registrar vendas e consultar catálogo/estoque estritamente necessários.            |
-| Consulta | Consultar dados operacionais e relatórios previamente autorizados, sem mutar.      |
+| Papel       | Finalidade proposta                                                                                           |
+| ----------- | ------------------------------------------------------------------------------------------------------------- |
+| Dono        | Toda a operação, configuração e administração de acessos.                                                     |
+| Gerente     | Gestão diária, sem administrar identidades ou papéis.                                                         |
+| Funcionário | Selecionar itens de catálogo e registrar compras e vendas, sem dashboard, relatórios ou leituras financeiras. |
+
+`admin`, `production`, `sales` e `viewer` são valores legados da enumeração.
+Não devem ser concedidos a novas contas. A migration `0016` converte o vínculo
+Admin existente para `owner`; ela foi aplicada em HML. A compatibilidade de
+leitura permanece apenas para uma transição reversível de vínculos legados.
 
 ## Permissões por domínio
 
-| Permissão | Admin | Gestor | Produção | Venda | Consulta | Server Functions atuais |
-| --- | --- | --- | --- | --- | --- |
-| `catalog:read` | sim | sim | sim | sim | sim | `listCategories`, `listProducts`, `listPurchasableProducts`, `listSaleProducts` |
-| `catalog:write` | sim | sim | não | não | não | criar, editar e inativar categoria/produto |
-| `purchases:read` | sim | sim | não | não | não | `listPurchases` |
-| `purchases:write` | sim | sim | não | não | não | `createPurchase` |
-| `inventory:read` | sim | sim | sim | sim* | sim* | `listInventory` |
-| `sales:read` | sim | sim | não | proposta† | proposta† | `listSales` |
-| `sales:write` | sim | sim | não | sim | não | `createSale` |
-| `expenses:read` / `expenses:write` | sim | sim | não | não | não | `listExpenses`, `createExpense` |
-| `production:read` / `production:write` | sim | sim | sim | não | não | workspace, prévia, criação, consulta e conclusão de lote |
-| `reports:financial:read` | sim | sim | não | não | proposta‡ | `getOperationalReports` |
-| `dashboard:read` | sim | sim | proposta‡ | proposta‡ | proposta‡ | `getDashboard` |
-| `fifo:lifecycle:write` | sim | proposta§ | não | não | não | cancelamento, devolução, perda e ajustes |
-| `fifo:audit:read` | sim | não | não | não | não | `getFifoMigrationAudit` |
-| `access:manage` | sim | não | não | não | não | usuários, vínculos e papéis futuros |
-
-\* A resposta atual de `listInventory` expõe custos de movimentos. Para Venda
-e Consulta, habilitar esta leitura depende de uma projeção sem custo, em vez de
-somente esconder valores na UI.
-
-† “Apenas próprias” exige `actor_id` ou vínculo equivalente nos fatos de venda,
-além de regra de delegação. Enquanto isso não existir, a opção segura é negar.
-
-‡ `getOperationalReports` e `getDashboard` agregam dados financeiros. Consulta,
-Produção e Venda só poderão recebê-los após definir uma projeção não financeira
-e o escopo permitido.
-
-§ Cancelamento, devolução, perda e ajuste afetam estoque e CMV/FIFO. Gestor só
-poderá recebê-los se a revisão humana confirmar a separação de deveres e a
-trilha de aprovação.
+| Permissão                              | Dono | Gerente | Funcionário | Server Functions atuais                                  |
+| -------------------------------------- | ---- | ------- | ----------- | -------------------------------------------------------- |
+| `catalog:read`                         | sim  | sim     | sim         | listagens de catálogo e itens de compra/venda            |
+| `catalog:write`                        | sim  | sim     | não         | criar, editar e inativar categoria/produto               |
+| `purchases:read`                       | sim  | sim     | não         | `listPurchases`                                          |
+| `purchases:write`                      | sim  | sim     | sim         | `createPurchase`                                         |
+| `inventory:read`                       | sim  | sim     | não         | `listInventory` (expõe custos)                           |
+| `sales:read`                           | sim  | sim     | não         | `listSales`                                              |
+| `sales:write`                          | sim  | sim     | sim         | `createSale`                                             |
+| `expenses:read` / `expenses:write`     | sim  | sim     | não         | `listExpenses`, `createExpense`                          |
+| `production:read` / `production:write` | sim  | sim     | não         | workspace, prévia, criação, consulta e conclusão de lote |
+| `reports:financial:read`               | sim  | sim     | não         | `getOperationalReports`                                  |
+| `dashboard:read`                       | sim  | sim     | não         | `getDashboard`                                           |
+| `fifo:lifecycle:write`                 | sim  | não     | não         | cancelamento, devolução, perda e ajustes                 |
+| `fifo:audit:read`                      | sim  | não     | não         | `getFifoMigrationAudit`                                  |
+| `access:manage`                        | sim  | não     | não         | vínculos e papéis futuros                                |
 
 ## Rota e proteção de interface
 
-Todas as rotas atuais são operacionais. O desenho inicial é usar uma rota de
+Todas as rotas atuais são operacionais. O desenho usa uma rota de
 login pública e um layout autenticado para `/`, `/categorias`, `/produtos`,
 `/compras`, `/estoque`, `/vendas`, `/despesas`, `/producao`, `/relatorios` e
-`/fifo-migration-audit`. A guarda de rota melhora a navegação, mas cada Server
-Function acima ainda deverá aplicar a mesma permissão no servidor.
+`/fifo-migration-audit`. A guarda de rota melhora a navegação, e cada Server
+Function acima aplica a mesma permissão no servidor.
 
 ## Decisões pendentes antes da aplicação
 
-1. se Gestor pode executar lifecycle FIFO ou somente solicitar/aprovar;
+1. se Gerente pode executar lifecycle FIFO ou somente solicitar/aprovar;
 2. quais projeções sem custo serão usadas por Produção, Venda e Consulta;
 3. se Venda e Consulta terão escopo próprio, por local ou global;
 4. quais eventos exigem dupla aprovação e como isso será registrado;
-5. quais leituras administrativas e técnicas ficam restritas ao Admin.
+5. quais leituras administrativas e técnicas ficam restritas ao Dono.
