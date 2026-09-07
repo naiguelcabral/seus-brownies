@@ -15,6 +15,35 @@ scripts/codex-autopilot.sh --once --cycle-timeout 900
 scripts/codex-autopilot.sh --loop --max-cycles 3 --cycle-timeout 900
 ```
 
+## Topologia obrigatória para `--once` e `--loop`
+
+O controlador deve ser iniciado em um terminal Bash comum e independente; ele
+não deve ser iniciado por outra sessão ativa do Codex. No VS Code, abra um
+segundo terminal independente e encerre a sessão interativa que preparou o
+piloto antes de iniciá-lo. Nesta topologia, `--dry-run` pode ser usado pelo
+agente atual, mas `--once` e `--loop` devem ser iniciados externamente.
+
+Evidência do piloto de 2026-09-07: o Bash que chamou o controlador era filho do
+processo `codex-linux-sandbox`; o `codex exec` aninhado falhou ao inicializar o
+app-server com `Read-only file system`, inclusive com `--ephemeral`. O erro não
+preservou o caminho de escrita do app-server. A escrita em diretório temporário
+funcionou, portanto não há evidência de indisponibilidade geral de escrita.
+
+Não há sinal local estável e documentado que permita ao script detectar essa
+topologia sem heurística frágil. O controlador não deve tentar bloqueá-la por
+variável interna ou inspeção de processo; siga o procedimento manual abaixo.
+
+```bash
+cd ~/Projetos/seus-brownies
+git switch codex/autonomy-runner
+git status --short
+./LIGARTUDO --prepare-only
+./scripts/codex-autopilot.sh --dry-run
+./scripts/codex-autopilot.sh --once
+```
+
+Com A01 em `ready`, `--once` selecionará somente A01 e terminará antes de A02.
+
 `--loop` é opt-in e só pode ser usado após três execuções `--once` verdes
 revisadas por humano. O controlador usa a primeira linha da fila com estado
 exatamente `ready`; itens `ready-after-*` e `needs-human` não são selecionados.

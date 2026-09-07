@@ -10,17 +10,32 @@ Atualizado em 7 de setembro de 2026.
 - uso Codex: não disponível para esta execução;
 - reserva: 5%;
 - reset exibido: não disponível;
-- próximo passo exato: resolver a inicialização local do app-server do Codex
-  em sistema de arquivos gravável, confirmar `--dry-run` e executar um único
-  `--once` para A01. Não executar A02 enquanto A01 permanecer `ready`.
+- próximo passo exato: em terminal Bash comum, fora de qualquer sessão Codex
+  ativa, executar o procedimento manual abaixo para um único `--once` de A01.
+  Não executar A02 enquanto A01 permanecer `ready`.
 
 ## Bloqueio do piloto A01
 
 O preflight e o `--dry-run` selecionaram exclusivamente A01 e mantiveram a
-árvore limpa. O `--once` não iniciou o agente: a CLI local falhou ao criar seu
-app-server em sistema de arquivos somente leitura, inclusive com `--ephemeral`.
+árvore limpa. O `--once` não iniciou o agente: o processo Bash era filho de
+`codex-linux-sandbox`, e a CLI aninhada falhou ao inicializar o app-server com
+`Read-only file system`, inclusive com `--ephemeral`. O caminho de escrita não
+foi preservado pelo erro. Uma escrita de teste em diretório temporário foi
+bem-sucedida, portanto o bloqueio confirmado é de topologia de execução, não
+falha funcional de A01 nem indisponibilidade geral de escrita.
+
 Não houve acesso a Cloudflare, Neon, HML ou produção; nenhuma documentação HML
-foi modificada e A01 continua `ready` na fila.
+foi modificada e A01 continua `ready` na fila. Não foi adicionada detecção
+automática: não há sinal local estável, documentado e não heurístico.
+
+```bash
+cd ~/Projetos/seus-brownies
+git switch codex/autonomy-runner
+git status --short
+./LIGARTUDO --prepare-only
+./scripts/codex-autopilot.sh --dry-run
+./scripts/codex-autopilot.sh --once
+```
 
 ## Contrato de retomada
 
