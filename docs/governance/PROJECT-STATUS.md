@@ -96,6 +96,10 @@ Este documento é a referência canônica de alto nível para o estado atual do 
   navegação pública foi corrigido: `/login` responde `200` e `/` sem sessão
   redireciona para `/login`. A homologação end-to-end ainda depende de login,
   OTP, sessão e autorização por papel reais.
+- Em 7 de setembro, o widget Turnstile HML existente foi limitado a
+  `localhost`, `127.0.0.1` e ao hostname HML; seu segredo foi atualizado
+  somente no Worker e a site key pública foi incluída no bundle HML. A
+  verificação descartável de Siteverify confirmou o segredo sem expô-lo.
 
 ## Ainda não entregue ou não homologado
 
@@ -103,8 +107,9 @@ Este documento é a referência canônica de alto nível para o estado atual do 
   aprovado, criar o vínculo auditado somente após a verificação de e-mail.
 - Homologação integrada/E2E de login, logout, OTP, reset, cookie, sessão,
   autorização por papel e negações de acesso.
-- Rate limit distribuído HML, widget Turnstile, confirmação de revogação de
-  sessão e auditoria de todos os eventos de autenticação.
+- Rate limit distribuído HML, validação integrada de um desafio Turnstile real
+  e de replay, confirmação de revogação de sessão e auditoria de todos os
+  eventos de autenticação.
 - Gestão de identidades/papéis por interface autorizada; hoje os vínculos HML
   foram operações administrativas auditadas.
 - Auditoria de autoria para todas as mutações operacionais e, se desejado,

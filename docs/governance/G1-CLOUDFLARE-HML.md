@@ -54,16 +54,18 @@ Wrangler.
 
 ## Bindings e configurações exigidos antes do deploy
 
-| Área             | Binding/configuração                                                                               | Estado                                                           |
-| ---------------- | -------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
-| Banco HML        | secret `DATABASE_URL`, exclusivo de `g1-auth-hml`                                                  | configurado; valor não inspecionado                              |
-| Neon Auth        | `NEON_AUTH_BASE_URL` e `NEON_AUTH_COOKIE_SECRET`                                                   | configurados; valores não inspecionados                          |
-| Tentativas       | secret `AUTH_LOGIN_HASH_PEPPER`, diferente do cookie secret                                        | configurado; valor não inspecionado                              |
-| Turnstile        | secret `TURNSTILE_SECRET_KEY` e variável pública `VITE_TURNSTILE_SITE_KEY` quando a UI for ativada | secret configurado; sitekey/UI pendentes                         |
-| Rate Limiting    | binding `AUTH_RATE_LIMITER` HML com `namespace_id` numérico exclusivo e política aprovada          | não declarado até existir namespace real; nunca usar placeholder |
-| E-mail/callbacks | origem confiável, callback, verificação e provedor no Neon Auth HML                                | gate externo separado                                            |
+| Área             | Binding/configuração                                                                               | Estado                                                             |
+| ---------------- | -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| Banco HML        | secret `DATABASE_URL`, exclusivo de `g1-auth-hml`                                                  | configurado; valor não inspecionado                                |
+| Neon Auth        | `NEON_AUTH_BASE_URL` e `NEON_AUTH_COOKIE_SECRET`                                                   | configurados; valores não inspecionados                            |
+| Tentativas       | secret `AUTH_LOGIN_HASH_PEPPER`, diferente do cookie secret                                        | configurado; valor não inspecionado                                |
+| Turnstile        | secret `TURNSTILE_SECRET_KEY` e variável pública `VITE_TURNSTILE_SITE_KEY` quando a UI for ativada | configurado no widget e Worker HML; validação real/replay pendente |
+| Rate Limiting    | binding `AUTH_RATE_LIMITER` HML com `namespace_id` numérico exclusivo e política aprovada          | não declarado até existir namespace real; nunca usar placeholder   |
+| E-mail/callbacks | origem confiável, callback, verificação e provedor no Neon Auth HML                                | gate externo separado                                              |
 
-`VITE_TURNSTILE_SITE_KEY` é client-safe e não integra `secrets.required`.
+`VITE_TURNSTILE_SITE_KEY` é client-safe e não integra `secrets.required`. O
+build HML isolado a recebe apenas pelo ambiente do processo de deploy; nem ela
+nem o segredo são versionados.
 `VITE_NEON_AUTH_URL` fica dispensado enquanto a integração permanecer mediada
 pelo servidor. Não registrar valores públicos em `wrangler.jsonc` sem uma
 necessidade concreta da UI e uma revisão do pipeline HML.

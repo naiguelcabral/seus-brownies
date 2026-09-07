@@ -32,11 +32,12 @@ O Codex consegue identificar estado, regras, limites e próxima tarefa sem depen
 - [~] Configurar integração externa Neon Auth em HML (secrets, callbacks,
   e-mail, Turnstile e rate limiting), sujeita a gate humano. E-mail/senha,
   provedor compartilhado e origens confiáveis foram confirmados em leitura;
-  limite distribuído, widget e homologação pública seguem pendentes.
+  widget Turnstile HML e seu segredo foram configurados e publicados, mas o
+  limite distribuído e a homologação integrada seguem pendentes.
 - [x] Publicar Worker Cloudflare HML separado em `workers.dev`, sem DNS, rota
-  customizada ou alteração no Worker principal. Em 6 de setembro, o Worker
-  recebeu o código atual e o smoke público confirmou `/login` com `200` e `/`
-  sem sessão redirecionando para `/login`.
+      customizada ou alteração no Worker principal. Em 6 de setembro, o Worker
+      recebeu o código atual e o smoke público confirmou `/login` com `200` e `/`
+      sem sessão redirecionando para `/login`.
 - [x] Aplicar a migration de infraestrutura de acesso `0014` somente no branch
       Neon de homologação autorizado, sem bootstrap de usuário.
 - [~] Implementar identidade de usuário (cadastro e verificação OTP por
@@ -58,8 +59,9 @@ O Codex consegue identificar estado, regras, limites e próxima tarefa sem depen
 - [~] Implementar rate limiting de autenticação: limite local para login,
   cadastro, OTP e reset preparado; binding distribuído HML permanece pendente.
 - [~] Definir e implementar CAPTCHA/desafio adicional em fluxos suspeitos:
-  verificador server-side e bloqueio fail-closed quando o desafio é exigido;
-  UI do widget pronta, mas configuração e validação integrada pendentes.
+  verificador server-side, bloqueio fail-closed, widget e site key HML estão
+  configurados. A validação do segredo por resposta descartável passou; falta
+  homologar um desafio real e seu replay junto aos fluxos de autenticação.
 - [~] Reestruturar RBAC inicial em Dono, Gerente e Funcionário: política,
   testes e migrations de transição aplicados em HML; o Dono e um Gerente
   possuem vínculos auditados. A verificação de e-mail e a liberação das demais

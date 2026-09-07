@@ -51,7 +51,8 @@ Ainda falta validar, em uma execução integrada controlada e sem expor valores:
 - Ao exceder o limite local, um token Turnstile válido passa a ser obrigatório.
   A UI renderiza o widget somente quando há uma `VITE_TURNSTILE_SITE_KEY`
   pública; sem site key, secret ou token quando o desafio é exigido, a operação
-  falha fechada. A configuração e homologação do widget continuam externas.
+  falha fechada. O widget HML, seu segredo no Worker e a site key do bundle
+  foram configurados; a homologação com desafio real e replay continua externa.
 - Esses controles não substituem o binding `AUTH_RATE_LIMITER` distribuído da
   Cloudflare; esse continua requisito externo antes da abertura operacional.
 
@@ -106,9 +107,8 @@ fluxo real de login no próximo gate.
   Server Function protegida.
 - Verificar os eventos de auditoria por ação/resultado/timestamp, sem senha,
   token, e-mail bruto, cookie ou segredo.
-- Adicionar `cacau-v1-hml.naiguelcabral.workers.dev` ao widget Turnstile
-  `cacau-v1-hml`, preservando `localhost`; validar o token exclusivamente no
-  servidor.
+- Confirmar em homologação um desafio real e a rejeição do replay para o
+  widget `cacau-v1-hml`; o token deve ser validado exclusivamente no servidor.
 
 ## Provedor de e-mail
 
