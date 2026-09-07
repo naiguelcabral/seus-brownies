@@ -44,6 +44,15 @@ if [[ -t 0 ]]; then
   esac
 fi
 
+# Fecha a memória local antes do checkpoint Git. A pasta .codex-local é
+# ignorada pelo Git para impedir que conversas brutas sejam publicadas.
+if [[ -f "$ROOT_DIR/scripts/codex/conversation_memory.py" ]]; then
+  if ! python3 "$ROOT_DIR/scripts/codex/conversation_memory.py" finalize; then
+    echo "⚠ A memória local do Codex não pôde ser finalizada."
+    echo "O salvamento do código continuará; nenhuma conversa será adicionada ao Git."
+  fi
+fi
+
 # Defesa adicional: arquivos de ambiente/segredo conhecidos não podem ser
 # adicionados por este fluxo, mesmo se a configuração local do Git mudar.
 SENSITIVE_PATHS=(
