@@ -85,3 +85,19 @@ test('avaliação do cooldown preserva o sinal de desafio para o handler', async
   assert.equal(attempt.decision.requiresChallenge, true)
   assert.equal(attempt.state, state)
 })
+
+test('cooldown expirado libera a tentativa somente com desafio obrigatório', async () => {
+  const state = {
+    consecutiveFailures: maxConsecutiveLoginFailures,
+    cooldownUntil: new Date('2026-09-03T12:15:00.000Z'),
+  }
+  const attempt = await evaluateLoginAttempt(
+    { read: async () => state },
+    'opaque-id',
+    new Date('2026-09-03T12:15:00.000Z'),
+  )
+
+  assert.equal(attempt.decision.allowed, true)
+  assert.equal(attempt.decision.requiresChallenge, true)
+  assert.equal(attempt.state, state)
+})

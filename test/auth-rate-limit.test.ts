@@ -160,3 +160,65 @@ test('desafio requerido sem secret ou token falha fechado sem invocar Turnstile'
     assert.equal(turnstileCalls, 0)
   }
 })
+
+test('desafio durável forçado exige token válido e rejeita token reutilizado', async () => {
+  const environment = {
+    AUTH_LOGIN_HASH_PEPPER: 'pepper-only-for-test',
+    TURNSTILE_SECRET_KEY: 'turnstile-test-key',
+  }
+  const limiter = createInMemoryAuthRateLimiter()
+  const consumedTokens = new Set<string>()
+  const dependencies = {
+    limiter,
+    verifyTurnstile: async ({
+      token,
+    }: {
+      secretKey: string
+      token: string
+    }) => {
+      if (token !== 'valid-test-token' || consumedTokens.has(token))
+        return false
+      consumedTokens.add(token)
+      return true
+    },
+  }
+  const options = { forceChallenge: true }
+
+  const missingToken = await protectPublicAuthAction(
+    { scope: 'login', email: 'admin@example.test' },
+    environment,
+    dependencies,
+    options,
+  )
+  assert.deepEqual(missingToken, {
+    allowed: false,
+    requiresChallenge: true,
+    retryAfterMs: 0,
+  })
+
+  const validToken = await protectPublicAuthAction(
+    {
+      scope: 'login',
+      email: 'admin@example.test',
+      turnstileToken: 'valid-test-token',
+    },
+    environment,
+    dependencies,
+    options,
+  )
+  assert.equal(validToken.allowed, true)
+  assert.equal(validToken.requiresChallenge, true)
+
+  const replay = await protectPublicAuthAction(
+    {
+      scope: 'login',
+      email: 'admin@example.test',
+      turnstileToken: 'valid-test-token',
+    },
+    environment,
+    dependencies,
+    options,
+  )
+  assert.equal(replay.allowed, false)
+  assert.equal(replay.requiresChallenge, true)
+})

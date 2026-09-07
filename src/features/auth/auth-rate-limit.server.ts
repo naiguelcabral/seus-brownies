@@ -13,6 +13,10 @@ type PublicAuthProtectionDependencies = {
   }) => Promise<boolean>
 }
 
+type PublicAuthProtectionOptions = {
+  forceChallenge?: boolean
+}
+
 function isDevelopment() {
   return import.meta.env.DEV === true
 }
@@ -56,6 +60,7 @@ export async function protectPublicAuthAction(
   input: PublicAuthProtectionInput,
   environment: Record<string, string | undefined>,
   dependencies: PublicAuthProtectionDependencies = {},
+  options: PublicAuthProtectionOptions = {},
 ) {
   const pepper = environment.AUTH_LOGIN_HASH_PEPPER
   if (!pepper) {
@@ -74,11 +79,19 @@ export async function protectPublicAuthAction(
     input.scope,
     opaqueIdentity,
   )
-  if (decision.allowed) return decision
+  const requiresChallenge =
+    options.forceChallenge === true || decision.requiresChallenge
+  if (!requiresChallenge) return decision
+
+  const challengeDecision = {
+    ...decision,
+    allowed: false,
+    requiresChallenge: true,
+  }
 
   const secretKey = environment.TURNSTILE_SECRET_KEY
   if (!secretKey || !input.turnstileToken) {
-    return { ...decision, allowed: false }
+    return challengeDecision
   }
 
   try {
@@ -92,8 +105,8 @@ export async function protectPublicAuthAction(
             token: input.turnstileToken,
           })
         ).success
-    return { ...decision, allowed: verified }
+    return { ...challengeDecision, allowed: verified }
   } catch {
-    return { ...decision, allowed: false }
+    return challengeDecision
   }
 }

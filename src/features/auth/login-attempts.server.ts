@@ -83,5 +83,13 @@ export async function evaluateLoginAttempt(
     now,
     policy: { cooldownMs: loginCooldownMs },
   })
-  return { state, decision }
+  return {
+    state,
+    decision: {
+      ...decision,
+      requiresChallenge:
+        decision.requiresChallenge ||
+        (state?.consecutiveFailures ?? 0) >= maxConsecutiveLoginFailures,
+    },
+  }
 }

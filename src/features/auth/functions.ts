@@ -104,35 +104,23 @@ async function getAuthActionAuditContext(): Promise<
 async function getPublicAuthProtection(
   scope: AuthRateLimitScope,
   data: { email: string; turnstileToken?: string },
+  options: { forceChallenge?: boolean } = {},
 ) {
   return protectPublicAuthAction(
     { scope, email: data.email, turnstileToken: data.turnstileToken },
     process.env,
+    {},
+    options,
   )
 }
 
 export const loginWithEmailPassword = createServerFn({ method: 'POST' })
   .validator(loginWithProtectionInput)
   .handler(async ({ data }) => {
-    const protection = await getPublicAuthProtection('login', data)
-    if (!protection.allowed) {
-      return {
-        ok: false,
-        message: invalidLoginMessage,
-        requiresChallenge: protection.requiresChallenge,
-      }
-    }
-    const auth = createConfiguredNeonAuthServer(process.env)
-    if (!auth) return { ok: false, message: unavailableLoginMessage }
-    const store = process.env.AUTH_LOGIN_HASH_PEPPER
-      ? createDatabaseLoginAttemptStore()
-      : null
-    const loginIdentity = process.env.AUTH_LOGIN_HASH_PEPPER
-      ? await hashAuthIdentity(
-          'login',
-          data.email,
-          process.env.AUTH_LOGIN_HASH_PEPPER,
-        )
+    const pepper = process.env.AUTH_LOGIN_HASH_PEPPER
+    const store = pepper ? createDatabaseLoginAttemptStore() : null
+    const loginIdentity = pepper
+      ? await hashAuthIdentity('login', data.email, pepper)
       : null
     const loginAttempt =
       store && loginIdentity
@@ -145,6 +133,18 @@ export const loginWithEmailPassword = createServerFn({ method: 'POST' })
         requiresChallenge: loginAttempt.decision.requiresChallenge,
       }
     }
+    const protection = await getPublicAuthProtection('login', data, {
+      forceChallenge: loginAttempt?.decision.requiresChallenge === true,
+    })
+    if (!protection.allowed) {
+      return {
+        ok: false,
+        message: invalidLoginMessage,
+        requiresChallenge: protection.requiresChallenge,
+      }
+    }
+    const auth = createConfiguredNeonAuthServer(process.env)
+    if (!auth) return { ok: false, message: unavailableLoginMessage }
     const result = await signInWithEmailPassword(
       auth,
       {

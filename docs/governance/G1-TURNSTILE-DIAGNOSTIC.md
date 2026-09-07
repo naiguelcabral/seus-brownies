@@ -29,6 +29,13 @@ retornam `requiresChallenge: true`. A UI passa a solicitar o widget sem
 depender de a sexta chamada chegar ao mesmo isolate. A integração HML, token
 válido e replay continuam não homologados.
 
+O estado durável com cinco ou mais falhas continua marcando o desafio como
+obrigatório após `cooldown_until`. Assim, o primeiro login após expiração só
+prossegue ao provedor depois de token válido; token ausente, inválido ou
+reutilizado recebe a mesma negação genérica. Durante o cooldown, a avaliação
+durável bloqueia antes da validação de token, portanto token válido não reduz
+nem contorna o bloqueio.
+
 ## Fluxo comprovado por código
 
 ### Limite local e desafio
@@ -79,10 +86,13 @@ assim, a quinta falha também ativa o desafio na resposta ao cliente.
 3. Uma falha comum antes da quinta ainda retorna somente `ok: false` e
    `invalidLoginMessage`; a quinta falha e o cooldown retornam também
    `requiresChallenge: true`.
-4. Em `src/routes/login.tsx`, `captureChallenge()` só marca o estado quando o
+4. Após o cooldown expirar, `evaluateLoginAttempt()` permite a tentativa, mas
+   mantém `requiresChallenge: true`; `protectPublicAuthAction()` usa o mesmo
+   verificador server-side já tipado antes de chamar o provedor.
+5. Em `src/routes/login.tsx`, `captureChallenge()` só marca o estado quando o
    campo da resposta é exatamente `true`. Uma falha comum de senha, portanto,
    não mostra widget.
-5. `TurnstileChallenge` só renderiza conteúdo quando esse estado está ativo.
+6. `TurnstileChallenge` só renderiza conteúdo quando esse estado está ativo.
    Com site key ausente, vazia ou só com espaços, ele mostra a mensagem de
    indisponibilidade e mantém o botão bloqueado; não há bypass. Com site key
    presente, carrega o script Turnstile e só libera o envio depois do callback
@@ -115,6 +125,7 @@ o banco continua sendo fonte durável apenas para cooldown de login.
 | A quinta falha de credencial grava cooldown durável de 15 minutos.        | Comprovado localmente | `login-security.ts`, `login-attempts.server.ts` e `auth-login-security.test.ts`.             |
 | A versão anterior omitiria `requiresChallenge` no cooldown durável.       | Comprovado localmente | Diagnóstico do diff anterior em `functions.ts`; corrigido localmente neste pacote.           |
 | A correção devolve o sinal no cooldown e na quinta falha.                 | Comprovado localmente | Caminho do handler revisado; `auth-login-security.test.ts` cobre a decisão preservada.       |
+| Cooldown expirado exige token; token válido segue e replay é negado.      | Comprovado localmente | `auth-login-security.test.ts` e fake em `auth-rate-limit.test.ts`.                           |
 | Essa omissão explica as tentativas HML observadas.                        | Hipótese forte        | É compatível com o fluxo; esta investigação não fez rede nem leu estado HML.                 |
 | A site key publicada estava ausente, vazia ou indisponível no bundle HML. | Depende de HML        | O código trata esse caso; nenhuma inspeção de bundle/navegador foi feita.                    |
 | Um limitador distribuído corrigirá o sinal cliente do cooldown.           | Hipótese              | Ele melhora consistência entre isolates, mas não propaga `requiresChallenge` do store atual. |

@@ -49,9 +49,11 @@ Atualizado em 7 de setembro de 2026.
   execução.
 - O diagnóstico local `G1-TURNSTILE-DIAGNOSTIC.md` confirmou a divergência e a
   correção aprovada preserva `requiresChallenge` do cooldown durável e da
-  quinta falha até a UI. Os testes locais passaram; a revisão/publicação e os
-  pré-requisitos de teste seguro ainda são necessários. A07 permanece
-  bloqueada até então.
+  quinta falha até a UI. O reparo A07-R1 também exige token válido após o
+  cooldown expirar e rejeita token inválido/reutilizado pelos fakes locais;
+  token válido durante cooldown não contorna o bloqueio. Os testes locais
+  passaram; a revisão/publicação e os pré-requisitos de teste seguro ainda são
+  necessários. A07 permanece bloqueada até então.
 - próximo pacote: nenhum selecionável; A07 está `blocked` e A08–A10 permanecem
   `needs-human`.
 - A05 criou `playwright.auth-hml.config.ts`,
