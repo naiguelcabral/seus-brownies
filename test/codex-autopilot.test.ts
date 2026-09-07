@@ -81,6 +81,7 @@ test('estado bruto usa diretório local ignorado e preserva a sentinela em .code
   assert.match(source, /não foi possível criar a trava do controlador/)
   assert.match(source, /--approve-for-me/)
   assert.doesNotMatch(source, /--ask-for-approval/)
+  assert.doesNotMatch(source, /--sandbox workspace-write --approve-for-me/)
 })
 
 test('arquivo .env.example versionado não é tratado como segredo', async () => {

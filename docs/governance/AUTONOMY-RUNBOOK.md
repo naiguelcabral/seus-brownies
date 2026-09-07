@@ -20,8 +20,9 @@ revisadas por humano. O controlador usa a primeira linha da fila com estado
 exatamente `ready`; itens `ready-after-*` e `needs-human` não são selecionados.
 Após um resultado `done`, o controlador revisa espaços em branco, bloqueia
 arquivo `.env*` novo e cria o único commit local de checkpoint do pacote.
-Na versão atual da CLI, a execução usa `--approve-for-me` com sandbox
-`workspace-write`; ela não usa `danger-full-access` nem bypass de sandbox.
+Na versão atual da CLI, a execução usa `--approve-for-me`, que a própria CLI
+define como revisão automática em sandbox `workspace-write`; ela não usa
+`danger-full-access` nem bypass de sandbox.
 
 ## Resultado e retomada
 
