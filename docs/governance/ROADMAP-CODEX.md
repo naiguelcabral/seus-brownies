@@ -34,9 +34,9 @@ O Codex consegue identificar estado, regras, limites e próxima tarefa sem depen
   provedor compartilhado e origens confiáveis foram confirmados em leitura;
   limite distribuído, widget e homologação pública seguem pendentes.
 - [x] Publicar Worker Cloudflare HML separado em `workers.dev`, sem DNS, rota
-  customizada ou alteração no Worker principal. Em 6 de setembro, o Worker
-  recebeu o código atual e o smoke público confirmou `/login` com `200` e `/`
-  sem sessão redirecionando para `/login`.
+      customizada ou alteração no Worker principal. Em 6 de setembro, o Worker
+      recebeu o código atual e o smoke público confirmou `/login` com `200` e `/`
+      sem sessão redirecionando para `/login`.
 - [x] Aplicar a migration de infraestrutura de acesso `0014` somente no branch
       Neon de homologação autorizado, sem bootstrap de usuário.
 - [~] Implementar identidade de usuário (cadastro e verificação OTP por
@@ -154,8 +154,11 @@ A definição de margem realizada e vínculo venda-lote é decisão de negócio/
 
 - [x] Configuração Cloudflare versionada.
 - [x] Build/deploy command disponível.
-- [~] Worker HML isolado publicado, mas indisponível publicamente por `403` de
-  borda e ainda sem deploy do RBAC atual.
+- [~] Worker HML isolado publicado e acessível publicamente: em 6 de setembro
+  `/login` respondeu `200` e `/` sem sessão redirecionou para `/login`.
+  Turnstile publicado e o diagnóstico histórico do `403` foram preservados;
+  homologação integrada, rate limit distribuído e demais gates de G1 seguem
+  pendentes.
 - [ ] Definir ambientes development/staging/production formalmente.
 - [ ] Configurar secrets por ambiente.
 - [ ] Definir estratégia de backup Neon.
@@ -168,9 +171,13 @@ A definição de margem realizada e vínculo venda-lote é decisão de negócio/
 ## Fase G8 — Autonomia progressiva do Codex
 
 - [x] Testes e documentação suficientes para iniciar governança agent-friendly.
-- [ ] Nível 1: Codex implementa tarefa explícita e apresenta diff/checks.
-- [ ] Nível 2: Codex conclui pacote pequeno do roadmap e prepara PR.
-- [ ] Nível 3: Codex escolhe próxima tarefa não bloqueada dentro de fase autorizada.
+- [x] Etapas 1–2 preparadas: fila, handoff, log, runbook, controlador local
+      seguro e `LIGARTUDO --prepare-only`, todos cobertos por testes locais.
+- [~] Nível 1: Codex implementa tarefa explícita e apresenta diff/checks.
+- [ ] Nível 2: após revisão humana do piloto A01–A03, Codex conclui pacote
+      pequeno, cria commit local e prepara PR.
+- [ ] Nível 3: após três pacotes consecutivos verdes e sem correção humana ou
+      gate violado, Codex escolhe próximo item exatamente `ready` em fase autorizada.
 - [ ] Automação de revisão de CI/dependências, quando útil.
 - [ ] Multiagente somente após estabilidade do workflow e proteção adequada da `main`.
 

@@ -48,3 +48,15 @@ test('não abre configuração do VS Code e inicia o runtime HML', async () => {
   assert.match(script, /codex mcp list 2>\/dev\/null/)
   assert.match(script, /exec npm run dev:hml/)
 })
+
+test('prepare-only não consulta remoto nem inicia o runtime', async () => {
+  const script = await readScript()
+  const prepareOnly = script.indexOf('PREPARE_ONLY=true')
+  const remoteCheck = script.indexOf('git ls-remote --exit-code --heads')
+  const devServer = script.indexOf('exec npm run dev:hml')
+
+  assert.notEqual(prepareOnly, -1)
+  assert.ok(prepareOnly < remoteCheck)
+  assert.ok(remoteCheck < devServer)
+  assert.match(script, /servidor não iniciado \(--prepare-only\)/)
+})
