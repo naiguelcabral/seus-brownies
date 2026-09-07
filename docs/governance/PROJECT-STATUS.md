@@ -1,6 +1,6 @@
 # Estado canônico do projeto — Cacau v1
 
-Atualizado em 6 de setembro de 2026, após revisão de código, migrations,
+Atualizado em 7 de setembro de 2026, após revisão de código, migrations,
 testes, rotas, documentação e estado público de HML.
 
 Este documento é a referência canônica de alto nível para o estado atual do sistema. Registros históricos de homologação, importação e decisões específicas permanecem válidos como evidência, mas não substituem este resumo.
@@ -94,8 +94,10 @@ Este documento é a referência canônica de alto nível para o estado atual do 
 - O Worker HML `cacau-v1-hml` permanece publicado exclusivamente em
   `workers.dev`. Em 6 de setembro, o código atual foi publicado e o `403` de
   navegação pública foi corrigido: `/login` responde `200` e `/` sem sessão
-  redireciona para `/login`. A homologação end-to-end ainda depende de login,
-  OTP, sessão e autorização por papel reais.
+  redireciona para `/login`. Uma leitura pública sanitizada em 7 de setembro
+  reconfirmou esse comportamento, sem enviar cookie ou ler corpo. A
+  homologação end-to-end ainda depende de login, OTP, sessão e autorização por
+  papel reais.
 
 ## Ainda não entregue ou não homologado
 

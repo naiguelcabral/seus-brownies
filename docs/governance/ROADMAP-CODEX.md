@@ -37,7 +37,8 @@ O Codex consegue identificar estado, regras, limites e próxima tarefa sem depen
 - [x] Publicar Worker Cloudflare HML separado em `workers.dev`, sem DNS, rota
       customizada ou alteração no Worker principal. Em 6 de setembro, o Worker
       recebeu o código atual e o smoke público confirmou `/login` com `200` e `/`
-      sem sessão redirecionando para `/login`.
+      sem sessão redirecionando para `/login`; a leitura pública sanitizada de
+      A06 reconfirmou os mesmos resultados em 7 de setembro.
 - [x] Aplicar a migration de infraestrutura de acesso `0014` somente no branch
       Neon de homologação autorizado, sem bootstrap de usuário.
 - [~] Implementar identidade de usuário (cadastro e verificação OTP por

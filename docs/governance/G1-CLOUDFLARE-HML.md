@@ -37,6 +37,19 @@ homologam autenticação de ponta a ponta. Permanecem pendentes o desafio real,
 a rejeição de replay, rate limiting distribuído e os testes integrados de
 login, OTP, reset, logout, cookie, sessão e negações por papel.
 
+### Leitura pública sanitizada A06 — 7 de setembro de 2026
+
+Sob autorização humana, duas requisições GET anônimas, sem cookie, corpo ou
+redirect seguido, reconfirmaram a navegação pública às `19:27:54Z`:
+
+- `/` retornou HTTP `307` com `location: /login`; `cf-ray`:
+  `a3781b58aa52cabb-GIG`;
+- `/login` retornou HTTP `200` com `content-type: text/html; charset=utf-8`
+  (`cf-ray: a3781c6f0a68ece8-GIG`).
+
+Essa leitura não acessou autenticação, e-mail, banco, Neon, Cloudflare API ou
+configuração. Ela não substitui nenhuma homologação integrada de G1.
+
 ## Scripts preparados
 
 ```bash
