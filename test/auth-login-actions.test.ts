@@ -19,6 +19,7 @@ import {
   verifyEmailVerificationOtp,
 } from '../src/features/auth/login-actions'
 import type { NeonAuthCredentialsClient } from '../src/features/auth/login-actions'
+import type { AuthAuditInput } from '../src/features/auth/audit'
 
 function createAuthClient() {
   return {
@@ -39,29 +40,79 @@ function createPasswordResetClient() {
   }
 }
 
+function createAuditContext(events: Array<AuthAuditInput>) {
+  return {
+    requestId: 'request-id-local-001',
+    writer: {
+      append: async (event: AuthAuditInput) => {
+        events.push(event)
+      },
+    },
+  }
+}
+
 test('login inválido produz mensagem controlada', async () => {
+  const events: Array<AuthAuditInput> = []
   const result = await signInWithEmailPassword(
     {
       ...createAuthClient(),
       signIn: { email: async () => ({ error: { status: 401 } }) },
     },
     { email: 'invalido@example.test', password: 'senha-incorreta' },
+    createAuditContext(events),
   )
 
   assert.deepEqual(result, { ok: false, message: invalidLoginMessage })
+  assert.deepEqual(events, [
+    {
+      action: 'login',
+      outcome: 'failure',
+      targetType: 'identity',
+      requestId: 'request-id-local-001',
+      metadata: { reasonCode: 'provider_rejected' },
+    },
+  ])
+  assert.doesNotMatch(
+    JSON.stringify(events),
+    /invalido@example\.test|senha-incorreta|token|cookie/i,
+  )
 })
 
 test('login e logout bem-sucedidos não expõem dados de sessão', async () => {
   const auth = createAuthClient()
+  const events: Array<AuthAuditInput> = []
 
   assert.deepEqual(
-    await signInWithEmailPassword(auth, {
-      email: 'user@example.test',
-      password: 'senha-valida',
-    }),
+    await signInWithEmailPassword(
+      auth,
+      {
+        email: 'user@example.test',
+        password: 'senha-valida',
+      },
+      createAuditContext(events),
+    ),
     { ok: true },
   )
-  assert.deepEqual(await signOutCurrentSession(auth), { ok: true })
+  assert.deepEqual(
+    await signOutCurrentSession(auth, createAuditContext(events)),
+    { ok: true },
+  )
+  assert.deepEqual(events, [
+    {
+      action: 'login',
+      outcome: 'success',
+      targetType: 'identity',
+      requestId: 'request-id-local-001',
+      metadata: null,
+    },
+    {
+      action: 'logout',
+      outcome: 'success',
+      targetType: 'session',
+      requestId: 'request-id-local-001',
+      metadata: null,
+    },
+  ])
 })
 
 test('acesso negado após autenticação tem mensagem orientativa sem dados da sessão', () => {
@@ -75,14 +126,27 @@ test('e-mail não verificado pede confirmação sem expor dados da sessão', () 
 })
 
 test('falha de transporte no logout recebe mensagem controlada', async () => {
-  const result = await signOutCurrentSession({
-    ...createAuthClient(),
-    signOut: async () => {
-      throw new Error('network failure')
+  const events: Array<AuthAuditInput> = []
+  const result = await signOutCurrentSession(
+    {
+      ...createAuthClient(),
+      signOut: async () => {
+        throw new Error('network failure')
+      },
     },
-  })
+    createAuditContext(events),
+  )
 
   assert.deepEqual(result, { ok: false, message: unavailableLoginMessage })
+  assert.deepEqual(events, [
+    {
+      action: 'logout',
+      outcome: 'failure',
+      targetType: 'session',
+      requestId: 'request-id-local-001',
+      metadata: { reasonCode: 'provider_unavailable' },
+    },
+  ])
 })
 
 test('cadastro válido cria a identidade e solicita OTP de verificação', async () => {
@@ -190,6 +254,7 @@ test('reenvio de OTP usa o mesmo retorno não enumerável', async () => {
 })
 
 test('OTP inválido recebe mensagem controlada', async () => {
+  const events: Array<AuthAuditInput> = []
   const result = await verifyEmailVerificationOtp(
     {
       ...createAuthClient(),
@@ -199,13 +264,24 @@ test('OTP inválido recebe mensagem controlada', async () => {
       },
     },
     { email: 'user@example.test', otp: '000000' },
+    createAuditContext(events),
   )
 
   assert.deepEqual(result, { ok: false, message: invalidOtpMessage })
+  assert.deepEqual(events, [
+    {
+      action: 'email_verification',
+      outcome: 'failure',
+      targetType: 'identity',
+      requestId: 'request-id-local-001',
+      metadata: { reasonCode: 'provider_rejected' },
+    },
+  ])
 })
 
 test('OTP válido é delegado ao Neon Auth para emitir a sessão', async () => {
   const calls: Array<unknown> = []
+  const events: Array<AuthAuditInput> = []
   const result = await verifyEmailVerificationOtp(
     {
       ...createAuthClient(),
@@ -218,10 +294,40 @@ test('OTP válido é delegado ao Neon Auth para emitir a sessão', async () => {
       },
     },
     { email: 'user@example.test', otp: '123456' },
+    createAuditContext(events),
   )
 
   assert.deepEqual(result, { ok: true })
   assert.deepEqual(calls, [{ email: 'user@example.test', otp: '123456' }])
+  assert.deepEqual(events, [
+    {
+      action: 'email_verification',
+      outcome: 'success',
+      targetType: 'identity',
+      requestId: 'request-id-local-001',
+      metadata: null,
+    },
+  ])
+})
+
+test('falha do gravador não altera uma negação fail-closed de login', async () => {
+  const result = await signInWithEmailPassword(
+    {
+      ...createAuthClient(),
+      signIn: { email: async () => ({ error: { status: 401 } }) },
+    },
+    { email: 'invalido@example.test', password: 'senha-incorreta' },
+    {
+      requestId: 'request-id-local-002',
+      writer: {
+        append: async () => {
+          throw new Error('audit persistence unavailable')
+        },
+      },
+    },
+  )
+
+  assert.deepEqual(result, { ok: false, message: invalidLoginMessage })
 })
 
 test('solicitação de recuperação sempre devolve mensagem não enumerável', async () => {

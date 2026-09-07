@@ -4,8 +4,8 @@ Atualizado em 7 de setembro de 2026.
 
 ## Estado atual
 
-- pacote ativo: nenhum; A01, A02 e A03 concluídos;
-- última execução: auditoria documental local do A03 concluída, sem rede,
+- pacote ativo: nenhum; A01, A02, A03 e A04 concluídos;
+- última execução: cobertura local prioritária de A04 concluída, sem rede,
   escrita externa, deploy ou mudança de configuração;
 - branch esperada para o piloto: `codex/autonomy-runner`;
 - uso Codex: não disponível para esta execução;
@@ -33,11 +33,15 @@ Atualizado em 7 de setembro de 2026.
   concluída manualmente no mesmo escopo documental; não repetir `--once` sem
   resolver a topologia externa.
 - A03 produziu `AUTH-COVERAGE-AUDIT.md`: todos os fluxos e negações previstos
-  foram mapeados para código, teste, cobertura negativa e pendência HML. Reset
-  possui lifecycle auditado localmente; eventos de login, logout, verificação
-  de e-mail e acesso negado ainda não possuem emissão persistida de runtime.
-- próximo pacote dependente: A04 — implementar testes locais prioritários de
-  auth. Ele permanece `ready-after-A03`; não o iniciar nesta execução.
+  foram mapeados para código, teste, cobertura negativa e pendência HML.
+- A04 conectou login, logout e confirmação de e-mail a um writer de auditoria
+  tipado, com `request_id` e razões enumeradas. Os testes locais comprovam
+  sucesso/falha e ausência de e-mail, senha, token e cookie nos eventos. O
+  ator não é inventado antes de o provedor retornar identidade. A persistência
+  real e `access_denied` permanecem pendentes de HML e decisão de retenção/
+  boundary assíncrono, respectivamente.
+- próximo pacote elegível: A05 — preparar E2E G1 não destrutivo. Não foi
+  iniciado nesta execução.
 
 ## Bloqueio do piloto A01
 

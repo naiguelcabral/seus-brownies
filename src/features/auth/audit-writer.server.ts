@@ -2,11 +2,7 @@ import { getDb } from '#/db/index'
 import { authAuditEvents } from '#/db/schema'
 
 import { createAuthAuditEvent } from './audit'
-import type { AuthAuditInput } from './audit'
-
-export type AuthAuditWriter = {
-  append: (input: AuthAuditInput) => Promise<void>
-}
+import type { AuthAuditWriter } from './audit'
 
 /** Persists only the allowlisted audit contract; it never receives credentials. */
 export function createDatabaseAuthAuditWriter(): AuthAuditWriter {

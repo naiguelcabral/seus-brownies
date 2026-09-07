@@ -1,3 +1,6 @@
+import { createAuthAuditEvent } from './audit'
+import type { AuthAuditAction, AuthAuditWriter } from './audit'
+
 export const invalidLoginMessage =
   'Não foi possível iniciar a sessão. Verifique as credenciais e tente novamente.'
 
@@ -59,16 +62,63 @@ export type NeonAuthPasswordResetClient = {
   }) => NeonAuthResult
 }
 
+export type AuthActionAuditContext = {
+  requestId: string
+  writer: AuthAuditWriter
+}
+
+async function recordAuthAction(
+  audit: AuthActionAuditContext | undefined,
+  action: Extract<AuthAuditAction, 'login' | 'logout' | 'email_verification'>,
+  outcome: 'success' | 'failure',
+  targetType: 'identity' | 'session',
+  reasonCode?: 'provider_rejected' | 'provider_unavailable',
+) {
+  if (!audit) return
+
+  try {
+    await audit.writer.append(
+      createAuthAuditEvent({
+        action,
+        outcome,
+        targetType,
+        requestId: audit.requestId,
+        metadata: reasonCode ? { reasonCode } : undefined,
+      }),
+    )
+  } catch {
+    // Audit persistence must not disclose an internal failure or change an
+    // already-established authentication result. HML verifies persistence.
+  }
+}
+
 export async function signInWithEmailPassword(
   auth: NeonAuthCredentialsClient,
   input: { email: string; password: string },
+  audit?: AuthActionAuditContext,
 ) {
   try {
     const result = await auth.signIn.email(input)
-    return result.error
-      ? { ok: false, message: invalidLoginMessage }
-      : { ok: true }
+    if (result.error) {
+      await recordAuthAction(
+        audit,
+        'login',
+        'failure',
+        'identity',
+        'provider_rejected',
+      )
+      return { ok: false, message: invalidLoginMessage }
+    }
+    await recordAuthAction(audit, 'login', 'success', 'identity')
+    return { ok: true }
   } catch {
+    await recordAuthAction(
+      audit,
+      'login',
+      'failure',
+      'identity',
+      'provider_unavailable',
+    )
     return { ok: false, message: unavailableLoginMessage }
   }
 }
@@ -113,24 +163,60 @@ export async function resendEmailVerificationOtp(
 export async function verifyEmailVerificationOtp(
   auth: NeonAuthCredentialsClient,
   input: { email: string; otp: string },
+  audit?: AuthActionAuditContext,
 ) {
   try {
     const result = await auth.emailOtp.verifyEmail(input)
-    return result.error
-      ? { ok: false, message: invalidOtpMessage }
-      : { ok: true }
+    if (result.error) {
+      await recordAuthAction(
+        audit,
+        'email_verification',
+        'failure',
+        'identity',
+        'provider_rejected',
+      )
+      return { ok: false, message: invalidOtpMessage }
+    }
+    await recordAuthAction(audit, 'email_verification', 'success', 'identity')
+    return { ok: true }
   } catch {
+    await recordAuthAction(
+      audit,
+      'email_verification',
+      'failure',
+      'identity',
+      'provider_unavailable',
+    )
     return { ok: false, message: unavailableLoginMessage }
   }
 }
 
-export async function signOutCurrentSession(auth: NeonAuthCredentialsClient) {
+export async function signOutCurrentSession(
+  auth: NeonAuthCredentialsClient,
+  audit?: AuthActionAuditContext,
+) {
   try {
     const result = await auth.signOut()
-    return result.error
-      ? { ok: false, message: unavailableLoginMessage }
-      : { ok: true }
+    if (result.error) {
+      await recordAuthAction(
+        audit,
+        'logout',
+        'failure',
+        'session',
+        'provider_rejected',
+      )
+      return { ok: false, message: unavailableLoginMessage }
+    }
+    await recordAuthAction(audit, 'logout', 'success', 'session')
+    return { ok: true }
   } catch {
+    await recordAuthAction(
+      audit,
+      'logout',
+      'failure',
+      'session',
+      'provider_unavailable',
+    )
     return { ok: false, message: unavailableLoginMessage }
   }
 }

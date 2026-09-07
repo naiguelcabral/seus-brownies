@@ -25,6 +25,7 @@ import {
   unavailableLoginMessage,
   verifyEmailVerificationOtp,
 } from './login-actions'
+import type { AuthActionAuditContext } from './login-actions'
 import {
   executeAuditedPasswordReset,
   isAuditedPasswordResetSuccessful,
@@ -81,7 +82,7 @@ function passwordResetRedirectTo() {
     : hmlPasswordResetRedirectTo
 }
 
-async function getPasswordResetAuditWriter() {
+async function getAuthAuditWriter() {
   if (!process.env.DATABASE_URL) return null
   try {
     const { createDatabaseAuthAuditWriter } =
@@ -90,6 +91,13 @@ async function getPasswordResetAuditWriter() {
   } catch {
     return null
   }
+}
+
+async function getAuthActionAuditContext(): Promise<
+  AuthActionAuditContext | undefined
+> {
+  const writer = await getAuthAuditWriter()
+  return writer ? { writer, requestId: crypto.randomUUID() } : undefined
 }
 
 async function getPublicAuthProtection(
@@ -132,10 +140,14 @@ export const loginWithEmailPassword = createServerFn({ method: 'POST' })
     ) {
       return { ok: false, message: invalidLoginMessage }
     }
-    const result = await signInWithEmailPassword(auth, {
-      email: data.email,
-      password: data.password,
-    })
+    const result = await signInWithEmailPassword(
+      auth,
+      {
+        email: data.email,
+        password: data.password,
+      },
+      await getAuthActionAuditContext(),
+    )
     if (store && loginIdentity && result.message !== unavailableLoginMessage) {
       await store.record(loginIdentity, result.ok)
     }
@@ -191,10 +203,14 @@ export const verifyEmailVerificationOtpFn = createServerFn({ method: 'POST' })
     }
     const auth = createConfiguredNeonAuthServer(process.env)
     if (!auth) return { ok: false, message: unavailableLoginMessage }
-    return verifyEmailVerificationOtp(auth, {
-      email: data.email,
-      otp: data.otp,
-    })
+    return verifyEmailVerificationOtp(
+      auth,
+      {
+        email: data.email,
+        otp: data.otp,
+      },
+      await getAuthActionAuditContext(),
+    )
   })
 
 export const requestPasswordResetFn = createServerFn({ method: 'POST' })
@@ -228,7 +244,7 @@ export const requestPasswordResetFn = createServerFn({ method: 'POST' })
       return { ok: false, message: passwordResetRequestMessage }
     }
 
-    const writer = await getPasswordResetAuditWriter()
+    const writer = await getAuthAuditWriter()
     if (!writer) {
       telemetry.emit({
         requestId,
@@ -265,7 +281,7 @@ export const resetPasswordWithTokenFn = createServerFn({ method: 'POST' })
       return { ok: false, message: invalidPasswordResetMessage }
     }
 
-    const writer = await getPasswordResetAuditWriter()
+    const writer = await getAuthAuditWriter()
     if (!writer) return { ok: false, message: invalidPasswordResetMessage }
 
     const audit = await executeAuditedPasswordReset({
@@ -287,5 +303,5 @@ export const resetPasswordWithTokenFn = createServerFn({ method: 'POST' })
 export const logout = createServerFn({ method: 'POST' }).handler(async () => {
   const auth = createConfiguredNeonAuthServer(process.env)
   if (!auth) return { ok: true }
-  return signOutCurrentSession(auth)
+  return signOutCurrentSession(auth, await getAuthActionAuditContext())
 })

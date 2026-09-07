@@ -11,6 +11,10 @@ export const authAuditActions = [
 export type AuthAuditAction = (typeof authAuditActions)[number]
 export type AuthAuditOutcome = 'success' | 'failure' | 'blocked'
 
+export type AuthAuditWriter = {
+  append: (input: AuthAuditInput) => Promise<void>
+}
+
 /**
  * Writers may record only this allowlisted metadata. Credentials, session
  * cookies, reset tokens and raw network identifiers have no representation.
