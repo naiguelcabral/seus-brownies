@@ -4,8 +4,8 @@ Atualizado em 7 de setembro de 2026.
 
 ## Estado atual
 
-- pacote ativo: nenhum; A01 concluído;
-- última execução: recuperação manual do A01 concluída localmente, sem rede,
+- pacote ativo: nenhum; A01 e A02 concluídos;
+- última execução: classificação documental local do A02 concluída, sem rede,
   escrita externa, deploy ou mudança de configuração;
 - branch esperada para o piloto: `codex/autonomy-runner`;
 - uso Codex: não disponível para esta execução;
@@ -24,10 +24,16 @@ Atualizado em 7 de setembro de 2026.
   carregamento viola a política; o EROFS de log é secundário.
 - nenhuma ação externa ocorreu; não houve leitura de `.env*`, deploy, acesso a
   Cloudflare, Neon, HML, banco, DNS, Worker, RBAC ou produção.
-- próximo pacote elegível: A02 — classificar a dívida de `npm run check`.
-  Não o iniciar nesta execução. A matriz de validação por tipo de pacote foi
-  adicionada ao controlador: A02 é `documental`, portanto build e check global
-  não são aplicáveis.
+- A02 classificou 103 falhas de `npm run check` em fonte mantida (39), testes
+  mantidos (18), artefatos/relatórios gerados (37), documentação histórica (8)
+  e outro (1). O resultado e as recomendações mínimas estão em
+  `FORMATTING-DEBT.md`; nenhum dos arquivos classificados foi reformatado.
+- a tentativa obrigatória do controlador não iniciou o agente: a CLI falhou ao
+  inicializar o app-server em filesystem somente leitura. A classificação foi
+  concluída manualmente no mesmo escopo documental; não repetir `--once` sem
+  resolver a topologia externa.
+- próximo pacote elegível: A03 — auditar eventos locais de auth e negações por
+  papel. Não o iniciar nesta execução.
 
 ## Bloqueio do piloto A01
 
