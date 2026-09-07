@@ -83,8 +83,9 @@ Este documento é a referência canônica de alto nível para o estado atual do 
 - As migrations `0014`, `0015` e `0016` estão registradas no histórico Drizzle
   do branch Neon HML. Elas criam a infraestrutura de acesso e auditam a
   transição de `admin` para `owner`. Há um vínculo ativo de Dono e um de
-  Gerente, ambos auditados; as demais identidades aguardam verificação de
-  e-mail antes de qualquer liberação.
+  Gerente, ambos auditados e com e-mail verificado. Em 6 de setembro, o Dono
+  concluiu manualmente recuperação de senha, OTP, login e acesso operacional
+  completo em HML.
 - A política atual é Dono, Gerente e Funcionário. Funcionário pode apenas ler
   catálogo e registrar compras/vendas; não recebe dashboard, relatórios,
   estoque, despesas, produção ou administração. Papéis anteriores permanecem
@@ -97,8 +98,8 @@ Este documento é a referência canônica de alto nível para o estado atual do 
 
 ## Ainda não entregue ou não homologado
 
-- Verificação OTP das identidades pendentes e vínculo auditado do segundo
-  Gerente após essa verificação.
+- Decisão humana sobre a necessidade e a identidade do segundo Gerente; se
+  aprovado, criar o vínculo auditado somente após a verificação de e-mail.
 - Homologação integrada/E2E de login, logout, OTP, reset, cookie, sessão,
   autorização por papel e negações de acesso.
 - Rate limit distribuído HML, widget Turnstile, confirmação de revogação de

@@ -41,8 +41,9 @@ O Codex consegue identificar estado, regras, limites e próxima tarefa sem depen
       Neon de homologação autorizado, sem bootstrap de usuário.
 - [~] Implementar identidade de usuário (cadastro e verificação OTP por
   e-mail disponíveis; a transição para Dono e um vínculo de Gerente foram
-  auditados em HML; identidades ainda não verificadas permanecem sem liberação;
-  RBAC operacional depende de homologação em runtime).
+  auditados em HML e ambos os e-mails foram verificados; o Dono concluiu
+  recuperação de senha, OTP, login e acesso operacional completo em HML;
+  homologação integrada dos demais papéis e controles ainda está pendente).
 - [~] Implementar login/logout por e-mail/senha via proxy server-side Neon Auth;
   validação operacional depende de identidade autorizada em HML.
 - [~] Implementar sessão segura para SSR via cookies Neon Auth e adaptador
@@ -173,8 +174,8 @@ A definição de margem realizada e vínculo venda-lote é decisão de negócio/
 
 ## Prioridade imediata
 
-1. Concluir a verificação OTP das identidades pendentes e criar, após ela, o
-   vínculo auditado do segundo Gerente.
+1. Decidir se haverá segundo Gerente e, se aprovado, informar a identidade a
+   verificar antes de criar o vínculo auditado.
 2. Executar a homologação integrada/E2E de G1, inclusive reset, login, sessão,
    negações por papel, cooldown e auditoria.
 3. Depois consolidar G2 (CMV/margem) antes de ampliar os relatórios gerenciais.
