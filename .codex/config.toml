@@ -1,0 +1,1 @@
+notify = ["python3", "scripts/codex/conversation_memory.py", "notify"]
