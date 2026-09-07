@@ -31,6 +31,7 @@ async function fixture() {
   )
   await writeFile(join(dir, 'docs/governance/AUTONOMY-LOG.md'), '# log\n')
   await writeFile(join(dir, '.gitignore'), 'bin/\nstate/\n')
+  await writeFile(join(dir, '.env.example'), 'EXAMPLE_ONLY=true\n')
   await execFileAsync('git', ['init', '-q', '-b', 'autonomy-test'], {
     cwd: dir,
   })
@@ -67,6 +68,30 @@ test('dry-run seleciona apenas o primeiro pacote ready sem chamar Codex', async 
   try {
     const { stdout } = await run(dir, ['--dry-run'])
     assert.match(stdout, /Pacote selecionado: A01/)
+  } finally {
+    await rm(dir, { recursive: true, force: true })
+  }
+})
+
+test('arquivo .env.example versionado não é tratado como segredo', async () => {
+  const dir = await fixture()
+  try {
+    await run(dir, ['--dry-run'])
+  } finally {
+    await rm(dir, { recursive: true, force: true })
+  }
+})
+
+test('arquivo .env.local versionado bloqueia o preflight', async () => {
+  const dir = await fixture()
+  try {
+    await writeFile(join(dir, '.env.local'), 'SHOULD_NOT_BE_READ=true\n')
+    await execFileAsync('git', ['add', '.env.local'], { cwd: dir })
+    await execFileAsync('git', ['commit', '-qm', 'tracked env'], { cwd: dir })
+    await assert.rejects(
+      run(dir, ['--dry-run']),
+      (error: { code?: number }) => error.code === 23,
+    )
   } finally {
     await rm(dir, { recursive: true, force: true })
   }

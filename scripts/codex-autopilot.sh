@@ -31,8 +31,16 @@ preflight() {
   [[ -z "$(git status --porcelain)" ]] || { echo "Preflight: árvore Git não está limpa"; return "$EXIT_PREFLIGHT"; }
   [[ -f "$QUEUE" && -f "$HANDOFF" && -f "$LOG" ]] || { echo "Preflight: documentos de autonomia ausentes"; return "$EXIT_PREFLIGHT"; }
   [[ ! -e "$STOP_FILE" ]] || { echo "Preflight: sentinela STOP_AUTONOMY encontrada"; return "$EXIT_PREFLIGHT"; }
-  git ls-files | grep -Eq '(^|/)\.env($|\.)' && { echo "Gate: arquivo .env rastreado"; return "$EXIT_HUMAN"; } || true
+  has_sensitive_env_tracked && { echo "Gate: arquivo .env sensível rastreado"; return "$EXIT_HUMAN"; }
   command -v codex >/dev/null 2>&1 || { echo "Preflight: Codex CLI indisponível"; return "$EXIT_PREFLIGHT"; }
+}
+
+has_sensitive_env_tracked() {
+  git ls-files | grep -E '(^|/)\.env($|\.)' | grep -Ev '(^|/)\.env\.example$' | grep -q .
+}
+
+has_sensitive_env_untracked() {
+  git ls-files --others --exclude-standard | grep -E '(^|/)\.env($|\.)' | grep -Ev '(^|/)\.env\.example$' | grep -q .
 }
 
 next_package() { awk -F '|' '/^\| A[0-9]+ / { gsub(/^[[:space:]]+|[[:space:]]+$/, "", $4); if ($4 == "ready") { gsub(/^[[:space:]]+|[[:space:]]+$/, "", $2); print $2; exit } }' "$QUEUE"; }
@@ -41,7 +49,7 @@ result_code() {
 }
 append_log() { printf '| %s | %s | %s | %s | ver JSONL local | %s |\n' "$(date -u +%F)" "$1" "$2" "$3" "$4" >> "$LOG"; }
 checkpoint_done() {
-  git ls-files --others --exclude-standard | grep -Eq '(^|/)\.env($|\.)' && { echo "Gate: .env não rastreado criado durante o ciclo"; return "$EXIT_HUMAN"; } || true
+  has_sensitive_env_untracked && { echo "Gate: .env não rastreado criado durante o ciclo"; return "$EXIT_HUMAN"; }
   git diff --check || return "$EXIT_VALIDATION"
   git add --all
   git commit -m "chore(autonomy): complete $PACKAGE"
