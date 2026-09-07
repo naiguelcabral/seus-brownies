@@ -25,7 +25,9 @@ Atualizado em 7 de setembro de 2026.
 - nenhuma ação externa ocorreu; não houve leitura de `.env*`, deploy, acesso a
   Cloudflare, Neon, HML, banco, DNS, Worker, RBAC ou produção.
 - próximo pacote elegível: A02 — classificar a dívida de `npm run check`.
-  Não o iniciar nesta execução.
+  Não o iniciar nesta execução. A matriz de validação por tipo de pacote foi
+  adicionada ao controlador: A02 é `documental`, portanto build e check global
+  não são aplicáveis.
 
 ## Bloqueio do piloto A01
 

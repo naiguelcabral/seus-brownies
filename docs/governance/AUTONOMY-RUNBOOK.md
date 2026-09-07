@@ -7,6 +7,18 @@ Ele nunca faz deploy, migration em ambiente compartilhado, escrita de dados,
 mudança de secrets/DNS/Worker, leitura de `.env` ou execução de
 `DESLIGARTUDO`. Diante de um gate, registra `needs-human` e para.
 
+## Matriz de validação por tipo de pacote
+
+| Tipo                | Verificações permitidas                                                                                                                                                                  | Restrições                                                                                                                                                                                                                      |
+| ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `documental`        | Prettier direcionado, `git diff --check`, verificações documentais direcionadas e testes do controlador quando seus arquivos mudarem; `npm test` e lint somente se previstos no contrato | Nunca executar build ou check global.                                                                                                                                                                                           |
+| `codigo`            | Testes direcionados, `npm test` e lint conforme o contrato                                                                                                                               | Build somente por mecanismo previamente comprovado como isolado de arquivos secretos. Se o aceite exigir build e não houver tal mecanismo, registrar `validation-blocked` ou `needs-human`; nunca substituir pelo build padrão. |
+| `auditoria-leitura` | Somente inspeções previstas no contrato                                                                                                                                                  | Nunca executar build, alterar estado externo, escrever em banco ou HML.                                                                                                                                                         |
+
+O tipo `codigo-build-obrigatorio` explicita um aceite que depende de build.
+Enquanto não houver mecanismo isolado comprovado, o controlador o bloqueia
+antes de chamar o agente e registra `validation-blocked`.
+
 ## Uso
 
 ```bash
@@ -57,9 +69,10 @@ persistir arquivos de sessão fora do diretório local do controlador.
 ## Resultado e retomada
 
 O agente deve encerrar sua resposta com exatamente um marcador:
-`AUTONOMY_RESULT: done`, `blocked`, `validation-failed`, `needs-human` ou
-`limit`. O controlador converte o marcador em código de saída e atualiza o log
-sanitizado. A saída JSONL, a trava e a sentinela `STOP_AUTONOMY` ficam em
+`AUTONOMY_RESULT: done`, `blocked`, `validation-failed`,
+`validation-blocked`, `needs-human` ou `limit`. O controlador converte o
+marcador em código de saída e atualiza o log sanitizado. A saída JSONL, a trava
+e a sentinela `STOP_AUTONOMY` ficam em
 `.codex-local/autonomy/`; lock existente, `main`, árvore suja ou arquivo `.env*`
 rastreado impedem a execução antes de chamar o Codex.
 

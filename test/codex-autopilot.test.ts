@@ -17,20 +17,26 @@ const execFileAsync = promisify(execFile)
 const root = new URL('..', import.meta.url).pathname
 const script = join(root, 'scripts/codex-autopilot.sh')
 
-async function fixture() {
+async function fixture(
+  queueRows = '| A01 | seguro | documental | ready | teste |\n',
+) {
   const dir = await mkdtemp(join(tmpdir(), 'cacau-autopilot-'))
   await mkdir(join(dir, 'docs/governance'), { recursive: true })
   await mkdir(join(dir, '.codex-local/autonomy'), { recursive: true })
   await writeFile(
     join(dir, 'docs/governance/AUTONOMY-QUEUE.md'),
-    '| ID | Pacote | Estado | Saída |\n| --- | --- | --- | --- |\n| A01 | seguro | ready | teste |\n',
+    '| ID | Pacote | Tipo | Estado | Saída |\n| --- | --- | --- | --- | --- |\n' +
+      queueRows,
   )
   await writeFile(
     join(dir, 'docs/governance/AUTONOMY-HANDOFF.md'),
     '# handoff\n',
   )
   await writeFile(join(dir, 'docs/governance/AUTONOMY-LOG.md'), '# log\n')
-  await writeFile(join(dir, '.gitignore'), 'bin/\nstate/\n.codex/\n.codex-local/\n')
+  await writeFile(
+    join(dir, '.gitignore'),
+    'bin/\nstate/\n.codex/\n.codex-local/\n',
+  )
   await writeFile(join(dir, '.env.example'), 'EXAMPLE_ONLY=true\n')
   await execFileAsync('git', ['init', '-q', '-b', 'autonomy-test'], {
     cwd: dir,
@@ -44,7 +50,12 @@ async function fixture() {
   return dir
 }
 
-async function run(dir: string, args: string[], codex?: string) {
+async function run(
+  dir: string,
+  args: string[],
+  codex?: string,
+  extraEnv: Record<string, string> = {},
+) {
   const bin = join(dir, 'bin')
   await mkdir(bin, { recursive: true })
   if (codex) {
@@ -59,6 +70,7 @@ async function run(dir: string, args: string[], codex?: string) {
       PATH: `${bin}:${process.env.PATH}`,
       CODEX_AUTOPILOT_ROOT_DIR: dir,
       CODEX_AUTOPILOT_STATE_DIR: join(dir, 'state'),
+      ...extraEnv,
     },
   })
 }
@@ -68,6 +80,64 @@ test('dry-run seleciona apenas o primeiro pacote ready sem chamar Codex', async 
   try {
     const { stdout } = await run(dir, ['--dry-run'])
     assert.match(stdout, /Pacote selecionado: A01/)
+  } finally {
+    await rm(dir, { recursive: true, force: true })
+  }
+})
+
+test('pacote documental não solicita build, check global nem acesso a arquivos secretos', async () => {
+  const dir = await fixture()
+  const capture = join(dir, 'prompt.txt')
+  try {
+    await run(
+      dir,
+      ['--once'],
+      '#!/usr/bin/env bash\nprintf "%s" "$*" > "$CAPTURE_PROMPT"\necho "AUTONOMY_RESULT: done"\n',
+      { CAPTURE_PROMPT: capture },
+    )
+    const prompt = await readFile(capture, 'utf8')
+    assert.match(prompt, /documental/)
+    assert.doesNotMatch(prompt, /npm run build/)
+    assert.doesNotMatch(prompt, /npm run check/)
+    assert.doesNotMatch(prompt, /\.env/)
+  } finally {
+    await rm(dir, { recursive: true, force: true })
+  }
+})
+
+test('pacote com build obrigatório fica bloqueado sem chamar Codex', async () => {
+  const dir = await fixture(
+    '| A01 | exige build | codigo-build-obrigatorio | ready | teste |\n',
+  )
+  const marker = join(dir, 'codex-called')
+  try {
+    await assert.rejects(
+      run(
+        dir,
+        ['--once'],
+        '#!/usr/bin/env bash\ntouch "$CODEX_CALLED"\necho "AUTONOMY_RESULT: done"\n',
+        { CODEX_CALLED: marker },
+      ),
+      (error: { code?: number }) => error.code === 21,
+    )
+    await assert.rejects(readFile(marker, 'utf8'))
+    const log = await readFile(
+      join(dir, 'docs/governance/AUTONOMY-LOG.md'),
+      'utf8',
+    )
+    assert.match(log, /validation-blocked/)
+  } finally {
+    await rm(dir, { recursive: true, force: true })
+  }
+})
+
+test('A02 é selecionável quando A01 está concluído', async () => {
+  const dir = await fixture(
+    '| A01 | concluído | documental | done | teste |\n| A02 | próximo | documental | ready | teste |\n',
+  )
+  try {
+    const { stdout } = await run(dir, ['--dry-run'])
+    assert.match(stdout, /Pacote selecionado: A02 \(documental\)/)
   } finally {
     await rm(dir, { recursive: true, force: true })
   }

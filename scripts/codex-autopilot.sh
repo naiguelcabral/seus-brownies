@@ -43,9 +43,18 @@ has_sensitive_env_untracked() {
   git ls-files --others --exclude-standard | grep -E '(^|/)\.env($|\.)' | grep -Ev '(^|/)\.env\.example$' | grep -q .
 }
 
-next_package() { awk -F '|' '/^\| A[0-9]+ / { gsub(/^[[:space:]]+|[[:space:]]+$/, "", $4); if ($4 == "ready") { gsub(/^[[:space:]]+|[[:space:]]+$/, "", $2); print $2; exit } }' "$QUEUE"; }
+next_package() { awk -F '|' '/^\| A[0-9]+ / { gsub(/^[[:space:]]+|[[:space:]]+$/, "", $5); if ($5 == "ready") { gsub(/^[[:space:]]+|[[:space:]]+$/, "", $2); id=$2; gsub(/^[[:space:]]+|[[:space:]]+$/, "", $4); print id "|" $4; exit } }' "$QUEUE"; }
+validation_contract() {
+  case "$1" in
+    documental) printf '%s' 'Execute Prettier direcionado, git diff --check e verificações documentais previstas. Execute npm test e lint somente se o contrato do pacote os exigir. Não execute build nem check global.' ;;
+    codigo) printf '%s' 'Execute testes direcionados, npm test e lint conforme o contrato. Build só é permitido por mecanismo previamente comprovado como isolado de arquivos secretos; caso seja obrigatório e não exista esse mecanismo, termine validation-blocked.' ;;
+    codigo-build-obrigatorio) printf '%s' 'Build obrigatório sem mecanismo isolado comprovado: o controlador bloqueará este pacote antes de chamar o agente.' ;;
+    auditoria-leitura) printf '%s' 'Execute somente comandos de inspeção previstos no contrato. Não altere estado externo, não escreva em banco ou HML e não execute build.' ;;
+    *) return 1 ;;
+  esac
+}
 result_code() {
-  case "$1" in done) return 0;; blocked) return "$EXIT_BLOCKED";; validation-failed) return "$EXIT_VALIDATION";; limit) return "$EXIT_LIMIT";; needs-human) return "$EXIT_HUMAN";; *) return "$EXIT_BLOCKED";; esac
+  case "$1" in done) return 0;; blocked) return "$EXIT_BLOCKED";; validation-failed|validation-blocked) return "$EXIT_VALIDATION";; limit) return "$EXIT_LIMIT";; needs-human) return "$EXIT_HUMAN";; *) return "$EXIT_BLOCKED";; esac
 }
 append_log() { printf '| %s | %s | %s | %s | ver JSONL local | %s |\n' "$(date -u +%F)" "$1" "$2" "$3" "$4" >> "$LOG"; }
 checkpoint_done() {
@@ -70,18 +79,25 @@ trap 'rmdir "$LOCK_DIR"' EXIT
 for ((cycle=1; cycle<=MAX_CYCLES; cycle++)); do
   preflight
   [[ ! -e "$STOP_FILE" ]] || { echo "Preflight: sentinela STOP_AUTONOMY encontrada"; exit "$EXIT_PREFLIGHT"; }
-  PACKAGE="$(next_package)"
-  [[ -n "$PACKAGE" ]] || { echo "Nenhum pacote exatamente ready"; exit "$EXIT_BLOCKED"; }
-  echo "Pacote selecionado: $PACKAGE"
+  PACKAGE_INFO="$(next_package)"
+  [[ -n "$PACKAGE_INFO" ]] || { echo "Nenhum pacote exatamente ready"; exit "$EXIT_BLOCKED"; }
+  IFS='|' read -r PACKAGE PACKAGE_TYPE <<< "$PACKAGE_INFO"
+  VALIDATION_CONTRACT="$(validation_contract "$PACKAGE_TYPE")" || { echo "Preflight: tipo de pacote inválido: $PACKAGE_TYPE"; exit "$EXIT_PREFLIGHT"; }
+  echo "Pacote selecionado: $PACKAGE ($PACKAGE_TYPE)"
   if [[ "$MODE" == "--dry-run" ]]; then exit 0; fi
+  if [[ "$PACKAGE_TYPE" == "codigo-build-obrigatorio" ]]; then
+    append_log "$cycle" "$PACKAGE" "validation-blocked" "build obrigatório sem mecanismo isolado comprovado"
+    echo "Validação bloqueada: build obrigatório sem mecanismo isolado comprovado"
+    exit "$EXIT_VALIDATION"
+  fi
   RAW="$STATE_DIR/$(date -u +%Y%m%dT%H%M%SZ)-${PACKAGE}.jsonl"
-  PROMPT="Leia AGENTS.md e os documentos canônicos. Execute exatamente o pacote $PACKAGE da AUTONOMY-QUEUE.md conforme AUTONOMY-RUNBOOK.md. Não ultrapasse gates, não leia .env, não faça rede/escrita externa, não use DESLIGARTUDO. Congele escopo no handoff, valide e revise o diff. Não crie commit: o controlador cria o único checkpoint local após resultado done. Termine com AUTONOMY_RESULT: done|blocked|validation-failed|needs-human|limit."
+  PROMPT="Leia AGENTS.md e os documentos canônicos. Execute exatamente o pacote $PACKAGE ($PACKAGE_TYPE) da AUTONOMY-QUEUE.md conforme AUTONOMY-RUNBOOK.md. Contrato de validação: $VALIDATION_CONTRACT Não ultrapasse gates, não acesse arquivos secretos, não faça rede/escrita externa, não use DESLIGARTUDO. Congele escopo no handoff, valide e revise o diff. Não crie commit: o controlador cria o único checkpoint local após resultado done. Termine com AUTONOMY_RESULT: done|blocked|validation-failed|validation-blocked|needs-human|limit."
   set +e
   if command -v timeout >/dev/null 2>&1; then timeout "$CYCLE_TIMEOUT" codex exec --ephemeral --approve-for-me --json "$PROMPT" | tee "$RAW"; else codex exec --ephemeral --approve-for-me --json "$PROMPT" | tee "$RAW"; fi
   AGENT_EXIT=${PIPESTATUS[0]}
   set -e
   [[ "$AGENT_EXIT" -eq 0 ]] || { append_log "$cycle" "$PACKAGE" "validation-failed" "Codex CLI saiu com $AGENT_EXIT"; exit "$EXIT_VALIDATION"; }
-  RESULT="$(grep -Eo 'AUTONOMY_RESULT: (done|blocked|validation-failed|needs-human|limit)' "$RAW" | tail -1 | sed 's/AUTONOMY_RESULT: //')"
+  RESULT="$(grep -Eo 'AUTONOMY_RESULT: (done|blocked|validation-failed|validation-blocked|needs-human|limit)' "$RAW" | tail -1 | sed 's/AUTONOMY_RESULT: //')"
   [[ -n "$RESULT" ]] || RESULT="blocked"
   append_log "$cycle" "$PACKAGE" "$RESULT" "resultado do agente"
   if [[ "$RESULT" == "done" ]]; then checkpoint_done || exit $?; fi
