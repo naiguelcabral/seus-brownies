@@ -4,14 +4,23 @@ Atualizado em 7 de setembro de 2026.
 
 ## Estado atual
 
-- pacote ativo: nenhum;
-- última execução: ainda não executada;
+- pacote ativo: A01 não iniciado;
+- última execução: piloto bloqueado antes de iniciar o agente;
 - branch esperada para o piloto: `codex/autonomy-runner`;
 - uso Codex: não disponível para esta execução;
 - reserva: 5%;
 - reset exibido: não disponível;
-- próximo passo exato: executar `scripts/codex-autopilot.sh --dry-run` e
-  revisar o pacote selecionado antes do primeiro `--once`.
+- próximo passo exato: resolver a inicialização local do app-server do Codex
+  em sistema de arquivos gravável, confirmar `--dry-run` e executar um único
+  `--once` para A01. Não executar A02 enquanto A01 permanecer `ready`.
+
+## Bloqueio do piloto A01
+
+O preflight e o `--dry-run` selecionaram exclusivamente A01 e mantiveram a
+árvore limpa. O `--once` não iniciou o agente: a CLI local falhou ao criar seu
+app-server em sistema de arquivos somente leitura, inclusive com `--ephemeral`.
+Não houve acesso a Cloudflare, Neon, HML ou produção; nenhuma documentação HML
+foi modificada e A01 continua `ready` na fila.
 
 ## Contrato de retomada
 
