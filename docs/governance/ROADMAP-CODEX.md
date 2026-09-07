@@ -72,7 +72,9 @@ O Codex consegue identificar estado, regras, limites e próxima tarefa sem depen
   validação integrada e cobertura dos demais eventos.
 - [~] Testes unitários/integrados de auth: testes unitários locais existem;
   testes integrados e E2E permanecem pendentes.
-- [ ] Testes E2E de acesso.
+- [~] Testes E2E de acesso: spec de rotas públicas criada; execução integrada
+  de login, logout, OTP, reset, sessão e negações ainda depende de ambiente e
+  identidades de teste autorizados.
 
 ### Gate
 

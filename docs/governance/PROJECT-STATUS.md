@@ -64,9 +64,10 @@ Este documento é a referência canônica de alto nível para o estado atual do 
   dívida de formatação em 102 arquivos, inclusive artefatos históricos e
   snapshots gerados. Os arquivos alterados nesta revisão foram formatados
   isoladamente; essa pendência não foi escondida com uma reescrita em massa.
-- Há 10 specs Playwright de operação/FIFO. Parte delas é intencionalmente
-  `skip` ou requer autorização/referência exclusiva; não existem E2E de
-  autenticação e a suíte E2E não foi executada nesta revisão.
+- Há 11 specs Playwright, incluindo uma de rotas públicas de autenticação.
+  Parte delas é intencionalmente `skip` ou requer autorização/referência
+  exclusiva; a execução E2E completa de autenticação ainda depende de ambiente
+  local autorizado que não carregue `.env` e de identidades de teste próprias.
 - O código versionado possui 13 módulos de rota, CSRF global para métodos
   mutáveis e middleware estrutural de autorização aplicado às 30 Server
   Functions operacionais. A permissão é resolvida no servidor.
