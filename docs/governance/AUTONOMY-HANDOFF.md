@@ -4,7 +4,7 @@ Atualizado em 7 de setembro de 2026.
 
 ## Estado atual
 
-- pacote ativo: nenhum; A01, A02, A03, A04, A05 e A06 concluídos;
+- pacote ativo: nenhum; A01, A02, A03, A04, A05 e A06 concluídos; A07 bloqueado;
 - última execução: leitura pública sanitizada de A06 concluída, sem escrita,
   deploy ou mudança de configuração;
 - branch esperada para o piloto: `codex/autonomy-runner`;
@@ -40,8 +40,21 @@ Atualizado em 7 de setembro de 2026.
   ator não é inventado antes de o provedor retornar identidade. A persistência
   real e `access_denied` permanecem pendentes de HML e decisão de retenção/
   boundary assíncrono, respectivamente.
-- próximo pacote na fila: A07 — homologar Turnstile real e replay; permanece
-  `needs-human` e não foi iniciado nesta execução.
+- A07 recebeu autorização humana em 7 de setembro, mas foi bloqueado antes de
+  qualquer navegação/rede: não havia navegador disponível nesta sessão. Não
+  houve CAPTCHA, login, token, validação de token inválido, replay ou ação HML.
+  Para retomar, habilitar navegador, disponibilizar operador humano para o
+  CAPTCHA, confirmar identidade HML já autorizada e usar somente o mecanismo
+  de replay previamente aprovado; sem ele, registrar bloqueio e não forçar a
+  execução.
+- O diagnóstico local `G1-TURNSTILE-DIAGNOSTIC.md` confirmou a divergência:
+  a quinta falha grava cooldown durável, mas o handler omite
+  `requiresChallenge`; somente a sexta chamada no mesmo isolate é bloqueada
+  pelo limitador em memória com o sinal para a UI. Em isolate novo, o cooldown
+  ainda pode negar login sem widget. A07 permanece bloqueada até decisão humana
+  sobre esse contrato e os pré-requisitos de teste seguro.
+- próximo pacote: nenhum selecionável; A07 está `blocked` e A08–A10 permanecem
+  `needs-human`.
 - A05 criou `playwright.auth-hml.config.ts`,
   `e2e/auth-hml-non-destructive.spec.ts` e `G1-HML-E2E-RUNBOOK.md`. A
   configuração usa somente a URL HML canônica, não inicia servidor local e

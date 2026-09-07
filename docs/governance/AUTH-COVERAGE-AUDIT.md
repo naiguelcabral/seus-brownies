@@ -62,6 +62,13 @@ serviço externo.
    gestão de acessos por interface, dupla aprovação e retenção dos eventos
    continua humana.
 
+Em 7 de setembro de 2026, A07 recebeu autorização humana, mas foi bloqueada
+antes de rede: esta sessão não disponibilizava navegador para o desafio real.
+Não houve token, login, CAPTCHA, tentativa inválida, replay ou nova evidência
+HML. A cobertura integrada de Turnstile e replay continua pendente de
+navegador habilitado, operador humano no CAPTCHA, identidade HML já autorizada
+e mecanismo de replay aprovado.
+
 Esta matriz não altera a matriz de autorização, guards, Server Functions,
 migrations nem os ambientes HML/produção.
 

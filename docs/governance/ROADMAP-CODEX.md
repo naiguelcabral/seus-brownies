@@ -62,7 +62,9 @@ O Codex consegue identificar estado, regras, limites e próxima tarefa sem depen
 - [~] Definir e implementar CAPTCHA/desafio adicional em fluxos suspeitos:
   verificador server-side e bloqueio fail-closed quando o desafio é exigido;
   Turnstile foi publicado, mas validação integrada e replay permanecem
-  pendentes.
+  pendentes. A07 recebeu autorização humana em 7 de setembro, porém foi
+  bloqueada antes de rede por ausência de navegador; não houve CAPTCHA, token
+  ou replay.
 - [~] Reestruturar RBAC inicial em Dono, Gerente e Funcionário: política,
   testes e migrations de transição aplicados em HML; o Dono e um Gerente
   possuem vínculos auditados. A verificação de e-mail e a liberação das demais

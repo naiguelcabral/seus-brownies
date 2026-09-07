@@ -123,6 +123,23 @@ continua fora do Git; o secret permanece somente no Worker HML. A publicação e
 a validação sanitizada por Siteverify não substituem a homologação integrada,
 o desafio real nem a validação de replay, que continuam gates separados.
 
+## A07 — tentativa de homologação Turnstile em HML (bloqueada)
+
+Em 7 de setembro de 2026, houve autorização humana para A07. A execução foi
+interrompida antes de qualquer navegação ou requisição HML porque não havia
+navegador disponível nesta sessão. Portanto, não houve resolução de CAPTCHA,
+login, envio de token, validação de token inválido, replay, alteração externa
+ou evidência integrada nova.
+
+O pré-requisito restante é uma sessão de navegador habilitada, com operador
+humano para resolver o desafio Turnstile no momento da execução e uma
+identidade HML já autorizada. O token emitido deve ser validado uma vez e a
+tentativa de reutilizá-lo deve seguir somente o mecanismo de replay aprovado;
+se ele não estiver disponível, a execução deve parar sem forçar requisições.
+Qualquer evidência futura permanece limitada a caso, resultado, horário e
+identificador sanitizado quando visível — nunca token, credencial, cookie,
+corpo, cabeçalho de autorização ou segredo.
+
 ## Ordem segura do próximo gate
 
 1. Preservar o diagnóstico histórico do `403` sem redeploy: a publicação atual
