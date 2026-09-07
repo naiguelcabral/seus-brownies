@@ -140,6 +140,11 @@ Qualquer evidência futura permanece limitada a caso, resultado, horário e
 identificador sanitizado quando visível — nunca token, credencial, cookie,
 corpo, cabeçalho de autorização ou segredo.
 
+O diagnóstico local posterior encontrou que o cooldown durável omitiria o sinal
+para a UI após a quinta falha ou em isolate novo. A correção aprovada preserva
+`requiresChallenge` nesses retornos, mas ainda requer revisão/publicação e não
+constitui evidência HML nem autoriza uma nova A07.
+
 ## Ordem segura do próximo gate
 
 1. Preservar o diagnóstico histórico do `403` sem redeploy: a publicação atual

@@ -9,8 +9,9 @@ import {
 import type { AuthRateLimitScope } from './auth-rate-limit'
 import {
   createDatabaseLoginAttemptStore,
-  isLoginAttemptAllowed,
+  evaluateLoginAttempt,
 } from './login-attempts.server'
+import { decideLoginAttempt } from './login-security'
 import {
   invalidLoginMessage,
   invalidOtpMessage,
@@ -133,12 +134,16 @@ export const loginWithEmailPassword = createServerFn({ method: 'POST' })
           process.env.AUTH_LOGIN_HASH_PEPPER,
         )
       : null
-    if (
-      store &&
-      loginIdentity &&
-      !(await isLoginAttemptAllowed(store, loginIdentity))
-    ) {
-      return { ok: false, message: invalidLoginMessage }
+    const loginAttempt =
+      store && loginIdentity
+        ? await evaluateLoginAttempt(store, loginIdentity)
+        : null
+    if (loginAttempt && !loginAttempt.decision.allowed) {
+      return {
+        ok: false,
+        message: invalidLoginMessage,
+        requiresChallenge: loginAttempt.decision.requiresChallenge,
+      }
     }
     const result = await signInWithEmailPassword(
       auth,
@@ -150,6 +155,18 @@ export const loginWithEmailPassword = createServerFn({ method: 'POST' })
     )
     if (store && loginIdentity && result.message !== unavailableLoginMessage) {
       await store.record(loginIdentity, result.ok)
+      if (!result.ok) {
+        const postFailure = decideLoginAttempt({
+          state: loginAttempt?.state ?? null,
+          succeeded: false,
+          now: new Date(),
+          policy: { cooldownMs: 15 * 60 * 1000 },
+        })
+        return {
+          ...result,
+          requiresChallenge: postFailure.requiresChallenge,
+        }
+      }
     }
     return result
   })

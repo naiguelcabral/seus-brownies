@@ -47,12 +47,11 @@ Atualizado em 7 de setembro de 2026.
   CAPTCHA, confirmar identidade HML já autorizada e usar somente o mecanismo
   de replay previamente aprovado; sem ele, registrar bloqueio e não forçar a
   execução.
-- O diagnóstico local `G1-TURNSTILE-DIAGNOSTIC.md` confirmou a divergência:
-  a quinta falha grava cooldown durável, mas o handler omite
-  `requiresChallenge`; somente a sexta chamada no mesmo isolate é bloqueada
-  pelo limitador em memória com o sinal para a UI. Em isolate novo, o cooldown
-  ainda pode negar login sem widget. A07 permanece bloqueada até decisão humana
-  sobre esse contrato e os pré-requisitos de teste seguro.
+- O diagnóstico local `G1-TURNSTILE-DIAGNOSTIC.md` confirmou a divergência e a
+  correção aprovada preserva `requiresChallenge` do cooldown durável e da
+  quinta falha até a UI. Os testes locais passaram; a revisão/publicação e os
+  pré-requisitos de teste seguro ainda são necessários. A07 permanece
+  bloqueada até então.
 - próximo pacote: nenhum selecionável; A07 está `blocked` e A08–A10 permanecem
   `needs-human`.
 - A05 criou `playwright.auth-hml.config.ts`,

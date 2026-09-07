@@ -7,7 +7,7 @@ import {
   decideLoginAttempt,
   maxConsecutiveLoginFailures,
 } from './login-security'
-import type { LoginAttemptState } from './login-security'
+import type { LoginAttemptDecision, LoginAttemptState } from './login-security'
 
 const loginCooldownMs = 15 * 60 * 1000
 
@@ -65,11 +65,23 @@ export async function isLoginAttemptAllowed(
   identityHash: string,
   now: Date = new Date(),
 ) {
+  return (await evaluateLoginAttempt(store, identityHash, now)).decision.allowed
+}
+
+export async function evaluateLoginAttempt(
+  store: Pick<LoginAttemptStore, 'read'>,
+  identityHash: string,
+  now: Date = new Date(),
+): Promise<{
+  state: LoginAttemptState | null
+  decision: LoginAttemptDecision
+}> {
   const state = await store.read(identityHash)
-  return decideLoginAttempt({
+  const decision = decideLoginAttempt({
     state,
     succeeded: true,
     now,
     policy: { cooldownMs: loginCooldownMs },
-  }).allowed
+  })
+  return { state, decision }
 }

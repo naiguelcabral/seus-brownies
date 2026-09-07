@@ -1,10 +1,11 @@
 # G1 — Diagnóstico do gatilho do Turnstile
 
-Atualizado em 7 de setembro de 2026. Este é um diagnóstico estático do código
-versionado, testes e documentação. Não houve navegador, requisição HML,
-Cloudflare, Neon, banco, token, credencial ou alteração de comportamento.
+Atualizado em 7 de setembro de 2026. O diagnóstico foi estático, sobre código
+versionado, testes e documentação; após aprovação humana, houve apenas a
+correção local descrita abaixo. Não houve navegador, requisição HML,
+Cloudflare, Neon, banco, token ou credencial.
 
-## Conclusão
+## Conclusão e correção aprovada
 
 O comportamento observado — repetidas senhas incorretas em HML sem widget — é
 compatível com uma divergência confirmada entre dois controles independentes:
@@ -18,9 +19,15 @@ compatível com uma divergência confirmada entre dois controles independentes:
    zero, enquanto o cooldown durável ainda bloqueia o login sem informar ao
    cliente que o desafio é obrigatório.
 
-Assim, o código não comprova que o widget deveria aparecer na própria quinta
-tentativa. O documento histórico que afirma isso resume a intenção do
-controle, mas não corresponde ao contrato HTTP/UI implementado.
+Assim, o código anterior não comprovava que o widget deveria aparecer na
+própria quinta tentativa. O documento histórico que afirma isso resumia a
+intenção do controle, mas não correspondia ao contrato HTTP/UI implementado.
+
+Após aprovação humana, a correção local preserva a decisão durável até o
+handler: tanto a quinta falha recém-gravada quanto uma negação durante cooldown
+retornam `requiresChallenge: true`. A UI passa a solicitar o widget sem
+depender de a sexta chamada chegar ao mesmo isolate. A integração HML, token
+válido e replay continuam não homologados.
 
 ## Fluxo comprovado por código
 
@@ -56,21 +63,22 @@ Após o fim do cooldown, uma nova tentativa pode chegar ao provedor; se falhar,
 o contador durável é incrementado novamente e o cooldown é reiniciado. Não há
 reset automático da contagem pelo decurso do cooldown.
 
-Embora `decideLoginAttempt()` calcule `requiresChallenge: true` na quinta
-falha e durante cooldown, `isLoginAttemptAllowed()` retorna apenas `allowed`.
-Em `src/features/auth/functions.ts`, a negação do store retorna somente
-`{ ok: false, message: invalidLoginMessage }`. Logo, o sinal de desafio do
-controle durável é descartado antes da resposta ao cliente.
+Anteriormente, embora `decideLoginAttempt()` calculasse
+`requiresChallenge: true` na quinta falha e durante cooldown,
+`isLoginAttemptAllowed()` retornava apenas `allowed`. A correção introduziu
+`evaluateLoginAttempt()`, que preserva a decisão para o handler. O handler
+agora devolve esse sinal em cooldown e calcula o sinal após gravar uma falha;
+assim, a quinta falha também ativa o desafio na resposta ao cliente.
 
 ### Servidor para cliente
 
 1. `loginWithEmailPassword` chama `protectPublicAuthAction()` antes do Neon
    Auth e do store durável.
-2. Apenas se essa proteção local retornar `allowed: false`, o handler responde
-   com `requiresChallenge: protection.requiresChallenge`.
-3. A falha comum de senha vem de `signInWithEmailPassword()` e retorna somente
-   `ok: false` e `invalidLoginMessage`; a negação do cooldown durável também
-   omite `requiresChallenge`.
+2. Se a proteção local ou a avaliação durável negar a tentativa, o handler
+   responde com seu respectivo `requiresChallenge`.
+3. Uma falha comum antes da quinta ainda retorna somente `ok: false` e
+   `invalidLoginMessage`; a quinta falha e o cooldown retornam também
+   `requiresChallenge: true`.
 4. Em `src/routes/login.tsx`, `captureChallenge()` só marca o estado quando o
    campo da resposta é exatamente `true`. Uma falha comum de senha, portanto,
    não mostra widget.
@@ -84,11 +92,10 @@ controle durável é descartado antes da resposta ao cliente.
 
 O `limiter` de `auth-rate-limit.server.ts` é singleton de módulo, mas apenas
 por isolate. Cloudflare pode encaminhar requisições consecutivas a isolates
-diferentes ou descartar o isolate entre elas. Assim, mesmo que cinco senhas
-incorretas tenham criado cooldown no banco, uma sexta chamada em isolate novo
-passa pelo limitador local como primeira chamada e é negada pelo store durável
-sem `requiresChallenge`. A tela recebe somente a mensagem genérica e não
-renderiza widget.
+diferentes ou descartar o isolate entre elas. Antes da correção, isso permitia
+que a sexta chamada em isolate novo fosse negada pelo store durável sem
+`requiresChallenge`. A correção local elimina essa omissão no contrato de
+resposta; somente uma homologação HML pode confirmar o comportamento publicado.
 
 Também é possível que tentativas tenham cruzado a janela local de 15 minutos,
 ou não pertencido ao mesmo bucket HMAC de `login`; ambos reiniciam/separam a
@@ -106,7 +113,8 @@ o banco continua sendo fonte durável apenas para cooldown de login.
 | ------------------------------------------------------------------------- | --------------------- | -------------------------------------------------------------------------------------------- |
 | A sexta chamada no mesmo isolate exige desafio pelo limitador local.      | Comprovado localmente | `auth-rate-limit.ts` e `auth-rate-limit.test.ts`.                                            |
 | A quinta falha de credencial grava cooldown durável de 15 minutos.        | Comprovado localmente | `login-security.ts`, `login-attempts.server.ts` e `auth-login-security.test.ts`.             |
-| A resposta do cooldown durável omite `requiresChallenge`.                 | Comprovado localmente | `functions.ts` retorna apenas `ok` e `message` nesse ramo.                                   |
+| A versão anterior omitiria `requiresChallenge` no cooldown durável.       | Comprovado localmente | Diagnóstico do diff anterior em `functions.ts`; corrigido localmente neste pacote.           |
+| A correção devolve o sinal no cooldown e na quinta falha.                 | Comprovado localmente | Caminho do handler revisado; `auth-login-security.test.ts` cobre a decisão preservada.       |
 | Essa omissão explica as tentativas HML observadas.                        | Hipótese forte        | É compatível com o fluxo; esta investigação não fez rede nem leu estado HML.                 |
 | A site key publicada estava ausente, vazia ou indisponível no bundle HML. | Depende de HML        | O código trata esse caso; nenhuma inspeção de bundle/navegador foi feita.                    |
 | Um limitador distribuído corrigirá o sinal cliente do cooldown.           | Hipótese              | Ele melhora consistência entre isolates, mas não propaga `requiresChallenge` do store atual. |
@@ -132,9 +140,9 @@ navegador ou captura de token.
 
 Antes de uma nova tentativa A07, exigir decisão humana para:
 
-1. corrigir ou aceitar explicitamente a divergência de contrato: o cooldown
-   durável precisa propagar `requiresChallenge` ao cliente, ou a homologação
-   deve testar somente o limiar local de sexta chamada no mesmo isolate;
+1. revisar esta correção local antes de publicação; a nova A07 deve verificar
+   que quinta falha e cooldown devolvem o sinal para a UI, sem depender de
+   afinidade de isolate;
 2. aprovar uma identidade HML exclusiva, sem papel operacional, e uma janela
    que permita o cooldown sem afetar conta de operação;
 3. habilitar navegador e operador humano para resolver o CAPTCHA, sem gravar
@@ -145,6 +153,5 @@ Antes de uma nova tentativa A07, exigir decisão humana para:
    registrar que a tentativa não afirma consistência entre isolates.
 
 Sem esses critérios, A07 permanece bloqueada. A recomendação de próximo pacote
-é uma decisão humana sobre o contrato do desafio durável; só depois uma pequena
-mudança de código/teste, revisada separadamente, poderá tornar a homologação
-integrada determinística.
+é revisar e publicar esta pequena correção separadamente; só depois a
+homologação integrada poderá comprovar o comportamento determinístico.

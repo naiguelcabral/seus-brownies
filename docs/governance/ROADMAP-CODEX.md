@@ -64,7 +64,8 @@ O Codex consegue identificar estado, regras, limites e próxima tarefa sem depen
   Turnstile foi publicado, mas validação integrada e replay permanecem
   pendentes. A07 recebeu autorização humana em 7 de setembro, porém foi
   bloqueada antes de rede por ausência de navegador; não houve CAPTCHA, token
-  ou replay.
+  ou replay. A correção local agora propaga o desafio do cooldown durável para
+  a UI; ainda requer revisão/publicação e homologação HML.
 - [~] Reestruturar RBAC inicial em Dono, Gerente e Funcionário: política,
   testes e migrations de transição aplicados em HML; o Dono e um Gerente
   possuem vínculos auditados. A verificação de e-mail e a liberação das demais

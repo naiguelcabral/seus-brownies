@@ -5,7 +5,10 @@ import {
   decideLoginAttempt,
   maxConsecutiveLoginFailures,
 } from '../src/features/auth/login-security'
-import { isLoginAttemptAllowed } from '../src/features/auth/login-attempts.server'
+import {
+  evaluateLoginAttempt,
+  isLoginAttemptAllowed,
+} from '../src/features/auth/login-attempts.server'
 
 const now = new Date('2026-09-03T12:00:00.000Z')
 const policy = { cooldownMs: 15 * 60 * 1000 }
@@ -65,4 +68,20 @@ test('verificação prévia bloqueia tentativa durante cooldown sem modificar o 
     ),
     true,
   )
+})
+
+test('avaliação do cooldown preserva o sinal de desafio para o handler', async () => {
+  const state = {
+    consecutiveFailures: maxConsecutiveLoginFailures,
+    cooldownUntil: new Date('2026-09-03T12:15:00.000Z'),
+  }
+  const attempt = await evaluateLoginAttempt(
+    { read: async () => state },
+    'opaque-id',
+    now,
+  )
+
+  assert.equal(attempt.decision.allowed, false)
+  assert.equal(attempt.decision.requiresChallenge, true)
+  assert.equal(attempt.state, state)
 })
