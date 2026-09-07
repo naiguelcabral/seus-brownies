@@ -20,7 +20,7 @@ const script = join(root, 'scripts/codex-autopilot.sh')
 async function fixture() {
   const dir = await mkdtemp(join(tmpdir(), 'cacau-autopilot-'))
   await mkdir(join(dir, 'docs/governance'), { recursive: true })
-  await mkdir(join(dir, '.codex'), { recursive: true })
+  await mkdir(join(dir, '.codex-local/autonomy'), { recursive: true })
   await writeFile(
     join(dir, 'docs/governance/AUTONOMY-QUEUE.md'),
     '| ID | Pacote | Estado | Saída |\n| --- | --- | --- | --- |\n| A01 | seguro | ready | teste |\n',
@@ -30,7 +30,7 @@ async function fixture() {
     '# handoff\n',
   )
   await writeFile(join(dir, 'docs/governance/AUTONOMY-LOG.md'), '# log\n')
-  await writeFile(join(dir, '.gitignore'), 'bin/\nstate/\n')
+  await writeFile(join(dir, '.gitignore'), 'bin/\nstate/\n.codex/\n.codex-local/\n')
   await writeFile(join(dir, '.env.example'), 'EXAMPLE_ONLY=true\n')
   await execFileAsync('git', ['init', '-q', '-b', 'autonomy-test'], {
     cwd: dir,
@@ -73,11 +73,12 @@ test('dry-run seleciona apenas o primeiro pacote ready sem chamar Codex', async 
   }
 })
 
-test('estado bruto usa diretório local ignorado e preserva a sentinela em .codex', async () => {
+test('estado bruto e sentinela usam exclusivamente o diretório local ignorado', async () => {
   const source = await readFile(script, 'utf8')
 
   assert.match(source, /\.codex-local\/autonomy/)
-  assert.match(source, /\.codex\/STOP_AUTONOMY/)
+  assert.match(source, /STOP_FILE="\$STATE_DIR\/STOP_AUTONOMY"/)
+  assert.doesNotMatch(source, /\.codex\/STOP_AUTONOMY/)
   assert.match(source, /não foi possível criar a trava do controlador/)
   assert.match(source, /--approve-for-me/)
   assert.match(source, /--ephemeral/)
@@ -134,7 +135,8 @@ test('once grava JSONL local e traduz resultado done', async () => {
 test('sentinela impede chamar Codex', async () => {
   const dir = await fixture()
   try {
-    await writeFile(join(dir, '.codex/STOP_AUTONOMY'), '')
+    await mkdir(join(dir, 'state'), { recursive: true })
+    await writeFile(join(dir, 'state/STOP_AUTONOMY'), '')
     await assert.rejects(
       run(dir, ['--once'], '#!/usr/bin/env bash\nexit 99\n'),
       (error: { code?: number }) => error.code === 24,

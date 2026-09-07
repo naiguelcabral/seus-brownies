@@ -88,9 +88,21 @@ if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
   fi
 fi
 
-# 4. Prepara a memória operacional local do Codex
+# 4. Prepara a infraestrutura e a memória operacional local do Codex.
 echo
 echo "Preparando memória local do Codex..."
+
+LOCAL_CODEX_DIR="$ROOT_DIR/.codex-local"
+mkdir -p \
+  "$LOCAL_CODEX_DIR/context/sessions" \
+  "$LOCAL_CODEX_DIR/terminal/raw" \
+  "$LOCAL_CODEX_DIR/terminal/sessions" \
+  "$LOCAL_CODEX_DIR/conversations" \
+  "$LOCAL_CODEX_DIR/history" \
+  "$LOCAL_CODEX_DIR/state" \
+  "$LOCAL_CODEX_DIR/backups"
+chmod 700 "$LOCAL_CODEX_DIR" 2>/dev/null || true
+echo "✓ Infraestrutura local do Codex pronta"
 
 if [[ -f "$ROOT_DIR/scripts/codex/conversation_memory.py" ]]; then
   if python3 "$ROOT_DIR/scripts/codex/conversation_memory.py" prepare; then
@@ -155,6 +167,9 @@ if [[ "$PREPARE_ONLY" == true ]]; then
   echo "✓ Preparação local concluída; servidor não iniciado (--prepare-only)."
   exit 0
 fi
+
+echo "ℹ Para registrar comandos e saídas desta sessão, execute separadamente:"
+echo "  scripts/codex/record_terminal_session.sh"
 
 # 8. Inicia o ambiente HML local
 echo

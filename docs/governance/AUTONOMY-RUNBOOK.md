@@ -59,8 +59,8 @@ persistir arquivos de sessão fora do diretório local do controlador.
 O agente deve encerrar sua resposta com exatamente um marcador:
 `AUTONOMY_RESULT: done`, `blocked`, `validation-failed`, `needs-human` ou
 `limit`. O controlador converte o marcador em código de saída e atualiza o log
-sanitizado. A saída JSONL e a trava ficam em `.codex-local/autonomy/`;
-`.codex/STOP_AUTONOMY`, lock existente, `main`, árvore suja ou arquivo `.env*`
+sanitizado. A saída JSONL, a trava e a sentinela `STOP_AUTONOMY` ficam em
+`.codex-local/autonomy/`; lock existente, `main`, árvore suja ou arquivo `.env*`
 rastreado impedem a execução antes de chamar o Codex.
 
 Código de saída: `0` concluído, `20` bloqueado, `21` validação falhou, `22`

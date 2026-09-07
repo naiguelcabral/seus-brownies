@@ -24,7 +24,7 @@ done
 
 QUEUE="docs/governance/AUTONOMY-QUEUE.md"; HANDOFF="docs/governance/AUTONOMY-HANDOFF.md"; LOG="docs/governance/AUTONOMY-LOG.md"
 STATE_DIR="${CODEX_AUTOPILOT_STATE_DIR:-$ROOT_DIR/.codex-local/autonomy}"
-LOCK_DIR="$STATE_DIR/autopilot.lock"; STOP_FILE="$ROOT_DIR/.codex/STOP_AUTONOMY"
+LOCK_DIR="$STATE_DIR/autopilot.lock"; STOP_FILE="$STATE_DIR/STOP_AUTONOMY"
 
 preflight() {
   [[ "$(git branch --show-current)" != "main" ]] || { echo "Gate: execução na main"; return "$EXIT_HUMAN"; }

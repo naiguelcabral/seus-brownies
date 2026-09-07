@@ -70,6 +70,14 @@ for sensitive in "${SENSITIVE_PATHS[@]}"; do
   fi
 done
 
+# A memória, o contexto e os logs do Codex são estritamente locais. Confirme
+# isso antes de qualquer operação que altere o staging area.
+if ! git check-ignore -q .codex-local; then
+  echo "ERRO: .codex-local não está ignorada pelo Git."
+  echo "O commit foi abortado antes de executar git add."
+  exit 1
+fi
+
 if [[ -n "$(git status --porcelain)" ]]; then
   if [[ -t 0 ]]; then
     read -r -p "Mensagem do salvamento [${DEFAULT_MESSAGE}]: " COMMIT_MESSAGE
@@ -79,6 +87,16 @@ if [[ -n "$(git status --porcelain)" ]]; then
   fi
 
   git add --all
+  LOCAL_CODEX_STAGED="$(git diff --cached --name-only | grep -E '^\.codex(-local)?/' || true)"
+  if [[ -n "$LOCAL_CODEX_STAGED" ]]; then
+    while IFS= read -r staged_path; do
+      [[ -n "$staged_path" ]] && git restore --staged -- "$staged_path"
+    done <<< "$LOCAL_CODEX_STAGED"
+    echo "ERRO: caminhos .codex/.codex-local foram encontrados no staging."
+    echo "Eles foram removidos apenas do staging; arquivos locais foram preservados."
+    echo "O commit foi abortado."
+    exit 1
+  fi
   git commit -m "$COMMIT_MESSAGE"
 else
   echo "Não há alterações novas para criar um commit."
