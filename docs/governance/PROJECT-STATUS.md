@@ -103,8 +103,9 @@ Este documento é a referência canônica de alto nível para o estado atual do 
   aprovado, criar o vínculo auditado somente após a verificação de e-mail.
 - Homologação integrada/E2E de login, logout, OTP, reset, cookie, sessão,
   autorização por papel e negações de acesso.
-- Rate limit distribuído HML, widget Turnstile, confirmação de revogação de
-  sessão e auditoria de todos os eventos de autenticação.
+- Rate limit distribuído HML, desafio Turnstile real com rejeição de replay,
+  confirmação de revogação de sessão e auditoria de todos os eventos de
+  autenticação.
 - Gestão de identidades/papéis por interface autorizada; hoje os vínculos HML
   foram operações administrativas auditadas.
 - Auditoria de autoria para todas as mutações operacionais e, se desejado,

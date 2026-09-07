@@ -5,9 +5,14 @@
 As migrations `0014`, `0015` e `0016` já existem exclusivamente em
 `g1-auth-hml`. O código possui adaptadores, CSRF e guards que falham fechados,
 e os fluxos locais de recuperação e login foram exercitados. Em 6 de setembro,
-o Worker HML recebeu o código atual e a navegação pública deixou de receber
-`403`; a homologação real de autenticação permanece pendente. Nenhum valor deve
-ser registrado neste documento, em Git, em logs ou no chat.
+o Worker HML recebeu o código atual, `/login` respondeu `200`, e `/` sem sessão
+redirecionou para `/login`; a versão publicada reconhece `owner`. O Turnstile
+foi publicado: o widget foi limitado a `localhost`, `127.0.0.1` e ao hostname
+HML, a site key pública entrou somente no bundle HML, o segredo foi atualizado
+somente no Worker HML e a validação sanitizada por Siteverify passou. A
+homologação integrada de autenticação, o desafio real e a rejeição de replay
+continuam pendentes. Nenhum valor deve ser registrado neste documento, em Git,
+em logs ou no chat.
 
 ### Recuperação de senha por link/token
 
@@ -35,7 +40,7 @@ Ainda falta validar, em uma execução integrada controlada e sem expor valores:
 
 - entrega do e-mail e consumo único/expiração do token;
 - limite de taxa específico para recuperação;
-- homologação do Turnstile para solicitações repetidas ou suspeitas;
+- desafio Turnstile real, rejeição de token inválido e rejeição de replay;
 - comportamento de revogação de sessões após a redefinição, que não deve ser
   presumido sem confirmação explícita do Neon Auth;
 - presença dos eventos `password_reset_requested` e
@@ -51,7 +56,8 @@ Ainda falta validar, em uma execução integrada controlada e sem expor valores:
 - Ao exceder o limite local, um token Turnstile válido passa a ser obrigatório.
   A UI renderiza o widget somente quando há uma `VITE_TURNSTILE_SITE_KEY`
   pública; sem site key, secret ou token quando o desafio é exigido, a operação
-  falha fechada. A configuração e homologação do widget continuam externas.
+  falha fechada. O widget e a site key já foram publicados em HML; a
+  homologação real e de replay continuam externas.
 - Esses controles não substituem o binding `AUTH_RATE_LIMITER` distribuído da
   Cloudflare; esse continua requisito externo antes da abertura operacional.
 
@@ -106,9 +112,9 @@ fluxo real de login no próximo gate.
   Server Function protegida.
 - Verificar os eventos de auditoria por ação/resultado/timestamp, sem senha,
   token, e-mail bruto, cookie ou segredo.
-- Adicionar `cacau-v1-hml.naiguelcabral.workers.dev` ao widget Turnstile
-  `cacau-v1-hml`, preservando `localhost`; validar o token exclusivamente no
-  servidor.
+- Confirmar, no desafio real, que o widget permanece limitado a `localhost`,
+  `127.0.0.1` e `cacau-v1-hml.naiguelcabral.workers.dev`; validar o token
+  exclusivamente no servidor, inclusive contra replay.
 
 ## Provedor de e-mail
 

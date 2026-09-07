@@ -32,8 +32,8 @@ O Codex consegue identificar estado, regras, limites e próxima tarefa sem depen
 - [~] Configurar integração externa Neon Auth em HML (secrets, callbacks,
   e-mail, Turnstile e rate limiting), sujeita a gate humano. E-mail/senha,
   provedor compartilhado e origens confiáveis foram confirmados em leitura;
-  Turnstile foi publicado; limite distribuído, validação integrada/replay e
-  homologação pública seguem pendentes.
+  Turnstile foi publicado com widget restrito e site key no bundle HML; limite
+  distribuído, desafio real, validação integrada e replay seguem pendentes.
 - [x] Publicar Worker Cloudflare HML separado em `workers.dev`, sem DNS, rota
       customizada ou alteração no Worker principal. Em 6 de setembro, o Worker
       recebeu o código atual e o smoke público confirmou `/login` com `200` e `/`
@@ -158,9 +158,9 @@ A definição de margem realizada e vínculo venda-lote é decisão de negócio/
 - [x] Build/deploy command disponível.
 - [~] Worker HML isolado publicado e acessível publicamente: em 6 de setembro
   `/login` respondeu `200` e `/` sem sessão redirecionou para `/login`.
-  Turnstile publicado e o diagnóstico histórico do `403` foram preservados;
-  homologação integrada, rate limit distribuído e demais gates de G1 seguem
-  pendentes.
+  Turnstile publicado, widget restrito, site key no bundle HML e diagnóstico
+  histórico do `403` preservado; desafio real, replay, homologação integrada,
+  rate limit distribuído e demais gates de G1 seguem pendentes.
 - [ ] Definir ambientes development/staging/production formalmente.
 - [ ] Configurar secrets por ambiente.
 - [ ] Definir estratégia de backup Neon.

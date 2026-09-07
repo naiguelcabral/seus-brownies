@@ -23,6 +23,20 @@ O deploy ativo mantém `compatibility_date: 2025-09-02`,
 `compatibility_flags: ["nodejs_compat"]` e os cinco secrets somente pelos
 nomes. Não há rota, DNS, custom domain ou alteração em `cacau-v1`.
 
+## Evidência atual reconciliada
+
+Em 6 de setembro, o Worker HML recebeu o código atual. O smoke público
+confirmou `/login` com HTTP `200` e `/` sem sessão redirecionando para
+`/login`; a versão publicada reconhece o papel `owner`. O Turnstile foi
+publicado. Seu widget é limitado a `localhost`, `127.0.0.1` e ao hostname HML;
+a site key pública foi incluída somente no bundle HML, o segredo foi atualizado
+somente no Worker HML e a validação sanitizada por Siteverify passou.
+
+Esses fatos encerram o `403` como bloqueio atual de navegação pública, mas não
+homologam autenticação de ponta a ponta. Permanecem pendentes o desafio real,
+a rejeição de replay, rate limiting distribuído e os testes integrados de
+login, OTP, reset, logout, cookie, sessão e negações por papel.
+
 ## Scripts preparados
 
 ```bash
@@ -54,14 +68,14 @@ Wrangler.
 
 ## Bindings e configurações exigidos antes do deploy
 
-| Área             | Binding/configuração                                                                               | Estado                                                           |
-| ---------------- | -------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
-| Banco HML        | secret `DATABASE_URL`, exclusivo de `g1-auth-hml`                                                  | configurado; valor não inspecionado                              |
-| Neon Auth        | `NEON_AUTH_BASE_URL` e `NEON_AUTH_COOKIE_SECRET`                                                   | configurados; valores não inspecionados                          |
-| Tentativas       | secret `AUTH_LOGIN_HASH_PEPPER`, diferente do cookie secret                                        | configurado; valor não inspecionado                              |
-| Turnstile        | secret `TURNSTILE_SECRET_KEY` e variável pública `VITE_TURNSTILE_SITE_KEY` quando a UI for ativada | publicado; homologação integrada e replay ainda pendentes        |
-| Rate Limiting    | binding `AUTH_RATE_LIMITER` HML com `namespace_id` numérico exclusivo e política aprovada          | não declarado até existir namespace real; nunca usar placeholder |
-| E-mail/callbacks | origem confiável, callback, verificação e provedor no Neon Auth HML                                | gate externo separado                                            |
+| Área             | Binding/configuração                                                                      | Estado                                                                                            |
+| ---------------- | ----------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| Banco HML        | secret `DATABASE_URL`, exclusivo de `g1-auth-hml`                                         | configurado; valor não inspecionado                                                               |
+| Neon Auth        | `NEON_AUTH_BASE_URL` e `NEON_AUTH_COOKIE_SECRET`                                          | configurados; valores não inspecionados                                                           |
+| Tentativas       | secret `AUTH_LOGIN_HASH_PEPPER`, diferente do cookie secret                               | configurado; valor não inspecionado                                                               |
+| Turnstile        | secret `TURNSTILE_SECRET_KEY` e variável pública `VITE_TURNSTILE_SITE_KEY`                | publicado; widget/site key HML e Siteverify sanitizado validados; desafio real e replay pendentes |
+| Rate Limiting    | binding `AUTH_RATE_LIMITER` HML com `namespace_id` numérico exclusivo e política aprovada | não declarado até existir namespace real; nunca usar placeholder                                  |
+| E-mail/callbacks | origem confiável, callback, verificação e provedor no Neon Auth HML                       | gate externo separado                                                                             |
 
 `VITE_TURNSTILE_SITE_KEY` é client-safe e não integra `secrets.required`.
 `VITE_NEON_AUTH_URL` fica dispensado enquanto a integração permanecer mediada
@@ -90,20 +104,21 @@ trusted domain usada pelo Neon Auth deve aceitar somente:
 - `http://localhost:3000`
 - `https://cacau-v1-hml.naiguelcabral.workers.dev`
 
-O hostname HML foi adicionado ao widget Turnstile `cacau-v1-hml`, preservando
-`localhost`. O sitekey é client-safe, mas continua fora do Git; o secret
-permanece somente no Worker. A publicação não substitui a homologação integrada
-nem a validação de replay, que continuam gates separados.
+O widget Turnstile `cacau-v1-hml` está limitado a `localhost`, `127.0.0.1` e
+ao hostname HML. O sitekey é client-safe, foi incluído somente no bundle HML e
+continua fora do Git; o secret permanece somente no Worker HML. A publicação e
+a validação sanitizada por Siteverify não substituem a homologação integrada,
+o desafio real nem a validação de replay, que continuam gates separados.
 
 ## Ordem segura do próximo gate
 
 1. Preservar o diagnóstico histórico do `403` sem redeploy: a publicação atual
    corrigiu a navegação pública e o smoke de 6 de setembro confirmou `/login`
    com `200`.
-2. Configurar e-mail e Rate Limiting; registrar o
-   namespace HML real de rate limit na configuração versionada.
-3. Validar o Worker HML sem criar Dono, Gerente, Funcionário ou dados de
-   negócio.
+2. Configurar e-mail e Rate Limiting; registrar o namespace HML real de rate
+   limit na configuração versionada.
+3. Homologar o desafio Turnstile real, token inválido e replay sem criar Dono,
+   Gerente, Funcionário ou dados de negócio.
 
 Nenhum comando deste documento autoriza produção, DNS, rota de produção,
 secrets de produção ou bootstrap de papéis.
@@ -117,9 +132,9 @@ antes de qualquer invocação do Worker. Esse diagnóstico é preservado como
 evidência histórica: ele não descreve mais o estado atual e não justifica
 redeploy às cegas.
 
-As origens confiáveis do Neon Auth HML e o hostname do widget Turnstile HML
-foram atualizados para incluir a URL estável, preservando `localhost` e sem
-wildcard. O deployment ativo e os cinco nomes de secrets também foram
+As origens confiáveis do Neon Auth HML e o widget Turnstile HML foram depois
+atualizados sem wildcard. O widget atual limita-se a `localhost`, `127.0.0.1`
+e ao hostname HML. O deployment ativo e os cinco nomes de secrets também foram
 confirmados sem expor valores.
 
 Em 4 de setembro de 2026, um GET sem sessão à URL estável retornou

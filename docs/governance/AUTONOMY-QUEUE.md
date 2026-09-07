@@ -16,18 +16,18 @@ seleção de pacotes pelo controlador. Ela não substitui os gates de
 
 ## Pacotes
 
-| ID  | Pacote                                              | Estado          | Escopo e saída esperada                                                                                                                                                |
-| --- | --------------------------------------------------- | --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| A01 | Reconciliar evidências HML mais recentes            | ready           | Corrigir contradições em `AUTHORIZATION-MATRIX.md`, `G1-CLOUDFLARE-HML.md` e G7: `/login` 200, Turnstile publicado e 403 resolvido; preservar o diagnóstico histórico. |
-| A02 | Classificar dívida de `npm run check`               | ready           | Separar fonte, histórico, snapshots e relatórios gerados; propor correção mínima, sem formatação em massa.                                                             |
-| A03 | Auditar eventos locais de auth e negações por papel | ready           | Matriz código × teste × pendência, sem tocar HML.                                                                                                                      |
-| A04 | Implementar testes locais prioritários de auth      | ready-after-A03 | Testes determinísticos verdes, sem alterar RBAC.                                                                                                                       |
-| A05 | Preparar E2E G1 não destrutivo                      | ready-after-A03 | Spec e runbook prontos; execução real requer identidades autorizadas.                                                                                                  |
-| A06 | Validar HML por leituras públicas seguras           | needs-human     | Smoke sanitizado, sem alteração externa.                                                                                                                               |
-| A07 | Homologar Turnstile real e replay                   | needs-human     | Requer navegador, desafio real e identidade autorizada.                                                                                                                |
-| A08 | Configurar rate limit distribuído HML               | needs-human     | Requer namespace e política Cloudflare aprovados.                                                                                                                      |
-| A09 | Definir segundo Gerente                             | needs-human     | Requer decisão e identidade do Dono.                                                                                                                                   |
-| A10 | Fechar CMV realizado e vínculo venda–lote           | needs-human     | Requer decisão de negócio/contabilidade antes de G2.                                                                                                                   |
+| ID  | Pacote                                              | Estado          | Escopo e saída esperada                                                                                    |
+| --- | --------------------------------------------------- | --------------- | ---------------------------------------------------------------------------------------------------------- |
+| A01 | Reconciliar evidências HML mais recentes            | done            | Reconciliação concluída: estado atual, pendências e diagnóstico histórico do 403 preservados.              |
+| A02 | Classificar dívida de `npm run check`               | ready           | Separar fonte, histórico, snapshots e relatórios gerados; propor correção mínima, sem formatação em massa. |
+| A03 | Auditar eventos locais de auth e negações por papel | ready           | Matriz código × teste × pendência, sem tocar HML.                                                          |
+| A04 | Implementar testes locais prioritários de auth      | ready-after-A03 | Testes determinísticos verdes, sem alterar RBAC.                                                           |
+| A05 | Preparar E2E G1 não destrutivo                      | ready-after-A03 | Spec e runbook prontos; execução real requer identidades autorizadas.                                      |
+| A06 | Validar HML por leituras públicas seguras           | needs-human     | Smoke sanitizado, sem alteração externa.                                                                   |
+| A07 | Homologar Turnstile real e replay                   | needs-human     | Requer navegador, desafio real e identidade autorizada.                                                    |
+| A08 | Configurar rate limit distribuído HML               | needs-human     | Requer namespace e política Cloudflare aprovados.                                                          |
+| A09 | Definir segundo Gerente                             | needs-human     | Requer decisão e identidade do Dono.                                                                       |
+| A10 | Fechar CMV realizado e vínculo venda–lote           | needs-human     | Requer decisão de negócio/contabilidade antes de G2.                                                       |
 
 ## Regra de seleção
 

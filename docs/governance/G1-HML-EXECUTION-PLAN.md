@@ -12,9 +12,11 @@ auditada, depois de a respectiva identidade estar verificada.
 
 Identidades ainda sem e-mail verificado não receberam vínculo de acesso. A
 próxima liberação só poderá ocorrer depois da verificação OTP e de nova
-operação auditada. Essas alterações são exclusivas do banco HML: não resolvem o
-`403` de borda do Worker nem substituem a homologação e o deploy HML do código
-que reconhece a política atual.
+operação auditada. Essas alterações são exclusivas do banco HML. À época, elas
+não resolviam o `403` de borda nem substituíam a publicação HML do código que
+reconhece a política atual; posteriormente, o Worker recebeu esse código e o
+smoke público confirmou `/login` com `200` e o redirecionamento de `/` sem
+sessão. A homologação integrada continua pendente.
 
 Este procedimento é exclusivo para o branch Neon **`g1-auth-hml`**. Em 3 de
 setembro de 2026, após confirmação humana do alvo, a migration `0014` foi
@@ -75,7 +77,8 @@ uma migration corretiva somente após revisão humana.
 - `NEON_AUTH_BASE_URL`
 - `NEON_AUTH_COOKIE_SECRET`
 - `VITE_NEON_AUTH_URL`
-- segredo server-side de validação Turnstile, com nome a definir no Worker.
+- `TURNSTILE_SECRET_KEY` — segredo server-side de validação Turnstile no
+  Worker HML.
 - credenciais do provedor de e-mail escolhido, com nomes definidos no momento
   da configuração humana.
 
@@ -115,3 +118,14 @@ inválido permanece negado.
 - quinta falha → auditoria, Turnstile e cooldown;
 - reset → resposta sem enumeração;
 - tentativa de autoatribuir papel por endpoint público → 403/ausência de rota.
+
+## Evidência publicada posterior
+
+Em 6 de setembro, o Worker HML recebeu o código atual; a versão publicada
+reconhece `owner`, `/login` respondeu `200` e `/` sem sessão redirecionou para
+`/login`. O Turnstile foi publicado com o widget limitado a `localhost`,
+`127.0.0.1` e ao hostname HML; a site key pública foi incluída no bundle HML,
+o segredo foi atualizado somente no Worker HML e a validação sanitizada por
+Siteverify passou. Essa evidência não substitui os casos integrados preparados:
+desafio real, token inválido, replay, login, OTP, reset, logout, cookie, sessão
+e negações por papel continuam gates de homologação.

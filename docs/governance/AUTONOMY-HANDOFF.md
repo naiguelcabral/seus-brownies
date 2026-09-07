@@ -4,34 +4,28 @@ Atualizado em 7 de setembro de 2026.
 
 ## Estado atual
 
-- pacote ativo: A01 congelado após reconciliação documental;
-- última execução: agente concluiu a edição local, sem rede, escrita externa,
-  deploy ou mudança de configuração;
+- pacote ativo: nenhum; A01 concluído;
+- última execução: recuperação manual do A01 concluída localmente, sem rede,
+  escrita externa, deploy ou mudança de configuração;
 - branch esperada para o piloto: `codex/autonomy-runner`;
 - uso Codex: não disponível para esta execução;
 - reserva: 5%;
 - reset exibido: não disponível;
-- objetivo congelado: reconciliar somente as evidências HML conflitantes em
-  `AUTHORIZATION-MATRIX.md` e `G1-CLOUDFLARE-HML.md` com G7: `/login` 200,
-  redirecionamento de `/` sem sessão, Turnstile publicado e `403` resolvido;
-  manter o diagnóstico anterior como histórico.
-- fora de escopo: rede, smoke HML, deploy, secrets, DNS, Worker, Neon, `.env`,
-  RBAC, código, testes de auth e mudança de estado da fila.
-- arquivos previstos: `AUTHORIZATION-MATRIX.md`, `G1-CLOUDFLARE-HML.md`, a
-  entrada G7 de `ROADMAP-CODEX.md` e este handoff.
-- aceite: os dois registros deixam de declarar o `403` como estado atual,
-  registram a evidência publicada sem dados sensíveis e mantêm o diagnóstico
-  histórico claramente datado; G7 permanece coerente.
-- validação executada: Prettier direcionado, `npm test` (35/35) e `npm run lint`
-  passaram; `git diff --check` passou. A execução de `npm run build` terminou
-  com build emitido, mas o Wrangler informou carregamento automático de
-  `.env.local` e falha de escrita de log fora do workspace. Nenhum valor foi
-  registrado, mas o carregamento de `.env.local` viola o limite deste ciclo;
-  por isso o resultado é `validation-failed`.
-- próximo passo exato: o controlador deve registrar `validation-failed` e não
-  criar checkpoint/commit. Antes de nova tentativa, ajustar ou autorizar uma
-  validação de build que impeça explicitamente o carregamento de `.env*`; não
-  iniciar A02.
+- escopo concluído: reconciliar as evidências HML em `PROJECT-STATUS.md`,
+  `AUTHORIZATION-MATRIX.md`, `G1-EXTERNAL-CONFIGURATION.md`,
+  `G1-HML-EXECUTION-PLAN.md`, `G1-CLOUDFLARE-HML.md` e G7. O estado atual
+  registra `/login` 200, redirecionamento de `/` sem sessão, `owner`,
+  Turnstile/widget/site key/Siteverify; o 403 permanece evidência histórica.
+- validação executada: Prettier direcionado passou; `npm test` passou (35
+  arquivos de teste, 185 testes); `npm run lint` e `git diff --check` passaram.
+  `npm run build` não é aplicável a este pacote exclusivamente documental: a
+  tentativa anterior concluiu tecnicamente, mas o Wrangler carregou
+  automaticamente `.env.local`. Nenhum valor foi exibido, porém esse
+  carregamento viola a política; o EROFS de log é secundário.
+- nenhuma ação externa ocorreu; não houve leitura de `.env*`, deploy, acesso a
+  Cloudflare, Neon, HML, banco, DNS, Worker, RBAC ou produção.
+- próximo pacote elegível: A02 — classificar a dívida de `npm run check`.
+  Não o iniciar nesta execução.
 
 ## Bloqueio do piloto A01
 

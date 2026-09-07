@@ -11,12 +11,15 @@ papel e os vínculos liberados registrados em auditoria.
 
 Em 6 de setembro, o Worker HML recebeu o código atual, `/login` respondeu
 `200` e `/` sem sessão redirecionou para `/login`; a versão publicada reconhece
-`owner`. O Turnstile também foi publicado. Isso não equivale à homologação
-end-to-end: login, OTP, sessão, autorização e negações por papel reais seguem
-pendentes de validação integrada autorizada. O diagnóstico anterior do `403`
-permanece preservado como registro histórico em `G1-CLOUDFLARE-HML.md` e não
-autoriza nova mudança material de permissões, que continua sujeita a
-`HUMAN-APPROVALS.md`.
+`owner`. O Turnstile foi publicado com o widget limitado a `localhost`,
+`127.0.0.1` e ao hostname HML; a site key pública foi incluída no bundle HML,
+o segredo foi atualizado somente no Worker HML e a validação sanitizada por
+Siteverify passou. Isso não equivale à homologação end-to-end: desafio real,
+rejeição de replay, login, OTP, reset, logout, cookie, sessão, autorização e
+negações por papel reais seguem pendentes de validação integrada autorizada. O
+diagnóstico anterior do `403` permanece preservado como registro histórico em
+`G1-CLOUDFLARE-HML.md` e não autoriza nova mudança material de permissões, que
+continua sujeita a `HUMAN-APPROVALS.md`.
 
 ## Princípios
 
