@@ -59,7 +59,7 @@ Wrangler.
 | Banco HML        | secret `DATABASE_URL`, exclusivo de `g1-auth-hml`                                                  | configurado; valor não inspecionado                              |
 | Neon Auth        | `NEON_AUTH_BASE_URL` e `NEON_AUTH_COOKIE_SECRET`                                                   | configurados; valores não inspecionados                          |
 | Tentativas       | secret `AUTH_LOGIN_HASH_PEPPER`, diferente do cookie secret                                        | configurado; valor não inspecionado                              |
-| Turnstile        | secret `TURNSTILE_SECRET_KEY` e variável pública `VITE_TURNSTILE_SITE_KEY` quando a UI for ativada | secret configurado; sitekey/UI pendentes                         |
+| Turnstile        | secret `TURNSTILE_SECRET_KEY` e variável pública `VITE_TURNSTILE_SITE_KEY` quando a UI for ativada | publicado; homologação integrada e replay ainda pendentes        |
 | Rate Limiting    | binding `AUTH_RATE_LIMITER` HML com `namespace_id` numérico exclusivo e política aprovada          | não declarado até existir namespace real; nunca usar placeholder |
 | E-mail/callbacks | origem confiável, callback, verificação e provedor no Neon Auth HML                                | gate externo separado                                            |
 
@@ -90,15 +90,16 @@ trusted domain usada pelo Neon Auth deve aceitar somente:
 - `http://localhost:3000`
 - `https://cacau-v1-hml.naiguelcabral.workers.dev`
 
-O hostname HML também deve ser adicionado ao widget Turnstile `cacau-v1-hml`,
-preservando `localhost`. O sitekey é client-safe, mas continua fora do Git; o
-secret permanece somente no Worker.
+O hostname HML foi adicionado ao widget Turnstile `cacau-v1-hml`, preservando
+`localhost`. O sitekey é client-safe, mas continua fora do Git; o secret
+permanece somente no Worker. A publicação não substitui a homologação integrada
+nem a validação de replay, que continuam gates separados.
 
 ## Ordem segura do próximo gate
 
-1. Investigar a resposta `403` atual do hostname `workers.dev` antes de novo
-   deploy; o upload e a versão ativa foram confirmados, mas a aplicação ainda
-   não respondeu publicamente.
+1. Preservar o diagnóstico histórico do `403` sem redeploy: a publicação atual
+   corrigiu a navegação pública e o smoke de 6 de setembro confirmou `/login`
+   com `200`.
 2. Configurar e-mail e Rate Limiting; registrar o
    namespace HML real de rate limit na configuração versionada.
 3. Validar o Worker HML sem criar Dono, Gerente, Funcionário ou dados de
@@ -109,12 +110,12 @@ secrets de produção ou bootstrap de papéis.
 
 ## Smoke e gate externo atual
 
-### Revalidação em 6 de setembro de 2026
+### Diagnóstico histórico do `403` (anterior à publicação atual)
 
-Um novo GET público sem sessão continuou retornando `403` na borda antes de
-qualquer invocação do Worker. Portanto, o bloqueio permanece ativo e não foi
-feito novo deploy HML para o código que adiciona o papel `owner`. O diagnóstico
-e o gate de suporte abaixo continuam válidos; não fazer redeploy às cegas.
+Antes da publicação atual, um GET público sem sessão retornou `403` na borda
+antes de qualquer invocação do Worker. Esse diagnóstico é preservado como
+evidência histórica: ele não descreve mais o estado atual e não justifica
+redeploy às cegas.
 
 As origens confiáveis do Neon Auth HML e o hostname do widget Turnstile HML
 foram atualizados para incluir a URL estável, preservando `localhost` e sem
@@ -130,12 +131,12 @@ habilitado e público, sem Cloudflare Access. A versão
 domain. Um `wrangler tail` sanitizado, filtrado para GET e para essa versão,
 não registrou invocação durante um GET correlacionado que também retornou 403.
 
-O diagnóstico é, portanto, bloqueio na borda antes do Worker, com alta
-confiança; não é evidência de middleware TanStack, CSRF, RBAC, Neon Auth ou
-Turnstile. Não fazer novo deploy às cegas. O próximo gate humano é abrir
-chamado com o suporte Cloudflare, informando somente a URL HML, o horário UTC,
-o `cf-ray` e que o Worker público habilitado não recebeu a invocação. Não
-anexar cookies, tokens, headers de autorização ou valores de secrets.
+O diagnóstico histórico aponta para bloqueio na borda antes do Worker, com alta
+confiança; não foi evidência de middleware TanStack, CSRF, RBAC, Neon Auth ou
+Turnstile. Caso o sintoma volte, o gate humano é abrir chamado com o suporte
+Cloudflare, informando somente a URL HML, o horário UTC, o `cf-ray` e que o
+Worker público habilitado não recebeu a invocação. Não anexar cookies, tokens,
+headers de autorização ou valores de secrets.
 
 ### Leitura da conta pela API Cloudflare (4 de setembro de 2026)
 
@@ -160,20 +161,22 @@ Ruleset`, na fase `http_request_firewall_managed`, com 31 regras ativas de
   trace de borda nem uma correlação de regra para a requisição já observada.
 
 Com isso, Access e regras IP de conta foram descartados com evidência. A causa
-do 403 segue **inconclusiva**: o conector não expõe a política/evento de borda
-responsável. O gate humano continua sendo abrir chamado ao suporte Cloudflare
-com a URL HML, o horário UTC do smoke anterior, `cf-ray:
-a359fcdd3da0bba0-GRU` e a evidência de zero invocações no `wrangler tail`.
-Não anexar informações de autenticação, cookies, headers ou secrets.
+histórica do `403` segue **inconclusiva**: o conector não expõe a
+política/evento de borda responsável. Como o `403` foi resolvido pela publicação
+atual, não há gate de suporte ativo; se o sintoma retornar, abrir chamado com a
+URL HML, o horário UTC do smoke, `cf-ray: a359fcdd3da0bba0-GRU` e a evidência
+de zero invocações no `wrangler tail`. Não anexar informações de autenticação,
+cookies, headers ou secrets.
 
 O aviso pós-upload `Could not apply service and environment tags` não tem, até
 o momento, evidência de falha funcional: a versão HML publicada permaneceu
 ativa a 100% com o handler, a data de compatibilidade, a flag e os nomes dos
 secrets esperados. Ele é tratado como limitação de metadados/agrupamento visual
 até que o dashboard mostre impacto concreto; não justifica redeploy. O
-`fetch failed` observado após o upload também não invalida o deploy, mas o 403
-do smoke é uma falha externa real que precisa ser resolvida antes de prosseguir.
-Não atualizar o Wrangler automaticamente; reavaliar apenas com aprovação.
+`fetch failed` observado após o upload também não invalida o deploy. O `403`
+do smoke foi uma falha externa real, posteriormente resolvida pela publicação
+atual; não atualizar o Wrangler automaticamente, reavaliando apenas com
+aprovação.
 
 Após o 403 estar resolvido, ainda será necessária a aprovação do namespace e da
 política de `AUTH_RATE_LIMITER` antes de criar o binding HML.

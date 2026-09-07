@@ -32,7 +32,8 @@ O Codex consegue identificar estado, regras, limites e próxima tarefa sem depen
 - [~] Configurar integração externa Neon Auth em HML (secrets, callbacks,
   e-mail, Turnstile e rate limiting), sujeita a gate humano. E-mail/senha,
   provedor compartilhado e origens confiáveis foram confirmados em leitura;
-  limite distribuído, widget e homologação pública seguem pendentes.
+  Turnstile foi publicado; limite distribuído, validação integrada/replay e
+  homologação pública seguem pendentes.
 - [x] Publicar Worker Cloudflare HML separado em `workers.dev`, sem DNS, rota
       customizada ou alteração no Worker principal. Em 6 de setembro, o Worker
       recebeu o código atual e o smoke público confirmou `/login` com `200` e `/`
@@ -59,7 +60,8 @@ O Codex consegue identificar estado, regras, limites e próxima tarefa sem depen
   cadastro, OTP e reset preparado; binding distribuído HML permanece pendente.
 - [~] Definir e implementar CAPTCHA/desafio adicional em fluxos suspeitos:
   verificador server-side e bloqueio fail-closed quando o desafio é exigido;
-  UI do widget pronta, mas configuração e validação integrada pendentes.
+  Turnstile foi publicado, mas validação integrada e replay permanecem
+  pendentes.
 - [~] Reestruturar RBAC inicial em Dono, Gerente e Funcionário: política,
   testes e migrations de transição aplicados em HML; o Dono e um Gerente
   possuem vínculos auditados. A verificação de e-mail e a liberação das demais

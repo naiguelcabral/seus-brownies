@@ -13,3 +13,4 @@ tokens ou URLs privadas.
 | 2026-09-07 | 1                   | A01    | validation-failed                           | ver JSONL local                                                      | Codex CLI saiu com 1                                                                                       |
 | 2026-09-07 | piloto A01          | A01    | blocked                                     | dry-run selecionou apenas A01; 8 testes do controlador verdes        | CLI não iniciou app-server em sistema de arquivos somente leitura; sem ação externa                        |
 | 2026-09-07 | diagnóstico runtime | —      | blocked                                     | Codex CLI 0.153.4; escrita temporária local permitida                | execução aninhada confirmada por Bash filho de `codex-linux-sandbox`; caminho do app-server não preservado |
+| 2026-09-07 | 1 | A01 | validation-failed | ver JSONL local | resultado do agente |
