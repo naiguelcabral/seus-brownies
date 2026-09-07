@@ -20,7 +20,7 @@ seleção de pacotes pelo controlador. Ela não substitui os gates de
 | --- | --------------------------------------------------- | ------------------------ | --------------- | --------------------------------------------------------------------------------------------- |
 | A01 | Reconciliar evidências HML mais recentes            | documental               | done            | Reconciliação concluída: estado atual, pendências e diagnóstico histórico do 403 preservados. |
 | A02 | Classificar dívida de `npm run check`               | documental               | done            | Classificação reproduzível em `FORMATTING-DEBT.md`, sem formatação em massa.                  |
-| A03 | Auditar eventos locais de auth e negações por papel | auditoria-leitura        | ready           | Matriz código × teste × pendência, sem tocar HML.                                             |
+| A03 | Auditar eventos locais de auth e negações por papel | auditoria-leitura        | done            | Matriz reproduzível em `AUTH-COVERAGE-AUDIT.md`, sem tocar HML.                               |
 | A04 | Implementar testes locais prioritários de auth      | codigo                   | ready-after-A03 | Testes determinísticos verdes, sem alterar RBAC.                                              |
 | A05 | Preparar E2E G1 não destrutivo                      | codigo                   | ready-after-A03 | Spec e runbook prontos; execução real requer identidades autorizadas.                         |
 | A06 | Validar HML por leituras públicas seguras           | auditoria-leitura        | needs-human     | Smoke sanitizado, sem alteração externa.                                                      |

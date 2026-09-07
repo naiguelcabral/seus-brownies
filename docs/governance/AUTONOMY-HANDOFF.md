@@ -4,8 +4,8 @@ Atualizado em 7 de setembro de 2026.
 
 ## Estado atual
 
-- pacote ativo: nenhum; A01 e A02 concluídos;
-- última execução: classificação documental local do A02 concluída, sem rede,
+- pacote ativo: nenhum; A01, A02 e A03 concluídos;
+- última execução: auditoria documental local do A03 concluída, sem rede,
   escrita externa, deploy ou mudança de configuração;
 - branch esperada para o piloto: `codex/autonomy-runner`;
 - uso Codex: não disponível para esta execução;
@@ -32,8 +32,12 @@ Atualizado em 7 de setembro de 2026.
   inicializar o app-server em filesystem somente leitura. A classificação foi
   concluída manualmente no mesmo escopo documental; não repetir `--once` sem
   resolver a topologia externa.
-- próximo pacote elegível: A03 — auditar eventos locais de auth e negações por
-  papel. Não o iniciar nesta execução.
+- A03 produziu `AUTH-COVERAGE-AUDIT.md`: todos os fluxos e negações previstos
+  foram mapeados para código, teste, cobertura negativa e pendência HML. Reset
+  possui lifecycle auditado localmente; eventos de login, logout, verificação
+  de e-mail e acesso negado ainda não possuem emissão persistida de runtime.
+- próximo pacote dependente: A04 — implementar testes locais prioritários de
+  auth. Ele permanece `ready-after-A03`; não o iniciar nesta execução.
 
 ## Bloqueio do piloto A01
 
