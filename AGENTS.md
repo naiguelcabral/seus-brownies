@@ -18,6 +18,8 @@ Manter e evoluir o Cacau v1, sistema operacional dos Seus Brownies, preservando 
 8. `docs/governance/DEVELOPMENT-WORKFLOW.md`
 9. `docs/governance/CODEX-USAGE-POLICY.md`
 
+Se `.codex-local/MEMORY.md` existir, lê-lo depois das fontes acima como contexto auxiliar da última sessão. Essa memória é local, pode estar desatualizada e nunca prevalece sobre Git, `AGENTS.md` ou `docs/governance/`.
+
 Documentos de homologação/importação continuam sendo evidência histórica e devem ser consultados quando a tarefa tocar o respectivo domínio.
 
 ## Autoridade das fontes
