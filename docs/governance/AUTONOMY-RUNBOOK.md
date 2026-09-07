@@ -26,8 +26,9 @@ arquivo `.env*` novo e cria o único commit local de checkpoint do pacote.
 O agente deve encerrar sua resposta com exatamente um marcador:
 `AUTONOMY_RESULT: done`, `blocked`, `validation-failed`, `needs-human` ou
 `limit`. O controlador converte o marcador em código de saída e atualiza o log
-sanitizado. Arquivo `.codex/STOP_AUTONOMY`, lock existente, `main`, árvore suja
-ou arquivo `.env*` rastreado impedem a execução antes de chamar o Codex.
+sanitizado. A saída JSONL e a trava ficam em `.codex-local/autonomy/`;
+`.codex/STOP_AUTONOMY`, lock existente, `main`, árvore suja ou arquivo `.env*`
+rastreado impedem a execução antes de chamar o Codex.
 
 Código de saída: `0` concluído, `20` bloqueado, `21` validação falhou, `22`
 limite de uso, `23` gate humano, `24` preflight/lock/sentinela ou `2` uso

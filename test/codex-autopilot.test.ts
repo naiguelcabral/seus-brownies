@@ -73,6 +73,14 @@ test('dry-run seleciona apenas o primeiro pacote ready sem chamar Codex', async 
   }
 })
 
+test('estado bruto usa diretório local ignorado e preserva a sentinela em .codex', async () => {
+  const source = await readFile(script, 'utf8')
+
+  assert.match(source, /\.codex-local\/autonomy/)
+  assert.match(source, /\.codex\/STOP_AUTONOMY/)
+  assert.match(source, /não foi possível criar a trava do controlador/)
+})
+
 test('arquivo .env.example versionado não é tratado como segredo', async () => {
   const dir = await fixture()
   try {

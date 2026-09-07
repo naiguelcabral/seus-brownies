@@ -1,7 +1,7 @@
 # Log sanitizado de autonomia — Cacau v1
 
 Este é o histórico resumido de ciclos. A saída JSONL bruta fica apenas em
-`.codex/autonomy/`, ignorada pelo Git, e não deve conter `.env`, credenciais,
+`.codex-local/autonomy/`, ignorada pelo Git, e não deve conter `.env`, credenciais,
 tokens ou URLs privadas.
 
 | Data       | Ciclo      | Pacote | Resultado                                   | Checks                                                               | Gate/bloqueio                      |

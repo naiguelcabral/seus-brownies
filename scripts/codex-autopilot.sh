@@ -23,7 +23,7 @@ done
 [[ "$MODE" == "--loop" || "$MAX_CYCLES" == 1 ]] || { echo "--max-cycles > 1 exige --loop"; exit 2; }
 
 QUEUE="docs/governance/AUTONOMY-QUEUE.md"; HANDOFF="docs/governance/AUTONOMY-HANDOFF.md"; LOG="docs/governance/AUTONOMY-LOG.md"
-STATE_DIR="${CODEX_AUTOPILOT_STATE_DIR:-$ROOT_DIR/.codex/autonomy}"
+STATE_DIR="${CODEX_AUTOPILOT_STATE_DIR:-$ROOT_DIR/.codex-local/autonomy}"
 LOCK_DIR="$STATE_DIR/autopilot.lock"; STOP_FILE="$ROOT_DIR/.codex/STOP_AUTONOMY"
 
 preflight() {
@@ -57,7 +57,14 @@ checkpoint_done() {
 
 preflight
 mkdir -p "$STATE_DIR"
-if ! mkdir "$LOCK_DIR" 2>/dev/null; then echo "Preflight: controlador já está em execução"; exit "$EXIT_PREFLIGHT"; fi
+if ! mkdir "$LOCK_DIR" 2>/dev/null; then
+  if [[ -d "$LOCK_DIR" ]]; then
+    echo "Preflight: controlador já está em execução"
+  else
+    echo "Preflight: não foi possível criar a trava do controlador"
+  fi
+  exit "$EXIT_PREFLIGHT"
+fi
 trap 'rmdir "$LOCK_DIR"' EXIT
 
 for ((cycle=1; cycle<=MAX_CYCLES; cycle++)); do
