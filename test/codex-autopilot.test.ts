@@ -79,6 +79,8 @@ test('estado bruto usa diretório local ignorado e preserva a sentinela em .code
   assert.match(source, /\.codex-local\/autonomy/)
   assert.match(source, /\.codex\/STOP_AUTONOMY/)
   assert.match(source, /não foi possível criar a trava do controlador/)
+  assert.match(source, /--approve-for-me/)
+  assert.doesNotMatch(source, /--ask-for-approval/)
 })
 
 test('arquivo .env.example versionado não é tratado como segredo', async () => {
