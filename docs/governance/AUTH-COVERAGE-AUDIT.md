@@ -64,3 +64,19 @@ serviço externo.
 
 Esta matriz não altera a matriz de autorização, guards, Server Functions,
 migrations nem os ambientes HML/produção.
+
+## Plano E2E HML preparado — não executado
+
+O pacote A05 adicionou `e2e/auth-hml-non-destructive.spec.ts`, sua configuração
+dedicada e o runbook `G1-HML-E2E-RUNBOOK.md`. A configuração aceita somente a
+URL HML canônica e exige o opt-in exato `CACAU_HML_AUTH_E2E=authorized` antes
+de qualquer navegador ou rede. Sem esse valor, ela falha fechada; não inicia
+servidor local e não usa fallback de URL.
+
+O plano cobre navegação pública, login, sessão por recarga, logout, OTP/e-mail
+verificado, reset, ausência de allowlist, vínculo inativo, e-mail não
+verificado, papel insuficiente e auditoria sanitizada. OTP, reset, atributos de
+cookie e consulta de auditoria são `fixme` deliberados: exigem identidade,
+e-mail, autorização ou consulta humana e não são coletados automaticamente.
+Assim, a **spec está preparada**, mas nenhuma execução E2E/HML foi concluída e
+nenhuma evidência integrada nova foi produzida.

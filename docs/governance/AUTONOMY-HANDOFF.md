@@ -4,8 +4,8 @@ Atualizado em 7 de setembro de 2026.
 
 ## Estado atual
 
-- pacote ativo: nenhum; A01, A02, A03 e A04 concluídos;
-- última execução: cobertura local prioritária de A04 concluída, sem rede,
+- pacote ativo: nenhum; A01, A02, A03, A04 e A05 concluídos;
+- última execução: preparação local do E2E não destrutivo de A05 concluída, sem rede,
   escrita externa, deploy ou mudança de configuração;
 - branch esperada para o piloto: `codex/autonomy-runner`;
 - uso Codex: não disponível para esta execução;
@@ -40,8 +40,14 @@ Atualizado em 7 de setembro de 2026.
   ator não é inventado antes de o provedor retornar identidade. A persistência
   real e `access_denied` permanecem pendentes de HML e decisão de retenção/
   boundary assíncrono, respectivamente.
-- próximo pacote elegível: A05 — preparar E2E G1 não destrutivo. Não foi
-  iniciado nesta execução.
+- próximo pacote na fila: A06 — validar HML por leituras públicas seguras;
+  permanece `needs-human` e não foi iniciado nesta execução.
+- A05 criou `playwright.auth-hml.config.ts`,
+  `e2e/auth-hml-non-destructive.spec.ts` e `G1-HML-E2E-RUNBOOK.md`. A
+  configuração usa somente a URL HML canônica, não inicia servidor local e
+  falha fechada sem opt-in humano. Nenhum browser, Playwright, HML, e-mail,
+  reset, OTP, banco ou configuração externa foi acionado. A06 permanece
+  `needs-human`; não há pacote `ready` sem novo gate.
 
 ## Bloqueio do piloto A01
 
