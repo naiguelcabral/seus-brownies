@@ -22,7 +22,8 @@ Após um resultado `done`, o controlador revisa espaços em branco, bloqueia
 arquivo `.env*` novo e cria o único commit local de checkpoint do pacote.
 Na versão atual da CLI, a execução usa `--approve-for-me`, que a própria CLI
 define como revisão automática em sandbox `workspace-write`; ela não usa
-`danger-full-access` nem bypass de sandbox.
+`danger-full-access` nem bypass de sandbox. Usa também `--ephemeral`, para não
+persistir arquivos de sessão fora do diretório local do controlador.
 
 ## Resultado e retomada
 

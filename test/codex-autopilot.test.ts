@@ -80,6 +80,7 @@ test('estado bruto usa diretório local ignorado e preserva a sentinela em .code
   assert.match(source, /\.codex\/STOP_AUTONOMY/)
   assert.match(source, /não foi possível criar a trava do controlador/)
   assert.match(source, /--approve-for-me/)
+  assert.match(source, /--ephemeral/)
   assert.doesNotMatch(source, /--ask-for-approval/)
   assert.doesNotMatch(source, /--sandbox workspace-write --approve-for-me/)
 })

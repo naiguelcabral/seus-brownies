@@ -77,7 +77,7 @@ for ((cycle=1; cycle<=MAX_CYCLES; cycle++)); do
   RAW="$STATE_DIR/$(date -u +%Y%m%dT%H%M%SZ)-${PACKAGE}.jsonl"
   PROMPT="Leia AGENTS.md e os documentos canônicos. Execute exatamente o pacote $PACKAGE da AUTONOMY-QUEUE.md conforme AUTONOMY-RUNBOOK.md. Não ultrapasse gates, não leia .env, não faça rede/escrita externa, não use DESLIGARTUDO. Congele escopo no handoff, valide e revise o diff. Não crie commit: o controlador cria o único checkpoint local após resultado done. Termine com AUTONOMY_RESULT: done|blocked|validation-failed|needs-human|limit."
   set +e
-  if command -v timeout >/dev/null 2>&1; then timeout "$CYCLE_TIMEOUT" codex exec --approve-for-me --json "$PROMPT" | tee "$RAW"; else codex exec --approve-for-me --json "$PROMPT" | tee "$RAW"; fi
+  if command -v timeout >/dev/null 2>&1; then timeout "$CYCLE_TIMEOUT" codex exec --ephemeral --approve-for-me --json "$PROMPT" | tee "$RAW"; else codex exec --ephemeral --approve-for-me --json "$PROMPT" | tee "$RAW"; fi
   AGENT_EXIT=${PIPESTATUS[0]}
   set -e
   [[ "$AGENT_EXIT" -eq 0 ]] || { append_log "$cycle" "$PACKAGE" "validation-failed" "Codex CLI saiu com $AGENT_EXIT"; exit "$EXIT_VALIDATION"; }
