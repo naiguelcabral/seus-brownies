@@ -39,6 +39,7 @@ run_isolated() {
     WRANGLER_LOG_SANITIZE=true \
     CLOUDFLARE_ENV=hml \
     CLOUDFLARE_LOAD_DEV_VARS_FROM_DOT_ENV=false \
+    VITE_TURNSTILE_SITE_KEY="${VITE_TURNSTILE_SITE_KEY:-}" \
     "$@"
 }
 

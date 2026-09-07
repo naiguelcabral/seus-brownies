@@ -41,3 +41,17 @@ test('Worker HML é separado e preserva a compatibilidade do Worker principal', 
     'AUTH_LOGIN_HASH_PEPPER',
   ])
 })
+
+test('build HML isolado só repassa a site key pública de Turnstile', async () => {
+  const script = await readFile(
+    new URL('../scripts/build-hml-isolated.sh', import.meta.url),
+    'utf8',
+  )
+
+  assert.match(script, /CLOUDFLARE_LOAD_DEV_VARS_FROM_DOT_ENV=false/)
+  assert.match(
+    script,
+    /VITE_TURNSTILE_SITE_KEY="\$\{VITE_TURNSTILE_SITE_KEY:-\}"/,
+  )
+  assert.doesNotMatch(script, /TURNSTILE_SECRET_KEY=/)
+})
