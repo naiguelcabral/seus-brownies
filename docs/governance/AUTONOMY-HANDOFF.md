@@ -2,6 +2,35 @@
 
 Atualizado em 7 de setembro de 2026.
 
+## Retomada local — checkpoint reconciliado e contrato A07-R3
+
+- Humano confirmou `c28c267868e6aa8b80272862dcd6ba558e325cab`; Git local
+  confirma HEAD, branch `codex/autonomy-runner`, árvore inicialmente limpa e
+  exatamente os sete arquivos de A07-R2. Checkpoint concluído; não recriar.
+- A falha anterior de `.git/index.lock` permanece no histórico abaixo.
+  A07-R2 está `done`; isso não altera A07, bloqueado para homologação real.
+- Missão atual: até três pacotes locais da rodada autorizada. Sem rede,
+  ambientes reais, instalação, build convencional, deploy, push, scripts de
+  ligar/desligar, outro Codex ou controlador. Uso/reset não disponíveis.
+- Seleção: A07-R3, após ler sua definição e A11. Objetivo: exercitar o callback
+  real de login com provedor/store sintéticos, observar ordem, falha de
+  persistência após sucesso e limites de sanitização. Não alterar aplicação,
+  sessão, concorrência, retenção, RBAC ou infraestrutura.
+- Arquivos previstos: `test/auth-login-composition.test.ts`, diagnóstico
+  Turnstile, fila, handoff, log, status e roadmap (reconciliação de A07-R2).
+- Aceite local: testes direcionados, suíte determinística, lint, Prettier
+  direcionado e diff revisado. Extração do callback por AST não testa o
+  transporte TanStack, validação de entrada, cookies nem persistência real.
+  Qualquer validação obrigatória restante impede marcar A07-R3 como `done`.
+- Comandos: `env -i PATH="$PATH" node --import tsx --test
+  test/auth-login-composition.test.ts`; suíte com os arquivos `test/*.test.ts`,
+  exceto `codex-autopilot.test.ts`, que executa `--once` até nas fixtures e
+  portanto conflita com a proibição desta missão (nenhum teste alterado);
+  `env -i PATH="$PATH" node node_modules/eslint/bin/eslint.js`;
+  Prettier local apenas nos arquivos do pacote; `git diff --check`.
+- Checkpoint: incluir apenas os sete arquivos previstos. Se `.git` recusar
+  escrita, preservar trabalho e comandos humanos; parar antes de A11.
+
 ## Rodada manual local — contrato A07-R2
 
 - Autorização: missão local de até 20 pacotes; não promove autonomia permanente.
@@ -51,7 +80,7 @@ Atualizado em 7 de setembro de 2026.
   `PROJECT-STATUS.md` e `ROADMAP-CODEX.md`.
 - Os registros abaixo são da sessão anterior e não substituem este fechamento.
 
-## Estado atual
+## Estado histórico anterior a A07-R2 (não usar para seleção atual)
 
 - pacote ativo: nenhum; A01, A02, A03, A04, A05 e A06 concluídos; A07 bloqueado;
 - última execução: leitura pública sanitizada de A06 concluída, sem escrita,

@@ -176,10 +176,10 @@ A definição de margem realizada e vínculo venda-lote é decisão de negócio/
 
 ## Fase G8 — Autonomia progressiva do Codex
 
-- [!] Rodada manual local autorizada: A07-R2 tem seis testes novos, suíte de
-  37 arquivos e lint verdes; checkpoint impedido por filesystem somente
-  leitura em `.git`. Execução encerrada antes de outro pacote, sem promover
-  autonomia permanente. Retomada exata no handoff.
+- [~] Rodada manual local autorizada: checkpoint humano de A07-R2 confirmado
+  em `c28c267`, com seis testes novos, suíte de 37 arquivos e lint verdes.
+  Falha anterior de escrita em `.git` preservada no log. A07-R3 em avaliação
+  local, sem promover autonomia permanente. Contrato no handoff.
 
 - [x] Testes e documentação suficientes para iniciar governança agent-friendly.
 - [x] Etapas 1–2 preparadas: fila, handoff, log, runbook, controlador local

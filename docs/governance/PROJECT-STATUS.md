@@ -58,8 +58,9 @@ Este documento é a referência canônica de alto nível para o estado atual do 
 
 - Rodada manual local de 7 de setembro: seis casos individuais adicionais
   de cooldown/desafio passaram; suíte de 37 arquivos e lint verdes. A07-R2
-  está implementado e validado, com commit bloqueado por `.git` somente
-  leitura. Build não executado; nenhuma evidência nova de publicação/HML.
+  está concluído no checkpoint humano `c28c267`, confirmado no Git local.
+  A falha anterior de escrita em `.git` permanece no log. Build não executado;
+  nenhuma evidência nova de publicação/HML.
   Detalhes e retomada em `AUTONOMY-HANDOFF.md`.
 
 - A suíte determinística contém 34 arquivos de teste e passou integralmente na

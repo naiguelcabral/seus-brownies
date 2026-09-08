@@ -1,5 +1,15 @@
 # Log sanitizado de autonomia — Cacau v1
 
+## Retomada local de 7 de setembro de 2026
+
+- Checkpoint humano `c28c267868e6aa8b80272862dcd6ba558e325cab` confirmado
+  como HEAD de `codex/autonomy-runner`, árvore limpa e sete arquivos exatos.
+  A07-R2 concluído; não houve recriação de teste/pacote/commit. A falha de
+  escrita da rodada anterior continua registrada abaixo como fato histórico.
+- A07-R3 selecionado conforme definição existente, com dependência A07-R1
+  satisfeita e contrato no handoff. A11 lido e ainda não iniciado. A07 segue
+  bloqueado; nenhuma evidência local comprova publicação ou Turnstile real.
+
 ## Rodada manual local de 7 de setembro de 2026
 
 - A07-R2: seis testes individuais novos verdes; suíte local de 37 arquivos

@@ -36,8 +36,8 @@ seleção de pacotes pelo controlador. Ela não substitui os gates de
 
 | ID     | Pacote                                             | Tipo       | Estado  | Escopo e saída esperada                                                                                                |
 | ------ | -------------------------------------------------- | ---------- | ------- | ---------------------------------------------------------------------------------------------------------------------- |
-| A07-R2 | Revisar limites e falhas dos componentes Turnstile | codigo     | blocked | Implementado e validado; commit impedido por `.git` somente leitura. Seis testes e lacunas de composição documentados. |
-| A07-R3 | Validar composição de login e falha de gravação    | codigo     | ready   | Provedor/store simulados; avaliar sessão já emitida e sanitização sem definir política concorrente.                    |
+| A07-R2 | Revisar limites e falhas dos componentes Turnstile | codigo     | done | Checkpoint humano c28c267 confirmado no Git com os sete arquivos; falha anterior de escrita preservada no log. |
+| A07-R3 | Validar composição de login e falha de gravação    | codigo     | running | Provedor/store simulados; avaliar sessão já emitida e sanitização sem definir política concorrente.                    |
 | A11    | Comprovar viabilidade de build local sem segredos  | documental | ready   | Inspeção das dependências instaladas e condições de isolamento; não executar build sem prova sintética.                |
 
 Esses pacotes decorrem da missão manual de até 20 pacotes. A07 continua
