@@ -319,4 +319,6 @@ de carregamento, erro com nova tentativa e lista vazia.
 Não há mudança na criação de despesas, no cálculo monetário, na permissão ou em
 dados existentes. Testes cobrem o limite/ajuste de página e o contrato da
 Server Function protegida e da rota. Build isolado e CI desse novo checkpoint
-ainda aguardam HEAD limpo.
+foram separados: o build passou em HEAD limpo com chave pública sintética e o
+aviso de secrets operacionais ausentes esperado; a CI do novo checkpoint ainda
+aguarda publicação.

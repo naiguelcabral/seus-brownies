@@ -77,7 +77,8 @@ Este documento é a referência canônica de alto nível para o estado atual do 
   o build isolado.
 - Busca textual, período e paginação de 20 itens para o histórico de despesas
   estão implementados sobre a Server Function já autorizada, com estados de
-  carregamento/erro; a validação remota do novo checkpoint ainda é pendente.
+  carregamento/erro. O build isolado desse checkpoint passou; a validação remota
+  ainda é pendente.
 
 - Rodada manual local de 7 de setembro: seis casos individuais adicionais
   de cooldown/desafio passaram; suíte de 37 arquivos e lint verdes. A07-R2

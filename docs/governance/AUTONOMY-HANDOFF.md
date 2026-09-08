@@ -48,8 +48,8 @@ Atualizado em 8 de setembro de 2026.
   protegida para filtrar descrição/categoria e período, contar e paginar 20
   itens em ordem estável. A rota conserva filtros na URL e inclui estados de
   carregamento, erro, vazio e paginação acessível. Testes de contrato/paginação,
-  lint, tipos, Prettier e `git diff --check` passaram. Próximo passo: checkpoint
-  limpo, build HML isolado e CI.
+  lint, tipos, Prettier, `git diff --check` e build HML isolado passaram.
+  Próximo passo: registrar esta evidência, publicar e observar CI.
 
 ## Retomada local — checkpoint reconciliado e contrato A07-R3
 
