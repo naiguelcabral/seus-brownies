@@ -1,6 +1,31 @@
 # Handoff de autonomia — Cacau v1
 
-Atualizado em 7 de setembro de 2026.
+Atualizado em 8 de setembro de 2026.
+
+## Missão `codex/audit-remediation` — checkpoint local AR-E1
+
+- Branch: `codex/audit-remediation`; último checkpoint publicado:
+  `e185388 fix(operations): enforce idempotency and fifo integrity`.
+- Pacotes A/B/C implementados nesta missão: proteção de checkpoint e build
+  isolado, sanitização de conversas, hardening de auth e experiência do
+  Funcionário, idempotência operacional, correção FIFO, autoria/auditoria e
+  reconciliação somente leitura. Migrations `0017` e `0018` estão preparadas,
+  não aplicadas.
+- Pacote ativo: AR-E1. `npm run typecheck` está verde e o workflow versionado
+  de CI usa Node 22, `npm ci`, testes, lint, tipos e build HML isolado com
+  chave pública sintética. O build exige HEAD limpo; criar o checkpoint abaixo
+  antes de executá-lo.
+- Validação desta rodada: `npm test` 248/248; lint, typecheck, Prettier dos
+  arquivos alterados e `git diff --check` verdes. `npm run check` global segue
+  vermelho com 92 arquivos de dívida histórica, catalogada em
+  `FORMATTING-DEBT.md`; não foi reformatada em massa.
+- Próximo passo exato: revisar e commitar somente os arquivos de AR-E1, rodar
+  `VITE_TURNSTILE_SITE_KEY=1x00000000000000000000AA npm run build:hml` com
+  HEAD limpo, atualizar este handoff/log e publicar a branch. Não aplicar
+  migrations, não acessar HML ou produção e não executar DESLIGARTUDO.
+- Gates: aplicação das migrations em banco descartável, escolha de semântica
+  temporal do relatório FIFO, política de tentativas concorrentes no login,
+  configuração externa do rate limit e homologação real de auth/FIFO.
 
 ## Retomada local — checkpoint reconciliado e contrato A07-R3
 

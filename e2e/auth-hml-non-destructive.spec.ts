@@ -134,17 +134,21 @@ test('papel insuficiente não acessa relatório protegido', async ({ page }) => 
 })
 
 test.fixme(
+  true,
   'OTP real é uma etapa humana: não consumir código nem alterar identidade por esta spec',
 )
 
 test.fixme(
+  true,
   'recuperação real é uma etapa humana: não solicitar ou redefinir senha por esta spec',
 )
 
 test.fixme(
+  true,
   'auditoria persistida é conferida por operador autorizado, sem consulta automática ao HML',
 )
 
 test.fixme(
+  true,
   'atributos do cookie são conferidos manualmente, sem coletar ou registrar seu valor',
 )

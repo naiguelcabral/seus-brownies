@@ -239,3 +239,22 @@ Estado: implementado e validado localmente em cenários sucessivos, parcial mais
 cancelamento, excesso, repetição, custo residual e rollback em cada estágio.
 Concorrência real em PostgreSQL permanece `validation-blocked` pela ausência de
 banco descartável local.
+
+## AR-E1 — typecheck, runtime e CI (G0/G7)
+
+O repositório não possuía script explícito de typecheck e não tinha workflow
+versionado. Foi adicionado `npm run typecheck` (`tsc --noEmit`), após corrigir
+as dívidas de tipos em guards HML intencionalmente pendentes, bridge de
+auditoria FIFO, formulários lifecycle, produção e script de diagnóstico local.
+Node 22, mínimo `22.12.0` e menor que 23, está declarado no `package.json` e
+fixado em `.nvmrc`; o intervalo atende o Vite 8 do lockfile e a instalação
+local comprovada nesta missão.
+
+O workflow de CI executa `npm ci`, suíte, lint, typecheck e build HML isolado
+com site key pública sintética. Não executa deploy, migration, e2e ou
+`npm run check` global: este último continua vermelho pela dívida de
+formatação histórica catalogada em `FORMATTING-DEBT.md`. O build isolado não
+recebe secrets de aplicação.
+
+Estado: implementação local concluída; execução remota aguarda publicação do
+workflow e primeira rodada no GitHub Actions.

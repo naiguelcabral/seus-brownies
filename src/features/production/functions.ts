@@ -378,7 +378,14 @@ async function loadPlan(tx: Transaction, input: BatchInput) {
       'A receita ativa precisa de energia, mão de obra e tarifas vigentes.',
     )
 
-  const sellableOutputs = selectedProfiles.map(({ output, profile }) => ({
+  const sellableOutputs: Array<{
+    product: Pick<
+      typeof products.$inferSelect,
+      'id' | 'sku' | 'name' | 'unit' | 'type'
+    >
+    quantity: bigint
+    role: 'primary' | 'co_product'
+  }> = selectedProfiles.map(({ output, profile }) => ({
     product: {
       id: profile.productId,
       sku: profile.productSku,
@@ -716,8 +723,9 @@ export const getProductionBatch = createServerFn({ method: 'GET' })
       losses?: Array<{ productId: number; quantity: string; reason: string }>
     }
     const plannedLosses = z.array(lossInput).safeParse(payload.losses ?? [])
+    const { sourcePayload: _sourcePayload, ...serializableBatch } = batch
     return {
-      batch,
+      batch: serializableBatch,
       outputs,
       consumptions,
       losses,
@@ -750,6 +758,7 @@ export const completeProductionBatch = createServerFn({ method: 'POST' })
         throw new Error(
           'O rascunho não possui receita, data ou multiplicador válidos.',
         )
+      const productionDate = batch.plannedFor
 
       const [outputs, completedLosses] = await Promise.all([
         tx
@@ -871,7 +880,7 @@ export const completeProductionBatch = createServerFn({ method: 'POST' })
           unit: item.requirement.unit,
           unitAmount: item.rate.unitAmount,
           amount: centsToMoney(item.amountCents),
-          occurredAt: batch.plannedFor,
+          occurredAt: productionDate,
           notes: 'Tarifa vigente efetivamente aplicada ao lote.',
         })),
       )

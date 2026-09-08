@@ -17,6 +17,7 @@
     "ligartudo": "bash ./LIGARTUDO",
     "desligartudo": "bash ./DESLIGARTUDO",
     "lint": "eslint",
+    "typecheck": "tsc --noEmit",
     "test": "node --import tsx --test test/**/*.test.ts",
     "test:e2e": "playwright test",
     "format": "prettier --write . && eslint --fix",
@@ -37,6 +38,9 @@
     "production:import": "tsx scripts/import_production.ts",
     "production:profiles:sync": "tsx scripts/sync_production_profile_components.ts",
     "fifo:backfill:hml": "tsx scripts/backfill-hml-fifo.ts"
+  },
+  "engines": {
+    "node": ">=22.12.0 <23"
   },
   "dependencies": {
     "@neondatabase/neon-js": "^0.7.0-beta",

@@ -4,6 +4,12 @@ import {
   positiveInventoryValues,
   returnSaleValues,
 } from '#/features/inventory/lifecycle-contracts'
+import type {
+  CancelSaleInput,
+  NegativeInventoryInput,
+  PositiveInventoryInput,
+  ReturnSaleInput,
+} from '#/features/inventory/lifecycle-contracts'
 
 export type NegativeInventoryFormValues = {
   productId: string
@@ -20,7 +26,11 @@ export function canCancelSale(status: string) {
   return status === 'confirmed' || status === 'paid'
 }
 
-export function canSubmitLifecycle(pending: boolean, needsConfirmation = false, confirmed = true) {
+export function canSubmitLifecycle(
+  pending: boolean,
+  needsConfirmation = false,
+  confirmed = true,
+) {
   return !pending && (!needsConfirmation || confirmed)
 }
 
@@ -33,8 +43,13 @@ export function canSubmitPositiveAdjustment(
   values: Record<string, unknown>,
   confirmed: boolean,
 ) {
-  return canSubmitLifecycle(pending, true, confirmed)
-    && validateLifecycleForm('positive', { ...values, productId: Number(values.productId) }).ok
+  return (
+    canSubmitLifecycle(pending, true, confirmed) &&
+    validateLifecycleForm('positive', {
+      ...values,
+      productId: Number(values.productId),
+    }).ok
+  )
 }
 
 export function lifecycleErrorMessage(error: unknown) {
@@ -44,14 +59,43 @@ export function lifecycleErrorMessage(error: unknown) {
   return message || 'Não foi possível registrar o evento de estoque.'
 }
 
-export function validateLifecycleForm(kind: 'cancel' | 'return' | 'loss' | 'negative' | 'positive', values: Record<string, unknown>) {
-  const schema = kind === 'cancel' ? cancelSaleValues
-    : kind === 'return' ? returnSaleValues
-      : kind === 'positive' ? positiveInventoryValues
-        : negativeInventoryValues
+type ValidationResult<T> =
+  { ok: true; data: T } | { ok: false; message: string }
+
+export function validateLifecycleForm(
+  kind: 'cancel',
+  values: Record<string, unknown>,
+): ValidationResult<CancelSaleInput>
+export function validateLifecycleForm(
+  kind: 'return',
+  values: Record<string, unknown>,
+): ValidationResult<ReturnSaleInput>
+export function validateLifecycleForm(
+  kind: 'loss' | 'negative',
+  values: Record<string, unknown>,
+): ValidationResult<NegativeInventoryInput>
+export function validateLifecycleForm(
+  kind: 'positive',
+  values: Record<string, unknown>,
+): ValidationResult<PositiveInventoryInput>
+export function validateLifecycleForm(
+  kind: 'cancel' | 'return' | 'loss' | 'negative' | 'positive',
+  values: Record<string, unknown>,
+) {
+  const schema =
+    kind === 'cancel'
+      ? cancelSaleValues
+      : kind === 'return'
+        ? returnSaleValues
+        : kind === 'positive'
+          ? positiveInventoryValues
+          : negativeInventoryValues
   const result = schema.safeParse(values)
-  return result.success ? { ok: true as const, data: result.data } : {
-    ok: false as const,
-    message: 'Revise os campos obrigatórios: quantidade positiva (até três casas), motivo e referência.',
-  }
+  return result.success
+    ? { ok: true as const, data: result.data }
+    : {
+        ok: false as const,
+        message:
+          'Revise os campos obrigatórios: quantidade positiva (até três casas), motivo e referência.',
+      }
 }

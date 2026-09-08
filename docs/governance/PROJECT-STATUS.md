@@ -52,9 +52,19 @@ Este documento é a referência canônica de alto nível para o estado atual do 
 - Catálogo e histórico de 2026 já foram importados no ambiente informado.
 - Prévia somente leitura existe para catálogo, histórico e produção.
 - Migrations Drizzle já foram aplicadas no ambiente autorizado até as versões documentadas nos registros históricos.
+- As migrations `0017` (idempotência, autoria e proteção estrutural de
+  produto) e `0018` (auditoria operacional) estão preparadas para revisão;
+  não foram aplicadas a nenhum banco nesta missão.
 - Não repetir cargas ou homologações já consumidas sem autorização explícita.
 
 ### Qualidade
+
+- Checkpoint local de 8 de setembro na branch `codex/audit-remediation`:
+  `npm test` aprovou 248 casos, `npm run lint` e `npm run typecheck` passaram.
+  O build HML isolado havia passado no checkpoint anterior com chave pública
+  sintética; a repetição para as mudanças de CI ocorrerá com o próximo HEAD
+  limpo. Um workflow versionado prepara `npm ci`, testes, lint, tipos e esse
+  build isolado, sem deploy ou migration.
 
 - Rodada manual local de 7 de setembro: seis casos individuais adicionais
   de cooldown/desafio passaram; suíte de 37 arquivos e lint verdes. A07-R2
@@ -68,7 +78,7 @@ Este documento é a referência canônica de alto nível para o estado atual do 
   apenas o aviso não bloqueante do Wrangler por não poder escrever logs fora do
   workspace.
 - `npm run check` não está verde para o repositório inteiro: o Prettier aponta
-  dívida de formatação em 102 arquivos, inclusive artefatos históricos e
+  dívida de formatação em 92 arquivos, inclusive artefatos históricos e
   snapshots gerados. Os arquivos alterados nesta revisão foram formatados
   isoladamente; essa pendência não foi escondida com uma reescrita em massa.
 - Há 11 specs Playwright, incluindo uma de rotas públicas de autenticação.
