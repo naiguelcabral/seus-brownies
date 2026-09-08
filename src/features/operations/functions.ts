@@ -1,5 +1,17 @@
 import { createServerFn } from '@tanstack/react-start'
-import { asc, count, desc, eq, gte, inArray, sql } from 'drizzle-orm'
+import {
+  and,
+  asc,
+  count,
+  desc,
+  eq,
+  gte,
+  ilike,
+  inArray,
+  lte,
+  or,
+  sql,
+} from 'drizzle-orm'
 import { z } from 'zod'
 
 import {
@@ -33,6 +45,10 @@ import {
   resolveIdempotentReplay,
 } from '#/features/operations/idempotency'
 import { appendOperationalAudit } from '#/features/operations/audit'
+import {
+  calculateExpenseHistoryPage,
+  expenseHistoryPageSize,
+} from '#/features/operations/expense-history'
 
 const quantityPattern = /^\d+(?:[,.]\d{1,3})?$/
 const moneyPattern = /^\d+(?:[,.]\d{1,2})?$/
@@ -676,15 +692,45 @@ export const createExpense = createServerFn({ method: 'POST' })
       throw new Error('Não foi possível reconciliar a operação repetida.')
     })
   })
+const expenseHistoryValues = z.object({
+  query: z.string().trim().max(100).optional(),
+  start: z.string().date().optional(),
+  end: z.string().date().optional(),
+  page: z.number().int().min(1).max(10_000).default(1),
+})
+
 export const listExpenses = createServerFn({ method: 'GET' })
   .middleware([requireServerFunctionPermission('listExpenses')])
-  .handler(async () => {
+  .validator(expenseHistoryValues)
+  .handler(async ({ data }) => {
+    if (data.start && data.end && data.start > data.end) {
+      throw new Error('A data inicial deve ser anterior à data final.')
+    }
     const { getDb } = await import('#/db/index')
-    return getDb()
+    const database = getDb()
+    const filters = and(
+      data.query
+        ? or(
+            ilike(expenses.description, `%${data.query}%`),
+            ilike(expenses.category, `%${data.query}%`),
+          )
+        : undefined,
+      data.start ? gte(expenses.occurredAt, data.start) : undefined,
+      data.end ? lte(expenses.occurredAt, data.end) : undefined,
+    )
+    const [{ total }] = await database
+      .select({ total: count() })
+      .from(expenses)
+      .where(filters)
+    const pagination = calculateExpenseHistoryPage(data.page, Number(total))
+    const rows = await database
       .select()
       .from(expenses)
-      .orderBy(desc(expenses.occurredAt))
-      .limit(60)
+      .where(filters)
+      .orderBy(desc(expenses.occurredAt), desc(expenses.id))
+      .limit(expenseHistoryPageSize)
+      .offset(pagination.offset)
+    return { expenses: rows, total: Number(total), ...pagination }
   })
 
 export const getDashboard = createServerFn({ method: 'GET' })

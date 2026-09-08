@@ -1,17 +1,37 @@
 import { useState } from 'react'
-import { createFileRoute, useRouter } from '@tanstack/react-router'
+import { createFileRoute, useNavigate, useRouter } from '@tanstack/react-router'
 import { useServerFn } from '@tanstack/react-start'
+import { z } from 'zod'
 
 import { ManagementLayout } from '#/components/ManagementLayout'
 import { createExpense, listExpenses } from '#/features/operations/functions'
 
+const expenseSearch = z.object({
+  query: z.string().trim().max(100).optional().catch(undefined),
+  start: z.string().date().optional().catch(undefined),
+  end: z.string().date().optional().catch(undefined),
+  page: z.number().int().min(1).max(10_000).catch(1),
+})
+
 export const Route = createFileRoute('/despesas')({
-  loader: () => listExpenses(),
+  validateSearch: expenseSearch,
+  loaderDeps: ({ search }) => ({
+    query: search.query,
+    start: search.start,
+    end: search.end,
+    page: search.page,
+  }),
+  loader: ({ deps }) => listExpenses({ data: deps }),
   component: ExpensesPage,
+  pendingComponent: ExpensesPending,
+  pendingMs: 300,
+  errorComponent: ExpensesError,
 })
 function ExpensesPage() {
-  const expenses = Route.useLoaderData()
+  const history = Route.useLoaderData()
+  const search = Route.useSearch()
   const router = useRouter()
+  const navigate = useNavigate({ from: Route.fullPath })
   const save = useServerFn(createExpense)
   const [idempotencyKey, setIdempotencyKey] = useState(() =>
     crypto.randomUUID(),
@@ -54,7 +74,7 @@ function ExpensesPage() {
       setNotes('')
       setIdempotencyKey(crypto.randomUUID())
       setMessage('Despesa registrada com sucesso.')
-      await router.invalidate()
+      await router.invalidate({ sync: true })
     } catch (error) {
       setMessage(
         error instanceof Error
@@ -75,9 +95,66 @@ function ExpensesPage() {
           <div className="border-b border-[#f0e5dc] px-5 py-4">
             <h2 className="font-bold">Despesas recentes</h2>
           </div>
-          {expenses.length ? (
+          <form
+            className="flex flex-wrap items-end gap-3 border-b border-[#f0e5dc] px-5 py-4"
+            role="search"
+            onSubmit={(event) => {
+              event.preventDefault()
+              const form = new FormData(event.currentTarget)
+              void navigate({
+                search: (previous) => ({
+                  ...previous,
+                  query: String(form.get('query') ?? '').trim() || undefined,
+                  start: String(form.get('start') ?? '') || undefined,
+                  end: String(form.get('end') ?? '') || undefined,
+                  page: 1,
+                }),
+              })
+            }}
+          >
+            <label className="text-xs font-bold text-[#573524]">
+              Buscar
+              <input
+                className="field mt-1 block min-w-48"
+                name="query"
+                defaultValue={search.query}
+                placeholder="Descrição ou categoria"
+              />
+            </label>
+            <label className="text-xs font-bold text-[#573524]">
+              De
+              <input
+                className="field mt-1 block"
+                type="date"
+                name="start"
+                defaultValue={search.start}
+              />
+            </label>
+            <label className="text-xs font-bold text-[#573524]">
+              Até
+              <input
+                className="field mt-1 block"
+                type="date"
+                name="end"
+                defaultValue={search.end}
+              />
+            </label>
+            <button className="rounded-lg border border-[#4a2114] px-3 py-2 text-xs font-bold text-[#4a2114]">
+              Filtrar
+            </button>
+            {search.query || search.start || search.end ? (
+              <button
+                type="button"
+                className="px-2 py-2 text-xs font-bold text-[#75411f]"
+                onClick={() => void navigate({ search: { page: 1 } })}
+              >
+                Limpar filtros
+              </button>
+            ) : null}
+          </form>
+          {history.expenses.length ? (
             <ul className="divide-y divide-[#f0e5dc]">
-              {expenses.map((expense) => (
+              {history.expenses.map((expense) => (
                 <li
                   key={expense.id}
                   className="flex items-center justify-between gap-4 px-5 py-4"
@@ -97,9 +174,50 @@ function ExpensesPage() {
             </ul>
           ) : (
             <p className="p-6 text-sm text-[#846859]">
-              Nenhuma despesa registrada ainda.
+              Nenhuma despesa encontrada para esses filtros.
             </p>
           )}
+          <nav
+            className="flex items-center justify-between gap-3 border-t border-[#f0e5dc] px-5 py-4 text-sm"
+            aria-label="Paginação das despesas"
+          >
+            <span aria-live="polite">
+              Página {history.page} de {history.totalPages} · {history.total}{' '}
+              {history.total === 1 ? 'despesa' : 'despesas'}
+            </span>
+            <div className="flex gap-2">
+              <button
+                type="button"
+                className="rounded-lg border border-[#d9c4b5] px-3 py-1.5 text-xs font-bold disabled:opacity-50"
+                disabled={history.page === 1}
+                onClick={() =>
+                  void navigate({
+                    search: (previous) => ({
+                      ...previous,
+                      page: history.page - 1,
+                    }),
+                  })
+                }
+              >
+                Anterior
+              </button>
+              <button
+                type="button"
+                className="rounded-lg border border-[#d9c4b5] px-3 py-1.5 text-xs font-bold disabled:opacity-50"
+                disabled={history.page === history.totalPages}
+                onClick={() =>
+                  void navigate({
+                    search: (previous) => ({
+                      ...previous,
+                      page: history.page + 1,
+                    }),
+                  })
+                }
+              >
+                Próxima
+              </button>
+            </div>
+          </nav>
         </section>
         <form
           onSubmit={submit}
@@ -154,6 +272,44 @@ function ExpensesPage() {
     </ManagementLayout>
   )
 }
+
+function ExpensesPending() {
+  return (
+    <ManagementLayout
+      title="Despesas"
+      description="Carregando o histórico de despesas."
+    >
+      <p
+        role="status"
+        className="rounded-2xl border border-[#ecdfd4] bg-white p-5 text-sm text-[#846859]"
+      >
+        Carregando despesas…
+      </p>
+    </ManagementLayout>
+  )
+}
+
+function ExpensesError({ error }: { error: Error }) {
+  const router = useRouter()
+  return (
+    <ManagementLayout
+      title="Despesas"
+      description="Não foi possível carregar o histórico de despesas."
+    >
+      <div className="rounded-2xl border border-[#e7c9b8] bg-[#fff5ed] p-5 text-sm text-[#75411f]">
+        <p>{error.message || 'Tente novamente em alguns instantes.'}</p>
+        <button
+          type="button"
+          className="mt-3 rounded-lg border border-[#75411f] px-3 py-2 text-xs font-bold"
+          onClick={() => void router.invalidate()}
+        >
+          Tentar novamente
+        </button>
+      </div>
+    </ManagementLayout>
+  )
+}
+
 function Input({
   label,
   value,

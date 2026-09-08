@@ -2,10 +2,10 @@
 
 Atualizado em 8 de setembro de 2026.
 
-## Missão `codex/audit-remediation` — pacote AR-E2 em validação final
+## Missão `codex/audit-remediation` — pacote AR-D2 em validação final
 
-- Branch: `codex/audit-remediation`; checkpoint local pendente de publicação:
-  `3087ee9 ci(quality): add reproducible verification gates`.
+- Branch: `codex/audit-remediation`; último checkpoint publicado:
+  `8c80bbf docs(governance): record ci remediation validation`.
 - Pacotes A/B/C implementados nesta missão: proteção de checkpoint e build
   isolado, sanitização de conversas, hardening de auth e experiência do
   Funcionário, idempotência operacional, correção FIFO, autoria/auditoria e
@@ -21,8 +21,8 @@ Atualizado em 8 de setembro de 2026.
 - Build no HEAD limpo: `VITE_TURNSTILE_SITE_KEY=1x00000000000000000000AA npm run build:hml`
   passou para cliente e SSR. O aviso de secrets operacionais ausentes é
   esperado nesta prova isolada e não inclui secret no build.
-- Próximo passo exato: registrar esta evidência, publicar a branch e observar
-  a primeira rodada remota de CI. Não aplicar migrations, não acessar HML ou
+- A CI `34268997522` passou para o checkpoint `8c80bbf`, confirmando suíte,
+  lint, typecheck e build isolado. Não aplicar migrations, não acessar HML ou
   produção e não executar DESLIGARTUDO.
 - Gates: aplicação das migrations em banco descartável, escolha de semântica
   temporal do relatório FIFO, política de tentativas concorrentes no login,
@@ -37,13 +37,19 @@ Atualizado em 8 de setembro de 2026.
   e passaram. O build HML isolado com chave pública sintética passou no
   checkpoint `c44b954`; a ausência de secrets operacionais foi o aviso esperado
   da prova. Próximo passo: registrar esta evidência, publicar e observar CI.
-- Pacote ativo: AR-E2. A CI `34264913745` falhou porque `--dry-run` exigia o
+- AR-E2 concluído conforme aceite local e CI. A CI `34264913745` falhou porque `--dry-run` exigia o
   binário Codex antes de executar, embora esse modo não o chame. O preflight
   agora só exige CLI nos modos executáveis; a ausência é reproduzida em teste.
   O lint também apontou controle literal na regex CSV; a expressão preserva a
   mesma proteção construída em runtime. Teste do controlador/CSV, lint,
-  typecheck, Prettier, `bash -n`, `git diff --check` e build isolado passaram.
-  Próximo passo: registrar esta evidência, publicar e observar CI.
+  typecheck, Prettier, `bash -n`, `git diff --check` e build isolado passaram;
+  a CI `34268997522` confirmou a correção.
+- Pacote ativo: AR-D2. O histórico de despesas usa a Server Function já
+  protegida para filtrar descrição/categoria e período, contar e paginar 20
+  itens em ordem estável. A rota conserva filtros na URL e inclui estados de
+  carregamento, erro, vazio e paginação acessível. Testes de contrato/paginação,
+  lint, tipos, Prettier e `git diff --check` passaram. Próximo passo: checkpoint
+  limpo, build HML isolado e CI.
 
 ## Retomada local — checkpoint reconciliado e contrato A07-R3
 

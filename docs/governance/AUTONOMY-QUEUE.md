@@ -34,14 +34,15 @@ seleção de pacotes pelo controlador. Ela não substitui os gates de
 
 ### Extensão autorizada para a rodada manual local
 
-| ID     | Pacote                                             | Tipo       | Estado      | Escopo e saída esperada                                                                                                                       |
-| ------ | -------------------------------------------------- | ---------- | ----------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
-| A07-R2 | Revisar limites e falhas dos componentes Turnstile | codigo     | done        | Checkpoint humano c28c267 confirmado no Git com os sete arquivos; falha anterior de escrita preservada no log.                                |
-| A07-R3 | Validar composição de login e falha de gravação    | codigo     | needs-human | Testes locais concluídos; falha posterior pode ocorrer após `Set-Cookie`. Política de concorrência/rollback de sessão aguarda decisão.        |
-| A11    | Comprovar viabilidade de build local sem segredos  | documental | done        | Archive isolado, inputs explícitos e build cliente/SSR com chave pública sintética comprovados.                                               |
-| AR-E1  | Tornar checks reproduzíveis no CI                  | codigo     | done        | `typecheck`, Node 22 e workflow de suíte/lint/tipos/build isolado passaram localmente; primeira execução remota aguarda publicação.           |
-| AR-D1  | Exportar relatórios CSV seguros                    | codigo     | done        | CSV local de agregados já autorizados, com valores decimais preservados e proteção contra fórmulas de planilha; build local isolado aprovado. |
-| AR-E2  | Corrigir preflight da CI e lint CSV                | codigo     | done        | `--dry-run` sem Codex CLI e regex segura sem controles literais validados localmente; build isolado aprovado, CI remota aguarda publicação.   |
+| ID     | Pacote                                             | Tipo       | Estado      | Escopo e saída esperada                                                                                                                |
+| ------ | -------------------------------------------------- | ---------- | ----------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| A07-R2 | Revisar limites e falhas dos componentes Turnstile | codigo     | done        | Checkpoint humano c28c267 confirmado no Git com os sete arquivos; falha anterior de escrita preservada no log.                         |
+| A07-R3 | Validar composição de login e falha de gravação    | codigo     | needs-human | Testes locais concluídos; falha posterior pode ocorrer após `Set-Cookie`. Política de concorrência/rollback de sessão aguarda decisão. |
+| A11    | Comprovar viabilidade de build local sem segredos  | documental | done        | Archive isolado, inputs explícitos e build cliente/SSR com chave pública sintética comprovados.                                        |
+| AR-E1  | Tornar checks reproduzíveis no CI                  | codigo     | done        | `typecheck`, Node 22 e workflow de suíte/lint/tipos/build isolado aprovados local e remotamente em `34268997522`.                      |
+| AR-D1  | Exportar relatórios CSV seguros                    | codigo     | done        | CSV local de agregados autorizados, precisão decimal e proteção de fórmula aprovados na CI `34268997522`; XLSX segue fora do escopo.   |
+| AR-E2  | Corrigir preflight da CI e lint CSV                | codigo     | done        | `--dry-run` sem Codex CLI e regex sem controles literais aprovados na CI `34268997522`; falhas anteriores preservadas no log.          |
+| AR-D2  | Filtrar e paginar histórico de despesas            | codigo     | running     | Busca textual, período, 20 itens e estados de carregamento/erro implementados localmente; build e CI do checkpoint pendentes.          |
 
 Esses pacotes decorrem da missão manual de até 20 pacotes. A07 continua
 `blocked`; A08–A10 continuam `needs-human`. Não há promoção de nível permanente.

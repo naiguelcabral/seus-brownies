@@ -73,7 +73,11 @@ Este documento é a referência canônica de alto nível para o estado atual do 
   escopo atual.
 - A primeira CI remota falhou porque o modo local `--dry-run` do controlador
   exigia Codex CLI sem utilizá-lo. A correção e sua reprodução sem CLI estão
-  preparadas em checkpoint local; a próxima CI é a evidência pendente.
+  foram aprovadas na CI `34268997522`, que também confirmou a exportação CSV e
+  o build isolado.
+- Busca textual, período e paginação de 20 itens para o histórico de despesas
+  estão implementados sobre a Server Function já autorizada, com estados de
+  carregamento/erro; a validação remota do novo checkpoint ainda é pendente.
 
 - Rodada manual local de 7 de setembro: seis casos individuais adicionais
   de cooldown/desafio passaram; suíte de 37 arquivos e lint verdes. A07-R2

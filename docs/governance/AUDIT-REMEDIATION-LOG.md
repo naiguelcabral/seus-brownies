@@ -260,8 +260,8 @@ Validação local: `npm test` aprovou 248 casos, `npm run lint` e
 `npm run typecheck` passaram, e o build HML isolado passou em HEAD limpo com
 somente `VITE_TURNSTILE_SITE_KEY` sintética. O SSR avisou que os cinco secrets
 operacionais não estavam disponíveis, como esperado para esta prova; nenhum
-arquivo de ambiente foi carregado. A execução remota continua aguardando
-publicação do workflow e primeira rodada no GitHub Actions.
+arquivo de ambiente foi carregado. A CI `34268997522` no checkpoint `8c80bbf`
+passou integralmente depois de AR-E2.
 
 ## AR-D1 — exportação CSV de relatórios (G3)
 
@@ -284,8 +284,8 @@ arquivos verdes. O build HML isolado passou no checkpoint `c44b954` com chave
 pública sintética; o aviso de secrets operacionais ausentes é esperado e não
 carregou arquivo de ambiente.
 
-Estado: implementado e validado localmente; primeira CI remota e homologação de
-abertura do CSV no aplicativo de planilha escolhido continuam pendentes.
+Estado: implementado e validado localmente e na CI `34268997522`; homologação
+de abertura do CSV no aplicativo de planilha escolhido continua pendente.
 
 ## AR-E2 — preflight reproduzível de CI (G7/G8)
 
@@ -303,4 +303,20 @@ prefixos de fórmula. Isso não muda o conteúdo exportado.
 Estado: implementado e validado localmente com teste do controlador, teste CSV,
 lint, typecheck, Prettier, `bash -n` e `git diff --check`. O build isolado
 passou em HEAD limpo com chave pública sintética; o aviso de secrets
-operacionais ausentes continua esperado. Nova CI remota aguarda publicação.
+operacionais ausentes continua esperado. A CI `34268997522` no checkpoint
+`8c80bbf` passou com suíte, lint, typecheck e build isolado. As duas falhas
+anteriores permanecem como evidência histórica: `34264913745` descobriu o
+preflight e `34268367786` confirmou o lint CSV antes da correção.
+
+## AR-D2 — busca, filtros e paginação de despesas (G3)
+
+O histórico protegido por `expenses:read` deixa de carregar 60 itens fixos. O
+servidor valida página, texto e período, conta com os mesmos filtros e retorna
+20 itens em ordem estável por data e ID. A interface mantém os filtros na URL,
+reseta a página quando eles mudam, informa total/página e tem estados explícitos
+de carregamento, erro com nova tentativa e lista vazia.
+
+Não há mudança na criação de despesas, no cálculo monetário, na permissão ou em
+dados existentes. Testes cobrem o limite/ajuste de página e o contrato da
+Server Function protegida e da rota. Build isolado e CI desse novo checkpoint
+ainda aguardam HEAD limpo.
