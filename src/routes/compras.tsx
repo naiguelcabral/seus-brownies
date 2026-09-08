@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { Plus, Trash2 } from 'lucide-react'
-import { createFileRoute, useRouter } from '@tanstack/react-router'
+import { createFileRoute, useNavigate, useRouter } from '@tanstack/react-router'
 import { useServerFn } from '@tanstack/react-start'
+import { z } from 'zod'
 
 import { ManagementLayout } from '#/components/ManagementLayout'
 import { hasPermission } from '#/features/auth/authorization'
@@ -11,26 +12,47 @@ import {
   listPurchases,
 } from '#/features/operations/functions'
 
+const purchaseSearch = z.object({
+  query: z.string().trim().max(100).optional().catch(undefined),
+  start: z.string().date().optional().catch(undefined),
+  end: z.string().date().optional().catch(undefined),
+  page: z.number().int().min(1).max(10_000).catch(1),
+})
+
 export const Route = createFileRoute('/compras')({
-  loader: async ({ context }) => {
+  validateSearch: purchaseSearch,
+  loaderDeps: ({ search }) => ({
+    query: search.query,
+    start: search.start,
+    end: search.end,
+    page: search.page,
+  }),
+  loader: async ({ context, deps }) => {
     const canReadHistory = Boolean(
       context.appRole && hasPermission(context.appRole, 'purchases:read'),
     )
     return {
       products: await listPurchasableProducts(),
-      purchases: canReadHistory ? await listPurchases() : [],
+      history: canReadHistory
+        ? await listPurchases({ data: deps })
+        : { purchases: [], total: 0, page: 1, pageSize: 20, totalPages: 1 },
       canReadHistory,
     }
   },
   component: PurchasesPage,
+  pendingComponent: PurchasesPending,
+  pendingMs: 300,
+  errorComponent: PurchasesError,
 })
 
 type Item = { productId: string; quantity: string; unitCost: string }
 const emptyItem = (): Item => ({ productId: '', quantity: '', unitCost: '' })
 
 function PurchasesPage() {
-  const { products, purchases, canReadHistory } = Route.useLoaderData()
+  const { products, history, canReadHistory } = Route.useLoaderData()
+  const search = Route.useSearch()
   const router = useRouter()
+  const navigate = useNavigate({ from: Route.fullPath })
   const save = useServerFn(createPurchase)
   const [idempotencyKey, setIdempotencyKey] = useState(() =>
     crypto.randomUUID(),
@@ -109,32 +131,135 @@ function PurchasesPage() {
           </div>
           {!canReadHistory ? (
             <Empty text="Seu acesso permite registrar compras, sem consultar o histórico financeiro." />
-          ) : purchases.length ? (
-            <ul className="divide-y divide-[#f0e5dc]">
-              {purchases.map((purchase) => (
-                <li
-                  key={purchase.id}
-                  className="flex items-center justify-between gap-4 px-5 py-4"
-                >
-                  <div>
-                    <p className="font-bold">{purchase.supplierName}</p>
-                    <p className="mt-1 text-xs text-[#896d5b]">
-                      {new Intl.DateTimeFormat('pt-BR').format(
-                        new Date(`${purchase.purchasedAt}T12:00:00`),
-                      )}
-                      {purchase.invoiceFileReference
-                        ? ' · nota referenciada'
-                        : ''}
-                    </p>
-                  </div>
-                  <strong>
-                    {currency.format(Number(purchase.totalAmount))}
-                  </strong>
-                </li>
-              ))}
-            </ul>
           ) : (
-            <Empty text="Nenhuma compra registrada ainda." />
+            <>
+              <form
+                className="flex flex-wrap items-end gap-3 border-b border-[#f0e5dc] px-5 py-4"
+                role="search"
+                onSubmit={(event) => {
+                  event.preventDefault()
+                  const form = new FormData(event.currentTarget)
+                  void navigate({
+                    search: (previous) => ({
+                      ...previous,
+                      query:
+                        String(form.get('query') ?? '').trim() || undefined,
+                      start: String(form.get('start') ?? '') || undefined,
+                      end: String(form.get('end') ?? '') || undefined,
+                      page: 1,
+                    }),
+                  })
+                }}
+              >
+                <label className="text-xs font-bold text-[#573524]">
+                  Fornecedor
+                  <input
+                    className="field mt-1 block min-w-48"
+                    name="query"
+                    defaultValue={search.query}
+                    placeholder="Buscar fornecedor"
+                  />
+                </label>
+                <label className="text-xs font-bold text-[#573524]">
+                  De
+                  <input
+                    className="field mt-1 block"
+                    type="date"
+                    name="start"
+                    defaultValue={search.start}
+                  />
+                </label>
+                <label className="text-xs font-bold text-[#573524]">
+                  Até
+                  <input
+                    className="field mt-1 block"
+                    type="date"
+                    name="end"
+                    defaultValue={search.end}
+                  />
+                </label>
+                <button className="rounded-lg border border-[#4a2114] px-3 py-2 text-xs font-bold text-[#4a2114]">
+                  Filtrar
+                </button>
+                {search.query || search.start || search.end ? (
+                  <button
+                    type="button"
+                    className="px-2 py-2 text-xs font-bold text-[#75411f]"
+                    onClick={() => void navigate({ search: { page: 1 } })}
+                  >
+                    Limpar filtros
+                  </button>
+                ) : null}
+              </form>
+              {history.purchases.length ? (
+                <ul className="divide-y divide-[#f0e5dc]">
+                  {history.purchases.map((purchase) => (
+                    <li
+                      key={purchase.id}
+                      className="flex items-center justify-between gap-4 px-5 py-4"
+                    >
+                      <div>
+                        <p className="font-bold">{purchase.supplierName}</p>
+                        <p className="mt-1 text-xs text-[#896d5b]">
+                          {new Intl.DateTimeFormat('pt-BR').format(
+                            new Date(`${purchase.purchasedAt}T12:00:00`),
+                          )}
+                          {purchase.invoiceFileReference
+                            ? ' · nota referenciada'
+                            : ''}
+                        </p>
+                      </div>
+                      <strong>
+                        {currency.format(Number(purchase.totalAmount))}
+                      </strong>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <Empty text="Nenhuma compra encontrada para esses filtros." />
+              )}
+              <nav
+                className="flex items-center justify-between gap-3 border-t border-[#f0e5dc] px-5 py-4 text-sm"
+                aria-label="Paginação das compras"
+              >
+                <span aria-live="polite">
+                  Página {history.page} de {history.totalPages} ·{' '}
+                  {history.total} {history.total === 1 ? 'compra' : 'compras'}
+                </span>
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    className="rounded-lg border border-[#d9c4b5] px-3 py-1.5 text-xs font-bold disabled:opacity-50"
+                    disabled={history.page === 1}
+                    onClick={() =>
+                      void navigate({
+                        search: (previous) => ({
+                          ...previous,
+                          page: history.page - 1,
+                        }),
+                      })
+                    }
+                  >
+                    Anterior
+                  </button>
+                  <button
+                    type="button"
+                    className="rounded-lg border border-[#d9c4b5] px-3 py-1.5 text-xs font-bold disabled:opacity-50"
+                    disabled={history.page === history.totalPages}
+                    onClick={() =>
+                      void navigate({
+                        search: (previous) => ({
+                          ...previous,
+                          page: history.page + 1,
+                        }),
+                      })
+                    }
+                  >
+                    Próxima
+                  </button>
+                </div>
+              </nav>
+            </>
           )}
         </section>
         <form
@@ -241,6 +366,43 @@ function PurchasesPage() {
             {saving ? 'Registrando...' : 'Registrar compra'}
           </button>
         </form>
+      </div>
+    </ManagementLayout>
+  )
+}
+
+function PurchasesPending() {
+  return (
+    <ManagementLayout
+      title="Compras"
+      description="Carregando o histórico de compras."
+    >
+      <p
+        role="status"
+        className="rounded-2xl border border-[#ecdfd4] bg-white p-5 text-sm text-[#846859]"
+      >
+        Carregando compras…
+      </p>
+    </ManagementLayout>
+  )
+}
+
+function PurchasesError({ error }: { error: Error }) {
+  const router = useRouter()
+  return (
+    <ManagementLayout
+      title="Compras"
+      description="Não foi possível carregar o histórico de compras."
+    >
+      <div className="rounded-2xl border border-[#e7c9b8] bg-[#fff5ed] p-5 text-sm text-[#75411f]">
+        <p>{error.message || 'Tente novamente em alguns instantes.'}</p>
+        <button
+          type="button"
+          className="mt-3 rounded-lg border border-[#75411f] px-3 py-2 text-xs font-bold"
+          onClick={() => void router.invalidate()}
+        >
+          Tentar novamente
+        </button>
       </div>
     </ManagementLayout>
   )

@@ -31,7 +31,10 @@ test('loaders de compra e venda não consultam histórico sem permissão', async
   ])
 
   assert.match(purchases, /hasPermission\(context\.appRole, 'purchases:read'\)/)
-  assert.match(purchases, /canReadHistory \? await listPurchases\(\) : \[\]/)
+  assert.match(
+    purchases,
+    /canReadHistory[\s\S]*?\? await listPurchases\(\{ data: deps \}\)[\s\S]*?: \{ purchases: \[\]/,
+  )
   assert.match(sales, /hasPermission\(context\.appRole, 'sales:read'\)/)
   assert.match(sales, /canReadHistory \? await listSales\(\) : \[\]/)
   assert.match(sales, /canManageLifecycle && canCancelSale/)

@@ -49,6 +49,10 @@ import {
   calculateExpenseHistoryPage,
   expenseHistoryPageSize,
 } from '#/features/operations/expense-history'
+import {
+  calculatePurchaseHistoryPage,
+  purchaseHistoryPageSize,
+} from '#/features/operations/purchase-history'
 
 const quantityPattern = /^\d+(?:[,.]\d{1,3})?$/
 const moneyPattern = /^\d+(?:[,.]\d{1,2})?$/
@@ -124,11 +128,40 @@ export const listPurchasableProducts = createServerFn({
       .orderBy(asc(products.name))
   })
 
+const purchaseHistoryValues = z.object({
+  query: z.string().trim().max(100).optional(),
+  start: z.string().date().optional(),
+  end: z.string().date().optional(),
+  page: z.number().int().min(1).max(10_000).default(1),
+})
+
 export const listPurchases = createServerFn({ method: 'GET' })
   .middleware([requireServerFunctionPermission('listPurchases')])
-  .handler(async () => {
+  .validator(purchaseHistoryValues)
+  .handler(async ({ data }) => {
+    if (data.start && data.end && data.start > data.end) {
+      throw new Error('A data inicial deve ser anterior à data final.')
+    }
     const { getDb } = await import('#/db/index')
-    return getDb().select().from(purchases).orderBy(desc(purchases.purchasedAt))
+    const database = getDb()
+    const filters = and(
+      data.query ? ilike(purchases.supplierName, `%${data.query}%`) : undefined,
+      data.start ? gte(purchases.purchasedAt, data.start) : undefined,
+      data.end ? lte(purchases.purchasedAt, data.end) : undefined,
+    )
+    const [{ total }] = await database
+      .select({ total: count() })
+      .from(purchases)
+      .where(filters)
+    const pagination = calculatePurchaseHistoryPage(data.page, Number(total))
+    const rows = await database
+      .select()
+      .from(purchases)
+      .where(filters)
+      .orderBy(desc(purchases.purchasedAt), desc(purchases.id))
+      .limit(purchaseHistoryPageSize)
+      .offset(pagination.offset)
+    return { purchases: rows, total: Number(total), ...pagination }
   })
 
 export const createPurchase = createServerFn({ method: 'POST' })
