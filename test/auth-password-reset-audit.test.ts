@@ -17,7 +17,11 @@ test('reset só é considerado concluído após persistir intenção e resultado
   const result = await executeAuditedPasswordReset({
     action: 'password_reset_completed',
     requestId: 'request-audit-test',
-    writer: { append: async (event) => events.push(event) },
+    writer: {
+      append: async (event) => {
+        events.push(event)
+      },
+    },
     telemetry: { emit: (event) => telemetry.push(event) },
     execute: async () => ({ ok: true }),
     getOutcome: (providerResult) => (providerResult.ok ? 'success' : 'failure'),
@@ -126,7 +130,11 @@ test('erro do provider mantém resposta pública genérica, audita failure e nã
   const result = await executeAuditedPasswordReset({
     action: 'password_reset_requested',
     requestId: 'request-provider-failed',
-    writer: { append: async (event) => events.push(event) },
+    writer: {
+      append: async (event) => {
+        events.push(event)
+      },
+    },
     telemetry: { emit: (event) => telemetry.push(event) },
     execute: async () => providerResult,
     getOutcome: (provider) => (provider.ok ? 'success' : 'failure'),
@@ -150,7 +158,11 @@ test('timeout do provider registra failure sanitizado na auditoria final', async
   const result = await executeAuditedPasswordReset({
     action: 'password_reset_requested',
     requestId: 'request-provider-timeout',
-    writer: { append: async (event) => events.push(event) },
+    writer: {
+      append: async (event) => {
+        events.push(event)
+      },
+    },
     telemetry: { emit: (event) => telemetry.push(event) },
     execute: async () => ({
       ok: false,

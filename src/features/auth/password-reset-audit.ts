@@ -1,5 +1,8 @@
-import type { AuthAuditAction, AuthAuditOutcome } from './audit'
-import type { AuthAuditWriter } from './audit-writer.server'
+import type {
+  AuthAuditAction,
+  AuthAuditOutcome,
+  AuthAuditWriter,
+} from './audit'
 import type { PasswordResetTelemetry } from './password-reset-telemetry.server'
 
 export type PasswordResetAuditAction = Extract<

@@ -17,9 +17,13 @@ em logs ou no chat.
 ### Recuperação de senha por link/token
 
 O código local encaminha a solicitação pelo proxy server-side do Neon Auth e
-usa a rota pública `/login/redefinir-senha`. Em desenvolvimento, o retorno é
-fixado em `http://localhost:3000/login/redefinir-senha`; no Worker HML, em
-`https://cacau-v1-hml.naiguelcabral.workers.dev/login/redefinir-senha`.
+usa a rota pública `/login/redefinir-senha`. Em desenvolvimento, na ausência
+de configuração, o retorno usa `http://localhost:3000`. Em qualquer build fora
+de desenvolvimento, `PASSWORD_RESET_REDIRECT_ORIGIN` é obrigatório, deve ser
+uma origem HTTPS sem credenciais, caminho, query ou fragmento, e a rota pública
+é anexada pelo servidor. Assim, um build de produção não herda silenciosamente
+o callback HML. A variável ainda precisa ser configurada no ambiente HML antes
+de nova publicação; nenhum valor foi escrito por esta missão.
 O token e a senha não são registrados, persistidos pelo Cacau ou incluídos em
 eventos de auditoria. Antes de chamar o provedor, o Cacau exige um evento
 sanitizado com estado `blocked` e motivo `provider_outcome_pending`; após a
@@ -71,6 +75,7 @@ Ainda falta validar, em uma execução integrada controlada e sem expor valores:
 | `VITE_NEON_AUTH_URL`                       | variável de build HML                     | dispensado enquanto Neon Auth for mediado pelo servidor                           | não configurar sem necessidade de UI    |
 | `TURNSTILE_SECRET_KEY`                     | secret do Worker HML                      | validação server-side de desafios Turnstile                                       | somente servidor                        |
 | `VITE_TURNSTILE_SITE_KEY`                  | variável de build HML                     | renderização do widget Turnstile                                                  | client-safe, não é segredo              |
+| `PASSWORD_RESET_REDIRECT_ORIGIN`           | variável server-side por ambiente         | origem HTTPS explícita para o callback de recuperação                             | configuração pública, sem caminho       |
 | origem confiável/callbacks                 | Neon Auth Console, branch HML             | permite apenas as origens e URLs de retorno HML aprovadas                         | configuração externa                    |
 | verificação de e-mail obrigatória          | Neon Auth Console, branch HML             | impede principal não verificado de avançar                                        | configuração externa                    |
 | provedor de e-mail, remetente e credencial | Neon Auth Console/serviço escolhido       | entrega de verificação e recuperação                                              | server-only; nomes dependem do provedor |

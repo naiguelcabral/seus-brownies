@@ -30,6 +30,17 @@ test('limite público bloqueia após a cota e pede desafio sem reter identidade 
   assert.equal(limiter.consume('password-reset', 'opaque-id').allowed, true)
 })
 
+test('limitador local remove buckets abandonados quando a primeira janela expira', () => {
+  let now = 0
+  const limiter = createInMemoryAuthRateLimiter(() => now)
+  limiter.consume('login', 'first-opaque-id')
+  limiter.consume('password-reset', 'second-opaque-id')
+  assert.equal(limiter.activeBucketCount(), 2)
+
+  now = authRateLimitPolicies['password-reset'].windowMs
+  assert.equal(limiter.activeBucketCount(), 0)
+})
+
 test('hash HMAC muda por escopo e não contém o e-mail', async () => {
   const email = 'admin@example.test'
   const pepper = 'pepper-only-for-test'
@@ -47,10 +58,11 @@ test('DEV sem pepper permite todas as ações públicas sem desafio', async () =
     'sign-up',
     'verification-otp',
     'password-reset',
+    'password-reset-completion',
   ] as const) {
     assert.deepEqual(
       await protectPublicAuthAction(
-        { scope, email: 'admin@example.test' },
+        { scope, identifier: 'admin@example.test' },
         {},
         { isDevelopment: true },
       ),
@@ -65,10 +77,11 @@ test('produção sem pepper falha fechado para todas as ações públicas', asyn
     'sign-up',
     'verification-otp',
     'password-reset',
+    'password-reset-completion',
   ] as const) {
     assert.deepEqual(
       await protectPublicAuthAction(
-        { scope, email: 'admin@example.test' },
+        { scope, identifier: 'admin@example.test' },
         {},
         { isDevelopment: false },
       ),
@@ -80,7 +93,7 @@ test('produção sem pepper falha fechado para todas as ações públicas', asyn
 test('DEV com pepper e abaixo do limite permite sem invocar Turnstile', async () => {
   let turnstileCalls = 0
   const result = await protectPublicAuthAction(
-    { scope: 'password-reset', email: 'admin@example.test' },
+    { scope: 'password-reset', identifier: 'admin@example.test' },
     { AUTH_LOGIN_HASH_PEPPER: 'pepper-only-for-test' },
     {
       isDevelopment: true,
@@ -97,11 +110,81 @@ test('DEV com pepper e abaixo do limite permite sem invocar Turnstile', async ()
   assert.equal(turnstileCalls, 0)
 })
 
+test('binding distribuído recebe somente chave opaca por escopo antes do limite local', async () => {
+  const keys: Array<string> = []
+  let localCalls = 0
+  const result = await protectPublicAuthAction(
+    { scope: 'sign-up', identifier: 'admin@example.test' },
+    { AUTH_LOGIN_HASH_PEPPER: 'pepper-only-for-test' },
+    {
+      distributedLimiter: {
+        limit: async ({ key }) => {
+          keys.push(key)
+          return { success: true }
+        },
+      },
+      limiter: {
+        consume: () => {
+          localCalls += 1
+          return { allowed: true, requiresChallenge: false, retryAfterMs: 0 }
+        },
+      },
+    },
+  )
+
+  assert.equal(result.allowed, true)
+  assert.equal(localCalls, 1)
+  assert.equal(keys.length, 1)
+  assert.match(keys[0], /^sign-up:[a-f0-9]{64}$/)
+  assert.doesNotMatch(keys[0], /admin|example/i)
+})
+
+test('negação ou falha do binding distribuído bloqueia sem consumir CAPTCHA ou limite local', async () => {
+  for (const outcome of ['denied', 'failure'] as const) {
+    let localCalls = 0
+    let challengeCalls = 0
+    const result = await protectPublicAuthAction(
+      { scope: 'login', identifier: 'admin@example.test' },
+      {
+        AUTH_LOGIN_HASH_PEPPER: 'pepper-only-for-test',
+        TURNSTILE_SECRET_KEY: 'turnstile-test-key',
+      },
+      {
+        distributedLimiter: {
+          limit: async () => {
+            if (outcome === 'failure')
+              throw new Error('synthetic binding failure')
+            return { success: false }
+          },
+        },
+        limiter: {
+          consume: () => {
+            localCalls += 1
+            return { allowed: true, requiresChallenge: false, retryAfterMs: 0 }
+          },
+        },
+        verifyTurnstile: async () => {
+          challengeCalls += 1
+          return true
+        },
+      },
+    )
+
+    assert.deepEqual(result, {
+      allowed: false,
+      requiresChallenge: false,
+      retryAfterMs: 0,
+    })
+    assert.equal(localCalls, 0)
+    assert.equal(challengeCalls, 0)
+  }
+})
+
 test('desafio não requerido não invoca Turnstile em DEV nem produção', async () => {
   for (const isDevelopment of [true, false]) {
     let turnstileCalls = 0
     const result = await protectPublicAuthAction(
-      { scope: 'login', email: 'admin@example.test' },
+      { scope: 'login', identifier: 'admin@example.test' },
       { AUTH_LOGIN_HASH_PEPPER: 'pepper-only-for-test' },
       {
         isDevelopment,
@@ -134,17 +217,21 @@ test('desafio requerido sem secret ou token falha fechado sem invocar Turnstile'
       attempt < authRateLimitPolicies.login.limit;
       attempt += 1
     ) {
-      await protectPublicAuthAction({ scope: 'login', email }, environment, {
-        limiter,
-        verifyTurnstile: async () => {
-          turnstileCalls += 1
-          return true
+      await protectPublicAuthAction(
+        { scope: 'login', identifier: email },
+        environment,
+        {
+          limiter,
+          verifyTurnstile: async () => {
+            turnstileCalls += 1
+            return true
+          },
         },
-      })
+      )
     }
 
     const blocked = await protectPublicAuthAction(
-      { scope: 'login', email },
+      { scope: 'login', identifier: email },
       environment,
       {
         limiter,
@@ -185,7 +272,7 @@ test('desafio durável forçado exige token válido e rejeita token reutilizado'
   const options = { forceChallenge: true }
 
   const missingToken = await protectPublicAuthAction(
-    { scope: 'login', email: 'admin@example.test' },
+    { scope: 'login', identifier: 'admin@example.test' },
     environment,
     dependencies,
     options,
@@ -199,7 +286,7 @@ test('desafio durável forçado exige token válido e rejeita token reutilizado'
   const validToken = await protectPublicAuthAction(
     {
       scope: 'login',
-      email: 'admin@example.test',
+      identifier: 'admin@example.test',
       turnstileToken: 'valid-test-token',
     },
     environment,
@@ -212,7 +299,7 @@ test('desafio durável forçado exige token válido e rejeita token reutilizado'
   const replay = await protectPublicAuthAction(
     {
       scope: 'login',
-      email: 'admin@example.test',
+      identifier: 'admin@example.test',
       turnstileToken: 'valid-test-token',
     },
     environment,

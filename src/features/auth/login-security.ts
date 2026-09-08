@@ -22,7 +22,8 @@ export function decideLoginAttempt(input: {
   policy: LoginSecurityPolicy
 }): LoginAttemptDecision {
   const state = input.state ?? { consecutiveFailures: 0, cooldownUntil: null }
-  const coolingDown = state.cooldownUntil?.getTime() > input.now.getTime()
+  const coolingDown =
+    (state.cooldownUntil?.getTime() ?? 0) > input.now.getTime()
 
   if (coolingDown) {
     return { allowed: false, requiresChallenge: true, nextState: state }

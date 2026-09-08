@@ -1,6 +1,8 @@
 import { createCloudflareTurnstileVerifier } from './turnstile-adapter.server'
 import { createInMemoryAuthRateLimiter } from './auth-rate-limit'
 import type { AuthRateLimitScope } from './auth-rate-limit'
+import { getCloudflareAuthRateLimiter } from './cloudflare-rate-limit.server'
+import type { CloudflareRateLimitBinding } from './cloudflare-rate-limit.server'
 
 const limiter = createInMemoryAuthRateLimiter()
 
@@ -11,6 +13,10 @@ type PublicAuthProtectionDependencies = {
     secretKey: string
     token: string
   }) => Promise<boolean>
+  distributedLimiter?: CloudflareRateLimitBinding | null
+  resolveDistributedLimiter?: () => Promise<
+    CloudflareRateLimitBinding | undefined
+  >
 }
 
 type PublicAuthProtectionOptions = {
@@ -46,7 +52,7 @@ export async function hashAuthIdentity(
 
 export type PublicAuthProtectionInput = {
   scope: AuthRateLimitScope
-  email: string
+  identifier: string
   turnstileToken?: string
 }
 
@@ -72,9 +78,36 @@ export async function protectPublicAuthAction(
 
   const opaqueIdentity = await hashAuthIdentity(
     input.scope,
-    input.email,
+    input.identifier,
     pepper,
   )
+  const distributedLimiter =
+    dependencies.distributedLimiter === null
+      ? undefined
+      : (dependencies.distributedLimiter ??
+        (await (
+          dependencies.resolveDistributedLimiter ?? getCloudflareAuthRateLimiter
+        )()))
+  if (distributedLimiter) {
+    try {
+      const distributed = await distributedLimiter.limit({
+        key: `${input.scope}:${opaqueIdentity}`,
+      })
+      if (!distributed.success) {
+        return {
+          allowed: false,
+          requiresChallenge: false,
+          retryAfterMs: 0,
+        }
+      }
+    } catch {
+      return {
+        allowed: false,
+        requiresChallenge: false,
+        retryAfterMs: 0,
+      }
+    }
+  }
   const decision = (dependencies.limiter ?? limiter).consume(
     input.scope,
     opaqueIdentity,

@@ -1,5 +1,9 @@
 export type AuthRateLimitScope =
-  'login' | 'sign-up' | 'verification-otp' | 'password-reset'
+  | 'login'
+  | 'sign-up'
+  | 'verification-otp'
+  | 'password-reset'
+  | 'password-reset-completion'
 
 export type AuthRateLimitPolicy = {
   limit: number
@@ -19,6 +23,7 @@ export const authRateLimitPolicies: Readonly<
   'sign-up': { limit: 3, windowMs: 15 * 60 * 1000 },
   'verification-otp': { limit: 3, windowMs: 10 * 60 * 1000 },
   'password-reset': { limit: 3, windowMs: 15 * 60 * 1000 },
+  'password-reset-completion': { limit: 3, windowMs: 15 * 60 * 1000 },
 }
 
 type RateLimitBucket = {
@@ -35,6 +40,16 @@ export function createInMemoryAuthRateLimiter(
   now: () => number = () => Date.now(),
 ) {
   const buckets = new Map<string, RateLimitBucket>()
+  let nextExpiry = Number.POSITIVE_INFINITY
+
+  function pruneExpired(currentTime: number) {
+    if (currentTime < nextExpiry) return
+    nextExpiry = Number.POSITIVE_INFINITY
+    for (const [key, bucket] of buckets) {
+      if (bucket.resetAt <= currentTime) buckets.delete(key)
+      else nextExpiry = Math.min(nextExpiry, bucket.resetAt)
+    }
+  }
 
   return {
     consume(
@@ -43,14 +58,17 @@ export function createInMemoryAuthRateLimiter(
     ): AuthRateLimitDecision {
       const policy = authRateLimitPolicies[scope]
       const currentTime = now()
+      pruneExpired(currentTime)
       const key = `${scope}:${opaqueIdentity}`
       const existing = buckets.get(key)
 
-      if (!existing || existing.resetAt <= currentTime) {
-        buckets.set(key, {
+      if (!existing) {
+        const bucket = {
           count: 1,
           resetAt: currentTime + policy.windowMs,
-        })
+        }
+        buckets.set(key, bucket)
+        nextExpiry = Math.min(nextExpiry, bucket.resetAt)
         return { allowed: true, requiresChallenge: false, retryAfterMs: 0 }
       }
 
@@ -64,6 +82,10 @@ export function createInMemoryAuthRateLimiter(
 
       existing.count += 1
       return { allowed: true, requiresChallenge: false, retryAfterMs: 0 }
+    },
+    activeBucketCount() {
+      pruneExpired(now())
+      return buckets.size
     },
   }
 }

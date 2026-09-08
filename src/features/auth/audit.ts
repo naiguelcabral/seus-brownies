@@ -31,7 +31,7 @@ export type AuthAuditInput = {
     reasonCode?: string
     challengeRequired?: boolean
     provider?: 'neon-auth'
-  }
+  } | null
 }
 
 export function createAuthAuditEvent(input: AuthAuditInput) {

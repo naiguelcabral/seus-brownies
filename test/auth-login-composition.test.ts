@@ -20,6 +20,7 @@ import type { AuthAuditInput } from '../src/features/auth/audit'
 import type { LoginAttemptStore } from '../src/features/auth/login-attempts.server'
 import type { LoginAttemptState } from '../src/features/auth/login-security'
 import type { NeonAuthCredentialsClient } from '../src/features/auth/login-actions'
+import { createTanStackNeonAuthServer } from '../src/features/auth/neon-tanstack-adapter.server'
 
 // Execute the actual callback, without importing runtime configuration or
 // replacing its control flow. This is not a TanStack transport/cookie test.
@@ -67,6 +68,7 @@ function harness(options: {
   state?: LoginAttemptState
   readFails?: boolean
   recordFails?: boolean
+  auditFails?: boolean
   provider?: 'success' | 'rejected' | 'unavailable'
   validToken?: boolean
 }) {
@@ -134,7 +136,11 @@ function harness(options: {
     ) => {
       calls.push('protection')
       return protectPublicAuthAction(
-        { scope, ...data },
+        {
+          scope,
+          identifier: data.email,
+          turnstileToken: data.turnstileToken,
+        },
         environment,
         {
           limiter,
@@ -153,6 +159,9 @@ function harness(options: {
       writer: {
         append: async (event: AuthAuditInput) => {
           calls.push('audit')
+          if (options.auditFails) {
+            throw new Error('synthetic-audit-private-detail')
+          }
           events.push(event)
         },
       },
@@ -297,4 +306,70 @@ test('composição: provedor indisponível tem resposta sanitizada e não grava 
     JSON.stringify({ result, events: fixture.events }),
     /composition@|synthetic-password|synthetic-token|private-detail/,
   )
+})
+
+test('composição: falha de auditoria preserva sucesso e ainda grava o contador', async () => {
+  const fixture = harness({ auditFails: true })
+  assert.deepEqual(await fixture.run(), { ok: true })
+  assert.deepEqual(fixture.calls, [
+    'read',
+    'protection',
+    'provider',
+    'audit',
+    'record',
+  ])
+  assert.equal(fixture.session.issued, true)
+  assert.deepEqual(fixture.events, [])
+  assert.deepEqual(fixture.records, [
+    {
+      identity: await hashAuthIdentity(
+        'login',
+        input.email,
+        environment.AUTH_LOGIN_HASH_PEPPER,
+      ),
+      succeeded: true,
+    },
+  ])
+})
+
+test('adaptador Neon encaminha o cookie do provedor antes de a chamada de login resolver', async (t) => {
+  const cookies: Array<string> = []
+  t.mock.method(
+    globalThis,
+    'fetch',
+    async () =>
+      new Response(JSON.stringify({ user: { id: 'synthetic-user' } }), {
+        status: 200,
+        headers: {
+          'content-type': 'application/json',
+          'set-cookie': 'neon-auth-session=opaque-synthetic; HttpOnly; Path=/',
+        },
+      }),
+  )
+  const auth = createTanStackNeonAuthServer(
+    {
+      baseUrl: 'https://auth.example.invalid/api/auth/',
+      cookieSecret: 'synthetic-cookie-secret-at-least-32-characters',
+    },
+    {
+      getRequest: () =>
+        new Request('https://app.example.invalid/login', {
+          method: 'POST',
+          headers: { origin: 'https://app.example.invalid' },
+        }),
+      appendSetCookie: (value) => cookies.push(value),
+    },
+  )
+
+  const result = await auth.signIn.email({
+    email: input.email,
+    password: input.password,
+  })
+
+  assert.equal(result.error, null)
+  assert.equal(cookies.length, 1)
+  assert.match(cookies[0], /neon-auth-session=opaque-synthetic/)
+  assert.match(cookies[0], /HttpOnly/i)
+  assert.match(cookies[0], /Secure/i)
+  assert.match(cookies[0], /SameSite=Strict/i)
 })

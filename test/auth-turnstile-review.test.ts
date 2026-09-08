@@ -87,7 +87,7 @@ test('desafio durável continua obrigatório com limitador novo e verificador em
     const result = await protectPublicAuthAction(
       {
         scope: 'login',
-        email: 'synthetic@example.invalid',
+        identifier: 'synthetic@example.invalid',
         turnstileToken: 'synthetic-token',
       },
       environment,
@@ -119,7 +119,7 @@ test('desafio durável sem token ou secret bloqueia antes de chamar verificador'
       const result = await protectPublicAuthAction(
         {
           scope: 'login',
-          email: 'synthetic@example.invalid',
+          identifier: 'synthetic@example.invalid',
           turnstileToken: withToken ? 'synthetic-token' : undefined,
         },
         {

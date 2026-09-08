@@ -33,12 +33,10 @@ import {
 } from './password-reset-audit'
 import { createPasswordResetTelemetry } from './password-reset-telemetry.server'
 import { requestTanStackNeonPasswordReset } from './neon-tanstack-adapter.server'
-import { readNeonAuthRuntimeConfig } from './runtime-config.server'
-
-const localPasswordResetRedirectTo =
-  'http://localhost:3000/login/redefinir-senha'
-const hmlPasswordResetRedirectTo =
-  'https://cacau-v1-hml.naiguelcabral.workers.dev/login/redefinir-senha'
+import {
+  readNeonAuthRuntimeConfig,
+  readPasswordResetRedirectTo,
+} from './runtime-config.server'
 
 const loginInput = z.object({
   email: z.string().trim().email().max(320),
@@ -61,14 +59,16 @@ const verifyOtpInput = emailInput.extend({
 
 const passwordResetInput = emailInput
 
-const passwordResetCompletionInput = z.object({
-  token: z.string().trim().min(1).max(2048),
-  newPassword: z.string().min(8).max(128),
-})
-
 const publicAuthInput = z.object({
   turnstileToken: z.string().trim().min(1).max(2048).optional(),
 })
+
+const passwordResetCompletionInput = z
+  .object({
+    token: z.string().trim().min(1).max(2048),
+    newPassword: z.string().min(8).max(128),
+  })
+  .merge(publicAuthInput)
 
 const loginWithProtectionInput = loginInput.merge(publicAuthInput)
 const signUpWithProtectionInput = signUpInput.merge(publicAuthInput)
@@ -76,12 +76,6 @@ const emailWithProtectionInput = emailInput.merge(publicAuthInput)
 const verifyOtpWithProtectionInput = verifyOtpInput.merge(publicAuthInput)
 const passwordResetWithProtectionInput =
   passwordResetInput.merge(publicAuthInput)
-
-function passwordResetRedirectTo() {
-  return import.meta.env.DEV
-    ? localPasswordResetRedirectTo
-    : hmlPasswordResetRedirectTo
-}
 
 async function getAuthAuditWriter() {
   if (!process.env.DATABASE_URL) return null
@@ -107,10 +101,25 @@ async function getPublicAuthProtection(
   options: { forceChallenge?: boolean } = {},
 ) {
   return protectPublicAuthAction(
-    { scope, email: data.email, turnstileToken: data.turnstileToken },
+    {
+      scope,
+      identifier: data.email,
+      turnstileToken: data.turnstileToken,
+    },
     process.env,
     {},
     options,
+  )
+}
+
+async function getPublicAuthProtectionForIdentifier(
+  scope: AuthRateLimitScope,
+  identifier: string,
+  turnstileToken?: string,
+) {
+  return protectPublicAuthAction(
+    { scope, identifier, turnstileToken },
+    process.env,
   )
 }
 
@@ -244,8 +253,14 @@ export const requestPasswordResetFn = createServerFn({ method: 'POST' })
       }
     }
     let config
+    let redirectTo
     try {
       config = readNeonAuthRuntimeConfig(process.env)
+      redirectTo = config
+        ? readPasswordResetRedirectTo(process.env, {
+            development: import.meta.env.DEV,
+          })
+        : null
     } catch {
       telemetry.emit({
         requestId,
@@ -253,7 +268,7 @@ export const requestPasswordResetFn = createServerFn({ method: 'POST' })
       })
       return { ok: false, message: passwordResetRequestMessage }
     }
-    if (!config) {
+    if (!config || !redirectTo) {
       telemetry.emit({
         requestId,
         stage: 'runtime_config_missing',
@@ -278,11 +293,13 @@ export const requestPasswordResetFn = createServerFn({ method: 'POST' })
       execute: () =>
         requestTanStackNeonPasswordReset(config, {
           email: data.email,
-          redirectTo: passwordResetRedirectTo(),
+          redirectTo,
         }),
       getOutcome: (result) => (result.ok ? 'success' : 'failure'),
       getFailureReasonCode: (result) =>
-        result.ok ? undefined : result.reasonCode,
+        !result.ok && result.reasonCode !== 'provider_success'
+          ? result.reasonCode
+          : undefined,
     })
     return {
       ok: isAuditedPasswordResetSuccessful(audit),
@@ -293,6 +310,18 @@ export const requestPasswordResetFn = createServerFn({ method: 'POST' })
 export const resetPasswordWithTokenFn = createServerFn({ method: 'POST' })
   .validator(passwordResetCompletionInput)
   .handler(async ({ data }) => {
+    const protection = await getPublicAuthProtectionForIdentifier(
+      'password-reset-completion',
+      data.token,
+      data.turnstileToken,
+    )
+    if (!protection.allowed) {
+      return {
+        ok: false,
+        message: invalidPasswordResetMessage,
+        requiresChallenge: protection.requiresChallenge,
+      }
+    }
     const auth = createConfiguredNeonAuthServer(process.env)
     if (!auth) {
       return { ok: false, message: invalidPasswordResetMessage }

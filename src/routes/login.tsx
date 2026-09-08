@@ -78,12 +78,20 @@ function LoginPage() {
   const [pending, setPending] = useState(false)
   const [requiresChallenge, setRequiresChallenge] = useState(false)
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null)
+  const [challengeAttempt, setChallengeAttempt] = useState(0)
   const challengePending = requiresChallenge && !turnstileToken
 
-  function captureChallenge(result: { requiresChallenge?: boolean }) {
-    const required = result.requiresChallenge === true
+  function captureChallenge(result: object) {
+    const required =
+      'requiresChallenge' in result && result.requiresChallenge === true
     setRequiresChallenge(required)
     if (!required) setTurnstileToken(null)
+  }
+
+  function readMessage(result: object, fallback: string) {
+    return 'message' in result && typeof result.message === 'string'
+      ? result.message
+      : fallback
   }
 
   function changeMode(
@@ -99,6 +107,7 @@ function LoginPage() {
     return (
       <TurnstileChallenge
         onToken={setTurnstileToken}
+        resetKey={challengeAttempt}
         requiresChallenge={requiresChallenge}
         siteKey={turnstileSiteKey}
       />
@@ -130,13 +139,23 @@ function LoginPage() {
             })
       if (!result.ok) {
         captureChallenge(result)
-        setMessage(result.message)
+        setMessage(
+          readMessage(
+            result,
+            'Não foi possível iniciar a sessão. Tente novamente.',
+          ),
+        )
         return
       }
       captureChallenge(result)
       if (mode === 'sign-up') {
         setMode('verify-email')
-        setMessage(result.message)
+        setMessage(
+          readMessage(
+            result,
+            'Conta criada. Verifique seu e-mail para continuar.',
+          ),
+        )
         return
       }
       const session = await getSession()
@@ -157,6 +176,7 @@ function LoginPage() {
     } catch {
       setMessage('Não foi possível iniciar a sessão. Tente novamente.')
     } finally {
+      if (turnstileToken) setChallengeAttempt((attempt) => attempt + 1)
       setPending(false)
     }
   }
@@ -174,11 +194,12 @@ function LoginPage() {
       setMessage(
         result.ok
           ? 'E-mail verificado. Sua conta não terá acesso operacional até receber uma permissão do Cacau.'
-          : result.message,
+          : readMessage(result, 'Não foi possível verificar o código.'),
       )
     } catch {
       setMessage('Não foi possível verificar o código. Tente novamente.')
     } finally {
+      if (turnstileToken) setChallengeAttempt((attempt) => attempt + 1)
       setPending(false)
     }
   }
@@ -192,10 +213,13 @@ function LoginPage() {
         data: { email, turnstileToken: turnstileToken ?? undefined },
       })
       captureChallenge(result)
-      setMessage(result.message)
+      setMessage(
+        readMessage(result, 'Não foi possível solicitar um novo código.'),
+      )
     } catch {
       setMessage('Não foi possível solicitar um novo código. Tente novamente.')
     } finally {
+      if (turnstileToken) setChallengeAttempt((attempt) => attempt + 1)
       setPending(false)
     }
   }
@@ -212,12 +236,18 @@ function LoginPage() {
         data: { email, turnstileToken: turnstileToken ?? undefined },
       })
       captureChallenge(result)
-      setMessage(result.message)
+      setMessage(
+        readMessage(
+          result,
+          'Se houver uma conta compatível, enviaremos instruções para o e-mail informado.',
+        ),
+      )
     } catch {
       setMessage(
         'Se houver uma conta compatível, enviaremos instruções para o e-mail informado.',
       )
     } finally {
+      if (turnstileToken) setChallengeAttempt((attempt) => attempt + 1)
       setPending(false)
     }
   }
