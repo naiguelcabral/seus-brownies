@@ -1,5 +1,18 @@
 # Log sanitizado de autonomia — Cacau v1
 
+## Rodada manual local de 7 de setembro de 2026
+
+- A07-R2: seis testes individuais novos verdes; suíte local de 37 arquivos
+  verde; lint, Prettier direcionado e `git diff --check` verdes; revisão de
+  `d55f1fe` documenta limites da evidência. Sem alteração de
+  aplicação, build ou acesso externo. Commit local previsto:
+  `test(auth): cover durable challenge boundaries and failures`.
+- Checkpoint A07-R2 bloqueado: `git add` retornou 128, impossibilidade de
+  criar `.git/index.lock` por `Read-only file system`. Rodada interrompida
+  conforme a missão; zero commits novos, zero pacotes integralmente fechados,
+  um pacote implementado e validado aguardando checkpoint. Sem escalada,
+  repetição do comando ou início de outro pacote. Arquivos preservados.
+
 Este é o histórico resumido de ciclos. A saída JSONL bruta fica apenas em
 `.codex-local/autonomy/`, ignorada pelo Git, e não deve conter `.env`, credenciais,
 tokens ou URLs privadas.

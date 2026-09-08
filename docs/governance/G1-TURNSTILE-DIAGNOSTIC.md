@@ -79,8 +79,9 @@ assim, a quinta falha também ativa o desafio na resposta ao cliente.
 
 ### Servidor para cliente
 
-1. `loginWithEmailPassword` chama `protectPublicAuthAction()` antes do Neon
-   Auth e do store durável.
+1. `loginWithEmailPassword` consulta primeiro o store durável; somente quando
+   a avaliação permite prosseguir chama `protectPublicAuthAction()`, ainda
+   antes do Neon Auth (ordem confirmada no diff de `d55f1fe`).
 2. Se a proteção local ou a avaliação durável negar a tentativa, o handler
    responde com seu respectivo `requiresChallenge`.
 3. Uma falha comum antes da quinta ainda retorna somente `ok: false` e
@@ -166,3 +167,32 @@ Antes de uma nova tentativa A07, exigir decisão humana para:
 Sem esses critérios, A07 permanece bloqueada. A recomendação de próximo pacote
 é revisar e publicar esta pequena correção separadamente; só depois a
 homologação integrada poderá comprovar o comportamento determinístico.
+
+## Revisão local A07-R2 — limites e falhas dos componentes
+
+Seis testes adicionais em `test/auth-turnstile-review.test.ts` cobrem leituras
+independentes no milissegundo anterior, exato e posterior à expiração; rejeição
+da leitura persistida; nova falha incrementando para seis e renovando cooldown;
+sucesso zerando contador seguido de nova falha; verificador falso ou lançando
+erro com limitador novo; e ausência de token/secret sem chamar o verificador.
+Valores, relógio e persistência são sintéticos. Nenhum serviço foi consultado.
+
+A quinta falha e token válido/reutilizado já têm testes nos arquivos originais.
+A inspeção confirma que cooldown ativo retorna antes do verificador no handler,
+mas os testes novos exercitam componentes: não comprovam cookies, integração
+TanStack, persistência real ou rejeição real do replay pelo Turnstile.
+
+Lacunas para continuação da revisão, sem mudança de política:
+
+- `store.record` ocorre depois da chamada ao provedor. Uma rejeição nessa
+  gravação impede o retorno normal do handler, mas não comprova reversão de
+  eventual sessão já emitida. Falta teste de composição com provedor e store
+  simulados; não declarar fail-closed de sessão por esses testes de componentes.
+- O sinal após falha usa o snapshot lido antes do provedor, enquanto a gravação
+  incrementa atomicamente no banco. Interleavings concorrentes precisam de
+  decisão explícita; esta revisão não inventa regra de concorrência/reset.
+- A leitura durável propaga a exceção. A sanitização no transporte da Server
+  Function e falhas de gravação ainda requerem validação específica.
+- Auditoria de login preserva o resultado já estabelecido quando o writer
+  falha, conforme implementação e A04. Não confundir essa política com o
+  bloqueio de leitura do contador ou com a auditoria obrigatória de reset.

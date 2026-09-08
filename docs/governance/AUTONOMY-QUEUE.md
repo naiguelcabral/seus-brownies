@@ -32,6 +32,17 @@ seleção de pacotes pelo controlador. Ela não substitui os gates de
 
 ## Regra de seleção
 
+### Extensão autorizada para a rodada manual local
+
+| ID     | Pacote                                             | Tipo       | Estado  | Escopo e saída esperada                                                                                                |
+| ------ | -------------------------------------------------- | ---------- | ------- | ---------------------------------------------------------------------------------------------------------------------- |
+| A07-R2 | Revisar limites e falhas dos componentes Turnstile | codigo     | blocked | Implementado e validado; commit impedido por `.git` somente leitura. Seis testes e lacunas de composição documentados. |
+| A07-R3 | Validar composição de login e falha de gravação    | codigo     | ready   | Provedor/store simulados; avaliar sessão já emitida e sanitização sem definir política concorrente.                    |
+| A11    | Comprovar viabilidade de build local sem segredos  | documental | ready   | Inspeção das dependências instaladas e condições de isolamento; não executar build sem prova sintética.                |
+
+Esses pacotes decorrem da missão manual de até 20 pacotes. A07 continua
+`blocked`; A08–A10 continuam `needs-human`. Não há promoção de nível permanente.
+
 O controlador escolhe somente o primeiro pacote com estado exatamente `ready`.
 Antes de editar, o agente registra no handoff objetivo, não objetivos, arquivos
 previstos, critérios de aceite e comandos de validação. Um pacote não pode

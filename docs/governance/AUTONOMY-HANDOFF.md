@@ -2,6 +2,55 @@
 
 Atualizado em 7 de setembro de 2026.
 
+## Rodada manual local — contrato A07-R2
+
+- Autorização: missão local de até 20 pacotes; não promove autonomia permanente.
+- Branch confirmada: `codex/autonomy-runner`; início limpo em `d55f1fe`,
+  zero commits à frente da referência upstream local, sem consultar remoto.
+- Objetivo: revisão independente de A07-R1 e testes adicionais de limites e
+  falhas dos componentes de cooldown e desafio, com dependências simuladas.
+- Vínculo: G1, requisito transversal de autenticação citado nos próximos passos
+  de `docs/MVP-01-FUNDACAO.md`. Esse documento também contém MVP-02 (catálogo),
+  MVP-03 (histórico), MVP-04 (prévia de produção) e MVP-05 (produção real).
+  Não existe equivalência numérica MVP/G: G2 consolida custos/FIFO; G3 amplia
+  os relatórios operacionais; G6 evolui a produção do MVP-05; G4/G5/G7 tratam
+  integrações e dependências futuras; G8 governa a execução transversal.
+- Arquivos previstos: novo teste `test/auth-turnstile-review.test.ts`,
+  diagnóstico Turnstile, fila, log e este handoff.
+- Dependências: A07-R1 local; Node, tsx, Prettier e ESLint instalados.
+- Aceite: testes determinísticos dos componentes verdes, suíte local segura,
+  lint, Prettier direcionado e diff revisado; registrar lacunas do handler e
+  política concorrente sem inventar decisões. Nenhuma mudança de aplicação;
+  build não exigido pelo contrato de testes conforme matriz do runbook.
+- Comandos: binários locais diretos, ambiente mínimo; sem npm/npx com download,
+  build convencional, navegador, controlador real ou serviços externos.
+- A07 permanece bloqueado: build seguro/publicação autorizados, identidade
+  adequada e método de validação real ainda necessários.
+- Uso/reset: não disponíveis nesta execução.
+
+### Resultado A07-R2 — checkpoint bloqueado
+
+- Seis casos individuais novos passaram por execução direta; a suíte agregada
+  passou com 37 arquivos (o runner informa arquivos, não o total individual).
+- Nenhuma alteração de aplicação. Diagnóstico corrigido quanto à ordem real
+  do handler e acrescido das lacunas de composição/persistência/concorrência.
+- Comando de ambiente mínimo com PATH fixo não encontrou Node; usar o PATH
+  corrente com `env -i` resolveu, sem carregar arquivos de ambiente.
+- Lint, formatação e revisão final registrados no log ao fechar o pacote.
+- Parada obrigatória: `git add` falhou ao criar `.git/index.lock` com
+  `Read-only file system`. Nenhum commit foi criado e nenhuma permissão
+  ampliada foi solicitada. A07-R2 está `blocked` por checkpoint, apesar das
+  verificações verdes; nenhum pacote seguinte foi iniciado.
+- Próximo passo exato: em uma execução com escrita de Git já permitida,
+  revisar os sete arquivos desta rodada, executar Prettier direcionado e
+  `git diff --check`, atualizar A07-R2 e criar o commit local descritivo.
+  Só depois retomar A07-R3 ou A11. Não executar controlador, ligar/desligar,
+  sincronização ou build convencional para resolver este bloqueio.
+- Arquivos preservados: teste novo e os documentos `AUTONOMY-HANDOFF.md`,
+  `AUTONOMY-LOG.md`, `AUTONOMY-QUEUE.md`, `G1-TURNSTILE-DIAGNOSTIC.md`,
+  `PROJECT-STATUS.md` e `ROADMAP-CODEX.md`.
+- Os registros abaixo são da sessão anterior e não substituem este fechamento.
+
 ## Estado atual
 
 - pacote ativo: nenhum; A01, A02, A03, A04, A05 e A06 concluídos; A07 bloqueado;
