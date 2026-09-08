@@ -2,10 +2,10 @@
 
 Atualizado em 8 de setembro de 2026.
 
-## Missão `codex/audit-remediation` — runbook AR-E3 pronto para publicação
+## Missão `codex/audit-remediation` — dependências analisadas e CI verde
 
 - Branch: `codex/audit-remediation`; último checkpoint publicado:
-  `8c80bbf docs(governance): record ci remediation validation`.
+  `7b07629 docs(governance): record expenses ci validation`.
 - Pacotes A/B/C implementados nesta missão: proteção de checkpoint e build
   isolado, sanitização de conversas, hardening de auth e experiência do
   Funcionário, idempotência operacional, correção FIFO, autoria/auditoria e
@@ -21,7 +21,7 @@ Atualizado em 8 de setembro de 2026.
 - Build no HEAD limpo: `VITE_TURNSTILE_SITE_KEY=1x00000000000000000000AA npm run build:hml`
   passou para cliente e SSR. O aviso de secrets operacionais ausentes é
   esperado nesta prova isolada e não inclui secret no build.
-- A CI `34268997522` passou para o checkpoint `8c80bbf`, confirmando suíte,
+- A CI `34278599814` passou para o checkpoint `7b07629`, confirmando suíte,
   lint, typecheck e build isolado. Não aplicar migrations, não acessar HML ou
   produção e não executar DESLIGARTUDO.
 - Gates: aplicação das migrations em banco descartável, escolha de semântica
@@ -54,6 +54,11 @@ Atualizado em 8 de setembro de 2026.
   branch isolada de qualquer corte na ativa, define ensaio descartável,
   rollback, observabilidade e retenção sem criar configuração externa. Restam
   decisão de RPO/RTO, responsáveis, cópia independente e ensaio autorizado.
+- AR-E4 confirmou 13 vulnerabilidades no `npm audit` completo: cinco altas e
+  oito moderadas. A atualização simples de `js-yaml` exige revisão do lockfile;
+  as propostas para as cadeias Drizzle e Wrangler usam `--force` e versões
+  incompatíveis. Nenhuma dependência foi atualizada. Próximo pacote só deve
+  tocar versões após decidir a estratégia e preparar validação completa.
 
 ## Retomada local — checkpoint reconciliado e contrato A07-R3
 

@@ -79,6 +79,10 @@ Este documento é a referência canônica de alto nível para o estado atual do 
   estão implementados sobre a Server Function já autorizada, com estados de
   carregamento/erro. O build isolado e a CI `34270184144` desse checkpoint
   passaram.
+- A CI `34278599814` também passou no checkpoint publicado mais recente, com
+  suíte, lint, typecheck e build HML isolado. A análise completa de dependências
+  encontrou 13 vulnerabilidades (cinco altas); nenhuma atualização automática
+  foi aceita, pois as cadeias Drizzle e Wrangler só têm proposta incompatível.
 - O runbook de resiliência operacional documenta backup, restauração em branch
   descartável, RPO/RTO, rollback, observabilidade e retenção. Não há estratégia
   externa configurada nem ensaio de restauração: esses são gates humanos.

@@ -177,6 +177,9 @@ A definição de margem realizada e vínculo venda-lote é decisão de negócio/
 - [ ] Logs estruturados.
 - [ ] Monitoramento de falhas.
 - [ ] Alertas de erro e disponibilidade.
+- [!] Revisar atualização de dependências auditadas: `npm audit` confirmou 13
+  vulnerabilidades; a correção automática de Drizzle/Wrangler exige versões
+  incompatíveis e depende de estratégia aprovada e validação completa.
 - [ ] Deploy definitivo somente após aprovação humana.
 
 ## Fase G8 — Autonomia progressiva do Codex

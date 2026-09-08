@@ -334,3 +334,22 @@ humanas obrigatórias.
 
 Estado: implementado documentalmente e pendente de ensaio autorizado em branch
 descartável, decisão de RPO/RTO, cópia independente e configuração externa.
+
+## AR-E4 — análise de dependências sem atualização automática (G0/G7)
+
+O `npm audit` completo de 8 de setembro encontrou 13 vulnerabilidades: cinco
+altas e oito moderadas. A alta em `js-yaml@4.3.1` é transitiva de TanStack e
+ESLint; a alta em `sharp` é transitiva de `wrangler`/Miniflare. A cadeia
+moderada de `esbuild@0.18.20` vem de `drizzle-kit` por
+`@esbuild-kit/esm-loader`; ela também alcança as dependências de autenticação.
+
+O comando propõe corrigir apenas `js-yaml` sem forçar versões. Para a cadeia de
+Drizzle e a de Wrangler, a única proposta automática usa `--force` e troca
+versões diretas de forma incompatível. Não foi executado `npm audit fix`, não
+houve alteração de `package-lock.json` e não se assume que o rebaixamento
+sugerido pelo npm seja seguro. A atualização precisa de revisão de compatibilidade
+e de um checkpoint próprio, com a suíte, lint, tipos e build isolado.
+
+Estado: achado confirmado; correção de `js-yaml` aguarda revisão do diff de
+lockfile e as cadeias Drizzle/Wrangler aguardam decisão de atualização. A
+análise não altera o estado de homologação nem substitui testes de runtime.
