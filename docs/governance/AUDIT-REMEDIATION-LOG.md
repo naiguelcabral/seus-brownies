@@ -27,6 +27,21 @@ diff sem erros. Build sintético prova archive sem arquivos de ambiente locais,
 inputs explícitos, diretórios de perfil vazios e rejeição de HEAD sensível.
 Build real ainda pendente do checkpoint limpo. Alterações não homologadas.
 
+Checkpoint `b5471fa`: build real isolado de cliente/SSR passou com chave pública
+de teste e sem secrets. Aviso esperado de secrets ausentes; nenhum deploy.
+AR-A1/A2/A3 validados localmente; publicação/homologação continuam pendentes.
+
+## AR-A4/A5 — conversas e reconciliação (G0/G8)
+
+Confirmados vazamentos sintéticos de Bearer e postgresql. Corrigida ordem para
+remover estruturas completas antes das atribuições; adicionados cookies,
+Basic, URLs credenciadas e valores entre aspas. Quinze formatos e sanitização
+repetida passaram. Um teste inicialmente falhou por perda de conteúdo adjacente
+na segunda passagem e foi corrigido. Captura bruta agora usa umask 077.
+Contrato e revisão preparada do PR2 em LOCAL-CONVERSATION-PRIVACY.md.
+Nenhuma conversa/log existente lido ou reprocessado. Lint direcionado verde.
+Estado: implementado e validado localmente; aguardando revisão/publicação.
+
 Consulta remota: PR #2 aberto, destino `g1-auth-adr`, origem
 `feat/codex-conversation-memory`. API não listou workflows nem webhooks.
 Integrações de Git por aplicativo externo ainda não foram comprovadas ausentes;

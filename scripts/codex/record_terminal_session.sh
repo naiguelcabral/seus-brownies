@@ -3,6 +3,7 @@
 # Abre um Bash filho registrado localmente. Execute-o de forma explícita para
 # não capturar/recursar sobre o shell que iniciou LIGARTUDO.
 set -euo pipefail
+umask 077
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 LOG_DIR="$ROOT_DIR/.codex-local/terminal/sessions"

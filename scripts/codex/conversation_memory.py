@@ -17,18 +17,25 @@ LOCAL_CODEX_DIR = ROOT_DIR / ".codex-local"
 MAX_MEMORY_CHARS = 60_000
 
 SENSITIVE_ASSIGNMENT = re.compile(
-    r"(?i)(\b(?:authorization|cookie|database_url|api[_-]?key|secret|senha|password|token|cloudflare[_-]?token|neon(?:[_-]?(?:url|credential|token))?)\b\s*[:=]\s*)([^\s,;]+)"
+    r'''(?i)(\b(?:database_url|api[_-]?key|secret|senha|password|token|cloudflare[_-]?token|neon(?:[_-]?(?:url|credential|token))?)\b["']?\s*[:=]\s*)(\[REDACTED\]|"[^"\r\n]*"|'[^'\r\n]*'|[^\s,;]+)'''
 )
-KNOWN_TOKEN = re.compile(r"(?i)\b(?:sk-[a-z0-9_-]{16,}|gh[pousr]_[a-z0-9]{20,}|cf[a-z0-9_-]{20,}|bearer\s+[a-z0-9._~+/-]{16,})\b")
-URL_CREDENTIAL = re.compile(r"(?i)(https?://[^\s:/]+:)([^@\s]+)(@)")
+AUTH_HEADER = re.compile(
+    r'''(?im)(\b(?:authorization|proxy-authorization|cookie|set-cookie)\b["']?\s*[:=]\s*)(\[REDACTED\]|"[^"\r\n]*"|'[^'\r\n]*'|[^\r\n]+)'''
+)
+KNOWN_TOKEN = re.compile(r"(?i)\b(?:sk-[a-z0-9_-]{16,}|gh[pousr]_[a-z0-9]{20,}|cf[a-z0-9_-]{20,}|bearer\s+[a-z0-9._~+/=-]+)")
+URL_CREDENTIAL = re.compile(r'''(?i)\b[a-z][a-z0-9+.-]*://[^\s<>"'`/]+@[^\s<>"'`]*''')
+DATABASE_URI = re.compile(r'''(?i)\b(?:postgres(?:ql)?|mysql|rediss?|amqps?)://[^\s<>"'`]+''')
 PRIVATE_KEY = re.compile(r"(?is)-----BEGIN [A-Z ]*PRIVATE KEY-----.*?-----END [A-Z ]*PRIVATE KEY-----")
 
 
 def redact(text: str) -> str:
-    text = SENSITIVE_ASSIGNMENT.sub(r"\1[REDACTED]", text)
+    # Whole structures first: redacting just 'Bearer' would orphan its token.
+    text = PRIVATE_KEY.sub("[REDACTED PRIVATE KEY]", text)
+    text = DATABASE_URI.sub("[REDACTED]", text)
+    text = URL_CREDENTIAL.sub("[REDACTED]", text)
+    text = AUTH_HEADER.sub(r"\1[REDACTED]", text)
     text = KNOWN_TOKEN.sub("[REDACTED]", text)
-    text = URL_CREDENTIAL.sub(r"\1[REDACTED]\3", text)
-    return PRIVATE_KEY.sub("[REDACTED PRIVATE KEY]", text)
+    return SENSITIVE_ASSIGNMENT.sub(r"\1[REDACTED]", text)
 
 
 def readable(value: Any) -> str:
