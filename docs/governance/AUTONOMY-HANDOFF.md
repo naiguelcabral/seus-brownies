@@ -2,7 +2,7 @@
 
 Atualizado em 8 de setembro de 2026.
 
-## Missão `codex/audit-remediation` — pacote AR-D2 em validação final
+## Missão `codex/audit-remediation` — runbook AR-E3 pronto para publicação
 
 - Branch: `codex/audit-remediation`; último checkpoint publicado:
   `8c80bbf docs(governance): record ci remediation validation`.
@@ -48,8 +48,8 @@ Atualizado em 8 de setembro de 2026.
   protegida para filtrar descrição/categoria e período, contar e paginar 20
   itens em ordem estável. A rota conserva filtros na URL e inclui estados de
   carregamento, erro, vazio e paginação acessível. Testes de contrato/paginação,
-  lint, tipos, Prettier, `git diff --check` e build HML isolado passaram.
-  Próximo passo: registrar esta evidência, publicar e observar CI.
+  lint, tipos, Prettier, `git diff --check` e build HML isolado passaram. A CI
+  `34270184144` confirmou o pacote.
 - AR-E3 concluído documentalmente. O novo runbook separa recuperação por
   branch isolada de qualquer corte na ativa, define ensaio descartável,
   rollback, observabilidade e retenção sem criar configuração externa. Restam

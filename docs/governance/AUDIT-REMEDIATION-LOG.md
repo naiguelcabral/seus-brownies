@@ -320,8 +320,8 @@ Não há mudança na criação de despesas, no cálculo monetário, na permissã
 dados existentes. Testes cobrem o limite/ajuste de página e o contrato da
 Server Function protegida e da rota. Build isolado e CI desse novo checkpoint
 foram separados: o build passou em HEAD limpo com chave pública sintética e o
-aviso de secrets operacionais ausentes esperado; a CI do novo checkpoint ainda
-aguarda publicação.
+aviso de secrets operacionais ausentes esperado. A CI `34270184144` no
+checkpoint `7e10f0d` passou integralmente.
 
 ## AR-E3 — runbook de resiliência operacional (G7)
 

@@ -77,8 +77,8 @@ Este documento é a referência canônica de alto nível para o estado atual do 
   o build isolado.
 - Busca textual, período e paginação de 20 itens para o histórico de despesas
   estão implementados sobre a Server Function já autorizada, com estados de
-  carregamento/erro. O build isolado desse checkpoint passou; a validação remota
-  ainda é pendente.
+  carregamento/erro. O build isolado e a CI `34270184144` desse checkpoint
+  passaram.
 - O runbook de resiliência operacional documenta backup, restauração em branch
   descartável, RPO/RTO, rollback, observabilidade e retenção. Não há estratégia
   externa configurada nem ensaio de restauração: esses são gates humanos.
