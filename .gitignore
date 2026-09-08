@@ -4,6 +4,15 @@ dist
 dist-ssr
 *.local
 .env
+.env.*
+!.env.example
+.dev.vars*
+*.pem
+*.key
+*.p12
+*.pfx
+.npmrc
+.netrc
 .neon
 .nitro
 .tanstack
