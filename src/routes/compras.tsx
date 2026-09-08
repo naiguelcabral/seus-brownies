@@ -4,6 +4,7 @@ import { createFileRoute, useRouter } from '@tanstack/react-router'
 import { useServerFn } from '@tanstack/react-start'
 
 import { ManagementLayout } from '#/components/ManagementLayout'
+import { hasPermission } from '#/features/auth/authorization'
 import {
   createPurchase,
   listPurchasableProducts,
@@ -11,10 +12,16 @@ import {
 } from '#/features/operations/functions'
 
 export const Route = createFileRoute('/compras')({
-  loader: async () => ({
-    products: await listPurchasableProducts(),
-    purchases: await listPurchases(),
-  }),
+  loader: async ({ context }) => {
+    const canReadHistory = Boolean(
+      context.appRole && hasPermission(context.appRole, 'purchases:read'),
+    )
+    return {
+      products: await listPurchasableProducts(),
+      purchases: canReadHistory ? await listPurchases() : [],
+      canReadHistory,
+    }
+  },
   component: PurchasesPage,
 })
 
@@ -22,7 +29,7 @@ type Item = { productId: string; quantity: string; unitCost: string }
 const emptyItem = (): Item => ({ productId: '', quantity: '', unitCost: '' })
 
 function PurchasesPage() {
-  const { products, purchases } = Route.useLoaderData()
+  const { products, purchases, canReadHistory } = Route.useLoaderData()
   const router = useRouter()
   const save = useServerFn(createPurchase)
   const [supplierName, setSupplierName] = useState('')
@@ -95,7 +102,9 @@ function PurchasesPage() {
           <div className="border-b border-[#f0e5dc] px-5 py-4">
             <h2 className="font-bold">Compras recentes</h2>
           </div>
-          {purchases.length ? (
+          {!canReadHistory ? (
+            <Empty text="Seu acesso permite registrar compras, sem consultar o histórico financeiro." />
+          ) : purchases.length ? (
             <ul className="divide-y divide-[#f0e5dc]">
               {purchases.map((purchase) => (
                 <li

@@ -16,6 +16,7 @@ export const getSessionStatus = createServerFn({ method: 'GET' }).handler(
       authenticated: principal?.emailVerified === true,
       sessionPresent: Boolean(session?.data?.user),
       emailVerified: session?.data?.user.emailVerified === true,
+      role: principal?.role ?? null,
     }
   },
 )

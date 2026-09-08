@@ -4,6 +4,7 @@ import { createFileRoute, useRouter } from '@tanstack/react-router'
 import { useServerFn } from '@tanstack/react-start'
 
 import { ManagementLayout } from '#/components/ManagementLayout'
+import { hasPermission } from '#/features/auth/authorization'
 import {
   createProduct,
   listCategories,
@@ -39,10 +40,19 @@ const typeLabels: Record<ProductType, string> = {
   finished_product: 'Produto final',
 }
 
-const unitLabels = { g: 'g', kg: 'kg', ml: 'ml', l: 'l', m: 'm', unit: 'unidade' }
+const unitLabels = {
+  g: 'g',
+  kg: 'kg',
+  ml: 'ml',
+  l: 'l',
+  m: 'm',
+  unit: 'unidade',
+}
 
 function ProductsPage() {
   const { products, categories } = Route.useLoaderData()
+  const { appRole } = Route.useRouteContext()
+  const canWrite = Boolean(appRole && hasPermission(appRole, 'catalog:write'))
   const router = useRouter()
   const create = useServerFn(createProduct)
   const update = useServerFn(updateProduct)
@@ -85,7 +95,13 @@ function ProductsPage() {
       title="Produtos"
       description="Cadastre ingredientes, embalagens e produtos finais. Nenhum item é excluído: você pode desativá-lo quando não fizer mais parte da operação."
     >
-      <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_390px]">
+      <div
+        className={
+          canWrite
+            ? 'grid gap-6 xl:grid-cols-[minmax(0,1fr)_390px]'
+            : 'grid gap-6'
+        }
+      >
         <section className="overflow-hidden rounded-2xl border border-[#ecdfd4] bg-white">
           <div className="flex items-center justify-between border-b border-[#f0e5dc] px-5 py-4">
             <h2 className="font-bold">Produtos cadastrados</h2>
@@ -95,7 +111,7 @@ function ProductsPage() {
           </div>
           {products.length === 0 ? (
             <p className="p-6 text-sm text-[#846859]">
-              Nenhum produto cadastrado. Use o formulário ao lado para começar.
+              Nenhum produto cadastrado.
             </p>
           ) : (
             <div className="overflow-x-auto">
@@ -134,26 +150,30 @@ function ProductsPage() {
                       <td className="px-5 py-4">
                         <div className="flex justify-end gap-2">
                           <Status active={product.isActive} />
-                          <button
-                            type="button"
-                            onClick={() => setEditing(product)}
-                            className="rounded-lg border border-[#e6d4c5] p-2 text-[#72462f] hover:bg-[#fff8f2]"
-                            aria-label={`Editar ${product.name}`}
-                          >
-                            <Pencil size={15} />
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => toggle(product)}
-                            className="rounded-lg border border-[#e6d4c5] p-2 text-[#72462f] hover:bg-[#fff8f2]"
-                            aria-label={
-                              product.isActive
-                                ? `Desativar ${product.name}`
-                                : `Ativar ${product.name}`
-                            }
-                          >
-                            <Power size={15} />
-                          </button>
+                          {canWrite ? (
+                            <>
+                              <button
+                                type="button"
+                                onClick={() => setEditing(product)}
+                                className="rounded-lg border border-[#e6d4c5] p-2 text-[#72462f] hover:bg-[#fff8f2]"
+                                aria-label={`Editar ${product.name}`}
+                              >
+                                <Pencil size={15} />
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => toggle(product)}
+                                className="rounded-lg border border-[#e6d4c5] p-2 text-[#72462f] hover:bg-[#fff8f2]"
+                                aria-label={
+                                  product.isActive
+                                    ? `Desativar ${product.name}`
+                                    : `Ativar ${product.name}`
+                                }
+                              >
+                                <Power size={15} />
+                              </button>
+                            </>
+                          ) : null}
                         </div>
                       </td>
                     </tr>
@@ -163,14 +183,16 @@ function ProductsPage() {
             </div>
           )}
         </section>
-        <ProductForm
-          key={editing?.id ?? 'new'}
-          product={editing}
-          categories={categories}
-          onCancel={() => setEditing(null)}
-          onSave={save}
-          notice={notice}
-        />
+        {canWrite ? (
+          <ProductForm
+            key={editing?.id ?? 'new'}
+            product={editing}
+            categories={categories}
+            onCancel={() => setEditing(null)}
+            onSave={save}
+            notice={notice}
+          />
+        ) : null}
       </div>
     </ManagementLayout>
   )
