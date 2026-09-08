@@ -73,12 +73,15 @@ Este documento é a referência canônica de alto nível para o estado atual do 
   escopo atual.
 - A primeira CI remota falhou porque o modo local `--dry-run` do controlador
   exigia Codex CLI sem utilizá-lo. A correção e sua reprodução sem CLI estão
-  foram aprovadas na CI `34268997522`, que também confirmou a exportação CSV e
+  aprovadas na CI `34268997522`, que também confirmou a exportação CSV e
   o build isolado.
 - Busca textual, período e paginação de 20 itens para o histórico de despesas
   estão implementados sobre a Server Function já autorizada, com estados de
   carregamento/erro. O build isolado desse checkpoint passou; a validação remota
   ainda é pendente.
+- O runbook de resiliência operacional documenta backup, restauração em branch
+  descartável, RPO/RTO, rollback, observabilidade e retenção. Não há estratégia
+  externa configurada nem ensaio de restauração: esses são gates humanos.
 
 - Rodada manual local de 7 de setembro: seis casos individuais adicionais
   de cooldown/desafio passaram; suíte de 37 arquivos e lint verdes. A07-R2

@@ -50,6 +50,10 @@ Atualizado em 8 de setembro de 2026.
   carregamento, erro, vazio e paginação acessível. Testes de contrato/paginação,
   lint, tipos, Prettier, `git diff --check` e build HML isolado passaram.
   Próximo passo: registrar esta evidência, publicar e observar CI.
+- AR-E3 concluído documentalmente. O novo runbook separa recuperação por
+  branch isolada de qualquer corte na ativa, define ensaio descartável,
+  rollback, observabilidade e retenção sem criar configuração externa. Restam
+  decisão de RPO/RTO, responsáveis, cópia independente e ensaio autorizado.
 
 ## Retomada local — checkpoint reconciliado e contrato A07-R3
 

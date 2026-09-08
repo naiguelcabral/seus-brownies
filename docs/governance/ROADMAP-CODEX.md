@@ -170,8 +170,10 @@ A definição de margem realizada e vínculo venda-lote é decisão de negócio/
   rate limit distribuído e demais gates de G1 seguem pendentes.
 - [ ] Definir ambientes development/staging/production formalmente.
 - [ ] Configurar secrets por ambiente.
-- [ ] Definir estratégia de backup Neon.
-- [ ] Definir recuperação e RPO/RTO compatíveis com o negócio.
+- [~] Runbook de backup Neon e cópia independente preparado; janela, storage,
+  RPO e responsáveis dependem de decisão humana.
+- [~] Runbook de restauração e ensaio descartável preparado; RTO, corte e
+  validação em branch continuam dependentes de infraestrutura autorizada.
 - [ ] Logs estruturados.
 - [ ] Monitoramento de falhas.
 - [ ] Alertas de erro e disponibilidade.

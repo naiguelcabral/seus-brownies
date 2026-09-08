@@ -322,3 +322,15 @@ Server Function protegida e da rota. Build isolado e CI desse novo checkpoint
 foram separados: o build passou em HEAD limpo com chave pública sintética e o
 aviso de secrets operacionais ausentes esperado; a CI do novo checkpoint ainda
 aguarda publicação.
+
+## AR-E3 — runbook de resiliência operacional (G7)
+
+Foi criado `OPERATIONS-RESILIENCE-RUNBOOK.md` com recuperação primária por
+branch restaurada do Neon, cópia independente proposta, ensaio em branch
+descartável, resposta a incidente, rollback de código, sinais operacionais e
+proteção de artefatos. O documento não configura storage, retenção, alertas,
+backup ou restauração; registra responsáveis, RPO/RTO e corte como decisões
+humanas obrigatórias.
+
+Estado: implementado documentalmente e pendente de ensaio autorizado em branch
+descartável, decisão de RPO/RTO, cópia independente e configuração externa.
