@@ -262,3 +262,20 @@ somente `VITE_TURNSTILE_SITE_KEY` sintética. O SSR avisou que os cinco secrets
 operacionais não estavam disponíveis, como esperado para esta prova; nenhum
 arquivo de ambiente foi carregado. A execução remota continua aguardando
 publicação do workflow e primeira rodada no GitHub Actions.
+
+## AR-D1 — exportação CSV de relatórios (G3)
+
+O relatório operacional agora oferece CSV local dos mesmos agregados já
+autorizados no loader protegido por `reports:financial:read`: período,
+faturamento, despesas, estoque, vendas, FIFO e, quando disponíveis, produção.
+O arquivo usa UTF-8 com BOM e delimitador `;`; os valores monetários e de
+quantidade permanecem como decimais textuais, sem conversão para `Number`.
+
+Todo campo recebe aspas CSV e prefixos de fórmula (`=`, `+`, `-`, `@`, mesmo
+precedidos por espaço ou controle) recebem apóstrofo antes do download. Assim,
+texto fornecido por canal, categoria, produto ou motivo não é executado ao
+abrir o arquivo em planilha. Não há endpoint público novo, escrita de dados,
+integração de Excel ou serviço externo.
+
+Estado: implementado e validado localmente em testes de escaping, precisão e
+relatório; build isolado no novo checkpoint aguarda HEAD limpo.

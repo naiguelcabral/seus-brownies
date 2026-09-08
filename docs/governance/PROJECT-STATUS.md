@@ -65,6 +65,10 @@ Este documento é a referência canônica de alto nível para o estado atual do 
   carregamento de arquivo de ambiente; o aviso de secrets operacionais
   ausentes no SSR é esperado nessa prova. Um workflow versionado prepara
   `npm ci`, testes, lint, tipos e esse build isolado, sem deploy ou migration.
+- Exportação CSV local de relatórios operacionais está implementada sobre os
+  agregados já autorizados. Ela preserva os decimais como texto e neutraliza
+  prefixos de fórmula de planilha; não cria endpoint público, arquivo remoto ou
+  integração externa. A entrega de XLSX permanece fora do escopo atual.
 
 - Rodada manual local de 7 de setembro: seis casos individuais adicionais
   de cooldown/desafio passaram; suíte de 37 arquivos e lint verdes. A07-R2

@@ -3,6 +3,10 @@ import { BarChart3, Box, ReceiptText, TrendingUp, Wallet } from 'lucide-react'
 import { z } from 'zod'
 
 import { ManagementLayout } from '#/components/ManagementLayout'
+import {
+  createOperationalReportCsv,
+  downloadCsv,
+} from '#/features/reports/csv-export'
 import { getOperationalReports } from '#/features/reports/functions'
 
 const reportSearch = z.object({
@@ -60,6 +64,18 @@ function ReportsPage() {
         </label>
         <button className="rounded-lg bg-[#4a2114] px-4 py-2.5 text-sm font-bold text-white">
           Aplicar período
+        </button>
+        <button
+          type="button"
+          className="rounded-lg border border-[#4a2114] px-4 py-2.5 text-sm font-bold text-[#4a2114]"
+          onClick={() =>
+            downloadCsv(
+              `relatorio-operacional-${report.period.start}-a-${report.period.end}.csv`,
+              createOperationalReportCsv(report),
+            )
+          }
+        >
+          Baixar CSV
         </button>
       </form>
       <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">

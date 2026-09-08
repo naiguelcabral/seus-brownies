@@ -117,7 +117,8 @@ A definição de margem realizada e vínculo venda-lote é decisão de negócio/
 - [ ] Produção por período e rendimento real.
 - [ ] Perdas e coprodutos.
 - [ ] Parceiros/canais com desempenho.
-- [ ] Exportação CSV/Excel quando necessária.
+- [~] Exportação CSV segura dos relatórios operacionais concluída localmente;
+  XLSX segue fora do escopo atual e não foi apresentado como integração.
 
 ## Fase G4 — WhatsApp e mensageria
 
