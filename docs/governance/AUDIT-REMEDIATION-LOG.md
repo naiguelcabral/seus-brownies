@@ -301,5 +301,6 @@ escapes equivalentes em runtime, mantendo a proteção de NUL, whitespace e os
 prefixos de fórmula. Isso não muda o conteúdo exportado.
 
 Estado: implementado e validado localmente com teste do controlador, teste CSV,
-lint, typecheck, Prettier, `bash -n` e `git diff --check`; build isolado e nova
-CI remota aguardam o checkpoint limpo.
+lint, typecheck, Prettier, `bash -n` e `git diff --check`. O build isolado
+passou em HEAD limpo com chave pública sintética; o aviso de secrets
+operacionais ausentes continua esperado. Nova CI remota aguarda publicação.

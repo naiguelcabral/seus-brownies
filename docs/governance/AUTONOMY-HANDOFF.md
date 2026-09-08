@@ -42,8 +42,8 @@ Atualizado em 8 de setembro de 2026.
   agora só exige CLI nos modos executáveis; a ausência é reproduzida em teste.
   O lint também apontou controle literal na regex CSV; a expressão preserva a
   mesma proteção construída em runtime. Teste do controlador/CSV, lint,
-  typecheck, Prettier, `bash -n` e `git diff --check` passaram. Próximo passo:
-  checkpoint, build isolado e CI remota.
+  typecheck, Prettier, `bash -n`, `git diff --check` e build isolado passaram.
+  Próximo passo: registrar esta evidência, publicar e observar CI.
 
 ## Retomada local — checkpoint reconciliado e contrato A07-R3
 
