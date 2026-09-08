@@ -68,7 +68,9 @@ Este documento é a referência canônica de alto nível para o estado atual do 
 - Exportação CSV local de relatórios operacionais está implementada sobre os
   agregados já autorizados. Ela preserva os decimais como texto e neutraliza
   prefixos de fórmula de planilha; não cria endpoint público, arquivo remoto ou
-  integração externa. A entrega de XLSX permanece fora do escopo atual.
+  integração externa. O build HML isolado repetido no checkpoint dessa entrega
+  passou com chave pública sintética. A entrega de XLSX permanece fora do
+  escopo atual.
 
 - Rodada manual local de 7 de setembro: seis casos individuais adicionais
   de cooldown/desafio passaram; suíte de 37 arquivos e lint verdes. A07-R2

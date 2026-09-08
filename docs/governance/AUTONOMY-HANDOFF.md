@@ -27,15 +27,16 @@ Atualizado em 8 de setembro de 2026.
 - Gates: aplicação das migrations em banco descartável, escolha de semântica
   temporal do relatório FIFO, política de tentativas concorrentes no login,
   configuração externa do rate limit e homologação real de auth/FIFO.
-- Pacote ativo: AR-D1, exportação CSV de relatórios. A UI exporta somente os
+- AR-D1 concluído conforme aceite local. A UI exporta somente os
   agregados já carregados pelo loader de `reports:financial:read`; não há novo
   endpoint, escrita ou serviço externo. Campos CSV recebem aspas e valores que
   iniciam fórmula recebem apóstrofo; quantidades e moeda mantêm a string
   decimal exata. Testes específicos, lint, tipos, Prettier e `git diff --check`
   passaram. O runner local interrompe `npm test` depois de 21 arquivos por
   limite de 30 segundos, sem falha; as 48 specs foram executadas em três grupos
-  e passaram. Próximo passo: registrar checkpoint limpo, executar build HML
-  isolado com chave pública sintética e publicar.
+  e passaram. O build HML isolado com chave pública sintética passou no
+  checkpoint `c44b954`; a ausência de secrets operacionais foi o aviso esperado
+  da prova. Próximo passo: registrar esta evidência, publicar e observar CI.
 
 ## Retomada local — checkpoint reconciliado e contrato A07-R3
 

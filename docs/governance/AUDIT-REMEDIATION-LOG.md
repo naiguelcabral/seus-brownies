@@ -277,5 +277,12 @@ texto fornecido por canal, categoria, produto ou motivo não é executado ao
 abrir o arquivo em planilha. Não há endpoint público novo, escrita de dados,
 integração de Excel ou serviço externo.
 
-Estado: implementado e validado localmente em testes de escaping, precisão e
-relatório; build isolado no novo checkpoint aguarda HEAD limpo.
+Validação: testes específicos, lint, typecheck, Prettier e `git diff --check`
+passaram. As 48 specs foram executadas em grupos sem falha; a execução única
+de `npm test` excede o limite local de 30 segundos depois de reportar 21
+arquivos verdes. O build HML isolado passou no checkpoint `c44b954` com chave
+pública sintética; o aviso de secrets operacionais ausentes é esperado e não
+carregou arquivo de ambiente.
+
+Estado: implementado e validado localmente; primeira CI remota e homologação de
+abertura do CSV no aplicativo de planilha escolhido continuam pendentes.
