@@ -1,14 +1,14 @@
-import { allocateFifoCost, reverseFifoAllocations } from '#/features/inventory/fifo'
+import {
+  allocateFifoCost,
+  reverseFifoAllocations,
+} from '#/features/inventory/fifo'
 import type {
   InventoryCostLayer,
   ReversibleFifoAllocation,
 } from '#/features/inventory/fifo'
 
 export type LifecycleEvent =
-  | 'sale_cancellation'
-  | 'sale_return'
-  | 'loss'
-  | 'adjustment_negative'
+  'sale_cancellation' | 'sale_return' | 'loss' | 'adjustment_negative'
 
 /** Cancel and return use identical cost restoration; financial credit is separate. */
 export function planStockRestoration(input: {
@@ -17,7 +17,53 @@ export function planStockRestoration(input: {
   allocations: ReversibleFifoAllocation[]
   quantities: Array<{ allocationId: number; quantity: bigint }>
 }) {
-  return reverseFifoAllocations(input.layers, input.allocations, input.quantities)
+  return reverseFifoAllocations(
+    input.layers,
+    input.allocations,
+    input.quantities,
+  )
+}
+
+export function planRemainingReversalQuantities(input: {
+  allocations: Array<{
+    id: number
+    quantity: bigint
+    reversedQuantity?: bigint
+  }>
+  requestedQuantity: bigint | null
+}) {
+  if (input.requestedQuantity !== null && input.requestedQuantity <= 0n) {
+    throw new Error('Quantidade de devolução inválida.')
+  }
+
+  const remaining = [...input.allocations]
+    .sort((left, right) => left.id - right.id)
+    .map((allocation) => ({
+      allocationId: allocation.id,
+      quantity: allocation.quantity - (allocation.reversedQuantity ?? 0n),
+    }))
+    .filter((allocation) => allocation.quantity > 0n)
+
+  if (input.requestedQuantity === null) {
+    if (!remaining.length) {
+      throw new Error('Venda não possui quantidade reversível restante.')
+    }
+    return remaining
+  }
+
+  let pending = input.requestedQuantity
+  const requested = remaining.flatMap((allocation) => {
+    if (pending <= 0n) return []
+    const take = pending < allocation.quantity ? pending : allocation.quantity
+    pending -= take
+    return [{ allocationId: allocation.allocationId, quantity: take }]
+  })
+  if (pending > 0n) {
+    throw new Error(
+      'Devolução excede a quantidade vendida ainda reversível para esta operação.',
+    )
+  }
+  return requested
 }
 
 /** Losses and negative adjustments consume global FIFO, never create negative layers. */
@@ -40,6 +86,12 @@ export function assertPositiveAdjustment(input: {
   totalCost: bigint
   sourceReference: string
 }) {
-  if (input.quantity <= 0n || input.totalCost < 0n || !input.sourceReference.trim())
-    throw new Error('Ajuste positivo exige quantidade, custo de origem e referência.')
+  if (
+    input.quantity <= 0n ||
+    input.totalCost < 0n ||
+    !input.sourceReference.trim()
+  )
+    throw new Error(
+      'Ajuste positivo exige quantidade, custo de origem e referência.',
+    )
 }

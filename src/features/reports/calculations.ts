@@ -72,7 +72,7 @@ export type FifoMarginRow = {
   saleItemId: number
   productId: number
   productName: string
-  productionBatchId: number
+  productionBatchId: number | null
   quantity: string
   allocatedCost: string
   reversedCost?: string | null
@@ -145,10 +145,13 @@ export function summarizeFifoMargins(rows: FifoMarginRow[]) {
     },
     { revenue: 0n, cogs: 0n },
   )
-  const group = <T extends string | number>(keyFor: (row: FifoMarginRow) => T) => {
+  const group = <T extends string | number>(
+    keyFor: (row: FifoMarginRow) => T | null,
+  ) => {
     const byKey = new Map<T, { revenue: bigint; cogs: bigint }>()
     for (const row of rows) {
       const key = keyFor(row)
+      if (key === null) continue
       const current = byKey.get(key) ?? { revenue: 0n, cogs: 0n }
       current.revenue += revenueByAllocation.get(row.allocationId) ?? 0n
       current.cogs += netAllocatedCost(row)

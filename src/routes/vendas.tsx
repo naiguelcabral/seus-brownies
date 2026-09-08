@@ -50,6 +50,9 @@ function SalesPage() {
     Route.useLoaderData()
   const router = useRouter()
   const save = useServerFn(createSale)
+  const [idempotencyKey, setIdempotencyKey] = useState(() =>
+    crypto.randomUUID(),
+  )
   const cancel = useServerFn(cancelSaleLifecycle)
   const [customerName, setCustomerName] = useState('')
   const [customerPhone, setCustomerPhone] = useState('')
@@ -115,6 +118,7 @@ function SalesPage() {
     try {
       await save({
         data: {
+          idempotencyKey,
           customerName,
           customerPhone,
           status,
@@ -130,6 +134,7 @@ function SalesPage() {
       setNotes('')
       setStatus('draft')
       setItems([emptyItem()])
+      setIdempotencyKey(crypto.randomUUID())
       setMessage(
         status === 'confirmed' || status === 'paid'
           ? 'Venda registrada e estoque baixado.'

@@ -2,8 +2,18 @@ import { createServerFn } from '@tanstack/react-start'
 import { asc, eq } from 'drizzle-orm'
 import { z } from 'zod'
 
-import { categories, products } from '#/db/schema'
+import {
+  categories,
+  productImportAliases,
+  productionBatchOutputs,
+  productionProfileComponents,
+  productionProfiles,
+  products,
+  recipeItems,
+  stockMovements,
+} from '#/db/schema'
 import { requireServerFunctionPermission } from '#/features/auth/server-function-middleware'
+import { assertProductStructureChangeAllowed } from '#/features/catalog/product-structure'
 
 const categoryValues = z.object({
   name: z.string().trim().min(2, 'Informe ao menos 2 caracteres.').max(80),
@@ -188,9 +198,64 @@ export const updateProduct = createServerFn({ method: 'POST' })
   .validator(productValuesWithId)
   .handler(async ({ data }) => {
     const { getDb } = await import('#/db/index')
+    const database = getDb()
+
+    const current = (
+      await database
+        .select({ type: products.type, unit: products.unit })
+        .from(products)
+        .where(eq(products.id, data.id))
+        .limit(1)
+    ).at(0)
+    if (!current) throw new Error('Produto não encontrado.')
+
+    if (current.type !== data.type || current.unit !== data.unit) {
+      const usages = await Promise.all([
+        database
+          .select({ id: stockMovements.id })
+          .from(stockMovements)
+          .where(eq(stockMovements.productId, data.id))
+          .limit(1),
+        database
+          .select({ id: recipeItems.id })
+          .from(recipeItems)
+          .where(eq(recipeItems.productId, data.id))
+          .limit(1),
+        database
+          .select({ id: productImportAliases.id })
+          .from(productImportAliases)
+          .where(eq(productImportAliases.productId, data.id))
+          .limit(1),
+        database
+          .select({ id: productionProfiles.id })
+          .from(productionProfiles)
+          .where(eq(productionProfiles.productId, data.id))
+          .limit(1),
+        database
+          .select({ id: productionProfiles.id })
+          .from(productionProfiles)
+          .where(eq(productionProfiles.packagingProductId, data.id))
+          .limit(1),
+        database
+          .select({ id: productionProfileComponents.id })
+          .from(productionProfileComponents)
+          .where(eq(productionProfileComponents.productId, data.id))
+          .limit(1),
+        database
+          .select({ id: productionBatchOutputs.id })
+          .from(productionBatchOutputs)
+          .where(eq(productionBatchOutputs.productId, data.id))
+          .limit(1),
+      ])
+      assertProductStructureChangeAllowed(
+        current,
+        { type: data.type, unit: data.unit },
+        usages.some((usage) => usage.length > 0),
+      )
+    }
 
     try {
-      await getDb()
+      await database
         .update(products)
         .set({
           name: data.name,

@@ -123,3 +123,119 @@ sem receber controles de edição e não vê cancelamento FIFO. Chamadas diretas
 continuam protegidas pelo middleware existente; nenhuma permissão foi ampliada.
 Estado: implementado e validado localmente; aguarda revisão e homologação por
 papel.
+
+## AR-C1/C2/C3/C4 — idempotência e integridade das criações (G2/G6)
+
+Os quatro achados foram confirmados no código atual. Compra, venda e despesa
+não recebiam chave idempotente; compras repetidas do mesmo produto associavam
+itens distintos ao primeiro movimento por `find(productId)`; a escrita aceitava
+produto desativado e a venda não revalidava o tipo; tipo/unidade do produto
+podiam mudar depois de uso operacional.
+
+A migration `0017_orange_the_hand.sql`, preparada para revisão e não aplicada,
+adiciona chave/hash idempotentes e autor da criação em compras, vendas e
+despesas. As colunas são anuláveis para preservar fatos legados; novas Server
+Functions exigem UUID, calculam SHA-256 canônico no servidor, reservam a chave
+com unicidade transacional e retornam o mesmo ID no reenvio igual. A mesma chave
+com payload diferente falha explicitamente. O cliente mantém a chave após erro
+ou timeout e só a renova depois do sucesso. A restrição única serializa chamadas
+simultâneas antes das escritas filhas.
+
+Cada item de compra agora cria sequencialmente seu próprio item, movimento com
+referência `purchase_item` e, quando acabado, camada ligada àquele movimento.
+O mesmo alinhamento explícito por índice foi aplicado a itens e movimentos de
+venda, removendo dependência da ordem de `RETURNING`. A escrita revalida produto
+ativo e exige produto final na venda.
+
+Mudanças estruturais de produto têm defesa em duas camadas: consulta de uso na
+aplicação e trigger `BEFORE UPDATE` na migration, cobrindo estoque, compra,
+venda, aliases, receitas, perfis, componentes e saídas de produção. O trigger
+fecha a corrida entre consulta e escrita sem modificar fatos históricos.
+
+Impacto da migration: adição de nove colunas anuláveis, três constraints únicas
+e um trigger; a criação dos índices únicos pode segurar locks breves nas três
+tabelas. Não há backfill, exclusão ou transformação de dados. Recuperação, se a
+aplicação também for revertida: remover primeiro o trigger e a função; depois,
+em janela aprovada, remover constraints e colunas. A remoção das colunas perde
+as novas referências/autor e por isso não deve ser automática.
+
+Estado: implementado e validado por testes de domínio, contrato SQL, lint e
+schema gerado. A execução concorrente e o trigger em PostgreSQL real estão como
+`validation-blocked`: não há binário PostgreSQL nem imagem Docker local, e
+nenhum banco compartilhado foi tocado. Migration aguarda revisão humana antes
+de aplicação em branch descartável.
+
+## AR-B5 — autoria e auditoria operacional (G1/G2)
+
+O achado foi confirmado: os fatos criados pela interface não guardavam a
+identidade resolvida pelo servidor e não existia uma trilha transversal das
+mutações operacionais. As colunas de autoria da migration `0017` recebem o ID
+da identidade autenticada em compra, venda e despesa. A migration aditiva
+`0018_bouncy_odin.sql`, preparada e não aplicada, cria
+`operational_audit_events` com ator, ação, tipo/ID da entidade, instante,
+referência da operação e motivo quando fornecido.
+
+Compra, venda, despesa, cancelamento, devolução, perda e ajustes agora gravam o
+evento na mesma transação do fato. A falha da auditoria é propagada e força
+rollback; reenvio idempotente não duplica o evento porque não cria novo fato.
+Eventos antigos não recebem ator inventado e não há backfill. Impacto: uma nova
+tabela e três índices, sem reescrita das tabelas existentes. Recuperação exige
+reverter primeiro o código; a eventual remoção da tabela perde evidência e só
+pode ocorrer com decisão humana expressa.
+
+Estado: implementado e validado com fakes transacionais, inclusive falha de
+persistência da auditoria. PostgreSQL real e homologação por identidade estão
+`validation-blocked` junto das migrations 0017/0018.
+
+## AR-C5/C8/C9 — relatório FIFO, reconciliação e exceções (G2/G3)
+
+Confirmado que o `INNER JOIN` obrigatório com saída de produção eliminava do
+CMV as alocações de camadas originadas por compra e ajuste positivo. O join é
+agora opcional; uma venda combinando produção, compra e ajuste preserva toda a
+receita e todo o CMV, enquanto a visão por lote inclui apenas a parcela que
+possui lote real.
+
+A tela de relatórios recebeu reconciliação somente leitura. Ela confronta, com
+IDs rastreáveis, quantidade e custo original/remanescente de cada camada,
+alocações, movimentos de saída, reversões, movimentos de entrada, produto e
+CMV alocado. O resultado apenas emite divergências; não contém comando de
+correção ou escrita.
+
+Os blocos opcionais de produção/FIFO deixam de transformar qualquer exceção em
+“recurso ausente”. Somente os códigos PostgreSQL `42P01` e `42703`, que indicam
+migration aditiva ausente, degradam para `null`; erros reais de consulta são
+propagados à página de erro.
+
+Estado: implementado e validado localmente por testes puros e contratos de
+consulta; resultado sobre dados reais aguarda migrations e homologação.
+
+## AR-C6 — semântica temporal dos relatórios (G3)
+
+Achado confirmado e não alterado por falta de regra aprovada. Hoje a receita e
+as vendas são selecionadas pelo período, todas as reversões ligadas a essas
+alocações são consideradas mesmo quando ocorreram depois do fim do período, e
+o quadro FIFO mostra o saldo atual das camadas.
+
+Opção A, “posição no encerramento”: reconstruir movimentos, alocações e
+reversões até o fim do dia selecionado. Uma devolução no mês seguinte não muda
+o CMV já fechado; exige corte temporal consistente e é adequada a fechamento
+contábil. Opção B, “visão atual das vendas do período”: manter todas as
+reversões conhecidas e rotular explicitamente o resultado como visão atual; o
+CMV de um período passado pode mudar depois. Recomenda-se A para relatórios de
+fechamento e B somente como consulta operacional separada. A escolha e o
+tratamento financeiro da receita em cancelamentos/devoluções aguardam decisão
+humana.
+
+## AR-C7 — devoluções e cancelamentos (G2)
+
+Confirmado que o writer planejava uma reversão a partir da alocação original e
+não descontava reversões anteriores. Devoluções sucessivas agora usam apenas a
+quantidade e o custo ainda reversíveis; cancelamento após devolução parcial
+restaura somente o residual. O lock do item/venda, seguido dos locks ordenados
+de produto, camadas e alocações, mantém a leitura e a gravação no mesmo limite
+transacional. Excesso falha antes de novo movimento.
+
+Estado: implementado e validado localmente em cenários sucessivos, parcial mais
+cancelamento, excesso, repetição, custo residual e rollback em cada estágio.
+Concorrência real em PostgreSQL permanece `validation-blocked` pela ausência de
+banco descartável local.

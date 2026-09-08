@@ -13,6 +13,9 @@ function ExpensesPage() {
   const expenses = Route.useLoaderData()
   const router = useRouter()
   const save = useServerFn(createExpense)
+  const [idempotencyKey, setIdempotencyKey] = useState(() =>
+    crypto.randomUUID(),
+  )
   const [description, setDescription] = useState('')
   const [category, setCategory] = useState('')
   const [amount, setAmount] = useState('')
@@ -35,11 +38,21 @@ function ExpensesPage() {
     setSaving(true)
     setMessage(null)
     try {
-      await save({ data: { description, category, amount, occurredAt, notes } })
+      await save({
+        data: {
+          idempotencyKey,
+          description,
+          category,
+          amount,
+          occurredAt,
+          notes,
+        },
+      })
       setDescription('')
       setCategory('')
       setAmount('')
       setNotes('')
+      setIdempotencyKey(crypto.randomUUID())
       setMessage('Despesa registrada com sucesso.')
       await router.invalidate()
     } catch (error) {

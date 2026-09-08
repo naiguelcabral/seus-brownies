@@ -2,6 +2,7 @@ import {
   inventoryCostAllocations,
   inventoryCostLayers,
   inventoryCostReversals,
+  operationalAuditEvents,
   saleItems,
   sales,
   stockMovements,
@@ -11,13 +12,24 @@ type Rows = Record<string, Array<Record<string, unknown>>>
 
 export function createLifecycleDrizzleMock(input: Partial<Rows> = {}) {
   const rows: Rows = {
-    sales: input.sales ?? [], saleItems: input.saleItems ?? [],
-    allocations: input.allocations ?? [], layers: input.layers ?? [],
-    reversals: input.reversals ?? [], movements: input.movements ?? [],
+    sales: input.sales ?? [],
+    saleItems: input.saleItems ?? [],
+    allocations: input.allocations ?? [],
+    layers: input.layers ?? [],
+    reversals: input.reversals ?? [],
+    movements: input.movements ?? [],
   }
   const journal: Array<{ kind: string; table?: string; values?: unknown }> = []
-  const committed: Array<{ kind: 'insert' | 'update'; table: string; values: unknown }> = []
-  let pending: Array<{ kind: 'insert' | 'update'; table: string; values: unknown }> = []
+  const committed: Array<{
+    kind: 'insert' | 'update'
+    table: string
+    values: unknown
+  }> = []
+  let pending: Array<{
+    kind: 'insert' | 'update'
+    table: string
+    values: unknown
+  }> = []
   let failAt: string | undefined
   let nextId = 100
   let executeCount = 0
@@ -28,38 +40,57 @@ export function createLifecycleDrizzleMock(input: Partial<Rows> = {}) {
     if (table === inventoryCostLayers) return 'layers'
     if (table === inventoryCostReversals) return 'reversals'
     if (table === stockMovements) return 'movements'
+    if (table === operationalAuditEvents) return 'operationalAudit'
     return 'unknown'
   }
   const select = () => ({
     from(table: unknown) {
       const values = rows[name(table)]
-      const query = { where: () => query, orderBy: () => query, then: (resolve: (value: typeof values) => unknown) => resolve(values) }
+      const query = {
+        where: () => query,
+        orderBy: () => query,
+        then: (resolve: (value: typeof values) => unknown) => resolve(values),
+      }
       return query
     },
   })
   const tx = {
-    async execute(query: { sql?: string }) {
+    async execute(_query: { sql?: string }) {
       const kind = executeCount++ === 0 ? 'schema' : 'lock'
       journal.push({ kind })
-      if (failAt === kind || failAt === 'execute') throw new Error(`forced ${kind} failure`)
-      return { rows: [{ lifecycle_table: failAt === 'schema-missing' ? null : 'inventory_cost_reversals' }] }
+      if (failAt === kind || failAt === 'execute')
+        throw new Error(`forced ${kind} failure`)
+      return {
+        rows: [
+          {
+            lifecycle_table:
+              failAt === 'schema-missing' ? null : 'inventory_cost_reversals',
+          },
+        ],
+      }
     },
     select,
     insert(table: unknown) {
-      return { values(values: unknown) {
-        journal.push({ kind: 'insert', table: name(table), values })
-        if (failAt === `insert:${name(table)}` || failAt === name(table)) throw new Error(`forced insert:${name(table)} failure`)
-        pending.push({ kind: 'insert', table: name(table), values })
-        return { returning: async () => [{ id: nextId++ }] }
-      } }
+      return {
+        values(values: unknown) {
+          journal.push({ kind: 'insert', table: name(table), values })
+          if (failAt === `insert:${name(table)}` || failAt === name(table))
+            throw new Error(`forced insert:${name(table)} failure`)
+          pending.push({ kind: 'insert', table: name(table), values })
+          return { returning: async () => [{ id: nextId++ }] }
+        },
+      }
     },
     update(table: unknown) {
-      return { set(values: unknown) {
-        journal.push({ kind: 'update', table: name(table), values })
-        if (failAt === `update:${name(table)}` || failAt === name(table)) throw new Error(`forced update:${name(table)} failure`)
-        pending.push({ kind: 'update', table: name(table), values })
-        return { where: async () => undefined }
-      } }
+      return {
+        set(values: unknown) {
+          journal.push({ kind: 'update', table: name(table), values })
+          if (failAt === `update:${name(table)}` || failAt === name(table))
+            throw new Error(`forced update:${name(table)} failure`)
+          pending.push({ kind: 'update', table: name(table), values })
+          return { where: async () => undefined }
+        },
+      }
     },
   }
   const db = {
@@ -67,10 +98,24 @@ export function createLifecycleDrizzleMock(input: Partial<Rows> = {}) {
       journal.push({ kind: 'begin' })
       try {
         const result = await work(tx)
-        committed.push(...pending); pending = []
-        journal.push({ kind: 'commit' }); return result
-      } catch (error) { pending = []; journal.push({ kind: 'rollback' }); throw error }
+        committed.push(...pending)
+        pending = []
+        journal.push({ kind: 'commit' })
+        return result
+      } catch (error) {
+        pending = []
+        journal.push({ kind: 'rollback' })
+        throw error
+      }
     },
   }
-  return { db, journal, rows, committed, fail(at: string) { failAt = at } }
+  return {
+    db,
+    journal,
+    rows,
+    committed,
+    fail(at: string) {
+      failAt = at
+    },
+  }
 }

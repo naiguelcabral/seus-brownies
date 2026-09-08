@@ -180,6 +180,31 @@ export const authAuditEvents = pgTable(
   ],
 )
 
+/** Immutable audit facts for operational mutations; business rows remain the source of truth. */
+export const operationalAuditEvents = pgTable(
+  'operational_audit_events',
+  {
+    id: serial().primaryKey(),
+    actorAuthUserId: varchar('actor_auth_user_id', { length: 191 }),
+    action: varchar('action', { length: 80 }).notNull(),
+    entityType: varchar('entity_type', { length: 80 }).notNull(),
+    entityId: varchar('entity_id', { length: 191 }).notNull(),
+    operationReference: varchar('operation_reference', { length: 160 }),
+    reason: text(),
+    occurredAt: timestamp('occurred_at', { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (table) => [
+    index('operational_audit_events_actor_idx').on(table.actorAuthUserId),
+    index('operational_audit_events_entity_idx').on(
+      table.entityType,
+      table.entityId,
+    ),
+    index('operational_audit_events_occurred_at_idx').on(table.occurredAt),
+  ],
+)
+
 /** Groups sellable products for reporting and menu organization. */
 export const categories = pgTable('categories', {
   id: serial().primaryKey(),
@@ -262,6 +287,9 @@ export const stockMovements = pgTable('stock_movements', {
 
 export const purchases = pgTable('purchases', {
   id: serial().primaryKey(),
+  idempotencyKey: varchar('idempotency_key', { length: 160 }).unique(),
+  idempotencyHash: varchar('idempotency_hash', { length: 64 }),
+  createdByAuthUserId: varchar('created_by_auth_user_id', { length: 191 }),
   sourceId: varchar('source_id', { length: 80 }).unique(),
   sourceHash: varchar('source_hash', { length: 64 }),
   supplierName: varchar('supplier_name', { length: 160 }),
@@ -321,6 +349,9 @@ export const productImportAliases = pgTable('product_import_aliases', {
 
 export const sales = pgTable('sales', {
   id: serial().primaryKey(),
+  idempotencyKey: varchar('idempotency_key', { length: 160 }).unique(),
+  idempotencyHash: varchar('idempotency_hash', { length: 64 }),
+  createdByAuthUserId: varchar('created_by_auth_user_id', { length: 191 }),
   sourceId: varchar('source_id', { length: 80 }).unique(),
   sourceHash: varchar('source_hash', { length: 64 }),
   locationId: integer('location_id').references(() => salesLocations.id, {
@@ -365,6 +396,9 @@ export const saleItems = pgTable('sale_items', {
 
 export const expenses = pgTable('expenses', {
   id: serial().primaryKey(),
+  idempotencyKey: varchar('idempotency_key', { length: 160 }).unique(),
+  idempotencyHash: varchar('idempotency_hash', { length: 64 }),
+  createdByAuthUserId: varchar('created_by_auth_user_id', { length: 191 }),
   sourceId: varchar('source_id', { length: 80 }).unique(),
   sourceHash: varchar('source_hash', { length: 64 }),
   description: varchar({ length: 180 }).notNull(),

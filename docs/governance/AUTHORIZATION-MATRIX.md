@@ -31,9 +31,11 @@ continua sujeita a `HUMAN-APPROVALS.md`.
   produzir.
 - Alterações de estoque, custo, FIFO, cancelamento e devolução são operações
   financeiras/auditáveis e permanecem explicitamente restritas.
-- O escopo “dados próprios” não é habilitado até existir autoria auditável nos
-  fatos operacionais. Hoje as tabelas de venda, compra e produção não possuem
-  esse vínculo.
+- O escopo “dados próprios” não está habilitado. A autoria auditável de novas
+  compras, vendas e despesas e a trilha de lifecycle foram preparada nas
+  migrations `0017`/`0018`, ainda sem homologação; produção ainda não possui o
+  mesmo vínculo. Definir escopo próprio exige uma política separada e não
+  decorre automaticamente dessas colunas.
 
 ## Papéis
 

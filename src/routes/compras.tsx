@@ -32,6 +32,9 @@ function PurchasesPage() {
   const { products, purchases, canReadHistory } = Route.useLoaderData()
   const router = useRouter()
   const save = useServerFn(createPurchase)
+  const [idempotencyKey, setIdempotencyKey] = useState(() =>
+    crypto.randomUUID(),
+  )
   const [supplierName, setSupplierName] = useState('')
   const [purchasedAt, setPurchasedAt] = useState(
     new Date().toISOString().slice(0, 10),
@@ -65,6 +68,7 @@ function PurchasesPage() {
     try {
       await save({
         data: {
+          idempotencyKey,
           supplierName,
           purchasedAt,
           invoiceFileReference,
@@ -80,6 +84,7 @@ function PurchasesPage() {
       setInvoiceFileReference('')
       setNotes('')
       setItems([emptyItem()])
+      setIdempotencyKey(crypto.randomUUID())
       setMessage('Compra registrada e estoque atualizado.')
       await router.invalidate()
     } catch (error) {
