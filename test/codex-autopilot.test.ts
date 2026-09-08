@@ -85,6 +85,18 @@ test('dry-run seleciona apenas o primeiro pacote ready sem chamar Codex', async 
   }
 })
 
+test('dry-run não exige Codex CLI instalado', async () => {
+  const dir = await fixture()
+  try {
+    const { stdout } = await run(dir, ['--dry-run'], undefined, {
+      PATH: '/usr/bin:/bin',
+    })
+    assert.match(stdout, /Pacote selecionado: A01/)
+  } finally {
+    await rm(dir, { recursive: true, force: true })
+  }
+})
+
 test('pacote documental não solicita build, check global nem acesso a arquivos secretos', async () => {
   const dir = await fixture()
   const capture = join(dir, 'prompt.txt')

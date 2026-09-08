@@ -73,7 +73,9 @@ type ExportRow = [
   note: CsvCell,
 ]
 
-const spreadsheetFormulaPrefix = /^[\s\u0000-\u001f]*[=+\-@]/
+const spreadsheetFormulaPrefix = new RegExp(
+  String.raw`^[\s\u0000-\u001f]*[=+\-@]`,
+)
 
 /**
  * Formula prefixes are rendered as text so data entered by a customer or

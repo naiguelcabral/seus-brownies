@@ -2,7 +2,7 @@
 
 Atualizado em 8 de setembro de 2026.
 
-## Missão `codex/audit-remediation` — pacote AR-D1 em validação final
+## Missão `codex/audit-remediation` — pacote AR-E2 em validação final
 
 - Branch: `codex/audit-remediation`; checkpoint local pendente de publicação:
   `3087ee9 ci(quality): add reproducible verification gates`.
@@ -37,6 +37,13 @@ Atualizado em 8 de setembro de 2026.
   e passaram. O build HML isolado com chave pública sintética passou no
   checkpoint `c44b954`; a ausência de secrets operacionais foi o aviso esperado
   da prova. Próximo passo: registrar esta evidência, publicar e observar CI.
+- Pacote ativo: AR-E2. A CI `34264913745` falhou porque `--dry-run` exigia o
+  binário Codex antes de executar, embora esse modo não o chame. O preflight
+  agora só exige CLI nos modos executáveis; a ausência é reproduzida em teste.
+  O lint também apontou controle literal na regex CSV; a expressão preserva a
+  mesma proteção construída em runtime. Teste do controlador/CSV, lint,
+  typecheck, Prettier, `bash -n` e `git diff --check` passaram. Próximo passo:
+  checkpoint, build isolado e CI remota.
 
 ## Retomada local — checkpoint reconciliado e contrato A07-R3
 

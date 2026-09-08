@@ -32,7 +32,9 @@ preflight() {
   [[ -f "$QUEUE" && -f "$HANDOFF" && -f "$LOG" ]] || { echo "Preflight: documentos de autonomia ausentes"; return "$EXIT_PREFLIGHT"; }
   [[ ! -e "$STOP_FILE" ]] || { echo "Preflight: sentinela STOP_AUTONOMY encontrada"; return "$EXIT_PREFLIGHT"; }
   has_sensitive_env_tracked && { echo "Gate: arquivo .env sensível rastreado"; return "$EXIT_HUMAN"; }
-  command -v codex >/dev/null 2>&1 || { echo "Preflight: Codex CLI indisponível"; return "$EXIT_PREFLIGHT"; }
+  if [[ "$MODE" != "--dry-run" ]]; then
+    command -v codex >/dev/null 2>&1 || { echo "Preflight: Codex CLI indisponível"; return "$EXIT_PREFLIGHT"; }
+  fi
 }
 
 has_sensitive_env_tracked() {

@@ -41,6 +41,7 @@ seleção de pacotes pelo controlador. Ela não substitui os gates de
 | A11    | Comprovar viabilidade de build local sem segredos  | documental | done        | Archive isolado, inputs explícitos e build cliente/SSR com chave pública sintética comprovados.                                               |
 | AR-E1  | Tornar checks reproduzíveis no CI                  | codigo     | done        | `typecheck`, Node 22 e workflow de suíte/lint/tipos/build isolado passaram localmente; primeira execução remota aguarda publicação.           |
 | AR-D1  | Exportar relatórios CSV seguros                    | codigo     | done        | CSV local de agregados já autorizados, com valores decimais preservados e proteção contra fórmulas de planilha; build local isolado aprovado. |
+| AR-E2  | Corrigir preflight da CI e lint CSV                | codigo     | running     | `--dry-run` sem Codex CLI e regex segura sem controles literais validados localmente; build e CI do checkpoint pendentes.                     |
 
 Esses pacotes decorrem da missão manual de até 20 pacotes. A07 continua
 `blocked`; A08–A10 continuam `needs-human`. Não há promoção de nível permanente.

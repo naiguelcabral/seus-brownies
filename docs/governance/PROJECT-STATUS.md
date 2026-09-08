@@ -71,6 +71,9 @@ Este documento é a referência canônica de alto nível para o estado atual do 
   integração externa. O build HML isolado repetido no checkpoint dessa entrega
   passou com chave pública sintética. A entrega de XLSX permanece fora do
   escopo atual.
+- A primeira CI remota falhou porque o modo local `--dry-run` do controlador
+  exigia Codex CLI sem utilizá-lo. A correção e sua reprodução sem CLI estão
+  preparadas em checkpoint local; a próxima CI é a evidência pendente.
 
 - Rodada manual local de 7 de setembro: seis casos individuais adicionais
   de cooldown/desafio passaram; suíte de 37 arquivos e lint verdes. A07-R2

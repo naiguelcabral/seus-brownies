@@ -286,3 +286,20 @@ carregou arquivo de ambiente.
 
 Estado: implementado e validado localmente; primeira CI remota e homologação de
 abertura do CSV no aplicativo de planilha escolhido continuam pendentes.
+
+## AR-E2 — preflight reproduzível de CI (G7/G8)
+
+A primeira CI remota (`34264913745`, commit `dddff49`) falhou em três testes
+de `--dry-run`: o controlador exigia o binário Codex antes de selecionar o
+pacote, embora esse modo não invoque Codex. O preflight agora exige o binário
+somente em modos que podem iniciar um ciclo. O teste reproduz a ausência do
+CLI com `PATH` restrito a `/usr/bin:/bin`.
+
+Na mesma revisão, o lint identificou que a expressão de proteção CSV continha
+controles literais proibidos pela regra de qualidade. Ela passou a construir os
+escapes equivalentes em runtime, mantendo a proteção de NUL, whitespace e os
+prefixos de fórmula. Isso não muda o conteúdo exportado.
+
+Estado: implementado e validado localmente com teste do controlador, teste CSV,
+lint, typecheck, Prettier, `bash -n` e `git diff --check`; build isolado e nova
+CI remota aguardam o checkpoint limpo.
