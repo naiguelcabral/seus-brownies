@@ -256,5 +256,9 @@ com site key pública sintética. Não executa deploy, migration, e2e ou
 formatação histórica catalogada em `FORMATTING-DEBT.md`. O build isolado não
 recebe secrets de aplicação.
 
-Estado: implementação local concluída; execução remota aguarda publicação do
-workflow e primeira rodada no GitHub Actions.
+Validação local: `npm test` aprovou 248 casos, `npm run lint` e
+`npm run typecheck` passaram, e o build HML isolado passou em HEAD limpo com
+somente `VITE_TURNSTILE_SITE_KEY` sintética. O SSR avisou que os cinco secrets
+operacionais não estavam disponíveis, como esperado para esta prova; nenhum
+arquivo de ambiente foi carregado. A execução remota continua aguardando
+publicação do workflow e primeira rodada no GitHub Actions.

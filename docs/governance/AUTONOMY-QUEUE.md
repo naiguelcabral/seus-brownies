@@ -34,12 +34,12 @@ seleção de pacotes pelo controlador. Ela não substitui os gates de
 
 ### Extensão autorizada para a rodada manual local
 
-| ID     | Pacote                                             | Tipo       | Estado  | Escopo e saída esperada                                                                                                |
-| ------ | -------------------------------------------------- | ---------- | ------- | ---------------------------------------------------------------------------------------------------------------------- |
-| A07-R2 | Revisar limites e falhas dos componentes Turnstile | codigo     | done | Checkpoint humano c28c267 confirmado no Git com os sete arquivos; falha anterior de escrita preservada no log. |
+| ID     | Pacote                                             | Tipo       | Estado      | Escopo e saída esperada                                                                                                                |
+| ------ | -------------------------------------------------- | ---------- | ----------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| A07-R2 | Revisar limites e falhas dos componentes Turnstile | codigo     | done        | Checkpoint humano c28c267 confirmado no Git com os sete arquivos; falha anterior de escrita preservada no log.                         |
 | A07-R3 | Validar composição de login e falha de gravação    | codigo     | needs-human | Testes locais concluídos; falha posterior pode ocorrer após `Set-Cookie`. Política de concorrência/rollback de sessão aguarda decisão. |
-| A11    | Comprovar viabilidade de build local sem segredos  | documental | done   | Archive isolado, inputs explícitos e build cliente/SSR com chave pública sintética comprovados.                       |
-| AR-E1  | Tornar checks reproduzíveis no CI                  | codigo     | done   | `typecheck`, Node 22 e workflow de suíte/lint/tipos/build isolado preparados; primeira execução remota aguarda publicação. |
+| A11    | Comprovar viabilidade de build local sem segredos  | documental | done        | Archive isolado, inputs explícitos e build cliente/SSR com chave pública sintética comprovados.                                        |
+| AR-E1  | Tornar checks reproduzíveis no CI                  | codigo     | done        | `typecheck`, Node 22 e workflow de suíte/lint/tipos/build isolado passaram localmente; primeira execução remota aguarda publicação.    |
 
 Esses pacotes decorrem da missão manual de até 20 pacotes. A07 continua
 `blocked`; A08–A10 continuam `needs-human`. Não há promoção de nível permanente.

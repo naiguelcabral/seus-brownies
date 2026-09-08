@@ -61,10 +61,10 @@ Este documento é a referência canônica de alto nível para o estado atual do 
 
 - Checkpoint local de 8 de setembro na branch `codex/audit-remediation`:
   `npm test` aprovou 248 casos, `npm run lint` e `npm run typecheck` passaram.
-  O build HML isolado havia passado no checkpoint anterior com chave pública
-  sintética; a repetição para as mudanças de CI ocorrerá com o próximo HEAD
-  limpo. Um workflow versionado prepara `npm ci`, testes, lint, tipos e esse
-  build isolado, sem deploy ou migration.
+  O build HML isolado passou no HEAD atual com chave pública sintética e sem
+  carregamento de arquivo de ambiente; o aviso de secrets operacionais
+  ausentes no SSR é esperado nessa prova. Um workflow versionado prepara
+  `npm ci`, testes, lint, tipos e esse build isolado, sem deploy ou migration.
 
 - Rodada manual local de 7 de setembro: seis casos individuais adicionais
   de cooldown/desafio passaram; suíte de 37 arquivos e lint verdes. A07-R2
