@@ -373,5 +373,28 @@ Validação local: seis testes direcionados (paginação, contrato da Server
 Function/rota e experiência do Funcionário), lint, typecheck, Prettier e
 `git diff --check` passaram. O build HML isolado do checkpoint `e198cd1`
 passou com chave pública sintética; o aviso de secrets operacionais ausentes no
-SSR é esperado. Estado: implementado e validado localmente; CI remota e
-homologação de interface aguardam publicação.
+SSR é esperado. A CI `34295688527` do checkpoint `9180c44` passou
+integralmente. Estado: implementado e validado localmente e em CI;
+homologação de interface aguarda ambiente autorizado.
+
+## AR-D4 — busca, filtros e paginação de vendas (G3)
+
+O achado foi confirmado: `listSales` limitava o histórico a 60 linhas sem
+validação de filtros, contagem ou desempate. A Server Function protegida por
+`sales:read` agora valida cliente, status e período, rejeita intervalo
+invertido, conta com os mesmos filtros e devolve 20 linhas em ordem estável por
+instante e ID. O limite final usa o próximo dia à meia-noite UTC, o mesmo corte
+inclusivo de data já empregado nos relatórios; não altera receita, CMV, saldo
+ou lifecycle.
+
+A rota preserva filtros na URL, oferece status autorizado, carregamento, erro
+recuperável, lista vazia e paginação acessível. O Funcionário continua sem
+invocar `listSales`, mas conserva a criação de vendas; os botões de
+cancelamento seguem condicionados a `fifo:lifecycle:write`.
+
+Validação local: sete testes direcionados (paginação, corte temporal, contrato
+da Server Function/rota, negação ao Funcionário e UI de lifecycle), lint,
+typecheck, Prettier e `git diff --check` passaram. O build HML isolado de
+`9137752` passou com chave pública sintética; o aviso de secrets operacionais
+ausentes no SSR é esperado. Estado: implementado e validado localmente; CI
+remota e homologação de interface aguardam publicação.
