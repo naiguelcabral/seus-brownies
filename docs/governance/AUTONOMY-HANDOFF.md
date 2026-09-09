@@ -1,12 +1,13 @@
 # Handoff de autonomia — Cacau v1
 
-Atualizado em 8 de setembro de 2026.
+Atualizado em 9 de setembro de 2026.
 
 ## Missão `codex/audit-remediation` — G1 local e decisões G2 em validação
 
-- Branch: `codex/audit-remediation`; último checkpoint publicado:
-  `2a7b573 docs(governance): record green PR validation`; HEAD, origin e
-  árvore foram reconciliados após a interrupção de capacidade.
+- Branch: `codex/audit-remediation`; checkpoint local a publicar:
+  `3056e4d fix(auth): harden public verification contracts`. A recuperação
+  partiu de `2a7b573`; HEAD, origin e árvore foram reconciliados antes de novas
+  alterações.
 - Pacotes A/B/C implementados nesta missão: proteção de checkpoint e build
   isolado, sanitização de conversas, hardening de auth e experiência do
   Funcionário, idempotência operacional, correção FIFO, autoria/auditoria e

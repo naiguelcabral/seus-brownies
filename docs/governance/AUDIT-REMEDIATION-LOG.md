@@ -505,3 +505,11 @@ receita, CMV e vínculo venda–lote sem escolher regra financeira. A análise
 de uso e impacto de atualização. `PR-INTEGRATION-ORDER.md` confirma que #2 é
 ancestral de #3 e recomenda integrar G1 antes de revisar #3 contra a `main`
 atualizada. Nenhuma base, dependency, migration, banco ou ambiente foi alterado.
+
+No checkpoint `3056e4d`, os 68 testes G1 direcionados e a suíte integral
+`npm test` (270 casos) passaram. Lint, typecheck, Prettier dos arquivos
+alterados, `git diff --check` e o build HML isolado também passaram. O build
+recebeu somente a chave pública sintética e relatou a ausência esperada de
+secrets operacionais; isso confirma o isolamento, não uma homologação do
+provedor. CI e testes HML com navegador, CAPTCHA, e-mail e identidade autorizada
+continuam gates externos.
