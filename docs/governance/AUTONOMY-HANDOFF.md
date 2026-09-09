@@ -2,11 +2,11 @@
 
 Atualizado em 8 de setembro de 2026.
 
-## Missão `codex/audit-remediation` — recuperação concluída, PR pendente
+## Missão `codex/audit-remediation` — correção da CI e precisão de relatórios
 
 - Branch: `codex/audit-remediation`; último checkpoint publicado:
-  `3c0b335 docs(governance): record catalog history validation`; HEAD,
-  origin e árvore foram reconciliados após a interrupção de capacidade.
+  `3184bbd docs(governance): record recovery checkpoint`; HEAD, origin e
+  árvore foram reconciliados após a interrupção de capacidade.
 - Pacotes A/B/C implementados nesta missão: proteção de checkpoint e build
   isolado, sanitização de conversas, hardening de auth e experiência do
   Funcionário, idempotência operacional, correção FIFO, autoria/auditoria e
@@ -80,8 +80,21 @@ Atualizado em 8 de setembro de 2026.
   iniciados terminaram com código 0. Não há processo Node/npm/tsx/ESLint/tsc/
   Vite da tarefa ativo nem handle de terminal pendente recuperável; nenhum
   processo foi encerrado. A CI `34296485813` corresponde exatamente ao HEAD
-  `3c0b335`. Próximo passo: abrir PR em rascunho contra `main`; a PR #2 contra
-  `g1-auth-adr` permanece aberta e intocada.
+  `3c0b335`. A PR #3 em rascunho foi aberta contra `main`; a PR #2 contra
+  `g1-auth-adr` permanece aberta e intocada. A CI de pull request `34298609505`
+  falhou somente no build HML: o checkout detached foi confundido com `main`.
+- AR-D6 preparado: ordenação e filtro dos agregados de relatórios devem usar
+  inteiros monetários/quantitativos exatos, sem conversão para `Number`.
+  Arquivos previstos: `src/features/reports/calculations.ts` e
+  `test/report-calculations.test.ts`. Aceite: valores além do inteiro seguro
+  mantêm ordem correta, saldo positivo é decidido por milésimos exatos e a
+  alteração continua somente leitura, sem redefinir CMV ou margem. Dezesseis
+  testes direcionados, lint, typecheck e Prettier passaram; build aguarda
+  checkpoint limpo.
+- AR-E5 preparado: em CI, checkout detached pode usar exclusivamente a
+  referência explícita de uma branch de trabalho para `build:hml`. `HML_DEPLOY`
+  continua bloqueado nesse modo. A mesma validação local passou; próximo passo:
+  revisar, commitar e publicar ambos os pacotes para a CI da PR #3.
 
 ## Retomada local — checkpoint reconciliado e contrato A07-R3
 

@@ -439,3 +439,40 @@ portanto nenhum resultado é inferido a partir de processo oculto.
 
 Estado: checkpoint de recuperação registrado. Próximo passo: preparar a PR em
 rascunho contra `main`, preservando a PR #2 aberta contra `g1-auth-adr`.
+
+## AR-R2 — PR de remediação preparada
+
+A PR #3 foi aberta em rascunho contra `main`, com evidências e gates explícitos.
+A PR #2 continua aberta contra `g1-auth-adr` e não foi alterada. A CI de push
+`34298486668` passou para `3184bbd`. A CI de pull request `34298609505`, no
+mesmo SHA, revelou o bloqueio de checkout detached registrado em AR-E5; ela não
+é usada como evidência de falha nos testes, lint ou typecheck, que passaram.
+
+## AR-D6 — precisão de ordenação em relatórios
+
+Achado confirmado no código atual: os agrupamentos de faturamento, despesas e
+vendas, bem como a listagem de inventário, usavam `Number(...)` para ordenar
+valores que já são representados por inteiros exatos no domínio. Acima do
+limite de inteiro seguro do JavaScript, centavos ou milésimos podem se perder e
+uma ordem incorreta pode ser apresentada. O pacote troca somente comparações e
+filtros por comparações `bigint`, com desempate estável. Não altera fatos,
+CMV, margem, períodos ou permissões.
+
+Validação local: os testes direcionados de relatórios e isolamento passaram
+(16 casos), assim como lint, typecheck, Prettier e `git diff --check`. O build
+isolado exige árvore limpa e será executado no checkpoint versionado.
+
+## AR-E5 — build isolado em CI de pull request
+
+Achado confirmado pela CI `34298609505`: testes, lint e typecheck passaram no
+mesmo SHA `3184bbd`, mas `build:hml` parou antes do build porque o checkout
+detached de pull request não possui branch local. O script passa a aceitar
+somente build de CI sem deploy quando `CI=true` e a referência de origem aponta
+uma branch de trabalho. O deploy (`HML_DEPLOY=1`) continua exigindo a branch
+local, inclusive se variáveis de CI forem informadas. Testes de fixture cobrem
+checkout detached, referência explícita e a negativa de deploy.
+
+Validação local: os mesmos 16 testes direcionados, lint, typecheck, Prettier e
+`git diff --check` passaram. O build isolado será reexecutado a partir do HEAD
+limpo do checkpoint; a falha anterior da CI permanece registrada como evidência
+histórica, não como resultado deste código ainda local.

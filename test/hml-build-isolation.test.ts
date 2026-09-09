@@ -87,7 +87,7 @@ echo ISOLATION_VERIFIED
     git('commit', '-m', 'fixture')
     writeFileSync(join(root, '.env.production'), 'SYNTHETIC_PRIVATE_INPUT=fake')
     writeFileSync(join(root, '.env.local'), 'SYNTHETIC_PRIVATE_INPUT=fake')
-    const run = (key: string) =>
+    const run = (key: string, environment: Record<string, string> = {}) =>
       spawnSync('bash', ['scripts/build-hml-isolated.sh'], {
         cwd: root,
         encoding: 'utf8',
@@ -96,12 +96,30 @@ echo ISOLATION_VERIFIED
           HOME: root,
           VITE_TURNSTILE_SITE_KEY: key,
           SYNTHETIC_PRIVATE_INPUT: 'fake',
+          ...environment,
         },
       })
     for (const key of ['', '   ', 'bad key']) assert.equal(run(key).status, 1)
     const result = run('public-test-key')
     assert.equal(result.status, 0, result.stderr)
     assert.match(result.stdout, /ISOLATION_VERIFIED/)
+    git('checkout', '--detach')
+    assert.equal(run('public-test-key').status, 1)
+    assert.equal(
+      run('public-test-key', {
+        CI: 'true',
+        GITHUB_HEAD_REF: 'fixture',
+      }).status,
+      0,
+    )
+    assert.equal(
+      run('public-test-key', {
+        CI: 'true',
+        GITHUB_HEAD_REF: 'fixture',
+        HML_DEPLOY: '1',
+      }).status,
+      1,
+    )
     git('add', '-f', '.env.production')
     git('commit', '-m', 'synthetic forbidden source')
     assert.equal(run('public-test-key').status, 1)

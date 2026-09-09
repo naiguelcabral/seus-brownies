@@ -5,6 +5,10 @@ set -euo pipefail
 repository_root=$(git rev-parse --show-toplevel)
 branch=$(git -C "$repository_root" branch --show-current)
 
+if [[ -z "$branch" && "${HML_DEPLOY:-0}" != '1' && "${CI:-}" == 'true' ]]; then
+  branch=${GITHUB_HEAD_REF:-${GITHUB_REF_NAME:-}}
+fi
+
 if [[ -z "$branch" || "$branch" == "main" ]]; then
   echo 'Build HML exige uma branch de trabalho; main é bloqueada.' >&2
   exit 1

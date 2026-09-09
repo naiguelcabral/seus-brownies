@@ -24,6 +24,38 @@ test('agrega faturamento preservando valores históricos por canal', () => {
   ])
 })
 
+test('ordena agregados monetários sem perder centavos fora do inteiro seguro', () => {
+  assert.deepEqual(
+    groupRevenueByChannel([
+      { channel: 'Canal menor', amount: '90071992547409.93' },
+      { channel: 'Canal maior', amount: '90071992547409.94' },
+    ]).map((item) => item.channel),
+    ['Canal maior', 'Canal menor'],
+  )
+  assert.deepEqual(
+    groupExpensesByCategory([
+      { category: 'Menor', amount: '90071992547409.93' },
+      { category: 'Maior', amount: '90071992547409.94' },
+    ]).map((item) => item.category),
+    ['Maior', 'Menor'],
+  )
+  assert.deepEqual(
+    groupSalesByProduct([
+      {
+        productName: 'Brownie menor',
+        quantity: '1',
+        amount: '90071992547409.93',
+      },
+      {
+        productName: 'Brownie maior',
+        quantity: '1',
+        amount: '90071992547409.94',
+      },
+    ]).map((item) => item.productName),
+    ['Brownie maior', 'Brownie menor'],
+  )
+})
+
 test('separa receita líquida, CMV, perdas, margem e resultado financeiro', () => {
   assert.deepEqual(
     summarizeLifecycleFinancials({
@@ -113,6 +145,31 @@ test('valoriza saídas de produção pelo custo total alocado, não por custo un
   assert.deepEqual(
     inventory.map((item) => item.value),
     ['45.33', '22.67'],
+  )
+})
+
+test('mantém saldo positivo e ordem de inventário com inteiros exatos', () => {
+  const inventory = valueInventory([
+    {
+      productId: 2,
+      productName: 'Menor',
+      unit: 'unit',
+      quantityDelta: '9007199254740993.000',
+      unitCost: '1.000',
+      allocatedCost: '9007199254740993.00',
+    },
+    {
+      productId: 1,
+      productName: 'Maior',
+      unit: 'unit',
+      quantityDelta: '9007199254740994.000',
+      unitCost: '1.000',
+      allocatedCost: '9007199254740994.00',
+    },
+  ])
+  assert.deepEqual(
+    inventory.map((item) => item.productName),
+    ['Maior', 'Menor'],
   )
 })
 
