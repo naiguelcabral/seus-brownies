@@ -79,6 +79,10 @@ Este documento é a referência canônica de alto nível para o estado atual do 
   estão implementados sobre a Server Function já autorizada, com estados de
   carregamento/erro. O build isolado e a CI `34270184144` desse checkpoint
   passaram.
+- O histórico de compras agora filtra fornecedor e período no servidor,
+  pagina 20 itens com ordem estável e preserva a negação de histórico ao
+  Funcionário. Testes direcionados, lint, typecheck e build HML isolado
+  passaram localmente; a CI desse checkpoint ainda depende de publicação.
 - A CI `34278599814` também passou no checkpoint publicado mais recente, com
   suíte, lint, typecheck e build HML isolado. A análise completa de dependências
   encontrou 13 vulnerabilidades (cinco altas); nenhuma atualização automática

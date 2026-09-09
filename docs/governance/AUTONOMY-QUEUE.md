@@ -45,6 +45,7 @@ seleção de pacotes pelo controlador. Ela não substitui os gates de
 | AR-D2  | Filtrar e paginar histórico de despesas            | codigo     | done        | Busca textual, período, 20 itens e estados de carregamento/erro aprovados na CI `34270184144`; preserva `expenses:read`.                       |
 | AR-E3  | Preparar resiliência operacional                   | documental | done        | Runbook de backup, restauração descartável, RPO/RTO, rollback, observabilidade e retenção preparado; decisões e ensaio humano pendentes.       |
 | AR-E4  | Revisar vulnerabilidades de dependências           | qualidade  | needs-human | `npm audit` confirmou 13 vulnerabilidades; `js-yaml` permite correção não forçada a revisar, Drizzle/Wrangler exigem estratégia sem `--force`. |
+| AR-D3  | Filtrar e paginar histórico de compras             | codigo     | running     | Busca de fornecedor, período, paginação e estados explícitos validados localmente; CI e homologação de interface aguardam publicação.          |
 
 Esses pacotes decorrem da missão manual de até 20 pacotes. A07 continua
 `blocked`; A08–A10 continuam `needs-human`. Não há promoção de nível permanente.

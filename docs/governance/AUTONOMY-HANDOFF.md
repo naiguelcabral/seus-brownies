@@ -2,10 +2,11 @@
 
 Atualizado em 8 de setembro de 2026.
 
-## Missão `codex/audit-remediation` — dependências analisadas e CI verde
+## Missão `codex/audit-remediation` — compras paginadas, aguardando CI
 
 - Branch: `codex/audit-remediation`; último checkpoint publicado:
-  `7b07629 docs(governance): record expenses ci validation`.
+  `545c4ac docs(governance): record dependency audit gate`; checkpoint local
+  atual: `e198cd1 feat(purchases): add filtered paginated history`.
 - Pacotes A/B/C implementados nesta missão: proteção de checkpoint e build
   isolado, sanitização de conversas, hardening de auth e experiência do
   Funcionário, idempotência operacional, correção FIFO, autoria/auditoria e
@@ -59,6 +60,11 @@ Atualizado em 8 de setembro de 2026.
   as propostas para as cadeias Drizzle e Wrangler usam `--force` e versões
   incompatíveis. Nenhuma dependência foi atualizada. Próximo pacote só deve
   tocar versões após decidir a estratégia e preparar validação completa.
+- AR-D3 implementou busca por fornecedor, período e paginação de 20 compras
+  na Server Function protegida. A rota preserva filtros na URL, estados de
+  carregamento/erro/vazio e a negação de `purchases:read` ao Funcionário. Seis
+  testes específicos, lint, typecheck, Prettier e build HML isolado passaram;
+  o pacote aguarda publicação e CI.
 
 ## Retomada local — checkpoint reconciliado e contrato A07-R3
 

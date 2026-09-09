@@ -119,8 +119,9 @@ A definição de margem realizada e vínculo venda-lote é decisão de negócio/
 - [ ] Parceiros/canais com desempenho.
 - [~] Exportação CSV segura dos relatórios operacionais concluída localmente;
   XLSX segue fora do escopo atual e não foi apresentado como integração.
-- [~] Busca, filtros, paginação e estados explícitos implementados para o
-  histórico de despesas; os demais históricos seguem como pacotes separados.
+- [~] Busca, filtros, paginação e estados explícitos implementados para os
+  históricos de despesas e compras; vendas e os demais históricos seguem como
+  pacotes separados.
 
 ## Fase G4 — WhatsApp e mensageria
 

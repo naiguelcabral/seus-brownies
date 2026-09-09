@@ -353,3 +353,25 @@ e de um checkpoint próprio, com a suíte, lint, tipos e build isolado.
 Estado: achado confirmado; correção de `js-yaml` aguarda revisão do diff de
 lockfile e as cadeias Drizzle/Wrangler aguardam decisão de atualização. A
 análise não altera o estado de homologação nem substitui testes de runtime.
+
+## AR-D3 — busca, filtros e paginação de compras (G3)
+
+O achado foi confirmado: `listPurchases` retornava todo o histórico, sem
+validação de filtros, limite ou ordenação de desempate. A Server Function
+protegida por `purchases:read` agora valida texto e período, rejeita intervalo
+invertido, conta com os mesmos filtros e devolve 20 linhas em ordem estável por
+data e ID. A busca se restringe ao fornecedor; não cria consulta por campos
+financeiros ou novos acessos.
+
+A rota conserva os filtros na URL, os reinicia ao filtrar, informa
+total/página e mostra carregamento, erro recuperável e resultado vazio. O
+Funcionário continua sem invocar o histórico: recebe somente a lista de
+produtos necessária para registrar uma compra. Não houve alteração na escrita,
+no cálculo monetário, nas permissões ou nos dados existentes.
+
+Validação local: seis testes direcionados (paginação, contrato da Server
+Function/rota e experiência do Funcionário), lint, typecheck, Prettier e
+`git diff --check` passaram. O build HML isolado do checkpoint `e198cd1`
+passou com chave pública sintética; o aviso de secrets operacionais ausentes no
+SSR é esperado. Estado: implementado e validado localmente; CI remota e
+homologação de interface aguardam publicação.
