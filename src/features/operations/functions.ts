@@ -8,6 +8,7 @@ import {
   gte,
   ilike,
   inArray,
+  lt,
   lte,
   or,
   sql,
@@ -53,6 +54,12 @@ import {
   calculatePurchaseHistoryPage,
   purchaseHistoryPageSize,
 } from '#/features/operations/purchase-history'
+import {
+  calculateSaleHistoryPage,
+  endOfSaleHistoryDay,
+  saleHistoryPageSize,
+  saleStatuses,
+} from '#/features/operations/sale-history'
 
 const quantityPattern = /^\d+(?:[,.]\d{1,3})?$/
 const moneyPattern = /^\d+(?:[,.]\d{1,2})?$/
@@ -374,7 +381,7 @@ const saleValues = z.object({
   idempotencyKey: z.string().uuid(),
   customerName: z.string().trim().max(120).optional(),
   customerPhone: z.string().trim().max(32).optional(),
-  status: z.enum(['draft', 'confirmed', 'paid', 'cancelled']),
+  status: z.enum(saleStatuses),
   notes: z.string().trim().max(1000).optional(),
   items: z
     .array(
@@ -639,11 +646,46 @@ export const createSale = createServerFn({ method: 'POST' })
     })
   })
 
+const saleHistoryValues = z.object({
+  query: z.string().trim().max(100).optional(),
+  status: z.enum(saleStatuses).optional(),
+  start: z.string().date().optional(),
+  end: z.string().date().optional(),
+  page: z.number().int().min(1).max(10_000).default(1),
+})
+
 export const listSales = createServerFn({ method: 'GET' })
   .middleware([requireServerFunctionPermission('listSales')])
-  .handler(async () => {
+  .validator(saleHistoryValues)
+  .handler(async ({ data }) => {
+    if (data.start && data.end && data.start > data.end) {
+      throw new Error('A data inicial deve ser anterior à data final.')
+    }
     const { getDb } = await import('#/db/index')
-    return getDb().select().from(sales).orderBy(desc(sales.soldAt)).limit(60)
+    const database = getDb()
+    const startAt = data.start
+      ? new Date(`${data.start}T00:00:00.000Z`)
+      : undefined
+    const endAt = data.end ? endOfSaleHistoryDay(data.end) : undefined
+    const filters = and(
+      data.query ? ilike(sales.customerName, `%${data.query}%`) : undefined,
+      data.status ? eq(sales.status, data.status) : undefined,
+      startAt ? gte(sales.soldAt, startAt) : undefined,
+      endAt ? lt(sales.soldAt, endAt) : undefined,
+    )
+    const [{ total }] = await database
+      .select({ total: count() })
+      .from(sales)
+      .where(filters)
+    const pagination = calculateSaleHistoryPage(data.page, Number(total))
+    const rows = await database
+      .select()
+      .from(sales)
+      .where(filters)
+      .orderBy(desc(sales.soldAt), desc(sales.id))
+      .limit(saleHistoryPageSize)
+      .offset(pagination.offset)
+    return { sales: rows, total: Number(total), ...pagination }
   })
 
 const expenseValues = z.object({
