@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { Pencil, Plus, Power } from 'lucide-react'
-import { createFileRoute, useRouter } from '@tanstack/react-router'
+import { createFileRoute, useNavigate, useRouter } from '@tanstack/react-router'
 import { useServerFn } from '@tanstack/react-start'
+import { z } from 'zod'
 
 import { ManagementLayout } from '#/components/ManagementLayout'
 import { hasPermission } from '#/features/auth/authorization'
@@ -13,15 +14,35 @@ import {
   updateProduct,
 } from '#/features/catalog/functions'
 
+const productSearch = z.object({
+  query: z.string().trim().max(100).optional().catch(undefined),
+  type: z
+    .enum(['ingredient', 'packaging', 'finished_product'])
+    .optional()
+    .catch(undefined),
+  activity: z.enum(['active', 'inactive']).optional().catch(undefined),
+  page: z.number().int().min(1).max(10_000).catch(1),
+})
+
 export const Route = createFileRoute('/produtos')({
-  loader: async () => ({
-    products: await listProducts(),
+  validateSearch: productSearch,
+  loaderDeps: ({ search }) => ({
+    query: search.query,
+    type: search.type,
+    activity: search.activity,
+    page: search.page,
+  }),
+  loader: async ({ deps }) => ({
+    history: await listProducts({ data: deps }),
     categories: await listCategories(),
   }),
   component: ProductsPage,
+  pendingComponent: ProductsPending,
+  pendingMs: 300,
+  errorComponent: ProductsError,
 })
 
-type Product = Awaited<ReturnType<typeof listProducts>>[number]
+type Product = Awaited<ReturnType<typeof listProducts>>['products'][number]
 type Category = Awaited<ReturnType<typeof listCategories>>[number]
 type ProductType = 'ingredient' | 'packaging' | 'finished_product'
 type ProductFormValues = {
@@ -50,10 +71,12 @@ const unitLabels = {
 }
 
 function ProductsPage() {
-  const { products, categories } = Route.useLoaderData()
+  const { history, categories } = Route.useLoaderData()
+  const search = Route.useSearch()
   const { appRole } = Route.useRouteContext()
   const canWrite = Boolean(appRole && hasPermission(appRole, 'catalog:write'))
   const router = useRouter()
+  const navigate = useNavigate({ from: Route.fullPath })
   const create = useServerFn(createProduct)
   const update = useServerFn(updateProduct)
   const setActive = useServerFn(setProductActive)
@@ -106,12 +129,89 @@ function ProductsPage() {
           <div className="flex items-center justify-between border-b border-[#f0e5dc] px-5 py-4">
             <h2 className="font-bold">Produtos cadastrados</h2>
             <span className="rounded-full bg-[#f8eee4] px-2.5 py-1 text-xs font-bold text-[#92522e]">
-              {products.length}
+              {history.total}
             </span>
           </div>
-          {products.length === 0 ? (
+          <form
+            className="flex flex-wrap items-end gap-3 border-b border-[#f0e5dc] px-5 py-4"
+            role="search"
+            onSubmit={(event) => {
+              event.preventDefault()
+              const form = new FormData(event.currentTarget)
+              const selectedType = String(form.get('type') ?? '')
+              const selectedActivity = String(form.get('activity') ?? '')
+              void navigate({
+                search: (previous) => ({
+                  ...previous,
+                  query: String(form.get('query') ?? '').trim() || undefined,
+                  type:
+                    selectedType === 'ingredient' ||
+                    selectedType === 'packaging' ||
+                    selectedType === 'finished_product'
+                      ? selectedType
+                      : undefined,
+                  activity:
+                    selectedActivity === 'active' ||
+                    selectedActivity === 'inactive'
+                      ? selectedActivity
+                      : undefined,
+                  page: 1,
+                }),
+              })
+            }}
+          >
+            <label className="text-xs font-bold text-[#573524]">
+              Buscar
+              <input
+                className="field mt-1 block min-w-48"
+                name="query"
+                defaultValue={search.query}
+                placeholder="Nome ou SKU"
+              />
+            </label>
+            <label className="text-xs font-bold text-[#573524]">
+              Tipo
+              <select
+                className="field mt-1 block"
+                name="type"
+                defaultValue={search.type ?? ''}
+              >
+                <option value="">Todos</option>
+                {Object.entries(typeLabels).map(([value, label]) => (
+                  <option key={value} value={value}>
+                    {label}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label className="text-xs font-bold text-[#573524]">
+              Situação
+              <select
+                className="field mt-1 block"
+                name="activity"
+                defaultValue={search.activity ?? ''}
+              >
+                <option value="">Todas</option>
+                <option value="active">Ativos</option>
+                <option value="inactive">Inativos</option>
+              </select>
+            </label>
+            <button className="rounded-lg border border-[#4a2114] px-3 py-2 text-xs font-bold text-[#4a2114]">
+              Filtrar
+            </button>
+            {search.query || search.type || search.activity ? (
+              <button
+                type="button"
+                className="px-2 py-2 text-xs font-bold text-[#75411f]"
+                onClick={() => void navigate({ search: { page: 1 } })}
+              >
+                Limpar filtros
+              </button>
+            ) : null}
+          </form>
+          {history.products.length === 0 ? (
             <p className="p-6 text-sm text-[#846859]">
-              Nenhum produto cadastrado.
+              Nenhum produto encontrado para esses filtros.
             </p>
           ) : (
             <div className="overflow-x-auto">
@@ -126,7 +226,7 @@ function ProductsPage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#f0e5dc]">
-                  {products.map((product) => (
+                  {history.products.map((product) => (
                     <tr key={product.id}>
                       <td className="px-5 py-4">
                         <p className="font-bold">{product.name}</p>
@@ -182,6 +282,47 @@ function ProductsPage() {
               </table>
             </div>
           )}
+          <nav
+            className="flex items-center justify-between gap-3 border-t border-[#f0e5dc] px-5 py-4 text-sm"
+            aria-label="Paginação dos produtos"
+          >
+            <span aria-live="polite">
+              Página {history.page} de {history.totalPages} · {history.total}{' '}
+              {history.total === 1 ? 'produto' : 'produtos'}
+            </span>
+            <div className="flex gap-2">
+              <button
+                type="button"
+                className="rounded-lg border border-[#d9c4b5] px-3 py-1.5 text-xs font-bold disabled:opacity-50"
+                disabled={history.page === 1}
+                onClick={() =>
+                  void navigate({
+                    search: (previous) => ({
+                      ...previous,
+                      page: history.page - 1,
+                    }),
+                  })
+                }
+              >
+                Anterior
+              </button>
+              <button
+                type="button"
+                className="rounded-lg border border-[#d9c4b5] px-3 py-1.5 text-xs font-bold disabled:opacity-50"
+                disabled={history.page === history.totalPages}
+                onClick={() =>
+                  void navigate({
+                    search: (previous) => ({
+                      ...previous,
+                      page: history.page + 1,
+                    }),
+                  })
+                }
+              >
+                Próxima
+              </button>
+            </div>
+          </nav>
         </section>
         {canWrite ? (
           <ProductForm
@@ -193,6 +334,43 @@ function ProductsPage() {
             notice={notice}
           />
         ) : null}
+      </div>
+    </ManagementLayout>
+  )
+}
+
+function ProductsPending() {
+  return (
+    <ManagementLayout
+      title="Produtos"
+      description="Carregando o catálogo de produtos."
+    >
+      <p
+        role="status"
+        className="rounded-2xl border border-[#ecdfd4] bg-white p-5 text-sm text-[#846859]"
+      >
+        Carregando produtos…
+      </p>
+    </ManagementLayout>
+  )
+}
+
+function ProductsError({ error }: { error: Error }) {
+  const router = useRouter()
+  return (
+    <ManagementLayout
+      title="Produtos"
+      description="Não foi possível carregar o catálogo de produtos."
+    >
+      <div className="rounded-2xl border border-[#e7c9b8] bg-[#fff5ed] p-5 text-sm text-[#75411f]">
+        <p>{error.message || 'Tente novamente em alguns instantes.'}</p>
+        <button
+          type="button"
+          className="mt-3 rounded-lg border border-[#75411f] px-3 py-2 text-xs font-bold"
+          onClick={() => void router.invalidate()}
+        >
+          Tentar novamente
+        </button>
       </div>
     </ManagementLayout>
   )

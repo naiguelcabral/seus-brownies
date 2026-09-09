@@ -1,5 +1,5 @@
 import { createServerFn } from '@tanstack/react-start'
-import { asc, eq } from 'drizzle-orm'
+import { and, asc, count, eq, ilike, or } from 'drizzle-orm'
 import { z } from 'zod'
 
 import {
@@ -14,6 +14,10 @@ import {
 } from '#/db/schema'
 import { requireServerFunctionPermission } from '#/features/auth/server-function-middleware'
 import { assertProductStructureChangeAllowed } from '#/features/catalog/product-structure'
+import {
+  calculateProductHistoryPage,
+  productHistoryPageSize,
+} from '#/features/catalog/product-history'
 
 const categoryValues = z.object({
   name: z.string().trim().min(2, 'Informe ao menos 2 caracteres.').max(80),
@@ -148,11 +152,37 @@ export const setCategoryActive = createServerFn({ method: 'POST' })
       .where(eq(categories.id, data.id))
   })
 
+const productHistoryValues = z.object({
+  query: z.string().trim().max(100).optional(),
+  type: z.enum(['ingredient', 'packaging', 'finished_product']).optional(),
+  activity: z.enum(['active', 'inactive']).optional(),
+  page: z.number().int().min(1).max(10_000).default(1),
+})
+
 export const listProducts = createServerFn({ method: 'GET' })
   .middleware([requireServerFunctionPermission('listProducts')])
-  .handler(async () => {
+  .validator(productHistoryValues)
+  .handler(async ({ data }) => {
     const { getDb } = await import('#/db/index')
-    return getDb()
+    const database = getDb()
+    const filters = and(
+      data.query
+        ? or(
+            ilike(products.name, `%${data.query}%`),
+            ilike(products.sku, `%${data.query}%`),
+          )
+        : undefined,
+      data.type ? eq(products.type, data.type) : undefined,
+      data.activity
+        ? eq(products.isActive, data.activity === 'active')
+        : undefined,
+    )
+    const [{ total }] = await database
+      .select({ total: count() })
+      .from(products)
+      .where(filters)
+    const pagination = calculateProductHistoryPage(data.page, Number(total))
+    const rows = await database
       .select({
         id: products.id,
         name: products.name,
@@ -167,7 +197,11 @@ export const listProducts = createServerFn({ method: 'GET' })
       })
       .from(products)
       .leftJoin(categories, eq(products.categoryId, categories.id))
-      .orderBy(asc(products.name))
+      .where(filters)
+      .orderBy(asc(products.name), asc(products.id))
+      .limit(productHistoryPageSize)
+      .offset(pagination.offset)
+    return { products: rows, total: Number(total), ...pagination }
   })
 
 export const createProduct = createServerFn({ method: 'POST' })
