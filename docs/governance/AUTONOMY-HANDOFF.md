@@ -4,10 +4,11 @@ Atualizado em 9 de setembro de 2026.
 
 ## Missão `codex/audit-remediation` — G1 local e decisões G2 em validação
 
-- Branch: `codex/audit-remediation`; checkpoint local a publicar:
-  `3056e4d fix(auth): harden public verification contracts`. A recuperação
-  partiu de `2a7b573`; HEAD, origin e árvore foram reconciliados antes de novas
-  alterações.
+- Branch: `codex/audit-remediation`; checkpoint funcional publicado:
+  `8a29760 fix(auth): signal audit persistence failures`. A recuperação partiu
+  de `2a7b573`; HEAD, origin e árvore foram reconciliados antes de novas
+  alterações. A CI iniciada para esse SHA é `34343787554`; consultar seu
+  resultado atual antes de atribuir validação remota a outro commit.
 - Pacotes A/B/C implementados nesta missão: proteção de checkpoint e build
   isolado, sanitização de conversas, hardening de auth e experiência do
   Funcionário, idempotência operacional, correção FIFO, autoria/auditoria e
@@ -106,6 +107,11 @@ Atualizado em 9 de setembro de 2026.
   emitido nem expor dados sensíveis. A política de compensação e a confirmação
   HML continuam pendentes de decisão e acesso humano.
 - AR-G2-D1 preparou a decisão de CMV, e AR-E6 analisou as 13 vulnerabilidades.
+- Próximo comando de retomada, após conferir `git status --short --branch`:
+  `gh run list --branch codex/audit-remediation --limit 3`. Não repetir a
+  suíte local se uma execução equivalente estiver ativa. Sem resultado remoto
+  confirmado, registrar a CI como pendente; os únicos próximos passos G1 são
+  HML, navegador/CAPTCHA, identidade/e-mail autorizados e a decisão de sessão.
   A ordem recomendada de integração é #2 para `g1-auth-adr`, depois G1 para
   `main`, e por fim revisão de #3 contra a base atualizada, sem rebase.
 
