@@ -102,6 +102,10 @@ Este documento é a referência canônica de alto nível para o estado atual do 
   build, usando a referência explícita da branch de trabalho; deploy nesse modo
   continua bloqueado. As CIs `34299895120` e `34299897403` passaram com essa
   proteção e com ordenação exata dos agregados de relatórios.
+- A revisão local G1 cobre os cinco escopos do binding distribuído e rejeita
+  respostas HTTP/JSON inválidas do Turnstile. A homologação com binding HML,
+  desafio real, replay, e-mail, cookies, sessão e revogação permanece externa
+  e está explicitamente separada na matriz de validação G1.
 - O runbook de resiliência operacional documenta backup, restauração em branch
   descartável, RPO/RTO, rollback, observabilidade e retenção. Não há estratégia
   externa configurada nem ensaio de restauração: esses são gates humanos.

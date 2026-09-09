@@ -2,10 +2,10 @@
 
 Atualizado em 8 de setembro de 2026.
 
-## Missão `codex/audit-remediation` — PR verde, gates humanos pendentes
+## Missão `codex/audit-remediation` — G1 local e decisões G2 em validação
 
 - Branch: `codex/audit-remediation`; último checkpoint publicado:
-  `3184bbd docs(governance): record recovery checkpoint`; HEAD, origin e
+  `2a7b573 docs(governance): record green PR validation`; HEAD, origin e
   árvore foram reconciliados após a interrupção de capacidade.
 - Pacotes A/B/C implementados nesta missão: proteção de checkpoint e build
   isolado, sanitização de conversas, hardening de auth e experiência do
@@ -97,6 +97,12 @@ Atualizado em 8 de setembro de 2026.
   (pull request), ambas para `562da42`. A PR #3 está verde, limpa e segue em
   rascunho. Próximo passo: revisão humana da PR e, depois de decisões ou acesso
   específico, A07/A08/A10, dependências e homologações.
+- AR-G1-L2 fortaleceu o adaptador Turnstile contra HTTP/JSON inválido e cobriu
+  a resolução do binding distribuído nos cinco fluxos públicos. Os 68 testes
+  G1 direcionados passaram; CI, HML e replay real ainda não foram executados.
+- AR-G2-D1 preparou a decisão de CMV, e AR-E6 analisou as 13 vulnerabilidades.
+  A ordem recomendada de integração é #2 para `g1-auth-adr`, depois G1 para
+  `main`, e por fim revisão de #3 contra a base atualizada, sem rebase.
 
 ## Retomada local — checkpoint reconciliado e contrato A07-R3
 

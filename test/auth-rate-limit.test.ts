@@ -139,6 +139,47 @@ test('binding distribuído recebe somente chave opaca por escopo antes do limite
   assert.doesNotMatch(keys[0], /admin|example/i)
 })
 
+test('resolver do binding distribuído protege todos os escopos antes do limite local', async () => {
+  for (const scope of [
+    'login',
+    'sign-up',
+    'verification-otp',
+    'password-reset',
+    'password-reset-completion',
+  ] as const) {
+    const calls: string[] = []
+    const result = await protectPublicAuthAction(
+      { scope, identifier: 'admin@example.test' },
+      { AUTH_LOGIN_HASH_PEPPER: 'pepper-only-for-test' },
+      {
+        resolveDistributedLimiter: async () => {
+          calls.push('resolve')
+          return {
+            limit: async ({ key }) => {
+              calls.push(`distributed:${key}`)
+              return { success: true }
+            },
+          }
+        },
+        limiter: {
+          consume: () => {
+            calls.push('local')
+            return { allowed: true, requiresChallenge: false, retryAfterMs: 0 }
+          },
+        },
+      },
+    )
+
+    assert.equal(result.allowed, true)
+    assert.equal(calls[0], 'resolve')
+    assert.match(
+      calls[1] ?? '',
+      new RegExp(`^distributed:${scope}:[a-f0-9]{64}$`),
+    )
+    assert.equal(calls[2], 'local')
+  }
+})
+
 test('negação ou falha do binding distribuído bloqueia sem consumir CAPTCHA ou limite local', async () => {
   for (const outcome of ['denied', 'failure'] as const) {
     let localCalls = 0

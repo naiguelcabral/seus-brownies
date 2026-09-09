@@ -485,3 +485,23 @@ As CIs `34299895120` (push) e `34299897403` (pull request) passaram no SHA
 `562da4215af15361a809c553cdc9360b08de3787`, incluindo `build:hml` no checkout
 detached. Estado: implementado e validado localmente e em CI; deploy e HML
 continuam fora deste pacote.
+
+## AR-G1-L2 — contratos locais de rate limit e Turnstile
+
+O binding distribuído já era integrado por chave HMAC opaca, mas faltava provar
+a resolução injetada para todos os escopos públicos. A cobertura agora confirma
+`login`, cadastro, OTP, solicitação e conclusão de reset antes do limite local.
+O adaptador Turnstile também passa a rejeitar resposta HTTP inválida ou JSON
+inválido mesmo que um corpo malformado alegue sucesso. Sessenta e oito testes
+G1 direcionados passaram localmente. A matriz
+`G1-LOCAL-EXTERNAL-VALIDATION-MATRIX.md` diferencia esses fakes de HML, replay,
+e-mail, cookies e revogação reais.
+
+## AR-G2-D1 e AR-E6 — decisões e dependências preparadas
+
+`G2-CMV-DECISION.md` documenta alternativas de corte temporal, reversão,
+receita, CMV e vínculo venda–lote sem escolher regra financeira. A análise
+`DEPENDENCY-AUDIT-2026-09-09.md` classifica os 13 alertas, caminhos, contexto
+de uso e impacto de atualização. `PR-INTEGRATION-ORDER.md` confirma que #2 é
+ancestral de #3 e recomenda integrar G1 antes de revisar #3 contra a `main`
+atualizada. Nenhuma base, dependency, migration, banco ou ambiente foi alterado.

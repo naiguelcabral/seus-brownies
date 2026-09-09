@@ -31,7 +31,15 @@ export function createCloudflareTurnstileVerifier(
         'https://challenges.cloudflare.com/turnstile/v0/siteverify',
         { method: 'POST', body },
       )
-      const result = (await response.json()) as TurnstileResponse
+      if (!response.ok) {
+        return { success: false, reasonCode: 'provider_http_error' }
+      }
+      let result: TurnstileResponse
+      try {
+        result = (await response.json()) as TurnstileResponse
+      } catch {
+        return { success: false, reasonCode: 'provider_invalid_response' }
+      }
       return {
         success: result.success === true,
         reasonCode: result['error-codes']?.[0],
