@@ -31,6 +31,7 @@ import {
   executeAuditedPasswordReset,
   isAuditedPasswordResetSuccessful,
 } from './password-reset-audit'
+import { createAuthAuditTelemetry } from './auth-audit-telemetry.server'
 import { createPasswordResetTelemetry } from './password-reset-telemetry.server'
 import { requestTanStackNeonPasswordReset } from './neon-tanstack-adapter.server'
 import {
@@ -92,7 +93,13 @@ async function getAuthActionAuditContext(): Promise<
   AuthActionAuditContext | undefined
 > {
   const writer = await getAuthAuditWriter()
-  return writer ? { writer, requestId: crypto.randomUUID() } : undefined
+  return writer
+    ? {
+        writer,
+        requestId: crypto.randomUUID(),
+        telemetry: createAuthAuditTelemetry(),
+      }
+    : undefined
 }
 
 async function getPublicAuthProtection(

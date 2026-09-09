@@ -513,3 +513,18 @@ recebeu somente a chave pública sintética e relatou a ausência esperada de
 secrets operacionais; isso confirma o isolamento, não uma homologação do
 provedor. CI e testes HML com navegador, CAPTCHA, e-mail e identidade autorizada
 continuam gates externos.
+
+## AR-G1-L3 — telemetria de falha de auditoria local
+
+Achado confirmado: login, logout e verificação de OTP preservavam o resultado
+do provedor quando o gravador de auditoria falhava, o que é necessário porque o
+provedor pode já ter emitido um cookie; porém a falha não tinha um sinal local
+estruturado. Cada falha agora emite exclusivamente `requestId`, ação, resultado
+e estágio `persistence_failed`. Não inclui identidade, e-mail, senha, OTP,
+token, cookie, resposta do provedor ou dados de rede. A política de revogar ou
+compensar uma sessão já emitida não foi escolhida: permanece uma decisão humana
+e uma homologação do provedor.
+
+Validação local: login com gravador sintético rejeitado conserva a negação e
+emite somente o evento permitido. Os testes direcionados de ação/composição de
+login, reset e políticas de Server Function passaram, além de lint e typecheck.

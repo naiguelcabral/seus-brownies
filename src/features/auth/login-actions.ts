@@ -1,5 +1,6 @@
 import { createAuthAuditEvent } from './audit'
 import type { AuthAuditAction, AuthAuditWriter } from './audit'
+import type { AuthAuditTelemetry } from './auth-audit-telemetry.server'
 
 export const invalidLoginMessage =
   'Não foi possível iniciar a sessão. Verifique as credenciais e tente novamente.'
@@ -65,6 +66,7 @@ export type NeonAuthPasswordResetClient = {
 export type AuthActionAuditContext = {
   requestId: string
   writer: AuthAuditWriter
+  telemetry?: AuthAuditTelemetry
 }
 
 async function recordAuthAction(
@@ -87,8 +89,14 @@ async function recordAuthAction(
       }),
     )
   } catch {
-    // Audit persistence must not disclose an internal failure or change an
-    // already-established authentication result. HML verifies persistence.
+    // A provider may already have emitted a session cookie. Keep that outcome
+    // stable, but make the lost audit event observable with safe metadata.
+    audit.telemetry?.emit({
+      requestId: audit.requestId,
+      action,
+      outcome,
+      stage: 'persistence_failed',
+    })
   }
 }
 

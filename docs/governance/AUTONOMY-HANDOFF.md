@@ -101,6 +101,10 @@ Atualizado em 9 de setembro de 2026.
 - AR-G1-L2 fortaleceu o adaptador Turnstile contra HTTP/JSON inválido e cobriu
   a resolução do binding distribuído nos cinco fluxos públicos. Os 68 testes
   G1 direcionados passaram; CI, HML e replay real ainda não foram executados.
+- AR-G1-L3 emite telemetria permitida quando o gravador de auditoria de
+  login/logout/OTP falha, sem mudar uma sessão que o provedor já possa ter
+  emitido nem expor dados sensíveis. A política de compensação e a confirmação
+  HML continuam pendentes de decisão e acesso humano.
 - AR-G2-D1 preparou a decisão de CMV, e AR-E6 analisou as 13 vulnerabilidades.
   A ordem recomendada de integração é #2 para `g1-auth-adr`, depois G1 para
   `main`, e por fim revisão de #3 contra a base atualizada, sem rebase.

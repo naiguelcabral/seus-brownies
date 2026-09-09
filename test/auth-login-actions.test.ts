@@ -311,6 +311,7 @@ test('OTP válido é delegado ao Neon Auth para emitir a sessão', async () => {
 })
 
 test('falha do gravador não altera uma negação fail-closed de login', async () => {
+  const telemetry: Array<unknown> = []
   const result = await signInWithEmailPassword(
     {
       ...createAuthClient(),
@@ -324,10 +325,20 @@ test('falha do gravador não altera uma negação fail-closed de login', async (
           throw new Error('audit persistence unavailable')
         },
       },
+      telemetry: { emit: (event) => telemetry.push(event) },
     },
   )
 
   assert.deepEqual(result, { ok: false, message: invalidLoginMessage })
+  assert.deepEqual(telemetry, [
+    {
+      requestId: 'request-id-local-002',
+      action: 'login',
+      outcome: 'failure',
+      stage: 'persistence_failed',
+    },
+  ])
+  assert.doesNotMatch(JSON.stringify(telemetry), /senha|cookie|token|email/i)
 })
 
 test('solicitação de recuperação sempre devolve mensagem não enumerável', async () => {
