@@ -396,5 +396,27 @@ Validação local: sete testes direcionados (paginação, corte temporal, contra
 da Server Function/rota, negação ao Funcionário e UI de lifecycle), lint,
 typecheck, Prettier e `git diff --check` passaram. O build HML isolado de
 `9137752` passou com chave pública sintética; o aviso de secrets operacionais
-ausentes no SSR é esperado. Estado: implementado e validado localmente; CI
-remota e homologação de interface aguardam publicação.
+ausentes no SSR é esperado. A CI `34296133493` do checkpoint `9001c25` passou
+integralmente. Estado: implementado e validado localmente e em CI;
+homologação de interface aguarda ambiente autorizado.
+
+## AR-D5 — busca, filtros e paginação do catálogo (G3)
+
+O achado foi confirmado: `listProducts` retornava o catálogo completo sem
+validação de busca, tipo, situação ou página. A Server Function protegida por
+`catalog:read` agora filtra por nome/SKU, tipo e ativo/inativo, conta com os
+mesmos filtros e devolve 20 produtos em ordem estável por nome e ID. A edição,
+inativação, regra estrutural de unidade/tipo e a matriz de permissões não foram
+alteradas.
+
+A rota conserva filtros na URL, apresenta total/página e estados explícitos de
+carregamento, erro recuperável e resultado vazio. Os controles de escrita
+permanecem visíveis apenas a quem tem `catalog:write`; o Funcionário continua
+com leitura de catálogo sem mutações.
+
+Validação local: nove testes direcionados (paginação, contrato da Server
+Function/rota, política das Server Functions e experiência do Funcionário),
+lint, typecheck, Prettier e `git diff --check` passaram. O build HML isolado
+de `4e7d757` passou com chave pública sintética; o aviso de secrets
+operacionais ausentes no SSR é esperado. Estado: implementado e validado
+localmente; CI remota e homologação de interface aguardam publicação.

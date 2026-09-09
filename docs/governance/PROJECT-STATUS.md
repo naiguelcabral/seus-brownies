@@ -87,8 +87,12 @@ Este documento é a referência canônica de alto nível para o estado atual do 
 - O histórico de vendas agora filtra cliente, status e período no servidor,
   pagina 20 itens com corte final inclusivo de data em UTC e preserva a negação
   de histórico ao Funcionário. Testes direcionados, lint, typecheck e build
-  HML isolado passaram localmente; a CI desse checkpoint ainda depende de
-  publicação.
+  HML isolado passaram localmente e na CI `34296133493`; a homologação de
+  interface depende de ambiente autorizado.
+- O catálogo agora filtra nome/SKU, tipo e situação no servidor, pagina 20
+  produtos em ordem estável e mantém os controles de escrita fora do papel
+  Funcionário. Testes direcionados, lint, typecheck e build HML isolado
+  passaram localmente; a CI desse checkpoint ainda depende de publicação.
 - A CI `34278599814` também passou no checkpoint publicado mais recente, com
   suíte, lint, typecheck e build HML isolado. A análise completa de dependências
   encontrou 13 vulnerabilidades (cinco altas); nenhuma atualização automática

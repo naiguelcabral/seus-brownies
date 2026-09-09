@@ -2,11 +2,11 @@
 
 Atualizado em 8 de setembro de 2026.
 
-## Missão `codex/audit-remediation` — vendas paginadas, aguardando CI
+## Missão `codex/audit-remediation` — catálogo paginado, aguardando CI
 
 - Branch: `codex/audit-remediation`; último checkpoint publicado:
-  `9180c44 docs(governance): record purchase history validation`; checkpoint
-  local atual: `9137752 feat(sales): add filtered paginated history`.
+  `9001c25 docs(governance): record sales history validation`; checkpoint
+  local atual: `4e7d757 feat(catalog): add filtered paginated products`.
 - Pacotes A/B/C implementados nesta missão: proteção de checkpoint e build
   isolado, sanitização de conversas, hardening de auth e experiência do
   Funcionário, idempotência operacional, correção FIFO, autoria/auditoria e
@@ -69,8 +69,13 @@ Atualizado em 8 de setembro de 2026.
 - AR-D4 implementou filtros por cliente, status e período, com paginação de 20
   vendas. O corte final inclusivo por data usa UTC como os relatórios; não muda
   receita, CMV, inventário, lifecycle ou permissões. Sete testes específicos,
-  lint, typecheck, Prettier e build isolado passaram. A CI e a homologação de
-  interface aguardam publicação.
+  lint, typecheck, Prettier e build isolado passaram. A CI `34296133493`
+  confirmou o pacote; a homologação de interface aguarda ambiente autorizado.
+- AR-D5 implementou busca por nome/SKU, tipo e situação ativa no catálogo, com
+  paginação de 20 produtos e estados de carregamento/erro/vazio. Não muda as
+  mutações, proteção estrutural ou RBAC. Nove testes específicos, lint,
+  typecheck, Prettier e build isolado passaram; CI e homologação de interface
+  aguardam publicação.
 
 ## Retomada local — checkpoint reconciliado e contrato A07-R3
 
