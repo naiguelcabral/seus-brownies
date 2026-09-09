@@ -2,7 +2,7 @@
 
 Atualizado em 8 de setembro de 2026.
 
-## Missão `codex/audit-remediation` — correção da CI e precisão de relatórios
+## Missão `codex/audit-remediation` — PR verde, gates humanos pendentes
 
 - Branch: `codex/audit-remediation`; último checkpoint publicado:
   `3184bbd docs(governance): record recovery checkpoint`; HEAD, origin e
@@ -92,8 +92,11 @@ Atualizado em 8 de setembro de 2026.
   testes direcionados, lint, typecheck, Prettier e build isolado passaram.
 - AR-E5 preparado: em CI, checkout detached pode usar exclusivamente a
   referência explícita de uma branch de trabalho para `build:hml`. `HML_DEPLOY`
-  continua bloqueado nesse modo. A mesma validação local passou; próximo passo:
-  publicar ambos os pacotes e acompanhar a CI da PR #3.
+  continua bloqueado nesse modo. A mesma validação local passou.
+- AR-D6 e AR-E5 foram aprovados nas CIs `34299895120` (push) e `34299897403`
+  (pull request), ambas para `562da42`. A PR #3 está verde, limpa e segue em
+  rascunho. Próximo passo: revisão humana da PR e, depois de decisões ou acesso
+  específico, A07/A08/A10, dependências e homologações.
 
 ## Retomada local — checkpoint reconciliado e contrato A07-R3
 

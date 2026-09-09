@@ -98,6 +98,10 @@ Este documento é a referência canônica de alto nível para o estado atual do 
   suíte, lint, typecheck e build HML isolado. A análise completa de dependências
   encontrou 13 vulnerabilidades (cinco altas); nenhuma atualização automática
   foi aceita, pois as cadeias Drizzle e Wrangler só têm proposta incompatível.
+- O build HML isolado agora reconhece checkout detached somente durante CI de
+  build, usando a referência explícita da branch de trabalho; deploy nesse modo
+  continua bloqueado. As CIs `34299895120` e `34299897403` passaram com essa
+  proteção e com ordenação exata dos agregados de relatórios.
 - O runbook de resiliência operacional documenta backup, restauração em branch
   descartável, RPO/RTO, rollback, observabilidade e retenção. Não há estratégia
   externa configurada nem ensaio de restauração: esses são gates humanos.

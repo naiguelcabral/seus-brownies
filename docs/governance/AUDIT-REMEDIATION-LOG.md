@@ -463,6 +463,10 @@ Validação local: os testes direcionados de relatórios e isolamento passaram
 HML isolado com chave pública sintética. O aviso de secrets operacionais
 ausentes no SSR é esperado nesse build sem credenciais.
 
+A CI de push `34299895120` e a CI de pull request `34299897403` passaram no
+SHA `562da4215af15361a809c553cdc9360b08de3787`. Estado: implementado,
+validado localmente e em CI; não requer homologação externa.
+
 ## AR-E5 — build isolado em CI de pull request
 
 Achado confirmado pela CI `34298609505`: testes, lint e typecheck passaram no
@@ -476,3 +480,8 @@ checkout detached, referência explícita e a negativa de deploy.
 Validação local: os mesmos 16 testes direcionados, lint, typecheck, Prettier,
 `git diff --check` e build HML isolado passaram. A falha anterior da CI
 permanece registrada como evidência histórica, não como resultado deste código.
+
+As CIs `34299895120` (push) e `34299897403` (pull request) passaram no SHA
+`562da4215af15361a809c553cdc9360b08de3787`, incluindo `build:hml` no checkout
+detached. Estado: implementado e validado localmente e em CI; deploy e HML
+continuam fora deste pacote.
