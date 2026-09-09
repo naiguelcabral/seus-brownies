@@ -89,12 +89,11 @@ Atualizado em 8 de setembro de 2026.
   `test/report-calculations.test.ts`. Aceite: valores além do inteiro seguro
   mantêm ordem correta, saldo positivo é decidido por milésimos exatos e a
   alteração continua somente leitura, sem redefinir CMV ou margem. Dezesseis
-  testes direcionados, lint, typecheck e Prettier passaram; build aguarda
-  checkpoint limpo.
+  testes direcionados, lint, typecheck, Prettier e build isolado passaram.
 - AR-E5 preparado: em CI, checkout detached pode usar exclusivamente a
   referência explícita de uma branch de trabalho para `build:hml`. `HML_DEPLOY`
   continua bloqueado nesse modo. A mesma validação local passou; próximo passo:
-  revisar, commitar e publicar ambos os pacotes para a CI da PR #3.
+  publicar ambos os pacotes e acompanhar a CI da PR #3.
 
 ## Retomada local — checkpoint reconciliado e contrato A07-R3
 

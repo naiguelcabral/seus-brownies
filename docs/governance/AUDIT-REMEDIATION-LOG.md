@@ -459,8 +459,9 @@ filtros por comparações `bigint`, com desempate estável. Não altera fatos,
 CMV, margem, períodos ou permissões.
 
 Validação local: os testes direcionados de relatórios e isolamento passaram
-(16 casos), assim como lint, typecheck, Prettier e `git diff --check`. O build
-isolado exige árvore limpa e será executado no checkpoint versionado.
+(16 casos), assim como lint, typecheck, Prettier, `git diff --check` e o build
+HML isolado com chave pública sintética. O aviso de secrets operacionais
+ausentes no SSR é esperado nesse build sem credenciais.
 
 ## AR-E5 — build isolado em CI de pull request
 
@@ -472,7 +473,6 @@ uma branch de trabalho. O deploy (`HML_DEPLOY=1`) continua exigindo a branch
 local, inclusive se variáveis de CI forem informadas. Testes de fixture cobrem
 checkout detached, referência explícita e a negativa de deploy.
 
-Validação local: os mesmos 16 testes direcionados, lint, typecheck, Prettier e
-`git diff --check` passaram. O build isolado será reexecutado a partir do HEAD
-limpo do checkpoint; a falha anterior da CI permanece registrada como evidência
-histórica, não como resultado deste código ainda local.
+Validação local: os mesmos 16 testes direcionados, lint, typecheck, Prettier,
+`git diff --check` e build HML isolado passaram. A falha anterior da CI
+permanece registrada como evidência histórica, não como resultado deste código.

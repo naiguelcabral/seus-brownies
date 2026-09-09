@@ -48,8 +48,8 @@ seleção de pacotes pelo controlador. Ela não substitui os gates de
 | AR-D3  | Filtrar e paginar histórico de compras             | codigo     | done        | Busca de fornecedor, período, paginação e estados explícitos aprovados na CI `34295688527`; homologação de interface permanece pendente.       |
 | AR-D4  | Filtrar e paginar histórico de vendas              | codigo     | done        | Cliente, status, período, paginação e estados explícitos aprovados na CI `34296133493`; homologação de interface permanece pendente.           |
 | AR-D5  | Filtrar e paginar catálogo de produtos             | codigo     | done        | Nome/SKU, tipo, situação, paginação e estados explícitos aprovados na CI `34296485813`; homologação de interface permanece pendente.           |
-| AR-D6  | Preservar precisão na ordenação dos relatórios     | codigo     | running     | Comparações exatas para agregados e inventário preparadas; testes, lint e tipos locais passaram; build/CI aguardam checkpoint.                 |
-| AR-E5  | Permitir build CI em checkout detached             | codigo     | running     | CI de PR falhou antes do build por branch ausente; fallback restrito a build de CI e teste de negativa de deploy preparados.                   |
+| AR-D6  | Preservar precisão na ordenação dos relatórios     | codigo     | running     | Comparações exatas para agregados e inventário validadas localmente; CI aguarda publicação.                                                    |
+| AR-E5  | Permitir build CI em checkout detached             | codigo     | running     | CI de PR falhou antes do build por branch ausente; fallback e negativa de deploy validados localmente; CI aguarda publicação.                  |
 
 Esses pacotes decorrem da missão manual de até 20 pacotes. A07 continua
 `blocked`; A08–A10 continuam `needs-human`. Não há promoção de nível permanente.
