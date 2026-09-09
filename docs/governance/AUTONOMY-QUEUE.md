@@ -47,7 +47,7 @@ seleção de pacotes pelo controlador. Ela não substitui os gates de
 | AR-E4  | Revisar vulnerabilidades de dependências           | qualidade  | needs-human | `npm audit` confirmou 13 vulnerabilidades; `js-yaml` permite correção não forçada a revisar, Drizzle/Wrangler exigem estratégia sem `--force`. |
 | AR-D3  | Filtrar e paginar histórico de compras             | codigo     | done        | Busca de fornecedor, período, paginação e estados explícitos aprovados na CI `34295688527`; homologação de interface permanece pendente.       |
 | AR-D4  | Filtrar e paginar histórico de vendas              | codigo     | done        | Cliente, status, período, paginação e estados explícitos aprovados na CI `34296133493`; homologação de interface permanece pendente.           |
-| AR-D5  | Filtrar e paginar catálogo de produtos             | codigo     | running     | Nome/SKU, tipo, situação, paginação e estados explícitos validados localmente; CI e homologação de interface aguardam publicação.              |
+| AR-D5  | Filtrar e paginar catálogo de produtos             | codigo     | done        | Nome/SKU, tipo, situação, paginação e estados explícitos aprovados na CI `34296485813`; homologação de interface permanece pendente.           |
 
 Esses pacotes decorrem da missão manual de até 20 pacotes. A07 continua
 `blocked`; A08–A10 continuam `needs-human`. Não há promoção de nível permanente.

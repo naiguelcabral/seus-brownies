@@ -2,11 +2,11 @@
 
 Atualizado em 8 de setembro de 2026.
 
-## Missão `codex/audit-remediation` — catálogo paginado, aguardando CI
+## Missão `codex/audit-remediation` — recuperação concluída, PR pendente
 
 - Branch: `codex/audit-remediation`; último checkpoint publicado:
-  `9001c25 docs(governance): record sales history validation`; checkpoint
-  local atual: `4e7d757 feat(catalog): add filtered paginated products`.
+  `3c0b335 docs(governance): record catalog history validation`; HEAD,
+  origin e árvore foram reconciliados após a interrupção de capacidade.
 - Pacotes A/B/C implementados nesta missão: proteção de checkpoint e build
   isolado, sanitização de conversas, hardening de auth e experiência do
   Funcionário, idempotência operacional, correção FIFO, autoria/auditoria e
@@ -74,8 +74,14 @@ Atualizado em 8 de setembro de 2026.
 - AR-D5 implementou busca por nome/SKU, tipo e situação ativa no catálogo, com
   paginação de 20 produtos e estados de carregamento/erro/vazio. Não muda as
   mutações, proteção estrutural ou RBAC. Nove testes específicos, lint,
-  typecheck, Prettier e build isolado passaram; CI e homologação de interface
-  aguardam publicação.
+  typecheck, Prettier e build isolado passaram. A CI `34296485813` confirmou o
+  pacote; a homologação de interface aguarda ambiente autorizado.
+- Recuperação AR-R1: testes direcionados, lint, typecheck e build isolado já
+  iniciados terminaram com código 0. Não há processo Node/npm/tsx/ESLint/tsc/
+  Vite da tarefa ativo nem handle de terminal pendente recuperável; nenhum
+  processo foi encerrado. A CI `34296485813` corresponde exatamente ao HEAD
+  `3c0b335`. Próximo passo: abrir PR em rascunho contra `main`; a PR #2 contra
+  `g1-auth-adr` permanece aberta e intocada.
 
 ## Retomada local — checkpoint reconciliado e contrato A07-R3
 

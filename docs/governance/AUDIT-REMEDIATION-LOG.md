@@ -418,5 +418,24 @@ Validação local: nove testes direcionados (paginação, contrato da Server
 Function/rota, política das Server Functions e experiência do Funcionário),
 lint, typecheck, Prettier e `git diff --check` passaram. O build HML isolado
 de `4e7d757` passou com chave pública sintética; o aviso de secrets
-operacionais ausentes no SSR é esperado. Estado: implementado e validado
-localmente; CI remota e homologação de interface aguardam publicação.
+operacionais ausentes no SSR é esperado. A CI `34296485813` do checkpoint
+`3c0b335` passou integralmente. Estado: implementado e validado localmente e
+em CI; homologação de interface aguarda ambiente autorizado.
+
+## AR-R1 — recuperação após interrupção de capacidade
+
+Após a interrupção por capacidade do modelo, a recuperação confirmou
+`HEAD=3c0b3357aab42dc5e604dd7c36381d1515c5eb67`, branch
+`codex/audit-remediation` sincronizada com origin e árvore limpa. A CI
+`34296485813` foi consultada novamente e corresponde exatamente a esse SHA.
+
+Os resultados já disponíveis das três verificações em segundo plano foram
+recolhidos: testes direcionados do catálogo, lint e typecheck terminaram com
+código 0; o build HML isolado do checkpoint também terminou com código 0. A
+inspeção de processos não encontrou Node, npm, tsx, ESLint, TypeScript ou Vite
+ativos; apenas o shell do ambiente permaneceu visível. Não havia processo da
+tarefa a encerrar. Não há handle recuperável de terminal pendente nesta sessão;
+portanto nenhum resultado é inferido a partir de processo oculto.
+
+Estado: checkpoint de recuperação registrado. Próximo passo: preparar a PR em
+rascunho contra `main`, preservando a PR #2 aberta contra `g1-auth-adr`.
