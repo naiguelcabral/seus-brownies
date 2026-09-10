@@ -88,6 +88,20 @@ export async function protectPublicAuthAction(
         (await (
           dependencies.resolveDistributedLimiter ?? getCloudflareAuthRateLimiter
         )()))
+
+  // HML enables this explicitly so a missing Workers binding cannot silently
+  // downgrade a public endpoint to the isolate-local fallback limiter.
+  if (
+    !distributedLimiter &&
+    environment.AUTH_RATE_LIMITER_REQUIRED === 'true'
+  ) {
+    return {
+      allowed: false,
+      requiresChallenge: false,
+      retryAfterMs: 0,
+    }
+  }
+
   if (distributedLimiter) {
     try {
       const distributed = await distributedLimiter.limit({

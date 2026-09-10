@@ -115,7 +115,10 @@ test('binding distribuído recebe somente chave opaca por escopo antes do limite
   let localCalls = 0
   const result = await protectPublicAuthAction(
     { scope: 'sign-up', identifier: 'admin@example.test' },
-    { AUTH_LOGIN_HASH_PEPPER: 'pepper-only-for-test' },
+    {
+      AUTH_LOGIN_HASH_PEPPER: 'pepper-only-for-test',
+      AUTH_RATE_LIMITER_REQUIRED: 'true',
+    },
     {
       distributedLimiter: {
         limit: async ({ key }) => {
@@ -137,6 +140,33 @@ test('binding distribuído recebe somente chave opaca por escopo antes do limite
   assert.equal(keys.length, 1)
   assert.match(keys[0], /^sign-up:[a-f0-9]{64}$/)
   assert.doesNotMatch(keys[0], /admin|example/i)
+})
+
+test('binding distribuído obrigatório ausente falha fechado antes do limite local', async () => {
+  let localCalls = 0
+  const result = await protectPublicAuthAction(
+    { scope: 'login', identifier: 'admin@example.test' },
+    {
+      AUTH_LOGIN_HASH_PEPPER: 'pepper-only-for-test',
+      AUTH_RATE_LIMITER_REQUIRED: 'true',
+    },
+    {
+      distributedLimiter: null,
+      limiter: {
+        consume: () => {
+          localCalls += 1
+          return { allowed: true, requiresChallenge: false, retryAfterMs: 0 }
+        },
+      },
+    },
+  )
+
+  assert.deepEqual(result, {
+    allowed: false,
+    requiresChallenge: false,
+    retryAfterMs: 0,
+  })
+  assert.equal(localCalls, 0)
 })
 
 test('resolver do binding distribuído protege todos os escopos antes do limite local', async () => {

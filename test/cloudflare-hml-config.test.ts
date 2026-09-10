@@ -10,6 +10,12 @@ type WranglerConfig = {
     hml: {
       name: string
       workers_dev: boolean
+      vars: { AUTH_RATE_LIMITER_REQUIRED: string }
+      ratelimits: Array<{
+        name: string
+        namespace_id: string
+        simple: { limit: number; period: number }
+      }>
       secrets: { required: string[] }
     }
   }
@@ -32,6 +38,16 @@ test('Worker HML é separado e preserva a compatibilidade do Worker principal', 
   assert.deepEqual(config.compatibility_flags, ['nodejs_compat'])
   assert.equal(config.env.hml.name, 'cacau-v1-hml')
   assert.equal(config.env.hml.workers_dev, true)
+  assert.deepEqual(config.env.hml.vars, {
+    AUTH_RATE_LIMITER_REQUIRED: 'true',
+  })
+  assert.deepEqual(config.env.hml.ratelimits, [
+    {
+      name: 'AUTH_RATE_LIMITER',
+      namespace_id: '2026091001',
+      simple: { limit: 20, period: 60 },
+    },
+  ])
   assert.equal(config.routes, undefined)
   assert.deepEqual(config.env.hml.secrets.required, [
     'DATABASE_URL',
