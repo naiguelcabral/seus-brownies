@@ -132,6 +132,8 @@ Este documento é a referência canônica de alto nível para o estado atual do 
 - O código versionado possui 13 módulos de rota, CSRF global para métodos
   mutáveis e middleware estrutural de autorização aplicado às 30 Server
   Functions operacionais. A permissão é resolvida no servidor.
+- O acesso ao banco valida `DATABASE_URL` com Zod no runtime server-side, sem
+  carregar arquivos de ambiente nem incluir valores na mensagem de falha.
 
 ### Autenticação e acesso (G1)
 
@@ -181,6 +183,9 @@ Este documento é a referência canônica de alto nível para o estado atual do 
 - Regras completas de entrega.
 - Deploy definitivo de produção e secrets finais do Worker.
 - Relatórios gerenciais avançados, margem por produto/lote e análises adicionais.
+- Adoção multitenant: plano em `MULTITENANCY-ADOPTION.md`; depende de decidir
+  memberships, escopo de chaves e mapeamento auditável dos fatos históricos
+  antes de gerar uma migration aplicável.
 
 ## Restrições atuais
 

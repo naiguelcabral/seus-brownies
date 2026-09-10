@@ -204,6 +204,10 @@ A definição de margem realizada e vínculo venda-lote é decisão de negócio/
 
 ## Prioridade imediata
 
+0. Aprovar o modelo de membership e o mapeamento histórico de tenancy descritos
+   em `MULTITENANCY-ADOPTION.md` antes de gerar/aplicar migration multitenant.
+   Não atribuir `tenant-test-001` a fatos HML/produção nem alterar unicidades
+   globais sem a decisão.
 1. Decidir se haverá segundo Gerente e, se aprovado, informar a identidade a
    verificar antes de criar o vínculo auditado.
 2. Executar a homologação integrada/E2E de G1, inclusive reset, login, sessão,
