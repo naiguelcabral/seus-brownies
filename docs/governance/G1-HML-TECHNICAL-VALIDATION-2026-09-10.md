@@ -4,6 +4,34 @@ Esta evidência é de leitura e testes locais. Não houve deploy, escrita em
 Cloudflare/Neon, migration, criação de identidade, login, CAPTCHA, e-mail, OTP,
 reset, cookie ou token real.
 
+## Atualização AR-G1-HML-2 — binding preparado, publicação bloqueada
+
+Em 10 de setembro, o commit `99c30d7` passou na CI `34468924703`. Ele declara
+somente no environment `hml` o binding Cloudflare `AUTH_RATE_LIMITER`, com
+namespace positivo `2026091001`, limite simples de 20 chamadas por 60 segundos
+e `AUTH_RATE_LIMITER_REQUIRED=true`. O namespace não existia na configuração
+versionada do Worker HML antes desta alteração; ele é exclusivo desse Worker
+HML na configuração proposta. O limite é volumétrico por chave HMAC opaca e
+escopo, não substitui o cooldown durável de cinco tentativas por identidade,
+nem CAPTCHA ou validação de identidade. A consistência eventual do contador da
+Cloudflare impede tratá-lo como fonte financeira ou contador global exato.
+
+Quando essa variável exige o binding e o runtime não o resolve, os cinco
+fluxos públicos falham fechados antes do fallback local. A presença do binding
+continua a ser aplicada antes do limite local para login, cadastro, envio e
+verificação de OTP, e solicitação e conclusão de reset. Os contratos locais
+cobrem os dois caminhos e não reduzem as validações existentes.
+
+O deploy autorizado não foi executado: a sessão não recebeu
+`VITE_TURNSTILE_SITE_KEY` como variável explícita. O script oficial isola o
+build e exige essa chave pública; a chave sintética usada para validar o build
+não pode ser publicada porque quebraria o widget Turnstile real. Não houve
+tentativa de ler `.env`, consultar o valor da chave, alterar secret, binding
+remoto ou deployment. A versão HML ativa anterior permanece inalterada. Para
+publicar, um operador deve iniciar uma sessão com a chave pública HML já
+aprovada injetada no ambiente e executar `npm run deploy:hml` no HEAD limpo
+`99c30d7` (ou no commit documental posterior), sem registrar seu valor.
+
 ## Conexões e publicação
 
 - GitHub: PR #2 permanece aberta contra `g1-auth-adr`; PR #3 permanece em
@@ -24,28 +52,29 @@ reset, cookie ou token real.
 
 ## Configuração e limites
 
-`wrangler.jsonc` declara `cacau-v1-hml`, `workers_dev: true`,
-`compatibility_date: 2025-09-02` e `nodejs_compat`; não declara
-`AUTH_RATE_LIMITER`. A consulta somente leitura de detalhes da versão ativa com
+Na evidência anterior, `wrangler.jsonc` declarava `cacau-v1-hml`, `workers_dev:
+true`, `compatibility_date: 2025-09-02` e `nodejs_compat`, mas ainda não
+declarava `AUTH_RATE_LIMITER`. O commit `99c30d7` corrige essa lacuna somente
+na configuração versionada HML; a aplicação efetiva aguarda deploy. A consulta
+somente leitura de detalhes da versão ativa com
 `wrangler versions view <versão> --env hml --json` falhou por conectividade
 temporária da API Wrangler e tentativa de log em diretório somente leitura.
 Logo, a ausência efetiva do binding no Worker ativo é **não confirmada por API**,
-mas a ausência na configuração versionada é confirmada.
+mas a ausência na configuração versionada anterior é confirmada.
 
-O binding continua bloqueado por decisão/configuração Cloudflare: criar ou
-selecionar um namespace de Rate Limiting exclusivo de HML, aprovar limite e
-janela, então declarar no environment HML um binding exatamente chamado
-`AUTH_RATE_LIMITER` que aponte para esse namespace. Não usar placeholder e não
-reutilizar namespace de produção. Essa ação requer configuração externa e novo
-deploy, ambos fora desta execução.
+O binding remoto continua `validation-blocked` até um deploy HML com a chave
+pública legítima. A ação pendente não requer criar recurso separado: o
+namespace numérico é declarado pelo deployment do Worker. Não reutilizar o
+namespace em outro Worker e não alterar produção.
 
 ## Testes executados
 
-- Local: `npm test` passou com 270 casos; inclui login, logout, sessão/cookies
+- Local: `npm test` passou com 271 casos; inclui login, logout, sessão/cookies
   por contrato, OTP, reset, CSRF, RBAC, Turnstile, limite local/distribuído fake,
   auditoria e negações por vínculo/papel/verificação.
 - Qualidade: lint, typecheck e `git diff --check` passaram.
-- Build: `build:hml` passou com uma site key sintética explícita. O aviso de
+- Build: `build:hml` passou no commit `99c30d7` com uma site key sintética
+  explícita. O aviso de
   nomes de secrets ausentes é esperado no build isolado e comprova que nenhum
   arquivo de ambiente foi carregado; não é prova dos secrets remotos.
 - Playwright: a configuração recebeu o opt-in de execução, mas recusou antes de
@@ -59,6 +88,7 @@ deploy, ambos fora desta execução.
 
 Validado em HML: alcance público, redirecionamento sem sessão, login público,
 Worker acessível e Neon Auth/domínio HML declarados. Validado localmente: todos
-os contratos automatizáveis. Bloqueado: versão/configuração efetiva do binding
-por API Wrangler; navegador/CAPTCHA; identidades e caixa de e-mail autorizadas;
-replay e revogação de sessão reais. Nenhuma regressão local foi encontrada.
+os contratos automatizáveis, incluindo o binding obrigatório. Bloqueado:
+publicação efetiva do binding pela ausência da chave pública explícita no
+ambiente; navegador/CAPTCHA; identidades e caixa de e-mail autorizadas; replay
+e revogação de sessão reais. Nenhuma regressão local foi encontrada.

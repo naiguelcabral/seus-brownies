@@ -1,5 +1,32 @@
 # Missão de correção da auditoria
 
+## AR-G1-HML-2 — Rate Limiting HML preparado para publicação
+
+Achado revalidado: o runtime resolve `AUTH_RATE_LIMITER` por binding Workers e
+usa chave `escopo:HMAC` antes do limiter em memória. A configuração HML não o
+declarava. O commit `99c30d7` declara o binding somente em `env.hml`, com
+namespace positivo `2026091001` e política simples de 20 chamadas em 60
+segundos; a mesma configuração exige o binding no HML para que sua ausência
+falhe fechada. Os cinco fluxos públicos continuam protegidos e o cooldown
+durável de cinco tentativas não foi alterado. A camada Cloudflare é volumétrica
+e eventualmente consistente, portanto não é tratada como contador global.
+
+Validação local: contrato do limiter e da configuração, suíte integral de 271
+testes, lint, typecheck, Prettier direcionado, `git diff --check` e build HML
+isolado com chave pública sintética passaram. A CI `34468924703` passou para o
+SHA `99c30d7`. A leitura pública anterior de `/login` retornou 200; a tentativa
+posterior de consulta de versão por Wrangler foi `validation-blocked` por rede/
+log externo de Wrangler e não foi usada como prova do binding ativo.
+
+Publicação HML: bloqueada com segurança. O script oficial exige
+`VITE_TURNSTILE_SITE_KEY` injetada explicitamente e a sessão não a possui. Não
+foi lido `.env`, não houve deploy com valor sintético, alteração de secret,
+binding remoto, rollback ou escrita de dados. Próximo passo autorizado requer
+uma sessão que injete a chave pública HML sem exibi-la; então executar
+`npm run deploy:hml`, inspecionar a versão e repetir os GETs anônimos. Browser,
+CAPTCHA real, replay, identidades, e-mail, OTP, reset, cookies e revogação
+continuam aguardando recursos/participação humana.
+
 ## Base e autorização — 2026-09-07
 
 Branch dedicada `codex/audit-remediation`, criada de `40bb2af` com árvore e

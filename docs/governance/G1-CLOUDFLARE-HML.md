@@ -81,14 +81,14 @@ Wrangler.
 
 ## Bindings e configurações exigidos antes do deploy
 
-| Área             | Binding/configuração                                                                      | Estado                                                                                            |
-| ---------------- | ----------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
-| Banco HML        | secret `DATABASE_URL`, exclusivo de `g1-auth-hml`                                         | configurado; valor não inspecionado                                                               |
-| Neon Auth        | `NEON_AUTH_BASE_URL` e `NEON_AUTH_COOKIE_SECRET`                                          | configurados; valores não inspecionados                                                           |
-| Tentativas       | secret `AUTH_LOGIN_HASH_PEPPER`, diferente do cookie secret                               | configurado; valor não inspecionado                                                               |
-| Turnstile        | secret `TURNSTILE_SECRET_KEY` e variável pública `VITE_TURNSTILE_SITE_KEY`                | publicado; widget/site key HML e Siteverify sanitizado validados; desafio real e replay pendentes |
-| Rate Limiting    | binding `AUTH_RATE_LIMITER` HML com `namespace_id` numérico exclusivo e política aprovada | não declarado até existir namespace real; nunca usar placeholder                                  |
-| E-mail/callbacks | origem confiável, callback, verificação e provedor no Neon Auth HML                       | gate externo separado                                                                             |
+| Área             | Binding/configuração                                                                      | Estado                                                                                                                                |
+| ---------------- | ----------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| Banco HML        | secret `DATABASE_URL`, exclusivo de `g1-auth-hml`                                         | configurado; valor não inspecionado                                                                                                   |
+| Neon Auth        | `NEON_AUTH_BASE_URL` e `NEON_AUTH_COOKIE_SECRET`                                          | configurados; valores não inspecionados                                                                                               |
+| Tentativas       | secret `AUTH_LOGIN_HASH_PEPPER`, diferente do cookie secret                               | configurado; valor não inspecionado                                                                                                   |
+| Turnstile        | secret `TURNSTILE_SECRET_KEY` e variável pública `VITE_TURNSTILE_SITE_KEY`                | publicado; widget/site key HML e Siteverify sanitizado validados; desafio real e replay pendentes                                     |
+| Rate Limiting    | binding `AUTH_RATE_LIMITER` HML com `namespace_id` numérico exclusivo e política aprovada | declarado no HEAD `99c30d7`: namespace `2026091001`, 20 por 60 s; publicação HML bloqueada sem site key pública explícita no ambiente |
+| E-mail/callbacks | origem confiável, callback, verificação e provedor no Neon Auth HML                       | gate externo separado                                                                                                                 |
 
 `VITE_TURNSTILE_SITE_KEY` é client-safe e não integra `secrets.required`.
 `VITE_NEON_AUTH_URL` fica dispensado enquanto a integração permanecer mediada
@@ -102,12 +102,13 @@ resolvedor de principal retorna anônimo e os guards das Server Functions falham
 fechados antes de consultar o banco, mas esse comportamento não substitui a
 validação do Wrangler.
 
-`AUTH_RATE_LIMITER` permanece pendente porque o namespace é uma identificação
-numérica positiva definida pela conta e não existe valor aprovado para HML. A
-decisão precisa definir namespace exclusivo, limite e janela permitida (10 ou
-60 segundos). A API Cloudflare é apenas volumétrica e eventualmente
+O HEAD `99c30d7` reserva para HML o namespace positivo `2026091001` e usa a
+política simples de 20 chamadas por 60 segundos. O binding é declarado apenas
+no environment HML e a aplicação falha fechada se ele não estiver disponível
+nesse ambiente. A API Cloudflare continua apenas volumétrica e eventualmente
 consistente; o contador persistente de cinco falhas no Neon continua sendo a
-fonte de verdade para cooldown e desafio adicional.
+fonte de verdade para cooldown e desafio adicional. O binding só passa a
+existir no Worker ativo após deploy HML; não publicar com site key sintética.
 
 ## Origens permitidas de autenticação
 

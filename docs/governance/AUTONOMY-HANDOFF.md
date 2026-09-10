@@ -2,6 +2,30 @@
 
 Atualizado em 9 de setembro de 2026.
 
+## Atualização AR-G1-HML-2 — 10 de setembro de 2026
+
+- HEAD de código publicado: `99c30d7 feat(auth): require HML distributed rate
+limiting`; CI `34468924703` passou para esse SHA. A PR #3 permanece em
+  rascunho contra `main`; nenhuma base, merge ou rebase foi alterado.
+- `wrangler.jsonc` declara exclusivamente em `env.hml` o binding
+  `AUTH_RATE_LIMITER`, namespace `2026091001`, `20` chamadas por `60` segundos
+  e `AUTH_RATE_LIMITER_REQUIRED=true`. Sem binding nesse ambiente, os cinco
+  fluxos públicos falham fechados; com binding, ele permanece anterior ao
+  limiter local. O cooldown durável de cinco tentativas permanece inalterado.
+- Validações concluídas: 271 testes, lint, typecheck, Prettier direcionado,
+  `git diff --check` e build HML isolado com chave sintética. O aviso nominal
+  de secrets ausentes é esperado no build isolado.
+- Deploy HML ainda não ocorreu. A sessão não possui a variável pública
+  `VITE_TURNSTILE_SITE_KEY`; o script isolado a exige e publicar a chave
+  sintética quebraria o widget real. Nenhum `.env`, secret, valor de chave ou
+  recurso Cloudflare foi lido ou alterado. A versão ativa anterior permanece o
+  rollback disponível.
+- Próximo passo exato, em ambiente com a chave pública HML já injetada e sem
+  imprimir seu valor: `git status --short --branch && npm run deploy:hml`.
+  Depois, listar deployments HML, confirmar binding/version e executar GETs
+  anônimos para `/`, `/relatorios` e `/login`. Só então executar browser HML
+  sem credenciais; CAPTCHA, identidades e e-mail continuam gates humanos.
+
 ## Missão `codex/audit-remediation` — G1 local e decisões G2 em validação
 
 - Branch: `codex/audit-remediation`; checkpoint funcional publicado:
