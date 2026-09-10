@@ -528,3 +528,19 @@ e uma homologação do provedor.
 Validação local: login com gravador sintético rejeitado conserva a negação e
 emite somente o evento permitido. Os testes direcionados de ação/composição de
 login, reset e políticas de Server Function passaram, além de lint e typecheck.
+
+## AR-G1-HML-1 — homologação técnica somente leitura
+
+Em 10 de setembro, GitHub, Cloudflare e Neon foram consultados em leitura. O
+endpoint HML respondeu a `/` sem sessão com redirecionamento para `/login`, e
+`/login` com `200`; Neon Auth estava ativo na branch HML correta e o domínio
+público constava como confiável. A suíte local atual passou com 270 casos,
+lint, typecheck, diff e build isolado. A evidência detalhada, sem valores
+sensíveis, está em `G1-HML-TECHNICAL-VALIDATION-2026-09-10.md`.
+
+O deployment HML listado não foi associado ao SHA `dfb7e1f`; nenhuma conclusão
+sobre paridade de código foi inferida. `AUTH_RATE_LIMITER` segue ausente da
+configuração versionada e a consulta do detalhe remoto da versão foi bloqueada
+por conectividade Wrangler. Playwright falhou fechada antes de browser/rede por
+falta das cinco identidades transitórias autorizadas. Não houve login, CAPTCHA,
+token, e-mail, OTP, reset, cookie, escrita ou deploy.

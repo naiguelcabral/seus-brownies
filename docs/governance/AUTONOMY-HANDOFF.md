@@ -106,6 +106,13 @@ Atualizado em 9 de setembro de 2026.
   login/logout/OTP falha, sem mudar uma sessão que o provedor já possa ter
   emitido nem expor dados sensíveis. A política de compensação e a confirmação
   HML continuam pendentes de decisão e acesso humano.
+- AR-G1-HML-1 confirmou em 10 de setembro o alcance público HML, CI do SHA
+  `dfb7e1f`, Neon Auth/branch/domínio e os 270 testes locais. O detalhe remoto
+  da versão do Worker não respondeu ao Wrangler, logo não há prova de que o
+  deployment execute o SHA da branch. A configuração versionada não declara
+  `AUTH_RATE_LIMITER`; navegador, CAPTCHA, identidades, e-mail, replay, cookies
+  e revogação real permanecem bloqueados. Consultar
+  `G1-HML-TECHNICAL-VALIDATION-2026-09-10.md` antes de retomar o gate humano.
 - AR-G2-D1 preparou a decisão de CMV, e AR-E6 analisou as 13 vulnerabilidades.
 - Próximo comando de retomada, após conferir `git status --short --branch`:
   `gh run list --branch codex/audit-remediation --limit 3`. Não repetir a
