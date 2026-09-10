@@ -14,9 +14,10 @@
   foram geradas e não aplicadas. Nenhuma política de margem, competência,
   reversão, crédito ou vínculo venda–lote foi definida unilateralmente.
 - Validação local: 283 testes passaram; lint, typecheck, Prettier direcionado e
-  `git diff --check` ficaram verdes. O build isolado recusou a árvore suja como
-  previsto; deve ser repetido após o commit limpo. Commit, push, PR e CI devem
-  ser anexados a este registro ao fechar a missão.
+  `git diff --check` ficaram verdes. O build isolado primeiro recusou a árvore
+  suja e depois passou no commit funcional limpo `712e0ca`; o aviso de secrets
+  ausentes no SSR foi o esperado, sem carregar `.env`. Push, PR e CI devem ser
+  anexados a este registro ao fechar a missão.
 
 ## Retomada local de 7 de setembro de 2026
 

@@ -21,10 +21,13 @@ Atualizado em 10 de setembro de 2026.
 - Gate financeiro preservado: competência, reversões, créditos, cancelamento
   retroativo, margem definitiva e vínculo venda–lote continuam em G2. Metas,
   cobertura e sugestão de compra foram suspensas somente em seus dependentes.
-- Validação local: 283 testes, lint, typecheck, Prettier direcionado e
-  `git diff --check` verdes. O build HML isolado recusou corretamente a árvore
-  suja e deve ser repetido após o primeiro commit. Próximo comando exato:
-  `VITE_TURNSTILE_SITE_KEY=1x00000000000000000000AA npm run build:hml`.
+- Checkpoint funcional: `712e0ca`. Validação local: 283 testes, lint,
+  typecheck, Prettier direcionado, `git diff --check` e build HML isolado
+  verdes. O primeiro build recusou corretamente a árvore suja; a repetição no
+  HEAD limpo passou para cliente e SSR. O aviso nominal de secrets ausentes foi
+  esperado e nenhum arquivo de ambiente foi carregado. Próximo passo: publicar
+  somente `codex/workbook-parity`, abrir PR em rascunho contra
+  `codex/audit-remediation` e acompanhar a CI.
 
 ## Atualização AR-G1-HML-2 — 10 de setembro de 2026
 
