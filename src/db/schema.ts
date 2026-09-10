@@ -56,6 +56,25 @@ export const saleStatus = pgEnum('sale_status', [
   'paid',
   'cancelled',
 ])
+export const saleAdjustmentKind = pgEnum('sale_adjustment_kind', [
+  'none',
+  'discount',
+  'combo',
+  'gift',
+  'manual_adjustment',
+])
+export const actionPlanPriority = pgEnum('action_plan_priority', [
+  'low',
+  'medium',
+  'high',
+  'critical',
+])
+export const actionPlanStatus = pgEnum('action_plan_status', [
+  'open',
+  'in_progress',
+  'completed',
+  'cancelled',
+])
 export const salesLocationClassification = pgEnum(
   'sales_location_classification',
   ['unclassified', 'physical', 'online', 'event', 'partner'],
@@ -261,6 +280,97 @@ export const salesLocations = pgTable('sales_locations', {
     .defaultNow(),
 })
 
+/** Singleton, server-validated management assumptions. Financial use still follows human gates. */
+export const managementSettings = pgTable('management_settings', {
+  id: integer().primaryKey(),
+  version: integer().notNull().default(1),
+  monthlyProfitGoal: money('monthly_profit_goal').notNull(),
+  fixedMonthlyCosts: money('fixed_monthly_costs').notNull(),
+  salesDaysPerMonth: integer('sales_days_per_month').notNull(),
+  weeksPerMonth: numeric('weeks_per_month', {
+    precision: 5,
+    scale: 2,
+  }).notNull(),
+  normalRevenueTolerance: numeric('normal_revenue_tolerance', {
+    precision: 6,
+    scale: 4,
+  }).notNull(),
+  criticalRevenueTolerance: numeric('critical_revenue_tolerance', {
+    precision: 6,
+    scale: 4,
+  }).notNull(),
+  minimumProductMargin: numeric('minimum_product_margin', {
+    precision: 6,
+    scale: 4,
+  }).notNull(),
+  feeTaxReserveRate: numeric('fee_tax_reserve_rate', {
+    precision: 6,
+    scale: 4,
+  }).notNull(),
+  updatedByAuthUserId: varchar('updated_by_auth_user_id', { length: 191 }),
+  updatedAt: timestamp('updated_at', { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+})
+
+/** Human-owned response to an observed alert; the system never asserts the cause. */
+export const actionPlans = pgTable(
+  'action_plans',
+  {
+    id: serial().primaryKey(),
+    version: integer().notNull().default(1),
+    alert: text().notNull(),
+    probableCause: text('probable_cause'),
+    action: text().notNull(),
+    priority: actionPlanPriority().notNull().default('medium'),
+    kpi: varchar({ length: 160 }),
+    responsible: varchar({ length: 160 }),
+    dueDate: date('due_date'),
+    status: actionPlanStatus().notNull().default('open'),
+    createdByAuthUserId: varchar('created_by_auth_user_id', {
+      length: 191,
+    }).notNull(),
+    updatedByAuthUserId: varchar('updated_by_auth_user_id', {
+      length: 191,
+    }).notNull(),
+    createdAt: timestamp('created_at', { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp('updated_at', { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (table) => [
+    index('action_plans_status_due_date_idx').on(table.status, table.dueDate),
+    index('action_plans_priority_idx').on(table.priority),
+  ],
+)
+
+/** Append-only snapshots preserve authorship and the evolution of every action plan. */
+export const actionPlanHistory = pgTable(
+  'action_plan_history',
+  {
+    id: serial().primaryKey(),
+    actionPlanId: integer('action_plan_id')
+      .notNull()
+      .references(() => actionPlans.id, { onDelete: 'restrict' }),
+    version: integer().notNull(),
+    event: varchar({ length: 40 }).notNull(),
+    actorAuthUserId: varchar('actor_auth_user_id', { length: 191 }).notNull(),
+    snapshot: jsonb().notNull(),
+    occurredAt: timestamp('occurred_at', { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (table) => [
+    unique('action_plan_history_plan_version_unique').on(
+      table.actionPlanId,
+      table.version,
+    ),
+    index('action_plan_history_actor_idx').on(table.actorAuthUserId),
+  ],
+)
+
 /** A signed quantityDelta forms the inventory ledger: positive enters, negative leaves. */
 export const stockMovements = pgTable('stock_movements', {
   id: serial().primaryKey(),
@@ -368,6 +478,10 @@ export const sales = pgTable('sales', {
   calculatedAmount: money('calculated_amount'),
   auditStatus: varchar('audit_status', { length: 40 }),
   auditNotes: text('audit_notes'),
+  adjustmentKind: saleAdjustmentKind('adjustment_kind')
+    .notNull()
+    .default('none'),
+  adjustmentReason: text('adjustment_reason'),
   affectsStock: boolean('affects_stock').notNull().default(true),
   notes: text(),
   soldAt: timestamp('sold_at', { withTimezone: true }).notNull().defaultNow(),
@@ -392,6 +506,8 @@ export const saleItems = pgTable('sale_items', {
   quantity: quantity('quantity').notNull(),
   unitPrice: money('unit_price').notNull(),
   totalAmount: money('total_amount').notNull(),
+  /** Exact share of the sale-level reported revenue allocated to this item. */
+  reportedAmount: money('reported_amount'),
 })
 
 export const expenses = pgTable('expenses', {

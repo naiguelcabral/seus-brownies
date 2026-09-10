@@ -1,7 +1,8 @@
 # Estado canônico do projeto — Cacau v1
 
-Atualizado em 7 de setembro de 2026, após revisão de código, migrations,
-testes, rotas, documentação e estado público de HML.
+Atualizado em 10 de setembro de 2026, após inspeção do workbook original,
+revisão de código, migrations, testes, rotas, documentação e estado público de
+HML.
 
 Este documento é a referência canônica de alto nível para o estado atual do sistema. Registros históricos de homologação, importação e decisões específicas permanecem válidos como evidência, mas não substituem este resumo.
 
@@ -38,6 +39,10 @@ Este documento é a referência canônica de alto nível para o estado atual do 
 - Despesas: implementado.
 - Produção: fluxo real implementado com rascunho e conclusão transacional.
 - Relatórios: implementados em nível operacional inicial.
+- Paridade do workbook: matriz canônica criada em
+  `WORKBOOK-SYSTEM-PARITY.md`. Parâmetros gerenciais, auditoria exata de
+  receita, locais/canais, KPIs de venda e plano de ação foram implementados
+  localmente; dependem das migrations `0019`/`0020` e de homologação.
 
 ### Custos e estoque
 
@@ -55,6 +60,9 @@ Este documento é a referência canônica de alto nível para o estado atual do 
 - As migrations `0017` (idempotência, autoria e proteção estrutural de
   produto) e `0018` (auditoria operacional) estão preparadas para revisão;
   não foram aplicadas a nenhum banco nesta missão.
+- As migrations aditivas `0019` (parâmetros e auditoria de receita) e `0020`
+  (plano de ação e histórico append-only) também estão preparadas e não foram
+  aplicadas. Não existe autorização para aplicá-las nesta missão.
 - Não repetir cargas ou homologações já consumidas sem autorização explícita.
 
 ### Qualidade
@@ -129,9 +137,10 @@ Este documento é a referência canônica de alto nível para o estado atual do 
   Parte delas é intencionalmente `skip` ou requer autorização/referência
   exclusiva; a execução E2E completa de autenticação ainda depende de ambiente
   local autorizado que não carregue `.env` e de identidades de teste próprias.
-- O código versionado possui 13 módulos de rota, CSRF global para métodos
-  mutáveis e middleware estrutural de autorização aplicado às 30 Server
-  Functions operacionais. A permissão é resolvida no servidor.
+- O código da branch de paridade possui CSRF global para métodos mutáveis e
+  middleware estrutural de autorização aplicado às 40 Server Functions
+  operacionais. A permissão é resolvida no servidor; os novos cadastros
+  financeiros e de ações ficam restritos a `access:manage`.
 - O acesso ao banco valida `DATABASE_URL` com Zod no runtime server-side, sem
   carregar arquivos de ambiente nem incluir valores na mensagem de falha.
 

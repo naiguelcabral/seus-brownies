@@ -2,10 +2,13 @@ import {
   Boxes,
   BarChart3,
   CookingPot,
+  ClipboardList,
   LayoutDashboard,
   LogOut,
   Package,
+  MapPin,
   ReceiptText,
+  Settings,
   ShoppingBag,
   Tags,
   Wallet,
@@ -39,6 +42,12 @@ const navigation = [
     label: 'Produtos',
     icon: Package,
     permission: 'catalog:read',
+  },
+  {
+    to: '/locais',
+    label: 'Locais',
+    icon: MapPin,
+    permission: 'catalog:write',
   },
   {
     to: '/compras',
@@ -75,6 +84,18 @@ const navigation = [
     label: 'Relatórios',
     icon: BarChart3,
     permission: 'reports:financial:read',
+  },
+  {
+    to: '/parametros',
+    label: 'Parâmetros',
+    icon: Settings,
+    permission: 'access:manage',
+  },
+  {
+    to: '/plano-de-acao',
+    label: 'Plano de ação',
+    icon: ClipboardList,
+    permission: 'access:manage',
   },
 ] as const
 

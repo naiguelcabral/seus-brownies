@@ -48,6 +48,35 @@ test('exporta valores financeiros e quantidades sem conversão de precisão', ()
     salesByProduct: [
       { productName: 'Brownie', quantity: '1.000', amount: '1.10' },
     ],
+    salesMetrics: {
+      total: {
+        events: 1,
+        units: '1.000',
+        revenue: '1.10',
+        ticketAverage: '1.10',
+        averageUnitPrice: '1.10',
+        audit: {
+          auditedEvents: 1,
+          reported: '1.10',
+          calculated: '1.20',
+          difference: '-0.10',
+          differenceRate: '-0.0833',
+          normal: 0,
+          attention: 0,
+          critical: 1,
+        },
+      },
+      byLocation: [
+        {
+          locationName: '=Canal externo',
+          events: 1,
+          units: '1.000',
+          revenue: '1.10',
+          ticketAverage: '1.10',
+          audit: { auditedEvents: 1, difference: '-0.10' },
+        },
+      ],
+    },
     fifo: null,
     production: null,
   })
@@ -55,4 +84,5 @@ test('exporta valores financeiros e quantidades sem conversão de precisão', ()
   assert.match(document, /12345678901234567890\.12/)
   assert.match(document, /10000000000000000000\.125/)
   assert.match(document, /"'=Canal externo"/)
+  assert.match(document, /-0\.0833/)
 })

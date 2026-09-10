@@ -1,5 +1,23 @@
 # Log sanitizado de autonomia — Cacau v1
 
+## Missão de paridade do workbook — 10 de setembro de 2026
+
+- Estado recuperado em `codex/audit-remediation` no SHA `241099a`, árvore
+  limpa; criada `codex/workbook-parity` sem reescrever histórico. PR #2 e PR
+  #3 foram somente consultadas. O binding `AUTH_RATE_LIMITER` já estava
+  versionado; o deploy HML continua bloqueado pela chave pública não injetada.
+- Workbook original inspecionado somente no caminho autorizado. Foram
+  confirmadas 15 abas, 12 tabelas, 3 gráficos, 1 validação, 4 comentários e
+  zero fórmulas executáveis; totais e divergências foram documentados de forma
+  sanitizada na matriz canônica.
+- WP-A/B/C/G/H implementados localmente. Migrations aditivas `0019` e `0020`
+  foram geradas e não aplicadas. Nenhuma política de margem, competência,
+  reversão, crédito ou vínculo venda–lote foi definida unilateralmente.
+- Validação local: 283 testes passaram; lint, typecheck, Prettier direcionado e
+  `git diff --check` ficaram verdes. O build isolado recusou a árvore suja como
+  previsto; deve ser repetido após o commit limpo. Commit, push, PR e CI devem
+  ser anexados a este registro ao fechar a missão.
+
 ## Retomada local de 7 de setembro de 2026
 
 - Checkpoint humano `c28c267868e6aa8b80272862dcd6ba558e325cab` confirmado

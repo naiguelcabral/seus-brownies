@@ -1,6 +1,30 @@
 # Handoff de autonomia — Cacau v1
 
-Atualizado em 9 de setembro de 2026.
+Atualizado em 10 de setembro de 2026.
+
+## Missão `codex/workbook-parity` — checkpoint local
+
+- Base confirmada: `codex/audit-remediation` em `241099a`; branch da missão
+  criada com árvore inicialmente limpa. A referência original foi inspecionada
+  somente em `.codex-local/reference/` e permaneceu sem alteração.
+- Matriz canônica: `WORKBOOK-SYSTEM-PARITY.md`. A inspeção confirmou 15 abas e
+  zero fórmulas executáveis; não reutilizou a suposição histórica sem verificar
+  o pacote XLSX local.
+- WP-A/B/C/G/H estão implementados localmente: parâmetros versionados,
+  informado × calculado com rateio exato, locais/canais, métricas rastreáveis e
+  plano de ação humano com histórico append-only. Novas Server Functions e
+  rotas usam guards; causas e ações nunca são inferidas.
+- Migrations `0019` e `0020` são aditivas e não foram aplicadas. `0019` inclui
+  defaults reconstruídos do workbook para a linha singleton; `0020` não cria
+  dados. Para rollback, primeiro reverter o código; remover colunas/tabelas
+  depois seria destrutivo para fatos novos e exige decisão humana.
+- Gate financeiro preservado: competência, reversões, créditos, cancelamento
+  retroativo, margem definitiva e vínculo venda–lote continuam em G2. Metas,
+  cobertura e sugestão de compra foram suspensas somente em seus dependentes.
+- Validação local: 283 testes, lint, typecheck, Prettier direcionado e
+  `git diff --check` verdes. O build HML isolado recusou corretamente a árvore
+  suja e deve ser repetido após o primeiro commit. Próximo comando exato:
+  `VITE_TURNSTILE_SITE_KEY=1x00000000000000000000AA npm run build:hml`.
 
 ## Atualização AR-G1-HML-2 — 10 de setembro de 2026
 

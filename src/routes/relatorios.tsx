@@ -99,6 +99,38 @@ function ReportsPage() {
           title="Itens em estoque"
           value={String(report.inventory.length)}
         />
+        <Metric
+          icon={ReceiptText}
+          title="Unidades vendidas"
+          value={quantity.format(Number(report.salesMetrics.total.units))}
+        />
+        <Metric
+          icon={Wallet}
+          title="Ticket médio por evento"
+          value={
+            report.salesMetrics.total.ticketAverage
+              ? money.format(Number(report.salesMetrics.total.ticketAverage))
+              : 'Sem dados'
+          }
+        />
+        <Metric
+          icon={TrendingUp}
+          title="Preço médio por unidade"
+          value={
+            report.salesMetrics.total.averageUnitPrice
+              ? money.format(Number(report.salesMetrics.total.averageUnitPrice))
+              : 'Sem dados'
+          }
+        />
+        <Metric
+          icon={BarChart3}
+          title="Divergência de receita"
+          value={
+            report.salesMetrics.total.audit.difference
+              ? money.format(Number(report.salesMetrics.total.audit.difference))
+              : 'Sem auditoria'
+          }
+        />
         {report.fifo ? (
           <Metric
             icon={TrendingUp}
@@ -107,6 +139,73 @@ function ReportsPage() {
           />
         ) : null}
       </div>
+      <section className="mt-6 overflow-hidden rounded-2xl border border-[#ecdfd4] bg-white">
+        <div className="border-b border-[#f0e5dc] px-5 py-4">
+          <h2 className="font-bold">Locais e canais no período</h2>
+          <p className="mt-1 text-xs text-[#846859]">
+            Receita, volume, ticket e divergência calculados a partir das vendas
+            confirmadas ou pagas. Auditoria disponível em{' '}
+            {report.salesMetrics.total.audit.auditedEvents} de{' '}
+            {report.salesMetrics.total.events} eventos.
+          </p>
+        </div>
+        {report.salesMetrics.byLocation.length ? (
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[760px] text-left text-sm">
+              <thead className="bg-[#fffaf5] text-xs uppercase text-[#896d5b]">
+                <tr>
+                  <th className="px-4 py-3">Local/canal</th>
+                  <th className="px-4 py-3 text-right">Eventos</th>
+                  <th className="px-4 py-3 text-right">Unidades</th>
+                  <th className="px-4 py-3 text-right">Faturamento</th>
+                  <th className="px-4 py-3 text-right">Ticket</th>
+                  <th className="px-4 py-3 text-right">Divergência</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-[#f0e5dc]">
+                {report.salesMetrics.byLocation.map((location) => (
+                  <tr key={location.locationId ?? 'unassigned'}>
+                    <td className="px-4 py-3 font-bold">
+                      {location.locationName}
+                    </td>
+                    <td className="px-4 py-3 text-right">{location.events}</td>
+                    <td className="px-4 py-3 text-right">
+                      {quantity.format(Number(location.units))}
+                    </td>
+                    <td className="px-4 py-3 text-right">
+                      {money.format(Number(location.revenue))}
+                    </td>
+                    <td className="px-4 py-3 text-right">
+                      {location.ticketAverage
+                        ? money.format(Number(location.ticketAverage))
+                        : '—'}
+                    </td>
+                    <td className="px-4 py-3 text-right">
+                      {location.audit.difference
+                        ? money.format(Number(location.audit.difference))
+                        : 'Sem auditoria'}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <p className="p-6 text-sm text-[#846859]">
+            Não há vendas confirmadas ou pagas no período.
+          </p>
+        )}
+      </section>
+      {report.managementSettings ? (
+        <p className="mt-4 rounded-xl border border-[#ecdfd4] bg-white p-4 text-sm text-[#846859]">
+          Meta de lucro cadastrada:{' '}
+          <strong>
+            {money.format(Number(report.managementSettings.monthlyProfitGoal))}
+          </strong>
+          . O progresso de lucro não é exibido enquanto competência, reversões e
+          margem definitiva aguardam a decisão G2.
+        </p>
+      ) : null}
       <div className="mt-6 grid gap-6 xl:grid-cols-2">
         <List
           title="Faturamento por canal"

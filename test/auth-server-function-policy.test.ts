@@ -5,7 +5,7 @@ import test from 'node:test'
 import { serverFunctionPolicies } from '../src/features/auth/server-function-policy'
 
 test('toda Server Function operacional mapeada recebe uma permissão explícita', () => {
-  assert.equal(Object.keys(serverFunctionPolicies).length, 30)
+  assert.equal(Object.keys(serverFunctionPolicies).length, 40)
   assert.equal(serverFunctionPolicies.createSale, 'sales:write')
   assert.equal(
     serverFunctionPolicies.getOperationalReports,
@@ -18,10 +18,13 @@ test('toda Server Function operacional mapeada recebe uma permissão explícita'
   assert.equal(serverFunctionPolicies.getFifoMigrationAudit, 'fifo:audit:read')
 })
 
-test('as 30 Server Functions inventariadas aplicam o middleware no servidor', async () => {
+test('as 40 Server Functions inventariadas aplicam o middleware no servidor', async () => {
   const source = await Promise.all(
     [
       'src/features/catalog/functions.ts',
+      'src/features/action-plans/functions.ts',
+      'src/features/locations/functions.ts',
+      'src/features/management/functions.ts',
       'src/features/operations/functions.ts',
       'src/features/production/functions.ts',
       'src/features/reports/functions.ts',

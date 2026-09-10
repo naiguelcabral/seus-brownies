@@ -20,11 +20,13 @@ import {
   expenses,
   inventoryCostAllocations,
   inventoryCostLayers,
+  managementSettings,
   products,
   purchaseItems,
   purchases,
   saleItems,
   sales,
+  salesLocations,
   stockMovements,
 } from '#/db/schema'
 import { requireServerFunctionPermission } from '#/features/auth/server-function-middleware'
@@ -46,6 +48,11 @@ import {
   resolveIdempotentReplay,
 } from '#/features/operations/idempotency'
 import { appendOperationalAudit } from '#/features/operations/audit'
+import { rateToTenThousandths } from '#/features/management/settings'
+import {
+  allocateReportedRevenue,
+  classifyRevenueDifference,
+} from '#/features/operations/revenue-audit'
 import {
   calculateExpenseHistoryPage,
   expenseHistoryPageSize,
@@ -76,6 +83,13 @@ function cents(value: string) {
   const normalized = decimal(value, moneyPattern, 2)
   if (!normalized) return null
   return BigInt(normalized.replace('.', ''))
+}
+
+function nonnegativeCents(value: string) {
+  const normalized = value.trim().replace(',', '.')
+  if (!/^\d+(?:\.\d{1,2})?$/.test(normalized)) return null
+  const [whole, fraction = ''] = normalized.split('.')
+  return BigInt(whole) * 100n + BigInt(fraction.padEnd(2, '0'))
 }
 
 function unitCostMillis(value: string) {
@@ -377,21 +391,41 @@ export const listInventory = createServerFn({ method: 'GET' })
     return { balances, movements }
   })
 
-const saleValues = z.object({
-  idempotencyKey: z.string().uuid(),
-  customerName: z.string().trim().max(120).optional(),
-  customerPhone: z.string().trim().max(32).optional(),
-  status: z.enum(saleStatuses),
-  notes: z.string().trim().max(1000).optional(),
-  items: z
-    .array(
-      z.object({
-        productId: z.number().int().positive(),
-        quantity: z.string().trim(),
-      }),
-    )
-    .min(1),
-})
+const saleValues = z
+  .object({
+    idempotencyKey: z.string().uuid(),
+    locationId: z.number().int().positive(),
+    customerName: z.string().trim().max(120).optional(),
+    customerPhone: z.string().trim().max(32).optional(),
+    status: z.enum(saleStatuses),
+    reportedAmount: z.string().trim().max(32),
+    adjustmentKind: z.enum([
+      'none',
+      'discount',
+      'combo',
+      'gift',
+      'manual_adjustment',
+    ]),
+    adjustmentReason: z.string().trim().max(500).optional(),
+    notes: z.string().trim().max(1000).optional(),
+    items: z
+      .array(
+        z.object({
+          productId: z.number().int().positive(),
+          quantity: z.string().trim(),
+        }),
+      )
+      .min(1),
+  })
+  .superRefine((value, context) => {
+    if (value.adjustmentKind !== 'none' && !value.adjustmentReason?.trim()) {
+      context.addIssue({
+        code: 'custom',
+        path: ['adjustmentReason'],
+        message: 'Informe o motivo do desconto, combo, brinde ou ajuste.',
+      })
+    }
+  })
 
 export const listSaleProducts = createServerFn({ method: 'GET' })
   .middleware([requireServerFunctionPermission('listSaleProducts')])
@@ -415,6 +449,9 @@ export const createSale = createServerFn({ method: 'POST' })
   .middleware([requireServerFunctionPermission('createSale')])
   .validator(saleValues)
   .handler(async ({ data, context }) => {
+    const reportedCents = nonnegativeCents(data.reportedAmount)
+    if (reportedCents === null)
+      throw new Error('Informe um faturamento recebido válido.')
     const normalizedItems = data.items.map((item) => ({
       ...item,
       quantity: decimal(item.quantity, quantityPattern, 3),
@@ -424,7 +461,11 @@ export const createSale = createServerFn({ method: 'POST' })
     const idempotencyHash = await hashOperationPayload({
       customerName: data.customerName?.trim() || null,
       customerPhone: data.customerPhone?.trim() || null,
+      locationId: data.locationId,
       status: data.status,
+      reportedAmount: centsToMoney(reportedCents),
+      adjustmentKind: data.adjustmentKind,
+      adjustmentReason: data.adjustmentReason?.trim() || null,
       notes: data.notes?.trim() || null,
       items: normalizedItems.map((item) => ({
         productId: item.productId,
@@ -445,16 +486,37 @@ export const createSale = createServerFn({ method: 'POST' })
       if (replay) return replay
 
       const ids = [...new Set(data.items.map((item) => item.productId))]
-      const selected = await tx
-        .select({
-          id: products.id,
-          name: products.name,
-          salePrice: products.salePrice,
-          type: products.type,
-          isActive: products.isActive,
-        })
-        .from(products)
-        .where(inArray(products.id, ids))
+      const [selected, location, settings] = await Promise.all([
+        tx
+          .select({
+            id: products.id,
+            name: products.name,
+            salePrice: products.salePrice,
+            type: products.type,
+            isActive: products.isActive,
+          })
+          .from(products)
+          .where(inArray(products.id, ids)),
+        tx
+          .select({ id: salesLocations.id })
+          .from(salesLocations)
+          .where(
+            and(
+              eq(salesLocations.id, data.locationId),
+              eq(salesLocations.isActive, true),
+            ),
+          )
+          .limit(1),
+        tx
+          .select({
+            normalRevenueTolerance: managementSettings.normalRevenueTolerance,
+            criticalRevenueTolerance:
+              managementSettings.criticalRevenueTolerance,
+          })
+          .from(managementSettings)
+          .where(eq(managementSettings.id, 1))
+          .limit(1),
+      ])
       const byId = new Map(selected.map((product) => [product.id, product]))
       if (
         byId.size !== ids.length ||
@@ -466,6 +528,17 @@ export const createSale = createServerFn({ method: 'POST' })
         )
       )
         throw new Error('Há produto sem preço de venda disponível.')
+      if (!location.length)
+        throw new Error('Selecione um local ou canal ativo.')
+      const auditSettings = settings.at(0)
+      const normalTolerance = auditSettings
+        ? rateToTenThousandths(auditSettings.normalRevenueTolerance)
+        : null
+      const criticalTolerance = auditSettings
+        ? rateToTenThousandths(auditSettings.criticalRevenueTolerance)
+        : null
+      if (normalTolerance === null || criticalTolerance === null)
+        throw new Error('Parâmetros de auditoria de receita indisponíveis.')
       const totals = normalizedItems.map((item) =>
         calculatePriceCentsTotal(
           cents(byId.get(item.productId)!.salePrice!)!,
@@ -473,6 +546,18 @@ export const createSale = createServerFn({ method: 'POST' })
         ),
       )
       const subtotal = totals.reduce((sum, item) => sum + item, 0n)
+      if (reportedCents !== subtotal && data.adjustmentKind === 'none') {
+        throw new Error(
+          'Classifique e justifique a diferença entre o faturamento recebido e o calculado.',
+        )
+      }
+      const revenueAudit = classifyRevenueDifference({
+        reportedCents,
+        calculatedCents: subtotal,
+        normalTolerance,
+        criticalTolerance,
+      })
+      const reportedByItem = allocateReportedRevenue(totals, reportedCents)
       const allocatesCost = createsSaleCostAllocation(data.status)
       const sale = (
         await tx
@@ -481,11 +566,21 @@ export const createSale = createServerFn({ method: 'POST' })
             idempotencyKey: data.idempotencyKey,
             idempotencyHash,
             createdByAuthUserId: context.principal!.id,
+            locationId: data.locationId,
             customerName: data.customerName?.trim() || null,
             customerPhone: data.customerPhone?.trim() || null,
             status: data.status,
             subtotalAmount: centsToMoney(subtotal),
-            totalAmount: centsToMoney(subtotal),
+            discountAmount: centsToMoney(
+              subtotal > reportedCents ? subtotal - reportedCents : 0n,
+            ),
+            totalAmount: centsToMoney(reportedCents),
+            reportedAmount: centsToMoney(reportedCents),
+            calculatedAmount: centsToMoney(subtotal),
+            auditStatus: revenueAudit.status,
+            auditNotes: data.adjustmentReason?.trim() || null,
+            adjustmentKind: data.adjustmentKind,
+            adjustmentReason: data.adjustmentReason?.trim() || null,
             notes: data.notes?.trim() || null,
           })
           .onConflictDoNothing({ target: sales.idempotencyKey })
@@ -558,6 +653,7 @@ export const createSale = createServerFn({ method: 'POST' })
               quantity: item.quantity!,
               unitPrice: byId.get(item.productId)!.salePrice!,
               totalAmount: centsToMoney(totals[index]),
+              reportedAmount: centsToMoney(reportedByItem[index]),
             })
             .returning({ id: saleItems.id })
         ).at(0)
@@ -640,7 +736,7 @@ export const createSale = createServerFn({ method: 'POST' })
         entityType: 'sale',
         entityId: sale.id,
         operationReference: data.idempotencyKey,
-        reason: data.notes,
+        reason: data.adjustmentReason || data.notes,
       })
       return { id: sale.id, replayed: false as const }
     })
@@ -649,6 +745,8 @@ export const createSale = createServerFn({ method: 'POST' })
 const saleHistoryValues = z.object({
   query: z.string().trim().max(100).optional(),
   status: z.enum(saleStatuses).optional(),
+  locationId: z.number().int().positive().optional(),
+  productId: z.number().int().positive().optional(),
   start: z.string().date().optional(),
   end: z.string().date().optional(),
   page: z.number().int().min(1).max(10_000).default(1),
@@ -670,6 +768,16 @@ export const listSales = createServerFn({ method: 'GET' })
     const filters = and(
       data.query ? ilike(sales.customerName, `%${data.query}%`) : undefined,
       data.status ? eq(sales.status, data.status) : undefined,
+      data.locationId ? eq(sales.locationId, data.locationId) : undefined,
+      data.productId
+        ? inArray(
+            sales.id,
+            database
+              .select({ saleId: saleItems.saleId })
+              .from(saleItems)
+              .where(eq(saleItems.productId, data.productId)),
+          )
+        : undefined,
       startAt ? gte(sales.soldAt, startAt) : undefined,
       endAt ? lt(sales.soldAt, endAt) : undefined,
     )
@@ -679,8 +787,22 @@ export const listSales = createServerFn({ method: 'GET' })
       .where(filters)
     const pagination = calculateSaleHistoryPage(data.page, Number(total))
     const rows = await database
-      .select()
+      .select({
+        id: sales.id,
+        customerName: sales.customerName,
+        status: sales.status,
+        totalAmount: sales.totalAmount,
+        reportedAmount: sales.reportedAmount,
+        calculatedAmount: sales.calculatedAmount,
+        auditStatus: sales.auditStatus,
+        adjustmentKind: sales.adjustmentKind,
+        adjustmentReason: sales.adjustmentReason,
+        locationId: sales.locationId,
+        locationName: salesLocations.name,
+        soldAt: sales.soldAt,
+      })
       .from(sales)
+      .leftJoin(salesLocations, eq(sales.locationId, salesLocations.id))
       .where(filters)
       .orderBy(desc(sales.soldAt), desc(sales.id))
       .limit(saleHistoryPageSize)

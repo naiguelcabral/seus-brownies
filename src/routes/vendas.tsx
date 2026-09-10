@@ -11,6 +11,7 @@ import {
   listSaleProducts,
   listSales,
 } from '#/features/operations/functions'
+import { listActiveSalesLocations } from '#/features/locations/functions'
 import { cancelSaleLifecycle } from '#/features/inventory/lifecycle-writers'
 import {
   canCancelSale,
@@ -25,6 +26,8 @@ import type { SaleStatus } from '#/features/operations/sale-history'
 const saleSearch = z.object({
   query: z.string().trim().max(100).optional().catch(undefined),
   status: z.enum(saleStatuses).optional().catch(undefined),
+  locationId: z.coerce.number().int().positive().optional().catch(undefined),
+  productId: z.coerce.number().int().positive().optional().catch(undefined),
   start: z.string().date().optional().catch(undefined),
   end: z.string().date().optional().catch(undefined),
   page: z.number().int().min(1).max(10_000).catch(1),
@@ -35,6 +38,8 @@ export const Route = createFileRoute('/vendas')({
   loaderDeps: ({ search }) => ({
     query: search.query,
     status: search.status,
+    locationId: search.locationId,
+    productId: search.productId,
     start: search.start,
     end: search.end,
     page: search.page,
@@ -46,8 +51,13 @@ export const Route = createFileRoute('/vendas')({
     const canManageLifecycle = Boolean(
       context.appRole && hasPermission(context.appRole, 'fifo:lifecycle:write'),
     )
+    const [products, locations] = await Promise.all([
+      listSaleProducts(),
+      listActiveSalesLocations(),
+    ])
     return {
-      products: await listSaleProducts(),
+      products,
+      locations,
       history: canReadHistory
         ? await listSales({ data: deps })
         : { sales: [], total: 0, page: 1, pageSize: 20, totalPages: 1 },
@@ -70,7 +80,7 @@ const statusLabels: Record<SaleStatus, string> = {
 }
 
 function SalesPage() {
-  const { products, history, canReadHistory, canManageLifecycle } =
+  const { products, locations, history, canReadHistory, canManageLifecycle } =
     Route.useLoaderData()
   const search = Route.useSearch()
   const router = useRouter()
@@ -83,6 +93,12 @@ function SalesPage() {
   const [customerName, setCustomerName] = useState('')
   const [customerPhone, setCustomerPhone] = useState('')
   const [status, setStatus] = useState<SaleStatus>('draft')
+  const [locationId, setLocationId] = useState('')
+  const [reportedAmount, setReportedAmount] = useState('')
+  const [adjustmentKind, setAdjustmentKind] = useState<
+    'none' | 'discount' | 'combo' | 'gift' | 'manual_adjustment'
+  >('none')
+  const [adjustmentReason, setAdjustmentReason] = useState('')
   const [notes, setNotes] = useState('')
   const [items, setItems] = useState<Item[]>([emptyItem()])
   const [message, setMessage] = useState<string | null>(null)
@@ -131,9 +147,13 @@ function SalesPage() {
   }
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    if (items.some((item) => !item.productId || !item.quantity)) {
+    if (
+      !locationId ||
+      !reportedAmount ||
+      items.some((item) => !item.productId || !item.quantity)
+    ) {
       setMessage(
-        'Selecione o produto e informe a quantidade em todos os itens.',
+        'Selecione o local, informe o faturamento recebido e complete todos os itens.',
       )
       return
     }
@@ -143,9 +163,13 @@ function SalesPage() {
       await save({
         data: {
           idempotencyKey,
+          locationId: Number(locationId),
           customerName,
           customerPhone,
           status,
+          reportedAmount,
+          adjustmentKind,
+          adjustmentReason,
           notes,
           items: items.map((item) => ({
             productId: Number(item.productId),
@@ -157,6 +181,10 @@ function SalesPage() {
       setCustomerPhone('')
       setNotes('')
       setStatus('draft')
+      setLocationId('')
+      setReportedAmount('')
+      setAdjustmentKind('none')
+      setAdjustmentReason('')
       setItems([emptyItem()])
       setIdempotencyKey(crypto.randomUUID())
       setMessage(
@@ -214,6 +242,8 @@ function SalesPage() {
                       )
                         ? (selectedStatus as SaleStatus)
                         : undefined,
+                      locationId: Number(form.get('locationId')) || undefined,
+                      productId: Number(form.get('productId')) || undefined,
                       start: String(form.get('start') ?? '') || undefined,
                       end: String(form.get('end') ?? '') || undefined,
                       page: 1,
@@ -255,6 +285,36 @@ function SalesPage() {
                   />
                 </label>
                 <label className="text-xs font-bold text-[#573524]">
+                  Local/canal
+                  <select
+                    className="field mt-1 block"
+                    name="locationId"
+                    defaultValue={search.locationId ?? ''}
+                  >
+                    <option value="">Todos</option>
+                    {locations.map((location) => (
+                      <option key={location.id} value={location.id}>
+                        {location.name}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <label className="text-xs font-bold text-[#573524]">
+                  Produto
+                  <select
+                    className="field mt-1 block"
+                    name="productId"
+                    defaultValue={search.productId ?? ''}
+                  >
+                    <option value="">Todos</option>
+                    {products.map((product) => (
+                      <option key={product.id} value={product.id}>
+                        {product.name}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <label className="text-xs font-bold text-[#573524]">
                   Até
                   <input
                     className="field mt-1 block"
@@ -266,7 +326,12 @@ function SalesPage() {
                 <button className="rounded-lg border border-[#4a2114] px-3 py-2 text-xs font-bold text-[#4a2114]">
                   Filtrar
                 </button>
-                {search.query || search.status || search.start || search.end ? (
+                {search.query ||
+                search.status ||
+                search.locationId ||
+                search.productId ||
+                search.start ||
+                search.end ? (
                   <button
                     type="button"
                     className="px-2 py-2 text-xs font-bold text-[#75411f]"
@@ -289,8 +354,17 @@ function SalesPage() {
                         </p>
                         <p className="mt-1 text-xs text-[#896d5b]">
                           {statusLabels[sale.status]} ·{' '}
-                          {formatDateTime(sale.soldAt)}
+                          {formatDateTime(sale.soldAt)} ·{' '}
+                          {sale.locationName ?? 'local não informado'}
                         </p>
+                        {sale.auditStatus ? (
+                          <p className="mt-1 text-xs text-[#896d5b]">
+                            Auditoria: {auditStatusLabel(sale.auditStatus)}
+                            {sale.reportedAmount && sale.calculatedAmount
+                              ? ` · informado ${currency.format(Number(sale.reportedAmount))} · calculado ${currency.format(Number(sale.calculatedAmount))}`
+                              : ''}
+                          </p>
+                        ) : null}
                       </div>
                       <div className="text-right">
                         <strong>
@@ -424,6 +498,22 @@ function SalesPage() {
             onChange={setCustomerPhone}
           />
           <label className="block text-sm font-bold text-[#573524]">
+            Local ou canal
+            <select
+              value={locationId}
+              onChange={(event) => setLocationId(event.target.value)}
+              className="field mt-1.5"
+              required
+            >
+              <option value="">Selecione</option>
+              {locations.map((location) => (
+                <option value={location.id} key={location.id}>
+                  {location.name}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className="block text-sm font-bold text-[#573524]">
             Status
             <select
               value={status}
@@ -492,6 +582,41 @@ function SalesPage() {
             <Plus size={16} />
             Adicionar item
           </button>
+          <Input
+            label="Faturamento recebido"
+            value={reportedAmount}
+            onChange={setReportedAmount}
+            placeholder="Ex.: 120,00"
+            inputMode="decimal"
+            required
+          />
+          <label className="block text-sm font-bold text-[#573524]">
+            Motivo da diferença
+            <select
+              value={adjustmentKind}
+              onChange={(event) =>
+                setAdjustmentKind(event.target.value as typeof adjustmentKind)
+              }
+              className="field mt-1.5"
+            >
+              <option value="none">Sem ajuste</option>
+              <option value="discount">Desconto</option>
+              <option value="combo">Combo</option>
+              <option value="gift">Brinde</option>
+              <option value="manual_adjustment">Ajuste manual</option>
+            </select>
+          </label>
+          {adjustmentKind !== 'none' ? (
+            <label className="block text-sm font-bold text-[#573524]">
+              Justificativa do ajuste
+              <textarea
+                className="field mt-1.5 min-h-20"
+                value={adjustmentReason}
+                onChange={(event) => setAdjustmentReason(event.target.value)}
+                required
+              />
+            </label>
+          ) : null}
           <label className="block text-sm font-bold text-[#573524]">
             Observações
             <textarea
@@ -578,3 +703,10 @@ const currency = new Intl.NumberFormat('pt-BR', {
   style: 'currency',
   currency: 'BRL',
 })
+
+function auditStatusLabel(value: string) {
+  if (value === 'normal') return 'normal'
+  if (value === 'attention') return 'atenção'
+  if (value === 'critical') return 'crítico'
+  return 'não classificada'
+}

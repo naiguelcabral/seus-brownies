@@ -5,12 +5,15 @@ const routePermissions: Readonly<Partial<Record<string, Permission>>> = {
   '/': 'dashboard:read',
   '/categorias': 'catalog:read',
   '/produtos': 'catalog:read',
+  '/locais': 'catalog:write',
   '/compras': 'purchases:write',
   '/estoque': 'inventory:read',
   '/producao': 'production:read',
   '/vendas': 'sales:write',
   '/despesas': 'expenses:read',
   '/relatorios': 'reports:financial:read',
+  '/parametros': 'access:manage',
+  '/plano-de-acao': 'access:manage',
   '/fifo-migration-audit': 'fifo:audit:read',
 }
 

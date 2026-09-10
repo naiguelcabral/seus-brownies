@@ -107,16 +107,23 @@ A definição de margem realizada e vínculo venda-lote é decisão de negócio/
 
 ## Fase G3 — Dashboard e gestão
 
+A matriz detalhada workbook × sistema está em
+[`WORKBOOK-SYSTEM-PARITY.md`](./WORKBOOK-SYSTEM-PARITY.md).
+
 - [x] Dashboard operacional inicial.
 - [x] Relatórios básicos por período.
 - [ ] KPIs de faturamento e volume com comparação temporal.
-- [ ] Ticket médio.
+- [~] Ticket médio, preço médio, unidades e divergência de receita
+  implementados localmente; aguardam migrations/homologação.
 - [ ] Produtos e sabores mais vendidos, conforme modelo disponível.
 - [ ] CMV e margem quando G2 estiver fechado.
 - [ ] Estoque crítico e cobertura estimada.
 - [ ] Produção por período e rendimento real.
 - [ ] Perdas e coprodutos.
-- [ ] Parceiros/canais com desempenho.
+- [~] Parceiros/canais com receita, eventos, unidades, ticket e divergência
+  implementados localmente; margem e comparação temporal continuam pendentes.
+- [~] Parâmetros gerenciais centralizados e plano de ação humano implementados
+  localmente; migrations `0019`/`0020` não aplicadas.
 - [~] Exportação CSV segura dos relatórios operacionais concluída localmente;
   XLSX segue fora do escopo atual e não foi apresentado como integração.
 - [~] Busca, filtros, paginação e estados explícitos implementados para os

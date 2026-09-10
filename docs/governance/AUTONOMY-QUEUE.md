@@ -1,6 +1,6 @@
 # Fila executável de autonomia — Cacau v1
 
-Atualizada em 8 de setembro de 2026. Esta fila é a fonte de verdade para a
+Atualizada em 10 de setembro de 2026. Esta fila é a fonte de verdade para a
 seleção de pacotes pelo controlador. Ela não substitui os gates de
 `AGENTS.md`, `SECURITY.md` ou `HUMAN-APPROVALS.md`.
 
@@ -56,6 +56,19 @@ seleção de pacotes pelo controlador. Ela não substitui os gates de
 | AR-G2-D1    | Preparar decisão de CMV e reversões                 | documental               | done        | Alternativas, exemplo, recomendação técnica e testes em `G2-CMV-DECISION.md`; decisão financeira permanece humana.                                                                                      |
 | AR-E6       | Classificar vulnerabilidades do lockfile            | documental               | done        | Caminhos, contexto de uso, exploração condicionada e impacto de correção em `DEPENDENCY-AUDIT-2026-09-09.md`; sem atualização automática.                                                               |
 | AR-G1-HML-2 | Declarar Rate Limiting HML e publicar com segurança | codigo-build-obrigatorio | blocked     | Binding `AUTH_RATE_LIMITER`, namespace `2026091001`, 20/60 s e fail-closed HML passaram localmente e na CI `34468924703`; deploy bloqueado sem site key pública HML injetada, sem usar valor sintético. |
+
+### Missão de paridade do workbook
+
+| ID        | Pacote                                    | Tipo                     | Estado      | Escopo e saída esperada                                                                                                     |
+| --------- | ----------------------------------------- | ------------------------ | ----------- | --------------------------------------------------------------------------------------------------------------------------- |
+| WP-MATRIX | Inventariar workbook e matriz de paridade | documental               | done        | 15 abas, estruturas, relações, indicadores, ausência de fórmulas e divergências sanitizadas em `WORKBOOK-SYSTEM-PARITY.md`. |
+| WP-A      | Centralizar parâmetros gerenciais         | codigo-build-obrigatorio | done        | Persistência exata, versão otimista, servidor, UI e auditoria locais; `0019` não aplicada e homologação pendente.           |
+| WP-B      | Capturar e auditar receita                | codigo-build-obrigatorio | done        | Informado/calculado, motivo, limites, rateio exato, autoria e idempotência locais; `0019` não aplicada.                     |
+| WP-C      | Gerir locais e canais                     | codigo-build-obrigatorio | done        | CRUD protegido, inativação, filtros, paginação e vínculo à venda; homologação pendente.                                     |
+| WP-G      | Ampliar dashboard atual                   | codigo-build-obrigatorio | done        | Volume, ticket, preço médio, divergência e métricas por local; margem/lucro continuam bloqueados por G2.                    |
+| WP-H      | Estruturar plano de ação humano           | codigo-build-obrigatorio | done        | CRUD, filtros, autoria, concorrência e histórico append-only; `0020` não aplicada e homologação pendente.                   |
+| WP-D      | Implementar metas e cenários              | codigo-build-obrigatorio | needs-human | Parâmetros existem; mix/projeções dependem de definição financeira G2 e não serão inferidos.                                |
+| WP-EF     | Completar produção e estoque gerenciais   | codigo-build-obrigatorio | needs-human | Validade/lote/reposição exigem desenho; cobertura depende de consumo histórico confiável.                                   |
 
 Esses pacotes decorrem da missão manual de até 20 pacotes. A07 continua
 `blocked`; A08–A10 continuam `needs-human`. Não há promoção de nível permanente.
