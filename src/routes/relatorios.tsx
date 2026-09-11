@@ -8,6 +8,7 @@ import {
   downloadCsv,
 } from '#/features/reports/csv-export'
 import { getOperationalReports } from '#/features/reports/functions'
+import { formatBrlMoney } from '#/lib/format-money'
 
 const reportSearch = z.object({
   start: z.string().date().optional(),
@@ -82,17 +83,17 @@ function ReportsPage() {
         <Metric
           icon={TrendingUp}
           title="Faturamento confirmado"
-          value={money.format(Number(report.revenueTotal))}
+          value={formatBrlMoney(report.revenueTotal)}
         />
         <Metric
           icon={Wallet}
           title="Despesas"
-          value={money.format(Number(report.expensesTotal))}
+          value={formatBrlMoney(report.expensesTotal)}
         />
         <Metric
           icon={Box}
           title="Estoque valorizado"
-          value={money.format(Number(report.inventoryTotal))}
+          value={formatBrlMoney(report.inventoryTotal)}
         />
         <Metric
           icon={ReceiptText}
@@ -109,7 +110,7 @@ function ReportsPage() {
           title="Ticket médio por evento"
           value={
             report.salesMetrics.total.ticketAverage
-              ? money.format(Number(report.salesMetrics.total.ticketAverage))
+              ? formatBrlMoney(report.salesMetrics.total.ticketAverage)
               : 'Sem dados'
           }
         />
@@ -118,7 +119,7 @@ function ReportsPage() {
           title="Preço médio por unidade"
           value={
             report.salesMetrics.total.averageUnitPrice
-              ? money.format(Number(report.salesMetrics.total.averageUnitPrice))
+              ? formatBrlMoney(report.salesMetrics.total.averageUnitPrice)
               : 'Sem dados'
           }
         />
@@ -127,7 +128,7 @@ function ReportsPage() {
           title="Divergência de receita"
           value={
             report.salesMetrics.total.audit.difference
-              ? money.format(Number(report.salesMetrics.total.audit.difference))
+              ? formatBrlMoney(report.salesMetrics.total.audit.difference)
               : 'Sem auditoria'
           }
         />
@@ -135,7 +136,7 @@ function ReportsPage() {
           <Metric
             icon={TrendingUp}
             title="Margem bruta FIFO"
-            value={money.format(Number(report.fifo.grossMargin))}
+            value={formatBrlMoney(report.fifo.grossMargin)}
           />
         ) : null}
       </div>
@@ -173,16 +174,16 @@ function ReportsPage() {
                       {quantity.format(Number(location.units))}
                     </td>
                     <td className="px-4 py-3 text-right">
-                      {money.format(Number(location.revenue))}
+                      {formatBrlMoney(location.revenue)}
                     </td>
                     <td className="px-4 py-3 text-right">
                       {location.ticketAverage
-                        ? money.format(Number(location.ticketAverage))
+                        ? formatBrlMoney(location.ticketAverage)
                         : '—'}
                     </td>
                     <td className="px-4 py-3 text-right">
                       {location.audit.difference
-                        ? money.format(Number(location.audit.difference))
+                        ? formatBrlMoney(location.audit.difference)
                         : 'Sem auditoria'}
                     </td>
                   </tr>
@@ -200,7 +201,7 @@ function ReportsPage() {
         <p className="mt-4 rounded-xl border border-[#ecdfd4] bg-white p-4 text-sm text-[#846859]">
           Meta de lucro cadastrada:{' '}
           <strong>
-            {money.format(Number(report.managementSettings.monthlyProfitGoal))}
+            {formatBrlMoney(report.managementSettings.monthlyProfitGoal)}
           </strong>
           . O progresso de lucro não é exibido enquanto competência, reversões e
           margem definitiva aguardam a decisão G2.
@@ -211,7 +212,7 @@ function ReportsPage() {
           title="Faturamento por canal"
           rows={report.revenue.map((item) => [
             item.channel,
-            money.format(Number(item.total)),
+            formatBrlMoney(item.total),
           ])}
           empty="Não há vendas confirmadas ou pagas no período."
         />
@@ -219,7 +220,7 @@ function ReportsPage() {
           title="Despesas por categoria"
           rows={report.expensesByCategory.map((item) => [
             item.category,
-            money.format(Number(item.total)),
+            formatBrlMoney(item.total),
           ])}
           empty="Não há despesas no período."
         />
@@ -229,7 +230,7 @@ function ReportsPage() {
             .slice(0, 12)
             .map((item) => [
               `${item.productName} · ${quantity.format(Number(item.balance))} ${item.unit === 'unit' ? 'un.' : item.unit}`,
-              money.format(Number(item.value)),
+              formatBrlMoney(item.value),
             ])}
           empty="Não há saldo positivo até o fim do período."
         />
@@ -237,7 +238,7 @@ function ReportsPage() {
           title="Vendas por produto"
           rows={report.salesByProduct.map((item) => [
             `${item.productName} · ${quantity.format(Number(item.quantity))} un.`,
-            money.format(Number(item.amount)),
+            formatBrlMoney(item.amount),
           ])}
           empty="Não há itens de venda no período."
         />
@@ -252,17 +253,17 @@ function ReportsPage() {
             <Metric
               icon={TrendingUp}
               title="Receita líquida alocada"
-              value={money.format(Number(report.fifo.netRevenue))}
+              value={formatBrlMoney(report.fifo.netRevenue)}
             />
             <Metric
               icon={Box}
               title="CMV"
-              value={money.format(Number(report.fifo.cogs))}
+              value={formatBrlMoney(report.fifo.cogs)}
             />
             <Metric
               icon={Wallet}
               title="Margem bruta"
-              value={money.format(Number(report.fifo.grossMargin))}
+              value={formatBrlMoney(report.fifo.grossMargin)}
             />
           </div>
           <div className="mt-6 grid gap-6 xl:grid-cols-3">
@@ -270,7 +271,7 @@ function ReportsPage() {
               title="Margem por produto"
               rows={report.fifo.byProduct.map((item) => [
                 item.productName,
-                money.format(Number(item.grossMargin)),
+                formatBrlMoney(item.grossMargin),
               ])}
               empty="Não há alocações FIFO no período."
             />
@@ -278,7 +279,7 @@ function ReportsPage() {
               title="Margem por lote"
               rows={report.fifo.byBatch.map((item) => [
                 `Lote #${item.productionBatchId}`,
-                money.format(Number(item.grossMargin)),
+                formatBrlMoney(item.grossMargin),
               ])}
               empty="Não há alocações FIFO no período."
             />
@@ -286,7 +287,7 @@ function ReportsPage() {
               title="Estoque FIFO remanescente"
               rows={report.fifo.inventory.map((item) => [
                 `${item.productName} · ${quantity.format(Number(item.balance))} ${item.unit === 'unit' ? 'un.' : item.unit}`,
-                money.format(Number(item.value)),
+                formatBrlMoney(item.value),
               ])}
               empty="Não há camadas FIFO remanescentes."
             />
@@ -336,7 +337,7 @@ function ReportsPage() {
               title="Consumo de insumos"
               rows={report.production.consumptions.map((item) => [
                 item.productName,
-                `${quantity.format(Number(item.quantity))} · ${item.amount ? money.format(Number(item.amount)) : 'custo não informado'}`,
+                `${quantity.format(Number(item.quantity))} · ${item.amount ? formatBrlMoney(item.amount) : 'custo não informado'}`,
               ])}
               empty="Nenhum consumo de lote concluído no período."
             />
@@ -353,7 +354,7 @@ function ReportsPage() {
               rows={report.production.batchCosts.map((item) => [
                 `Lote #${item.id} · ${item.plannedFor ?? 'sem data'}`,
                 item.amount
-                  ? money.format(Number(item.amount))
+                  ? formatBrlMoney(item.amount)
                   : 'custo não informado',
               ])}
               empty="Nenhum custo de lote concluído no período."
@@ -362,7 +363,7 @@ function ReportsPage() {
               title="Custos operacionais"
               rows={report.production.operationalCosts.map((item) => [
                 item.type === 'energy' ? 'Energia' : 'Mão de obra',
-                money.format(Number(item.amount)),
+                formatBrlMoney(item.amount),
               ])}
               empty="Nenhum custo operacional no período."
             />
@@ -440,8 +441,4 @@ function List({
     </section>
   )
 }
-const money = new Intl.NumberFormat('pt-BR', {
-  style: 'currency',
-  currency: 'BRL',
-})
 const quantity = new Intl.NumberFormat('pt-BR', { maximumFractionDigits: 3 })
