@@ -162,6 +162,20 @@
       "when": 1789093270876,
       "tag": "0022_ambitious_hellcat",
       "breakpoints": true
+    },
+    {
+      "idx": 23,
+      "version": "7",
+      "when": 1789130117098,
+      "tag": "0023_strange_union_jack",
+      "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "7",
+      "when": 1789130211788,
+      "tag": "0024_brainy_doorman",
+      "breakpoints": true
     }
   ]
 }

@@ -1,6 +1,7 @@
 import {
   boolean,
   date,
+  foreignKey,
   integer,
   index,
   jsonb,
@@ -123,6 +124,19 @@ export const authAuditOutcome = pgEnum('auth_audit_outcome', [
   'success',
   'failure',
   'blocked',
+])
+export const financialEventType = pgEnum('financial_event_type', [
+  'sale_revenue',
+  'cash_receipt',
+  'cash_refund',
+  'store_credit_issued',
+  'store_credit_redeemed',
+  'revenue_correction',
+  'cash_correction',
+])
+export const financialPeriodStatus = pgEnum('financial_period_status', [
+  'open',
+  'closed',
 ])
 
 /**
@@ -491,6 +505,8 @@ export const sales = pgTable('sales', {
   affectsStock: boolean('affects_stock').notNull().default(true),
   notes: text(),
   soldAt: timestamp('sold_at', { withTimezone: true }).notNull().defaultNow(),
+  /** Revenue competence starts at delivery; null means not delivered. */
+  deliveredAt: timestamp('delivered_at', { withTimezone: true }),
   createdAt: timestamp('created_at', { withTimezone: true })
     .notNull()
     .defaultNow(),
@@ -498,6 +514,75 @@ export const sales = pgTable('sales', {
     .notNull()
     .defaultNow(),
 })
+
+/** Manual period closure with the exact aggregates visible at the close. */
+export const financialPeriods = pgTable('financial_periods', {
+  id: serial().primaryKey(),
+  periodMonth: date('period_month').notNull().unique(),
+  status: financialPeriodStatus().notNull().default('open'),
+  version: integer().notNull().default(1),
+  closureSnapshot: jsonb('closure_snapshot'),
+  closureNotes: text('closure_notes'),
+  closedByAuthUserId: varchar('closed_by_auth_user_id', { length: 191 }),
+  closedAt: timestamp('closed_at', { withTimezone: true }),
+  createdAt: timestamp('created_at', { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+})
+
+/** Immutable accrual and cash facts; event type defines the indicator affected. */
+export const financialEvents = pgTable(
+  'financial_events',
+  {
+    id: serial().primaryKey(),
+    idempotencyKey: varchar('idempotency_key', { length: 160 })
+      .notNull()
+      .unique(),
+    idempotencyHash: varchar('idempotency_hash', { length: 64 }).notNull(),
+    type: financialEventType().notNull(),
+    saleId: integer('sale_id').references(() => sales.id, {
+      onDelete: 'restrict',
+    }),
+    saleItemId: integer('sale_item_id').references(() => saleItems.id, {
+      onDelete: 'restrict',
+    }),
+    correctsEventId: integer('corrects_event_id'),
+    amount: money('amount').notNull(),
+    /** Signed effects keep accrual and cash views independently additive. */
+    revenueEffect: money('revenue_effect').notNull().default('0'),
+    cashEffect: money('cash_effect').notNull().default('0'),
+    competenceDate: date('competence_date').notNull(),
+    occurredAt: timestamp('occurred_at', { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    reason: text().notNull(),
+    createdByAuthUserId: varchar('created_by_auth_user_id', {
+      length: 191,
+    }).notNull(),
+    authorizedByAuthUserId: varchar('authorized_by_auth_user_id', {
+      length: 191,
+    }),
+    createdAt: timestamp('created_at', { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (table) => [
+    foreignKey({
+      columns: [table.correctsEventId],
+      foreignColumns: [table.id],
+      name: 'financial_events_correction_fk',
+    }).onDelete('restrict'),
+    index('financial_events_competence_idx').on(
+      table.competenceDate,
+      table.type,
+    ),
+    index('financial_events_occurred_idx').on(table.occurredAt, table.type),
+    index('financial_events_sale_idx').on(table.saleId),
+  ],
+)
 
 /** Name and price snapshots preserve the historical value of each sale. */
 export const saleItems = pgTable('sale_items', {
