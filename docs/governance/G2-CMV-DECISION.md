@@ -1,6 +1,23 @@
-# Decisão pendente — CMV realizado, reversões e margem
+# Decisão aprovada — competência, CMV, reversões e margem
 
-Atualizado em 9 de setembro de 2026. Este documento não muda regra financeira.
+Atualizado em 11 de setembro de 2026. A decisão humana foi aprovada e passa a
+ser regra canônica; a análise histórica abaixo é preservada como evidência.
+
+## Resultado aprovado
+
+- Usar a alternativa A para posição/fechamento e a alternativa C para eventos
+  financeiros, com receita reconhecida na entrega e caixa separado.
+- Corrigir erro no período original; registrar evento econômico posterior na
+  data real do evento, sem apagar fatos.
+- Cancelamento pré-entrega restaura estoque e CMV. Devolução pós-entrega pode
+  gerar reembolso ou crédito futuro, mas não restaura alimento vendável nem
+  desfaz o CMV realizado.
+- Somente Dono corrige período fechado. Dono e Gerente podem decidir a forma de
+  compensação ao cliente.
+- Custos diretos de energia e mão de obra permanecem incorporados ao custo do
+  lote e não voltam a ser abatidos no resultado.
+- Margem mínima é alerta configurável. O mix histórico é normalizado
+  proporcionalmente de 103% para 100%.
 
 ## Fatos atuais
 
@@ -46,7 +63,6 @@ Exigir lote para compra ou ajuste criaria fatos fictícios. Margem por produto
 deve usar todas as alocações; margem por lote deve mostrar apenas a parcela de
 produção e separar a parcela sem lote.
 
-Recomenda-se, sujeito a aprovação financeira, **A** para posição/fechamento e
-**C** para resultado por competência, deixando **B** como consulta operacional
-rotulada. Isso preserva fatos FIFO e evita alterar meses fechados, mas não deve
-ser implementado antes da decisão humana.
+A recomendação **A + C** foi aprovada em 11 de setembro de 2026. A visão B pode
+continuar somente como consulta operacional explicitamente rotulada; não é
+fonte do fechamento nem substitui fatos financeiros.

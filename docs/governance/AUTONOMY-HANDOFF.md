@@ -4,6 +4,12 @@ Atualizado em 11 de setembro de 2026.
 
 ## Missão `codex/workbook-parity` — checkpoint WP-I1
 
+- G2-F1 ativo após aprovação humana de 11 de setembro de 2026. Objetivo:
+  persistir fatos financeiros imutáveis, entrega, reembolso/crédito e fechamento
+  manual; corrigir cancelamento pré-entrega versus devolução pós-entrega; expor
+  indicadores separados e normalização exata do mix. Não objetivos: aplicar
+  migration, backfill, corrigir banco compartilhado ou publicar ambiente.
+
 - Base confirmada: `codex/audit-remediation` em `241099a`; branch da missão
   criada com árvore inicialmente limpa. A referência original foi inspecionada
   somente em `.codex-local/reference/` e permaneceu sem alteração.
