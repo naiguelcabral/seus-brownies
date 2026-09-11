@@ -2,13 +2,19 @@
 
 Atualizado em 11 de setembro de 2026.
 
-## Missão `codex/workbook-parity` — checkpoint WP-I1
+## Missão `codex/workbook-parity` — G2-F1 em execução
 
 - G2-F1 ativo após aprovação humana de 11 de setembro de 2026. Objetivo:
   persistir fatos financeiros imutáveis, entrega, reembolso/crédito e fechamento
   manual; corrigir cancelamento pré-entrega versus devolução pós-entrega; expor
   indicadores separados e normalização exata do mix. Não objetivos: aplicar
   migration, backfill, corrigir banco compartilhado ou publicar ambiente.
+- Primeiro checkpoint funcional pronto localmente: migrations aditivas
+  `0023`–`0025`, fatos imutáveis, entrega com competência, caixa separado para
+  venda paga, reembolso/crédito pós-entrega sem retorno ao estoque e bloqueio
+  de cancelamento depois da entrega. A normalização do mix e os indicadores
+  separados usam aritmética exata. Validação: 303 testes, lint, typecheck e
+  `git diff --check` verdes; build isolado ainda será executado após o commit.
 
 - Base confirmada: `codex/audit-remediation` em `241099a`; branch da missão
   criada com árvore inicialmente limpa. A referência original foi inspecionada
@@ -26,9 +32,10 @@ Atualizado em 11 de setembro de 2026.
   compra; `0022` adiciona fornecedor padrão informativo. Para rollback,
   primeiro reverter o código; remover colunas/tabelas depois seria destrutivo
   para fatos novos e exige decisão humana.
-- Gate financeiro preservado: competência, reversões, créditos, cancelamento
-  retroativo, margem definitiva e vínculo venda–lote continuam em G2. Metas,
-  cobertura e sugestão de compra foram suspensas somente em seus dependentes.
+- O gate de decisão financeira foi removido pela aprovação formal; fechamento,
+  correções de período e indicadores consultáveis ainda precisam ser
+  implementados antes de concluir G2-F1. Metas aguardam esse checkpoint;
+  cobertura e sugestão de compra continuam exigindo histórico confiável.
 - WP-F1 concluído localmente: `0021` adiciona ponto de reposição no produto e
   lote/validade no item de compra. Catálogo, compra e estoque foram conectados;
   a comparação do alerta usa milésimos exatos e o saldo continua somente
@@ -61,11 +68,11 @@ Atualizado em 11 de setembro de 2026.
   `34554171049` passaram no WP-F2 `bbf6db3`; as CIs de push `34554627169` e PR
   `34554629415` passaram no WP-A2 `b9241ae`; as CIs de push `34554990879` e PR
   `34554994350` passaram no WP-I1 `aa593c3`.
-- Próximo passo exato: revisão humana da PR #4. Em ambiente explicitamente
-  autorizado, aplicar `0019`–`0022` e homologar os fluxos locais. Fechar G2
-  antes de implementar meta, lucro ou margem; obter histórico confiável antes
-  de calcular cobertura ou sugerir compra. Nenhuma dessas ações externas foi
-  executada nesta missão.
+- Próximo passo exato: implementar fechamento/correções e leitura dos fatos G2;
+  depois integrar indicadores e cenários. Em ambiente explicitamente
+  autorizado, aplicar `0019`–`0025` e homologar os fluxos locais. Obter
+  histórico confiável antes de calcular cobertura ou sugerir compra. Nenhuma
+  dessas ações externas foi executada nesta missão.
 
 ## Atualização AR-G1-HML-2 — 10 de setembro de 2026
 

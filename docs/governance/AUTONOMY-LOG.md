@@ -1,5 +1,20 @@
 # Log sanitizado de autonomia — Cacau v1
 
+## G2 financeiro — 11 de setembro de 2026
+
+- As dez decisões financeiras aprovadas pelo Dono foram registradas em
+  `HUMAN-APPROVALS.md`, `BUSINESS-RULES.md` e `G2-CMV-DECISION.md`, preservando
+  a evidência anterior como histórico e removendo o gate de decisão.
+- Migrations aditivas `0023`–`0025`, não aplicadas, modelam entrega, períodos e
+  fatos imutáveis com efeitos exatos e separados de competência e caixa.
+- Entrega registra receita na data de competência; venda paga registra caixa
+  separadamente. Compensação pós-entrega registra reembolso ou crédito auditado
+  e não restaura alimento nem CMV. Cancelamento após entrega falha fechado.
+- Normalização proporcional do mix, indicadores financeiros separados,
+  autorização de compensação e cálculo cumulativo de compensações parciais
+  foram cobertos por testes. O subpacote passou em 303 testes, lint, typecheck e
+  `git diff --check`; build e CI ainda serão registrados no checkpoint.
+
 ## Missão de paridade do workbook — 10 de setembro de 2026
 
 - Estado recuperado em `codex/audit-remediation` no SHA `241099a`, árvore

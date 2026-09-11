@@ -14,8 +14,25 @@ import { createLifecycleDrizzleMock } from './helpers/lifecycle-drizzle-mock'
 
 const base = () =>
   createLifecycleDrizzleMock({
-    sales: [{ id: 1, status: 'confirmed' }],
-    saleItems: [{ id: 2, saleId: 1, productId: 3 }],
+    sales: [
+      {
+        id: 1,
+        status: 'confirmed',
+        deliveredAt: null,
+        totalAmount: '10.00',
+        soldAt: new Date('2026-09-01T12:00:00Z'),
+      },
+    ],
+    saleItems: [
+      {
+        id: 2,
+        saleId: 1,
+        productId: 3,
+        quantity: '2.000',
+        totalAmount: '10.00',
+        reportedAmount: '10.00',
+      },
+    ],
     allocations: [
       {
         id: 4,
@@ -141,27 +158,42 @@ test('cancelamento grava retorno/reversão e restaura camada sem editar a aloca�
   )
 })
 
-test('devolução parcial preserva fato original e restaura somente quantidade/custo proporcional', async () => {
+test('cancelamento após entrega falha antes de restaurar estoque ou alterar venda', async () => {
   const mock = base()
-  await persistSaleReturn(database(mock), {
-    saleItemId: 2,
-    quantity: '1.000',
-    reason: 'Produto devolvido',
-    reference: 'RMA-1',
-  })
+  mock.rows.sales[0].deliveredAt = new Date('2026-09-10T12:00:00Z')
+  await assert.rejects(
+    persistSaleCancellation(database(mock), {
+      saleId: 1,
+      reason: 'Tentativa após entrega',
+    }),
+    /Venda entregue deve usar devolução/,
+  )
+  assertRolledBack(mock)
+})
+
+test('devolução pós-entrega registra compensação sem restaurar alimento ou CMV', async () => {
+  const mock = base()
+  mock.rows.sales[0].deliveredAt = new Date('2026-09-10T12:00:00Z')
+  await persistSaleReturn(
+    database(mock),
+    {
+      saleItemId: 2,
+      quantity: '1.000',
+      settlement: 'refund',
+      occurredOn: '2026-09-11',
+      reason: 'Produto devolvido',
+      reference: 'RMA-1',
+    },
+    'manager-1',
+  )
   assert.deepEqual(
     mutations(mock).map((entry) => `${entry.kind}:${entry.table}`),
-    [
-      'insert:movements',
-      'insert:reversals',
-      'update:layers',
-      'insert:operationalAudit',
-    ],
+    ['insert:financialEvents', 'insert:operationalAudit'],
   )
-  const layer = mock.journal.find((entry) => entry.table === 'layers')
-    ?.values as { remainingQuantity: string; remainingCost: string }
-  assert.equal(layer.remainingQuantity, '11.000')
-  assert.equal(layer.remainingCost, '41.55')
+  assert.equal(
+    mock.journal.some((entry) => entry.table === 'movements'),
+    false,
+  )
   assert.equal(mock.rows.allocations[0].allocatedCost, '7.56')
 })
 
@@ -277,21 +309,22 @@ const rollbackCases = [
   },
   {
     name: 'devolução',
-    stages: [
-      'schema',
-      'lock',
-      'movements',
-      'reversals',
-      'layers',
-      'operationalAudit',
-    ],
-    write: (mock: ReturnType<typeof base>) =>
-      persistSaleReturn(database(mock), {
-        saleItemId: 2,
-        quantity: '1.000',
-        reason: 'Devolução testada',
-        reference: 'RMA-rollback',
-      }),
+    stages: ['schema', 'lock', 'financialEvents', 'operationalAudit'],
+    write: (mock: ReturnType<typeof base>) => {
+      mock.rows.sales[0].deliveredAt = new Date('2026-09-10T12:00:00Z')
+      return persistSaleReturn(
+        database(mock),
+        {
+          saleItemId: 2,
+          quantity: '1.000',
+          settlement: 'store_credit',
+          occurredOn: '2026-09-11',
+          reason: 'Devolução testada',
+          reference: 'RMA-rollback',
+        },
+        'manager-1',
+      )
+    },
   },
   {
     name: 'perda',
@@ -377,40 +410,6 @@ test('cancelamento repetido falha sem criar novo fato', async () => {
     persistSaleCancellation(database(mock), {
       saleId: 1,
       reason: 'Cancelamento repetido',
-    }),
-    /já registrado/,
-  )
-  assertRolledBack(mock)
-})
-
-test('devolução acima do saldo devolvível falha com mensagem específica', async () => {
-  const mock = base()
-  mock.rows.reversals.push({
-    originalAllocationId: 4,
-    quantity: '2.000',
-    restoredCost: '7.56',
-  })
-  await assert.rejects(
-    persistSaleReturn(database(mock), {
-      saleItemId: 2,
-      quantity: '1.000',
-      reason: 'Devolução excedente',
-      reference: 'RMA-max',
-    }),
-    /excede a quantidade vendida/,
-  )
-  assertRolledBack(mock)
-})
-
-test('devolução repetida falha sem nova reversão', async () => {
-  const mock = base()
-  mock.rows.movements.push({ id: 92 })
-  await assert.rejects(
-    persistSaleReturn(database(mock), {
-      saleItemId: 2,
-      quantity: '1.000',
-      reason: 'Devolução repetida',
-      reference: 'RMA-repeat',
     }),
     /já registrado/,
   )

@@ -1,6 +1,6 @@
 # Estado canônico do projeto — Cacau v1
 
-Atualizado em 10 de setembro de 2026, após inspeção do workbook original,
+Atualizado em 11 de setembro de 2026, após inspeção do workbook original,
 revisão de código, migrations, testes, rotas, documentação e estado público de
 HML.
 
@@ -45,6 +45,9 @@ Este documento é a referência canônica de alto nível para o estado atual do 
   `WORKBOOK-SYSTEM-PARITY.md`. Parâmetros gerenciais, auditoria exata de
   receita, locais/canais, KPIs de venda e plano de ação foram implementados
   localmente; dependem das migrations `0019`/`0020` e de homologação.
+- Política financeira G2 aprovada e em implementação local: receita por
+  competência na entrega, caixa separado, compensações posteriores imutáveis e
+  devolução sem retorno de alimento ao estoque vendável.
 
 ### Custos e estoque
 
@@ -71,6 +74,9 @@ Este documento é a referência canônica de alto nível para o estado atual do 
   lote/validade por item de compra. Ela também não foi aplicada.
 - A migration aditiva `0022` prepara fornecedor padrão informativo por produto;
   o fornecedor efetivo continua preservado em cada compra. Não foi aplicada.
+- As migrations aditivas `0023`–`0025` preparam entrega, fatos financeiros
+  imutáveis, efeitos separados de competência/caixa, fechamento manual e
+  quantidade compensada. Não foram aplicadas a nenhum banco.
 - Não repetir cargas ou homologações já consumidas sem autorização explícita.
 
 ### Qualidade

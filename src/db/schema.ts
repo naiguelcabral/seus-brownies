@@ -550,6 +550,7 @@ export const financialEvents = pgTable(
       onDelete: 'restrict',
     }),
     correctsEventId: integer('corrects_event_id'),
+    quantity: quantity('quantity'),
     amount: money('amount').notNull(),
     /** Signed effects keep accrual and cash views independently additive. */
     revenueEffect: money('revenue_effect').notNull().default('0'),

@@ -56,6 +56,8 @@ export function lifecycleErrorMessage(error: unknown) {
   const message = error instanceof Error ? error.message : ''
   if (message.includes('0013_fifo_lifecycle'))
     return 'O ciclo FIFO ainda não está disponível: aplique a migration 0013 em development antes de registrar este evento.'
+  if (message.includes('migrations 0023 a 0025'))
+    return 'O lifecycle financeiro G2 ainda não está disponível: aplique as migrations 0023 a 0025 em ambiente autorizado.'
   return message || 'Não foi possível registrar o evento de estoque.'
 }
 
@@ -96,6 +98,6 @@ export function validateLifecycleForm(
     : {
         ok: false as const,
         message:
-          'Revise os campos obrigatórios: quantidade positiva (até três casas), motivo e referência.',
+          'Revise os campos obrigatórios: quantidade positiva, decisão, data, motivo e referência.',
       }
 }

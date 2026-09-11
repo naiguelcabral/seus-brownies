@@ -93,17 +93,19 @@ final por Server Function continuam sujeitos aos gates de `HUMAN-APPROVALS.md`.
 - [x] Estrutura FIFO criada.
 - [x] Homologação FIFO G6–G9 documentada.
 - [x] Lifecycle e testes principais existentes.
-- [ ] Definir regra canônica de CMV realizado por venda.
-- [ ] Decidir vínculo entre venda e camada/lote quando necessário para margem realizada.
+- [x] Definir regra canônica de CMV realizado por venda.
+- [x] Decidir vínculo entre venda e camada/lote quando necessário para margem realizada.
 - [ ] Implementar margem por produto de forma auditável.
 - [ ] Implementar margem por período/canal/parceiro quando os dados suportarem.
 - [ ] Criar reconciliação automatizada de estoque x FIFO x CMV.
 - [ ] Criar relatório de divergências sem correção automática.
-- [ ] Documentar estratégia de reversão/cancelamento de venda no FIFO.
+- [x] Documentar estratégia de reversão/cancelamento de venda no FIFO.
 
 ### Gate
 
-A definição de margem realizada e vínculo venda-lote é decisão de negócio/contabilidade e exige validação humana.
+A política G2 foi aprovada pelo Dono em 11 de setembro de 2026. A aplicação das
+migrations, o backfill do histórico e a homologação financeira continuam gates
+separados; nenhuma dessas ações externas foi autorizada nesta missão.
 
 ## Fase G3 — Dashboard e gestão
 

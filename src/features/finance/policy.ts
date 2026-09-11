@@ -121,3 +121,41 @@ export function inventoryEffectForSaleLifecycle(input: {
     throw new Error('Devolução exige venda previamente entregue.')
   return 'no_vendable_stock_return' as const
 }
+
+export function calculateCompensationAmount(input: {
+  itemAmount: string
+  itemQuantity: string
+  priorCompensatedAmount: string
+  priorCompensatedQuantity: string
+  requestedQuantity: string
+}) {
+  const itemAmount = moneyToCents(input.itemAmount)
+  const priorAmount = moneyToCents(input.priorCompensatedAmount)
+  const itemQuantity = parseQuantity(input.itemQuantity)
+  const priorQuantity = parseQuantity(input.priorCompensatedQuantity)
+  const requestedQuantity = parseQuantity(input.requestedQuantity)
+  if (
+    itemAmount === null ||
+    priorAmount === null ||
+    itemQuantity <= 0n ||
+    requestedQuantity <= 0n ||
+    priorQuantity < 0n ||
+    priorQuantity + requestedQuantity > itemQuantity
+  )
+    throw new Error('Quantidade de compensação excede o item entregue.')
+
+  const cumulativeQuantity = priorQuantity + requestedQuantity
+  const cumulativeAmount =
+    (itemAmount * cumulativeQuantity + itemQuantity / 2n) / itemQuantity
+  const amount = cumulativeAmount - priorAmount
+  if (amount <= 0n) throw new Error('Valor de compensação inválido.')
+  return centsToMoney(amount)
+}
+
+function parseQuantity(value: string) {
+  const normalized = value.trim().replace(',', '.')
+  if (!/^\d+(?:\.\d{1,3})?$/.test(normalized))
+    throw new Error('Quantidade de compensação inválida.')
+  const [whole, fraction = ''] = normalized.split('.')
+  return BigInt(whole) * 1_000n + BigInt(fraction.padEnd(3, '0'))
+}

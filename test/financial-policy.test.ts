@@ -4,6 +4,7 @@ import test from 'node:test'
 
 import { financialEvents, financialPeriods, sales } from '../src/db/schema'
 import {
+  calculateCompensationAmount,
   canCorrectClosedFinancialPeriod,
   inventoryEffectForSaleLifecycle,
   normalizeSalesMix,
@@ -86,6 +87,40 @@ test('somente Dono pode corrigir período financeiro fechado', () => {
   assert.equal(canCorrectClosedFinancialPeriod('admin'), false)
 })
 
+test('compensações parciais fecham o total sem exceder o item entregue', () => {
+  assert.equal(
+    calculateCompensationAmount({
+      itemAmount: '10.00',
+      itemQuantity: '3.000',
+      priorCompensatedAmount: '0.00',
+      priorCompensatedQuantity: '0.000',
+      requestedQuantity: '1.000',
+    }),
+    '3.33',
+  )
+  assert.equal(
+    calculateCompensationAmount({
+      itemAmount: '10.00',
+      itemQuantity: '3.000',
+      priorCompensatedAmount: '6.67',
+      priorCompensatedQuantity: '2.000',
+      requestedQuantity: '1.000',
+    }),
+    '3.33',
+  )
+  assert.throws(
+    () =>
+      calculateCompensationAmount({
+        itemAmount: '10.00',
+        itemQuantity: '3.000',
+        priorCompensatedAmount: '6.67',
+        priorCompensatedQuantity: '2.000',
+        requestedQuantity: '2.000',
+      }),
+    /excede o item entregue/,
+  )
+})
+
 test('schema financeiro separa entrega, competência, caixa e fechamento', () => {
   assert.equal(sales.deliveredAt.name, 'delivered_at')
   assert.equal(financialEvents.revenueEffect.name, 'revenue_effect')
@@ -102,10 +137,34 @@ test('migrations financeiras são aditivas e tornam eventos imutáveis', async (
     new URL('../drizzle/0024_brainy_doorman.sql', import.meta.url),
     'utf8',
   )
+  const quantity = await readFile(
+    new URL('../drizzle/0025_talented_darwin.sql', import.meta.url),
+    'utf8',
+  )
   assert.match(foundation, /CREATE TABLE "financial_events"/)
   assert.match(foundation, /financial_events_immutable/)
   assert.match(foundation, /financial_periods_closure_check/)
   assert.match(effects, /ADD COLUMN "revenue_effect"/)
   assert.match(effects, /ADD COLUMN "cash_effect"/)
-  assert.doesNotMatch(`${foundation}\n${effects}`, /DROP|TRUNCATE|DELETE FROM/i)
+  assert.match(quantity, /ADD COLUMN "quantity"/)
+  assert.doesNotMatch(
+    `${foundation}\n${effects}\n${quantity}`,
+    /DROP|TRUNCATE|DELETE FROM/i,
+  )
+})
+
+test('writers G2 registram entrega e compensação sem restaurar estoque pós-entrega', async () => {
+  const source = await readFile(
+    new URL('../src/features/finance/functions.ts', import.meta.url),
+    'utf8',
+  )
+  const compensation = source.slice(
+    source.indexOf('export async function persistDeliveredSaleCompensation'),
+  )
+  assert.match(source, /type: 'sale_revenue'/)
+  assert.match(source, /type: 'cash_receipt'/)
+  assert.match(compensation, /type:[\s\S]*?'cash_refund'/)
+  assert.match(compensation, /'store_credit_issued'/)
+  assert.doesNotMatch(compensation, /stockMovements|inventoryCostReversals/)
+  assert.match(compensation, /appendOperationalAudit/)
 })

@@ -23,6 +23,8 @@ test('papéis operacionais recebem apenas o menor privilégio já decidido', () 
   assert.equal(hasPermission('viewer', 'catalog:read'), true)
   assert.equal(hasPermission('viewer', 'reports:financial:read'), false)
   assert.equal(hasPermission('manager', 'fifo:lifecycle:write'), false)
+  assert.equal(hasPermission('manager', 'financial:compensation:write'), true)
+  assert.equal(hasPermission('sales', 'financial:compensation:write'), false)
 })
 
 test('funcionário só pode registrar compra e venda sem acesso a relatórios', () => {

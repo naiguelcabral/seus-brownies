@@ -1,4 +1,6 @@
 import {
+  financialEvents,
+  financialPeriods,
   inventoryCostAllocations,
   inventoryCostLayers,
   inventoryCostReversals,
@@ -18,6 +20,8 @@ export function createLifecycleDrizzleMock(input: Partial<Rows> = {}) {
     layers: input.layers ?? [],
     reversals: input.reversals ?? [],
     movements: input.movements ?? [],
+    financialEvents: input.financialEvents ?? [],
+    financialPeriods: input.financialPeriods ?? [],
   }
   const journal: Array<{ kind: string; table?: string; values?: unknown }> = []
   const committed: Array<{
@@ -41,6 +45,8 @@ export function createLifecycleDrizzleMock(input: Partial<Rows> = {}) {
     if (table === inventoryCostReversals) return 'reversals'
     if (table === stockMovements) return 'movements'
     if (table === operationalAuditEvents) return 'operationalAudit'
+    if (table === financialEvents) return 'financialEvents'
+    if (table === financialPeriods) return 'financialPeriods'
     return 'unknown'
   }
   const select = () => ({
@@ -49,6 +55,7 @@ export function createLifecycleDrizzleMock(input: Partial<Rows> = {}) {
       const query = {
         where: () => query,
         orderBy: () => query,
+        limit: () => query,
         then: (resolve: (value: typeof values) => unknown) => resolve(values),
       }
       return query
@@ -65,6 +72,8 @@ export function createLifecycleDrizzleMock(input: Partial<Rows> = {}) {
           {
             lifecycle_table:
               failAt === 'schema-missing' ? null : 'inventory_cost_reversals',
+            financial_events:
+              failAt === 'finance-schema-missing' ? null : 'financial_events',
           },
         ],
       }

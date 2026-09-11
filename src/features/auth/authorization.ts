@@ -31,6 +31,7 @@ export const permissions = [
   'dashboard:read',
   'fifo:lifecycle:write',
   'fifo:audit:read',
+  'financial:compensation:write',
   'access:manage',
 ] as const
 
@@ -64,6 +65,7 @@ const rolePermissions: Readonly<Record<AppRole, ReadonlySet<Permission>>> = {
     'production:write',
     'reports:financial:read',
     'dashboard:read',
+    'financial:compensation:write',
   ]),
   production: new Set([
     'catalog:read',
