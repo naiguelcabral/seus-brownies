@@ -36,6 +36,7 @@ const productValueShape = z.object({
   description: z.string().trim().max(1000).optional(),
   salePrice: z.string().trim().max(32).optional(),
   reorderPoint: z.string().trim().max(32).optional(),
+  preferredSupplierName: z.string().trim().max(160).optional(),
 })
 
 function validateProductValues(
@@ -206,6 +207,7 @@ export const listProducts = createServerFn({ method: 'GET' })
         description: products.description,
         salePrice: products.salePrice,
         reorderPoint: products.reorderPoint,
+        preferredSupplierName: products.preferredSupplierName,
         isActive: products.isActive,
       })
       .from(products)
@@ -235,6 +237,7 @@ export const createProduct = createServerFn({ method: 'POST' })
           description: optionalText(data.description),
           salePrice: data.salePrice ? toDatabaseMoney(data.salePrice) : null,
           reorderPoint: normalizeReorderPoint(data.reorderPoint),
+          preferredSupplierName: optionalText(data.preferredSupplierName),
         })
     } catch (error) {
       readableDatabaseError(error, 'um produto ou SKU')
@@ -314,6 +317,7 @@ export const updateProduct = createServerFn({ method: 'POST' })
           description: optionalText(data.description),
           salePrice: data.salePrice ? toDatabaseMoney(data.salePrice) : null,
           reorderPoint: normalizeReorderPoint(data.reorderPoint),
+          preferredSupplierName: optionalText(data.preferredSupplierName),
           updatedAt: new Date(),
         })
         .where(eq(products.id, data.id))

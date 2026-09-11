@@ -130,6 +130,8 @@ A matriz detalhada workbook × sistema está em
   localmente; migrations `0019`/`0020` não aplicadas.
 - [~] Lote de fornecedor e validade por item de compra, com rastreabilidade na
   movimentação, implementados localmente; migration `0021` não aplicada.
+- [~] Fornecedor padrão informativo por produto/insumo implementado localmente;
+  migration `0022` não aplicada e nenhuma compra é preenchida automaticamente.
 - [~] Exportação CSV segura dos relatórios operacionais concluída localmente;
   XLSX segue fora do escopo atual e não foi apresentado como integração.
 - [~] Busca, filtros, paginação e estados explícitos implementados para os

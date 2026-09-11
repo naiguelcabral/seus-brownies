@@ -54,6 +54,7 @@ type ProductFormValues = {
   description: string
   salePrice: string
   reorderPoint: string
+  preferredSupplierName: string
 }
 
 const typeLabels: Record<ProductType, string> = {
@@ -399,6 +400,7 @@ function ProductForm({
     description: product?.description ?? '',
     salePrice: product?.salePrice ?? '',
     reorderPoint: product?.reorderPoint ?? '',
+    preferredSupplierName: product?.preferredSupplierName ?? '',
   })
   const [error, setError] = useState<string | null>(null)
   const [submitting, setSubmitting] = useState(false)
@@ -527,6 +529,18 @@ function ProductForm({
         />
         <p className="-mt-2 text-xs text-[#896d5b]">
           O alerta compara o saldo calculado a este limite; não altera estoque.
+        </p>
+        <Input
+          label="Fornecedor padrão (opcional)"
+          value={values.preferredSupplierName}
+          onChange={(preferredSupplierName) =>
+            setValues({ ...values, preferredSupplierName })
+          }
+          maxLength={160}
+          placeholder="Referência para a próxima compra"
+        />
+        <p className="-mt-2 text-xs text-[#896d5b]">
+          Campo informativo. Cada compra mantém o fornecedor realmente usado.
         </p>
         {error ? (
           <p className="rounded-lg bg-red-50 p-3 text-sm font-medium text-red-700">

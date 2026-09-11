@@ -69,6 +69,8 @@ Este documento é a referência canônica de alto nível para o estado atual do 
   aplicadas. Não existe autorização para aplicá-las nesta missão.
 - A migration aditiva `0021` prepara ponto de reposição por produto e
   lote/validade por item de compra. Ela também não foi aplicada.
+- A migration aditiva `0022` prepara fornecedor padrão informativo por produto;
+  o fornecedor efetivo continua preservado em cada compra. Não foi aplicada.
 - Não repetir cargas ou homologações já consumidas sem autorização explícita.
 
 ### Qualidade

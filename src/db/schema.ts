@@ -253,6 +253,8 @@ export const products = pgTable('products', {
   salePrice: money('sale_price'),
   /** Alert threshold in the product's canonical measurement unit; never a stored balance. */
   reorderPoint: quantity('reorder_point'),
+  /** Informational default only; purchases always preserve their actual supplier. */
+  preferredSupplierName: varchar('preferred_supplier_name', { length: 160 }),
   isActive: boolean('is_active').notNull().default(true),
   createdAt: timestamp('created_at', { withTimezone: true })
     .notNull()

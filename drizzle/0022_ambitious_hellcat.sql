@@ -1,0 +1,1 @@
+ALTER TABLE "products" ADD COLUMN "preferred_supplier_name" varchar(160);

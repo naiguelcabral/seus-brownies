@@ -43,6 +43,9 @@
   usar o ponto de reposição exato, com zero apenas como fallback não
   configurado. O checkpoint funcional `85e7532` passou em 296 testes, lint,
   typecheck, `git diff --check` e build HML isolado.
+- WP-A2 iniciado: fornecedor padrão opcional foi acrescentado ao catálogo como
+  informação validada, sem entidade própria, automação de compra ou
+  recomendação. A migration aditiva `0022` foi gerada e não aplicada.
 
 ## Retomada local de 7 de setembro de 2026
 

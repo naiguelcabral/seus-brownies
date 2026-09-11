@@ -63,6 +63,32 @@ test('schema e migration de estoque gerencial são somente aditivos', async () =
   assert.doesNotMatch(migration, /DROP|TRUNCATE|DELETE FROM/i)
 })
 
+test('fornecedor padrão é informativo, validado e adicionado sem mutação destrutiva', async () => {
+  assert.equal(products.preferredSupplierName.name, 'preferred_supplier_name')
+  const [catalog, route, migration] = await Promise.all([
+    readFile(
+      new URL('../src/features/catalog/functions.ts', import.meta.url),
+      'utf8',
+    ),
+    readFile(new URL('../src/routes/produtos.tsx', import.meta.url), 'utf8'),
+    readFile(
+      new URL('../drizzle/0022_ambitious_hellcat.sql', import.meta.url),
+      'utf8',
+    ),
+  ])
+  assert.match(
+    catalog,
+    /preferredSupplierName: z\.string\(\)\.trim\(\)\.max\(160\)/,
+  )
+  assert.match(
+    catalog,
+    /preferredSupplierName: optionalText\(data\.preferredSupplierName\)/,
+  )
+  assert.match(route, /Campo informativo/)
+  assert.match(migration, /products.*preferred_supplier_name/s)
+  assert.doesNotMatch(migration, /DROP|TRUNCATE|DELETE FROM/i)
+})
+
 test('tela de estoque decide alerta pelo status exato calculado no servidor', async () => {
   const source = await readFile(
     new URL('../src/routes/estoque.tsx', import.meta.url),

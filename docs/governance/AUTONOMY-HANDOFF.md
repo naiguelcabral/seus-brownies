@@ -14,11 +14,12 @@ Atualizado em 10 de setembro de 2026.
   informado × calculado com rateio exato, locais/canais, métricas rastreáveis e
   plano de ação humano com histórico append-only. Novas Server Functions e
   rotas usam guards; causas e ações nunca são inferidas.
-- Migrations `0019`, `0020` e `0021` são aditivas e não foram aplicadas. `0019`
+- Migrations `0019`, `0020`, `0021` e `0022` são aditivas e não foram aplicadas. `0019`
   inclui defaults reconstruídos do workbook para a linha singleton; `0020` não
   cria dados; `0021` adiciona ponto de reposição e dados de lote/validade da
-  compra. Para rollback, primeiro reverter o código; remover colunas/tabelas
-  depois seria destrutivo para fatos novos e exige decisão humana.
+  compra; `0022` adiciona fornecedor padrão informativo. Para rollback,
+  primeiro reverter o código; remover colunas/tabelas depois seria destrutivo
+  para fatos novos e exige decisão humana.
 - Gate financeiro preservado: competência, reversões, créditos, cancelamento
   retroativo, margem definitiva e vínculo venda–lote continuam em G2. Metas,
   cobertura e sugestão de compra foram suspensas somente em seus dependentes.
@@ -34,6 +35,10 @@ Atualizado em 10 de setembro de 2026.
   servidor e o alerta do dashboard usa o ponto de reposição com comparação
   exata. A lista integral de produtos das ações FIFO foi preservada separada da
   página. Cobertura, previsão e sugestão de compra continuam suspensas.
+- WP-A2 ativo: cadastrar o `Fornecedor_Padrao` opcional do workbook no produto,
+  com validação no servidor e migration aditiva. Não objetivos: criar entidade
+  de fornecedores, selecionar automaticamente compras ou recomendar pedidos.
+  Arquivos previstos: schema/migration, catálogo, formulário, teste e matriz.
 - Checkpoint funcional: `85e7532`. Validação local: 296 testes, lint,
   typecheck, Prettier direcionado, `git diff --check` e build HML isolado
   verdes. O build no HEAD limpo passou para cliente e SSR. O aviso nominal de
@@ -42,8 +47,8 @@ Atualizado em 10 de setembro de 2026.
   `codex/audit-remediation`. As CIs de push `34552925067` e PR `34552929383`
   passaram no checkpoint WP-F1 `98a1d5a`; as CIs de push `34553608287` e PR
   `34553610770` passaram no WP-E1 `ca4cec8`. Próximo passo exato: publicar o
-  WP-F2, acompanhar sua CI e auditar os indicadores locais restantes do
-  dashboard contra a matriz, sem avançar nos cálculos bloqueados por G2.
+  WP-F2, acompanhar sua CI e concluir o WP-A2 sem avançar nos cálculos
+  bloqueados por G2.
 
 ## Atualização AR-G1-HML-2 — 10 de setembro de 2026
 
