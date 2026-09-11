@@ -25,9 +25,12 @@ Atualizado em 10 de setembro de 2026.
   typecheck, Prettier direcionado, `git diff --check` e build HML isolado
   verdes. O primeiro build recusou corretamente a árvore suja; a repetição no
   HEAD limpo passou para cliente e SSR. O aviso nominal de secrets ausentes foi
-  esperado e nenhum arquivo de ambiente foi carregado. Próximo passo: publicar
-  somente `codex/workbook-parity`, abrir PR em rascunho contra
-  `codex/audit-remediation` e acompanhar a CI.
+  esperado e nenhum arquivo de ambiente foi carregado.
+- A branch foi publicada e a PR #4 está em rascunho contra
+  `codex/audit-remediation`. A CI de push `34544769430` passou no SHA
+  `b1b6792`; a CI de pull request `34552154672` estava na fila no último
+  registro. Próximo passo exato: consultar essa execução e não atribuir sucesso
+  remoto ao novo checkpoint documental antes de sua CI concluir.
 
 ## Atualização AR-G1-HML-2 — 10 de setembro de 2026
 

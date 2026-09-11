@@ -16,8 +16,10 @@
 - Validação local: 283 testes passaram; lint, typecheck, Prettier direcionado e
   `git diff --check` ficaram verdes. O build isolado primeiro recusou a árvore
   suja e depois passou no commit funcional limpo `712e0ca`; o aviso de secrets
-  ausentes no SSR foi o esperado, sem carregar `.env`. Push, PR e CI devem ser
-  anexados a este registro ao fechar a missão.
+  ausentes no SSR foi o esperado, sem carregar `.env`.
+- Branch publicada sem deploy. A CI de push `34544769430` passou no SHA
+  `b1b6792`; a PR #4 foi aberta em rascunho contra `codex/audit-remediation`.
+  A CI de pull request `34552154672` estava na fila no último registro.
 
 ## Retomada local de 7 de setembro de 2026
 
