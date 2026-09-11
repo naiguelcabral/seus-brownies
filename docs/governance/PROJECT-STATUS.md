@@ -63,6 +63,8 @@ Este documento é a referência canônica de alto nível para o estado atual do 
 - As migrations aditivas `0019` (parâmetros e auditoria de receita) e `0020`
   (plano de ação e histórico append-only) também estão preparadas e não foram
   aplicadas. Não existe autorização para aplicá-las nesta missão.
+- A migration aditiva `0021` prepara ponto de reposição por produto e
+  lote/validade por item de compra. Ela também não foi aplicada.
 - Não repetir cargas ou homologações já consumidas sem autorização explícita.
 
 ### Qualidade

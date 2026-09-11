@@ -68,7 +68,8 @@ seleção de pacotes pelo controlador. Ela não substitui os gates de
 | WP-G      | Ampliar dashboard atual                   | codigo-build-obrigatorio | done        | Volume, ticket, preço médio, divergência e métricas por local; margem/lucro continuam bloqueados por G2.                    |
 | WP-H      | Estruturar plano de ação humano           | codigo-build-obrigatorio | done        | CRUD, filtros, autoria, concorrência e histórico append-only; `0020` não aplicada e homologação pendente.                   |
 | WP-D      | Implementar metas e cenários              | codigo-build-obrigatorio | needs-human | Parâmetros existem; mix/projeções dependem de definição financeira G2 e não serão inferidos.                                |
-| WP-EF     | Completar produção e estoque gerenciais   | codigo-build-obrigatorio | needs-human | Validade/lote/reposição exigem desenho; cobertura depende de consumo histórico confiável.                                   |
+| WP-EF     | Completar produção e estoque gerenciais   | codigo-build-obrigatorio | needs-human | Cobertura/sugestão dependem de consumo confiável; custos realizados e integrações adicionais dependem das decisões G2.      |
+| WP-F1     | Rastrear compras e alerta de reposição    | codigo-build-obrigatorio | running     | Ponto exato, lote, validade e fornecedor em revisão local; `0021` não aplicada. Cobertura/sugestão permanecem suspensas.    |
 
 Esses pacotes decorrem da missão manual de até 20 pacotes. A07 continua
 `blocked`; A08–A10 continuam `needs-human`. Não há promoção de nível permanente.

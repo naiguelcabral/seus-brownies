@@ -117,13 +117,16 @@ A matriz detalhada workbook × sistema está em
   implementados localmente; aguardam migrations/homologação.
 - [ ] Produtos e sabores mais vendidos, conforme modelo disponível.
 - [ ] CMV e margem quando G2 estiver fechado.
-- [ ] Estoque crítico e cobertura estimada.
+- [~] Estoque crítico por ponto de reposição implementado localmente com
+  comparação exata; cobertura estimada continua aguardando histórico confiável.
 - [ ] Produção por período e rendimento real.
 - [ ] Perdas e coprodutos.
 - [~] Parceiros/canais com receita, eventos, unidades, ticket e divergência
   implementados localmente; margem e comparação temporal continuam pendentes.
 - [~] Parâmetros gerenciais centralizados e plano de ação humano implementados
   localmente; migrations `0019`/`0020` não aplicadas.
+- [~] Lote de fornecedor e validade por item de compra, com rastreabilidade na
+  movimentação, implementados localmente; migration `0021` não aplicada.
 - [~] Exportação CSV segura dos relatórios operacionais concluída localmente;
   XLSX segue fora do escopo atual e não foi apresentado como integração.
 - [~] Busca, filtros, paginação e estados explícitos implementados para os

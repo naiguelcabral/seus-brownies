@@ -48,6 +48,7 @@ import {
   resolveIdempotentReplay,
 } from '#/features/operations/idempotency'
 import { appendOperationalAudit } from '#/features/operations/audit'
+import { calculateReorderStatus } from '#/features/inventory/reorder'
 import { rateToTenThousandths } from '#/features/management/settings'
 import {
   allocateReportedRevenue,
@@ -114,22 +115,36 @@ function millisToUnitCost(value: bigint) {
   return `${value / 1_000n}.${String(value % 1_000n).padStart(3, '0')}`
 }
 
-const purchaseValues = z.object({
-  idempotencyKey: z.string().uuid(),
-  supplierName: z.string().trim().min(2).max(160),
-  purchasedAt: z.string().date(),
-  invoiceFileReference: z.string().trim().max(500).optional(),
-  notes: z.string().trim().max(1000).optional(),
-  items: z
-    .array(
-      z.object({
-        productId: z.number().int().positive(),
-        quantity: z.string().trim(),
-        unitCost: z.string().trim(),
-      }),
-    )
-    .min(1, 'Inclua ao menos um item.'),
-})
+const purchaseValues = z
+  .object({
+    idempotencyKey: z.string().uuid(),
+    supplierName: z.string().trim().min(2).max(160),
+    purchasedAt: z.string().date(),
+    invoiceFileReference: z.string().trim().max(500).optional(),
+    notes: z.string().trim().max(1000).optional(),
+    items: z
+      .array(
+        z.object({
+          productId: z.number().int().positive(),
+          quantity: z.string().trim(),
+          unitCost: z.string().trim(),
+          supplierLot: z.string().trim().max(80).optional(),
+          expiresOn: z.string().date().optional(),
+        }),
+      )
+      .min(1, 'Inclua ao menos um item.'),
+  })
+  .superRefine((value, context) => {
+    value.items.forEach((item, index) => {
+      if (item.expiresOn && item.expiresOn < value.purchasedAt) {
+        context.addIssue({
+          code: 'custom',
+          path: ['items', index, 'expiresOn'],
+          message: 'A validade não pode ser anterior à data da compra.',
+        })
+      }
+    })
+  })
 
 export const listPurchasableProducts = createServerFn({
   method: 'GET',
@@ -220,6 +235,8 @@ export const createPurchase = createServerFn({ method: 'POST' })
         productId: item.productId,
         quantity: item.quantity,
         unitCost: millisToUnitCost(item.unitCost!),
+        supplierLot: item.supplierLot?.trim() || null,
+        expiresOn: item.expiresOn || null,
       })),
     })
 
@@ -303,6 +320,8 @@ export const createPurchase = createServerFn({ method: 'POST' })
               quantity: item.quantity!,
               unitCost: millisToUnitCost(item.unitCost!),
               totalAmount: centsToMoney(totals[index]),
+              supplierLot: item.supplierLot?.trim() || null,
+              expiresOn: item.expiresOn || null,
             })
             .returning({ id: purchaseItems.id })
         ).at(0)
@@ -366,6 +385,7 @@ export const listInventory = createServerFn({ method: 'GET' })
           unit: products.unit,
           categoryName: categories.name,
           isActive: products.isActive,
+          reorderPoint: products.reorderPoint,
           balance: sql<string>`coalesce(sum(${stockMovements.quantityDelta}), 0)`,
         })
         .from(products)
@@ -382,13 +402,30 @@ export const listInventory = createServerFn({ method: 'GET' })
           quantityDelta: stockMovements.quantityDelta,
           occurredAt: stockMovements.occurredAt,
           notes: stockMovements.notes,
+          supplierName: purchases.supplierName,
+          supplierLot: purchaseItems.supplierLot,
+          expiresOn: purchaseItems.expiresOn,
         })
         .from(stockMovements)
         .innerJoin(products, eq(products.id, stockMovements.productId))
+        .leftJoin(
+          purchaseItems,
+          and(
+            eq(stockMovements.referenceType, 'purchase_item'),
+            eq(stockMovements.referenceId, purchaseItems.id),
+          ),
+        )
+        .leftJoin(purchases, eq(purchaseItems.purchaseId, purchases.id))
         .orderBy(desc(stockMovements.occurredAt))
         .limit(80),
     ])
-    return { balances, movements }
+    return {
+      balances: balances.map((item) => ({
+        ...item,
+        reorderStatus: calculateReorderStatus(item.balance, item.reorderPoint),
+      })),
+      movements,
+    }
   })
 
 const saleValues = z

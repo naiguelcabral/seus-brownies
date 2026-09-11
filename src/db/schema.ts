@@ -251,6 +251,8 @@ export const products = pgTable('products', {
   unit: measurementUnit('measurement_unit').notNull(),
   // Ingredientes e embalagens não são vendidos diretamente.
   salePrice: money('sale_price'),
+  /** Alert threshold in the product's canonical measurement unit; never a stored balance. */
+  reorderPoint: quantity('reorder_point'),
   isActive: boolean('is_active').notNull().default(true),
   createdAt: timestamp('created_at', { withTimezone: true })
     .notNull()
@@ -429,6 +431,8 @@ export const purchaseItems = pgTable('purchase_items', {
   quantity: quantity('quantity').notNull(),
   unitCost: unitCost('unit_cost').notNull(),
   totalAmount: money('total_amount').notNull(),
+  supplierLot: varchar('supplier_lot', { length: 80 }),
+  expiresOn: date('expires_on'),
   sourceQuantityBase: quantity('source_quantity_base'),
   sourceQuantityPurchased: quantity('source_quantity_purchased'),
   sourceUnitPrice: money('source_unit_price'),

@@ -21,6 +21,10 @@ Atualizado em 10 de setembro de 2026.
 - Gate financeiro preservado: competência, reversões, créditos, cancelamento
   retroativo, margem definitiva e vínculo venda–lote continuam em G2. Metas,
   cobertura e sugestão de compra foram suspensas somente em seus dependentes.
+- WP-F1 ativo: `0021` adiciona ponto de reposição no produto e lote/validade no
+  item de compra. Catálogo, compra e estoque já foram conectados localmente; a
+  comparação do alerta usa milésimos exatos e o saldo continua somente
+  derivado. Falta fechar suíte/checks/build e checkpoint desse pacote.
 - Checkpoint funcional: `712e0ca`. Validação local: 283 testes, lint,
   typecheck, Prettier direcionado, `git diff --check` e build HML isolado
   verdes. O primeiro build recusou corretamente a árvore suja; a repetição no

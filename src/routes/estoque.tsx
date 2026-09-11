@@ -88,6 +88,7 @@ function InventoryPage() {
                 <th className="px-3 py-3">Produto</th>
                 <th className="px-3 py-3">Tipo</th>
                 <th className="px-3 py-3">Categoria</th>
+                <th className="px-3 py-3">Reposição</th>
                 <th className="px-3 py-3 text-right">Saldo calculado</th>
               </tr>
             </thead>
@@ -102,8 +103,23 @@ function InventoryPage() {
                   </td>
                   <td className="px-3 py-3">{typeLabel(item.type)}</td>
                   <td className="px-3 py-3">{item.categoryName ?? '—'}</td>
+                  <td className="px-3 py-3">
+                    {item.reorderStatus === 'not_configured' ? (
+                      <span className="text-[#896d5b]">Não configurado</span>
+                    ) : item.reorderStatus === 'reorder' ? (
+                      <span className="font-bold text-[#b65624]">
+                        Repor · limite{' '}
+                        {formatQuantity(item.reorderPoint!, item.unit)}
+                      </span>
+                    ) : (
+                      <span className="font-bold text-emerald-700">
+                        OK · limite{' '}
+                        {formatQuantity(item.reorderPoint!, item.unit)}
+                      </span>
+                    )}
+                  </td>
                   <td
-                    className={`px-3 py-3 text-right font-bold ${Number(item.balance) <= 0 ? 'text-[#b65624]' : ''}`}
+                    className={`px-3 py-3 text-right font-bold ${item.reorderStatus === 'reorder' ? 'text-[#b65624]' : ''}`}
                   >
                     {formatQuantity(item.balance, item.unit)}
                   </td>
@@ -136,6 +152,15 @@ function InventoryPage() {
                     {movementLabels[movement.type]} ·{' '}
                     {formatDateTime(movement.occurredAt)}
                   </p>
+                  {movement.supplierName ||
+                  movement.supplierLot ||
+                  movement.expiresOn ? (
+                    <p className="mt-1 text-xs text-[#896d5b]">
+                      Fornecedor: {movement.supplierName || 'não informado'} ·
+                      lote: {movement.supplierLot || 'não informado'} ·
+                      validade: {movement.expiresOn || 'não informada'}
+                    </p>
+                  ) : null}
                 </div>
                 <strong
                   className={
