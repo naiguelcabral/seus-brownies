@@ -1,6 +1,6 @@
 # Handoff de autonomia — Cacau v1
 
-Atualizado em 10 de setembro de 2026.
+Atualizado em 11 de setembro de 2026.
 
 ## Missão `codex/workbook-parity` — checkpoint WP-I1
 
@@ -53,9 +53,13 @@ Atualizado em 10 de setembro de 2026.
   passaram no checkpoint WP-F1 `98a1d5a`; as CIs de push `34553608287` e PR
   `34553610770` passaram no WP-E1 `ca4cec8`. As CIs de push `34554168480` e PR
   `34554171049` passaram no WP-F2 `bbf6db3`; as CIs de push `34554627169` e PR
-  `34554629415` passaram no WP-A2 `b9241ae`. Próximo passo exato: publicar este
-  checkpoint WP-I1, acompanhar sua CI e manter suspensos os cálculos bloqueados
-  por G2 e por histórico de consumo insuficiente.
+  `34554629415` passaram no WP-A2 `b9241ae`; as CIs de push `34554990879` e PR
+  `34554994350` passaram no WP-I1 `aa593c3`.
+- Próximo passo exato: revisão humana da PR #4. Em ambiente explicitamente
+  autorizado, aplicar `0019`–`0022` e homologar os fluxos locais. Fechar G2
+  antes de implementar meta, lucro ou margem; obter histórico confiável antes
+  de calcular cobertura ou sugerir compra. Nenhuma dessas ações externas foi
+  executada nesta missão.
 
 ## Atualização AR-G1-HML-2 — 10 de setembro de 2026
 

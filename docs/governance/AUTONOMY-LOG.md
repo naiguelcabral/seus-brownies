@@ -60,6 +60,10 @@
   preservam centavos fora do inteiro seguro e valores negativos. O checkpoint
   funcional `123009d` passou em 299 testes, lint, typecheck, `git diff --check`
   e build HML isolado.
+- As CIs de push `34554990879` e pull request `34554994350` passaram para o
+  checkpoint WP-I1 publicado `aa593c3`. Não restou pacote de paridade local
+  independente: os próximos itens dependem de decisão G2, migration e
+  homologação autorizadas ou histórico confiável de consumo.
 
 ## Retomada local de 7 de setembro de 2026
 

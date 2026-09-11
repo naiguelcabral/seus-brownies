@@ -79,6 +79,8 @@ Este documento é a referência canônica de alto nível para o estado atual do 
   Prettier direcionado, `git diff --check` e build HML isolado passaram no
   commit funcional `123009d`. O aviso de secrets ausentes no SSR é esperado
   nessa prova sintética e nenhum arquivo de ambiente foi carregado.
+  As CIs de push `34554990879` e pull request `34554994350` confirmaram o
+  checkpoint documental `aa593c3`.
 
 - Checkpoint local de 8 de setembro na branch `codex/audit-remediation`:
   `npm test` aprovou 248 casos, `npm run lint` e `npm run typecheck` passaram.
