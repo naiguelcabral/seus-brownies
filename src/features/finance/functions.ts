@@ -1,5 +1,5 @@
 import { createServerFn } from '@tanstack/react-start'
-import { and, eq, inArray, sql } from 'drizzle-orm'
+import { and, desc, eq, gte, inArray, lt, sql } from 'drizzle-orm'
 
 import {
   financialEvents,
@@ -10,13 +10,23 @@ import {
 import { requireServerFunctionPermission } from '#/features/auth/server-function-middleware'
 import {
   compensateSaleValues,
+  closeFinancialPeriodValues,
+  correctFinancialEventValues,
   deliverSaleValues,
+  financialOverviewValues,
 } from '#/features/finance/contracts'
 import type {
+  CloseFinancialPeriodInput,
   CompensateSaleInput,
+  CorrectFinancialEventInput,
   DeliverSaleInput,
 } from '#/features/finance/contracts'
-import { calculateCompensationAmount } from '#/features/finance/policy'
+import {
+  calculateCompensationAmount,
+  canCorrectClosedFinancialPeriod,
+  summarizeFinancialEventEffects,
+} from '#/features/finance/policy'
+import type { AppRole } from '#/features/auth/authorization'
 import { appendOperationalAudit } from '#/features/operations/audit'
 import {
   hashOperationPayload,
@@ -42,11 +52,7 @@ function assertFinancialSchema(error: unknown): never {
   throw error
 }
 
-async function requireFinancialSchema(tx: {
-  execute: (
-    query: unknown,
-  ) => Promise<{ rows: Array<{ financial_events: string | null }> }>
-}) {
+async function requireFinancialSchema(tx: any) {
   const result = await tx.execute(
     sql`select to_regclass('public.financial_events') as financial_events`,
   )
@@ -54,11 +60,42 @@ async function requireFinancialSchema(tx: {
     throw new FinancialSchemaUnavailableError()
 }
 
+function parseClosureSnapshot(value: unknown) {
+  if (!value || typeof value !== 'object') return null
+  const snapshot = value as Record<string, unknown>
+  if (
+    typeof snapshot.netRevenue !== 'string' ||
+    typeof snapshot.cashFlow !== 'string' ||
+    typeof snapshot.eventCount !== 'number'
+  )
+    return null
+  return {
+    netRevenue: snapshot.netRevenue,
+    cashFlow: snapshot.cashFlow,
+    eventCount: snapshot.eventCount,
+  }
+}
+
 function monthStart(value: string) {
   return `${value.slice(0, 7)}-01`
 }
 
+function nextMonth(value: string) {
+  const [year, month] = value.slice(0, 7).split('-').map(Number)
+  const next = new Date(Date.UTC(year, month, 1))
+  return next.toISOString().slice(0, 10)
+}
+
+async function lockFinancialPeriod(tx: any, competenceDate: string) {
+  const period = monthStart(competenceDate)
+  await tx.execute(
+    sql`select pg_advisory_xact_lock(hashtextextended(${`cacau:financial-period:${period}`}, 0))`,
+  )
+  return period
+}
+
 async function assertOpenPeriod(tx: any, competenceDate: string) {
+  await lockFinancialPeriod(tx, competenceDate)
   const [period] = await tx
     .select({ status: financialPeriods.status })
     .from(financialPeriods)
@@ -68,6 +105,31 @@ async function assertOpenPeriod(tx: any, competenceDate: string) {
     throw new Error(
       'Período financeiro fechado: registre uma correção autorizada pelo Dono.',
     )
+}
+
+async function loadPeriodSnapshot(tx: any, periodMonth: string) {
+  const rows = (await tx
+    .select({
+      revenueEffect: financialEvents.revenueEffect,
+      cashEffect: financialEvents.cashEffect,
+    })
+    .from(financialEvents)
+    .where(
+      and(
+        gte(financialEvents.competenceDate, periodMonth),
+        lt(financialEvents.competenceDate, nextMonth(periodMonth)),
+      ),
+    )) as Array<{ revenueEffect: string; cashEffect: string }>
+  return summarizeFinancialEventEffects(rows)
+}
+
+function signedMoneyToCents(value: string, allowZero = false) {
+  const normalized = value.trim().replace(',', '.')
+  const negative = normalized.startsWith('-')
+  const cents = moneyToCents(negative ? normalized.slice(1) : normalized)
+  if (cents === null || (!allowZero && cents === 0n))
+    throw new Error('A correção deve ter valor monetário diferente de zero.')
+  return negative ? -cents : cents
 }
 
 function dateOnly(value: Date) {
@@ -322,4 +384,270 @@ export const compensateDeliveredSale = createServerFn({ method: 'POST' })
       data,
       context.principal!.id,
     )
+  })
+
+export async function persistFinancialPeriodClose(
+  database: FinanceDatabase,
+  data: CloseFinancialPeriodInput,
+  actorAuthUserId: string,
+) {
+  return database.transaction(async (tx) => {
+    try {
+      await requireFinancialSchema(tx)
+      const periodMonth = await lockFinancialPeriod(tx, data.periodMonth)
+      const [existing] = await tx
+        .select()
+        .from(financialPeriods)
+        .where(eq(financialPeriods.periodMonth, periodMonth))
+        .limit(1)
+      if (existing?.status === 'closed')
+        throw new Error('Período financeiro já está fechado.')
+
+      const snapshot = await loadPeriodSnapshot(tx, periodMonth)
+      const closedAt = new Date()
+      let periodId: number
+      if (existing) {
+        const [updated] = await tx
+          .update(financialPeriods)
+          .set({
+            status: 'closed',
+            version: existing.version + 1,
+            closureSnapshot: snapshot,
+            closureNotes: data.notes,
+            closedByAuthUserId: actorAuthUserId,
+            closedAt,
+            updatedAt: closedAt,
+          })
+          .where(
+            and(
+              eq(financialPeriods.id, existing.id),
+              eq(financialPeriods.version, existing.version),
+              eq(financialPeriods.status, 'open'),
+            ),
+          )
+          .returning({ id: financialPeriods.id })
+        if (!updated)
+          throw new Error('O período mudou durante o fechamento. Recarregue.')
+        periodId = updated.id
+      } else {
+        const [inserted] = await tx
+          .insert(financialPeriods)
+          .values({
+            periodMonth,
+            status: 'closed',
+            closureSnapshot: snapshot,
+            closureNotes: data.notes,
+            closedByAuthUserId: actorAuthUserId,
+            closedAt,
+          })
+          .returning({ id: financialPeriods.id })
+        if (!inserted) throw new Error('Não foi possível fechar o período.')
+        periodId = inserted.id
+      }
+      await appendOperationalAudit(tx, {
+        actorAuthUserId,
+        action: 'financial_period.close',
+        entityType: 'financial_period',
+        entityId: periodId,
+        operationReference: `financial-period:${periodMonth}:close`,
+        reason: data.notes,
+      })
+      return { id: periodId, periodMonth, snapshot }
+    } catch (error) {
+      assertFinancialSchema(error)
+    }
+  })
+}
+
+export const closeFinancialPeriod = createServerFn({ method: 'POST' })
+  .middleware([requireServerFunctionPermission('closeFinancialPeriod')])
+  .validator(closeFinancialPeriodValues)
+  .handler(async ({ data, context }) => {
+    const { getDb } = await import('#/db/index')
+    return persistFinancialPeriodClose(getDb(), data, context.principal!.id)
+  })
+
+export async function persistFinancialEventCorrection(
+  database: FinanceDatabase,
+  data: CorrectFinancialEventInput,
+  actor: { id: string; role: AppRole },
+) {
+  const key = `finance:correction:${data.reference}`
+  const hash = await hashOperationPayload(data)
+  return database.transaction(async (tx) => {
+    try {
+      await requireFinancialSchema(tx)
+      await tx.execute(
+        sql`select id from ${financialEvents} where ${financialEvents.id} = ${data.correctsEventId} for update`,
+      )
+      const [target] = await tx
+        .select()
+        .from(financialEvents)
+        .where(eq(financialEvents.id, data.correctsEventId))
+        .limit(1)
+      if (!target) throw new Error('Fato financeiro original não encontrado.')
+      const periodMonth = await lockFinancialPeriod(tx, target.competenceDate)
+      const [period] = await tx
+        .select()
+        .from(financialPeriods)
+        .where(eq(financialPeriods.periodMonth, periodMonth))
+        .limit(1)
+      if (
+        period?.status === 'closed' &&
+        !canCorrectClosedFinancialPeriod(actor.role)
+      )
+        throw new Error('Somente o Dono pode corrigir período fechado.')
+
+      const [existing] = await tx
+        .select({
+          id: financialEvents.id,
+          idempotencyHash: financialEvents.idempotencyHash,
+        })
+        .from(financialEvents)
+        .where(eq(financialEvents.idempotencyKey, key))
+        .limit(1)
+      const replay = resolveIdempotentReplay(existing, hash)
+      if (replay) return replay
+
+      const targetEffect =
+        data.effect === 'revenue' ? target.revenueEffect : target.cashEffect
+      if (signedMoneyToCents(targetEffect, true) === 0n)
+        throw new Error('O fato original não afeta a visão selecionada.')
+      const delta = signedMoneyToCents(data.deltaAmount)
+      const [correction] = await tx
+        .insert(financialEvents)
+        .values({
+          idempotencyKey: key,
+          idempotencyHash: hash,
+          type:
+            data.effect === 'revenue'
+              ? 'revenue_correction'
+              : 'cash_correction',
+          saleId: target.saleId,
+          saleItemId: target.saleItemId,
+          correctsEventId: target.id,
+          amount: centsToMoney(delta),
+          revenueEffect:
+            data.effect === 'revenue' ? centsToMoney(delta) : '0.00',
+          cashEffect: data.effect === 'cash' ? centsToMoney(delta) : '0.00',
+          competenceDate: target.competenceDate,
+          occurredAt: occurredAt(data.occurredOn),
+          reason: data.reason,
+          createdByAuthUserId: actor.id,
+          authorizedByAuthUserId: actor.id,
+        })
+        .returning({ id: financialEvents.id })
+      if (!correction) throw new Error('Não foi possível registrar a correção.')
+
+      if (period?.status === 'closed') {
+        const snapshot = await loadPeriodSnapshot(tx, periodMonth)
+        await tx
+          .update(financialPeriods)
+          .set({
+            version: period.version + 1,
+            closureSnapshot: snapshot,
+            updatedAt: new Date(),
+          })
+          .where(
+            and(
+              eq(financialPeriods.id, period.id),
+              eq(financialPeriods.version, period.version),
+            ),
+          )
+      }
+      await appendOperationalAudit(tx, {
+        actorAuthUserId: actor.id,
+        action: `financial_event.correct.${data.effect}`,
+        entityType: 'financial_event',
+        entityId: correction.id,
+        operationReference: key,
+        reason: data.reason,
+      })
+      return {
+        id: correction.id,
+        correctsEventId: target.id,
+        competenceDate: target.competenceDate,
+        replayed: false as const,
+      }
+    } catch (error) {
+      assertFinancialSchema(error)
+    }
+  })
+}
+
+export const correctFinancialEvent = createServerFn({ method: 'POST' })
+  .middleware([requireServerFunctionPermission('correctFinancialEvent')])
+  .validator(correctFinancialEventValues)
+  .handler(async ({ data, context }) => {
+    const { getDb } = await import('#/db/index')
+    return persistFinancialEventCorrection(getDb(), data, {
+      id: context.principal!.id,
+      role: context.principal!.role,
+    })
+  })
+
+export const getFinancialOverview = createServerFn({ method: 'GET' })
+  .middleware([requireServerFunctionPermission('getFinancialOverview')])
+  .validator(financialOverviewValues)
+  .handler(async ({ data }) => {
+    const { getDb } = await import('#/db/index')
+    const database = getDb()
+    try {
+      await requireFinancialSchema(database)
+      const [period, events, currentSnapshot] = await Promise.all([
+        database
+          .select({
+            id: financialPeriods.id,
+            status: financialPeriods.status,
+            version: financialPeriods.version,
+            closureSnapshot: financialPeriods.closureSnapshot,
+            closureNotes: financialPeriods.closureNotes,
+            closedAt: financialPeriods.closedAt,
+          })
+          .from(financialPeriods)
+          .where(eq(financialPeriods.periodMonth, data.periodMonth))
+          .limit(1),
+        database
+          .select({
+            id: financialEvents.id,
+            type: financialEvents.type,
+            saleId: financialEvents.saleId,
+            saleItemId: financialEvents.saleItemId,
+            correctsEventId: financialEvents.correctsEventId,
+            amount: financialEvents.amount,
+            revenueEffect: financialEvents.revenueEffect,
+            cashEffect: financialEvents.cashEffect,
+            competenceDate: financialEvents.competenceDate,
+            occurredAt: financialEvents.occurredAt,
+            reason: financialEvents.reason,
+          })
+          .from(financialEvents)
+          .where(
+            and(
+              gte(financialEvents.competenceDate, data.periodMonth),
+              lt(financialEvents.competenceDate, nextMonth(data.periodMonth)),
+            ),
+          )
+          .orderBy(desc(financialEvents.occurredAt), desc(financialEvents.id))
+          .limit(100),
+        loadPeriodSnapshot(database, data.periodMonth),
+      ])
+      const selectedPeriod = period.at(0)
+      return {
+        periodMonth: data.periodMonth,
+        period: selectedPeriod
+          ? {
+              ...selectedPeriod,
+              closureSnapshot: parseClosureSnapshot(
+                selectedPeriod.closureSnapshot,
+              ),
+            }
+          : null,
+        currentSnapshot,
+        events,
+        eventsLimited: currentSnapshot.eventCount > events.length,
+      }
+    } catch (error) {
+      assertFinancialSchema(error)
+    }
   })

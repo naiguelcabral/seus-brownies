@@ -13,6 +13,8 @@ test('dono recebe todas as permissões definidas pela aplicação', () => {
   assert.equal(hasPermission('owner', 'fifo:lifecycle:write'), true)
   // Existing links remain safe until migration 0016 is applied in HML.
   assert.equal(hasPermission('admin', 'access:manage'), true)
+  assert.equal(hasPermission('owner', 'financial:period:correct'), true)
+  assert.equal(hasPermission('admin', 'financial:period:correct'), false)
 })
 
 test('papéis operacionais recebem apenas o menor privilégio já decidido', () => {
@@ -25,6 +27,8 @@ test('papéis operacionais recebem apenas o menor privilégio já decidido', () 
   assert.equal(hasPermission('manager', 'fifo:lifecycle:write'), false)
   assert.equal(hasPermission('manager', 'financial:compensation:write'), true)
   assert.equal(hasPermission('sales', 'financial:compensation:write'), false)
+  assert.equal(hasPermission('manager', 'financial:period:close'), false)
+  assert.equal(hasPermission('manager', 'financial:period:correct'), false)
 })
 
 test('funcionário só pode registrar compra e venda sem acesso a relatórios', () => {

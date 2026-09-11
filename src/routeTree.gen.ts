@@ -15,6 +15,7 @@ import { Route as ComprasRouteImport } from './routes/compras'
 import { Route as DespesasRouteImport } from './routes/despesas'
 import { Route as EstoqueRouteImport } from './routes/estoque'
 import { Route as FifoMigrationAuditRouteImport } from './routes/fifo-migration-audit'
+import { Route as FinanceiroRouteImport } from './routes/financeiro'
 import { Route as LocaisRouteImport } from './routes/locais'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as ParametrosRouteImport } from './routes/parametros'
@@ -53,6 +54,11 @@ const EstoqueRoute = EstoqueRouteImport.update({
 const FifoMigrationAuditRoute = FifoMigrationAuditRouteImport.update({
   id: '/fifo-migration-audit',
   path: '/fifo-migration-audit',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FinanceiroRoute = FinanceiroRouteImport.update({
+  id: '/financeiro',
+  path: '/financeiro',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LocaisRoute = LocaisRouteImport.update({
@@ -108,6 +114,7 @@ export interface FileRoutesByFullPath {
   '/despesas': typeof DespesasRoute
   '/estoque': typeof EstoqueRoute
   '/fifo-migration-audit': typeof FifoMigrationAuditRoute
+  '/financeiro': typeof FinanceiroRoute
   '/locais': typeof LocaisRoute
   '/login': typeof LoginRouteWithChildren
   '/parametros': typeof ParametrosRoute
@@ -125,6 +132,7 @@ export interface FileRoutesByTo {
   '/despesas': typeof DespesasRoute
   '/estoque': typeof EstoqueRoute
   '/fifo-migration-audit': typeof FifoMigrationAuditRoute
+  '/financeiro': typeof FinanceiroRoute
   '/locais': typeof LocaisRoute
   '/login': typeof LoginRouteWithChildren
   '/parametros': typeof ParametrosRoute
@@ -143,6 +151,7 @@ export interface FileRoutesById {
   '/despesas': typeof DespesasRoute
   '/estoque': typeof EstoqueRoute
   '/fifo-migration-audit': typeof FifoMigrationAuditRoute
+  '/financeiro': typeof FinanceiroRoute
   '/locais': typeof LocaisRoute
   '/login': typeof LoginRouteWithChildren
   '/parametros': typeof ParametrosRoute
@@ -162,6 +171,7 @@ export interface FileRouteTypes {
     | '/despesas'
     | '/estoque'
     | '/fifo-migration-audit'
+    | '/financeiro'
     | '/locais'
     | '/login'
     | '/parametros'
@@ -179,6 +189,7 @@ export interface FileRouteTypes {
     | '/despesas'
     | '/estoque'
     | '/fifo-migration-audit'
+    | '/financeiro'
     | '/locais'
     | '/login'
     | '/parametros'
@@ -196,6 +207,7 @@ export interface FileRouteTypes {
     | '/despesas'
     | '/estoque'
     | '/fifo-migration-audit'
+    | '/financeiro'
     | '/locais'
     | '/login'
     | '/parametros'
@@ -214,6 +226,7 @@ export interface RootRouteChildren {
   DespesasRoute: typeof DespesasRoute
   EstoqueRoute: typeof EstoqueRoute
   FifoMigrationAuditRoute: typeof FifoMigrationAuditRoute
+  FinanceiroRoute: typeof FinanceiroRoute
   LocaisRoute: typeof LocaisRoute
   LoginRoute: typeof LoginRouteWithChildren
   ParametrosRoute: typeof ParametrosRoute
@@ -266,6 +279,13 @@ declare module '@tanstack/react-router' {
       path: '/fifo-migration-audit'
       fullPath: '/fifo-migration-audit'
       preLoaderRoute: typeof FifoMigrationAuditRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/financeiro': {
+      id: '/financeiro'
+      path: '/financeiro'
+      fullPath: '/financeiro'
+      preLoaderRoute: typeof FinanceiroRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/locais': {
@@ -351,6 +371,7 @@ const rootRouteChildren: RootRouteChildren = {
   DespesasRoute: DespesasRoute,
   EstoqueRoute: EstoqueRoute,
   FifoMigrationAuditRoute: FifoMigrationAuditRoute,
+  FinanceiroRoute: FinanceiroRoute,
   LocaisRoute: LocaisRoute,
   LoginRoute: LoginRouteWithChildren,
   ParametrosRoute: ParametrosRoute,

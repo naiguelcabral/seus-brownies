@@ -11,8 +11,14 @@ import {
 } from '../../src/db/schema'
 
 type Rows = Record<string, Array<Record<string, unknown>>>
+type SelectionResponses = Partial<
+  Record<string, Array<Array<Record<string, unknown>>>>
+>
 
-export function createLifecycleDrizzleMock(input: Partial<Rows> = {}) {
+export function createLifecycleDrizzleMock(
+  input: Partial<Rows> = {},
+  selectionResponses: SelectionResponses = {},
+) {
   const rows: Rows = {
     sales: input.sales ?? [],
     saleItems: input.saleItems ?? [],
@@ -51,7 +57,8 @@ export function createLifecycleDrizzleMock(input: Partial<Rows> = {}) {
   }
   const select = () => ({
     from(table: unknown) {
-      const values = rows[name(table)]
+      const tableName = name(table)
+      const values = selectionResponses[tableName]?.shift() ?? rows[tableName]
       const query = {
         where: () => query,
         orderBy: () => query,

@@ -8,8 +8,13 @@ import {
   canCorrectClosedFinancialPeriod,
   inventoryEffectForSaleLifecycle,
   normalizeSalesMix,
+  summarizeFinancialEventEffects,
   summarizeFinancialIndicators,
 } from '../src/features/finance/policy'
+import {
+  closeFinancialPeriodValues,
+  correctFinancialEventValues,
+} from '../src/features/finance/contracts'
 
 test('separa competência, margens, lucro gerencial e caixa sem duplicar custo direto', () => {
   assert.deepEqual(
@@ -85,6 +90,56 @@ test('somente Dono pode corrigir período financeiro fechado', () => {
   assert.equal(canCorrectClosedFinancialPeriod('owner'), true)
   assert.equal(canCorrectClosedFinancialPeriod('manager'), false)
   assert.equal(canCorrectClosedFinancialPeriod('admin'), false)
+})
+
+test('snapshot de fechamento soma efeitos assinados sem ponto flutuante', () => {
+  assert.deepEqual(
+    summarizeFinancialEventEffects([
+      { revenueEffect: '100.00', cashEffect: '90.00' },
+      { revenueEffect: '-10.01', cashEffect: '-5.00' },
+      { revenueEffect: '0.00', cashEffect: '0.01' },
+    ]),
+    { netRevenue: '89.99', cashFlow: '85.01', eventCount: 3 },
+  )
+})
+
+test('contratos exigem mês canônico e correção monetária assinada', () => {
+  assert.equal(
+    closeFinancialPeriodValues.safeParse({
+      periodMonth: '2026-09-01',
+      notes: 'Fechamento conferido',
+    }).success,
+    true,
+  )
+  assert.equal(
+    closeFinancialPeriodValues.safeParse({
+      periodMonth: '2026-09-11',
+      notes: 'Fechamento conferido',
+    }).success,
+    false,
+  )
+  assert.equal(
+    correctFinancialEventValues.safeParse({
+      correctsEventId: 1,
+      effect: 'revenue',
+      deltaAmount: '-0.01',
+      occurredOn: '2026-09-11',
+      reason: 'Correção de centavo',
+      reference: 'CORR-1',
+    }).success,
+    true,
+  )
+  assert.equal(
+    correctFinancialEventValues.safeParse({
+      correctsEventId: 1,
+      effect: 'cash',
+      deltaAmount: '0.00',
+      occurredOn: '2026-09-11',
+      reason: 'Sem efeito',
+      reference: 'CORR-2',
+    }).success,
+    false,
+  )
 })
 
 test('compensações parciais fecham o total sem exceder o item entregue', () => {
@@ -167,4 +222,8 @@ test('writers G2 registram entrega e compensação sem restaurar estoque pós-en
   assert.match(compensation, /'store_credit_issued'/)
   assert.doesNotMatch(compensation, /stockMovements|inventoryCostReversals/)
   assert.match(compensation, /appendOperationalAudit/)
+  assert.match(source, /pg_advisory_xact_lock/)
+  assert.match(source, /financial_period\.close/)
+  assert.match(source, /financial_event\.correct/)
+  assert.match(source, /canCorrectClosedFinancialPeriod/)
 })

@@ -3,6 +3,7 @@ import {
   BarChart3,
   CookingPot,
   ClipboardList,
+  Landmark,
   LayoutDashboard,
   LogOut,
   Package,
@@ -83,6 +84,12 @@ const navigation = [
     to: '/relatorios',
     label: 'Relatórios',
     icon: BarChart3,
+    permission: 'reports:financial:read',
+  },
+  {
+    to: '/financeiro',
+    label: 'Financeiro',
+    icon: Landmark,
     permission: 'reports:financial:read',
   },
   {

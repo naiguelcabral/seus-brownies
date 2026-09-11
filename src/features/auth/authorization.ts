@@ -32,12 +32,17 @@ export const permissions = [
   'fifo:lifecycle:write',
   'fifo:audit:read',
   'financial:compensation:write',
+  'financial:period:close',
+  'financial:period:correct',
   'access:manage',
 ] as const
 
 export type Permission = (typeof permissions)[number]
 
 const allPermissions = new Set<Permission>(permissions)
+const legacyAdminPermissions = new Set<Permission>(
+  permissions.filter((permission) => permission !== 'financial:period:correct'),
+)
 
 /**
  * Only decisions already unambiguous in the G1 matrix belong here. Pending
@@ -50,7 +55,7 @@ const rolePermissions: Readonly<Record<AppRole, ReadonlySet<Permission>>> = {
   // but receives no operational reading, dashboard, report or access control.
   employee: new Set(['catalog:read', 'purchases:write', 'sales:write']),
   // Compatibility for links created before the Owner role migration.
-  admin: allPermissions,
+  admin: legacyAdminPermissions,
   manager: new Set([
     'catalog:read',
     'catalog:write',

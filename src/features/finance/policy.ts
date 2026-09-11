@@ -18,9 +18,10 @@ export type FinancialIndicatorInput = {
 
 function sumMoney(values: string[]) {
   return values.reduce((total, value) => {
-    const cents = moneyToCents(value)
+    const negative = value.trim().startsWith('-')
+    const cents = moneyToCents(negative ? value.trim().slice(1) : value)
     if (cents === null) throw new Error('Valor monetário inválido.')
-    return total + cents
+    return total + (negative ? -cents : cents)
   }, 0n)
 }
 
@@ -106,6 +107,16 @@ export function normalizeSalesMix(
 
 export function canCorrectClosedFinancialPeriod(role: AppRole) {
   return role === 'owner'
+}
+
+export function summarizeFinancialEventEffects(
+  rows: Array<{ revenueEffect: string; cashEffect: string }>,
+) {
+  return {
+    netRevenue: centsToMoney(sumMoney(rows.map((row) => row.revenueEffect))),
+    cashFlow: centsToMoney(sumMoney(rows.map((row) => row.cashEffect))),
+    eventCount: rows.length,
+  }
 }
 
 export function inventoryEffectForSaleLifecycle(input: {

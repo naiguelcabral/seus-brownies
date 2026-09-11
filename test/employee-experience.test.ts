@@ -15,6 +15,10 @@ test('funcionário inicia em compras e preserva a matriz aprovada', () => {
   assert.equal(requiredPermissionForRoute('/vendas'), 'sales:write')
   assert.equal(requiredPermissionForRoute('/locais'), 'catalog:write')
   assert.equal(requiredPermissionForRoute('/parametros'), 'access:manage')
+  assert.equal(
+    requiredPermissionForRoute('/financeiro'),
+    'reports:financial:read',
+  )
   assert.equal(requiredPermissionForRoute('/plano-de-acao'), 'access:manage')
 
   assert.equal(hasPermission('employee', 'catalog:read'), true)
