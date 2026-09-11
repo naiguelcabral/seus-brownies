@@ -53,6 +53,13 @@
   fornecedor efetivo em cada compra. O checkpoint funcional `56f0149` passou
   em 297 testes, lint, typecheck, `git diff --check` e build HML isolado; `0022`
   permanece não aplicada.
+- As CIs de push `34554627169` e pull request `34554629415` passaram para o
+  checkpoint WP-A2 publicado `b9241ae`.
+- WP-I1 concluído localmente: a rota de relatórios deixou de converter valores
+  monetários para `Number` durante a exibição. O formatador exato e seus testes
+  preservam centavos fora do inteiro seguro e valores negativos. O checkpoint
+  funcional `123009d` passou em 299 testes, lint, typecheck, `git diff --check`
+  e build HML isolado.
 
 ## Retomada local de 7 de setembro de 2026
 

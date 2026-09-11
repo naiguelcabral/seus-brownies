@@ -134,6 +134,8 @@ A matriz detalhada workbook × sistema está em
   migration `0022` não aplicada e nenhuma compra é preenchida automaticamente.
 - [~] Exportação CSV segura dos relatórios operacionais concluída localmente;
   XLSX segue fora do escopo atual e não foi apresentado como integração.
+- [~] Exibição monetária dos relatórios preserva a representação decimal exata
+  sem conversão para `Number`; aguarda homologação visual.
 - [~] Busca, filtros, paginação e estados explícitos implementados para os
   históricos de despesas, compras, vendas, produção real e razão de estoque, e
   para catálogo/saldos; produção e estoque passaram nos checkpoints locais

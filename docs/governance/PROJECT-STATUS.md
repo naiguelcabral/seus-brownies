@@ -75,9 +75,9 @@ Este documento é a referência canônica de alto nível para o estado atual do 
 
 ### Qualidade
 
-- Checkpoint workbook-parity de 10 de setembro: 297 testes, lint, typecheck,
+- Checkpoint workbook-parity de 10 de setembro: 299 testes, lint, typecheck,
   Prettier direcionado, `git diff --check` e build HML isolado passaram no
-  commit funcional `56f0149`. O aviso de secrets ausentes no SSR é esperado
+  commit funcional `123009d`. O aviso de secrets ausentes no SSR é esperado
   nessa prova sintética e nenhum arquivo de ambiente foi carregado.
 
 - Checkpoint local de 8 de setembro na branch `codex/audit-remediation`:

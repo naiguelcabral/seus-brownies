@@ -2,7 +2,7 @@
 
 Atualizado em 10 de setembro de 2026.
 
-## Missão `codex/workbook-parity` — checkpoint WP-A2
+## Missão `codex/workbook-parity` — checkpoint WP-I1
 
 - Base confirmada: `codex/audit-remediation` em `241099a`; branch da missão
   criada com árvore inicialmente limpa. A referência original foi inspecionada
@@ -40,7 +40,11 @@ Atualizado em 10 de setembro de 2026.
   campo é somente informativo; não cria entidade de fornecedores, não seleciona
   automaticamente compras e não recomenda pedidos. O fornecedor efetivo
   continua obrigatório e preservado em cada compra.
-- Checkpoint funcional: `56f0149`. Validação local: 297 testes, lint,
+- WP-I1 concluído localmente: todos os valores monetários da rota de relatórios
+  são formatados diretamente da representação decimal exata, sem conversão
+  para `Number`. O teste inclui valor além do inteiro seguro, sinal negativo e
+  rejeição de formato fora do contrato.
+- Checkpoint funcional: `123009d`. Validação local: 299 testes, lint,
   typecheck, Prettier direcionado, `git diff --check` e build HML isolado
   verdes. O build no HEAD limpo passou para cliente e SSR. O aviso nominal de
   secrets ausentes foi esperado e nenhum arquivo de ambiente foi carregado.
@@ -48,10 +52,10 @@ Atualizado em 10 de setembro de 2026.
   `codex/audit-remediation`. As CIs de push `34552925067` e PR `34552929383`
   passaram no checkpoint WP-F1 `98a1d5a`; as CIs de push `34553608287` e PR
   `34553610770` passaram no WP-E1 `ca4cec8`. As CIs de push `34554168480` e PR
-  `34554171049` passaram no WP-F2
-  `bbf6db3`. Próximo passo exato: publicar este checkpoint WP-A2, acompanhar
-  sua CI e manter suspensos os cálculos bloqueados por G2 e por histórico de
-  consumo insuficiente.
+  `34554171049` passaram no WP-F2 `bbf6db3`; as CIs de push `34554627169` e PR
+  `34554629415` passaram no WP-A2 `b9241ae`. Próximo passo exato: publicar este
+  checkpoint WP-I1, acompanhar sua CI e manter suspensos os cálculos bloqueados
+  por G2 e por histórico de consumo insuficiente.
 
 ## Atualização AR-G1-HML-2 — 10 de setembro de 2026
 

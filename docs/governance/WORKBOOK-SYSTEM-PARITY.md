@@ -40,6 +40,10 @@ Um campo no schema, isoladamente, não satisfaz paridade. O status considera
 persistência, regra no servidor, autorização, tela/consulta, rastreabilidade e
 teste.
 
+Na rota de relatórios, valores monetários são formatados diretamente das
+strings decimais exatas. A camada de apresentação não os converte para
+`Number`; o contrato é coberto inclusive fora do intervalo inteiro seguro.
+
 ## Mapa das abas
 
 | Aba                             | Função original                                                           | Banco / domínio atual                                                             | Serviço / rota / relatório                         | Teste principal                              | Status                        | Divergência ou decisão                                                                                               | Critério de aceite                                                              |
@@ -256,6 +260,8 @@ compras → movimentos/camadas → estoque/FIFO ← produção concluída
    cobertura de estoque continua pendente.
 7. `WP-H`: concluído localmente com confirmação humana de causa/ação,
    concorrência otimista e histórico append-only; aguarda migration/homologação.
+8. `WP-I1`: concluído localmente; exibição monetária exata nos relatórios, sem
+   conversão para `Number`; aguarda homologação visual.
 
 ## Gates e recursos externos
 
