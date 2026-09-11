@@ -134,8 +134,8 @@ A matriz detalhada workbook × sistema está em
   XLSX segue fora do escopo atual e não foi apresentado como integração.
 - [~] Busca, filtros, paginação e estados explícitos implementados para os
   históricos de despesas, compras, vendas, produção real e razão de estoque, e
-  para catálogo/saldos; produção passou no checkpoint local do WP-E1 e estoque
-  aguarda o checkpoint do WP-F2.
+  para catálogo/saldos; produção e estoque passaram nos checkpoints locais
+  WP-E1/WP-F2 e aguardam homologação de interface.
 
 ## Fase G4 — WhatsApp e mensageria
 
