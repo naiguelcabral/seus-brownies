@@ -49,6 +49,15 @@ import {
 } from '#/features/operations/idempotency'
 import { appendOperationalAudit } from '#/features/operations/audit'
 import { calculateReorderStatus } from '#/features/inventory/reorder'
+import {
+  calculateInventoryPage,
+  endOfInventoryDay,
+  inventoryBalancePageSize,
+  inventoryMovementPageSize,
+  inventoryMovementTypes,
+  inventoryProductTypes,
+  inventoryReorderStatuses,
+} from '#/features/inventory/history'
 import { rateToTenThousandths } from '#/features/management/settings'
 import {
   allocateReportedRevenue,
@@ -370,61 +379,154 @@ export const createPurchase = createServerFn({ method: 'POST' })
     })
   })
 
+const inventorySearchValues = z.object({
+  query: z.string().trim().max(100).optional(),
+  type: z.enum(inventoryProductTypes).optional(),
+  reorderStatus: z.enum(inventoryReorderStatuses).optional(),
+  page: z.number().int().min(1).max(10_000).default(1),
+  movementQuery: z.string().trim().max(100).optional(),
+  movementType: z.enum(inventoryMovementTypes).optional(),
+  start: z.string().date().optional(),
+  end: z.string().date().optional(),
+  movementPage: z.number().int().min(1).max(10_000).default(1),
+})
+
 export const listInventory = createServerFn({ method: 'GET' })
   .middleware([requireServerFunctionPermission('listInventory')])
-  .handler(async () => {
+  .validator(inventorySearchValues)
+  .handler(async ({ data }) => {
+    if (data.start && data.end && data.start > data.end) {
+      throw new Error('A data inicial deve ser anterior à data final.')
+    }
     const { getDb } = await import('#/db/index')
     const database = getDb()
-    const [balances, movements] = await Promise.all([
-      database
-        .select({
-          id: products.id,
-          name: products.name,
-          sku: products.sku,
-          type: products.type,
-          unit: products.unit,
-          categoryName: categories.name,
-          isActive: products.isActive,
-          reorderPoint: products.reorderPoint,
-          balance: sql<string>`coalesce(sum(${stockMovements.quantityDelta}), 0)`,
-        })
-        .from(products)
-        .leftJoin(stockMovements, eq(stockMovements.productId, products.id))
-        .leftJoin(categories, eq(categories.id, products.categoryId))
-        .groupBy(products.id, categories.name)
-        .orderBy(asc(products.name)),
-      database
-        .select({
-          id: stockMovements.id,
-          productName: products.name,
-          productUnit: products.unit,
-          type: stockMovements.type,
-          quantityDelta: stockMovements.quantityDelta,
-          occurredAt: stockMovements.occurredAt,
-          notes: stockMovements.notes,
-          supplierName: purchases.supplierName,
-          supplierLot: purchaseItems.supplierLot,
-          expiresOn: purchaseItems.expiresOn,
-        })
-        .from(stockMovements)
-        .innerJoin(products, eq(products.id, stockMovements.productId))
-        .leftJoin(
-          purchaseItems,
-          and(
-            eq(stockMovements.referenceType, 'purchase_item'),
-            eq(stockMovements.referenceId, purchaseItems.id),
-          ),
-        )
-        .leftJoin(purchases, eq(purchaseItems.purchaseId, purchases.id))
-        .orderBy(desc(stockMovements.occurredAt))
-        .limit(80),
-    ])
-    return {
-      balances: balances.map((item) => ({
+    const balanceFilters = and(
+      data.query
+        ? or(
+            ilike(products.name, `%${data.query}%`),
+            ilike(products.sku, `%${data.query}%`),
+          )
+        : undefined,
+      data.type ? eq(products.type, data.type) : undefined,
+    )
+    const startAt = data.start
+      ? new Date(`${data.start}T00:00:00.000Z`)
+      : undefined
+    const endAt = data.end ? endOfInventoryDay(data.end) : undefined
+    const movementFilters = and(
+      data.movementQuery
+        ? or(
+            ilike(products.name, `%${data.movementQuery}%`),
+            ilike(products.sku, `%${data.movementQuery}%`),
+            ilike(purchases.supplierName, `%${data.movementQuery}%`),
+          )
+        : undefined,
+      data.movementType
+        ? eq(stockMovements.type, data.movementType)
+        : undefined,
+      startAt ? gte(stockMovements.occurredAt, startAt) : undefined,
+      endAt ? lt(stockMovements.occurredAt, endAt) : undefined,
+    )
+    const [balanceRows, actionProducts, [{ total: movementTotal }]] =
+      await Promise.all([
+        database
+          .select({
+            id: products.id,
+            name: products.name,
+            sku: products.sku,
+            type: products.type,
+            unit: products.unit,
+            categoryName: categories.name,
+            isActive: products.isActive,
+            reorderPoint: products.reorderPoint,
+            balance: sql<string>`coalesce(sum(${stockMovements.quantityDelta}), 0)`,
+          })
+          .from(products)
+          .leftJoin(stockMovements, eq(stockMovements.productId, products.id))
+          .leftJoin(categories, eq(categories.id, products.categoryId))
+          .where(balanceFilters)
+          .groupBy(products.id, categories.name)
+          .orderBy(asc(products.name)),
+        database
+          .select({ id: products.id, name: products.name, sku: products.sku })
+          .from(products)
+          .where(eq(products.isActive, true))
+          .orderBy(asc(products.name)),
+        database
+          .select({ total: count() })
+          .from(stockMovements)
+          .innerJoin(products, eq(products.id, stockMovements.productId))
+          .leftJoin(
+            purchaseItems,
+            and(
+              eq(stockMovements.referenceType, 'purchase_item'),
+              eq(stockMovements.referenceId, purchaseItems.id),
+            ),
+          )
+          .leftJoin(purchases, eq(purchaseItems.purchaseId, purchases.id))
+          .where(movementFilters),
+      ])
+    const filteredBalances = balanceRows
+      .map((item) => ({
         ...item,
         reorderStatus: calculateReorderStatus(item.balance, item.reorderPoint),
-      })),
-      movements,
+      }))
+      .filter(
+        (item) =>
+          !data.reorderStatus || item.reorderStatus === data.reorderStatus,
+      )
+    const balancePagination = calculateInventoryPage(
+      data.page,
+      filteredBalances.length,
+      inventoryBalancePageSize,
+    )
+    const movementPagination = calculateInventoryPage(
+      data.movementPage,
+      Number(movementTotal),
+      inventoryMovementPageSize,
+    )
+    const movements = await database
+      .select({
+        id: stockMovements.id,
+        productName: products.name,
+        productUnit: products.unit,
+        type: stockMovements.type,
+        quantityDelta: stockMovements.quantityDelta,
+        occurredAt: stockMovements.occurredAt,
+        notes: stockMovements.notes,
+        supplierName: purchases.supplierName,
+        supplierLot: purchaseItems.supplierLot,
+        expiresOn: purchaseItems.expiresOn,
+      })
+      .from(stockMovements)
+      .innerJoin(products, eq(products.id, stockMovements.productId))
+      .leftJoin(
+        purchaseItems,
+        and(
+          eq(stockMovements.referenceType, 'purchase_item'),
+          eq(stockMovements.referenceId, purchaseItems.id),
+        ),
+      )
+      .leftJoin(purchases, eq(purchaseItems.purchaseId, purchases.id))
+      .where(movementFilters)
+      .orderBy(desc(stockMovements.occurredAt), desc(stockMovements.id))
+      .limit(inventoryMovementPageSize)
+      .offset(movementPagination.offset)
+    return {
+      balances: {
+        items: filteredBalances.slice(
+          balancePagination.offset,
+          balancePagination.offset + inventoryBalancePageSize,
+        ),
+        total: filteredBalances.length,
+        ...balancePagination,
+      },
+      movements: {
+        items: movements,
+        total: Number(movementTotal),
+        ...movementPagination,
+      },
+      actionProducts,
     }
   })
 
@@ -991,6 +1093,7 @@ export const getDashboard = createServerFn({ method: 'GET' })
           id: products.id,
           name: products.name,
           unit: products.unit,
+          reorderPoint: products.reorderPoint,
           balance: sql<string>`coalesce(sum(${stockMovements.quantityDelta}), 0)`,
         })
         .from(products)
@@ -1009,12 +1112,22 @@ export const getDashboard = createServerFn({ method: 'GET' })
         .where(gte(expenses.occurredAt, monthStartValue)),
     ])
 
-    const lowStock = balances.filter((item) => Number(item.balance) <= 0)
+    const balancesWithStatus = balances.map((item) => ({
+      ...item,
+      reorderStatus: calculateReorderStatus(
+        item.balance,
+        item.reorderPoint ?? '0.000',
+      ),
+    }))
+    const lowStock = balancesWithStatus.filter(
+      (item) => item.reorderStatus === 'reorder',
+    )
     return {
       activeProducts: activeProducts[0]?.total ?? 0,
       lowStock,
-      productsWithStock: balances.filter((item) => Number(item.balance) > 0)
-        .length,
+      productsWithStock: balancesWithStatus.filter(
+        (item) => calculateReorderStatus(item.balance, '0.000') === 'ok',
+      ).length,
       recentPurchases,
       recentSales,
       monthExpenses: monthExpenses[0]?.total ?? '0',

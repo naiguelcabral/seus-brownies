@@ -35,6 +35,11 @@
   Registros PLAN continuam excluídos. O checkpoint funcional `2f9fd2d` passou
   em 292 testes, lint, typecheck, `git diff --check` e build HML isolado; o
   aviso nominal de secrets ausentes permaneceu esperado.
+- WP-F2 em validação: saldos e razão de estoque ganharam filtros URL e
+  paginação no servidor, preservando uma lista independente de produtos para
+  ações FIFO. O dashboard deixou de converter saldo para `Number` e passou a
+  usar o ponto de reposição exato, com zero apenas como fallback não
+  configurado. Suíte integral verde com 296 testes; build limpo pendente.
 
 ## Retomada local de 7 de setembro de 2026
 

@@ -30,6 +30,11 @@ Atualizado em 10 de setembro de 2026.
   filtros de status/produto/período, paginação e estados acessíveis. Registros
   PLAN continuam excluídos; conclusão transacional, rendimento, unidades,
   FIFO e custos não foram alterados.
+- WP-F2 ativo: mover filtros e paginação de saldos/movimentos para o servidor e
+  alinhar o alerta do dashboard ao ponto de reposição com comparação exata.
+  Não objetivos: cobertura, previsão ou sugestão de compra. Arquivos previstos:
+  função/rota/dashboard de estoque, helper/testes e governança. Aceite: URL
+  validada, razão paginada, ações preservadas e nenhum `Number` na decisão.
 - Checkpoint funcional: `2f9fd2d`. Validação local: 292 testes, lint,
   typecheck, Prettier direcionado, `git diff --check` e build HML isolado
   verdes. O build no HEAD limpo passou para cliente e SSR. O aviso nominal de
@@ -37,8 +42,7 @@ Atualizado em 10 de setembro de 2026.
 - A branch foi publicada e a PR #4 está em rascunho contra
   `codex/audit-remediation`. As CIs de push `34552925067` e PR `34552929383`
   passaram no checkpoint WP-F1 `98a1d5a`. Próximo passo exato: publicar o
-  checkpoint WP-E1, acompanhar sua CI e ampliar a consulta de estoque com
-  filtros/paginação sem implementar cobertura ou sugestão automática.
+  checkpoint WP-E1, acompanhar sua CI e concluir o WP-F2.
 
 ## Atualização AR-G1-HML-2 — 10 de setembro de 2026
 

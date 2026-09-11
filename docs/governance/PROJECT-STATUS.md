@@ -53,6 +53,8 @@ Este documento é a referência canônica de alto nível para o estado atual do 
 - Camadas, alocações, lifecycle e reconciliação FIFO possuem testes e documentação própria.
 - Energia e mão de obra são custos operacionais, nunca itens de estoque.
 - Bordinhas é coproduto, não perda automática.
+- Saldos e razão de estoque têm busca, filtros e paginação locais; o dashboard
+  usa comparação exata contra o ponto de reposição, com zero como fallback.
 
 ### Dados e migrações
 

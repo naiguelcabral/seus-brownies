@@ -7,6 +7,10 @@ import {
   calculateReorderStatus,
   normalizeReorderPoint,
 } from '../src/features/inventory/reorder'
+import {
+  calculateInventoryPage,
+  endOfInventoryDay,
+} from '../src/features/inventory/history'
 
 test('normaliza ponto de reposição na unidade canônica sem ponto flutuante', () => {
   assert.equal(normalizeReorderPoint('0,5'), '0.500')
@@ -66,4 +70,68 @@ test('tela de estoque decide alerta pelo status exato calculado no servidor', as
   )
   assert.match(source, /item\.reorderStatus === 'reorder'/)
   assert.doesNotMatch(source, /Number\(item\.balance\)/)
+})
+
+test('paginação e período do razão de estoque preservam limites', () => {
+  assert.deepEqual(calculateInventoryPage(0, 41, 20), {
+    page: 1,
+    pageSize: 20,
+    totalPages: 3,
+    offset: 0,
+  })
+  assert.deepEqual(calculateInventoryPage(9, 41, 20), {
+    page: 3,
+    pageSize: 20,
+    totalPages: 3,
+    offset: 40,
+  })
+  assert.equal(
+    endOfInventoryDay('2026-09-10').toISOString(),
+    '2026-09-11T00:00:00.000Z',
+  )
+})
+
+test('consulta de estoque filtra no servidor e mantém produtos das ações separados', async () => {
+  const source = await readFile(
+    new URL('../src/features/operations/functions.ts', import.meta.url),
+    'utf8',
+  )
+  const inventory = source.slice(
+    source.indexOf('const inventorySearchValues'),
+    source.indexOf('const saleValues'),
+  )
+
+  assert.match(inventory, /\.validator\(inventorySearchValues\)/)
+  assert.match(inventory, /ilike\(products\.name/)
+  assert.match(inventory, /data\.reorderStatus/)
+  assert.match(inventory, /movementFilters/)
+  assert.match(inventory, /\.limit\(inventoryMovementPageSize\)/)
+  assert.match(inventory, /\.offset\(movementPagination\.offset\)/)
+  assert.match(inventory, /actionProducts/)
+})
+
+test('dashboard usa ponto de reposição e não converte saldo para Number', async () => {
+  const source = await readFile(
+    new URL('../src/features/operations/functions.ts', import.meta.url),
+    'utf8',
+  )
+  const dashboard = source.slice(source.indexOf('export const getDashboard'))
+
+  assert.match(dashboard, /reorderPoint: products\.reorderPoint/)
+  assert.match(dashboard, /calculateReorderStatus/)
+  assert.doesNotMatch(dashboard, /Number\(item\.balance\)/)
+})
+
+test('rota de estoque usa busca validada, paginação e estados explícitos', async () => {
+  const source = await readFile(
+    new URL('../src/routes/estoque.tsx', import.meta.url),
+    'utf8',
+  )
+
+  assert.match(source, /validateSearch: inventorySearch/)
+  assert.match(source, /loaderDeps: \(\{ search \}\)/)
+  assert.match(source, /listInventory\(\{ data: deps \}\)/)
+  assert.match(source, /pendingComponent: InventoryPending/)
+  assert.match(source, /errorComponent: InventoryError/)
+  assert.match(source, /Paginação do razão de estoque/)
 })

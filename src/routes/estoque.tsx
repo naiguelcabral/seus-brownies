@@ -1,6 +1,7 @@
-import { useEffect, useMemo, useState } from 'react'
-import { createFileRoute, useRouter } from '@tanstack/react-router'
+import { useEffect, useState } from 'react'
+import { createFileRoute, useNavigate, useRouter } from '@tanstack/react-router'
 import { useServerFn } from '@tanstack/react-start'
+import { z } from 'zod'
 
 import { ManagementLayout } from '#/components/ManagementLayout'
 import { listInventory } from '#/features/operations/functions'
@@ -18,10 +19,42 @@ import {
 } from '#/features/inventory/lifecycle-ui'
 import { PositiveAdjustmentForm } from '#/features/inventory/positive-adjustment-form'
 import { formatDateTime } from '#/lib/format'
+import {
+  inventoryMovementTypes,
+  inventoryProductTypes,
+  inventoryReorderStatuses,
+} from '#/features/inventory/history'
+
+const inventorySearch = z.object({
+  query: z.string().trim().max(100).optional().catch(undefined),
+  type: z.enum(inventoryProductTypes).optional().catch(undefined),
+  reorderStatus: z.enum(inventoryReorderStatuses).optional().catch(undefined),
+  page: z.number().int().min(1).max(10_000).catch(1),
+  movementQuery: z.string().trim().max(100).optional().catch(undefined),
+  movementType: z.enum(inventoryMovementTypes).optional().catch(undefined),
+  start: z.string().date().optional().catch(undefined),
+  end: z.string().date().optional().catch(undefined),
+  movementPage: z.number().int().min(1).max(10_000).catch(1),
+})
 
 export const Route = createFileRoute('/estoque')({
-  loader: () => listInventory(),
+  validateSearch: inventorySearch,
+  loaderDeps: ({ search }) => ({
+    query: search.query,
+    type: search.type,
+    reorderStatus: search.reorderStatus,
+    page: search.page,
+    movementQuery: search.movementQuery,
+    movementType: search.movementType,
+    start: search.start,
+    end: search.end,
+    movementPage: search.movementPage,
+  }),
+  loader: ({ deps }) => listInventory({ data: deps }),
   component: InventoryPage,
+  pendingComponent: InventoryPending,
+  pendingMs: 300,
+  errorComponent: InventoryError,
 })
 
 const movementLabels = {
@@ -34,24 +67,13 @@ const movementLabels = {
 }
 
 function InventoryPage() {
-  const { balances, movements } = Route.useLoaderData()
-  const [search, setSearch] = useState('')
-  const [type, setType] = useState('all')
+  const { balances, movements, actionProducts } = Route.useLoaderData()
+  const search = Route.useSearch()
+  const navigate = useNavigate({ from: Route.fullPath })
   const [clientReady, setClientReady] = useState(false)
   useEffect(() => {
     setClientReady(true)
   }, [])
-  const filtered = useMemo(
-    () =>
-      balances.filter(
-        (item) =>
-          (type === 'all' || item.type === type) &&
-          `${item.name} ${item.sku}`
-            .toLocaleLowerCase('pt-BR')
-            .includes(search.toLocaleLowerCase('pt-BR')),
-      ),
-    [balances, search, type],
-  )
   return (
     <ManagementLayout
       title="Estoque"
@@ -63,24 +85,87 @@ function InventoryPage() {
         </span>
       ) : null}
       <section className="rounded-2xl border border-[#ecdfd4] bg-white p-5">
-        <div className="flex flex-col gap-3 sm:flex-row">
-          <input
-            value={search}
-            onChange={(event) => setSearch(event.target.value)}
-            className="field flex-1"
-            placeholder="Filtrar por nome ou SKU"
-          />
-          <select
-            value={type}
-            onChange={(event) => setType(event.target.value)}
-            className="field sm:w-52"
-          >
-            <option value="all">Todos os tipos</option>
-            <option value="ingredient">Ingredientes</option>
-            <option value="packaging">Embalagens</option>
-            <option value="finished_product">Produtos finais</option>
-          </select>
-        </div>
+        <form
+          className="flex flex-wrap items-end gap-3"
+          role="search"
+          aria-label="Filtrar saldos de estoque"
+          onSubmit={(event) => {
+            event.preventDefault()
+            const form = new FormData(event.currentTarget)
+            void navigate({
+              search: (previous) => ({
+                ...previous,
+                query: String(form.get('query') ?? '').trim() || undefined,
+                type:
+                  (String(form.get('type') ?? '') as
+                    (typeof inventoryProductTypes)[number] | '') || undefined,
+                reorderStatus:
+                  (String(form.get('reorderStatus') ?? '') as
+                    (typeof inventoryReorderStatuses)[number] | '') ||
+                  undefined,
+                page: 1,
+              }),
+            })
+          }}
+        >
+          <label className="flex-1 text-xs font-bold text-[#573524]">
+            Produto
+            <input
+              name="query"
+              defaultValue={search.query}
+              className="field mt-1 w-full"
+              placeholder="Nome ou SKU"
+            />
+          </label>
+          <label className="text-xs font-bold text-[#573524]">
+            Tipo
+            <select
+              name="type"
+              defaultValue={search.type}
+              className="field mt-1 sm:w-48"
+            >
+              <option value="">Todos</option>
+              <option value="ingredient">Ingredientes</option>
+              <option value="packaging">Embalagens</option>
+              <option value="finished_product">Produtos finais</option>
+            </select>
+          </label>
+          <label className="text-xs font-bold text-[#573524]">
+            Reposição
+            <select
+              name="reorderStatus"
+              defaultValue={search.reorderStatus}
+              className="field mt-1 sm:w-48"
+            >
+              <option value="">Todos</option>
+              <option value="reorder">Repor</option>
+              <option value="ok">OK</option>
+              <option value="not_configured">Não configurado</option>
+            </select>
+          </label>
+          <button className="rounded-lg border border-[#4a2114] px-3 py-2 text-xs font-bold text-[#4a2114]">
+            Filtrar
+          </button>
+          {search.query || search.type || search.reorderStatus ? (
+            <button
+              type="button"
+              className="px-2 py-2 text-xs font-bold text-[#75411f]"
+              onClick={() =>
+                void navigate({
+                  search: (previous) => ({
+                    ...previous,
+                    query: undefined,
+                    type: undefined,
+                    reorderStatus: undefined,
+                    page: 1,
+                  }),
+                })
+              }
+            >
+              Limpar filtros
+            </button>
+          ) : null}
+        </form>
         <div className="mt-5 overflow-x-auto">
           <table className="w-full min-w-[620px] text-left text-sm">
             <thead className="border-y border-[#f0e5dc] bg-[#fffaf5] text-xs uppercase text-[#896d5b]">
@@ -93,7 +178,7 @@ function InventoryPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-[#f0e5dc]">
-              {filtered.map((item) => (
+              {balances.items.map((item) => (
                 <tr key={item.id}>
                   <td className="px-3 py-3">
                     <strong>{item.name}</strong>
@@ -127,21 +212,125 @@ function InventoryPage() {
               ))}
             </tbody>
           </table>
-          {filtered.length === 0 ? (
+          {balances.items.length === 0 ? (
             <p className="py-8 text-center text-sm text-[#846859]">
               Nenhum produto encontrado.
             </p>
           ) : null}
         </div>
+        <Pagination
+          label="Paginação dos saldos de estoque"
+          page={balances.page}
+          totalPages={balances.totalPages}
+          total={balances.total}
+          singular="produto"
+          plural="produtos"
+          onPage={(page) =>
+            navigate({
+              search: (previous) => ({ ...previous, page }),
+            })
+          }
+        />
       </section>
-      <LifecycleActions products={balances} />
+      <LifecycleActions products={actionProducts} />
       <section className="mt-6 overflow-hidden rounded-2xl border border-[#ecdfd4] bg-white">
         <div className="border-b border-[#f0e5dc] px-5 py-4">
           <h2 className="font-bold">Histórico de movimentações</h2>
         </div>
-        {movements.length ? (
+        <form
+          className="flex flex-wrap items-end gap-3 border-b border-[#f0e5dc] px-5 py-4"
+          role="search"
+          aria-label="Filtrar razão de estoque"
+          onSubmit={(event) => {
+            event.preventDefault()
+            const form = new FormData(event.currentTarget)
+            void navigate({
+              search: (previous) => ({
+                ...previous,
+                movementQuery:
+                  String(form.get('movementQuery') ?? '').trim() || undefined,
+                movementType:
+                  (String(form.get('movementType') ?? '') as
+                    (typeof inventoryMovementTypes)[number] | '') || undefined,
+                start: String(form.get('start') ?? '') || undefined,
+                end: String(form.get('end') ?? '') || undefined,
+                movementPage: 1,
+              }),
+            })
+          }}
+        >
+          <label className="flex-1 text-xs font-bold text-[#573524]">
+            Produto ou fornecedor
+            <input
+              name="movementQuery"
+              defaultValue={search.movementQuery}
+              className="field mt-1 w-full"
+              placeholder="Nome, SKU ou fornecedor"
+            />
+          </label>
+          <label className="text-xs font-bold text-[#573524]">
+            Movimento
+            <select
+              name="movementType"
+              defaultValue={search.movementType}
+              className="field mt-1"
+            >
+              <option value="">Todos</option>
+              {inventoryMovementTypes.map((type) => (
+                <option key={type} value={type}>
+                  {movementLabels[type]}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className="text-xs font-bold text-[#573524]">
+            De
+            <input
+              name="start"
+              type="date"
+              defaultValue={search.start}
+              className="field mt-1"
+            />
+          </label>
+          <label className="text-xs font-bold text-[#573524]">
+            Até
+            <input
+              name="end"
+              type="date"
+              defaultValue={search.end}
+              className="field mt-1"
+            />
+          </label>
+          <button className="rounded-lg border border-[#4a2114] px-3 py-2 text-xs font-bold text-[#4a2114]">
+            Filtrar
+          </button>
+          {search.movementQuery ||
+          search.movementType ||
+          search.start ||
+          search.end ? (
+            <button
+              type="button"
+              className="px-2 py-2 text-xs font-bold text-[#75411f]"
+              onClick={() =>
+                void navigate({
+                  search: (previous) => ({
+                    ...previous,
+                    movementQuery: undefined,
+                    movementType: undefined,
+                    start: undefined,
+                    end: undefined,
+                    movementPage: 1,
+                  }),
+                })
+              }
+            >
+              Limpar filtros
+            </button>
+          ) : null}
+        </form>
+        {movements.items.length ? (
           <ul className="divide-y divide-[#f0e5dc]">
-            {movements.map((movement) => (
+            {movements.items.map((movement) => (
               <li
                 key={movement.id}
                 className="flex items-center justify-between gap-3 px-5 py-3"
@@ -177,10 +366,108 @@ function InventoryPage() {
           </ul>
         ) : (
           <p className="p-6 text-sm text-[#846859]">
-            O histórico aparecerá após a primeira compra, venda ou ajuste.
+            Nenhuma movimentação encontrada para esses filtros.
           </p>
         )}
+        <Pagination
+          label="Paginação do razão de estoque"
+          page={movements.page}
+          totalPages={movements.totalPages}
+          total={movements.total}
+          singular="movimentação"
+          plural="movimentações"
+          onPage={(movementPage) =>
+            navigate({
+              search: (previous) => ({ ...previous, movementPage }),
+            })
+          }
+        />
       </section>
+    </ManagementLayout>
+  )
+}
+
+function Pagination({
+  label,
+  page,
+  totalPages,
+  total,
+  singular,
+  plural,
+  onPage,
+}: {
+  label: string
+  page: number
+  totalPages: number
+  total: number
+  singular: string
+  plural: string
+  onPage: (page: number) => void
+}) {
+  return (
+    <nav
+      className="flex items-center justify-between gap-3 border-t border-[#f0e5dc] px-1 pt-4 text-sm"
+      aria-label={label}
+    >
+      <span aria-live="polite">
+        Página {page} de {totalPages} · {total}{' '}
+        {total === 1 ? singular : plural}
+      </span>
+      <div className="flex gap-2">
+        <button
+          type="button"
+          className="rounded-lg border border-[#d9c4b5] px-3 py-1.5 text-xs font-bold disabled:opacity-50"
+          disabled={page === 1}
+          onClick={() => onPage(page - 1)}
+        >
+          Anterior
+        </button>
+        <button
+          type="button"
+          className="rounded-lg border border-[#d9c4b5] px-3 py-1.5 text-xs font-bold disabled:opacity-50"
+          disabled={page === totalPages}
+          onClick={() => onPage(page + 1)}
+        >
+          Próxima
+        </button>
+      </div>
+    </nav>
+  )
+}
+
+function InventoryPending() {
+  return (
+    <ManagementLayout
+      title="Estoque"
+      description="Carregando saldos e movimentações."
+    >
+      <p
+        role="status"
+        className="rounded-2xl border border-[#ecdfd4] bg-white p-5 text-sm text-[#846859]"
+      >
+        Carregando estoque…
+      </p>
+    </ManagementLayout>
+  )
+}
+
+function InventoryError({ error }: { error: Error }) {
+  const router = useRouter()
+  return (
+    <ManagementLayout
+      title="Estoque"
+      description="Não foi possível carregar saldos e movimentações."
+    >
+      <div className="rounded-2xl border border-[#e7c9b8] bg-[#fff5ed] p-5 text-sm text-[#75411f]">
+        <p>{error.message || 'Tente novamente em alguns instantes.'}</p>
+        <button
+          type="button"
+          className="mt-3 rounded-lg border border-[#75411f] px-3 py-2 text-xs font-bold"
+          onClick={() => void router.invalidate()}
+        >
+          Tentar novamente
+        </button>
+      </div>
     </ManagementLayout>
   )
 }
