@@ -14,27 +14,27 @@ Atualizado em 10 de setembro de 2026.
   informado × calculado com rateio exato, locais/canais, métricas rastreáveis e
   plano de ação humano com histórico append-only. Novas Server Functions e
   rotas usam guards; causas e ações nunca são inferidas.
-- Migrations `0019` e `0020` são aditivas e não foram aplicadas. `0019` inclui
-  defaults reconstruídos do workbook para a linha singleton; `0020` não cria
-  dados. Para rollback, primeiro reverter o código; remover colunas/tabelas
+- Migrations `0019`, `0020` e `0021` são aditivas e não foram aplicadas. `0019`
+  inclui defaults reconstruídos do workbook para a linha singleton; `0020` não
+  cria dados; `0021` adiciona ponto de reposição e dados de lote/validade da
+  compra. Para rollback, primeiro reverter o código; remover colunas/tabelas
   depois seria destrutivo para fatos novos e exige decisão humana.
 - Gate financeiro preservado: competência, reversões, créditos, cancelamento
   retroativo, margem definitiva e vínculo venda–lote continuam em G2. Metas,
   cobertura e sugestão de compra foram suspensas somente em seus dependentes.
-- WP-F1 ativo: `0021` adiciona ponto de reposição no produto e lote/validade no
-  item de compra. Catálogo, compra e estoque já foram conectados localmente; a
-  comparação do alerta usa milésimos exatos e o saldo continua somente
-  derivado. Falta fechar suíte/checks/build e checkpoint desse pacote.
-- Checkpoint funcional: `712e0ca`. Validação local: 283 testes, lint,
+- WP-F1 concluído localmente: `0021` adiciona ponto de reposição no produto e
+  lote/validade no item de compra. Catálogo, compra e estoque foram conectados;
+  a comparação do alerta usa milésimos exatos e o saldo continua somente
+  derivado. Cobertura e sugestão automática continuam suspensas.
+- Checkpoint funcional: `b0b3faf`. Validação local: 289 testes, lint,
   typecheck, Prettier direcionado, `git diff --check` e build HML isolado
-  verdes. O primeiro build recusou corretamente a árvore suja; a repetição no
-  HEAD limpo passou para cliente e SSR. O aviso nominal de secrets ausentes foi
-  esperado e nenhum arquivo de ambiente foi carregado.
+  verdes. O build no HEAD limpo passou para cliente e SSR. O aviso nominal de
+  secrets ausentes foi esperado e nenhum arquivo de ambiente foi carregado.
 - A branch foi publicada e a PR #4 está em rascunho contra
   `codex/audit-remediation`. A CI de push `34544769430` passou no SHA
   `b1b6792`; a CI de pull request `34552154672` estava na fila no último
-  registro. Próximo passo exato: consultar essa execução e não atribuir sucesso
-  remoto ao novo checkpoint documental antes de sua CI concluir.
+  registro. Próximo passo exato: publicar o checkpoint WP-F1, acompanhar sua CI
+  e depois ampliar a consulta histórica de produção sem tocar decisões G2.
 
 ## Atualização AR-G1-HML-2 — 10 de setembro de 2026
 

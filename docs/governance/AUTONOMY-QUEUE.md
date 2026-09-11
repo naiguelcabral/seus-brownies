@@ -69,7 +69,7 @@ seleção de pacotes pelo controlador. Ela não substitui os gates de
 | WP-H      | Estruturar plano de ação humano           | codigo-build-obrigatorio | done        | CRUD, filtros, autoria, concorrência e histórico append-only; `0020` não aplicada e homologação pendente.                   |
 | WP-D      | Implementar metas e cenários              | codigo-build-obrigatorio | needs-human | Parâmetros existem; mix/projeções dependem de definição financeira G2 e não serão inferidos.                                |
 | WP-EF     | Completar produção e estoque gerenciais   | codigo-build-obrigatorio | needs-human | Cobertura/sugestão dependem de consumo confiável; custos realizados e integrações adicionais dependem das decisões G2.      |
-| WP-F1     | Rastrear compras e alerta de reposição    | codigo-build-obrigatorio | running     | Ponto exato, lote, validade e fornecedor em revisão local; `0021` não aplicada. Cobertura/sugestão permanecem suspensas.    |
+| WP-F1     | Rastrear compras e alerta de reposição    | codigo-build-obrigatorio | done        | Ponto exato, lote, validade e fornecedor passaram em 289 testes e build local; `0021` não aplicada, homologação pendente.   |
 
 Esses pacotes decorrem da missão manual de até 20 pacotes. A07 continua
 `blocked`; A08–A10 continuam `needs-human`. Não há promoção de nível permanente.

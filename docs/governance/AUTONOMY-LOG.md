@@ -20,10 +20,13 @@
 - Branch publicada sem deploy. A CI de push `34544769430` passou no SHA
   `b1b6792`; a PR #4 foi aberta em rascunho contra `codex/audit-remediation`.
   A CI de pull request `34552154672` estava na fila no último registro.
-- WP-F1 iniciado enquanto a CI rodava: ponto de reposição exato e
+- WP-F1 concluído localmente enquanto a CI rodava: ponto de reposição exato e
   lote/validade/fornecedor foram conectados ao catálogo, compra e estoque. A
   migration aditiva `0021` foi gerada e não aplicada; cobertura e sugestão de
   compra continuam fora do escopo por falta de histórico/regra.
+- Checkpoint `b0b3faf`: 289 testes, lint, typecheck, Prettier direcionado,
+  `git diff --check` e build HML isolado verdes. O aviso de secrets ausentes no
+  SSR foi esperado; nenhuma variável privada ou arquivo `.env` foi carregado.
 
 ## Retomada local de 7 de setembro de 2026
 
