@@ -12,8 +12,11 @@
   e não restaura alimento nem CMV. Cancelamento após entrega falha fechado.
 - Normalização proporcional do mix, indicadores financeiros separados,
   autorização de compensação e cálculo cumulativo de compensações parciais
-  foram cobertos por testes. O subpacote passou em 303 testes, lint, typecheck e
-  `git diff --check`; build e CI ainda serão registrados no checkpoint.
+  foram cobertos por testes. O subpacote passou em 303 testes, lint, typecheck,
+  `git diff --check` e build HML isolado no checkpoint `e2bf666`; a primeira
+  tentativa de build recusou corretamente a ausência da chave pública e a
+  prova seguinte usou apenas a chave sintética documentada. CI ainda será
+  registrada após a publicação da branch.
 
 ## Missão de paridade do workbook — 10 de setembro de 2026
 

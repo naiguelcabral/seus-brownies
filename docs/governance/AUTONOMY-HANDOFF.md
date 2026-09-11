@@ -14,7 +14,9 @@ Atualizado em 11 de setembro de 2026.
   venda paga, reembolso/crédito pós-entrega sem retorno ao estoque e bloqueio
   de cancelamento depois da entrega. A normalização do mix e os indicadores
   separados usam aritmética exata. Validação: 303 testes, lint, typecheck e
-  `git diff --check` verdes; build isolado ainda será executado após o commit.
+  `git diff --check` e build HML isolado com chave pública sintética verdes no
+  checkpoint `e2bf666`. O aviso nominal de secrets ausentes foi esperado e
+  nenhum arquivo de ambiente foi carregado.
 
 - Base confirmada: `codex/audit-remediation` em `241099a`; branch da missão
   criada com árvore inicialmente limpa. A referência original foi inspecionada
