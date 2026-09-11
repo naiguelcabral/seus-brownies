@@ -2,7 +2,7 @@
 
 Atualizado em 10 de setembro de 2026.
 
-## Missão `codex/workbook-parity` — checkpoint local
+## Missão `codex/workbook-parity` — checkpoint WP-A2
 
 - Base confirmada: `codex/audit-remediation` em `241099a`; branch da missão
   criada com árvore inicialmente limpa. A referência original foi inspecionada
@@ -35,20 +35,23 @@ Atualizado em 10 de setembro de 2026.
   servidor e o alerta do dashboard usa o ponto de reposição com comparação
   exata. A lista integral de produtos das ações FIFO foi preservada separada da
   página. Cobertura, previsão e sugestão de compra continuam suspensas.
-- WP-A2 ativo: cadastrar o `Fornecedor_Padrao` opcional do workbook no produto,
-  com validação no servidor e migration aditiva. Não objetivos: criar entidade
-  de fornecedores, selecionar automaticamente compras ou recomendar pedidos.
-  Arquivos previstos: schema/migration, catálogo, formulário, teste e matriz.
-- Checkpoint funcional: `85e7532`. Validação local: 296 testes, lint,
+- WP-A2 concluído localmente: o `Fornecedor_Padrao` opcional do workbook foi
+  acrescentado ao produto, com validação no servidor e migration aditiva. O
+  campo é somente informativo; não cria entidade de fornecedores, não seleciona
+  automaticamente compras e não recomenda pedidos. O fornecedor efetivo
+  continua obrigatório e preservado em cada compra.
+- Checkpoint funcional: `56f0149`. Validação local: 297 testes, lint,
   typecheck, Prettier direcionado, `git diff --check` e build HML isolado
   verdes. O build no HEAD limpo passou para cliente e SSR. O aviso nominal de
   secrets ausentes foi esperado e nenhum arquivo de ambiente foi carregado.
 - A branch foi publicada e a PR #4 está em rascunho contra
   `codex/audit-remediation`. As CIs de push `34552925067` e PR `34552929383`
   passaram no checkpoint WP-F1 `98a1d5a`; as CIs de push `34553608287` e PR
-  `34553610770` passaram no WP-E1 `ca4cec8`. Próximo passo exato: publicar o
-  WP-F2, acompanhar sua CI e concluir o WP-A2 sem avançar nos cálculos
-  bloqueados por G2.
+  `34553610770` passaram no WP-E1 `ca4cec8`. As CIs de push `34554168480` e PR
+  `34554171049` passaram no WP-F2
+  `bbf6db3`. Próximo passo exato: publicar este checkpoint WP-A2, acompanhar
+  sua CI e manter suspensos os cálculos bloqueados por G2 e por histórico de
+  consumo insuficiente.
 
 ## Atualização AR-G1-HML-2 — 10 de setembro de 2026
 

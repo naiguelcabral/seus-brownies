@@ -46,6 +46,13 @@
 - WP-A2 iniciado: fornecedor padrão opcional foi acrescentado ao catálogo como
   informação validada, sem entidade própria, automação de compra ou
   recomendação. A migration aditiva `0022` foi gerada e não aplicada.
+- As CIs de push `34554168480` e pull request `34554171049` passaram para o
+  checkpoint WP-F2 publicado `bbf6db3`.
+- WP-A2 concluído localmente: schema, migration, Server Functions, formulário,
+  teste e matriz preservam o fornecedor padrão como referência informativa e o
+  fornecedor efetivo em cada compra. O checkpoint funcional `56f0149` passou
+  em 297 testes, lint, typecheck, `git diff --check` e build HML isolado; `0022`
+  permanece não aplicada.
 
 ## Retomada local de 7 de setembro de 2026
 
