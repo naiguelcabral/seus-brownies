@@ -119,7 +119,9 @@ A matriz detalhada workbook × sistema está em
 - [ ] CMV e margem quando G2 estiver fechado.
 - [~] Estoque crítico por ponto de reposição implementado localmente com
   comparação exata; cobertura estimada continua aguardando histórico confiável.
-- [ ] Produção por período e rendimento real.
+- [~] Histórico de produção real por receita, status, produto e período
+  implementado localmente com paginação; rendimento realizado já é rastreado
+  nos lotes concluídos e aguarda homologação gerencial.
 - [ ] Perdas e coprodutos.
 - [~] Parceiros/canais com receita, eventos, unidades, ticket e divergência
   implementados localmente; margem e comparação temporal continuam pendentes.
@@ -130,9 +132,9 @@ A matriz detalhada workbook × sistema está em
 - [~] Exportação CSV segura dos relatórios operacionais concluída localmente;
   XLSX segue fora do escopo atual e não foi apresentado como integração.
 - [~] Busca, filtros, paginação e estados explícitos implementados para os
-  históricos de despesas, compras e vendas, e para o catálogo; os quatro
-  pacotes foram aprovados em CI. Os demais históricos seguem como pacotes
-  separados.
+  históricos de despesas, compras, vendas e produção real, e para o catálogo;
+  produção aguarda o checkpoint/CI do WP-E1. Os demais históricos seguem como
+  pacotes separados.
 
 ## Fase G4 — WhatsApp e mensageria
 

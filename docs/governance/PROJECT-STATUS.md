@@ -38,6 +38,8 @@ Este documento é a referência canônica de alto nível para o estado atual do 
 - Vendas: implementado; vendas confirmadas ou pagas movimentam estoque quando aplicável.
 - Despesas: implementado.
 - Produção: fluxo real implementado com rascunho e conclusão transacional.
+- Histórico de produção real: filtros por receita, status, produto e período e
+  paginação implementados localmente; homologação de interface pendente.
 - Relatórios: implementados em nível operacional inicial.
 - Paridade do workbook: matriz canônica criada em
   `WORKBOOK-SYSTEM-PARITY.md`. Parâmetros gerenciais, auditoria exata de

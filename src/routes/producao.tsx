@@ -1,7 +1,8 @@
 import { useMemo, useState } from 'react'
 import { CheckCircle2, Eye, Plus, Trash2 } from 'lucide-react'
-import { createFileRoute, useRouter } from '@tanstack/react-router'
+import { createFileRoute, useNavigate, useRouter } from '@tanstack/react-router'
 import { useServerFn } from '@tanstack/react-start'
+import { z } from 'zod'
 
 import { ManagementLayout } from '#/components/ManagementLayout'
 import {
@@ -12,9 +13,37 @@ import {
   previewProductionBatch,
 } from '#/features/production/functions'
 
+const productionStatuses = [
+  'draft',
+  'planned',
+  'completed',
+  'cancelled',
+] as const
+
+const productionSearch = z.object({
+  query: z.string().trim().max(100).optional().catch(undefined),
+  status: z.enum(productionStatuses).optional().catch(undefined),
+  productId: z.coerce.number().int().positive().optional().catch(undefined),
+  start: z.string().date().optional().catch(undefined),
+  end: z.string().date().optional().catch(undefined),
+  page: z.number().int().min(1).max(10_000).catch(1),
+})
+
 export const Route = createFileRoute('/producao')({
-  loader: () => getProductionWorkspace(),
+  validateSearch: productionSearch,
+  loaderDeps: ({ search }) => ({
+    query: search.query,
+    status: search.status,
+    productId: search.productId,
+    start: search.start,
+    end: search.end,
+    page: search.page,
+  }),
+  loader: ({ deps }) => getProductionWorkspace({ data: deps }),
   component: ProductionPage,
+  pendingComponent: ProductionPending,
+  pendingMs: 300,
+  errorComponent: ProductionError,
 })
 
 type Output = { productId: string; quantity: string }
@@ -31,7 +60,9 @@ const statusLabel = {
 
 function ProductionPage() {
   const workspace = Route.useLoaderData()
+  const search = Route.useSearch()
   const router = useRouter()
+  const navigate = useNavigate({ from: Route.fullPath })
   const previewBatch = useServerFn(previewProductionBatch)
   const createBatch = useServerFn(createProductionBatch)
   const readBatch = useServerFn(getProductionBatch)
@@ -68,6 +99,18 @@ function ProductionPage() {
   )
   const selectableProfiles = profiles.filter(
     (profile) => profile.productId !== bordinhas?.productId,
+  )
+  const historyProducts = useMemo(
+    () =>
+      Array.from(
+        new Map(
+          workspace.profiles.map((profile) => [
+            profile.productId,
+            { id: profile.productId, name: profile.name },
+          ]),
+        ).values(),
+      ).sort((left, right) => left.name.localeCompare(right.name, 'pt-BR')),
+    [workspace.profiles],
   )
 
   function payload() {
@@ -183,16 +226,6 @@ function ProductionPage() {
     }
   }
 
-  if (!workspace.recipes.length) {
-    return (
-      <ManagementLayout
-        title="Produção"
-        description="Crie lotes reais com consumo rastreável de insumos, custos operacionais e entradas no estoque."
-      >
-        <Empty text="Não há receita-base ativa. Importe ou ative uma receita antes de iniciar a produção real." />
-      </ManagementLayout>
-    )
-  }
   return (
     <ManagementLayout
       title="Produção"
@@ -204,6 +237,32 @@ function ProductionPage() {
             <h2 className="font-bold">Lotes reais</h2>
             <p className="mt-1 text-sm text-[#846859]">A lista não mistura os registros PLAN importados do workbook.</p>
           </div>
+          <form
+            className="flex flex-wrap items-end gap-3 border-b border-[#f0e5dc] px-5 py-4"
+            role="search"
+            onSubmit={(event) => {
+              event.preventDefault()
+              const form = new FormData(event.currentTarget)
+              void navigate({
+                search: {
+                  query: String(form.get('query') ?? '').trim() || undefined,
+                  status: (String(form.get('status') ?? '') as (typeof productionStatuses)[number] | '') || undefined,
+                  productId: Number(form.get('productId')) || undefined,
+                  start: String(form.get('start') ?? '') || undefined,
+                  end: String(form.get('end') ?? '') || undefined,
+                  page: 1,
+                },
+              })
+            }}
+          >
+            <label className="text-xs font-bold text-[#573524]">Receita<input className="field mt-1 block min-w-44" name="query" defaultValue={search.query} placeholder="Buscar receita" /></label>
+            <label className="text-xs font-bold text-[#573524]">Status<select className="field mt-1 block" name="status" defaultValue={search.status}><option value="">Todos</option>{productionStatuses.map((status) => <option key={status} value={status}>{statusLabel[status]}</option>)}</select></label>
+            <label className="text-xs font-bold text-[#573524]">Produto<select className="field mt-1 block min-w-44" name="productId" defaultValue={search.productId ?? ''}><option value="">Todos</option>{historyProducts.map((product) => <option key={product.id} value={product.id}>{product.name}</option>)}</select></label>
+            <label className="text-xs font-bold text-[#573524]">De<input className="field mt-1 block" type="date" name="start" defaultValue={search.start} /></label>
+            <label className="text-xs font-bold text-[#573524]">Até<input className="field mt-1 block" type="date" name="end" defaultValue={search.end} /></label>
+            <button className="rounded-lg border border-[#4a2114] px-3 py-2 text-xs font-bold text-[#4a2114]">Filtrar</button>
+            {search.query || search.status || search.productId || search.start || search.end ? <button type="button" className="px-2 py-2 text-xs font-bold text-[#75411f]" onClick={() => void navigate({ search: { page: 1 } })}>Limpar filtros</button> : null}
+          </form>
           {workspace.batches.length ? (
             <ul className="divide-y divide-[#f0e5dc]">
               {workspace.batches.map((batch) => (
@@ -223,9 +282,16 @@ function ProductionPage() {
                 </li>
               ))}
             </ul>
-          ) : <Empty text="Nenhum lote real criado. Use o formulário ao lado para começar em rascunho." />}
+          ) : <Empty text="Nenhum lote real encontrado para esses filtros." />}
+          <nav className="flex items-center justify-between gap-3 border-t border-[#f0e5dc] px-5 py-4 text-sm" aria-label="Paginação dos lotes de produção">
+            <span aria-live="polite">Página {workspace.page} de {workspace.totalPages} · {workspace.total} {workspace.total === 1 ? 'lote' : 'lotes'}</span>
+            <div className="flex gap-2">
+              <button type="button" className="rounded-lg border border-[#d9c4b5] px-3 py-1.5 text-xs font-bold disabled:opacity-50" disabled={workspace.page === 1} onClick={() => void navigate({ search: (previous) => ({ ...previous, page: workspace.page - 1 }) })}>Anterior</button>
+              <button type="button" className="rounded-lg border border-[#d9c4b5] px-3 py-1.5 text-xs font-bold disabled:opacity-50" disabled={workspace.page === workspace.totalPages} onClick={() => void navigate({ search: (previous) => ({ ...previous, page: workspace.page + 1 }) })}>Próxima</button>
+            </div>
+          </nav>
         </section>
-        <form className="space-y-4 rounded-2xl border border-[#ecdfd4] bg-white p-5" onSubmit={(event) => { event.preventDefault(); void saveDraft() }}>
+        {workspace.recipes.length ? <form className="space-y-4 rounded-2xl border border-[#ecdfd4] bg-white p-5" onSubmit={(event) => { event.preventDefault(); void saveDraft() }}>
           <div>
             <h2 className="font-bold">Novo lote</h2>
             <p className="mt-1 text-sm text-[#846859]">O rascunho ainda não consome ou gera estoque.</p>
@@ -269,7 +335,7 @@ function ProductionPage() {
           <label className="block text-sm font-bold text-[#573524]">Observações<textarea className="field mt-1.5 min-h-20" value={notes} onChange={(event) => setNotes(event.target.value)} /></label>
           {message ? <p className="rounded-lg bg-[#fff5e7] p-3 text-sm text-[#75411f]">{message}</p> : null}
           <div className="flex flex-wrap gap-3"><button type="button" disabled={saving} onClick={() => void showPreview()} className="rounded-lg border border-[#d9c3b4] px-4 py-2.5 text-sm font-bold text-[#6c3e28] disabled:opacity-60">{saving ? 'Calculando...' : 'Ver prévia'}</button><button disabled={saving} className="rounded-lg bg-[#4a2114] px-4 py-2.5 text-sm font-bold text-white disabled:opacity-60">Salvar rascunho</button></div>
-        </form>
+        </form> : <aside className="rounded-2xl border border-[#ecdfd4] bg-white p-5"><h2 className="font-bold">Novo lote indisponível</h2><Empty text="Não há receita-base ativa. Importe ou ative uma receita antes de iniciar uma produção real." /></aside>}
       </div>
       {preview ? <Preview preview={preview} /> : null}
       {details ? <Details details={details} saving={saving} onClose={() => setDetails(null)} onComplete={() => void conclude()} /> : null}
@@ -298,6 +364,8 @@ function Details({ details, saving, onClose, onComplete }: { details: Awaited<Re
 }
 
 function AuditList({ title, rows }: { title: string; rows: string[] }) { return <article><h3 className="font-bold">{title}</h3><ul className="mt-2 divide-y divide-[#f0e5dc] text-sm text-[#573524]">{rows.map((row, index) => <li className="py-2" key={`${title}-${index}`}>{row}</li>)}</ul></article> }
+function ProductionPending() { return <ManagementLayout title="Produção" description="Carregando o histórico de produção."><p role="status" className="rounded-2xl border border-[#ecdfd4] bg-white p-5 text-sm text-[#846859]">Carregando lotes…</p></ManagementLayout> }
+function ProductionError({ error }: { error: Error }) { const router = useRouter(); return <ManagementLayout title="Produção" description="Não foi possível carregar o histórico de produção."><div className="rounded-2xl border border-[#e7c9b8] bg-[#fff5ed] p-5 text-sm text-[#75411f]"><p>{error.message || 'Tente novamente em alguns instantes.'}</p><button type="button" className="mt-3 rounded-lg border border-[#75411f] px-3 py-2 text-xs font-bold" onClick={() => void router.invalidate()}>Tentar novamente</button></div></ManagementLayout> }
 function Input({ label, value, onChange, ...props }: { label: string; value: string; onChange: (value: string) => void } & Omit<React.InputHTMLAttributes<HTMLInputElement>, 'value' | 'onChange'>) { return <label className="block text-sm font-bold text-[#573524]">{label}<input className="field mt-1.5" value={value} onChange={(event) => onChange(event.target.value)} {...props} /></label> }
 function Empty({ text }: { text: string }) { return <p className="rounded-2xl border border-[#ecdfd4] bg-white p-6 text-sm text-[#846859]">{text}</p> }
 function formatQuantity(value: string, unit: string) { return `${new Intl.NumberFormat('pt-BR', { maximumFractionDigits: 3 }).format(Number(value))}${unit ? ` ${unit === 'unit' ? 'un.' : unit}` : ''}` }

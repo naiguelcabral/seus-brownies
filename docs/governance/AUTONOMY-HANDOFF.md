@@ -26,6 +26,11 @@ Atualizado em 10 de setembro de 2026.
   lote/validade no item de compra. Catálogo, compra e estoque foram conectados;
   a comparação do alerta usa milésimos exatos e o saldo continua somente
   derivado. Cobertura e sugestão automática continuam suspensas.
+- WP-E1 ativo: ampliar somente a leitura histórica de lotes reais com busca,
+  filtros de status/produto/período e paginação. Não objetivos: alterar
+  conclusão transacional, rendimento, unidades, FIFO, custos ou registros PLAN.
+  Arquivos previstos: função/rota de produção, helper/teste e esta governança.
+  Aceite: filtro no servidor, URL validada, estados acessíveis e checks verdes.
 - Checkpoint funcional: `b0b3faf`. Validação local: 289 testes, lint,
   typecheck, Prettier direcionado, `git diff --check` e build HML isolado
   verdes. O build no HEAD limpo passou para cliente e SSR. O aviso nominal de
@@ -34,7 +39,7 @@ Atualizado em 10 de setembro de 2026.
   `codex/audit-remediation`. A CI de push `34544769430` passou no SHA
   `b1b6792`; a CI de pull request `34552154672` estava na fila no último
   registro. Próximo passo exato: publicar o checkpoint WP-F1, acompanhar sua CI
-  e depois ampliar a consulta histórica de produção sem tocar decisões G2.
+  e concluir o WP-E1 sem tocar decisões G2.
 
 ## Atualização AR-G1-HML-2 — 10 de setembro de 2026
 

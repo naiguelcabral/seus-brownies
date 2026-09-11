@@ -70,6 +70,7 @@ seleção de pacotes pelo controlador. Ela não substitui os gates de
 | WP-D      | Implementar metas e cenários              | codigo-build-obrigatorio | needs-human | Parâmetros existem; mix/projeções dependem de definição financeira G2 e não serão inferidos.                                |
 | WP-EF     | Completar produção e estoque gerenciais   | codigo-build-obrigatorio | needs-human | Cobertura/sugestão dependem de consumo confiável; custos realizados e integrações adicionais dependem das decisões G2.      |
 | WP-F1     | Rastrear compras e alerta de reposição    | codigo-build-obrigatorio | done        | Ponto exato, lote, validade e fornecedor passaram em 289 testes e build local; `0021` não aplicada, homologação pendente.   |
+| WP-E1     | Ampliar histórico de produção real        | codigo-build-obrigatorio | running     | Busca, status, produto, período e paginação no servidor; sem alterar conclusão, FIFO, custo ou registros PLAN.              |
 
 Esses pacotes decorrem da missão manual de até 20 pacotes. A07 continua
 `blocked`; A08–A10 continuam `needs-human`. Não há promoção de nível permanente.
