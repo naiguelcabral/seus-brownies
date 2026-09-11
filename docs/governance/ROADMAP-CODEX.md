@@ -133,8 +133,8 @@ A matriz detalhada workbook × sistema está em
   XLSX segue fora do escopo atual e não foi apresentado como integração.
 - [~] Busca, filtros, paginação e estados explícitos implementados para os
   históricos de despesas, compras, vendas e produção real, e para o catálogo;
-  produção aguarda o checkpoint/CI do WP-E1. Os demais históricos seguem como
-  pacotes separados.
+  produção passou no checkpoint local do WP-E1. Os demais históricos seguem
+  como pacotes separados.
 
 ## Fase G4 — WhatsApp e mensageria
 

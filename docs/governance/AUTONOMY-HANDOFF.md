@@ -26,20 +26,19 @@ Atualizado em 10 de setembro de 2026.
   lote/validade no item de compra. Catálogo, compra e estoque foram conectados;
   a comparação do alerta usa milésimos exatos e o saldo continua somente
   derivado. Cobertura e sugestão automática continuam suspensas.
-- WP-E1 ativo: ampliar somente a leitura histórica de lotes reais com busca,
-  filtros de status/produto/período e paginação. Não objetivos: alterar
-  conclusão transacional, rendimento, unidades, FIFO, custos ou registros PLAN.
-  Arquivos previstos: função/rota de produção, helper/teste e esta governança.
-  Aceite: filtro no servidor, URL validada, estados acessíveis e checks verdes.
-- Checkpoint funcional: `b0b3faf`. Validação local: 289 testes, lint,
+- WP-E1 concluído localmente: a leitura histórica de lotes reais tem busca,
+  filtros de status/produto/período, paginação e estados acessíveis. Registros
+  PLAN continuam excluídos; conclusão transacional, rendimento, unidades,
+  FIFO e custos não foram alterados.
+- Checkpoint funcional: `2f9fd2d`. Validação local: 292 testes, lint,
   typecheck, Prettier direcionado, `git diff --check` e build HML isolado
   verdes. O build no HEAD limpo passou para cliente e SSR. O aviso nominal de
   secrets ausentes foi esperado e nenhum arquivo de ambiente foi carregado.
 - A branch foi publicada e a PR #4 está em rascunho contra
-  `codex/audit-remediation`. A CI de push `34544769430` passou no SHA
-  `b1b6792`; a CI de pull request `34552154672` estava na fila no último
-  registro. Próximo passo exato: publicar o checkpoint WP-F1, acompanhar sua CI
-  e concluir o WP-E1 sem tocar decisões G2.
+  `codex/audit-remediation`. As CIs de push `34552925067` e PR `34552929383`
+  passaram no checkpoint WP-F1 `98a1d5a`. Próximo passo exato: publicar o
+  checkpoint WP-E1, acompanhar sua CI e ampliar a consulta de estoque com
+  filtros/paginação sem implementar cobertura ou sugestão automática.
 
 ## Atualização AR-G1-HML-2 — 10 de setembro de 2026
 

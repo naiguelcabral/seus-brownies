@@ -29,10 +29,12 @@
   SSR foi esperado; nenhuma variável privada ou arquivo `.env` foi carregado.
 - As CIs de push `34552925067` e pull request `34552929383` passaram para o
   checkpoint publicado `98a1d5a`.
-- WP-E1 em validação: consulta de lotes reais passou a filtrar no servidor por
-  receita, status, produto e período, com 20 itens por página e estados de UI.
-  Registros PLAN continuam excluídos e a suíte integral passou com 292 testes;
-  build limpo e checkpoint ainda pendentes neste registro.
+- WP-E1 concluído localmente: consulta de lotes reais passou a filtrar no
+  servidor por receita, status, produto e período, com 20 itens por página e
+  estados de UI.
+  Registros PLAN continuam excluídos. O checkpoint funcional `2f9fd2d` passou
+  em 292 testes, lint, typecheck, `git diff --check` e build HML isolado; o
+  aviso nominal de secrets ausentes permaneceu esperado.
 
 ## Retomada local de 7 de setembro de 2026
 
