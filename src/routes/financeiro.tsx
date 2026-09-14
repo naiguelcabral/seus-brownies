@@ -180,10 +180,18 @@ function FinancialPage() {
         </button>
       </form>
 
-      <div className="mt-6 grid gap-4 sm:grid-cols-3">
+      <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
         <Metric
           label="Receita líquida"
-          value={formatBrlMoney(overview.currentSnapshot.netRevenue)}
+          value={formatBrlMoney(overview.accrualMargins.netRevenue)}
+        />
+        <Metric
+          label="CMV realizado"
+          value={formatBrlMoney(overview.accrualMargins.cogs)}
+        />
+        <Metric
+          label="Margem bruta"
+          value={formatBrlMoney(overview.accrualMargins.grossMargin)}
         />
         <Metric
           label="Fluxo de caixa"
@@ -252,6 +260,70 @@ function FinancialPage() {
           {message}
         </p>
       ) : null}
+
+      <section className="mt-6 rounded-2xl border border-[#ecdfd4] bg-white p-5">
+        <div>
+          <h2 className="font-bold">Margem bruta por competência</h2>
+          <p className="mt-1 text-sm text-[#846859]">
+            O CMV entra uma única vez no mês da entrega. Reembolsos e créditos
+            posteriores reduzem a receita no mês do próprio fato, sem devolver
+            alimento nem desfazer o custo realizado.
+          </p>
+        </div>
+        {!overview.accrualMargins.reconciled ? (
+          <p className="mt-4 rounded-lg border border-[#e7c9b8] bg-[#fff5ed] p-3 text-sm text-[#75411f]">
+            A distribuição por produto não reconciliou com a receita líquida.
+            Revise os vínculos dos fatos antes de usar os grupos gerenciais.
+          </p>
+        ) : null}
+        {overview.accrualMargins.unattributedRevenue !== '0.00' ? (
+          <p className="mt-4 rounded-lg bg-[#fff8f0] p-3 text-sm text-[#75411f]">
+            Receita sem venda vinculada:{' '}
+            <strong>
+              {formatBrlMoney(overview.accrualMargins.unattributedRevenue)}
+            </strong>
+            . Ela permanece no total, mas não é atribuída artificialmente a um
+            produto, lote ou local.
+          </p>
+        ) : null}
+        <div className="mt-5 grid gap-6 xl:grid-cols-3">
+          <MarginList
+            title="Por produto"
+            empty="Nenhum produto com fato financeiro no período."
+            rows={overview.accrualMargins.byProduct.map((item) => ({
+              key: `${item.productId ?? 'snapshot'}-${item.productName}`,
+              label: item.productName,
+              revenue: item.revenue,
+              cogs: item.cogs,
+              margin: item.grossMargin,
+            }))}
+          />
+          <MarginList
+            title="Por lote/origem"
+            empty="Nenhuma origem FIFO com fato financeiro no período."
+            rows={overview.accrualMargins.byBatch.map((item) => ({
+              key: item.productionBatchId ?? 'without-batch',
+              label: item.productionBatchId
+                ? `Lote #${item.productionBatchId}`
+                : 'Compra/ajuste/sem lote',
+              revenue: item.revenue,
+              cogs: item.cogs,
+              margin: item.grossMargin,
+            }))}
+          />
+          <MarginList
+            title="Por local/canal"
+            empty="Nenhum local com fato financeiro no período."
+            rows={overview.accrualMargins.byLocation.map((item) => ({
+              key: item.locationId ?? 'without-location',
+              label: item.locationName,
+              revenue: item.revenue,
+              cogs: item.cogs,
+              margin: item.grossMargin,
+            }))}
+          />
+        </div>
+      </section>
 
       <section className="mt-6 overflow-hidden rounded-2xl border border-[#ecdfd4] bg-white">
         <div className="border-b border-[#ecdfd4] p-5">
@@ -416,6 +488,43 @@ function Metric({ label, value }: { label: string; value: string }) {
       </span>
       <strong className="mt-2 block text-2xl">{value}</strong>
     </article>
+  )
+}
+
+function MarginList({
+  title,
+  rows,
+  empty,
+}: {
+  title: string
+  rows: Array<{
+    key: string | number
+    label: string
+    revenue: string
+    cogs: string
+    margin: string
+  }>
+  empty: string
+}) {
+  return (
+    <div>
+      <h3 className="text-sm font-bold">{title}</h3>
+      {rows.length ? (
+        <ul className="mt-3 space-y-2">
+          {rows.map((row) => (
+            <li key={row.key} className="rounded-xl bg-[#fffaf5] p-3 text-sm">
+              <strong>{row.label}</strong>
+              <span className="mt-1 block text-xs text-[#846859]">
+                Receita {formatBrlMoney(row.revenue)} · CMV{' '}
+                {formatBrlMoney(row.cogs)} · margem {formatBrlMoney(row.margin)}
+              </span>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="mt-3 text-sm text-[#846859]">{empty}</p>
+      )}
+    </div>
   )
 }
 

@@ -18,8 +18,22 @@ function writes(mock: ReturnType<typeof createLifecycleDrizzleMock>) {
 test('fechamento manual congela snapshot exato e autoria na mesma transação', async () => {
   const mock = createLifecycleDrizzleMock({
     financialEvents: [
-      { revenueEffect: '100.00', cashEffect: '75.00' },
-      { revenueEffect: '-10.01', cashEffect: '-5.00' },
+      {
+        id: 1,
+        type: 'revenue_correction',
+        saleId: null,
+        saleItemId: null,
+        revenueEffect: '100.00',
+        cashEffect: '75.00',
+      },
+      {
+        id: 2,
+        type: 'revenue_correction',
+        saleId: null,
+        saleItemId: null,
+        revenueEffect: '-10.01',
+        cashEffect: '-5.00',
+      },
     ],
   })
   const result = await persistFinancialPeriodClose(
@@ -31,6 +45,10 @@ test('fechamento manual congela snapshot exato e autoria na mesma transação', 
     netRevenue: '89.99',
     cashFlow: '70.00',
     eventCount: 2,
+    cogs: '0.00',
+    grossMargin: '89.99',
+    unattributedRevenue: '89.99',
+    reconciled: true,
   })
   assert.deepEqual(writes(mock), [
     'insert:financialPeriods',
@@ -49,7 +67,7 @@ test('fechamento manual congela snapshot exato e autoria na mesma transação', 
 test('correção do Dono preserva competência original e atualiza período fechado', async () => {
   const target = {
     id: 7,
-    saleId: 3,
+    saleId: null,
     saleItemId: null,
     competenceDate: '2026-08-15',
     revenueEffect: '100.00',
@@ -61,7 +79,28 @@ test('correção do Dono preserva competência original e atualiza período fech
       financialEvents: [
         [target],
         [],
-        [target, { revenueEffect: '-5.00', cashEffect: '0.00' }],
+        [
+          target,
+          {
+            id: 8,
+            type: 'revenue_correction',
+            saleId: null,
+            saleItemId: null,
+            revenueEffect: '-5.00',
+            cashEffect: '0.00',
+          },
+        ],
+        [
+          target,
+          {
+            id: 8,
+            type: 'revenue_correction',
+            saleId: null,
+            saleItemId: null,
+            revenueEffect: '-5.00',
+            cashEffect: '0.00',
+          },
+        ],
       ],
       financialPeriods: [
         [
@@ -117,13 +156,17 @@ test('correção do Dono preserva competência original e atualiza período fech
     netRevenue: '95.00',
     cashFlow: '0.00',
     eventCount: 2,
+    cogs: '0.00',
+    grossMargin: '95.00',
+    unattributedRevenue: '95.00',
+    reconciled: true,
   })
 })
 
 test('papel diferente de Dono não corrige período fechado', async () => {
   const target = {
     id: 7,
-    saleId: 3,
+    saleId: null,
     saleItemId: null,
     competenceDate: '2026-08-15',
     revenueEffect: '100.00',
@@ -167,7 +210,7 @@ test('papel diferente de Dono não corrige período fechado', async () => {
 test('conflito otimista no snapshot fechado desfaz a correção inteira', async () => {
   const target = {
     id: 7,
-    saleId: 3,
+    saleId: null,
     saleItemId: null,
     competenceDate: '2026-08-15',
     revenueEffect: '100.00',
@@ -179,7 +222,28 @@ test('conflito otimista no snapshot fechado desfaz a correção inteira', async 
       financialEvents: [
         [target],
         [],
-        [target, { revenueEffect: '-5.00', cashEffect: '0.00' }],
+        [
+          target,
+          {
+            id: 8,
+            type: 'revenue_correction',
+            saleId: null,
+            saleItemId: null,
+            revenueEffect: '-5.00',
+            cashEffect: '0.00',
+          },
+        ],
+        [
+          target,
+          {
+            id: 8,
+            type: 'revenue_correction',
+            saleId: null,
+            saleItemId: null,
+            revenueEffect: '-5.00',
+            cashEffect: '0.00',
+          },
+        ],
       ],
       financialPeriods: [
         [

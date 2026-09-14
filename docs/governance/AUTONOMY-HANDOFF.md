@@ -4,6 +4,22 @@ Atualizado em 14 de setembro de 2026.
 
 ## Missão `codex/workbook-parity` — G2-F1 em execução
 
+### Subpacote G2-F1-R3 — relatório por competência iniciado
+
+- Objetivo: calcular CMV e margem bruta do mês a partir de
+  `financial_events` e das alocações FIFO das vendas entregues, com grupos
+  reconciliáveis por produto, lote/origem sem lote e local/canal.
+- Não objetivos: aplicar migrations, fazer backfill, classificar despesas como
+  fixas/variáveis, calcular lucro gerencial, iniciar WP-D ou alterar dados/HML.
+- Arquivos previstos: cálculo puro em `src/features/finance/`, leitura em
+  `src/features/finance/functions.ts`, apresentação em
+  `src/routes/financeiro.tsx` e testes determinísticos em `test/`.
+- Aceite: receita usa a competência de cada fato; CMV entra uma única vez na
+  entrega; compensação posterior reduz receita no próprio período sem devolver
+  CMV; totais e grupos fecham em centavos, inclusive quando não há lote.
+- Validação prevista: testes financeiros direcionados, `npm test`, lint,
+  typecheck, Prettier direcionado, `git diff --check` e build HML isolado.
+
 - G2-F1 ativo após aprovação humana de 11 de setembro de 2026. Objetivo:
   persistir fatos financeiros imutáveis, entrega, reembolso/crédito e fechamento
   manual; corrigir cancelamento pré-entrega versus devolução pós-entrega; expor

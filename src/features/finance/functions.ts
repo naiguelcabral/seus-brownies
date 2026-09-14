@@ -4,8 +4,12 @@ import { and, desc, eq, gte, inArray, lt, sql } from 'drizzle-orm'
 import {
   financialEvents,
   financialPeriods,
+  inventoryCostAllocations,
+  inventoryCostLayers,
+  productionBatchOutputs,
   saleItems,
   sales,
+  salesLocations,
 } from '#/db/schema'
 import { requireServerFunctionPermission } from '#/features/auth/server-function-middleware'
 import {
@@ -26,6 +30,13 @@ import {
   canCorrectClosedFinancialPeriod,
   summarizeFinancialEventEffects,
 } from '#/features/finance/policy'
+import { summarizeAccrualMargins } from '#/features/finance/accrual-margins'
+import type {
+  AccrualMarginAllocation,
+  AccrualMarginEvent,
+  AccrualMarginSale,
+  AccrualMarginSaleItem,
+} from '#/features/finance/accrual-margins'
 import type { AppRole } from '#/features/auth/authorization'
 import { appendOperationalAudit } from '#/features/operations/audit'
 import {
@@ -73,6 +84,17 @@ function parseClosureSnapshot(value: unknown) {
     netRevenue: snapshot.netRevenue,
     cashFlow: snapshot.cashFlow,
     eventCount: snapshot.eventCount,
+    ...(typeof snapshot.cogs === 'string' &&
+    typeof snapshot.grossMargin === 'string' &&
+    typeof snapshot.unattributedRevenue === 'string' &&
+    typeof snapshot.reconciled === 'boolean'
+      ? {
+          cogs: snapshot.cogs,
+          grossMargin: snapshot.grossMargin,
+          unattributedRevenue: snapshot.unattributedRevenue,
+          reconciled: snapshot.reconciled,
+        }
+      : {}),
   }
 }
 
@@ -121,6 +143,115 @@ async function loadPeriodSnapshot(tx: any, periodMonth: string) {
       ),
     )) as Array<{ revenueEffect: string; cashEffect: string }>
   return summarizeFinancialEventEffects(rows)
+}
+
+async function loadAccrualMargins(database: any, periodMonth: string) {
+  const events = (await database
+    .select({
+      id: financialEvents.id,
+      type: financialEvents.type,
+      saleId: financialEvents.saleId,
+      saleItemId: financialEvents.saleItemId,
+      revenueEffect: financialEvents.revenueEffect,
+    })
+    .from(financialEvents)
+    .where(
+      and(
+        gte(financialEvents.competenceDate, periodMonth),
+        lt(financialEvents.competenceDate, nextMonth(periodMonth)),
+      ),
+    )) as AccrualMarginEvent[]
+  const saleIds = [
+    ...new Set(
+      events.flatMap((event) => (event.saleId === null ? [] : [event.saleId])),
+    ),
+  ]
+  if (!saleIds.length)
+    return summarizeAccrualMargins({
+      events,
+      sales: [],
+      saleItems: [],
+      allocations: [],
+    })
+
+  const [saleRows, itemRows] = (await Promise.all([
+    database
+      .select({
+        id: sales.id,
+        locationId: sales.locationId,
+        locationName: salesLocations.name,
+      })
+      .from(sales)
+      .leftJoin(salesLocations, eq(sales.locationId, salesLocations.id))
+      .where(inArray(sales.id, saleIds)),
+    database
+      .select({
+        id: saleItems.id,
+        saleId: saleItems.saleId,
+        productId: saleItems.productId,
+        productName: saleItems.productName,
+        revenue:
+          sql<string>`coalesce(${saleItems.reportedAmount}, ${saleItems.totalAmount})`.as(
+            'revenue',
+          ),
+      })
+      .from(saleItems)
+      .where(inArray(saleItems.saleId, saleIds)),
+  ])) as [AccrualMarginSale[], AccrualMarginSaleItem[]]
+  const itemIds = itemRows.map((item) => item.id)
+  const allocationRows = itemIds.length
+    ? ((await database
+        .select({
+          id: inventoryCostAllocations.id,
+          saleItemId: inventoryCostAllocations.saleItemId,
+          productionBatchId: productionBatchOutputs.productionBatchId,
+          quantity: inventoryCostAllocations.quantity,
+          allocatedCost: inventoryCostAllocations.allocatedCost,
+        })
+        .from(inventoryCostAllocations)
+        .innerJoin(
+          inventoryCostLayers,
+          eq(
+            inventoryCostAllocations.inventoryCostLayerId,
+            inventoryCostLayers.id,
+          ),
+        )
+        .leftJoin(
+          productionBatchOutputs,
+          eq(
+            inventoryCostLayers.productionBatchOutputId,
+            productionBatchOutputs.id,
+          ),
+        )
+        .where(inArray(inventoryCostAllocations.saleItemId, itemIds))) as Array<
+        Omit<AccrualMarginAllocation, 'saleItemId'> & {
+          saleItemId: number | null
+        }
+      >)
+    : []
+  const allocations = allocationRows.map((allocation) => {
+    if (allocation.saleItemId === null)
+      throw new Error('Alocação FIFO de venda sem item vinculado.')
+    return { ...allocation, saleItemId: allocation.saleItemId }
+  })
+  return summarizeAccrualMargins({
+    events,
+    sales: saleRows,
+    saleItems: itemRows,
+    allocations,
+  })
+}
+
+async function loadFinancialPosition(database: any, periodMonth: string) {
+  const eventEffects = await loadPeriodSnapshot(database, periodMonth)
+  const accrualMargins = await loadAccrualMargins(database, periodMonth)
+  return {
+    ...eventEffects,
+    cogs: accrualMargins.cogs,
+    grossMargin: accrualMargins.grossMargin,
+    unattributedRevenue: accrualMargins.unattributedRevenue,
+    reconciled: accrualMargins.reconciled,
+  }
 }
 
 function signedMoneyToCents(value: string, allowZero = false) {
@@ -403,7 +534,7 @@ export async function persistFinancialPeriodClose(
       if (existing?.status === 'closed')
         throw new Error('Período financeiro já está fechado.')
 
-      const snapshot = await loadPeriodSnapshot(tx, periodMonth)
+      const snapshot = await loadFinancialPosition(tx, periodMonth)
       const closedAt = new Date()
       let periodId: number
       if (existing) {
@@ -540,7 +671,7 @@ export async function persistFinancialEventCorrection(
       if (!correction) throw new Error('Não foi possível registrar a correção.')
 
       if (period?.status === 'closed') {
-        const snapshot = await loadPeriodSnapshot(tx, periodMonth)
+        const snapshot = await loadFinancialPosition(tx, periodMonth)
         const [updatedPeriod] = await tx
           .update(financialPeriods)
           .set({
@@ -599,44 +730,46 @@ export const getFinancialOverview = createServerFn({ method: 'GET' })
     const database = getDb()
     try {
       await requireFinancialSchema(database)
-      const [period, events, currentSnapshot] = await Promise.all([
-        database
-          .select({
-            id: financialPeriods.id,
-            status: financialPeriods.status,
-            version: financialPeriods.version,
-            closureSnapshot: financialPeriods.closureSnapshot,
-            closureNotes: financialPeriods.closureNotes,
-            closedAt: financialPeriods.closedAt,
-          })
-          .from(financialPeriods)
-          .where(eq(financialPeriods.periodMonth, data.periodMonth))
-          .limit(1),
-        database
-          .select({
-            id: financialEvents.id,
-            type: financialEvents.type,
-            saleId: financialEvents.saleId,
-            saleItemId: financialEvents.saleItemId,
-            correctsEventId: financialEvents.correctsEventId,
-            amount: financialEvents.amount,
-            revenueEffect: financialEvents.revenueEffect,
-            cashEffect: financialEvents.cashEffect,
-            competenceDate: financialEvents.competenceDate,
-            occurredAt: financialEvents.occurredAt,
-            reason: financialEvents.reason,
-          })
-          .from(financialEvents)
-          .where(
-            and(
-              gte(financialEvents.competenceDate, data.periodMonth),
-              lt(financialEvents.competenceDate, nextMonth(data.periodMonth)),
-            ),
-          )
-          .orderBy(desc(financialEvents.occurredAt), desc(financialEvents.id))
-          .limit(100),
-        loadPeriodSnapshot(database, data.periodMonth),
-      ])
+      const [period, events, currentSnapshot, accrualMargins] =
+        await Promise.all([
+          database
+            .select({
+              id: financialPeriods.id,
+              status: financialPeriods.status,
+              version: financialPeriods.version,
+              closureSnapshot: financialPeriods.closureSnapshot,
+              closureNotes: financialPeriods.closureNotes,
+              closedAt: financialPeriods.closedAt,
+            })
+            .from(financialPeriods)
+            .where(eq(financialPeriods.periodMonth, data.periodMonth))
+            .limit(1),
+          database
+            .select({
+              id: financialEvents.id,
+              type: financialEvents.type,
+              saleId: financialEvents.saleId,
+              saleItemId: financialEvents.saleItemId,
+              correctsEventId: financialEvents.correctsEventId,
+              amount: financialEvents.amount,
+              revenueEffect: financialEvents.revenueEffect,
+              cashEffect: financialEvents.cashEffect,
+              competenceDate: financialEvents.competenceDate,
+              occurredAt: financialEvents.occurredAt,
+              reason: financialEvents.reason,
+            })
+            .from(financialEvents)
+            .where(
+              and(
+                gte(financialEvents.competenceDate, data.periodMonth),
+                lt(financialEvents.competenceDate, nextMonth(data.periodMonth)),
+              ),
+            )
+            .orderBy(desc(financialEvents.occurredAt), desc(financialEvents.id))
+            .limit(100),
+          loadPeriodSnapshot(database, data.periodMonth),
+          loadAccrualMargins(database, data.periodMonth),
+        ])
       const selectedPeriod = period.at(0)
       return {
         periodMonth: data.periodMonth,
@@ -649,6 +782,7 @@ export const getFinancialOverview = createServerFn({ method: 'GET' })
             }
           : null,
         currentSnapshot,
+        accrualMargins,
         events,
         eventsLimited: currentSnapshot.eventCount > events.length,
       }
