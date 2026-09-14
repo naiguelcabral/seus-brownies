@@ -95,8 +95,8 @@ final por Server Function continuam sujeitos aos gates de `HUMAN-APPROVALS.md`.
 - [x] Lifecycle e testes principais existentes.
 - [x] Definir regra canônica de CMV realizado por venda.
 - [x] Decidir vínculo entre venda e camada/lote quando necessário para margem realizada.
-- [ ] Implementar margem por produto de forma auditável.
-- [ ] Implementar margem por período/canal/parceiro quando os dados suportarem.
+- [x] Implementar margem por produto de forma auditável.
+- [x] Implementar margem por período/canal; parceiro aguarda fonte de dados.
 - [ ] Criar reconciliação automatizada de estoque x FIFO x CMV.
 - [ ] Criar relatório de divergências sem correção automática.
 - [x] Documentar estratégia de reversão/cancelamento de venda no FIFO.

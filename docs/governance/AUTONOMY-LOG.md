@@ -2,6 +2,14 @@
 
 ## Retomada G2 — 14 de setembro de 2026
 
+- Checkpoint `f2af82c`: `/financeiro` passou a calcular receita líquida, CMV
+  FIFO e margem bruta pela competência dos fatos, agrupando e reconciliando
+  produto, lote/origem sem lote e local/canal. O fechamento e a correção de
+  período congelam também os agregados de CMV e margem.
+- Validação do checkpoint: 315 testes, lint, typecheck, Prettier direcionado,
+  `git diff --check` e build HML isolado verdes. O `npm run check` global segue
+  vermelho em 92 arquivos históricos fora do diff. Nenhuma migration, banco,
+  `.env`, deploy ou recurso externo foi alterado.
 - O commit manual `a4f3c72` foi retomado com fechamento, correções e a rota
   financeira ainda sem checkpoint de validação canônico. A coerção de tipo que
   bloqueava o lint foi removida.
@@ -10,8 +18,9 @@
 - Checkpoint `47074c6`: 309 testes, lint, typecheck, `git diff --check` e build
   HML isolado verdes. O aviso nominal de secrets ausentes no SSR foi esperado;
   nenhuma migration, banco, `.env`, deploy ou recurso externo foi alterado.
-- G2-F1 continua `running`: o próximo passo é integrar fatos de competência às
-  alocações FIFO para CMV e margem rastreáveis por produto, lote e local.
+- G2-F1 continua `running`: o próximo passo é registrar corretamente o efeito
+  de caixa do cancelamento de venda paga antes da entrega e modelar o resgate
+  do crédito emitido, sem ampliar o escopo para migrations ou HML.
 
 ## G2 financeiro — 11 de setembro de 2026
 

@@ -50,7 +50,8 @@ Este documento é a referência canônica de alto nível para o estado atual do 
   devolução sem retorno de alimento ao estoque vendável.
 - Fechamento financeiro manual, correções imutáveis pelo Dono, leitura mensal
   dos fatos e a rota `/financeiro` estão implementados localmente. O relatório
-  por competência com CMV/margem e os cenários gerenciais continuam pendentes.
+  por competência agora reconcilia receita, CMV FIFO e margem bruta por produto,
+  lote/origem e local/canal; cenários gerenciais continuam pendentes.
 
 ### Custos e estoque
 
@@ -221,7 +222,7 @@ Este documento é a referência canônica de alto nível para o estado atual do 
 - Pagamentos online.
 - Regras completas de entrega.
 - Deploy definitivo de produção e secrets finais do Worker.
-- Relatórios gerenciais avançados, margem por produto/lote e análises adicionais.
+- Relatórios gerenciais avançados, cenários e análises adicionais.
 - Adoção multitenant: plano em `MULTITENANCY-ADOPTION.md`; depende de decidir
   memberships, escopo de chaves e mapeamento auditável dos fatos históricos
   antes de gerar uma migration aplicável.
@@ -237,7 +238,7 @@ Este documento é a referência canônica de alto nível para o estado atual do 
 ## Próxima macrofase
 
 1. Fechar a homologação segura de G1 e o acesso HML.
-2. Consolidar CMV/margem e rastreabilidade.
+2. Consolidar a reconciliação estoque × FIFO × CMV e homologar a margem.
 3. Evoluir dashboard e gestão sobre dados já autorizados.
 4. Iniciar mensageria, OCR e pagamentos somente após os gates anteriores.
 5. Formalizar observabilidade, backup e deploy definitivo antes de produção.
