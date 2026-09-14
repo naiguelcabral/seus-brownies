@@ -169,8 +169,17 @@ export function calculateScenarioProjection(
   draft: ScenarioDraftInput,
   products: ProductState[],
 ) {
-  const normalized = validateScenarioActivation(draft, products)
+  if (!draft.mix.length)
+    throw new Error('Informe ao menos um produto para calcular a projeção.')
+  const normalized = normalizeScenarioMix(draft.mix)
   const productById = new Map(products.map((product) => [product.id, product]))
+  for (const item of draft.mix) {
+    const product = productById.get(item.productId)
+    if (!product)
+      throw new Error(`Produto ${item.productId} não encontrado no catálogo.`)
+    if (product.type !== 'finished_product')
+      throw new Error(`O produto ${product.name} não é um produto final.`)
+  }
   const targetProfit = moneyToCents(draft.monthlyProfitGoal)
   const fixedCosts = moneyToCents(draft.fixedMonthlyCosts)
   const weeksHundredths = unsignedDecimal(draft.weeksPerMonth, 2)
@@ -306,6 +315,8 @@ export type RealizedScenarioInput = {
   }>
 }
 
+export type ScenarioProjection = ReturnType<typeof calculateScenarioProjection>
+
 export function compareProjectionWithRealized(
   projection: ReturnType<typeof calculateScenarioProjection>,
   realized?: RealizedScenarioInput | null,
@@ -354,3 +365,7 @@ export function compareProjectionWithRealized(
     }),
   }
 }
+
+export type ScenarioRealizedComparison = ReturnType<
+  typeof compareProjectionWithRealized
+>

@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as CategoriasRouteImport } from './routes/categorias'
+import { Route as CenariosRouteImport } from './routes/cenarios'
 import { Route as ComprasRouteImport } from './routes/compras'
 import { Route as DespesasRouteImport } from './routes/despesas'
 import { Route as EstoqueRouteImport } from './routes/estoque'
@@ -34,6 +35,11 @@ const IndexRoute = IndexRouteImport.update({
 const CategoriasRoute = CategoriasRouteImport.update({
   id: '/categorias',
   path: '/categorias',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CenariosRoute = CenariosRouteImport.update({
+  id: '/cenarios',
+  path: '/cenarios',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ComprasRoute = ComprasRouteImport.update({
@@ -110,6 +116,7 @@ const LoginRedefinirSenhaRoute = LoginRedefinirSenhaRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/categorias': typeof CategoriasRoute
+  '/cenarios': typeof CenariosRoute
   '/compras': typeof ComprasRoute
   '/despesas': typeof DespesasRoute
   '/estoque': typeof EstoqueRoute
@@ -128,6 +135,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/categorias': typeof CategoriasRoute
+  '/cenarios': typeof CenariosRoute
   '/compras': typeof ComprasRoute
   '/despesas': typeof DespesasRoute
   '/estoque': typeof EstoqueRoute
@@ -147,6 +155,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/categorias': typeof CategoriasRoute
+  '/cenarios': typeof CenariosRoute
   '/compras': typeof ComprasRoute
   '/despesas': typeof DespesasRoute
   '/estoque': typeof EstoqueRoute
@@ -167,6 +176,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/categorias'
+    | '/cenarios'
     | '/compras'
     | '/despesas'
     | '/estoque'
@@ -185,6 +195,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/categorias'
+    | '/cenarios'
     | '/compras'
     | '/despesas'
     | '/estoque'
@@ -203,6 +214,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/categorias'
+    | '/cenarios'
     | '/compras'
     | '/despesas'
     | '/estoque'
@@ -222,6 +234,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CategoriasRoute: typeof CategoriasRoute
+  CenariosRoute: typeof CenariosRoute
   ComprasRoute: typeof ComprasRoute
   DespesasRoute: typeof DespesasRoute
   EstoqueRoute: typeof EstoqueRoute
@@ -251,6 +264,13 @@ declare module '@tanstack/react-router' {
       path: '/categorias'
       fullPath: '/categorias'
       preLoaderRoute: typeof CategoriasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cenarios': {
+      id: '/cenarios'
+      path: '/cenarios'
+      fullPath: '/cenarios'
+      preLoaderRoute: typeof CenariosRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/compras': {
@@ -367,6 +387,7 @@ const LoginRouteWithChildren = LoginRoute._addFileChildren(LoginRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CategoriasRoute: CategoriasRoute,
+  CenariosRoute: CenariosRoute,
   ComprasRoute: ComprasRoute,
   DespesasRoute: DespesasRoute,
   EstoqueRoute: EstoqueRoute,

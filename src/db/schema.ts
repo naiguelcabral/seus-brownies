@@ -427,6 +427,7 @@ export const managementScenarioMix = pgTable(
     productId: integer('product_id')
       .notNull()
       .references(() => products.id, { onDelete: 'restrict' }),
+    productName: varchar('product_name', { length: 120 }).notNull(),
     originalWeight: numeric('original_weight', {
       precision: 12,
       scale: 6,
