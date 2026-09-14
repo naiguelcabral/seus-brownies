@@ -220,11 +220,11 @@ contábil oficial ainda exige decisão humana.
 | Tema                   | Decisão aprovada                                                        | Estado local                                                    | Gate remanescente                             |
 | ---------------------- | ----------------------------------------------------------------------- | --------------------------------------------------------------- | --------------------------------------------- |
 | competência            | receita na entrega; caixa em visão separada                             | schema e writer de entrega                                      | migration, UI, backfill e homologação         |
-| reversão temporal      | erro corrige período original; evento posterior usa sua própria data    | fatos imutáveis e referência de correção modelados              | writer de correção e fechamento               |
+| reversão temporal      | erro corrige período original; evento posterior usa sua própria data    | writer de correção imutável e snapshot versionado implementados | migration e homologação                       |
 | créditos               | Dono/Gerente escolhe reembolso ou crédito, sempre auditado              | compensação parcial exata e auditada                            | homologação e resgate de crédito              |
 | vínculo venda–lote     | CMV FIFO ligado às camadas consumidas na venda                          | alocação existente preservada                                   | relatório por competência e reconciliação     |
 | cancelamento/devolução | antes da entrega restaura; após a entrega não retorna alimento vendável | lifecycle futuro corrigido e cancelamento pós-entrega bloqueado | tratar caixa de cancelamento pago pré-entrega |
-| períodos               | fechamento manual; somente Dono corrige período fechado                 | tabela de períodos preparada                                    | funções, UI e testes de concorrência          |
+| períodos               | fechamento manual; somente Dono corrige período fechado                 | funções, UI e conflito otimista cobertos localmente             | migration e homologação                       |
 
 Continuam humanas as escolhas operacionais por evento — por exemplo, reembolso
 ou crédito — e a aprovação de correções concretas. A política contábil acima

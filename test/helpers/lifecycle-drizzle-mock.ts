@@ -107,9 +107,7 @@ export function createLifecycleDrizzleMock(
           return {
             where: () => ({
               returning: async () =>
-                failAt === `returning:${name(table)}`
-                  ? []
-                  : [{ id: nextId++ }],
+                failAt === `returning:${name(table)}` ? [] : [{ id: nextId++ }],
             }),
           }
         },

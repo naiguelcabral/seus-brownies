@@ -1,6 +1,6 @@
 # Estado canônico do projeto — Cacau v1
 
-Atualizado em 11 de setembro de 2026, após inspeção do workbook original,
+Atualizado em 14 de setembro de 2026, após inspeção do workbook original,
 revisão de código, migrations, testes, rotas, documentação e estado público de
 HML.
 
@@ -48,6 +48,9 @@ Este documento é a referência canônica de alto nível para o estado atual do 
 - Política financeira G2 aprovada e em implementação local: receita por
   competência na entrega, caixa separado, compensações posteriores imutáveis e
   devolução sem retorno de alimento ao estoque vendável.
+- Fechamento financeiro manual, correções imutáveis pelo Dono, leitura mensal
+  dos fatos e a rota `/financeiro` estão implementados localmente. O relatório
+  por competência com CMV/margem e os cenários gerenciais continuam pendentes.
 
 ### Custos e estoque
 
@@ -80,6 +83,12 @@ Este documento é a referência canônica de alto nível para o estado atual do 
 - Não repetir cargas ou homologações já consumidas sem autorização explícita.
 
 ### Qualidade
+
+- Checkpoint G2 retomado em 14 de setembro: a correção de período fechado agora
+  falha e reverte integralmente quando o controle otimista não atualiza o
+  snapshot. Os 309 testes, lint, typecheck, `git diff --check` e o build HML
+  isolado passaram no commit `47074c6`. O aviso de secrets ausentes no SSR é
+  esperado nessa prova sintética e nenhum arquivo de ambiente foi carregado.
 
 - Checkpoint workbook-parity de 10 de setembro: 299 testes, lint, typecheck,
   Prettier direcionado, `git diff --check` e build HML isolado passaram no

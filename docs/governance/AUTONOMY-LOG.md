@@ -1,5 +1,18 @@
 # Log sanitizado de autonomia — Cacau v1
 
+## Retomada G2 — 14 de setembro de 2026
+
+- O commit manual `a4f3c72` foi retomado com fechamento, correções e a rota
+  financeira ainda sem checkpoint de validação canônico. A coerção de tipo que
+  bloqueava o lint foi removida.
+- A atualização otimista do snapshot fechado passou a exigir linha retornada;
+  conflito agora provoca rollback da correção, coberto por teste transacional.
+- Checkpoint `47074c6`: 309 testes, lint, typecheck, `git diff --check` e build
+  HML isolado verdes. O aviso nominal de secrets ausentes no SSR foi esperado;
+  nenhuma migration, banco, `.env`, deploy ou recurso externo foi alterado.
+- G2-F1 continua `running`: o próximo passo é integrar fatos de competência às
+  alocações FIFO para CMV e margem rastreáveis por produto, lote e local.
+
 ## G2 financeiro — 11 de setembro de 2026
 
 - As dez decisões financeiras aprovadas pelo Dono foram registradas em

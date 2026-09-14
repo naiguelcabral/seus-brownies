@@ -1,6 +1,6 @@
 # Handoff de autonomia — Cacau v1
 
-Atualizado em 11 de setembro de 2026.
+Atualizado em 14 de setembro de 2026.
 
 ## Missão `codex/workbook-parity` — G2-F1 em execução
 
@@ -17,6 +17,13 @@ Atualizado em 11 de setembro de 2026.
   `git diff --check` e build HML isolado com chave pública sintética verdes no
   checkpoint `e2bf666`. O aviso nominal de secrets ausentes foi esperado e
   nenhum arquivo de ambiente foi carregado.
+- Segundo checkpoint funcional consolidado em `47074c6`: fechamento manual,
+  correções imutáveis pelo Dono, leitura mensal dos fatos e `/financeiro`
+  foram retomados do commit `a4f3c72`. O writer agora também verifica o
+  controle otimista ao atualizar o snapshot de período fechado e desfaz toda a
+  correção diante de conflito. Validação: 309 testes, lint, typecheck,
+  `git diff --check` e build HML isolado verdes; nenhuma migration, banco ou
+  ambiente externo foi alterado.
 
 - Base confirmada: `codex/audit-remediation` em `241099a`; branch da missão
   criada com árvore inicialmente limpa. A referência original foi inspecionada
@@ -35,9 +42,10 @@ Atualizado em 11 de setembro de 2026.
   primeiro reverter o código; remover colunas/tabelas depois seria destrutivo
   para fatos novos e exige decisão humana.
 - O gate de decisão financeira foi removido pela aprovação formal; fechamento,
-  correções de período e indicadores consultáveis ainda precisam ser
-  implementados antes de concluir G2-F1. Metas aguardam esse checkpoint;
-  cobertura e sugestão de compra continuam exigindo histórico confiável.
+  correções de período e leitura dos fatos estão implementados localmente.
+  Indicadores por competência com CMV/margem ainda precisam ser integrados
+  antes de concluir G2-F1. Metas aguardam esse checkpoint; cobertura e sugestão
+  de compra continuam exigindo histórico confiável.
 - WP-F1 concluído localmente: `0021` adiciona ponto de reposição no produto e
   lote/validade no item de compra. Catálogo, compra e estoque foram conectados;
   a comparação do alerta usa milésimos exatos e o saldo continua somente
@@ -70,11 +78,13 @@ Atualizado em 11 de setembro de 2026.
   `34554171049` passaram no WP-F2 `bbf6db3`; as CIs de push `34554627169` e PR
   `34554629415` passaram no WP-A2 `b9241ae`; as CIs de push `34554990879` e PR
   `34554994350` passaram no WP-I1 `aa593c3`.
-- Próximo passo exato: implementar fechamento/correções e leitura dos fatos G2;
-  depois integrar indicadores e cenários. Em ambiente explicitamente
-  autorizado, aplicar `0019`–`0025` e homologar os fluxos locais. Obter
-  histórico confiável antes de calcular cobertura ou sugerir compra. Nenhuma
-  dessas ações externas foi executada nesta missão.
+- Próximo passo exato: integrar o relatório por competência aos fatos G2 e às
+  alocações FIFO, preservando o CMV realizado depois da entrega e separando
+  margem por produto, lote e local. Depois concluir G2-F1 e iniciar os cenários
+  de WP-D. Em ambiente explicitamente autorizado, aplicar `0019`–`0025` e
+  homologar os fluxos locais. Obter histórico confiável antes de calcular
+  cobertura ou sugerir compra. Nenhuma dessas ações externas foi executada
+  nesta missão.
 
 ## Atualização AR-G1-HML-2 — 10 de setembro de 2026
 
