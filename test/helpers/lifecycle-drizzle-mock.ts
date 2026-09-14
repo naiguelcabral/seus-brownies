@@ -104,7 +104,14 @@ export function createLifecycleDrizzleMock(
           if (failAt === `update:${name(table)}` || failAt === name(table))
             throw new Error(`forced update:${name(table)} failure`)
           pending.push({ kind: 'update', table: name(table), values })
-          return { where: async () => undefined }
+          return {
+            where: () => ({
+              returning: async () =>
+                failAt === `returning:${name(table)}`
+                  ? []
+                  : [{ id: nextId++ }],
+            }),
+          }
         },
       }
     },

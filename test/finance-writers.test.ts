@@ -8,7 +8,7 @@ import {
 import { createLifecycleDrizzleMock } from './helpers/lifecycle-drizzle-mock'
 
 function database(mock: ReturnType<typeof createLifecycleDrizzleMock>) {
-  return mock.db as Parameters<typeof persistFinancialPeriodClose>[0]
+  return mock.db
 }
 
 function writes(mock: ReturnType<typeof createLifecycleDrizzleMock>) {
@@ -159,6 +159,56 @@ test('papel diferente de Dono não corrige período fechado', async () => {
       { id: 'manager-1', role: 'manager' },
     ),
     /Somente o Dono/,
+  )
+  assert.equal(mock.committed.length, 0)
+  assert.equal(mock.journal.at(-1)?.kind, 'rollback')
+})
+
+test('conflito otimista no snapshot fechado desfaz a correção inteira', async () => {
+  const target = {
+    id: 7,
+    saleId: 3,
+    saleItemId: null,
+    competenceDate: '2026-08-15',
+    revenueEffect: '100.00',
+    cashEffect: '0.00',
+  }
+  const mock = createLifecycleDrizzleMock(
+    {},
+    {
+      financialEvents: [
+        [target],
+        [],
+        [target, { revenueEffect: '-5.00', cashEffect: '0.00' }],
+      ],
+      financialPeriods: [
+        [
+          {
+            id: 4,
+            periodMonth: '2026-08-01',
+            status: 'closed',
+            version: 2,
+          },
+        ],
+      ],
+    },
+  )
+  mock.fail('returning:financialPeriods')
+
+  await assert.rejects(
+    persistFinancialEventCorrection(
+      database(mock),
+      {
+        correctsEventId: 7,
+        effect: 'revenue',
+        deltaAmount: '-5.00',
+        occurredOn: '2026-09-11',
+        reason: 'Valor original informado a maior',
+        reference: 'CORR-7-CONFLICT',
+      },
+      { id: 'owner-1', role: 'owner' },
+    ),
+    /O período mudou durante a correção/,
   )
   assert.equal(mock.committed.length, 0)
   assert.equal(mock.journal.at(-1)?.kind, 'rollback')

@@ -541,7 +541,7 @@ export async function persistFinancialEventCorrection(
 
       if (period?.status === 'closed') {
         const snapshot = await loadPeriodSnapshot(tx, periodMonth)
-        await tx
+        const [updatedPeriod] = await tx
           .update(financialPeriods)
           .set({
             version: period.version + 1,
@@ -553,6 +553,11 @@ export async function persistFinancialEventCorrection(
               eq(financialPeriods.id, period.id),
               eq(financialPeriods.version, period.version),
             ),
+          )
+          .returning({ id: financialPeriods.id })
+        if (!updatedPeriod)
+          throw new Error(
+            'O período mudou durante a correção. Recarregue e tente novamente.',
           )
       }
       await appendOperationalAudit(tx, {
