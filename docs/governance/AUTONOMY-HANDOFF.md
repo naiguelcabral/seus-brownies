@@ -2,6 +2,43 @@
 
 Atualizado em 14 de setembro de 2026.
 
+## Missão `codex/wp-d-scenarios` — WP-D em execução
+
+- Base validada: `e53d42d`, ponta publicada de G2-F1 na branch
+  `codex/workbook-parity`; CI de push `34908140443` verde para o mesmo SHA.
+- Objetivo: implementar metas e cenários como premissas persistidas,
+  versionadas e auditáveis, com mix original preservado, normalização exata,
+  projeções financeiras rastreáveis e comparação explicitamente separada dos
+  resultados realizados de G2.
+- Não objetivos: aplicar migrations, semear cenário compartilhado, classificar
+  despesas unilateralmente, fazer backfill/importação, alterar HML/Cloudflare/
+  Neon/secrets, deploy, merge ou rebase.
+- Persistência prevista: cenário identificado entre versões, versão imutável
+  após ativação, revisão otimista do rascunho, status `draft`/`active`/
+  `archived`, premissas exatas, mix por produto e histórico append-only. Uma
+  restrição aditiva manterá no máximo um cenário ativo.
+- Cálculo previsto: pesos originais aceitam a evidência histórica de 103% e
+  são normalizados proporcionalmente em pontos-base, com maior resto e
+  desempate por produto. Meta mais custos fixos é distribuída pelo mix; preço,
+  custo unitário e reserva determinam unidades inteiras, faturamento, margem,
+  lucro gerencial e folga sem `Number` financeiro. O ticket do workbook será
+  reproduzido e rotulado como média por unidade planejada.
+- Segurança prevista: `scenarios:read` somente para Dono/Gerente e
+  `scenarios:write` somente para Dono, em rota, navegação e todas as Server
+  Functions. Ativação revalida produtos ativos e o mix no servidor. Falha de
+  auditoria aborta a transação.
+- Arquivos previstos: `src/db/schema.ts`, migration Drizzle `0027`,
+  `src/features/scenarios/`, autorização, navegação, rota `/cenarios`, testes
+  direcionados e documentação canônica.
+- Critérios de aceite: cobrir papéis, chamada direta, mix vazio/inativo e
+  abaixo/acima/exato/103%, resíduos, precisão monetária, lifecycle,
+  versionamento imutável, ativo único, concorrência, auditoria falha, ausência
+  histórica e separação projeção × realizado.
+- Validação: testes direcionados por subpacote; nos checkpoints funcionais,
+  `npm test`, `npm run lint`, `npm run typecheck`, Prettier apenas nos arquivos
+  alterados, `git diff --check` e `npm run build:hml` isolado. A migration será
+  gerada e revisada, nunca aplicada.
+
 ## Missão `codex/workbook-parity` — G2-F1 concluído localmente
 
 ### Subpacote G2-F1-R4 — caixa de cancelamento e saldo de crédito concluído
