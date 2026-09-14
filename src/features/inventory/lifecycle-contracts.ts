@@ -15,6 +15,7 @@ const reference = z.string().trim().min(1).max(160)
 
 export const cancelSaleValues = z.object({
   saleId: z.number().int().positive(),
+  occurredOn: z.string().date(),
   reason,
 })
 export const returnSaleValues = compensateSaleValues

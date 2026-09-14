@@ -37,6 +37,7 @@ export const serverFunctionPolicies = {
   getOperationalReports: 'reports:financial:read',
   deliverSale: 'sales:write',
   compensateDeliveredSale: 'financial:compensation:write',
+  redeemStoreCredit: 'financial:compensation:write',
   closeFinancialPeriod: 'financial:period:close',
   correctFinancialEvent: 'financial:period:correct',
   getFinancialOverview: 'reports:financial:read',

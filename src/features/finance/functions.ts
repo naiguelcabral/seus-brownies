@@ -18,12 +18,14 @@ import {
   correctFinancialEventValues,
   deliverSaleValues,
   financialOverviewValues,
+  redeemStoreCreditValues,
 } from '#/features/finance/contracts'
 import type {
   CloseFinancialPeriodInput,
   CompensateSaleInput,
   CorrectFinancialEventInput,
   DeliverSaleInput,
+  RedeemStoreCreditInput,
 } from '#/features/finance/contracts'
 import {
   calculateCompensationAmount,
@@ -38,6 +40,11 @@ import type {
   AccrualMarginSaleItem,
 } from '#/features/finance/accrual-margins'
 import type { AppRole } from '#/features/auth/authorization'
+import {
+  calculateStoreCreditBalance,
+  summarizeStoreCreditLedger,
+} from '#/features/finance/store-credits'
+import type { StoreCreditLedgerEvent } from '#/features/finance/store-credits'
 import { appendOperationalAudit } from '#/features/operations/audit'
 import {
   hashOperationPayload,
@@ -52,7 +59,7 @@ import {
 
 export class FinancialSchemaUnavailableError extends Error {
   constructor() {
-    super('G2 financeiro requer as migrations 0023 a 0025 antes de gravar.')
+    super('G2 financeiro requer as migrations 0023 a 0026 antes de gravar.')
   }
 }
 
@@ -254,6 +261,28 @@ async function loadFinancialPosition(database: any, periodMonth: string) {
   }
 }
 
+async function loadStoreCredits(database: any) {
+  const events = (await database
+    .select({
+      id: financialEvents.id,
+      type: financialEvents.type,
+      settlesEventId: financialEvents.settlesEventId,
+      saleId: financialEvents.saleId,
+      saleItemId: financialEvents.saleItemId,
+      amount: financialEvents.amount,
+      occurredAt: financialEvents.occurredAt,
+      reason: financialEvents.reason,
+    })
+    .from(financialEvents)
+    .where(
+      inArray(financialEvents.type, [
+        'store_credit_issued',
+        'store_credit_redeemed',
+      ]),
+    )) as StoreCreditLedgerEvent[]
+  return summarizeStoreCreditLedger(events)
+}
+
 function signedMoneyToCents(value: string, allowZero = false) {
   const normalized = value.trim().replace(',', '.')
   const negative = normalized.startsWith('-')
@@ -278,6 +307,123 @@ function occurredAt(value: string) {
 
 export type FinanceDatabase = {
   transaction: (work: (tx: any) => Promise<any>) => Promise<any>
+}
+
+type PaidSaleCashInput = {
+  id: number
+  status: string
+  totalAmount: string
+  soldAt: Date
+}
+
+export async function appendPaidSaleCashReceipt(
+  tx: any,
+  sale: PaidSaleCashInput,
+  actorAuthUserId: string,
+) {
+  if (sale.status !== 'paid') return null
+  if (!actorAuthUserId)
+    throw new Error('Recebimento de venda paga exige autoria autenticada.')
+  try {
+    await requireFinancialSchema(tx)
+    const amount = moneyToCents(sale.totalAmount)
+    if (amount === null || amount <= 0n)
+      throw new Error('Venda paga não possui valor financeiro válido.')
+    const cashDate = dateOnly(sale.soldAt)
+    const key = `finance:sale-delivery:${sale.id}:cash`
+    const hash = await hashOperationPayload({
+      saleId: sale.id,
+      amount: centsToMoney(amount),
+      occurredOn: cashDate,
+    })
+    const [existing] = await tx
+      .select({
+        id: financialEvents.id,
+        idempotencyHash: financialEvents.idempotencyHash,
+      })
+      .from(financialEvents)
+      .where(eq(financialEvents.idempotencyKey, key))
+      .limit(1)
+    const replay = resolveIdempotentReplay(existing, hash)
+    if (replay) return replay
+
+    await assertOpenPeriod(tx, cashDate)
+    const [receipt] = await tx
+      .insert(financialEvents)
+      .values({
+        idempotencyKey: key,
+        idempotencyHash: hash,
+        type: 'cash_receipt',
+        saleId: sale.id,
+        amount: centsToMoney(amount),
+        revenueEffect: '0.00',
+        cashEffect: centsToMoney(amount),
+        competenceDate: cashDate,
+        occurredAt: sale.soldAt,
+        reason: 'Recebimento da venda paga',
+        createdByAuthUserId: actorAuthUserId,
+      })
+      .returning({ id: financialEvents.id })
+    if (!receipt) throw new Error('Não foi possível registrar o recebimento.')
+    return { id: receipt.id, replayed: false as const }
+  } catch (error) {
+    assertFinancialSchema(error)
+  }
+}
+
+export async function appendPaidSaleCancellationCashRefund(
+  tx: any,
+  sale: PaidSaleCashInput,
+  input: { occurredOn: string; reason: string },
+  actorAuthUserId: string,
+) {
+  if (sale.status !== 'paid') return null
+  try {
+    await appendPaidSaleCashReceipt(tx, sale, actorAuthUserId)
+    const amount = moneyToCents(sale.totalAmount)
+    if (amount === null || amount <= 0n)
+      throw new Error('Venda paga não possui valor financeiro válido.')
+    const key = `finance:sale-cancellation:${sale.id}:cash-refund`
+    const hash = await hashOperationPayload({
+      saleId: sale.id,
+      amount: centsToMoney(amount),
+      occurredOn: input.occurredOn,
+    })
+    const [existing] = await tx
+      .select({
+        id: financialEvents.id,
+        idempotencyHash: financialEvents.idempotencyHash,
+      })
+      .from(financialEvents)
+      .where(eq(financialEvents.idempotencyKey, key))
+      .limit(1)
+    const replay = resolveIdempotentReplay(existing, hash)
+    if (replay) return replay
+
+    await assertOpenPeriod(tx, input.occurredOn)
+    const [refund] = await tx
+      .insert(financialEvents)
+      .values({
+        idempotencyKey: key,
+        idempotencyHash: hash,
+        type: 'cash_refund',
+        saleId: sale.id,
+        amount: centsToMoney(amount),
+        revenueEffect: '0.00',
+        cashEffect: centsToMoney(-amount),
+        competenceDate: input.occurredOn,
+        occurredAt: occurredAt(input.occurredOn),
+        reason: input.reason,
+        createdByAuthUserId: actorAuthUserId,
+        authorizedByAuthUserId: actorAuthUserId,
+      })
+      .returning({ id: financialEvents.id })
+    if (!refund)
+      throw new Error('Não foi possível registrar o estorno de caixa.')
+    return { id: refund.id, replayed: false as const }
+  } catch (error) {
+    assertFinancialSchema(error)
+  }
 }
 
 export async function persistSaleDelivery(
@@ -336,29 +482,7 @@ export async function persistSaleDelivery(
       if (!event)
         throw new Error('Não foi possível registrar a receita da entrega.')
 
-      if (sale.status === 'paid') {
-        const cashDate = dateOnly(sale.soldAt)
-        await assertOpenPeriod(tx, cashDate)
-        const cashKey = `${key}:cash`
-        const cashHash = await hashOperationPayload({
-          saleId: sale.id,
-          amount: centsToMoney(amount),
-          occurredOn: cashDate,
-        })
-        await tx.insert(financialEvents).values({
-          idempotencyKey: cashKey,
-          idempotencyHash: cashHash,
-          type: 'cash_receipt',
-          saleId: sale.id,
-          amount: centsToMoney(amount),
-          revenueEffect: '0.00',
-          cashEffect: centsToMoney(amount),
-          competenceDate: cashDate,
-          occurredAt: sale.soldAt,
-          reason: 'Recebimento da venda paga',
-          createdByAuthUserId: actorAuthUserId,
-        })
-      }
+      await appendPaidSaleCashReceipt(tx, sale, actorAuthUserId)
 
       await tx
         .update(sales)
@@ -515,6 +639,107 @@ export const compensateDeliveredSale = createServerFn({ method: 'POST' })
       data,
       context.principal!.id,
     )
+  })
+
+export async function persistStoreCreditRedemption(
+  database: FinanceDatabase,
+  data: RedeemStoreCreditInput,
+  actorAuthUserId: string,
+) {
+  const key = `finance:store-credit-redemption:${data.reference}`
+  const hash = await hashOperationPayload(data)
+  return database.transaction(async (tx) => {
+    try {
+      await requireFinancialSchema(tx)
+      await tx.execute(
+        sql`select id from ${financialEvents} where ${financialEvents.id} = ${data.issuanceEventId} for update`,
+      )
+      const [issuance] = await tx
+        .select()
+        .from(financialEvents)
+        .where(eq(financialEvents.id, data.issuanceEventId))
+        .limit(1)
+      if (!issuance || issuance.type !== 'store_credit_issued')
+        throw new Error('Emissão de crédito não encontrada.')
+
+      const [existing] = await tx
+        .select({
+          id: financialEvents.id,
+          idempotencyHash: financialEvents.idempotencyHash,
+        })
+        .from(financialEvents)
+        .where(eq(financialEvents.idempotencyKey, key))
+        .limit(1)
+      const replay = resolveIdempotentReplay(existing, hash)
+      const prior = (await tx
+        .select({ amount: financialEvents.amount })
+        .from(financialEvents)
+        .where(
+          and(
+            eq(financialEvents.type, 'store_credit_redeemed'),
+            eq(financialEvents.settlesEventId, issuance.id),
+          ),
+        )) as Array<{ amount: string }>
+      if (replay) {
+        const currentBalance = calculateStoreCreditBalance({
+          issuedAmount: issuance.amount,
+          redeemedAmounts: prior.map((event) => event.amount),
+        })
+        return { ...replay, remaining: currentBalance.available }
+      }
+
+      await assertOpenPeriod(tx, data.occurredOn)
+      const balance = calculateStoreCreditBalance({
+        issuedAmount: issuance.amount,
+        redeemedAmounts: prior.map((event) => event.amount),
+        requestedAmount: data.amount,
+      })
+      const amount = moneyToCents(data.amount)!
+      const [redemption] = await tx
+        .insert(financialEvents)
+        .values({
+          idempotencyKey: key,
+          idempotencyHash: hash,
+          type: 'store_credit_redeemed',
+          saleId: issuance.saleId,
+          saleItemId: issuance.saleItemId,
+          settlesEventId: issuance.id,
+          amount: centsToMoney(amount),
+          revenueEffect: '0.00',
+          cashEffect: '0.00',
+          competenceDate: data.occurredOn,
+          occurredAt: occurredAt(data.occurredOn),
+          reason: data.reason,
+          createdByAuthUserId: actorAuthUserId,
+          authorizedByAuthUserId: actorAuthUserId,
+        })
+        .returning({ id: financialEvents.id })
+      if (!redemption) throw new Error('Não foi possível resgatar o crédito.')
+      await appendOperationalAudit(tx, {
+        actorAuthUserId,
+        action: 'store_credit.redeem',
+        entityType: 'financial_event',
+        entityId: redemption.id,
+        operationReference: key,
+        reason: data.reason,
+      })
+      return {
+        id: redemption.id,
+        remaining: balance.remainingAfterRequest,
+        replayed: false as const,
+      }
+    } catch (error) {
+      assertFinancialSchema(error)
+    }
+  })
+}
+
+export const redeemStoreCredit = createServerFn({ method: 'POST' })
+  .middleware([requireServerFunctionPermission('redeemStoreCredit')])
+  .validator(redeemStoreCreditValues)
+  .handler(async ({ data, context }) => {
+    const { getDb } = await import('#/db/index')
+    return persistStoreCreditRedemption(getDb(), data, context.principal!.id)
   })
 
 export async function persistFinancialPeriodClose(
@@ -730,7 +955,7 @@ export const getFinancialOverview = createServerFn({ method: 'GET' })
     const database = getDb()
     try {
       await requireFinancialSchema(database)
-      const [period, events, currentSnapshot, accrualMargins] =
+      const [period, events, currentSnapshot, accrualMargins, storeCredits] =
         await Promise.all([
           database
             .select({
@@ -751,6 +976,7 @@ export const getFinancialOverview = createServerFn({ method: 'GET' })
               saleId: financialEvents.saleId,
               saleItemId: financialEvents.saleItemId,
               correctsEventId: financialEvents.correctsEventId,
+              settlesEventId: financialEvents.settlesEventId,
               amount: financialEvents.amount,
               revenueEffect: financialEvents.revenueEffect,
               cashEffect: financialEvents.cashEffect,
@@ -769,6 +995,7 @@ export const getFinancialOverview = createServerFn({ method: 'GET' })
             .limit(100),
           loadPeriodSnapshot(database, data.periodMonth),
           loadAccrualMargins(database, data.periodMonth),
+          loadStoreCredits(database),
         ])
       const selectedPeriod = period.at(0)
       return {
@@ -783,6 +1010,7 @@ export const getFinancialOverview = createServerFn({ method: 'GET' })
           : null,
         currentSnapshot,
         accrualMargins,
+        storeCredits,
         events,
         eventsLimited: currentSnapshot.eventCount > events.length,
       }

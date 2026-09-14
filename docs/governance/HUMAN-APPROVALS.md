@@ -26,6 +26,11 @@ Aprovado pelo usuário em 11 de setembro de 2026:
 10. o mix histórico de 103% é normalizado proporcionalmente para 100%,
     preservando os pesos originais.
 
+Aprovado pelo usuário em 14 de setembro de 2026:
+
+11. o resgate de crédito futuro apenas consome o saldo disponível; não produz
+    novo efeito em receita nem em caixa.
+
 Esta aprovação autoriza implementação local, testes e migrations aditivas para
 revisão. Não autoriza aplicar migration, corrigir dados compartilhados, fazer
 backfill, merge ou deploy.

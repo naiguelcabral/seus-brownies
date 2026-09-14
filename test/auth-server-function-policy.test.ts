@@ -5,7 +5,7 @@ import test from 'node:test'
 import { serverFunctionPolicies } from '../src/features/auth/server-function-policy'
 
 test('toda Server Function operacional mapeada recebe uma permissão explícita', () => {
-  assert.equal(Object.keys(serverFunctionPolicies).length, 45)
+  assert.equal(Object.keys(serverFunctionPolicies).length, 46)
   assert.equal(serverFunctionPolicies.createSale, 'sales:write')
   assert.equal(
     serverFunctionPolicies.getOperationalReports,
@@ -22,6 +22,10 @@ test('toda Server Function operacional mapeada recebe uma permissão explícita'
     'financial:compensation:write',
   )
   assert.equal(
+    serverFunctionPolicies.redeemStoreCredit,
+    'financial:compensation:write',
+  )
+  assert.equal(
     serverFunctionPolicies.closeFinancialPeriod,
     'financial:period:close',
   )
@@ -35,7 +39,7 @@ test('toda Server Function operacional mapeada recebe uma permissão explícita'
   )
 })
 
-test('as 45 Server Functions inventariadas aplicam o middleware no servidor', async () => {
+test('as 46 Server Functions inventariadas aplicam o middleware no servidor', async () => {
   const source = await Promise.all(
     [
       'src/features/catalog/functions.ts',

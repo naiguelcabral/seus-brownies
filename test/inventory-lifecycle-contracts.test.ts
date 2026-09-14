@@ -10,7 +10,11 @@ import {
 
 test('contratos de ciclo de vida exigem referência, motivo e custo explícito', () => {
   assert.equal(
-    cancelSaleValues.safeParse({ saleId: 1, reason: 'erro' }).success,
+    cancelSaleValues.safeParse({
+      saleId: 1,
+      occurredOn: '2026-09-14',
+      reason: 'erro',
+    }).success,
     true,
   )
   assert.equal(

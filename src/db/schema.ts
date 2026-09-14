@@ -550,6 +550,7 @@ export const financialEvents = pgTable(
       onDelete: 'restrict',
     }),
     correctsEventId: integer('corrects_event_id'),
+    settlesEventId: integer('settles_event_id'),
     quantity: quantity('quantity'),
     amount: money('amount').notNull(),
     /** Signed effects keep accrual and cash views independently additive. */
@@ -576,12 +577,18 @@ export const financialEvents = pgTable(
       foreignColumns: [table.id],
       name: 'financial_events_correction_fk',
     }).onDelete('restrict'),
+    foreignKey({
+      columns: [table.settlesEventId],
+      foreignColumns: [table.id],
+      name: 'financial_events_settlement_fk',
+    }).onDelete('restrict'),
     index('financial_events_competence_idx').on(
       table.competenceDate,
       table.type,
     ),
     index('financial_events_occurred_idx').on(table.occurredAt, table.type),
     index('financial_events_sale_idx').on(table.saleId),
+    index('financial_events_settlement_idx').on(table.settlesEventId),
   ],
 )
 

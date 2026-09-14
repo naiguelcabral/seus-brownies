@@ -14,6 +14,7 @@ import {
   closeFinancialPeriod,
   correctFinancialEvent,
   getFinancialOverview,
+  redeemStoreCredit,
 } from '#/features/finance/functions'
 import { formatBrlMoney } from '#/lib/format-money'
 
@@ -72,6 +73,7 @@ function FinancialPage() {
   const { appRole } = rootRoute.useRouteContext()
   const closePeriod = useServerFn(closeFinancialPeriod)
   const correctEvent = useServerFn(correctFinancialEvent)
+  const redeemCredit = useServerFn(redeemStoreCredit)
   const [closeNotes, setCloseNotes] = useState('')
   const [closeConfirmed, setCloseConfirmed] = useState(false)
   const [correctingId, setCorrectingId] = useState<number | null>(null)
@@ -84,11 +86,21 @@ function FinancialPage() {
   })
   const [pending, setPending] = useState(false)
   const [message, setMessage] = useState<string | null>(null)
+  const [redeemingId, setRedeemingId] = useState<number | null>(null)
+  const [redemption, setRedemption] = useState({
+    amount: '',
+    occurredOn: today(),
+    reason: '',
+    reference: '',
+  })
   const canClose = Boolean(
     appRole && hasPermission(appRole, 'financial:period:close'),
   )
   const canCorrect = Boolean(
     appRole && hasPermission(appRole, 'financial:period:correct'),
+  )
+  const canCompensate = Boolean(
+    appRole && hasPermission(appRole, 'financial:compensation:write'),
   )
   const selectedPeriod = search.period ?? currentMonth()
 
@@ -152,6 +164,37 @@ function FinancialPage() {
     }
   }
 
+  async function submitRedemption(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    if (!redeemingId) return
+    setPending(true)
+    setMessage(null)
+    try {
+      const result = await redeemCredit({
+        data: { issuanceEventId: redeemingId, ...redemption },
+      })
+      setMessage(
+        `Crédito resgatado sem efeito em receita ou caixa. Saldo restante: ${formatBrlMoney(result.remaining)}.`,
+      )
+      setRedeemingId(null)
+      setRedemption({
+        amount: '',
+        occurredOn: today(),
+        reason: '',
+        reference: '',
+      })
+      await router.invalidate({ sync: true })
+    } catch (error) {
+      setMessage(
+        error instanceof Error
+          ? error.message
+          : 'Não foi possível resgatar o crédito.',
+      )
+    } finally {
+      setPending(false)
+    }
+  }
+
   return (
     <ManagementLayout
       title="Financeiro por competência"
@@ -202,6 +245,130 @@ function FinancialPage() {
           value={String(overview.currentSnapshot.eventCount)}
         />
       </div>
+
+      <section className="mt-6 rounded-2xl border border-[#ecdfd4] bg-white p-5">
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <div>
+            <h2 className="font-bold">Créditos futuros em aberto</h2>
+            <p className="mt-1 text-sm text-[#846859]">
+              O resgate reduz somente o saldo disponível, sem novo efeito em
+              receita ou caixa.
+            </p>
+          </div>
+          <strong>
+            {formatBrlMoney(overview.storeCredits.totalAvailable)}
+          </strong>
+        </div>
+        {overview.storeCredits.credits.length ? (
+          <ul className="mt-4 space-y-3">
+            {overview.storeCredits.credits.map((credit) => (
+              <li
+                key={credit.eventId}
+                className="rounded-xl border border-[#eee0d4] bg-[#fffaf5] p-4"
+              >
+                <div className="flex flex-wrap items-start justify-between gap-3">
+                  <div className="text-sm">
+                    <strong>Crédito #{credit.eventId}</strong>
+                    <p className="mt-1 text-xs text-[#846859]">
+                      Emitido {formatBrlMoney(credit.issued)} · usado{' '}
+                      {formatBrlMoney(credit.redeemed)} · venda{' '}
+                      {credit.saleId ? `#${credit.saleId}` : 'não vinculada'}
+                    </p>
+                  </div>
+                  <div className="text-right text-sm">
+                    <strong>{formatBrlMoney(credit.available)}</strong>
+                    {canCompensate ? (
+                      <button
+                        type="button"
+                        className="mt-1 block text-xs font-bold text-[#a64f23]"
+                        onClick={() => {
+                          setRedeemingId(credit.eventId)
+                          setRedemption({
+                            amount: credit.available,
+                            occurredOn: today(),
+                            reason: '',
+                            reference: '',
+                          })
+                        }}
+                      >
+                        Registrar uso
+                      </button>
+                    ) : null}
+                  </div>
+                </div>
+                {redeemingId === credit.eventId ? (
+                  <form
+                    className="mt-4 grid gap-3 sm:grid-cols-2"
+                    onSubmit={submitRedemption}
+                  >
+                    <Field
+                      label="Valor usado"
+                      value={redemption.amount}
+                      onChange={(amount) =>
+                        setRedemption((current) => ({ ...current, amount }))
+                      }
+                      placeholder="0,00"
+                      inputMode="decimal"
+                      required
+                    />
+                    <Field
+                      label="Data do uso"
+                      type="date"
+                      value={redemption.occurredOn}
+                      onChange={(occurredOn) =>
+                        setRedemption((current) => ({
+                          ...current,
+                          occurredOn,
+                        }))
+                      }
+                      required
+                    />
+                    <Field
+                      label="Referência única"
+                      value={redemption.reference}
+                      onChange={(reference) =>
+                        setRedemption((current) => ({
+                          ...current,
+                          reference,
+                        }))
+                      }
+                      required
+                    />
+                    <Field
+                      label="Motivo/uso"
+                      value={redemption.reason}
+                      onChange={(reason) =>
+                        setRedemption((current) => ({ ...current, reason }))
+                      }
+                      required
+                    />
+                    <div className="flex gap-3 sm:col-span-2">
+                      <button
+                        className="rounded-lg bg-[#4a2114] px-4 py-2.5 text-sm font-bold text-white disabled:opacity-60"
+                        disabled={pending}
+                      >
+                        {pending ? 'Registrando…' : 'Confirmar uso do crédito'}
+                      </button>
+                      <button
+                        type="button"
+                        className="text-sm font-bold"
+                        disabled={pending}
+                        onClick={() => setRedeemingId(null)}
+                      >
+                        Cancelar
+                      </button>
+                    </div>
+                  </form>
+                ) : null}
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="mt-4 text-sm text-[#846859]">
+            Nenhum crédito com saldo disponível.
+          </p>
+        )}
+      </section>
 
       <section className="mt-6 rounded-2xl border border-[#ecdfd4] bg-white p-5">
         <div className="flex flex-wrap items-start justify-between gap-3">
@@ -349,6 +516,9 @@ function FinancialPage() {
                       {event.saleId ? ` · venda #${event.saleId}` : ''}
                       {event.correctsEventId
                         ? ` · corrige fato #${event.correctsEventId}`
+                        : ''}
+                      {event.settlesEventId
+                        ? ` · usa crédito #${event.settlesEventId}`
                         : ''}
                     </p>
                   </div>
@@ -533,12 +703,12 @@ function Field({
   value,
   onChange,
   type = 'text',
-}: {
-  label: string
-  value: string
-  onChange: (value: string) => void
-  type?: string
-}) {
+  required = true,
+  ...props
+}: { label: string; value: string; onChange: (value: string) => void } & Omit<
+  React.InputHTMLAttributes<HTMLInputElement>,
+  'value' | 'onChange'
+>) {
   return (
     <label className="text-sm font-bold">
       {label}
@@ -547,7 +717,8 @@ function Field({
         type={type}
         value={value}
         onChange={(event) => onChange(event.target.value)}
-        required
+        required={required}
+        {...props}
       />
     </label>
   )

@@ -11,6 +11,13 @@ const signedMoney = z
   .refine((value) => !/^-?0+(?:[,.]0+)?$/.test(value), {
     message: 'A correção deve ter efeito diferente de zero.',
   })
+const positiveMoney = z
+  .string()
+  .trim()
+  .regex(/^\d+(?:[,.]\d{1,2})?$/)
+  .refine((value) => !/^0+(?:[,.]0+)?$/.test(value), {
+    message: 'O resgate deve ter valor maior que zero.',
+  })
 const reason = z.string().trim().min(3).max(500)
 const reference = z.string().trim().min(1).max(160)
 const periodMonth = z
@@ -45,6 +52,14 @@ export const correctFinancialEventValues = z.object({
   reference,
 })
 
+export const redeemStoreCreditValues = z.object({
+  issuanceEventId: z.number().int().positive(),
+  amount: positiveMoney,
+  occurredOn: z.string().date(),
+  reason,
+  reference,
+})
+
 export const financialOverviewValues = z.object({
   periodMonth,
 })
@@ -57,4 +72,5 @@ export type CloseFinancialPeriodInput = z.infer<
 export type CorrectFinancialEventInput = z.infer<
   typeof correctFinancialEventValues
 >
+export type RedeemStoreCreditInput = z.infer<typeof redeemStoreCreditValues>
 export type FinancialOverviewInput = z.infer<typeof financialOverviewValues>

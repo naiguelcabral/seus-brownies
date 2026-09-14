@@ -79,6 +79,15 @@ const statusLabels: Record<SaleStatus, string> = {
   cancelled: 'Cancelada',
 }
 
+function today() {
+  return new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'America/Sao_Paulo',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).format(new Date())
+}
+
 function SalesPage() {
   const { products, locations, history, canReadHistory, canManageLifecycle } =
     Route.useLoaderData()
@@ -105,6 +114,7 @@ function SalesPage() {
   const [saving, setSaving] = useState(false)
   const [cancellingId, setCancellingId] = useState<number | null>(null)
   const [cancelReason, setCancelReason] = useState('')
+  const [cancelledOn, setCancelledOn] = useState(today)
   const [cancelConfirmed, setCancelConfirmed] = useState(false)
   const [clientReady, setClientReady] = useState(false)
   useEffect(() => {
@@ -120,6 +130,7 @@ function SalesPage() {
   async function submitCancellation(saleId: number) {
     const validation = validateLifecycleForm('cancel', {
       saleId,
+      occurredOn: cancelledOn,
       reason: cancelReason,
     })
     if (!validation.ok) {
@@ -137,6 +148,7 @@ function SalesPage() {
       setMessage('Venda cancelada; o estoque e o custo foram estornados.')
       setCancellingId(null)
       setCancelReason('')
+      setCancelledOn(today())
       setCancelConfirmed(false)
       await router.invalidate()
     } catch (error) {
@@ -377,6 +389,7 @@ function SalesPage() {
                             onClick={() => {
                               setCancellingId(sale.id)
                               setCancelReason('')
+                              setCancelledOn(today())
                               setCancelConfirmed(false)
                             }}
                             className="mt-2 block text-xs font-bold text-[#a64f23] disabled:opacity-60"
@@ -392,6 +405,12 @@ function SalesPage() {
                             value={cancelReason}
                             onChange={setCancelReason}
                           />
+                          <Input
+                            label="Data do cancelamento/estorno"
+                            type="date"
+                            value={cancelledOn}
+                            onChange={setCancelledOn}
+                          />
                           <label className="mt-2 flex gap-2 text-xs">
                             <input
                               type="checkbox"
@@ -400,7 +419,8 @@ function SalesPage() {
                                 setCancelConfirmed(event.target.checked)
                               }
                             />{' '}
-                            Confirmo o estorno de estoque e CMV.
+                            Confirmo o estorno de estoque, CMV e, quando a venda
+                            estiver paga, do caixa.
                           </label>
                           <div className="mt-3 flex gap-2">
                             <button

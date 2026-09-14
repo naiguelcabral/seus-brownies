@@ -35,6 +35,9 @@
   entrega não retorna alimento ao estoque vendável.
 - Reembolso e crédito futuro são fatos distintos, decididos por Dono ou Gerente
   e sempre auditados.
+- O resgate de crédito futuro reduz somente o saldo do crédito emitido, sem novo
+  efeito em receita ou caixa; consumo parcial e saldo remanescente devem ser
+  exatos, imutáveis e rastreáveis até a emissão.
 
 ## Produção
 

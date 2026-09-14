@@ -10,53 +10,59 @@ import {
   persistSaleReturn,
   runLifecycleWriter,
 } from '../src/features/inventory/lifecycle-writers'
+import { hashOperationPayload } from '../src/features/operations/idempotency'
 import { createLifecycleDrizzleMock } from './helpers/lifecycle-drizzle-mock'
 
-const base = () =>
-  createLifecycleDrizzleMock({
-    sales: [
-      {
-        id: 1,
-        status: 'confirmed',
-        deliveredAt: null,
-        totalAmount: '10.00',
-        soldAt: new Date('2026-09-01T12:00:00Z'),
-      },
-    ],
-    saleItems: [
-      {
-        id: 2,
-        saleId: 1,
-        productId: 3,
-        quantity: '2.000',
-        totalAmount: '10.00',
-        reportedAmount: '10.00',
-      },
-    ],
-    allocations: [
-      {
-        id: 4,
-        inventoryCostLayerId: 5,
-        productId: 3,
-        quantity: '2.000',
-        allocatedCost: '7.56',
-      },
-    ],
-    layers: [
-      {
-        id: 5,
-        productId: 3,
-        productionBatchOutputId: null,
-        sourceStockMovementId: 8,
-        origin: 'production',
-        availableAt: new Date('2026-01-01T00:00:00Z'),
-        originalQuantity: '12.000',
-        originalCost: '45.33',
-        remainingQuantity: '10.000',
-        remainingCost: '37.77',
-      },
-    ],
-  })
+const base = (
+  selectionResponses: Parameters<typeof createLifecycleDrizzleMock>[1] = {},
+) =>
+  createLifecycleDrizzleMock(
+    {
+      sales: [
+        {
+          id: 1,
+          status: 'confirmed',
+          deliveredAt: null,
+          totalAmount: '10.00',
+          soldAt: new Date('2026-09-01T12:00:00Z'),
+        },
+      ],
+      saleItems: [
+        {
+          id: 2,
+          saleId: 1,
+          productId: 3,
+          quantity: '2.000',
+          totalAmount: '10.00',
+          reportedAmount: '10.00',
+        },
+      ],
+      allocations: [
+        {
+          id: 4,
+          inventoryCostLayerId: 5,
+          productId: 3,
+          quantity: '2.000',
+          allocatedCost: '7.56',
+        },
+      ],
+      layers: [
+        {
+          id: 5,
+          productId: 3,
+          productionBatchOutputId: null,
+          sourceStockMovementId: 8,
+          origin: 'production',
+          availableAt: new Date('2026-01-01T00:00:00Z'),
+          originalQuantity: '12.000',
+          originalCost: '45.33',
+          remainingQuantity: '10.000',
+          remainingCost: '37.77',
+        },
+      ],
+    },
+    selectionResponses,
+  )
 
 const database = (mock: ReturnType<typeof base>) => mock.db
 const mutations = (mock: ReturnType<typeof base>) =>
@@ -134,6 +140,7 @@ test('cancelamento grava retorno/reversão e restaura camada sem editar a aloca�
   const mock = base()
   await persistSaleCancellation(database(mock), {
     saleId: 1,
+    occurredOn: '2026-09-14',
     reason: 'Cliente desistiu',
   })
   assert.equal(mock.journal[1].kind, 'schema')
@@ -158,12 +165,86 @@ test('cancelamento grava retorno/reversão e restaura camada sem editar a aloca�
   )
 })
 
+test('cancelamento de venda paga registra recebimento e estorno de caixa na mesma transação', async () => {
+  const mock = base()
+  mock.rows.sales[0].status = 'paid'
+  await persistSaleCancellation(
+    database(mock),
+    {
+      saleId: 1,
+      occurredOn: '2026-09-14',
+      reason: 'Cliente desistiu antes da entrega',
+    },
+    'owner-1',
+  )
+
+  const financial = mock.committed
+    .filter((entry) => entry.table === 'financialEvents')
+    .map((entry) => entry.values) as Array<{
+    type: string
+    revenueEffect: string
+    cashEffect: string
+    competenceDate: string
+  }>
+  assert.deepEqual(
+    financial.map((event) => ({
+      type: event.type,
+      revenueEffect: event.revenueEffect,
+      cashEffect: event.cashEffect,
+      competenceDate: event.competenceDate,
+    })),
+    [
+      {
+        type: 'cash_receipt',
+        revenueEffect: '0.00',
+        cashEffect: '10.00',
+        competenceDate: '2026-09-01',
+      },
+      {
+        type: 'cash_refund',
+        revenueEffect: '0.00',
+        cashEffect: '-10.00',
+        competenceDate: '2026-09-14',
+      },
+    ],
+  )
+  assert.equal(mock.journal.at(-1)?.kind, 'commit')
+})
+
+test('cancelamento pago reutiliza recebimento já registrado sem duplicar caixa', async () => {
+  const receiptHash = await hashOperationPayload({
+    saleId: 1,
+    amount: '10.00',
+    occurredOn: '2026-09-01',
+  })
+  const mock = base({
+    financialEvents: [[{ id: 80, idempotencyHash: receiptHash }], []],
+  })
+  mock.rows.sales[0].status = 'paid'
+  await persistSaleCancellation(
+    database(mock),
+    {
+      saleId: 1,
+      occurredOn: '2026-09-14',
+      reason: 'Cliente desistiu antes da entrega',
+    },
+    'owner-1',
+  )
+
+  const financial = mock.committed.filter(
+    (entry) => entry.table === 'financialEvents',
+  )
+  assert.equal(financial.length, 1)
+  assert.equal((financial[0].values as { type: string }).type, 'cash_refund')
+})
+
 test('cancelamento após entrega falha antes de restaurar estoque ou alterar venda', async () => {
   const mock = base()
   mock.rows.sales[0].deliveredAt = new Date('2026-09-10T12:00:00Z')
   await assert.rejects(
     persistSaleCancellation(database(mock), {
       saleId: 1,
+      occurredOn: '2026-09-14',
       reason: 'Tentativa após entrega',
     }),
     /Venda entregue deve usar devolução/,
@@ -271,6 +352,25 @@ test('ajuste positivo exige origem/custo e cria movimento seguido da camada', as
   )
 })
 
+test('cancelamento pago sem schema financeiro falha antes do estorno FIFO', async () => {
+  const mock = base()
+  mock.rows.sales[0].status = 'paid'
+  mock.fail('finance-schema-missing')
+  await assert.rejects(
+    persistSaleCancellation(
+      database(mock),
+      {
+        saleId: 1,
+        occurredOn: '2026-09-14',
+        reason: 'Cliente desistiu antes da entrega',
+      },
+      'owner-1',
+    ),
+    /migrations 0023 a 0026/,
+  )
+  assertRolledBack(mock)
+})
+
 test('schema ausente aborta antes de insert ou update de writer', async () => {
   const mock = base()
   mock.fail('schema-missing')
@@ -304,6 +404,7 @@ const rollbackCases = [
     write: (mock: ReturnType<typeof base>) =>
       persistSaleCancellation(database(mock), {
         saleId: 1,
+        occurredOn: '2026-09-14',
         reason: 'Cancelamento testado',
       }),
   },
@@ -409,6 +510,7 @@ test('cancelamento repetido falha sem criar novo fato', async () => {
   await assert.rejects(
     persistSaleCancellation(database(mock), {
       saleId: 1,
+      occurredOn: '2026-09-14',
       reason: 'Cancelamento repetido',
     }),
     /já registrado/,

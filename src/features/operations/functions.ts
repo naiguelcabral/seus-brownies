@@ -30,6 +30,7 @@ import {
   stockMovements,
 } from '#/db/schema'
 import { requireServerFunctionPermission } from '#/features/auth/server-function-middleware'
+import { appendPaidSaleCashReceipt } from '#/features/finance/functions'
 import {
   calculatePriceCentsTotal,
   calculateUnitCostMillisTotal,
@@ -588,6 +589,7 @@ export const createSale = createServerFn({ method: 'POST' })
   .middleware([requireServerFunctionPermission('createSale')])
   .validator(saleValues)
   .handler(async ({ data, context }) => {
+    const soldAt = new Date()
     const reportedCents = nonnegativeCents(data.reportedAmount)
     if (reportedCents === null)
       throw new Error('Informe um faturamento recebido válido.')
@@ -721,6 +723,7 @@ export const createSale = createServerFn({ method: 'POST' })
             adjustmentKind: data.adjustmentKind,
             adjustmentReason: data.adjustmentReason?.trim() || null,
             notes: data.notes?.trim() || null,
+            soldAt,
           })
           .onConflictDoNothing({ target: sales.idempotencyKey })
           .returning({ id: sales.id })
@@ -739,6 +742,17 @@ export const createSale = createServerFn({ method: 'POST' })
         if (concurrentReplay) return concurrentReplay
         throw new Error('Não foi possível reconciliar a operação repetida.')
       }
+
+      await appendPaidSaleCashReceipt(
+        tx,
+        {
+          id: sale.id,
+          status: data.status,
+          totalAmount: centsToMoney(reportedCents),
+          soldAt,
+        },
+        context.principal!.id,
+      )
 
       let fifoPlans: ReturnType<typeof allocateFifoCost>[] = []
       if (allocatesCost) {

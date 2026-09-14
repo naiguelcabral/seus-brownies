@@ -29,7 +29,10 @@ import {
   planRemainingReversalQuantities,
   planStockRestoration,
 } from '#/features/inventory/lifecycle'
-import { persistDeliveredSaleCompensation } from '#/features/finance/functions'
+import {
+  appendPaidSaleCancellationCashRefund,
+  persistDeliveredSaleCompensation,
+} from '#/features/finance/functions'
 import { inventoryEffectForSaleLifecycle } from '#/features/finance/policy'
 import {
   moneyToCents,
@@ -263,6 +266,14 @@ export async function persistSaleCancellation(
         event: 'cancellation',
         deliveredAt: sale.deliveredAt,
       })
+      if (sale.status === 'paid' && !actorAuthUserId)
+        throw new Error('Cancelamento de venda paga exige autoria autenticada.')
+      await appendPaidSaleCancellationCashRefund(
+        tx,
+        sale,
+        { occurredOn: data.occurredOn, reason: data.reason },
+        actorAuthUserId ?? '',
+      )
       const items = await tx
         .select()
         .from(saleItems)

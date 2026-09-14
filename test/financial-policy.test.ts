@@ -14,6 +14,7 @@ import {
 import {
   closeFinancialPeriodValues,
   correctFinancialEventValues,
+  redeemStoreCreditValues,
 } from '../src/features/finance/contracts'
 
 test('separa competência, margens, lucro gerencial e caixa sem duplicar custo direto', () => {
@@ -140,6 +141,26 @@ test('contratos exigem mês canônico e correção monetária assinada', () => {
     }).success,
     false,
   )
+  assert.equal(
+    redeemStoreCreditValues.safeParse({
+      issuanceEventId: 1,
+      amount: '2.50',
+      occurredOn: '2026-09-14',
+      reason: 'Uso parcial do saldo',
+      reference: 'CREDIT-1-1',
+    }).success,
+    true,
+  )
+  assert.equal(
+    redeemStoreCreditValues.safeParse({
+      issuanceEventId: 1,
+      amount: '0.00',
+      occurredOn: '2026-09-14',
+      reason: 'Sem consumo',
+      reference: 'CREDIT-1-2',
+    }).success,
+    false,
+  )
 })
 
 test('compensações parciais fecham o total sem exceder o item entregue', () => {
@@ -180,6 +201,7 @@ test('schema financeiro separa entrega, competência, caixa e fechamento', () =>
   assert.equal(sales.deliveredAt.name, 'delivered_at')
   assert.equal(financialEvents.revenueEffect.name, 'revenue_effect')
   assert.equal(financialEvents.cashEffect.name, 'cash_effect')
+  assert.equal(financialEvents.settlesEventId.name, 'settles_event_id')
   assert.equal(financialPeriods.closureSnapshot.name, 'closure_snapshot')
 })
 
@@ -196,14 +218,22 @@ test('migrations financeiras são aditivas e tornam eventos imutáveis', async (
     new URL('../drizzle/0025_talented_darwin.sql', import.meta.url),
     'utf8',
   )
+  const settlements = await readFile(
+    new URL('../drizzle/0026_shiny_edwin_jarvis.sql', import.meta.url),
+    'utf8',
+  )
   assert.match(foundation, /CREATE TABLE "financial_events"/)
   assert.match(foundation, /financial_events_immutable/)
   assert.match(foundation, /financial_periods_closure_check/)
   assert.match(effects, /ADD COLUMN "revenue_effect"/)
   assert.match(effects, /ADD COLUMN "cash_effect"/)
   assert.match(quantity, /ADD COLUMN "quantity"/)
+  assert.match(settlements, /ADD COLUMN "settles_event_id"/)
+  assert.match(settlements, /financial_events_settlement_fk/)
+  assert.match(settlements, /financial_events_settlement_check/)
+  assert.match(settlements, /revenue_effect = 0 AND cash_effect = 0/)
   assert.doesNotMatch(
-    `${foundation}\n${effects}\n${quantity}`,
+    `${foundation}\n${effects}\n${quantity}\n${settlements}`,
     /DROP|TRUNCATE|DELETE FROM/i,
   )
 })
@@ -218,6 +248,8 @@ test('writers G2 registram entrega e compensação sem restaurar estoque pós-en
   )
   assert.match(source, /type: 'sale_revenue'/)
   assert.match(source, /type: 'cash_receipt'/)
+  assert.match(source, /type: 'store_credit_redeemed'/)
+  assert.match(source, /revenueEffect: '0\.00',[\s\S]*?cashEffect: '0\.00'/)
   assert.match(compensation, /type:[\s\S]*?'cash_refund'/)
   assert.match(compensation, /'store_credit_issued'/)
   assert.doesNotMatch(compensation, /stockMovements|inventoryCostReversals/)
@@ -226,4 +258,16 @@ test('writers G2 registram entrega e compensação sem restaurar estoque pós-en
   assert.match(source, /financial_period\.close/)
   assert.match(source, /financial_event\.correct/)
   assert.match(source, /canCorrectClosedFinancialPeriod/)
+})
+
+test('venda paga registra caixa no mesmo writer transacional', async () => {
+  const source = await readFile(
+    new URL('../src/features/operations/functions.ts', import.meta.url),
+    'utf8',
+  )
+  const saleWriter = source.slice(
+    source.indexOf('export const createSale'),
+    source.indexOf('const saleHistoryValues'),
+  )
+  assert.match(saleWriter, /appendPaidSaleCashReceipt/)
 })

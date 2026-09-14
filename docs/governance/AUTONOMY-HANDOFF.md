@@ -4,6 +4,26 @@ Atualizado em 14 de setembro de 2026.
 
 ## Missão `codex/workbook-parity` — G2-F1 em execução
 
+### Subpacote G2-F1-R4 — caixa de cancelamento e saldo de crédito iniciado
+
+- Objetivo: registrar recebimento e estorno de caixa da venda paga cancelada
+  antes da entrega e implementar emissão × resgate × saldo de crédito com fatos
+  imutáveis ligados à emissão original.
+- Regra humana de 14/09/2026: resgatar crédito consome apenas seu saldo, sem
+  novo efeito em receita ou caixa.
+- Não objetivos: aplicar migrations, fazer backfill, alterar dados/HML, criar
+  conta-corrente externa, automatizar a escolha do crédito ou iniciar WP-D.
+- Arquivos previstos: schema e migration aditiva, contratos/política/writers
+  financeiros, lifecycle de venda, `/financeiro`, `/vendas`, autorização,
+  mocks/testes e documentação canônica.
+- Aceite: valores e saldos fecham em centavos; resgate parcial nunca excede a
+  emissão; repetição é idempotente; períodos fechados falham fechados; venda
+  paga cancelada registra recebimento na data real e reembolso na data do
+  cancelamento, na mesma transação do estorno FIFO.
+- Validação prevista: testes financeiros/lifecycle/autorização direcionados,
+  `npm test`, lint, typecheck, Prettier direcionado, `git diff --check` e build
+  HML isolado.
+
 ### Subpacote G2-F1-R3 — relatório por competência concluído localmente
 
 - Objetivo: calcular CMV e margem bruta do mês a partir de

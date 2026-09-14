@@ -4,7 +4,9 @@ import test from 'node:test'
 import {
   persistFinancialEventCorrection,
   persistFinancialPeriodClose,
+  persistStoreCreditRedemption,
 } from '../src/features/finance/functions'
+import { hashOperationPayload } from '../src/features/operations/idempotency'
 import { createLifecycleDrizzleMock } from './helpers/lifecycle-drizzle-mock'
 
 function database(mock: ReturnType<typeof createLifecycleDrizzleMock>) {
@@ -276,4 +278,141 @@ test('conflito otimista no snapshot fechado desfaz a correção inteira', async 
   )
   assert.equal(mock.committed.length, 0)
   assert.equal(mock.journal.at(-1)?.kind, 'rollback')
+})
+
+test('resgate parcial consome saldo sem afetar receita ou caixa', async () => {
+  const issuance = {
+    id: 21,
+    type: 'store_credit_issued',
+    saleId: 3,
+    saleItemId: 7,
+    amount: '10.00',
+  }
+  const mock = createLifecycleDrizzleMock(
+    {},
+    {
+      financialEvents: [[issuance], [], [{ amount: '3.00' }]],
+    },
+  )
+  const result = await persistStoreCreditRedemption(
+    database(mock),
+    {
+      issuanceEventId: 21,
+      amount: '2.50',
+      occurredOn: '2026-09-14',
+      reason: 'Usado na encomenda 88',
+      reference: 'CREDIT-21-1',
+    },
+    'manager-1',
+  )
+
+  assert.equal(result.remaining, '4.50')
+  assert.deepEqual(writes(mock), [
+    'insert:financialEvents',
+    'insert:operationalAudit',
+  ])
+  const redemption = mock.committed[0].values as {
+    type: string
+    settlesEventId: number
+    amount: string
+    revenueEffect: string
+    cashEffect: string
+    authorizedByAuthUserId: string
+  }
+  assert.deepEqual(redemption, {
+    ...redemption,
+    type: 'store_credit_redeemed',
+    settlesEventId: 21,
+    amount: '2.50',
+    revenueEffect: '0.00',
+    cashEffect: '0.00',
+    authorizedByAuthUserId: 'manager-1',
+  })
+})
+
+test('resgate acima do saldo desfaz a transação', async () => {
+  const mock = createLifecycleDrizzleMock(
+    {},
+    {
+      financialEvents: [
+        [{ id: 21, type: 'store_credit_issued', amount: '10.00' }],
+        [],
+        [{ amount: '9.00' }],
+      ],
+    },
+  )
+  await assert.rejects(
+    persistStoreCreditRedemption(
+      database(mock),
+      {
+        issuanceEventId: 21,
+        amount: '1.01',
+        occurredOn: '2026-09-14',
+        reason: 'Tentativa acima do saldo',
+        reference: 'CREDIT-21-OVER',
+      },
+      'manager-1',
+    ),
+    /excede o saldo disponível/,
+  )
+  assert.equal(mock.committed.length, 0)
+  assert.equal(mock.journal.at(-1)?.kind, 'rollback')
+})
+
+test('resgate em período fechado falha antes de gravar o consumo', async () => {
+  const mock = createLifecycleDrizzleMock(
+    {},
+    {
+      financialEvents: [
+        [{ id: 21, type: 'store_credit_issued', amount: '10.00' }],
+        [],
+        [],
+      ],
+      financialPeriods: [[{ status: 'closed' }]],
+    },
+  )
+  await assert.rejects(
+    persistStoreCreditRedemption(
+      database(mock),
+      {
+        issuanceEventId: 21,
+        amount: '1.00',
+        occurredOn: '2026-09-14',
+        reason: 'Tentativa em mês fechado',
+        reference: 'CREDIT-21-CLOSED',
+      },
+      'owner-1',
+    ),
+    /Período financeiro fechado/,
+  )
+  assert.equal(mock.committed.length, 0)
+  assert.equal(mock.journal.at(-1)?.kind, 'rollback')
+})
+
+test('referência repetida do resgate é idempotente', async () => {
+  const data = {
+    issuanceEventId: 21,
+    amount: '2.50',
+    occurredOn: '2026-09-14',
+    reason: 'Usado na encomenda 88',
+    reference: 'CREDIT-21-REPLAY',
+  }
+  const hash = await hashOperationPayload(data)
+  const mock = createLifecycleDrizzleMock(
+    {},
+    {
+      financialEvents: [
+        [{ id: 21, type: 'store_credit_issued', amount: '10.00' }],
+        [{ id: 45, idempotencyHash: hash }],
+        [{ amount: '2.50' }],
+      ],
+    },
+  )
+  const result = await persistStoreCreditRedemption(
+    database(mock),
+    data,
+    'manager-1',
+  )
+  assert.deepEqual(result, { id: 45, replayed: true, remaining: '7.50' })
+  assert.equal(mock.committed.length, 0)
 })
