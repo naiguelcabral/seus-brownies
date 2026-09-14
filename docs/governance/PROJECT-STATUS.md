@@ -45,13 +45,17 @@ Este documento é a referência canônica de alto nível para o estado atual do 
   `WORKBOOK-SYSTEM-PARITY.md`. Parâmetros gerenciais, auditoria exata de
   receita, locais/canais, KPIs de venda e plano de ação foram implementados
   localmente; dependem das migrations `0019`/`0020` e de homologação.
-- Política financeira G2 aprovada e em implementação local: receita por
+- Política financeira G2 aprovada e implementada localmente: receita por
   competência na entrega, caixa separado, compensações posteriores imutáveis e
-  devolução sem retorno de alimento ao estoque vendável.
+  devolução sem retorno de alimento ao estoque vendável. Resgates parciais
+  consomem apenas o saldo do crédito emitido, sem efeito novo em receita/caixa.
 - Fechamento financeiro manual, correções imutáveis pelo Dono, leitura mensal
   dos fatos e a rota `/financeiro` estão implementados localmente. O relatório
   por competência agora reconcilia receita, CMV FIFO e margem bruta por produto,
   lote/origem e local/canal; cenários gerenciais continuam pendentes.
+- Venda paga registra recebimento imediatamente. Cancelamento pago pré-entrega
+  registra reembolso de caixa na data informada junto do estorno FIFO, sem criar
+  receita; recebimentos legados ausentes falham em período fechado.
 
 ### Custos e estoque
 
@@ -78,12 +82,18 @@ Este documento é a referência canônica de alto nível para o estado atual do 
   lote/validade por item de compra. Ela também não foi aplicada.
 - A migration aditiva `0022` prepara fornecedor padrão informativo por produto;
   o fornecedor efetivo continua preservado em cada compra. Não foi aplicada.
-- As migrations aditivas `0023`–`0025` preparam entrega, fatos financeiros
+- As migrations aditivas `0023`–`0026` preparam entrega, fatos financeiros
   imutáveis, efeitos separados de competência/caixa, fechamento manual e
-  quantidade compensada. Não foram aplicadas a nenhum banco.
+  quantidade compensada, além do vínculo entre resgate e emissão de crédito.
+  Não foram aplicadas a nenhum banco.
 - Não repetir cargas ou homologações já consumidas sem autorização explícita.
 
 ### Qualidade
+
+- Checkpoint G2-F1 concluído localmente em `8403fe1`: 327 testes, lint,
+  typecheck, Prettier direcionado, `git diff --check` e build HML isolado verdes.
+  A migration `0026` foi somente gerada para revisão. Nenhum banco, `.env`,
+  deploy ou recurso externo foi alterado.
 
 - Checkpoint G2 retomado em 14 de setembro: a correção de período fechado agora
   falha e reverte integralmente quando o controle otimista não atualiza o

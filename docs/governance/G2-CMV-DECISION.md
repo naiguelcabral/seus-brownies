@@ -1,6 +1,6 @@
 # Decisão aprovada — competência, CMV, reversões e margem
 
-Atualizado em 11 de setembro de 2026. A decisão humana foi aprovada e passa a
+Atualizado em 14 de setembro de 2026. A decisão humana foi aprovada e passa a
 ser regra canônica; a análise histórica abaixo é preservada como evidência.
 
 ## Resultado aprovado
@@ -14,6 +14,8 @@ ser regra canônica; a análise histórica abaixo é preservada como evidência.
   desfaz o CMV realizado.
 - Somente Dono corrige período fechado. Dono e Gerente podem decidir a forma de
   compensação ao cliente.
+- O resgate de crédito consome somente o saldo da emissão vinculada, sem novo
+  efeito em receita ou caixa.
 - Custos diretos de energia e mão de obra permanecem incorporados ao custo do
   lote e não voltam a ser abatidos no resultado.
 - Margem mínima é alerta configurável. O mix histórico é normalizado

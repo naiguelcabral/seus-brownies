@@ -2,9 +2,9 @@
 
 Atualizado em 14 de setembro de 2026.
 
-## Missão `codex/workbook-parity` — G2-F1 em execução
+## Missão `codex/workbook-parity` — G2-F1 concluído localmente
 
-### Subpacote G2-F1-R4 — caixa de cancelamento e saldo de crédito iniciado
+### Subpacote G2-F1-R4 — caixa de cancelamento e saldo de crédito concluído
 
 - Objetivo: registrar recebimento e estorno de caixa da venda paga cancelada
   antes da entrega e implementar emissão × resgate × saldo de crédito com fatos
@@ -23,6 +23,11 @@ Atualizado em 14 de setembro de 2026.
 - Validação prevista: testes financeiros/lifecycle/autorização direcionados,
   `npm test`, lint, typecheck, Prettier direcionado, `git diff --check` e build
   HML isolado.
+- Checkpoint funcional `8403fe1`: migration aditiva `0026`, ledger e UI de
+  saldo/resgate, recebimento no writer da venda paga e estorno de caixa no
+  cancelamento pré-entrega. Validação: 327 testes, lint, typecheck, Prettier
+  direcionado, `git diff --check` e build HML isolado verdes. Nenhuma migration
+  foi aplicada e nenhum recurso externo foi alterado.
 
 ### Subpacote G2-F1-R3 — relatório por competência concluído localmente
 
@@ -45,13 +50,13 @@ Atualizado em 14 de setembro de 2026.
   HML isolado verdes. `npm run check` permanece vermelho apenas pela dívida de
   formatação preexistente em 92 arquivos fora do diff.
 
-- G2-F1 ativo após aprovação humana de 11 de setembro de 2026. Objetivo:
+- G2-F1 foi executado após aprovação humana de 11 de setembro de 2026. Objetivo:
   persistir fatos financeiros imutáveis, entrega, reembolso/crédito e fechamento
   manual; corrigir cancelamento pré-entrega versus devolução pós-entrega; expor
   indicadores separados e normalização exata do mix. Não objetivos: aplicar
   migration, backfill, corrigir banco compartilhado ou publicar ambiente.
 - Primeiro checkpoint funcional pronto localmente: migrations aditivas
-  `0023`–`0025`, fatos imutáveis, entrega com competência, caixa separado para
+  `0023`–`0026`, fatos imutáveis, entrega com competência, caixa separado para
   venda paga, reembolso/crédito pós-entrega sem retorno ao estoque e bloqueio
   de cancelamento depois da entrega. A normalização do mix e os indicadores
   separados usam aritmética exata. Validação: 303 testes, lint, typecheck e
@@ -83,10 +88,10 @@ Atualizado em 14 de setembro de 2026.
   primeiro reverter o código; remover colunas/tabelas depois seria destrutivo
   para fatos novos e exige decisão humana.
 - O gate de decisão financeira foi removido pela aprovação formal; fechamento,
-  correções de período, leitura dos fatos e margem por competência estão
-  implementados localmente. G2-F1 ainda precisa tratar o caixa do cancelamento
-  pago pré-entrega e o resgate do crédito emitido. Metas aguardam esse
-  checkpoint; cobertura e sugestão de compra exigem histórico confiável.
+  correções de período, leitura dos fatos, margem por competência, caixa do
+  cancelamento pago e saldo/resgate de crédito estão implementados localmente.
+  G2-F1 está concluído; cobertura e sugestão de compra ainda exigem histórico
+  confiável.
 - WP-F1 concluído localmente: `0021` adiciona ponto de reposição no produto e
   lote/validade no item de compra. Catálogo, compra e estoque foram conectados;
   a comparação do alerta usa milésimos exatos e o saldo continua somente
@@ -119,10 +124,9 @@ Atualizado em 14 de setembro de 2026.
   `34554171049` passaram no WP-F2 `bbf6db3`; as CIs de push `34554627169` e PR
   `34554629415` passaram no WP-A2 `b9241ae`; as CIs de push `34554990879` e PR
   `34554994350` passaram no WP-I1 `aa593c3`.
-- Próximo passo exato: tratar, em mudança transacional e idempotente, o efeito
-  de caixa do cancelamento de venda paga antes da entrega e o resgate do crédito
-  emitido. Depois concluir G2-F1 e iniciar os cenários de WP-D. Em ambiente
-  explicitamente autorizado, aplicar `0019`–`0025` e
+- Próximo passo exato: iniciar WP-D com metas e cenários rastreáveis sobre fatos
+  G2 e premissas versionadas, sem classificar despesas unilateralmente. Em
+  ambiente explicitamente autorizado, aplicar `0019`–`0026` e
   homologar os fluxos locais. Obter histórico confiável antes de calcular
   cobertura ou sugerir compra. Nenhuma dessas ações externas foi executada
   nesta missão.

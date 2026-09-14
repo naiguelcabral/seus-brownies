@@ -2,6 +2,16 @@
 
 ## Retomada G2 — 14 de setembro de 2026
 
+- Decisão humana adicional: o resgate de crédito consome somente o saldo, sem
+  novo efeito em receita ou caixa. Ela foi incorporada às regras canônicas.
+- Checkpoint `8403fe1`: venda paga registra caixa no writer da venda; o
+  cancelamento pago pré-entrega registra o reembolso na mesma transação do
+  estorno FIFO. O ledger de crédito liga resgates imutáveis à emissão, suporta
+  consumo parcial exato, bloqueia excesso/competência fechada e expõe saldo em
+  `/financeiro`. A migration aditiva `0026` foi gerada e não aplicada.
+- G2-F1 foi concluído localmente após 327 testes, lint, typecheck, Prettier
+  direcionado, `git diff --check` e build HML isolado verdes. Nenhum banco,
+  `.env`, deploy ou recurso externo foi alterado. WP-D passa a `ready`.
 - Checkpoint `f2af82c`: `/financeiro` passou a calcular receita líquida, CMV
   FIFO e margem bruta pela competência dos fatos, agrupando e reconciliando
   produto, lote/origem sem lote e local/canal. O fechamento e a correção de
@@ -18,16 +28,15 @@
 - Checkpoint `47074c6`: 309 testes, lint, typecheck, `git diff --check` e build
   HML isolado verdes. O aviso nominal de secrets ausentes no SSR foi esperado;
   nenhuma migration, banco, `.env`, deploy ou recurso externo foi alterado.
-- G2-F1 continua `running`: o próximo passo é registrar corretamente o efeito
-  de caixa do cancelamento de venda paga antes da entrega e modelar o resgate
-  do crédito emitido, sem ampliar o escopo para migrations ou HML.
+- O próximo pacote elegível é WP-D: metas e cenários com premissas versionadas,
+  sem aplicar migrations ou escrever em ambientes compartilhados.
 
 ## G2 financeiro — 11 de setembro de 2026
 
 - As dez decisões financeiras aprovadas pelo Dono foram registradas em
   `HUMAN-APPROVALS.md`, `BUSINESS-RULES.md` e `G2-CMV-DECISION.md`, preservando
   a evidência anterior como histórico e removendo o gate de decisão.
-- Migrations aditivas `0023`–`0025`, não aplicadas, modelam entrega, períodos e
+- Migrations aditivas `0023`–`0026`, não aplicadas, modelam entrega, períodos e
   fatos imutáveis com efeitos exatos e separados de competência e caixa.
 - Entrega registra receita na data de competência; venda paga registra caixa
   separadamente. Compensação pós-entrega registra reembolso ou crédito auditado
