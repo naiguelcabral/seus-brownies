@@ -51,8 +51,10 @@ Este documento é a referência canônica de alto nível para o estado atual do 
   consomem apenas o saldo do crédito emitido, sem efeito novo em receita/caixa.
 - Fechamento financeiro manual, correções imutáveis pelo Dono, leitura mensal
   dos fatos e a rota `/financeiro` estão implementados localmente. O relatório
-  por competência agora reconcilia receita, CMV FIFO e margem bruta por produto,
-  lote/origem e local/canal; cenários gerenciais continuam pendentes.
+  por competência reconcilia receita, CMV FIFO e margem bruta por produto,
+  lote/origem e local/canal. Metas e cenários versionados, lifecycle auditado,
+  mix normalizado e projeções separadas do realizado estão implementados
+  localmente em `/cenarios`; aguardam migrations e homologação.
 - Venda paga registra recebimento imediatamente. Cancelamento pago pré-entrega
   registra reembolso de caixa na data informada junto do estorno FIFO, sem criar
   receita; recebimentos legados ausentes falham em período fechado.
@@ -86,9 +88,19 @@ Este documento é a referência canônica de alto nível para o estado atual do 
   imutáveis, efeitos separados de competência/caixa, fechamento manual e
   quantidade compensada, além do vínculo entre resgate e emissão de crédito.
   Não foram aplicadas a nenhum banco.
+- As migrations aditivas `0027` e `0028` preparam cenários versionados, mix
+  auditável, snapshot do nome do produto, ativo único e histórico append-only.
+  Foram somente geradas e revisadas; não foram aplicadas a nenhum banco e não
+  contêm seed, importação ou backfill.
 - Não repetir cargas ou homologações já consumidas sem autorização explícita.
 
 ### Qualidade
+
+- Checkpoint WP-D publicado em `0d4f62d`: 348 testes, lint, typecheck,
+  Prettier direcionado, `git diff --check` e build HML isolado verdes. A CI de
+  push `34911025705` confirmou o mesmo SHA. As migrations `0027`/`0028` não
+  foram aplicadas, nenhum cenário compartilhado foi semeado e nenhum recurso
+  operacional externo ou ambiente foi alterado.
 
 - Checkpoint G2-F1 concluído localmente em `8403fe1`: 327 testes, lint,
   typecheck, Prettier direcionado, `git diff --check` e build HML isolado verdes.
@@ -232,7 +244,8 @@ Este documento é a referência canônica de alto nível para o estado atual do 
 - Pagamentos online.
 - Regras completas de entrega.
 - Deploy definitivo de produção e secrets finais do Worker.
-- Relatórios gerenciais avançados, cenários e análises adicionais.
+- Homologação integrada de metas e cenários após aplicar `0027`/`0028` em
+  ambiente explicitamente autorizado; relatórios gerenciais adicionais.
 - Adoção multitenant: plano em `MULTITENANCY-ADOPTION.md`; depende de decidir
   memberships, escopo de chaves e mapeamento auditável dos fatos históricos
   antes de gerar uma migration aplicável.

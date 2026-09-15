@@ -2,42 +2,50 @@
 
 Atualizado em 14 de setembro de 2026.
 
-## Missão `codex/wp-d-scenarios` — WP-D em execução
+## Missão `codex/wp-d-scenarios` — WP-D concluído localmente
 
-- Base validada: `e53d42d`, ponta publicada de G2-F1 na branch
+- Base preservada: `e53d42d`, ponta publicada de G2-F1 na branch
   `codex/workbook-parity`; CI de push `34908140443` verde para o mesmo SHA.
-- Objetivo: implementar metas e cenários como premissas persistidas,
-  versionadas e auditáveis, com mix original preservado, normalização exata,
-  projeções financeiras rastreáveis e comparação explicitamente separada dos
-  resultados realizados de G2.
-- Não objetivos: aplicar migrations, semear cenário compartilhado, classificar
-  despesas unilateralmente, fazer backfill/importação, alterar HML/Cloudflare/
-  Neon/secrets, deploy, merge ou rebase.
-- Persistência prevista: cenário identificado entre versões, versão imutável
-  após ativação, revisão otimista do rascunho, status `draft`/`active`/
-  `archived`, premissas exatas, mix por produto e histórico append-only. Uma
-  restrição aditiva manterá no máximo um cenário ativo.
-- Cálculo previsto: pesos originais aceitam a evidência histórica de 103% e
-  são normalizados proporcionalmente em pontos-base, com maior resto e
-  desempate por produto. Meta mais custos fixos é distribuída pelo mix; preço,
-  custo unitário e reserva determinam unidades inteiras, faturamento, margem,
-  lucro gerencial e folga sem `Number` financeiro. O ticket do workbook será
-  reproduzido e rotulado como média por unidade planejada.
-- Segurança prevista: `scenarios:read` somente para Dono/Gerente e
-  `scenarios:write` somente para Dono, em rota, navegação e todas as Server
-  Functions. Ativação revalida produtos ativos e o mix no servidor. Falha de
-  auditoria aborta a transação.
-- Arquivos previstos: `src/db/schema.ts`, migration Drizzle `0027`,
-  `src/features/scenarios/`, autorização, navegação, rota `/cenarios`, testes
-  direcionados e documentação canônica.
-- Critérios de aceite: cobrir papéis, chamada direta, mix vazio/inativo e
-  abaixo/acima/exato/103%, resíduos, precisão monetária, lifecycle,
-  versionamento imutável, ativo único, concorrência, auditoria falha, ausência
-  histórica e separação projeção × realizado.
-- Validação: testes direcionados por subpacote; nos checkpoints funcionais,
-  `npm test`, `npm run lint`, `npm run typecheck`, Prettier apenas nos arquivos
-  alterados, `git diff --check` e `npm run build:hml` isolado. A migration será
-  gerada e revisada, nunca aplicada.
+  A branch WP-D partiu exatamente dessa ponta e a PR rascunho #5 tem
+  `codex/workbook-parity` como base; nenhum merge ou rebase foi feito.
+- Checkpoints publicados: `59bc709` registra o contrato da missão,
+  `15959e0` implementa o modelo de cálculo exato e `0d4f62d` fecha lifecycle,
+  persistência, RBAC, auditoria, interface e testes. A CI de push
+  `34911025705` passou para o SHA completo
+  `0d4f62db6a1eb96e7f259db539e1c868e60abdf6`.
+- Resultado implementado: rascunho editável com revisão otimista; versões
+  imutáveis após finalização; status `draft`/`active`/`archived`; ativo único;
+  criação de nova versão sem alterar a anterior; motivos de substituição e
+  arquivamento; histórico append-only e auditoria crítica na transação.
+- O mix preserva pesos originais, inclusive a evidência de 103%, e normaliza
+  para 10.000 pontos-base pelo maior resto com desempate pelo menor ID. A
+  ativação falha para mix vazio, produto ausente/inativo/não final ou projeção
+  sem contribuição positiva.
+- As projeções usam `BigInt`, centavos, milésimos e pontos-base exatos para
+  meta, custos fixos, reserva, unidades, faturamento, margem, lucro gerencial e
+  folga. O ticket do workbook é rotulado como média por unidade planejada. A
+  UI separa Meta/Premissa/Projeção de resultado por competência e CMV FIFO;
+  ausência histórica e lucro gerencial ainda não homologado ficam explícitos.
+- Segurança: `scenarios:read` pertence a Dono/Gerente e
+  `scenarios:write` somente ao Dono; Admin legado, Funcionário e demais papéis
+  não podem mutar. Rota, navegação e as seis Server Functions usam a mesma
+  matriz server-side.
+- Validação local do checkpoint `0d4f62d`: 348 testes, lint, typecheck,
+  Prettier apenas nos arquivos alterados, `git diff --check` e build HML
+  isolado com chave pública sintética verdes. O aviso nominal de secrets
+  ausentes no SSR foi esperado e nenhum arquivo de ambiente foi carregado.
+- Migrations `0027` e `0028`: aditivas, revisadas, sem seed/importação/backfill
+  e não aplicadas. Devem ser aplicadas juntas, em ordem, somente em ambiente
+  autorizado. Recuperação: reverter primeiro o código; remover as novas
+  tabelas/enum depois de uso apagaria fatos auditáveis e exige migration
+  destrutiva separada com aprovação humana.
+- Não executado: escrita em banco compartilhado, cenário inicial, migration,
+  HML, deploy, Cloudflare, Neon, DNS, secret, importação, backfill, merge ou
+  rebase.
+- Próximo passo exato: revisar e aprovar a PR #5; depois, em janela e ambiente
+  explicitamente autorizados, confirmar o conjunto já aplicado, executar as
+  migrations pendentes até `0028` na ordem e homologar Dono, Gerente e
+  Funcionário, lifecycle e cálculos com dados sintéticos descartáveis.
 
 ## Missão `codex/workbook-parity` — G2-F1 concluído localmente
 
@@ -161,12 +169,11 @@ Atualizado em 14 de setembro de 2026.
   `34554171049` passaram no WP-F2 `bbf6db3`; as CIs de push `34554627169` e PR
   `34554629415` passaram no WP-A2 `b9241ae`; as CIs de push `34554990879` e PR
   `34554994350` passaram no WP-I1 `aa593c3`.
-- Próximo passo exato: iniciar WP-D com metas e cenários rastreáveis sobre fatos
-  G2 e premissas versionadas, sem classificar despesas unilateralmente. Em
-  ambiente explicitamente autorizado, aplicar `0019`–`0026` e
-  homologar os fluxos locais. Obter histórico confiável antes de calcular
-  cobertura ou sugerir compra. Nenhuma dessas ações externas foi executada
-  nesta missão.
+- O próximo passo registrado naquele checkpoint era iniciar WP-D; ele foi
+  executado na branch e PR próprias descritas no topo. Continua pendente, em
+  ambiente explicitamente autorizado, aplicar `0019`–`0028` e homologar os
+  fluxos locais. Obter histórico confiável antes de calcular cobertura ou
+  sugerir compra. Nenhuma dessas ações externas foi executada nesta missão.
 
 ## Atualização AR-G1-HML-2 — 10 de setembro de 2026
 
