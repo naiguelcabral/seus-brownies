@@ -1,9 +1,18 @@
 # Handoff de autonomia — Cacau v1
 
-Atualizado em 14 de setembro de 2026.
+Atualizado em 16 de setembro de 2026.
 
 ## Missão `codex/wp-d-scenarios` — WP-D concluído localmente
 
+- Reconciliação somente leitura de 16/09/2026: a árvore está limpa em
+  `codex/wp-d-scenarios`, e o HEAD local `49d0b08` coincide com
+  `origin/codex/wp-d-scenarios` e com a ponta da PR rascunho #5. As CIs de
+  push `35040805679` e pull request `35040808764` passaram para o SHA completo
+  `49d0b08fd1f2ad15243eb7772c0eded5b9ea2352`. Nenhum merge, deploy, migration
+  ou escrita em ambiente foi executado nessa reconciliação.
+- WP-D está concluído no código da branch e publicado para revisão, mas ainda
+  não está integrado nem homologado. A PR #5 continua em rascunho e nenhuma
+  migration ou dado de cenário foi aplicado em HML.
 - Base preservada: `e53d42d`, ponta publicada de G2-F1 na branch
   `codex/workbook-parity`; CI de push `34908140443` verde para o mesmo SHA.
   A branch WP-D partiu exatamente dessa ponta e a PR rascunho #5 tem
@@ -39,6 +48,19 @@ Atualizado em 14 de setembro de 2026.
   autorizado. Recuperação: reverter primeiro o código; remover as novas
   tabelas/enum depois de uso apagaria fatos auditáveis e exige migration
   destrutiva separada com aprovação humana.
+- A reconciliação somente leitura do histórico Drizzle em HML confirmou pelos
+  hashes locais que `0000`–`0016` estão aplicadas. As migrations `0017`–`0028`
+  permanecem pendentes em HML; não executar nenhuma delas sem autorização,
+  janela e plano de homologação explícitos.
+- Commit isolado `2ce3566`: comparação somente leitura com
+  `codex/audit-remediation`, `codex/workbook-parity` e
+  `codex/wp-d-scenarios` concluiu incorporação parcial. As três branches já
+  usam `LEFT JOIN` para a saída de produção e preservam alocações sem lote nos
+  totais; G2 também reconcilia a origem sem lote em `/financeiro`. A distinção
+  explícita entre camadas `purchase` e `adjustment` proposta pelo commit não
+  está incorporada. O patch está defasado pelas evoluções posteriores dos
+  relatórios e não deve ser aplicado por cherry-pick; só deve ser reavaliado
+  como mudança nova e testada se essa distinção voltar a ser requisito humano.
 - Não executado: escrita em banco compartilhado, cenário inicial, migration,
   HML, deploy, Cloudflare, Neon, DNS, secret, importação, backfill, merge ou
   rebase.

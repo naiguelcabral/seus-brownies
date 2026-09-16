@@ -96,11 +96,18 @@ Este documento é a referência canônica de alto nível para o estado atual do 
 
 ### Qualidade
 
-- Checkpoint WP-D publicado em `95ff45f`: 349 testes, lint, typecheck,
-  Prettier direcionado, `git diff --check` e build HML isolado verdes. A CI de
-  push `35040598956` confirmou o mesmo SHA. As migrations `0027`/`0028` não
-  foram aplicadas, nenhum cenário compartilhado foi semeado e nenhum recurso
-  operacional externo ou ambiente foi alterado.
+- Checkpoint funcional atual de WP-D publicado em `49d0b08`: 349 testes, lint,
+  typecheck, Prettier direcionado, `git diff --check` e build HML isolado
+  verdes. As CIs de push `35040805679` e pull request `35040808764`
+  confirmaram o mesmo SHA. A implementação está concluída na branch
+  `codex/wp-d-scenarios`, mas não está integrada nem homologada: a PR #5
+  permanece em rascunho, as migrations `0027`/`0028` não foram aplicadas,
+  nenhum cenário compartilhado foi semeado e nenhum recurso operacional
+  externo ou ambiente foi alterado.
+
+- O checkpoint anterior `95ff45f` permanece como evidência histórica da
+  correção que limita o peso original do mix, confirmada pela CI de push
+  `35040598956`; ele é ancestral do checkpoint funcional atual `49d0b08`.
 
 - Checkpoint G2-F1 concluído localmente em `8403fe1`: 327 testes, lint,
   typecheck, Prettier direcionado, `git diff --check` e build HML isolado verdes.
