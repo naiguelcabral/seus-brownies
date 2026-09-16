@@ -9,10 +9,10 @@ Atualizado em 14 de setembro de 2026.
   A branch WP-D partiu exatamente dessa ponta e a PR rascunho #5 tem
   `codex/workbook-parity` como base; nenhum merge ou rebase foi feito.
 - Checkpoints publicados: `59bc709` registra o contrato da missão,
-  `15959e0` implementa o modelo de cálculo exato e `0d4f62d` fecha lifecycle,
-  persistência, RBAC, auditoria, interface e testes. A CI de push
-  `34911025705` passou para o SHA completo
-  `0d4f62db6a1eb96e7f259db539e1c868e60abdf6`.
+  `15959e0` implementa o modelo de cálculo exato, `0d4f62d` fecha lifecycle,
+  persistência, RBAC, auditoria, interface e testes, e `95ff45f` valida no
+  servidor o limite de precisão do peso original. A CI de push `35040598956`
+  passou para o SHA completo `95ff45fe336b9e1246752d182b6ac5045d3ce962`.
 - Resultado implementado: rascunho editável com revisão otimista; versões
   imutáveis após finalização; status `draft`/`active`/`archived`; ativo único;
   criação de nova versão sem alterar a anterior; motivos de substituição e
@@ -30,7 +30,7 @@ Atualizado em 14 de setembro de 2026.
   `scenarios:write` somente ao Dono; Admin legado, Funcionário e demais papéis
   não podem mutar. Rota, navegação e as seis Server Functions usam a mesma
   matriz server-side.
-- Validação local do checkpoint `0d4f62d`: 348 testes, lint, typecheck,
+- Validação local do checkpoint `95ff45f`: 349 testes, lint, typecheck,
   Prettier apenas nos arquivos alterados, `git diff --check` e build HML
   isolado com chave pública sintética verdes. O aviso nominal de secrets
   ausentes no SSR foi esperado e nenhum arquivo de ambiente foi carregado.

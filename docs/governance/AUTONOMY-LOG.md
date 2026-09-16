@@ -14,9 +14,9 @@
 - O workbook foi usado apenas como evidência do algoritmo e do mix original de
   103%. Nenhuma meta, peso, produto ou cenário foi semeado; a tela inicia com
   premissas vazias e exige decisão do Dono.
-- O checkpoint `0d4f62d` passou localmente em 348 testes, lint, typecheck,
-  Prettier direcionado, `git diff --check` e build HML isolado. A CI de push
-  `34911025705` confirmou o mesmo SHA. Nenhuma migration, banco, `.env`, HML,
+- O checkpoint final `95ff45f` passou localmente em 349 testes, lint,
+  typecheck, Prettier direcionado, `git diff --check` e build HML isolado. A CI
+  de push `35040598956` confirmou o mesmo SHA. Nenhuma migration, banco, `.env`, HML,
   deploy, Cloudflare, Neon, DNS, secret, importação ou backfill foi alterado.
 
 ## Retomada G2 — 14 de setembro de 2026

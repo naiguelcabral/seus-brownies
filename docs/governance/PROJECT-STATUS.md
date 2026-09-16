@@ -96,9 +96,9 @@ Este documento é a referência canônica de alto nível para o estado atual do 
 
 ### Qualidade
 
-- Checkpoint WP-D publicado em `0d4f62d`: 348 testes, lint, typecheck,
+- Checkpoint WP-D publicado em `95ff45f`: 349 testes, lint, typecheck,
   Prettier direcionado, `git diff --check` e build HML isolado verdes. A CI de
-  push `34911025705` confirmou o mesmo SHA. As migrations `0027`/`0028` não
+  push `35040598956` confirmou o mesmo SHA. As migrations `0027`/`0028` não
   foram aplicadas, nenhum cenário compartilhado foi semeado e nenhum recurso
   operacional externo ou ambiente foi alterado.
 
