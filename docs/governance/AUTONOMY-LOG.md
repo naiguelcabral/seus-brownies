@@ -1,5 +1,24 @@
 # Log sanitizado de autonomia — Cacau v1
 
+## WP-D metas e cenários — 14 de setembro de 2026
+
+- G2-F1 foi publicado na branch `codex/workbook-parity` sem force push; a CI
+  de push `34908140443` passou para o SHA
+  `e53d42d2cf1050dc1b7bfd61b3ced5578f16cd4b`. O workflow revisado executou
+  somente checkout, instalação, testes, lint, typecheck e build HML isolado.
+- A branch `codex/wp-d-scenarios` partiu exatamente de `e53d42d`; a PR #5 foi
+  aberta em rascunho contra `codex/workbook-parity`, sem merge ou rebase.
+- Checkpoints `15959e0` e `0d4f62d` implementam cálculo exato, migrations
+  aditivas `0027`/`0028`, versões imutáveis, revisão concorrente, ativo único,
+  mix original e normalizado, RBAC, auditoria transacional e `/cenarios`.
+- O workbook foi usado apenas como evidência do algoritmo e do mix original de
+  103%. Nenhuma meta, peso, produto ou cenário foi semeado; a tela inicia com
+  premissas vazias e exige decisão do Dono.
+- O checkpoint final `95ff45f` passou localmente em 349 testes, lint,
+  typecheck, Prettier direcionado, `git diff --check` e build HML isolado. A CI
+  de push `35040598956` confirmou o mesmo SHA. Nenhuma migration, banco, `.env`, HML,
+  deploy, Cloudflare, Neon, DNS, secret, importação ou backfill foi alterado.
+
 ## Retomada G2 — 14 de setembro de 2026
 
 - Decisão humana adicional: o resgate de crédito consome somente o saldo, sem

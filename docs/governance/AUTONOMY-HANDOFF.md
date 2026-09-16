@@ -1,6 +1,73 @@
 # Handoff de autonomia — Cacau v1
 
-Atualizado em 14 de setembro de 2026.
+Atualizado em 16 de setembro de 2026.
+
+## Missão `codex/wp-d-scenarios` — WP-D concluído localmente
+
+- Reconciliação somente leitura de 16/09/2026: a árvore está limpa em
+  `codex/wp-d-scenarios`, e o HEAD local `49d0b08` coincide com
+  `origin/codex/wp-d-scenarios` e com a ponta da PR rascunho #5. As CIs de
+  push `35040805679` e pull request `35040808764` passaram para o SHA completo
+  `49d0b08fd1f2ad15243eb7772c0eded5b9ea2352`. Nenhum merge, deploy, migration
+  ou escrita em ambiente foi executado nessa reconciliação.
+- WP-D está concluído no código da branch e publicado para revisão, mas ainda
+  não está integrado nem homologado. A PR #5 continua em rascunho e nenhuma
+  migration ou dado de cenário foi aplicado em HML.
+- Base preservada: `e53d42d`, ponta publicada de G2-F1 na branch
+  `codex/workbook-parity`; CI de push `34908140443` verde para o mesmo SHA.
+  A branch WP-D partiu exatamente dessa ponta e a PR rascunho #5 tem
+  `codex/workbook-parity` como base; nenhum merge ou rebase foi feito.
+- Checkpoints publicados: `59bc709` registra o contrato da missão,
+  `15959e0` implementa o modelo de cálculo exato, `0d4f62d` fecha lifecycle,
+  persistência, RBAC, auditoria, interface e testes, e `95ff45f` valida no
+  servidor o limite de precisão do peso original. A CI de push `35040598956`
+  passou para o SHA completo `95ff45fe336b9e1246752d182b6ac5045d3ce962`.
+- Resultado implementado: rascunho editável com revisão otimista; versões
+  imutáveis após finalização; status `draft`/`active`/`archived`; ativo único;
+  criação de nova versão sem alterar a anterior; motivos de substituição e
+  arquivamento; histórico append-only e auditoria crítica na transação.
+- O mix preserva pesos originais, inclusive a evidência de 103%, e normaliza
+  para 10.000 pontos-base pelo maior resto com desempate pelo menor ID. A
+  ativação falha para mix vazio, produto ausente/inativo/não final ou projeção
+  sem contribuição positiva.
+- As projeções usam `BigInt`, centavos, milésimos e pontos-base exatos para
+  meta, custos fixos, reserva, unidades, faturamento, margem, lucro gerencial e
+  folga. O ticket do workbook é rotulado como média por unidade planejada. A
+  UI separa Meta/Premissa/Projeção de resultado por competência e CMV FIFO;
+  ausência histórica e lucro gerencial ainda não homologado ficam explícitos.
+- Segurança: `scenarios:read` pertence a Dono/Gerente e
+  `scenarios:write` somente ao Dono; Admin legado, Funcionário e demais papéis
+  não podem mutar. Rota, navegação e as seis Server Functions usam a mesma
+  matriz server-side.
+- Validação local do checkpoint `95ff45f`: 349 testes, lint, typecheck,
+  Prettier apenas nos arquivos alterados, `git diff --check` e build HML
+  isolado com chave pública sintética verdes. O aviso nominal de secrets
+  ausentes no SSR foi esperado e nenhum arquivo de ambiente foi carregado.
+- Migrations `0027` e `0028`: aditivas, revisadas, sem seed/importação/backfill
+  e não aplicadas. Devem ser aplicadas juntas, em ordem, somente em ambiente
+  autorizado. Recuperação: reverter primeiro o código; remover as novas
+  tabelas/enum depois de uso apagaria fatos auditáveis e exige migration
+  destrutiva separada com aprovação humana.
+- A reconciliação somente leitura do histórico Drizzle em HML confirmou pelos
+  hashes locais que `0000`–`0016` estão aplicadas. As migrations `0017`–`0028`
+  permanecem pendentes em HML; não executar nenhuma delas sem autorização,
+  janela e plano de homologação explícitos.
+- Commit isolado `2ce3566`: comparação somente leitura com
+  `codex/audit-remediation`, `codex/workbook-parity` e
+  `codex/wp-d-scenarios` concluiu incorporação parcial. As três branches já
+  usam `LEFT JOIN` para a saída de produção e preservam alocações sem lote nos
+  totais; G2 também reconcilia a origem sem lote em `/financeiro`. A distinção
+  explícita entre camadas `purchase` e `adjustment` proposta pelo commit não
+  está incorporada. O patch está defasado pelas evoluções posteriores dos
+  relatórios e não deve ser aplicado por cherry-pick; só deve ser reavaliado
+  como mudança nova e testada se essa distinção voltar a ser requisito humano.
+- Não executado: escrita em banco compartilhado, cenário inicial, migration,
+  HML, deploy, Cloudflare, Neon, DNS, secret, importação, backfill, merge ou
+  rebase.
+- Próximo passo exato: revisar e aprovar a PR #5; depois, em janela e ambiente
+  explicitamente autorizados, confirmar o conjunto já aplicado, executar as
+  migrations pendentes até `0028` na ordem e homologar Dono, Gerente e
+  Funcionário, lifecycle e cálculos com dados sintéticos descartáveis.
 
 ## Missão `codex/workbook-parity` — G2-F1 concluído localmente
 
@@ -124,12 +191,11 @@ Atualizado em 14 de setembro de 2026.
   `34554171049` passaram no WP-F2 `bbf6db3`; as CIs de push `34554627169` e PR
   `34554629415` passaram no WP-A2 `b9241ae`; as CIs de push `34554990879` e PR
   `34554994350` passaram no WP-I1 `aa593c3`.
-- Próximo passo exato: iniciar WP-D com metas e cenários rastreáveis sobre fatos
-  G2 e premissas versionadas, sem classificar despesas unilateralmente. Em
-  ambiente explicitamente autorizado, aplicar `0019`–`0026` e
-  homologar os fluxos locais. Obter histórico confiável antes de calcular
-  cobertura ou sugerir compra. Nenhuma dessas ações externas foi executada
-  nesta missão.
+- O próximo passo registrado naquele checkpoint era iniciar WP-D; ele foi
+  executado na branch e PR próprias descritas no topo. Continua pendente, em
+  ambiente explicitamente autorizado, aplicar `0019`–`0028` e homologar os
+  fluxos locais. Obter histórico confiável antes de calcular cobertura ou
+  sugerir compra. Nenhuma dessas ações externas foi executada nesta missão.
 
 ## Atualização AR-G1-HML-2 — 10 de setembro de 2026
 

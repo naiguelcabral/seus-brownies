@@ -1,5 +1,6 @@
 import {
   boolean,
+  check,
   date,
   foreignKey,
   integer,
@@ -12,8 +13,10 @@ import {
   text,
   timestamp,
   unique,
+  uniqueIndex,
   varchar,
 } from 'drizzle-orm/pg-core'
+import { sql } from 'drizzle-orm'
 
 const money = (name: string) => numeric(name, { precision: 12, scale: 2 })
 const unitCost = (name: string) => numeric(name, { precision: 12, scale: 3 })
@@ -137,6 +140,11 @@ export const financialEventType = pgEnum('financial_event_type', [
 export const financialPeriodStatus = pgEnum('financial_period_status', [
   'open',
   'closed',
+])
+export const managementScenarioStatus = pgEnum('management_scenario_status', [
+  'draft',
+  'active',
+  'archived',
 ])
 
 /**
@@ -330,6 +338,147 @@ export const managementSettings = pgTable('management_settings', {
     .notNull()
     .defaultNow(),
 })
+
+/** A scenario row is one immutable business version once it leaves draft. */
+export const managementScenarios = pgTable(
+  'management_scenarios',
+  {
+    id: serial().primaryKey(),
+    scenarioKey: varchar('scenario_key', { length: 36 }).notNull(),
+    version: integer().notNull(),
+    revision: integer().notNull().default(1),
+    status: managementScenarioStatus().notNull().default('draft'),
+    name: varchar({ length: 120 }).notNull(),
+    description: text(),
+    effectiveOn: date('effective_on').notNull(),
+    monthlyProfitGoal: money('monthly_profit_goal').notNull(),
+    fixedMonthlyCosts: money('fixed_monthly_costs').notNull(),
+    salesDaysPerMonth: integer('sales_days_per_month').notNull(),
+    weeksPerMonth: numeric('weeks_per_month', {
+      precision: 5,
+      scale: 2,
+    }).notNull(),
+    minimumMarginBps: integer('minimum_margin_bps').notNull(),
+    feeTaxReserveBps: integer('fee_tax_reserve_bps').notNull(),
+    supersedesScenarioId: integer('supersedes_scenario_id'),
+    replacementReason: text('replacement_reason'),
+    archiveReason: text('archive_reason'),
+    createdByAuthUserId: varchar('created_by_auth_user_id', {
+      length: 191,
+    }).notNull(),
+    updatedByAuthUserId: varchar('updated_by_auth_user_id', {
+      length: 191,
+    }).notNull(),
+    activatedByAuthUserId: varchar('activated_by_auth_user_id', {
+      length: 191,
+    }),
+    archivedByAuthUserId: varchar('archived_by_auth_user_id', {
+      length: 191,
+    }),
+    createdAt: timestamp('created_at', { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp('updated_at', { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    activatedAt: timestamp('activated_at', { withTimezone: true }),
+    archivedAt: timestamp('archived_at', { withTimezone: true }),
+  },
+  (table) => [
+    unique('management_scenarios_key_version_unique').on(
+      table.scenarioKey,
+      table.version,
+    ),
+    uniqueIndex('management_scenarios_single_active_unique')
+      .on(table.status)
+      .where(sql`${table.status} = 'active'`),
+    index('management_scenarios_status_effective_idx').on(
+      table.status,
+      table.effectiveOn,
+    ),
+    foreignKey({
+      columns: [table.supersedesScenarioId],
+      foreignColumns: [table.id],
+      name: 'management_scenarios_supersedes_fk',
+    }).onDelete('restrict'),
+    check(
+      'management_scenarios_sales_days_check',
+      sql`${table.salesDaysPerMonth} between 1 and 31`,
+    ),
+    check(
+      'management_scenarios_minimum_margin_check',
+      sql`${table.minimumMarginBps} between 0 and 10000`,
+    ),
+    check(
+      'management_scenarios_fee_tax_reserve_check',
+      sql`${table.feeTaxReserveBps} between 0 and 10000`,
+    ),
+  ],
+)
+
+/** Original weights remain evidence; normalized basis points always close at 100%. */
+export const managementScenarioMix = pgTable(
+  'management_scenario_mix',
+  {
+    id: serial().primaryKey(),
+    scenarioId: integer('scenario_id')
+      .notNull()
+      .references(() => managementScenarios.id, { onDelete: 'restrict' }),
+    productId: integer('product_id')
+      .notNull()
+      .references(() => products.id, { onDelete: 'restrict' }),
+    productName: varchar('product_name', { length: 120 }).notNull(),
+    originalWeight: numeric('original_weight', {
+      precision: 12,
+      scale: 6,
+    }).notNull(),
+    normalizedWeightBps: integer('normalized_weight_bps').notNull(),
+    plannedUnitPrice: money('planned_unit_price').notNull(),
+    plannedUnitCost: unitCost('planned_unit_cost').notNull(),
+  },
+  (table) => [
+    unique('management_scenario_mix_product_unique').on(
+      table.scenarioId,
+      table.productId,
+    ),
+    index('management_scenario_mix_product_idx').on(table.productId),
+    check(
+      'management_scenario_mix_original_weight_check',
+      sql`${table.originalWeight} > 0`,
+    ),
+    check(
+      'management_scenario_mix_normalized_weight_check',
+      sql`${table.normalizedWeightBps} > 0 and ${table.normalizedWeightBps} <= 10000`,
+    ),
+  ],
+)
+
+/** Append-only snapshots preserve every critical scenario revision and reason. */
+export const managementScenarioHistory = pgTable(
+  'management_scenario_history',
+  {
+    id: serial().primaryKey(),
+    scenarioId: integer('scenario_id')
+      .notNull()
+      .references(() => managementScenarios.id, { onDelete: 'restrict' }),
+    revision: integer().notNull(),
+    scenarioVersion: integer('scenario_version').notNull(),
+    event: varchar({ length: 40 }).notNull(),
+    actorAuthUserId: varchar('actor_auth_user_id', { length: 191 }).notNull(),
+    reason: text(),
+    snapshot: jsonb().notNull(),
+    occurredAt: timestamp('occurred_at', { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (table) => [
+    unique('management_scenario_history_revision_unique').on(
+      table.scenarioId,
+      table.revision,
+    ),
+    index('management_scenario_history_actor_idx').on(table.actorAuthUserId),
+  ],
+)
 
 /** Human-owned response to an observed alert; the system never asserts the cause. */
 export const actionPlans = pgTable(

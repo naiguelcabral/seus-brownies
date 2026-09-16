@@ -51,8 +51,10 @@ Este documento é a referência canônica de alto nível para o estado atual do 
   consomem apenas o saldo do crédito emitido, sem efeito novo em receita/caixa.
 - Fechamento financeiro manual, correções imutáveis pelo Dono, leitura mensal
   dos fatos e a rota `/financeiro` estão implementados localmente. O relatório
-  por competência agora reconcilia receita, CMV FIFO e margem bruta por produto,
-  lote/origem e local/canal; cenários gerenciais continuam pendentes.
+  por competência reconcilia receita, CMV FIFO e margem bruta por produto,
+  lote/origem e local/canal. Metas e cenários versionados, lifecycle auditado,
+  mix normalizado e projeções separadas do realizado estão implementados
+  localmente em `/cenarios`; aguardam migrations e homologação.
 - Venda paga registra recebimento imediatamente. Cancelamento pago pré-entrega
   registra reembolso de caixa na data informada junto do estorno FIFO, sem criar
   receita; recebimentos legados ausentes falham em período fechado.
@@ -86,9 +88,26 @@ Este documento é a referência canônica de alto nível para o estado atual do 
   imutáveis, efeitos separados de competência/caixa, fechamento manual e
   quantidade compensada, além do vínculo entre resgate e emissão de crédito.
   Não foram aplicadas a nenhum banco.
+- As migrations aditivas `0027` e `0028` preparam cenários versionados, mix
+  auditável, snapshot do nome do produto, ativo único e histórico append-only.
+  Foram somente geradas e revisadas; não foram aplicadas a nenhum banco e não
+  contêm seed, importação ou backfill.
 - Não repetir cargas ou homologações já consumidas sem autorização explícita.
 
 ### Qualidade
+
+- Checkpoint funcional atual de WP-D publicado em `49d0b08`: 349 testes, lint,
+  typecheck, Prettier direcionado, `git diff --check` e build HML isolado
+  verdes. As CIs de push `35040805679` e pull request `35040808764`
+  confirmaram o mesmo SHA. A implementação está concluída na branch
+  `codex/wp-d-scenarios`, mas não está integrada nem homologada: a PR #5
+  permanece em rascunho, as migrations `0027`/`0028` não foram aplicadas,
+  nenhum cenário compartilhado foi semeado e nenhum recurso operacional
+  externo ou ambiente foi alterado.
+
+- O checkpoint anterior `95ff45f` permanece como evidência histórica da
+  correção que limita o peso original do mix, confirmada pela CI de push
+  `35040598956`; ele é ancestral do checkpoint funcional atual `49d0b08`.
 
 - Checkpoint G2-F1 concluído localmente em `8403fe1`: 327 testes, lint,
   typecheck, Prettier direcionado, `git diff --check` e build HML isolado verdes.
@@ -232,7 +251,8 @@ Este documento é a referência canônica de alto nível para o estado atual do 
 - Pagamentos online.
 - Regras completas de entrega.
 - Deploy definitivo de produção e secrets finais do Worker.
-- Relatórios gerenciais avançados, cenários e análises adicionais.
+- Homologação integrada de metas e cenários após aplicar `0027`/`0028` em
+  ambiente explicitamente autorizado; relatórios gerenciais adicionais.
 - Adoção multitenant: plano em `MULTITENANCY-ADOPTION.md`; depende de decidir
   memberships, escopo de chaves e mapeamento auditável dos fatos históricos
   antes de gerar uma migration aplicável.

@@ -1,0 +1,1 @@
+ALTER TABLE "management_scenario_mix" ADD COLUMN "product_name" varchar(120) NOT NULL;
