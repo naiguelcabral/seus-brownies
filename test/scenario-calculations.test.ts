@@ -56,6 +56,14 @@ test('contrato aceita rascunho vazio, mas ativação bloqueia mix vazio', () => 
   )
 })
 
+test('contrato rejeita peso que excede a precisão persistida', () => {
+  const oversized = {
+    ...draft,
+    mix: [{ ...draft.mix[0], originalWeight: '1000000.000001' }],
+  }
+  assert.equal(scenarioDraftValues.safeParse(oversized).success, false)
+})
+
 test('ativação bloqueia produto inativo ou que não seja produto final', () => {
   assert.throws(
     () =>

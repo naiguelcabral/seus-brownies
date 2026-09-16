@@ -29,6 +29,10 @@ const positiveWeight = z
   .trim()
   .regex(/^\d+(?:[,.]\d{1,6})?$/, 'Informe um peso válido.')
   .refine(
+    (value) => value.replace(',', '.').split('.')[0].length <= 6,
+    'O peso excede o limite permitido.',
+  )
+  .refine(
     (value) => !/^0+(?:[,.]0+)?$/.test(value),
     'O peso deve ser maior que zero.',
   )

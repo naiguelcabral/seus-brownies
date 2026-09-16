@@ -883,7 +883,7 @@ function ScenarioEditor({
                 </div>
                 <div className="mt-3 grid gap-3 sm:grid-cols-3">
                   <Field
-                    label="Peso original"
+                    label="Peso original (0,33 = 33%)"
                     value={row.originalWeight}
                     onChange={(value) =>
                       onMixChange(index, 'originalWeight', value)
