@@ -83,6 +83,7 @@ echo "Preparando memória local do Codex..."
 if [[ -f "$ROOT_DIR/scripts/codex/conversation_memory.py" ]]; then
   if python3 "$ROOT_DIR/scripts/codex/conversation_memory.py" prepare; then
     echo "✓ Contexto local pronto para a próxima sessão do Codex"
+    echo "ℹ Captura automática exige configuração local do usuário; veja docs/governance/LOCAL-CONVERSATION-MEMORY.md"
   else
     echo "⚠ Não foi possível preparar a memória local; a inicialização continuará."
   fi
