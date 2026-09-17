@@ -37,7 +37,7 @@ AUTH_HEADER = re.compile(
     r'''(?im)(\b(?:authorization|proxy-authorization|cookie|set-cookie)\b["']?\s*[:=]\s*)(\[REDACTED\]|"[^"\r\n]*"|'[^'\r\n]*'|[^\r\n]+)'''
 )
 SENSITIVE_ASSIGNMENT = re.compile(
-    r'''(?i)(\b(?:database_url|api[_-]?key|client[_-]?secret|secret|senha|password|passwd|token|access[_-]?token|refresh[_-]?token|cloudflare[_-]?token|neon(?:[_-]?(?:url|credential|token))?)\b["']?\s*[:=]\s*)(\[REDACTED\]|"[^"\r\n]*"|'[^'\r\n]*'|[^\s,;&]+)'''
+    r'''(?i)(\b(?:(?:[a-z0-9]+[_-])*(?:api[_-]?key|secret(?:[_-]?key)?|(?:private|access|signing|encryption)[_-]?key|token|password|passwd|passphrase|credential(?:s)?|connection[_-]?string|cookie|dsn)|database[_-]?url|senha|neon(?:[_-]?(?:url|credential|token))?)\b["']?\s*[:=]\s*)(\[REDACTED\]|"[^"\r\n]*"|'[^'\r\n]*'|[^\s,;&]+)'''
 )
 SENSITIVE_QUERY = re.compile(
     r'''(?i)([?&](?:api[_-]?key|client[_-]?secret|secret|password|passwd|token|access[_-]?token|refresh[_-]?token|signature|credential)=)([^&#\s]+)'''
