@@ -13,5 +13,6 @@ dist-ssr
 __unconfig*
 todos.json
 
-# Conversas e memória operacional locais do Codex
+# Estado, configuração e memória operacional locais do Codex
+.codex/
 .codex-local/

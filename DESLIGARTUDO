@@ -44,8 +44,13 @@ if [[ -t 0 ]]; then
   esac
 fi
 
-# Fecha a memória local antes do checkpoint Git. A pasta .codex-local é
-# ignorada pelo Git para impedir que conversas brutas sejam publicadas.
+# Bloqueia caminhos sensíveis antes de qualquer escrita da memória ou mudança
+# no staging. O verificador nunca abre o conteúdo desses arquivos.
+python3 "$ROOT_DIR/scripts/git-sensitive-paths.py" preflight
+python3 "$ROOT_DIR/scripts/git-sensitive-paths.py" staged
+
+# Fecha a memória local antes do checkpoint Git. Falha da memória não impede o
+# salvamento do código e a escrita atômica preserva o último contexto válido.
 if [[ -f "$ROOT_DIR/scripts/codex/conversation_memory.py" ]]; then
   if ! python3 "$ROOT_DIR/scripts/codex/conversation_memory.py" finalize; then
     echo "⚠ A memória local do Codex não pôde ser finalizada."
@@ -53,22 +58,12 @@ if [[ -f "$ROOT_DIR/scripts/codex/conversation_memory.py" ]]; then
   fi
 fi
 
-# Defesa adicional: arquivos de ambiente/segredo conhecidos não podem ser
-# adicionados por este fluxo, mesmo se a configuração local do Git mudar.
-SENSITIVE_PATHS=(
-  ".env"
-  ".env.local"
-  ".env.development"
-  ".env.production"
-  ".env.test"
-)
-for sensitive in "${SENSITIVE_PATHS[@]}"; do
-  if git ls-files --error-unmatch "$sensitive" >/dev/null 2>&1; then
-    echo "ERRO: arquivo sensível versionado detectado: $sensitive"
-    echo "Remova-o do índice Git antes de usar DESLIGARTUDO."
-    exit 1
-  fi
-done
+# A memória precisa continuar local antes de qualquer `git add`.
+if ! git check-ignore -q .codex-local/; then
+  echo "ERRO: .codex-local não está ignorada pelo Git."
+  echo "O checkpoint foi abortado antes de alterar o staging."
+  exit 1
+fi
 
 if [[ -n "$(git status --porcelain)" ]]; then
   if [[ -t 0 ]]; then
@@ -79,6 +74,7 @@ if [[ -n "$(git status --porcelain)" ]]; then
   fi
 
   git add --all
+  python3 "$ROOT_DIR/scripts/git-sensitive-paths.py" staged
   git commit -m "$COMMIT_MESSAGE"
 else
   echo "Não há alterações novas para criar um commit."
