@@ -12,3 +12,7 @@ dist-ssr
 .vinxi
 __unconfig*
 todos.json
+
+# Estado, configuração e memória operacional locais do Codex
+.codex/
+.codex-local/
