@@ -146,6 +146,88 @@ print(json.dumps([[module.redact(v), module.redact(module.redact(v))] for v in v
   }
 })
 
+test('redaction matches compound sensitive suffixes without broad key false positives', () => {
+  const sensitive = [
+    {
+      input: 'DATABASE_SECRET=fictional-database-secret-7Yp',
+      name: 'DATABASE_SECRET',
+      value: 'fictional-database-secret-7Yp',
+    },
+    {
+      input:
+        "export AUTH_PROVIDER_TOKEN='fictional auth token !@#$%^&*()[]{};,&=+/?.'",
+      name: 'AUTH_PROVIDER_TOKEN',
+      value: 'fictional auth token !@#$%^&*()[]{};,&=+/?.',
+    },
+    {
+      input:
+        'DB_MASTER_PASSWORD: "fictional db password !@#$%^&*()[]{};,&=+/?."',
+      name: 'DB_MASTER_PASSWORD',
+      value: 'fictional db password !@#$%^&*()[]{};,&=+/?.',
+    },
+    {
+      input: 'SERVICE_API_KEY=fictional-service-key+/=._:-',
+      name: 'SERVICE_API_KEY',
+      value: 'fictional-service-key+/=._:-',
+    },
+    {
+      input: '{"OAUTH_CLIENT_SECRET":"fictional-oauth-client-secret"}',
+      name: 'OAUTH_CLIENT_SECRET',
+      value: 'fictional-oauth-client-secret',
+    },
+    {
+      input: 'export INTEGRATION_ACCESS_TOKEN="fictional-integration-token"',
+      name: 'INTEGRATION_ACCESS_TOKEN',
+      value: 'fictional-integration-token',
+    },
+    {
+      input: 'database_secret=fictional-lowercase-secret',
+      name: 'database_secret',
+      value: 'fictional-lowercase-secret',
+    },
+    {
+      input: 'AuTh_PrOvIdEr_ToKeN=fictional-mixed-case-token',
+      name: 'AuTh_PrOvIdEr_ToKeN',
+      value: 'fictional-mixed-case-token',
+    },
+  ]
+  const preserved = [
+    'VITE_TURNSTILE_SITE_KEY=fictional-public-site-key',
+    'PRODUCT_SECRETARY=fictional-product-secretary',
+  ]
+  const output = execFileSync(
+    'python3',
+    [
+      '-B',
+      '-c',
+      `
+import importlib.util, json, sys
+spec = importlib.util.spec_from_file_location('memory', sys.argv[1])
+module = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(module)
+values = json.load(sys.stdin)
+print(json.dumps([module.redact(value) for value in values]))
+`,
+      sourceScript,
+    ],
+    {
+      input: JSON.stringify([
+        ...sensitive.map(({ input }) => input),
+        ...preserved,
+      ]),
+      encoding: 'utf8',
+    },
+  )
+  const results = JSON.parse(output) as string[]
+
+  for (const [index, { name, value }] of sensitive.entries()) {
+    assert.ok(results[index].includes(name))
+    assert.match(results[index], /\[REDACTED\]/)
+    assert.equal(results[index].includes(value), false)
+  }
+  assert.deepEqual(results.slice(sensitive.length), preserved)
+})
+
 test('notify separates roles, ignores tool payloads, blocks traversal and deduplicates replay', () => {
   fixture((root, script) => {
     const payload = JSON.stringify({
