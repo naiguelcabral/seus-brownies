@@ -1,28 +1,68 @@
 import { useEffect, useState } from 'react'
 import { Plus, Trash2 } from 'lucide-react'
-import { createFileRoute, useRouter } from '@tanstack/react-router'
+import { createFileRoute, useNavigate, useRouter } from '@tanstack/react-router'
 import { useServerFn } from '@tanstack/react-start'
+import { z } from 'zod'
 
 import { ManagementLayout } from '#/components/ManagementLayout'
+import { hasPermission } from '#/features/auth/authorization'
 import {
   createSale,
   listSaleProducts,
   listSales,
 } from '#/features/operations/functions'
 import { cancelSaleLifecycle } from '#/features/inventory/lifecycle-writers'
-import { canCancelSale, canSubmitLifecycle, lifecycleErrorMessage, validateLifecycleForm } from '#/features/inventory/lifecycle-ui'
+import {
+  canCancelSale,
+  canSubmitLifecycle,
+  lifecycleErrorMessage,
+  validateLifecycleForm,
+} from '#/features/inventory/lifecycle-ui'
 import { formatDateTime } from '#/lib/format'
+import { saleStatuses } from '#/features/operations/sale-history'
+import type { SaleStatus } from '#/features/operations/sale-history'
+
+const saleSearch = z.object({
+  query: z.string().trim().max(100).optional().catch(undefined),
+  status: z.enum(saleStatuses).optional().catch(undefined),
+  start: z.string().date().optional().catch(undefined),
+  end: z.string().date().optional().catch(undefined),
+  page: z.number().int().min(1).max(10_000).catch(1),
+})
 
 export const Route = createFileRoute('/vendas')({
-  loader: async () => ({
-    products: await listSaleProducts(),
-    sales: await listSales(),
+  validateSearch: saleSearch,
+  loaderDeps: ({ search }) => ({
+    query: search.query,
+    status: search.status,
+    start: search.start,
+    end: search.end,
+    page: search.page,
   }),
+  loader: async ({ context, deps }) => {
+    const canReadHistory = Boolean(
+      context.appRole && hasPermission(context.appRole, 'sales:read'),
+    )
+    const canManageLifecycle = Boolean(
+      context.appRole && hasPermission(context.appRole, 'fifo:lifecycle:write'),
+    )
+    return {
+      products: await listSaleProducts(),
+      history: canReadHistory
+        ? await listSales({ data: deps })
+        : { sales: [], total: 0, page: 1, pageSize: 20, totalPages: 1 },
+      canReadHistory,
+      canManageLifecycle,
+    }
+  },
   component: SalesPage,
+  pendingComponent: SalesPending,
+  pendingMs: 300,
+  errorComponent: SalesError,
 })
 type Item = { productId: string; quantity: string }
 const emptyItem = (): Item => ({ productId: '', quantity: '' })
-const statusLabels = {
+const statusLabels: Record<SaleStatus, string> = {
   draft: 'Rascunho',
   confirmed: 'Confirmada',
   paid: 'Paga',
@@ -30,15 +70,19 @@ const statusLabels = {
 }
 
 function SalesPage() {
-  const { products, sales } = Route.useLoaderData()
+  const { products, history, canReadHistory, canManageLifecycle } =
+    Route.useLoaderData()
+  const search = Route.useSearch()
   const router = useRouter()
+  const navigate = useNavigate({ from: Route.fullPath })
   const save = useServerFn(createSale)
+  const [idempotencyKey, setIdempotencyKey] = useState(() =>
+    crypto.randomUUID(),
+  )
   const cancel = useServerFn(cancelSaleLifecycle)
   const [customerName, setCustomerName] = useState('')
   const [customerPhone, setCustomerPhone] = useState('')
-  const [status, setStatus] = useState<
-    'draft' | 'confirmed' | 'paid' | 'cancelled'
-  >('draft')
+  const [status, setStatus] = useState<SaleStatus>('draft')
   const [notes, setNotes] = useState('')
   const [items, setItems] = useState<Item[]>([emptyItem()])
   const [message, setMessage] = useState<string | null>(null)
@@ -47,7 +91,9 @@ function SalesPage() {
   const [cancelReason, setCancelReason] = useState('')
   const [cancelConfirmed, setCancelConfirmed] = useState(false)
   const [clientReady, setClientReady] = useState(false)
-  useEffect(() => { setClientReady(true) }, [])
+  useEffect(() => {
+    setClientReady(true)
+  }, [])
   function updateItem(index: number, patch: Partial<Item>) {
     setItems(
       items.map((item, itemIndex) =>
@@ -56,16 +102,32 @@ function SalesPage() {
     )
   }
   async function submitCancellation(saleId: number) {
-    const validation = validateLifecycleForm('cancel', { saleId, reason: cancelReason })
-    if (!validation.ok) { setMessage(validation.message); return }
-    if (!canSubmitLifecycle(saving, true, cancelConfirmed)) { setMessage('Confirme o cancelamento antes de continuar.'); return }
-    setSaving(true); setMessage(null)
+    const validation = validateLifecycleForm('cancel', {
+      saleId,
+      reason: cancelReason,
+    })
+    if (!validation.ok) {
+      setMessage(validation.message)
+      return
+    }
+    if (!canSubmitLifecycle(saving, true, cancelConfirmed)) {
+      setMessage('Confirme o cancelamento antes de continuar.')
+      return
+    }
+    setSaving(true)
+    setMessage(null)
     try {
       await cancel({ data: validation.data })
       setMessage('Venda cancelada; o estoque e o custo foram estornados.')
-      setCancellingId(null); setCancelReason(''); setCancelConfirmed(false)
+      setCancellingId(null)
+      setCancelReason('')
+      setCancelConfirmed(false)
       await router.invalidate()
-    } catch (error) { setMessage(lifecycleErrorMessage(error)) } finally { setSaving(false) }
+    } catch (error) {
+      setMessage(lifecycleErrorMessage(error))
+    } finally {
+      setSaving(false)
+    }
   }
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -80,6 +142,7 @@ function SalesPage() {
     try {
       await save({
         data: {
+          idempotencyKey,
           customerName,
           customerPhone,
           status,
@@ -95,6 +158,7 @@ function SalesPage() {
       setNotes('')
       setStatus('draft')
       setItems([emptyItem()])
+      setIdempotencyKey(crypto.randomUUID())
       setMessage(
         status === 'confirmed' || status === 'paid'
           ? 'Venda registrada e estoque baixado.'
@@ -116,47 +180,232 @@ function SalesPage() {
       title="Vendas"
       description="Registre pedidos e vendas. A baixa no estoque é criada automaticamente somente para vendas confirmadas ou pagas."
     >
-      {clientReady ? <span data-testid="fifo-lifecycle-client-ready" className="sr-only">Interface pronta</span> : null}
+      {clientReady ? (
+        <span data-testid="fifo-lifecycle-client-ready" className="sr-only">
+          Interface pronta
+        </span>
+      ) : null}
       <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_420px]">
         <section className="overflow-hidden rounded-2xl border border-[#ecdfd4] bg-white">
           <div className="border-b border-[#f0e5dc] px-5 py-4">
             <h2 className="font-bold">Vendas recentes</h2>
           </div>
-          {sales.length ? (
-            <ul className="divide-y divide-[#f0e5dc]">
-              {sales.map((sale) => (
-                <li
-                  className="flex items-center justify-between gap-4 px-5 py-4"
-                  key={sale.id}
-                >
-                  <div>
-                    <p className="font-bold">
-                      {sale.customerName || 'Cliente não informado'}
-                    </p>
-                    <p className="mt-1 text-xs text-[#896d5b]">
-                      {statusLabels[sale.status]} · {formatDateTime(sale.soldAt)}
-                    </p>
-                  </div>
-                  <div className="text-right">
-                    <strong>{currency.format(Number(sale.totalAmount))}</strong>
-                    {canCancelSale(sale.status) ? (
-                      <button type="button" disabled={saving} onClick={() => { setCancellingId(sale.id); setCancelReason(''); setCancelConfirmed(false) }} className="mt-2 block text-xs font-bold text-[#a64f23] disabled:opacity-60">Cancelar / estornar</button>
-                    ) : null}
-                  </div>
-                  {cancellingId === sale.id ? (
-                    <div className="basis-full rounded-lg bg-[#fff5e7] p-3 text-left">
-                      <Input label="Motivo do cancelamento" value={cancelReason} onChange={setCancelReason} />
-                      <label className="mt-2 flex gap-2 text-xs"><input type="checkbox" checked={cancelConfirmed} onChange={(event) => setCancelConfirmed(event.target.checked)} /> Confirmo o estorno de estoque e CMV.</label>
-                      <div className="mt-3 flex gap-2"><button type="button" disabled={!canSubmitLifecycle(saving, true, cancelConfirmed)} onClick={() => submitCancellation(sale.id)} className="rounded bg-[#a64f23] px-3 py-2 text-xs font-bold text-white disabled:opacity-60">{saving ? 'Estornando...' : 'Confirmar cancelamento'}</button><button type="button" disabled={saving} onClick={() => setCancellingId(null)} className="text-xs font-bold">Fechar</button></div>
-                    </div>
-                  ) : null}
-                </li>
-              ))}
-            </ul>
-          ) : (
+          {!canReadHistory ? (
             <p className="p-6 text-sm text-[#846859]">
-              Nenhuma venda registrada ainda.
+              Seu acesso permite registrar vendas, sem consultar o histórico
+              financeiro.
             </p>
+          ) : (
+            <>
+              <form
+                className="flex flex-wrap items-end gap-3 border-b border-[#f0e5dc] px-5 py-4"
+                role="search"
+                onSubmit={(event) => {
+                  event.preventDefault()
+                  const form = new FormData(event.currentTarget)
+                  const selectedStatus = String(form.get('status') ?? '')
+                  void navigate({
+                    search: (previous) => ({
+                      ...previous,
+                      query:
+                        String(form.get('query') ?? '').trim() || undefined,
+                      status: saleStatuses.includes(
+                        selectedStatus as SaleStatus,
+                      )
+                        ? (selectedStatus as SaleStatus)
+                        : undefined,
+                      start: String(form.get('start') ?? '') || undefined,
+                      end: String(form.get('end') ?? '') || undefined,
+                      page: 1,
+                    }),
+                  })
+                }}
+              >
+                <label className="text-xs font-bold text-[#573524]">
+                  Cliente
+                  <input
+                    className="field mt-1 block min-w-48"
+                    name="query"
+                    defaultValue={search.query}
+                    placeholder="Buscar cliente"
+                  />
+                </label>
+                <label className="text-xs font-bold text-[#573524]">
+                  Status
+                  <select
+                    className="field mt-1 block"
+                    name="status"
+                    defaultValue={search.status ?? ''}
+                  >
+                    <option value="">Todos</option>
+                    {saleStatuses.map((value) => (
+                      <option key={value} value={value}>
+                        {statusLabels[value]}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <label className="text-xs font-bold text-[#573524]">
+                  De
+                  <input
+                    className="field mt-1 block"
+                    type="date"
+                    name="start"
+                    defaultValue={search.start}
+                  />
+                </label>
+                <label className="text-xs font-bold text-[#573524]">
+                  Até
+                  <input
+                    className="field mt-1 block"
+                    type="date"
+                    name="end"
+                    defaultValue={search.end}
+                  />
+                </label>
+                <button className="rounded-lg border border-[#4a2114] px-3 py-2 text-xs font-bold text-[#4a2114]">
+                  Filtrar
+                </button>
+                {search.query || search.status || search.start || search.end ? (
+                  <button
+                    type="button"
+                    className="px-2 py-2 text-xs font-bold text-[#75411f]"
+                    onClick={() => void navigate({ search: { page: 1 } })}
+                  >
+                    Limpar filtros
+                  </button>
+                ) : null}
+              </form>
+              {history.sales.length ? (
+                <ul className="divide-y divide-[#f0e5dc]">
+                  {history.sales.map((sale) => (
+                    <li
+                      className="flex items-center justify-between gap-4 px-5 py-4"
+                      key={sale.id}
+                    >
+                      <div>
+                        <p className="font-bold">
+                          {sale.customerName || 'Cliente não informado'}
+                        </p>
+                        <p className="mt-1 text-xs text-[#896d5b]">
+                          {statusLabels[sale.status]} ·{' '}
+                          {formatDateTime(sale.soldAt)}
+                        </p>
+                      </div>
+                      <div className="text-right">
+                        <strong>
+                          {currency.format(Number(sale.totalAmount))}
+                        </strong>
+                        {canManageLifecycle && canCancelSale(sale.status) ? (
+                          <button
+                            type="button"
+                            disabled={saving}
+                            onClick={() => {
+                              setCancellingId(sale.id)
+                              setCancelReason('')
+                              setCancelConfirmed(false)
+                            }}
+                            className="mt-2 block text-xs font-bold text-[#a64f23] disabled:opacity-60"
+                          >
+                            Cancelar / estornar
+                          </button>
+                        ) : null}
+                      </div>
+                      {cancellingId === sale.id ? (
+                        <div className="basis-full rounded-lg bg-[#fff5e7] p-3 text-left">
+                          <Input
+                            label="Motivo do cancelamento"
+                            value={cancelReason}
+                            onChange={setCancelReason}
+                          />
+                          <label className="mt-2 flex gap-2 text-xs">
+                            <input
+                              type="checkbox"
+                              checked={cancelConfirmed}
+                              onChange={(event) =>
+                                setCancelConfirmed(event.target.checked)
+                              }
+                            />{' '}
+                            Confirmo o estorno de estoque e CMV.
+                          </label>
+                          <div className="mt-3 flex gap-2">
+                            <button
+                              type="button"
+                              disabled={
+                                !canSubmitLifecycle(
+                                  saving,
+                                  true,
+                                  cancelConfirmed,
+                                )
+                              }
+                              onClick={() => submitCancellation(sale.id)}
+                              className="rounded bg-[#a64f23] px-3 py-2 text-xs font-bold text-white disabled:opacity-60"
+                            >
+                              {saving
+                                ? 'Estornando...'
+                                : 'Confirmar cancelamento'}
+                            </button>
+                            <button
+                              type="button"
+                              disabled={saving}
+                              onClick={() => setCancellingId(null)}
+                              className="text-xs font-bold"
+                            >
+                              Fechar
+                            </button>
+                          </div>
+                        </div>
+                      ) : null}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="p-6 text-sm text-[#846859]">
+                  Nenhuma venda encontrada para esses filtros.
+                </p>
+              )}
+              <nav
+                className="flex items-center justify-between gap-3 border-t border-[#f0e5dc] px-5 py-4 text-sm"
+                aria-label="Paginação das vendas"
+              >
+                <span aria-live="polite">
+                  Página {history.page} de {history.totalPages} ·{' '}
+                  {history.total} {history.total === 1 ? 'venda' : 'vendas'}
+                </span>
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    className="rounded-lg border border-[#d9c4b5] px-3 py-1.5 text-xs font-bold disabled:opacity-50"
+                    disabled={history.page === 1}
+                    onClick={() =>
+                      void navigate({
+                        search: (previous) => ({
+                          ...previous,
+                          page: history.page - 1,
+                        }),
+                      })
+                    }
+                  >
+                    Anterior
+                  </button>
+                  <button
+                    type="button"
+                    className="rounded-lg border border-[#d9c4b5] px-3 py-1.5 text-xs font-bold disabled:opacity-50"
+                    disabled={history.page === history.totalPages}
+                    onClick={() =>
+                      void navigate({
+                        search: (previous) => ({
+                          ...previous,
+                          page: history.page + 1,
+                        }),
+                      })
+                    }
+                  >
+                    Próxima
+                  </button>
+                </div>
+              </nav>
+            </>
           )}
         </section>
         <form
@@ -183,9 +432,9 @@ function SalesPage() {
               }
               className="field mt-1.5"
             >
-              {Object.entries(statusLabels).map(([value, label]) => (
+              {saleStatuses.map((value) => (
                 <option value={value} key={value}>
-                  {label}
+                  {statusLabels[value]}
                 </option>
               ))}
             </select>
@@ -263,6 +512,43 @@ function SalesPage() {
             {saving ? 'Registrando...' : 'Registrar venda'}
           </button>
         </form>
+      </div>
+    </ManagementLayout>
+  )
+}
+
+function SalesPending() {
+  return (
+    <ManagementLayout
+      title="Vendas"
+      description="Carregando o histórico de vendas."
+    >
+      <p
+        role="status"
+        className="rounded-2xl border border-[#ecdfd4] bg-white p-5 text-sm text-[#846859]"
+      >
+        Carregando vendas…
+      </p>
+    </ManagementLayout>
+  )
+}
+
+function SalesError({ error }: { error: Error }) {
+  const router = useRouter()
+  return (
+    <ManagementLayout
+      title="Vendas"
+      description="Não foi possível carregar o histórico de vendas."
+    >
+      <div className="rounded-2xl border border-[#e7c9b8] bg-[#fff5ed] p-5 text-sm text-[#75411f]">
+        <p>{error.message || 'Tente novamente em alguns instantes.'}</p>
+        <button
+          type="button"
+          className="mt-3 rounded-lg border border-[#75411f] px-3 py-2 text-xs font-bold"
+          onClick={() => void router.invalidate()}
+        >
+          Tentar novamente
+        </button>
       </div>
     </ManagementLayout>
   )

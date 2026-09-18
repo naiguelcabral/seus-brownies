@@ -32,12 +32,13 @@ O Codex consegue identificar estado, regras, limites e próxima tarefa sem depen
 - [~] Configurar integração externa Neon Auth em HML (secrets, callbacks,
   e-mail, Turnstile e rate limiting), sujeita a gate humano. E-mail/senha,
   provedor compartilhado e origens confiáveis foram confirmados em leitura;
-  widget Turnstile HML e seu segredo foram configurados e publicados, mas o
-  limite distribuído e a homologação integrada seguem pendentes.
+  Turnstile foi publicado com widget restrito e site key no bundle HML; limite
+  distribuído, desafio real, validação integrada e replay seguem pendentes.
 - [x] Publicar Worker Cloudflare HML separado em `workers.dev`, sem DNS, rota
       customizada ou alteração no Worker principal. Em 6 de setembro, o Worker
       recebeu o código atual e o smoke público confirmou `/login` com `200` e `/`
-      sem sessão redirecionando para `/login`.
+      sem sessão redirecionando para `/login`; a leitura pública sanitizada de
+      A06 reconfirmou os mesmos resultados em 7 de setembro.
 - [x] Aplicar a migration de infraestrutura de acesso `0014` somente no branch
       Neon de homologação autorizado, sem bootstrap de usuário.
 - [~] Implementar identidade de usuário (cadastro e verificação OTP por
@@ -59,9 +60,12 @@ O Codex consegue identificar estado, regras, limites e próxima tarefa sem depen
 - [~] Implementar rate limiting de autenticação: limite local para login,
   cadastro, OTP e reset preparado; binding distribuído HML permanece pendente.
 - [~] Definir e implementar CAPTCHA/desafio adicional em fluxos suspeitos:
-  verificador server-side, bloqueio fail-closed, widget e site key HML estão
-  configurados. A validação do segredo por resposta descartável passou; falta
-  homologar um desafio real e seu replay junto aos fluxos de autenticação.
+  verificador server-side e bloqueio fail-closed quando o desafio é exigido;
+  Turnstile foi publicado, mas validação integrada e replay permanecem
+  pendentes. A07 recebeu autorização humana em 7 de setembro, porém foi
+  bloqueada antes de rede por ausência de navegador; não houve CAPTCHA, token
+  ou replay. A correção local agora propaga o desafio do cooldown durável para
+  a UI; ainda requer revisão/publicação e homologação HML.
 - [~] Reestruturar RBAC inicial em Dono, Gerente e Funcionário: política,
   testes e migrations de transição aplicados em HML; o Dono e um Gerente
   possuem vínculos auditados. A verificação de e-mail e a liberação das demais
@@ -113,7 +117,12 @@ A definição de margem realizada e vínculo venda-lote é decisão de negócio/
 - [ ] Produção por período e rendimento real.
 - [ ] Perdas e coprodutos.
 - [ ] Parceiros/canais com desempenho.
-- [ ] Exportação CSV/Excel quando necessária.
+- [~] Exportação CSV segura dos relatórios operacionais concluída localmente;
+  XLSX segue fora do escopo atual e não foi apresentado como integração.
+- [~] Busca, filtros, paginação e estados explícitos implementados para os
+  históricos de despesas, compras e vendas, e para o catálogo; os quatro
+  pacotes foram aprovados em CI. Os demais históricos seguem como pacotes
+  separados.
 
 ## Fase G4 — WhatsApp e mensageria
 
@@ -156,28 +165,49 @@ A definição de margem realizada e vínculo venda-lote é decisão de negócio/
 
 - [x] Configuração Cloudflare versionada.
 - [x] Build/deploy command disponível.
-- [~] Worker HML isolado publicado, mas indisponível publicamente por `403` de
-  borda e ainda sem deploy do RBAC atual.
+- [~] Worker HML isolado publicado e acessível publicamente: em 6 de setembro
+  `/login` respondeu `200` e `/` sem sessão redirecionou para `/login`.
+  Turnstile publicado, widget restrito, site key no bundle HML e diagnóstico
+  histórico do `403` preservado; desafio real, replay, homologação integrada,
+  rate limit distribuído e demais gates de G1 seguem pendentes.
 - [ ] Definir ambientes development/staging/production formalmente.
 - [ ] Configurar secrets por ambiente.
-- [ ] Definir estratégia de backup Neon.
-- [ ] Definir recuperação e RPO/RTO compatíveis com o negócio.
+- [~] Runbook de backup Neon e cópia independente preparado; janela, storage,
+  RPO e responsáveis dependem de decisão humana.
+- [~] Runbook de restauração e ensaio descartável preparado; RTO, corte e
+  validação em branch continuam dependentes de infraestrutura autorizada.
 - [ ] Logs estruturados.
 - [ ] Monitoramento de falhas.
 - [ ] Alertas de erro e disponibilidade.
+- [!] Revisar atualização de dependências auditadas: `npm audit` confirmou 13
+  vulnerabilidades; a correção automática de Drizzle/Wrangler exige versões
+  incompatíveis e depende de estratégia aprovada e validação completa.
 - [ ] Deploy definitivo somente após aprovação humana.
 
 ## Fase G8 — Autonomia progressiva do Codex
 
+- [~] Rodada manual local autorizada: checkpoint humano de A07-R2 confirmado
+  em `c28c267`, com seis testes novos, suíte de 37 arquivos e lint verdes.
+  Falha anterior de escrita em `.git` preservada no log. A07-R3 em avaliação
+  local, sem promover autonomia permanente. Contrato no handoff.
+
 - [x] Testes e documentação suficientes para iniciar governança agent-friendly.
-- [ ] Nível 1: Codex implementa tarefa explícita e apresenta diff/checks.
-- [ ] Nível 2: Codex conclui pacote pequeno do roadmap e prepara PR.
-- [ ] Nível 3: Codex escolhe próxima tarefa não bloqueada dentro de fase autorizada.
+- [x] Etapas 1–2 preparadas: fila, handoff, log, runbook, controlador local
+      seguro e `LIGARTUDO --prepare-only`, todos cobertos por testes locais.
+- [~] Nível 1: Codex implementa tarefa explícita e apresenta diff/checks.
+- [ ] Nível 2: após revisão humana do piloto A01–A03, Codex conclui pacote
+      pequeno, cria commit local e prepara PR.
+- [ ] Nível 3: após três pacotes consecutivos verdes e sem correção humana ou
+      gate violado, Codex escolhe próximo item exatamente `ready` em fase autorizada.
 - [ ] Automação de revisão de CI/dependências, quando útil.
 - [ ] Multiagente somente após estabilidade do workflow e proteção adequada da `main`.
 
 ## Prioridade imediata
 
+0. Aprovar o modelo de membership e o mapeamento histórico de tenancy descritos
+   em `MULTITENANCY-ADOPTION.md` antes de gerar/aplicar migration multitenant.
+   Não atribuir `tenant-test-001` a fatos HML/produção nem alterar unicidades
+   globais sem a decisão.
 1. Decidir se haverá segundo Gerente e, se aprovado, informar a identidade a
    verificar antes de criar o vínculo auditado.
 2. Executar a homologação integrada/E2E de G1, inclusive reset, login, sessão,

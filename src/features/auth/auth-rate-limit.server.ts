@@ -1,6 +1,8 @@
 import { createCloudflareTurnstileVerifier } from './turnstile-adapter.server'
 import { createInMemoryAuthRateLimiter } from './auth-rate-limit'
 import type { AuthRateLimitScope } from './auth-rate-limit'
+import { getCloudflareAuthRateLimiter } from './cloudflare-rate-limit.server'
+import type { CloudflareRateLimitBinding } from './cloudflare-rate-limit.server'
 
 const limiter = createInMemoryAuthRateLimiter()
 
@@ -11,6 +13,14 @@ type PublicAuthProtectionDependencies = {
     secretKey: string
     token: string
   }) => Promise<boolean>
+  distributedLimiter?: CloudflareRateLimitBinding | null
+  resolveDistributedLimiter?: () => Promise<
+    CloudflareRateLimitBinding | undefined
+  >
+}
+
+type PublicAuthProtectionOptions = {
+  forceChallenge?: boolean
 }
 
 function isDevelopment() {
@@ -42,7 +52,7 @@ export async function hashAuthIdentity(
 
 export type PublicAuthProtectionInput = {
   scope: AuthRateLimitScope
-  email: string
+  identifier: string
   turnstileToken?: string
 }
 
@@ -56,6 +66,7 @@ export async function protectPublicAuthAction(
   input: PublicAuthProtectionInput,
   environment: Record<string, string | undefined>,
   dependencies: PublicAuthProtectionDependencies = {},
+  options: PublicAuthProtectionOptions = {},
 ) {
   const pepper = environment.AUTH_LOGIN_HASH_PEPPER
   if (!pepper) {
@@ -67,18 +78,67 @@ export async function protectPublicAuthAction(
 
   const opaqueIdentity = await hashAuthIdentity(
     input.scope,
-    input.email,
+    input.identifier,
     pepper,
   )
+  const distributedLimiter =
+    dependencies.distributedLimiter === null
+      ? undefined
+      : (dependencies.distributedLimiter ??
+        (await (
+          dependencies.resolveDistributedLimiter ?? getCloudflareAuthRateLimiter
+        )()))
+
+  // HML enables this explicitly so a missing Workers binding cannot silently
+  // downgrade a public endpoint to the isolate-local fallback limiter.
+  if (
+    !distributedLimiter &&
+    environment.AUTH_RATE_LIMITER_REQUIRED === 'true'
+  ) {
+    return {
+      allowed: false,
+      requiresChallenge: false,
+      retryAfterMs: 0,
+    }
+  }
+
+  if (distributedLimiter) {
+    try {
+      const distributed = await distributedLimiter.limit({
+        key: `${input.scope}:${opaqueIdentity}`,
+      })
+      if (!distributed.success) {
+        return {
+          allowed: false,
+          requiresChallenge: false,
+          retryAfterMs: 0,
+        }
+      }
+    } catch {
+      return {
+        allowed: false,
+        requiresChallenge: false,
+        retryAfterMs: 0,
+      }
+    }
+  }
   const decision = (dependencies.limiter ?? limiter).consume(
     input.scope,
     opaqueIdentity,
   )
-  if (decision.allowed) return decision
+  const requiresChallenge =
+    options.forceChallenge === true || decision.requiresChallenge
+  if (!requiresChallenge) return decision
+
+  const challengeDecision = {
+    ...decision,
+    allowed: false,
+    requiresChallenge: true,
+  }
 
   const secretKey = environment.TURNSTILE_SECRET_KEY
   if (!secretKey || !input.turnstileToken) {
-    return { ...decision, allowed: false }
+    return challengeDecision
   }
 
   try {
@@ -92,8 +152,8 @@ export async function protectPublicAuthAction(
             token: input.turnstileToken,
           })
         ).success
-    return { ...decision, allowed: verified }
+    return { ...challengeDecision, allowed: verified }
   } catch {
-    return { ...decision, allowed: false }
+    return challengeDecision
   }
 }

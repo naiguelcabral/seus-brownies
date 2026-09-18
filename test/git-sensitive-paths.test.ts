@@ -34,9 +34,16 @@ function status(root: string, mode = 'preflight') {
   return spawnSync('python3', ['-B', guard, mode], { cwd: root }).status
 }
 
+function staged(root: string) {
+  return execFileSync('git', ['diff', '--cached', '--name-only', '-z'], {
+    cwd: root,
+  })
+}
+
 test('guard rejects nested, staged and tracked sensitive paths without changing staging', () => {
   for (const path of [
     '.env.production',
+    '.env.production.example',
     'nested/.env.preview',
     'new\nline/.env',
     '.dev.vars.hml',
@@ -49,26 +56,22 @@ test('guard rejects nested, staged and tracked sensitive paths without changing 
       writeFileSync(join(root, path), 'FICTIONAL=synthetic')
       assert.equal(status(root), 1, path)
       git('add', '--', path)
-      const before = execFileSync(
-        'git',
-        ['diff', '--cached', '--name-only', '-z'],
-        {
-          cwd: root,
-        },
-      )
+      const before = staged(root)
       assert.equal(status(root, 'staged'), 1, path)
-      const after = execFileSync(
-        'git',
-        ['diff', '--cached', '--name-only', '-z'],
-        {
-          cwd: root,
-        },
-      )
-      assert.deepEqual(after, before)
+      assert.deepEqual(staged(root), before)
       git('commit', '-m', 'synthetic sensitive fixture')
       assert.equal(status(root, 'head'), 1, path)
     })
   }
+})
+
+test('guard rejects a sensitive rename destination without changing staging', () => {
+  fixture((root, git) => {
+    git('mv', 'safe.txt', '.env.renamed')
+    const before = staged(root)
+    assert.equal(status(root, 'staged'), 1)
+    assert.deepEqual(staged(root), before)
+  })
 })
 
 test('guard permits only the explicit root env example', () => {

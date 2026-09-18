@@ -4,8 +4,18 @@ import { useServerFn } from '@tanstack/react-start'
 
 import { ManagementLayout } from '#/components/ManagementLayout'
 import { listInventory } from '#/features/operations/functions'
-import { recordLossLifecycle, recordNegativeAdjustmentLifecycle, recordPositiveAdjustmentLifecycle, returnSaleLifecycle } from '#/features/inventory/lifecycle-writers'
-import { canSubmitLifecycle, createNegativeInventoryFormValues, lifecycleErrorMessage, validateLifecycleForm } from '#/features/inventory/lifecycle-ui'
+import {
+  recordLossLifecycle,
+  recordNegativeAdjustmentLifecycle,
+  recordPositiveAdjustmentLifecycle,
+  returnSaleLifecycle,
+} from '#/features/inventory/lifecycle-writers'
+import {
+  canSubmitLifecycle,
+  createNegativeInventoryFormValues,
+  lifecycleErrorMessage,
+  validateLifecycleForm,
+} from '#/features/inventory/lifecycle-ui'
 import { PositiveAdjustmentForm } from '#/features/inventory/positive-adjustment-form'
 import { formatDateTime } from '#/lib/format'
 
@@ -28,7 +38,9 @@ function InventoryPage() {
   const [search, setSearch] = useState('')
   const [type, setType] = useState('all')
   const [clientReady, setClientReady] = useState(false)
-  useEffect(() => { setClientReady(true) }, [])
+  useEffect(() => {
+    setClientReady(true)
+  }, [])
   const filtered = useMemo(
     () =>
       balances.filter(
@@ -45,7 +57,11 @@ function InventoryPage() {
       title="Estoque"
       description="O saldo é calculado pela soma das movimentações. Compras entram; vendas confirmadas ou pagas saem."
     >
-      {clientReady ? <span data-testid="fifo-lifecycle-client-ready" className="sr-only">Interface pronta</span> : null}
+      {clientReady ? (
+        <span data-testid="fifo-lifecycle-client-ready" className="sr-only">
+          Interface pronta
+        </span>
+      ) : null}
       <section className="rounded-2xl border border-[#ecdfd4] bg-white p-5">
         <div className="flex flex-col gap-3 sm:flex-row">
           <input
@@ -117,7 +133,8 @@ function InventoryPage() {
                 <div>
                   <p className="font-bold">{movement.productName}</p>
                   <p className="text-xs text-[#896d5b]">
-                    {movementLabels[movement.type]} · {formatDateTime(movement.occurredAt)}
+                    {movementLabels[movement.type]} ·{' '}
+                    {formatDateTime(movement.occurredAt)}
                   </p>
                 </div>
                 <strong
@@ -143,7 +160,11 @@ function InventoryPage() {
   )
 }
 
-function LifecycleActions({ products }: { products: Array<{ id: number; name: string; sku: string }> }) {
+function LifecycleActions({
+  products,
+}: {
+  products: Array<{ id: number; name: string; sku: string }>
+}) {
   const router = useRouter()
   const recordReturn = useServerFn(returnSaleLifecycle)
   const recordLoss = useServerFn(recordLossLifecycle)
@@ -151,40 +172,261 @@ function LifecycleActions({ products }: { products: Array<{ id: number; name: st
   const recordPositive = useServerFn(recordPositiveAdjustmentLifecycle)
   const [pending, setPending] = useState(false)
   const [message, setMessage] = useState<string | null>(null)
-  const [returnValues, setReturnValues] = useState({ saleItemId: '', quantity: '', reason: '', reference: '' })
-  const [lossValues, setLossValues] = useState(createNegativeInventoryFormValues)
-  const [negativeAdjustmentValues, setNegativeAdjustmentValues] = useState(createNegativeInventoryFormValues)
-  const [positiveValues, setPositiveValues] = useState({ productId: '', quantity: '', reason: '', reference: '', totalCost: '', originReference: '' })
+  const [returnValues, setReturnValues] = useState({
+    saleItemId: '',
+    quantity: '',
+    reason: '',
+    reference: '',
+  })
+  const [lossValues, setLossValues] = useState(
+    createNegativeInventoryFormValues,
+  )
+  const [negativeAdjustmentValues, setNegativeAdjustmentValues] = useState(
+    createNegativeInventoryFormValues,
+  )
+  const [positiveValues, setPositiveValues] = useState({
+    productId: '',
+    quantity: '',
+    reason: '',
+    reference: '',
+    totalCost: '',
+    originReference: '',
+  })
   const [positiveConfirmed, setPositiveConfirmed] = useState(false)
-  async function run(kind: 'return' | 'loss' | 'negative' | 'positive', values: Record<string, string>, confirmed = false) {
-    const numeric = { ...values, ...(kind === 'return' ? { saleItemId: Number(values.saleItemId) } : { productId: Number(values.productId) }) }
-    const validation = validateLifecycleForm(kind, numeric)
-    if (!validation.ok) { setMessage(validation.message); return }
-    if ((kind === 'loss' || kind === 'negative') && !confirmed) { setMessage('Confirme a saída de estoque antes de continuar.'); return }
-    if (kind === 'positive' && !confirmed) { setMessage('Confirme o impacto do ajuste positivo no estoque e na camada FIFO antes de continuar.'); return }
-    setPending(true); setMessage(null)
+  async function run(
+    kind: 'return' | 'loss' | 'negative' | 'positive',
+    values: Record<string, string>,
+    confirmed = false,
+  ) {
+    const numeric = {
+      ...values,
+      ...(kind === 'return'
+        ? { saleItemId: Number(values.saleItemId) }
+        : { productId: Number(values.productId) }),
+    }
+    if ((kind === 'loss' || kind === 'negative') && !confirmed) {
+      setMessage('Confirme a saída de estoque antes de continuar.')
+      return
+    }
+    if (kind === 'positive' && !confirmed) {
+      setMessage(
+        'Confirme o impacto do ajuste positivo no estoque e na camada FIFO antes de continuar.',
+      )
+      return
+    }
+    setPending(true)
+    setMessage(null)
     try {
-      if (kind === 'return') await recordReturn({ data: validation.data })
-      if (kind === 'loss') await recordLoss({ data: validation.data })
-      if (kind === 'negative') await recordNegative({ data: validation.data })
-      if (kind === 'positive') await recordPositive({ data: validation.data })
-      setMessage('Evento FIFO registrado.'); await router.invalidate()
-    } catch (error) { setMessage(lifecycleErrorMessage(error)) } finally { setPending(false) }
+      if (kind === 'return') {
+        const validation = validateLifecycleForm('return', numeric)
+        if (!validation.ok) throw new Error(validation.message)
+        await recordReturn({ data: validation.data })
+      }
+      if (kind === 'loss') {
+        const validation = validateLifecycleForm('loss', numeric)
+        if (!validation.ok) throw new Error(validation.message)
+        await recordLoss({ data: validation.data })
+      }
+      if (kind === 'negative') {
+        const validation = validateLifecycleForm('negative', numeric)
+        if (!validation.ok) throw new Error(validation.message)
+        await recordNegative({ data: validation.data })
+      }
+      if (kind === 'positive') {
+        const validation = validateLifecycleForm('positive', numeric)
+        if (!validation.ok) throw new Error(validation.message)
+        await recordPositive({ data: validation.data })
+      }
+      setMessage('Evento FIFO registrado.')
+      await router.invalidate()
+    } catch (error) {
+      setMessage(lifecycleErrorMessage(error))
+    } finally {
+      setPending(false)
+    }
   }
-  const product = (value: string, change: (value: string) => void) => <label className="block text-xs font-bold">Produto<select className="field mt-1" value={value} onChange={(event) => change(event.target.value)}><option value="">Selecione</option>{products.map((item) => <option value={item.id} key={item.id}>{item.name} · {item.sku}</option>)}</select></label>
-  const field = (label: string, value: string, change: (value: string) => void, placeholder = '') => <label className="block text-xs font-bold">{label}<input className="field mt-1" value={value} placeholder={placeholder} onChange={(event) => change(event.target.value)} /></label>
-  return <section className="mt-6 rounded-2xl border border-[#ecdfd4] bg-white p-5"><h2 className="font-bold">Eventos FIFO de ciclo de vida</h2><p className="mt-1 text-xs text-[#896d5b]">As ações abaixo exigem a migration 0013 e são registradas pelo servidor em uma única transação.</p>{message ? <p className="mt-3 rounded-lg bg-[#fff5e7] p-3 text-sm text-[#75411f]">{message}</p> : null}
-    <div className="mt-4 grid gap-4 lg:grid-cols-2">
-      <form className="rounded-xl border border-[#ead9ca] p-3 space-y-2" onSubmit={(event) => { event.preventDefault(); void run('return', returnValues) }}><strong>Devolução de venda</strong>{field('ID do item da venda', returnValues.saleItemId, (value) => setReturnValues({ ...returnValues, saleItemId: value }))}{field('Quantidade', returnValues.quantity, (value) => setReturnValues({ ...returnValues, quantity: value }), '1,000')}{field('Motivo', returnValues.reason, (value) => setReturnValues({ ...returnValues, reason: value }))}{field('Referência', returnValues.reference, (value) => setReturnValues({ ...returnValues, reference: value }))}<button disabled={pending} className="action-button">Registrar devolução</button></form>
-      <NegativeForm title="Perda de estoque" values={lossValues} setValues={setLossValues} product={product} field={field} pending={pending} onSubmit={(confirmed) => run('loss', lossValues, confirmed)} />
-      <NegativeForm title="Ajuste negativo" values={negativeAdjustmentValues} setValues={setNegativeAdjustmentValues} product={product} field={field} pending={pending} onSubmit={(confirmed) => run('negative', negativeAdjustmentValues, confirmed)} />
-      <PositiveAdjustmentForm products={products} values={positiveValues} setValues={setPositiveValues} pending={pending} confirmed={positiveConfirmed} setConfirmed={setPositiveConfirmed} onSubmit={() => { void run('positive', positiveValues, positiveConfirmed) }} />
-    </div></section>
+  const product = (value: string, change: (value: string) => void) => (
+    <label className="block text-xs font-bold">
+      Produto
+      <select
+        className="field mt-1"
+        value={value}
+        onChange={(event) => change(event.target.value)}
+      >
+        <option value="">Selecione</option>
+        {products.map((item) => (
+          <option value={item.id} key={item.id}>
+            {item.name} · {item.sku}
+          </option>
+        ))}
+      </select>
+    </label>
+  )
+  const field = (
+    label: string,
+    value: string,
+    change: (value: string) => void,
+    placeholder = '',
+  ) => (
+    <label className="block text-xs font-bold">
+      {label}
+      <input
+        className="field mt-1"
+        value={value}
+        placeholder={placeholder}
+        onChange={(event) => change(event.target.value)}
+      />
+    </label>
+  )
+  return (
+    <section className="mt-6 rounded-2xl border border-[#ecdfd4] bg-white p-5">
+      <h2 className="font-bold">Eventos FIFO de ciclo de vida</h2>
+      <p className="mt-1 text-xs text-[#896d5b]">
+        As ações abaixo exigem a migration 0013 e são registradas pelo servidor
+        em uma única transação.
+      </p>
+      {message ? (
+        <p className="mt-3 rounded-lg bg-[#fff5e7] p-3 text-sm text-[#75411f]">
+          {message}
+        </p>
+      ) : null}
+      <div className="mt-4 grid gap-4 lg:grid-cols-2">
+        <form
+          className="rounded-xl border border-[#ead9ca] p-3 space-y-2"
+          onSubmit={(event) => {
+            event.preventDefault()
+            void run('return', returnValues)
+          }}
+        >
+          <strong>Devolução de venda</strong>
+          {field('ID do item da venda', returnValues.saleItemId, (value) =>
+            setReturnValues({ ...returnValues, saleItemId: value }),
+          )}
+          {field(
+            'Quantidade',
+            returnValues.quantity,
+            (value) => setReturnValues({ ...returnValues, quantity: value }),
+            '1,000',
+          )}
+          {field('Motivo', returnValues.reason, (value) =>
+            setReturnValues({ ...returnValues, reason: value }),
+          )}
+          {field('Referência', returnValues.reference, (value) =>
+            setReturnValues({ ...returnValues, reference: value }),
+          )}
+          <button disabled={pending} className="action-button">
+            Registrar devolução
+          </button>
+        </form>
+        <NegativeForm
+          title="Perda de estoque"
+          values={lossValues}
+          setValues={setLossValues}
+          product={product}
+          field={field}
+          pending={pending}
+          onSubmit={(confirmed) => run('loss', lossValues, confirmed)}
+        />
+        <NegativeForm
+          title="Ajuste negativo"
+          values={negativeAdjustmentValues}
+          setValues={setNegativeAdjustmentValues}
+          product={product}
+          field={field}
+          pending={pending}
+          onSubmit={(confirmed) =>
+            run('negative', negativeAdjustmentValues, confirmed)
+          }
+        />
+        <PositiveAdjustmentForm
+          products={products}
+          values={positiveValues}
+          setValues={setPositiveValues}
+          pending={pending}
+          confirmed={positiveConfirmed}
+          setConfirmed={setPositiveConfirmed}
+          onSubmit={() => {
+            void run('positive', positiveValues, positiveConfirmed)
+          }}
+        />
+      </div>
+    </section>
+  )
 }
 
-function NegativeForm({ title, values, setValues, product, field, pending, onSubmit }: { title: string; values: { productId: string; quantity: string; reason: string; reference: string }; setValues: (values: { productId: string; quantity: string; reason: string; reference: string }) => void; product: (value: string, change: (value: string) => void) => React.ReactNode; field: (label: string, value: string, change: (value: string) => void, placeholder?: string) => React.ReactNode; pending: boolean; onSubmit: (confirmed: boolean) => Promise<void> }) {
+function NegativeForm({
+  title,
+  values,
+  setValues,
+  product,
+  field,
+  pending,
+  onSubmit,
+}: {
+  title: string
+  values: {
+    productId: string
+    quantity: string
+    reason: string
+    reference: string
+  }
+  setValues: (values: {
+    productId: string
+    quantity: string
+    reason: string
+    reference: string
+  }) => void
+  product: (value: string, change: (value: string) => void) => React.ReactNode
+  field: (
+    label: string,
+    value: string,
+    change: (value: string) => void,
+    placeholder?: string,
+  ) => React.ReactNode
+  pending: boolean
+  onSubmit: (confirmed: boolean) => Promise<void>
+}) {
   const [confirmed, setConfirmed] = useState(false)
-  return <form className="rounded-xl border border-[#ead9ca] p-3 space-y-2" onSubmit={(event) => { event.preventDefault(); void onSubmit(confirmed) }}><strong>{title}</strong>{product(values.productId, (value) => setValues({ ...values, productId: value }))}{field('Quantidade', values.quantity, (value) => setValues({ ...values, quantity: value }), '1,000')}{field('Motivo', values.reason, (value) => setValues({ ...values, reason: value }))}{field('Referência', values.reference, (value) => setValues({ ...values, reference: value }))}<label className="flex gap-2 text-xs"><input type="checkbox" checked={confirmed} onChange={(event) => setConfirmed(event.target.checked)} /> Confirmo a saída de estoque.</label><button disabled={!canSubmitLifecycle(pending, true, confirmed)} className="action-button">Registrar {title.toLocaleLowerCase('pt-BR')}</button></form>
+  return (
+    <form
+      className="rounded-xl border border-[#ead9ca] p-3 space-y-2"
+      onSubmit={(event) => {
+        event.preventDefault()
+        void onSubmit(confirmed)
+      }}
+    >
+      <strong>{title}</strong>
+      {product(values.productId, (value) =>
+        setValues({ ...values, productId: value }),
+      )}
+      {field(
+        'Quantidade',
+        values.quantity,
+        (value) => setValues({ ...values, quantity: value }),
+        '1,000',
+      )}
+      {field('Motivo', values.reason, (value) =>
+        setValues({ ...values, reason: value }),
+      )}
+      {field('Referência', values.reference, (value) =>
+        setValues({ ...values, reference: value }),
+      )}
+      <label className="flex gap-2 text-xs">
+        <input
+          type="checkbox"
+          checked={confirmed}
+          onChange={(event) => setConfirmed(event.target.checked)}
+        />{' '}
+        Confirmo a saída de estoque.
+      </label>
+      <button
+        disabled={!canSubmitLifecycle(pending, true, confirmed)}
+        className="action-button"
+      >
+        Registrar {title.toLocaleLowerCase('pt-BR')}
+      </button>
+    </form>
+  )
 }
 
 function formatQuantity(value: string, unit: string) {

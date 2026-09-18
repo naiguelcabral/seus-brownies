@@ -29,6 +29,9 @@ import {
   valueInventory,
 } from '#/features/reports/calculations'
 import { centsToMoney, moneyToCents } from '#/features/production/calculations'
+import { isMissingOptionalSchemaError } from '#/features/reports/optional-schema'
+import { reconcileInventoryLedger } from '#/features/reports/inventory-reconciliation'
+import type { ReconciliationDivergence } from '#/features/reports/inventory-reconciliation'
 
 const periodValues = z.object({
   start: z.string().date().optional(),
@@ -253,7 +256,8 @@ export const getOperationalReports = createServerFn({ method: 'GET' })
         losses,
         operationalCosts: costs.map(({ type, amount }) => ({ type, amount })),
       }
-    } catch {
+    } catch (error) {
+      if (!isMissingOptionalSchemaError(error)) throw error
       production = null
     }
 
@@ -281,8 +285,23 @@ export const getOperationalReports = createServerFn({ method: 'GET' })
         value: string
       }>
     } | null = null
+    let reconciliation: {
+      checked: {
+        layers: number
+        allocations: number
+        reversals: number
+        movements: number
+      }
+      divergences: ReconciliationDivergence[]
+    } | null = null
     try {
-      const [allocationRows, reversalRows, layerRows] = await Promise.all([
+      const [
+        allocationRows,
+        reversalRows,
+        layerRows,
+        reconciliationAllocations,
+        reconciliationReversals,
+      ] = await Promise.all([
         database
           .select({
             allocationId: inventoryCostAllocations.id,
@@ -311,7 +330,7 @@ export const getOperationalReports = createServerFn({ method: 'GET' })
               inventoryCostLayers.id,
             ),
           )
-          .innerJoin(
+          .leftJoin(
             productionBatchOutputs,
             eq(
               inventoryCostLayers.productionBatchOutputId,
@@ -333,14 +352,57 @@ export const getOperationalReports = createServerFn({ method: 'GET' })
           .from(inventoryCostReversals),
         database
           .select({
+            id: inventoryCostLayers.id,
             productId: products.id,
             productName: products.name,
             unit: products.unit,
+            originalQuantity: inventoryCostLayers.originalQuantity,
+            originalCost: inventoryCostLayers.originalCost,
             remainingQuantity: inventoryCostLayers.remainingQuantity,
             remainingCost: inventoryCostLayers.remainingCost,
           })
           .from(inventoryCostLayers)
           .innerJoin(products, eq(inventoryCostLayers.productId, products.id)),
+        database
+          .select({
+            id: inventoryCostAllocations.id,
+            layerId: inventoryCostAllocations.inventoryCostLayerId,
+            outgoingMovementId:
+              inventoryCostAllocations.outgoingStockMovementId,
+            productId: inventoryCostAllocations.productId,
+            quantity: inventoryCostAllocations.quantity,
+            allocatedCost: inventoryCostAllocations.allocatedCost,
+            movementProductId: stockMovements.productId,
+            movementQuantity: stockMovements.quantityDelta,
+            movementCost: stockMovements.allocatedCost,
+          })
+          .from(inventoryCostAllocations)
+          .innerJoin(
+            stockMovements,
+            eq(
+              inventoryCostAllocations.outgoingStockMovementId,
+              stockMovements.id,
+            ),
+          ),
+        database
+          .select({
+            id: inventoryCostReversals.id,
+            allocationId: inventoryCostReversals.originalAllocationId,
+            incomingMovementId: inventoryCostReversals.incomingStockMovementId,
+            quantity: inventoryCostReversals.quantity,
+            restoredCost: inventoryCostReversals.restoredCost,
+            movementProductId: stockMovements.productId,
+            movementQuantity: stockMovements.quantityDelta,
+            movementCost: stockMovements.allocatedCost,
+          })
+          .from(inventoryCostReversals)
+          .innerJoin(
+            stockMovements,
+            eq(
+              inventoryCostReversals.incomingStockMovementId,
+              stockMovements.id,
+            ),
+          ),
       ])
       if (allocationRows.length || layerRows.length) {
         const reversedCostByAllocation = new Map<number, bigint>()
@@ -364,9 +426,16 @@ export const getOperationalReports = createServerFn({ method: 'GET' })
           inventory: valueFifoLayers(layerRows),
         }
       }
-    } catch {
+      reconciliation = reconcileInventoryLedger({
+        layers: layerRows,
+        allocations: reconciliationAllocations,
+        reversals: reconciliationReversals,
+      })
+    } catch (error) {
       // The feature is additively migrated; older bases retain existing reports.
+      if (!isMissingOptionalSchemaError(error)) throw error
       fifo = null
+      reconciliation = null
     }
 
     const revenue = groupRevenueByChannel(
@@ -390,5 +459,6 @@ export const getOperationalReports = createServerFn({ method: 'GET' })
       salesByProduct: groupSalesByProduct(salesByProduct),
       production,
       fifo,
+      reconciliation,
     }
   })

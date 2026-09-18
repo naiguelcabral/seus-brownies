@@ -6,6 +6,11 @@ import {
 } from '@tanstack/react-router'
 
 import { getSessionStatus } from '#/features/auth/session-status.functions'
+import { hasPermission } from '#/features/auth/authorization'
+import {
+  homeRouteForRole,
+  requiredPermissionForRoute,
+} from '#/features/auth/ui-access'
 import appCss from '../styles.css?url'
 
 export const Route = createRootRoute({
@@ -14,13 +19,26 @@ export const Route = createRootRoute({
       location.pathname === '/login' ||
       location.pathname === '/login/redefinir-senha'
     ) {
-      return
+      return { appRole: null }
     }
 
-    const { authenticated } = await getSessionStatus()
-    if (!authenticated) {
-      throw redirect({ to: '/login', throw: true })
+    const session = await getSessionStatus()
+    if (!session.authenticated || !session.role) {
+      throw redirect({
+        to: '/login',
+        search: { token: undefined },
+        throw: true,
+      })
     }
+    const permission = requiredPermissionForRoute(location.pathname)
+    if (permission && !hasPermission(session.role, permission)) {
+      throw redirect({
+        to: homeRouteForRole(session.role),
+        search: {},
+        throw: true,
+      })
+    }
+    return { appRole: session.role }
   },
   head: () => ({
     meta: [

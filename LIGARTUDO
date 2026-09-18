@@ -4,6 +4,15 @@
 
 set -euo pipefail
 
+PREPARE_ONLY=false
+
+if [[ "${1:-}" == "--prepare-only" ]]; then
+  PREPARE_ONLY=true
+elif [[ $# -gt 0 ]]; then
+  echo "Uso: $0 [--prepare-only]"
+  exit 2
+fi
+
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$ROOT_DIR"
 
@@ -29,7 +38,8 @@ if [[ ! -d node_modules ]]; then
   npm ci
 fi
 
-# 3. Atualiza Git somente quando for seguro
+# 3. Atualiza Git somente quando for seguro. O controlador autônomo usa
+# --prepare-only para não tocar em remoto durante o preflight.
 if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
   BRANCH="$(git branch --show-current)"
 
@@ -40,6 +50,8 @@ if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
     echo "⚠ Não foi possível identificar a branch atual."
     echo "O painel será iniciado com o estado local."
 
+  elif [[ "$PREPARE_ONLY" == true ]]; then
+    echo "✓ Preflight Git concluído; atualização remota foi ignorada"
   elif ! git remote get-url origin >/dev/null 2>&1; then
     echo "⚠ O remoto origin não está configurado."
     echo "O painel será iniciado com o estado local."
@@ -76,12 +88,13 @@ if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
   fi
 fi
 
-# 4. Prepara a memória operacional local do Codex
+# 4. Prepara a infraestrutura e a memória operacional local do Codex.
 echo
 echo "Preparando memória local do Codex..."
 
 if [[ -f "$ROOT_DIR/scripts/codex/conversation_memory.py" ]]; then
   if python3 "$ROOT_DIR/scripts/codex/conversation_memory.py" prepare; then
+    echo "✓ Infraestrutura local do Codex validada pelas primitivas endurecidas"
     echo "✓ Contexto local pronto para a próxima sessão do Codex"
     echo "ℹ Captura automática exige configuração local do usuário; veja docs/governance/LOCAL-CONVERSATION-MEMORY.md"
   else
@@ -138,7 +151,17 @@ else
   echo "⚠ Codex CLI não encontrado neste terminal"
 fi
 
-# 7. Inicia o ambiente HML local
+# 7. O modo de preparação termina aqui; ele nunca inicia o servidor.
+if [[ "$PREPARE_ONLY" == true ]]; then
+  echo
+  echo "✓ Preparação local concluída; servidor não iniciado (--prepare-only)."
+  exit 0
+fi
+
+echo "ℹ Para registrar comandos e saídas desta sessão, execute separadamente:"
+echo "  scripts/codex/record_terminal_session.sh"
+
+# 8. Inicia o ambiente HML local
 echo
 echo "========================================"
 echo "Iniciando o projeto HML local"

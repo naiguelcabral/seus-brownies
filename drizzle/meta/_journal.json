@@ -120,6 +120,20 @@
       "when": 1788712214871,
       "tag": "0016_migrate-admin-to-owner",
       "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "7",
+      "when": 1788877037648,
+      "tag": "0017_orange_the_hand",
+      "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "7",
+      "when": 1788878474257,
+      "tag": "0018_bouncy_odin",
+      "breakpoints": true
     }
   ]
 }

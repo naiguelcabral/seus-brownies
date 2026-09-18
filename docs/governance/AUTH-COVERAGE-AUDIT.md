@@ -1,0 +1,89 @@
+# Auditoria de cobertura local — autenticação e negações por papel
+
+## Escopo e critério
+
+Auditoria estática concluída em 7 de setembro de 2026. Ela cobre apenas código
+versionado, testes locais e governança; não consulta ambiente, banco, Worker ou
+serviço externo.
+
+- **Comprovado localmente**: há código e teste determinístico correspondente.
+- **Pendente de teste local**: o código existe, mas a composição indicada ainda
+  não tem teste determinístico direto.
+- **Pendente HML**: exige sessão, cookie, Neon Auth, e-mail, banco ou outro
+  comportamento integrado real.
+- **Gate externo/humano**: depende de configuração aprovada ou decisão humana.
+
+## Matriz de fluxos e negações
+
+| Regra/fluxo              | Código responsável                                                                                                                      | Teste existente e cobertura negativa                                                                                                                                                                                                                                                   | Estado e pendência de homologação                                                                                                                                                                                                                    |
+| ------------------------ | --------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Login por e-mail/senha   | `src/features/auth/functions.ts` (`loginWithEmailPassword`), `login-actions.ts` (`signInWithEmailPassword`), `login-attempts.server.ts` | `test/auth-login-actions.test.ts`: credencial inválida recebe mensagem controlada e evento `login` sanitizado; `test/auth-login-security.test.ts`: quinta falha, cooldown e sinal de desafio; `test/auth-rate-limit.test.ts`: limite/challenge fail-closed, token válido e replay fake | Comprovado localmente: quinta falha/cooldown propagam `requiresChallenge`; após expiração, token válido é obrigatório e token inválido/reutilizado falha genericamente. Pendente HML: persistência/reconciliação, cookie/sessão Neon e desafio real. |
+| Logout                   | `functions.ts` (`logout`), `login-actions.ts` (`signOutCurrentSession`)                                                                 | `test/auth-login-actions.test.ts`: sucesso sem dados de sessão, evento `logout` sanitizado e falha de transporte controlada                                                                                                                                                            | Comprovado localmente para contrato do cliente e emissão ao writer injetado. Pendente HML: invalidação efetiva da sessão/cookie e reconciliação do evento persistido.                                                                                |
+| Cadastro                 | `functions.ts` (`signUpWithEmailPasswordFn`), `login-actions.ts` (`signUpWithEmailPassword`)                                            | `test/auth-login-actions.test.ts`: cadastro válido, conta existente e falha do provedor mantêm resposta opaca; `test/auth-rate-limit.test.ts`: proteção por escopo                                                                                                                     | Comprovado localmente. Pendente HML: criação real, entrega de e-mail, origem/callback confiável e desafio real.                                                                                                                                      |
+| OTP e reenvio            | `functions.ts` (`resendEmailVerificationOtpFn`, `verifyEmailVerificationOtpFn`), `login-actions.ts`                                     | `test/auth-login-actions.test.ts`: reenvio não enumerável, OTP inválido controlado, OTP válido delegado ao provedor e eventos `email_verification` sanitizados                                                                                                                         | Comprovado localmente, inclusive emissão ao writer injetado na confirmação. Pendente HML: entrega/expiração/uso único, sessão emitida e reconciliação do evento persistido.                                                                          |
+| Solicitação de reset     | `functions.ts` (`requestPasswordResetFn`), `password-reset-audit.ts`, `neon-tanstack-adapter.server.ts`                                 | `test/auth-login-actions.test.ts`: resposta não enumerável; `test/auth-password-reset-audit.test.ts`: intenção antes do provedor, resultado sanitizado, falha de auditoria e timeout                                                                                                   | Comprovado localmente para contrato e lifecycle auditado. Pendente HML: entrega, callback, consumo único/expiração, limite distribuído, desafio real e reconciliação dos eventos persistidos.                                                        |
+| Conclusão de reset       | `functions.ts` (`resetPasswordWithTokenFn`), `login-actions.ts` (`resetPasswordWithToken`), `password-reset-audit.ts`                   | `test/auth-login-actions.test.ts`: erro do provedor controlado; `test/auth-password-reset-audit.test.ts`: não aceita sucesso sem evento final                                                                                                                                          | Comprovado localmente. Pendente HML: token real, revogação de outras sessões e confirmação de cookie/sessão após a troca.                                                                                                                            |
+| Sessão ausente           | `neon-adapter.ts` (`createNeonPrincipalResolver`), `principal.ts` (`assertAuthenticated`), `guard.ts`                                   | `test/auth-neon-adapter.test.ts`: sessão ausente resolve `null`; `test/auth-principal.test.ts` e `test/auth-guard.test.ts`: negação 401                                                                                                                                                | Comprovado localmente. Pendente HML: cookie real ausente expõe a mesma negação em SSR e Server Functions.                                                                                                                                            |
+| Identidade sem allowlist | `neon-adapter.ts`: `readAccess` ausente retorna `null`; `principal.ts` converte ausência em 401                                         | `test/auth-neon-adapter.test.ts`: identidade Neon válida sem `app_user_access` não recebe principal                                                                                                                                                                                    | Comprovado localmente no resolvedor. Pendente HML: sessão Neon real sem vínculo deve permanecer negada em todas as 30 Server Functions.                                                                                                              |
+| Vínculo inativo          | `neon-adapter.ts`: `!access?.isActive` retorna `null`                                                                                   | `test/auth-neon-adapter.test.ts`: vínculo inativo não recebe principal                                                                                                                                                                                                                 | Comprovado localmente no resolvedor. Pendente HML: negação integrada e ausência de acesso a rota/Server Function.                                                                                                                                    |
+| E-mail não verificado    | `principal.ts` (`assertVerifiedPrincipal`), guardas de rota em `src/routes/__root.tsx` e `src/routes/login.tsx`                         | `test/auth-principal.test.ts`: 403; `test/auth-route-guard.test.ts`: redirecionamento para login/OTP                                                                                                                                                                                   | Comprovado localmente. Pendente HML: estado emitido pelo Neon Auth, OTP real e transição para sessão verificada.                                                                                                                                     |
+| Papel inválido           | `neon-adapter.ts` usa `isAppRole`; `authorization.ts` define papéis canônicos                                                           | `test/auth-neon-adapter.test.ts`: papel não canônico retorna `null`; `test/auth-authorization.test.ts`: validação rejeita papel livre                                                                                                                                                  | Comprovado localmente. Pendente HML: vínculo persistido inválido deve falhar fechado na integração completa.                                                                                                                                         |
+| Permissão insuficiente   | `authorization.ts`, `principal.ts`, `guard.ts`, `server-function-policy.ts`, `server-function-middleware.ts`                            | `test/auth-authorization.test.ts` e `test/auth-principal.test.ts`: permissões negativas; `test/auth-server-function-policy.test.ts`: 30 Server Functions mapeadas e middleware/CSRF presentes                                                                                          | Comprovado localmente para política e inventário. Pendente HML: tentativas autenticadas por Dono, Gerente e Funcionário contra cada rota/função relevante.                                                                                           |
+
+## Auditoria de eventos de autenticação e acesso
+
+| Evento                     | Código/evidência                                                                                                                               | Teste existente                                                                                                                  | Estado                                                                                                                                                                        |
+| -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `password_reset_requested` | `functions.ts` chama `executeAuditedPasswordReset`; writer em `audit-writer.server.ts`; contrato em `audit.ts`                                 | `test/auth-password-reset-audit.test.ts` cobre intenção `blocked`, sucesso/falha final e telemetria sanitizada                   | Comprovado localmente. Persistência e reconciliação em HML pendentes.                                                                                                         |
+| `password_reset_completed` | Mesmo lifecycle de reset, com ação distinta                                                                                                    | `test/auth-password-reset-audit.test.ts` cobre conclusão e falhas de auditoria                                                   | Comprovado localmente. Persistência e comportamento integrado do token em HML pendentes.                                                                                      |
+| `role_changed`             | `drizzle/0016_migrate-admin-to-owner.sql` registra a transição; tipo permitido em `audit.ts`                                                   | `test/auth-migration.test.ts` verifica a migration e a inserção de auditoria                                                     | Comprovado localmente como migration histórica. Gestão de acessos por interface e novas mudanças auditáveis permanecem pendentes de decisão humana/HML.                       |
+| `login`                    | `functions.ts` cria contexto com `request_id`; `login-actions.ts` emite ao writer tipado; `audit-writer.server.ts` persiste quando configurado | `test/auth-login-actions.test.ts` cobre sucesso, credencial rejeitada, motivo sanitizado e ausência de e-mail/senha/token/cookie | Comprovado localmente até o writer injetado. O ator permanece ausente antes de a identidade ser retornada pelo provedor; HML deve validar persistência e reconciliação reais. |
+| `logout`                   | `functions.ts` cria contexto com `request_id`; `login-actions.ts` emite ao writer tipado; `audit-writer.server.ts` persiste quando configurado | `test/auth-login-actions.test.ts` cobre sucesso e falha de transporte, com motivo sanitizado                                     | Comprovado localmente até o writer injetado. O contrato do `signOut` não fornece ator; HML deve validar a invalidação de cookie/sessão e o evento persistido.                 |
+| `email_verification`       | `functions.ts` cria contexto com `request_id`; `login-actions.ts` emite ao writer tipado após verificar OTP                                    | `test/auth-login-actions.test.ts` cobre OTP aceito e rejeitado, com ação, resultado e motivo sanitizado                          | Comprovado localmente até o writer injetado. O contrato de OTP não fornece ator; entrega, consumo, sessão e persistência real dependem de HML.                                |
+| `access_denied`            | Declarado em `audit.ts`; negações ocorrem em `principal.ts` e `authorization.ts`                                                               | Testes de guardas e permissões cobrem a negação, não a emissão de evento                                                         | Pendente de decisão de volume/retenção e implementação local de emissão persistida; HML só após essa decisão.                                                                 |
+
+## Lacunas e próximos passos
+
+1. **A04 concluído, cobertura local prioritária**: login, logout e
+   `email_verification` emitem ao writer tipado com ação, resultado,
+   `request_id` e motivo enumerado quando aplicável. O fluxo não oferece um
+   ator autenticado nesses pontos; ele não é inferido nem substituído por
+   e-mail. A falha do writer preserva a resposta controlada já estabelecida e
+   não expõe detalhes internos.
+2. **Pendente de decisão/implementação local**: `access_denied` já é
+   comprovado como negação pelos guards, mas ainda não possui writer de runtime.
+   Sua instrumentação requer decidir volume/retenção e definir um boundary
+   assíncrono que não altere guards nem Server Functions.
+3. **G1/HML**: validar login, logout, OTP, reset, cookie, sessão e todas as
+   negações com identidades autorizadas, sem criar novos usuários ou alterar
+   papéis fora de gate humano.
+4. **Gate externo/humano**: confirmar callbacks/origens, e-mail, revogação de
+   sessão, desafio Turnstile real/replay e rate limit distribuído. A decisão de
+   gestão de acessos por interface, dupla aprovação e retenção dos eventos
+   continua humana.
+
+Em 7 de setembro de 2026, A07 recebeu autorização humana, mas foi bloqueada
+antes de rede: esta sessão não disponibilizava navegador para o desafio real.
+Não houve token, login, CAPTCHA, tentativa inválida, replay ou nova evidência
+HML. A cobertura integrada de Turnstile e replay continua pendente de
+navegador habilitado, operador humano no CAPTCHA, identidade HML já autorizada
+e mecanismo de replay aprovado.
+
+Esta matriz não altera a matriz de autorização, guards, Server Functions,
+migrations nem os ambientes HML/produção.
+
+## Plano E2E HML preparado — não executado
+
+O pacote A05 adicionou `e2e/auth-hml-non-destructive.spec.ts`, sua configuração
+dedicada e o runbook `G1-HML-E2E-RUNBOOK.md`. A configuração aceita somente a
+URL HML canônica e exige o opt-in exato `CACAU_HML_AUTH_E2E=authorized` antes
+de qualquer navegador ou rede. Sem esse valor, ela falha fechada; não inicia
+servidor local e não usa fallback de URL.
+
+O plano cobre navegação pública, login, sessão por recarga, logout, OTP/e-mail
+verificado, reset, ausência de allowlist, vínculo inativo, e-mail não
+verificado, papel insuficiente e auditoria sanitizada. OTP, reset, atributos de
+cookie e consulta de auditoria são `fixme` deliberados: exigem identidade,
+e-mail, autorização ou consulta humana e não são coletados automaticamente.
+Assim, a **spec está preparada**, mas nenhuma execução E2E/HML foi concluída e
+nenhuma evidência integrada nova foi produzida.

@@ -11,6 +11,23 @@ import {
 export type RevenueRow = { channel: string; amount: string }
 export type ExpenseRow = { category: string; amount: string }
 
+function compareBigintsDescending(left: bigint, right: bigint) {
+  if (left === right) return 0
+  return left > right ? -1 : 1
+}
+
+function compareTextAscending(left: string, right: string) {
+  if (left === right) return 0
+  return left < right ? -1 : 1
+}
+
+function compareMoneyDescending(left: string, right: string) {
+  return compareBigintsDescending(
+    moneyToCents(left) ?? 0n,
+    moneyToCents(right) ?? 0n,
+  )
+}
+
 function sumMoney(rows: Array<{ amount: string }>) {
   return rows.reduce(
     (total, row) => total + (moneyToCents(row.amount) ?? 0n),
@@ -28,7 +45,11 @@ export function groupRevenueByChannel(rows: RevenueRow[]) {
   }
   return [...totals.entries()]
     .map(([channel, total]) => ({ channel, total: centsToMoney(total) }))
-    .sort((left, right) => Number(right.total) - Number(left.total))
+    .sort(
+      (left, right) =>
+        compareMoneyDescending(left.total, right.total) ||
+        compareTextAscending(left.channel, right.channel),
+    )
 }
 
 export function groupExpensesByCategory(rows: ExpenseRow[]) {
@@ -41,7 +62,11 @@ export function groupExpensesByCategory(rows: ExpenseRow[]) {
   }
   return [...totals.entries()]
     .map(([category, total]) => ({ category, total: centsToMoney(total) }))
-    .sort((left, right) => Number(right.total) - Number(left.total))
+    .sort(
+      (left, right) =>
+        compareMoneyDescending(left.total, right.total) ||
+        compareTextAscending(left.category, right.category),
+    )
 }
 
 export function sumReportMoney(rows: Array<{ amount: string }>) {
@@ -64,7 +89,11 @@ export function groupSalesByProduct(
       quantity: thousandthsToQuantity(total.quantity),
       amount: centsToMoney(total.amount),
     }))
-    .sort((left, right) => Number(right.amount) - Number(left.amount))
+    .sort(
+      (left, right) =>
+        compareMoneyDescending(left.amount, right.amount) ||
+        compareTextAscending(left.productName, right.productName),
+    )
 }
 
 export type FifoMarginRow = {
@@ -72,7 +101,7 @@ export type FifoMarginRow = {
   saleItemId: number
   productId: number
   productName: string
-  productionBatchId: number
+  productionBatchId: number | null
   quantity: string
   allocatedCost: string
   reversedCost?: string | null
@@ -145,10 +174,13 @@ export function summarizeFifoMargins(rows: FifoMarginRow[]) {
     },
     { revenue: 0n, cogs: 0n },
   )
-  const group = <T extends string | number>(keyFor: (row: FifoMarginRow) => T) => {
+  const group = <T extends string | number>(
+    keyFor: (row: FifoMarginRow) => T | null,
+  ) => {
     const byKey = new Map<T, { revenue: bigint; cogs: bigint }>()
     for (const row of rows) {
       const key = keyFor(row)
+      if (key === null) continue
       const current = byKey.get(key) ?? { revenue: 0n, cogs: 0n }
       current.revenue += revenueByAllocation.get(row.allocationId) ?? 0n
       current.cogs += netAllocatedCost(row)
@@ -217,7 +249,12 @@ export function valueFifoLayers(
       balance: thousandthsToQuantity(item.quantity),
       value: centsToMoney(item.value),
     }))
-    .filter((item) => Number(item.balance) > 0)
+    .filter((item) => (quantityToThousandths(item.balance) ?? 0n) > 0n)
+    .sort(
+      (left, right) =>
+        compareMoneyDescending(left.value, right.value) ||
+        left.productId - right.productId,
+    )
 }
 
 /** Financial facts are separate from FIFO stock facts: returns reduce revenue, losses do not. */
@@ -279,6 +316,10 @@ export function valueInventory(
         value: centsToMoney(valueCents),
       }
     })
-    .filter((item) => Number(item.balance) > 0)
-    .sort((left, right) => Number(right.value) - Number(left.value))
+    .filter((item) => (quantityToThousandths(item.balance) ?? 0n) > 0n)
+    .sort(
+      (left, right) =>
+        compareMoneyDescending(left.value, right.value) ||
+        left.productId - right.productId,
+    )
 }

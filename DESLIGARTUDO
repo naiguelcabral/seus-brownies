@@ -58,7 +58,8 @@ if [[ -f "$ROOT_DIR/scripts/codex/conversation_memory.py" ]]; then
   fi
 fi
 
-# A memória precisa continuar local antes de qualquer `git add`.
+# A memória, o contexto e os logs precisam continuar locais antes de qualquer
+# operação que altere o staging.
 if ! git check-ignore -q .codex-local/; then
   echo "ERRO: .codex-local não está ignorada pelo Git."
   echo "O checkpoint foi abortado antes de alterar o staging."

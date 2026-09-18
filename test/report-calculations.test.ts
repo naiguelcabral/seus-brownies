@@ -24,6 +24,38 @@ test('agrega faturamento preservando valores históricos por canal', () => {
   ])
 })
 
+test('ordena agregados monetários sem perder centavos fora do inteiro seguro', () => {
+  assert.deepEqual(
+    groupRevenueByChannel([
+      { channel: 'Canal menor', amount: '90071992547409.93' },
+      { channel: 'Canal maior', amount: '90071992547409.94' },
+    ]).map((item) => item.channel),
+    ['Canal maior', 'Canal menor'],
+  )
+  assert.deepEqual(
+    groupExpensesByCategory([
+      { category: 'Menor', amount: '90071992547409.93' },
+      { category: 'Maior', amount: '90071992547409.94' },
+    ]).map((item) => item.category),
+    ['Maior', 'Menor'],
+  )
+  assert.deepEqual(
+    groupSalesByProduct([
+      {
+        productName: 'Brownie menor',
+        quantity: '1',
+        amount: '90071992547409.93',
+      },
+      {
+        productName: 'Brownie maior',
+        quantity: '1',
+        amount: '90071992547409.94',
+      },
+    ]).map((item) => item.productName),
+    ['Brownie maior', 'Brownie menor'],
+  )
+})
+
 test('separa receita líquida, CMV, perdas, margem e resultado financeiro', () => {
   assert.deepEqual(
     summarizeLifecycleFinancials({
@@ -116,6 +148,31 @@ test('valoriza saídas de produção pelo custo total alocado, não por custo un
   )
 })
 
+test('mantém saldo positivo e ordem de inventário com inteiros exatos', () => {
+  const inventory = valueInventory([
+    {
+      productId: 2,
+      productName: 'Menor',
+      unit: 'unit',
+      quantityDelta: '9007199254740993.000',
+      unitCost: '1.000',
+      allocatedCost: '9007199254740993.00',
+    },
+    {
+      productId: 1,
+      productName: 'Maior',
+      unit: 'unit',
+      quantityDelta: '9007199254740994.000',
+      unitCost: '1.000',
+      allocatedCost: '9007199254740994.00',
+    },
+  ])
+  assert.deepEqual(
+    inventory.map((item) => item.productName),
+    ['Maior', 'Menor'],
+  )
+})
+
 test('calcula CMV e margem bruta FIFO sem somar a receita duas vezes', () => {
   const margin = summarizeFifoMargins([
     {
@@ -153,45 +210,132 @@ test('calcula CMV e margem bruta FIFO sem somar a receita duas vezes', () => {
   assert.equal(margin.byBatch[0]?.grossMargin, '16.44')
 })
 
+test('combina origens de produção, compra e ajuste sem perder receita ou CMV', () => {
+  const margin = summarizeFifoMargins([
+    {
+      allocationId: 10,
+      saleItemId: 7,
+      productId: 3,
+      productName: 'Brownie',
+      productionBatchId: 18,
+      quantity: '1.000',
+      allocatedCost: '3.00',
+      saleItemRevenue: '30.00',
+    },
+    {
+      allocationId: 11,
+      saleItemId: 7,
+      productId: 3,
+      productName: 'Brownie',
+      productionBatchId: null,
+      quantity: '1.000',
+      allocatedCost: '4.00',
+      saleItemRevenue: '30.00',
+    },
+    {
+      allocationId: 12,
+      saleItemId: 7,
+      productId: 3,
+      productName: 'Brownie',
+      productionBatchId: null,
+      quantity: '1.000',
+      allocatedCost: '5.00',
+      saleItemRevenue: '30.00',
+    },
+  ])
+
+  assert.equal(margin.netRevenue, '30.00')
+  assert.equal(margin.cogs, '12.00')
+  assert.equal(margin.grossMargin, '18.00')
+  assert.deepEqual(margin.byProduct, [
+    {
+      productName: 'Brownie',
+      revenue: '30.00',
+      cogs: '12.00',
+      grossMargin: '18.00',
+    },
+  ])
+  assert.deepEqual(margin.byBatch, [
+    {
+      productionBatchId: 18,
+      revenue: '10.00',
+      cogs: '3.00',
+      grossMargin: '7.00',
+    },
+  ])
+})
+
 test('mantém o CMV integral quando não há reversão FIFO', () => {
-  const margin = summarizeFifoMargins([{
-    allocationId: 1, saleItemId: 1, productId: 3, productName: 'Brownie',
-    productionBatchId: 18, quantity: '1.000', allocatedCost: '3.78',
-    reversedCost: '0.00', saleItemRevenue: '12.00',
-  }])
+  const margin = summarizeFifoMargins([
+    {
+      allocationId: 1,
+      saleItemId: 1,
+      productId: 3,
+      productName: 'Brownie',
+      productionBatchId: 18,
+      quantity: '1.000',
+      allocatedCost: '3.78',
+      reversedCost: '0.00',
+      saleItemRevenue: '12.00',
+    },
+  ])
   assert.equal(margin.netRevenue, '12.00')
   assert.equal(margin.cogs, '3.78')
   assert.equal(margin.grossMargin, '8.22')
 })
 
 test('abate do CMV somente o custo restaurado em devolução parcial', () => {
-  const margin = summarizeFifoMargins([{
-    allocationId: 1, saleItemId: 1, productId: 3, productName: 'Brownie',
-    productionBatchId: 18, quantity: '2.000', allocatedCost: '7.56',
-    reversedCost: '3.78', saleItemRevenue: '24.00',
-  }])
+  const margin = summarizeFifoMargins([
+    {
+      allocationId: 1,
+      saleItemId: 1,
+      productId: 3,
+      productName: 'Brownie',
+      productionBatchId: 18,
+      quantity: '2.000',
+      allocatedCost: '7.56',
+      reversedCost: '3.78',
+      saleItemRevenue: '24.00',
+    },
+  ])
   assert.equal(margin.netRevenue, '24.00')
   assert.equal(margin.cogs, '3.78')
   assert.equal(margin.grossMargin, '20.22')
 })
 
 test('zera CMV após devolução total sem decidir efeito sobre receita', () => {
-  const margin = summarizeFifoMargins([{
-    allocationId: 1, saleItemId: 1, productId: 3, productName: 'Brownie',
-    productionBatchId: 18, quantity: '1.000', allocatedCost: '3.78',
-    reversedCost: '3.78', saleItemRevenue: '12.00',
-  }])
+  const margin = summarizeFifoMargins([
+    {
+      allocationId: 1,
+      saleItemId: 1,
+      productId: 3,
+      productName: 'Brownie',
+      productionBatchId: 18,
+      quantity: '1.000',
+      allocatedCost: '3.78',
+      reversedCost: '3.78',
+      saleItemRevenue: '12.00',
+    },
+  ])
   assert.equal(margin.netRevenue, '12.00')
   assert.equal(margin.cogs, '0.00')
   assert.equal(margin.grossMargin, '12.00')
 })
 
 test('zera CMV da alocação revertida em cancelamento sem alterar receita no cálculo FIFO', () => {
-  const margin = summarizeFifoMargins([{
-    allocationId: 1, saleItemId: 1, productId: 3, productName: 'Brownie',
-    productionBatchId: 18, quantity: '1.000', allocatedCost: '3.78',
-    reversedCost: '3.78', saleItemRevenue: '12.00',
-  }])
+  const margin = summarizeFifoMargins([
+    {
+      allocationId: 1,
+      saleItemId: 1,
+      productId: 3,
+      productName: 'Brownie',
+      productionBatchId: 18,
+      quantity: '1.000',
+      allocatedCost: '3.78',
+      reversedCost: '3.78',
+      saleItemRevenue: '12.00',
+    },
+  ])
   assert.equal(margin.netRevenue, '12.00')
   assert.equal(margin.cogs, '0.00')
 })

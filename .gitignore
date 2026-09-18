@@ -4,6 +4,15 @@ dist
 dist-ssr
 *.local
 .env
+.env.*
+!.env.example
+.dev.vars*
+*.pem
+*.key
+*.p12
+*.pfx
+.npmrc
+.netrc
 .neon
 .nitro
 .tanstack
@@ -13,6 +22,6 @@ dist-ssr
 __unconfig*
 todos.json
 
-# Estado, configuração e memória operacional locais do Codex
+# Estado, configuração, memória operacional e logs locais do Codex
 .codex/
 .codex-local/

@@ -49,10 +49,23 @@ test('não abre configuração do VS Code e inicia o runtime HML', async () => {
   assert.match(script, /exec npm run dev:hml/)
 })
 
+test('prepare-only não consulta remoto nem inicia o runtime', async () => {
+  const script = await readScript()
+  const prepareOnly = script.indexOf('PREPARE_ONLY=true')
+  const remoteCheck = script.indexOf('git ls-remote --exit-code --heads')
+  const devServer = script.indexOf('exec npm run dev:hml')
+
+  assert.notEqual(prepareOnly, -1)
+  assert.ok(prepareOnly < remoteCheck)
+  assert.ok(remoteCheck < devServer)
+  assert.match(script, /servidor não iniciado \(--prepare-only\)/)
+})
+
 test('prepara somente o contexto local e não instala configuração global', async () => {
   const script = await readScript()
 
   assert.match(script, /conversation_memory\.py" prepare/)
   assert.match(script, /Captura automática exige configuração local do usuário/)
   assert.doesNotMatch(script, /\.codex\/config\.toml|CODEX_HOME/)
+  assert.doesNotMatch(script, /mkdir -p[\s\S]*\.codex-local/)
 })

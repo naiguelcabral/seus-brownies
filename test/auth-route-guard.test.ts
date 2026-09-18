@@ -12,7 +12,10 @@ test('a rota raiz redireciona visitantes para o login antes dos loaders', async 
   assert.match(source, /location\.pathname === '\/login'/)
   assert.match(source, /location\.pathname === '\/login\/redefinir-senha'/)
   assert.match(source, /await getSessionStatus\(\)/)
-  assert.match(source, /redirect\(\{ to: '\/login', throw: true \}\)/)
+  assert.match(source, /to: '\/login'/)
+  assert.match(source, /search: \{ token: undefined \}/)
+  assert.match(source, /requiredPermissionForRoute\(location\.pathname\)/)
+  assert.match(source, /homeRouteForRole\(session\.role\)/)
 })
 
 test('a rota de recuperação é pública, remove token da URL e não o persiste', async () => {
@@ -31,7 +34,7 @@ test('a rota de recuperação é pública, remove token da URL e não o persiste
   assert.match(source, /const \[token\] = useState\(tokenFromUrl\)/)
   assert.match(source, /if \(!token\)/)
   assert.match(source, /router\.navigate\(\{/)
-  assert.match(source, /search: \{\}/)
+  assert.match(source, /search: \{ token: undefined \}/)
   assert.match(source, /replace: true/)
   assert.match(source, /name: 'referrer', content: 'no-referrer'/)
   assert.doesNotMatch(source, /console\.(log|info|warn|error)/)

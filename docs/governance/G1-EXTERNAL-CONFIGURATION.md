@@ -5,16 +5,25 @@
 As migrations `0014`, `0015` e `0016` já existem exclusivamente em
 `g1-auth-hml`. O código possui adaptadores, CSRF e guards que falham fechados,
 e os fluxos locais de recuperação e login foram exercitados. Em 6 de setembro,
-o Worker HML recebeu o código atual e a navegação pública deixou de receber
-`403`; a homologação real de autenticação permanece pendente. Nenhum valor deve
-ser registrado neste documento, em Git, em logs ou no chat.
+o Worker HML recebeu o código atual, `/login` respondeu `200`, e `/` sem sessão
+redirecionou para `/login`; a versão publicada reconhece `owner`. O Turnstile
+foi publicado: o widget foi limitado a `localhost`, `127.0.0.1` e ao hostname
+HML, a site key pública entrou somente no bundle HML, o segredo foi atualizado
+somente no Worker HML e a validação sanitizada por Siteverify passou. A
+homologação integrada de autenticação, o desafio real e a rejeição de replay
+continuam pendentes. Nenhum valor deve ser registrado neste documento, em Git,
+em logs ou no chat.
 
 ### Recuperação de senha por link/token
 
 O código local encaminha a solicitação pelo proxy server-side do Neon Auth e
-usa a rota pública `/login/redefinir-senha`. Em desenvolvimento, o retorno é
-fixado em `http://localhost:3000/login/redefinir-senha`; no Worker HML, em
-`https://cacau-v1-hml.naiguelcabral.workers.dev/login/redefinir-senha`.
+usa a rota pública `/login/redefinir-senha`. Em desenvolvimento, na ausência
+de configuração, o retorno usa `http://localhost:3000`. Em qualquer build fora
+de desenvolvimento, `PASSWORD_RESET_REDIRECT_ORIGIN` é obrigatório, deve ser
+uma origem HTTPS sem credenciais, caminho, query ou fragmento, e a rota pública
+é anexada pelo servidor. Assim, um build de produção não herda silenciosamente
+o callback HML. A variável ainda precisa ser configurada no ambiente HML antes
+de nova publicação; nenhum valor foi escrito por esta missão.
 O token e a senha não são registrados, persistidos pelo Cacau ou incluídos em
 eventos de auditoria. Antes de chamar o provedor, o Cacau exige um evento
 sanitizado com estado `blocked` e motivo `provider_outcome_pending`; após a
@@ -35,7 +44,7 @@ Ainda falta validar, em uma execução integrada controlada e sem expor valores:
 
 - entrega do e-mail e consumo único/expiração do token;
 - limite de taxa específico para recuperação;
-- homologação do Turnstile para solicitações repetidas ou suspeitas;
+- desafio Turnstile real, rejeição de token inválido e rejeição de replay;
 - comportamento de revogação de sessões após a redefinição, que não deve ser
   presumido sem confirmação explícita do Neon Auth;
 - presença dos eventos `password_reset_requested` e
@@ -66,6 +75,7 @@ Ainda falta validar, em uma execução integrada controlada e sem expor valores:
 | `VITE_NEON_AUTH_URL`                       | variável de build HML                     | dispensado enquanto Neon Auth for mediado pelo servidor                           | não configurar sem necessidade de UI    |
 | `TURNSTILE_SECRET_KEY`                     | secret do Worker HML                      | validação server-side de desafios Turnstile                                       | somente servidor                        |
 | `VITE_TURNSTILE_SITE_KEY`                  | variável de build HML                     | renderização do widget Turnstile                                                  | client-safe, não é segredo              |
+| `PASSWORD_RESET_REDIRECT_ORIGIN`           | variável server-side por ambiente         | origem HTTPS explícita para o callback de recuperação                             | configuração pública, sem caminho       |
 | origem confiável/callbacks                 | Neon Auth Console, branch HML             | permite apenas as origens e URLs de retorno HML aprovadas                         | configuração externa                    |
 | verificação de e-mail obrigatória          | Neon Auth Console, branch HML             | impede principal não verificado de avançar                                        | configuração externa                    |
 | provedor de e-mail, remetente e credencial | Neon Auth Console/serviço escolhido       | entrega de verificação e recuperação                                              | server-only; nomes dependem do provedor |
@@ -107,8 +117,9 @@ fluxo real de login no próximo gate.
   Server Function protegida.
 - Verificar os eventos de auditoria por ação/resultado/timestamp, sem senha,
   token, e-mail bruto, cookie ou segredo.
-- Confirmar em homologação um desafio real e a rejeição do replay para o
-  widget `cacau-v1-hml`; o token deve ser validado exclusivamente no servidor.
+- Confirmar, no desafio real, que o widget permanece limitado a `localhost`,
+  `127.0.0.1` e `cacau-v1-hml.naiguelcabral.workers.dev`; validar o token
+  exclusivamente no servidor, inclusive contra replay.
 
 ## Provedor de e-mail
 

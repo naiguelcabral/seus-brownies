@@ -46,10 +46,12 @@ function loadTurnstileScript() {
 
 export function TurnstileChallenge({
   onToken,
+  resetKey,
   requiresChallenge,
   siteKey,
 }: {
   onToken: (token: string | null) => void
+  resetKey?: number
   requiresChallenge: boolean
   siteKey: string | undefined
 }) {
@@ -79,7 +81,7 @@ export function TurnstileChallenge({
       disposed = true
       if (widgetId) window.turnstile?.remove?.(widgetId)
     }
-  }, [onToken, siteKey, state.canRenderWidget])
+  }, [onToken, resetKey, siteKey, state.canRenderWidget])
 
   if (!state.requiresChallenge) return null
   if (!state.canRenderWidget) {

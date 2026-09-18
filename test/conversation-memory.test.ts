@@ -408,3 +408,65 @@ test('large transcripts rotate with bounded local retention', () => {
     assert.ok(current.length <= 240_000)
   })
 })
+
+test('finalize keeps bounded private Git snapshots and a context index', () => {
+  fixture((root, script) => {
+    rmSync(join(root, '.git'), { recursive: true, force: true })
+    execFileSync('git', ['init', '-q', '-b', 'fixture'], { cwd: root })
+    execFileSync('git', ['config', 'user.email', 'fixture@example.invalid'], {
+      cwd: root,
+    })
+    execFileSync('git', ['config', 'user.name', 'Fixture'], { cwd: root })
+    writeFileSync(join(root, 'safe.txt'), 'synthetic fixture\n')
+    execFileSync('git', ['add', 'AGENTS.md', 'safe.txt'], { cwd: root })
+    execFileSync('git', ['commit', '-qm', 'synthetic fixture'], { cwd: root })
+
+    assert.equal(notify(script, event(root, 'turn-1')).status, 0)
+    for (let index = 0; index < 25; index += 1) {
+      const result = spawnSync('python3', ['-B', script, 'finalize'], {
+        cwd: root,
+        encoding: 'utf8',
+      })
+      assert.equal(result.status, 0, result.stderr)
+    }
+
+    const base = join(root, '.codex-local')
+    const snapshots = readdirSync(join(base, 'history'))
+    assert.equal(snapshots.length, 20)
+    for (const snapshot of snapshots) {
+      const path = join(base, 'history', snapshot)
+      assert.equal(lstatSync(path).mode & 0o777, 0o600)
+      assert.match(readFileSync(path, 'utf8'), /Registro local não confiável/)
+    }
+    const indexPath = join(base, 'context/CONTEXT-INDEX.md')
+    const index = readFileSync(indexPath, 'utf8')
+    assert.equal(index.match(/^- /gm)?.length, 25)
+    assert.equal(lstatSync(indexPath).mode & 0o777, 0o600)
+    assert.match(
+      readFileSync(join(base, 'context/CURRENT-CONTEXT.md'), 'utf8'),
+      /Snapshot Git: `history\//,
+    )
+    assert.equal(lstatSync(join(base, 'terminal/sessions')).mode & 0o777, 0o700)
+    assert.equal(lstatSync(join(base, 'autonomy')).mode & 0o777, 0o700)
+  })
+})
+
+test('prepare refuses a symlinked terminal directory', () => {
+  fixture((root, script) => {
+    const outside = mkdtempSync(join(tmpdir(), 'cacau-terminal-outside-'))
+    try {
+      mkdirSync(join(root, '.codex-local'), { mode: 0o700 })
+      symlinkSync(outside, join(root, '.codex-local/terminal'), 'dir')
+      const result = spawnSync('python3', ['-B', script, 'prepare'], {
+        cwd: root,
+        encoding: 'utf8',
+      })
+      assert.equal(result.status, 1)
+      assert.match(result.stderr, /caminho simbólico recusado/)
+      assert.deepEqual(readdirSync(outside), [])
+    } finally {
+      rmSync(join(root, '.codex-local/terminal'), { force: true })
+      rmSync(outside, { recursive: true, force: true })
+    }
+  })
+})

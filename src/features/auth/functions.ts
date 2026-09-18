@@ -9,8 +9,9 @@ import {
 import type { AuthRateLimitScope } from './auth-rate-limit'
 import {
   createDatabaseLoginAttemptStore,
-  isLoginAttemptAllowed,
+  evaluateLoginAttempt,
 } from './login-attempts.server'
+import { decideLoginAttempt } from './login-security'
 import {
   invalidLoginMessage,
   invalidOtpMessage,
@@ -25,18 +26,18 @@ import {
   unavailableLoginMessage,
   verifyEmailVerificationOtp,
 } from './login-actions'
+import type { AuthActionAuditContext } from './login-actions'
 import {
   executeAuditedPasswordReset,
   isAuditedPasswordResetSuccessful,
 } from './password-reset-audit'
+import { createAuthAuditTelemetry } from './auth-audit-telemetry.server'
 import { createPasswordResetTelemetry } from './password-reset-telemetry.server'
 import { requestTanStackNeonPasswordReset } from './neon-tanstack-adapter.server'
-import { readNeonAuthRuntimeConfig } from './runtime-config.server'
-
-const localPasswordResetRedirectTo =
-  'http://localhost:3000/login/redefinir-senha'
-const hmlPasswordResetRedirectTo =
-  'https://cacau-v1-hml.naiguelcabral.workers.dev/login/redefinir-senha'
+import {
+  readNeonAuthRuntimeConfig,
+  readPasswordResetRedirectTo,
+} from './runtime-config.server'
 
 const loginInput = z.object({
   email: z.string().trim().email().max(320),
@@ -59,14 +60,16 @@ const verifyOtpInput = emailInput.extend({
 
 const passwordResetInput = emailInput
 
-const passwordResetCompletionInput = z.object({
-  token: z.string().trim().min(1).max(2048),
-  newPassword: z.string().min(8).max(128),
-})
-
 const publicAuthInput = z.object({
   turnstileToken: z.string().trim().min(1).max(2048).optional(),
 })
+
+const passwordResetCompletionInput = z
+  .object({
+    token: z.string().trim().min(1).max(2048),
+    newPassword: z.string().min(8).max(128),
+  })
+  .merge(publicAuthInput)
 
 const loginWithProtectionInput = loginInput.merge(publicAuthInput)
 const signUpWithProtectionInput = signUpInput.merge(publicAuthInput)
@@ -75,13 +78,7 @@ const verifyOtpWithProtectionInput = verifyOtpInput.merge(publicAuthInput)
 const passwordResetWithProtectionInput =
   passwordResetInput.merge(publicAuthInput)
 
-function passwordResetRedirectTo() {
-  return import.meta.env.DEV
-    ? localPasswordResetRedirectTo
-    : hmlPasswordResetRedirectTo
-}
-
-async function getPasswordResetAuditWriter() {
+async function getAuthAuditWriter() {
   if (!process.env.DATABASE_URL) return null
   try {
     const { createDatabaseAuthAuditWriter } =
@@ -92,12 +89,43 @@ async function getPasswordResetAuditWriter() {
   }
 }
 
+async function getAuthActionAuditContext(): Promise<
+  AuthActionAuditContext | undefined
+> {
+  const writer = await getAuthAuditWriter()
+  return writer
+    ? {
+        writer,
+        requestId: crypto.randomUUID(),
+        telemetry: createAuthAuditTelemetry(),
+      }
+    : undefined
+}
+
 async function getPublicAuthProtection(
   scope: AuthRateLimitScope,
   data: { email: string; turnstileToken?: string },
+  options: { forceChallenge?: boolean } = {},
 ) {
   return protectPublicAuthAction(
-    { scope, email: data.email, turnstileToken: data.turnstileToken },
+    {
+      scope,
+      identifier: data.email,
+      turnstileToken: data.turnstileToken,
+    },
+    process.env,
+    {},
+    options,
+  )
+}
+
+async function getPublicAuthProtectionForIdentifier(
+  scope: AuthRateLimitScope,
+  identifier: string,
+  turnstileToken?: string,
+) {
+  return protectPublicAuthAction(
+    { scope, identifier, turnstileToken },
     process.env,
   )
 }
@@ -105,7 +133,25 @@ async function getPublicAuthProtection(
 export const loginWithEmailPassword = createServerFn({ method: 'POST' })
   .validator(loginWithProtectionInput)
   .handler(async ({ data }) => {
-    const protection = await getPublicAuthProtection('login', data)
+    const pepper = process.env.AUTH_LOGIN_HASH_PEPPER
+    const store = pepper ? createDatabaseLoginAttemptStore() : null
+    const loginIdentity = pepper
+      ? await hashAuthIdentity('login', data.email, pepper)
+      : null
+    const loginAttempt =
+      store && loginIdentity
+        ? await evaluateLoginAttempt(store, loginIdentity)
+        : null
+    if (loginAttempt && !loginAttempt.decision.allowed) {
+      return {
+        ok: false,
+        message: invalidLoginMessage,
+        requiresChallenge: loginAttempt.decision.requiresChallenge,
+      }
+    }
+    const protection = await getPublicAuthProtection('login', data, {
+      forceChallenge: loginAttempt?.decision.requiresChallenge === true,
+    })
     if (!protection.allowed) {
       return {
         ok: false,
@@ -115,29 +161,28 @@ export const loginWithEmailPassword = createServerFn({ method: 'POST' })
     }
     const auth = createConfiguredNeonAuthServer(process.env)
     if (!auth) return { ok: false, message: unavailableLoginMessage }
-    const store = process.env.AUTH_LOGIN_HASH_PEPPER
-      ? createDatabaseLoginAttemptStore()
-      : null
-    const loginIdentity = process.env.AUTH_LOGIN_HASH_PEPPER
-      ? await hashAuthIdentity(
-          'login',
-          data.email,
-          process.env.AUTH_LOGIN_HASH_PEPPER,
-        )
-      : null
-    if (
-      store &&
-      loginIdentity &&
-      !(await isLoginAttemptAllowed(store, loginIdentity))
-    ) {
-      return { ok: false, message: invalidLoginMessage }
-    }
-    const result = await signInWithEmailPassword(auth, {
-      email: data.email,
-      password: data.password,
-    })
+    const result = await signInWithEmailPassword(
+      auth,
+      {
+        email: data.email,
+        password: data.password,
+      },
+      await getAuthActionAuditContext(),
+    )
     if (store && loginIdentity && result.message !== unavailableLoginMessage) {
       await store.record(loginIdentity, result.ok)
+      if (!result.ok) {
+        const postFailure = decideLoginAttempt({
+          state: loginAttempt?.state ?? null,
+          succeeded: false,
+          now: new Date(),
+          policy: { cooldownMs: 15 * 60 * 1000 },
+        })
+        return {
+          ...result,
+          requiresChallenge: postFailure.requiresChallenge,
+        }
+      }
     }
     return result
   })
@@ -191,10 +236,14 @@ export const verifyEmailVerificationOtpFn = createServerFn({ method: 'POST' })
     }
     const auth = createConfiguredNeonAuthServer(process.env)
     if (!auth) return { ok: false, message: unavailableLoginMessage }
-    return verifyEmailVerificationOtp(auth, {
-      email: data.email,
-      otp: data.otp,
-    })
+    return verifyEmailVerificationOtp(
+      auth,
+      {
+        email: data.email,
+        otp: data.otp,
+      },
+      await getAuthActionAuditContext(),
+    )
   })
 
 export const requestPasswordResetFn = createServerFn({ method: 'POST' })
@@ -211,8 +260,14 @@ export const requestPasswordResetFn = createServerFn({ method: 'POST' })
       }
     }
     let config
+    let redirectTo
     try {
       config = readNeonAuthRuntimeConfig(process.env)
+      redirectTo = config
+        ? readPasswordResetRedirectTo(process.env, {
+            development: import.meta.env.DEV,
+          })
+        : null
     } catch {
       telemetry.emit({
         requestId,
@@ -220,7 +275,7 @@ export const requestPasswordResetFn = createServerFn({ method: 'POST' })
       })
       return { ok: false, message: passwordResetRequestMessage }
     }
-    if (!config) {
+    if (!config || !redirectTo) {
       telemetry.emit({
         requestId,
         stage: 'runtime_config_missing',
@@ -228,7 +283,7 @@ export const requestPasswordResetFn = createServerFn({ method: 'POST' })
       return { ok: false, message: passwordResetRequestMessage }
     }
 
-    const writer = await getPasswordResetAuditWriter()
+    const writer = await getAuthAuditWriter()
     if (!writer) {
       telemetry.emit({
         requestId,
@@ -245,11 +300,13 @@ export const requestPasswordResetFn = createServerFn({ method: 'POST' })
       execute: () =>
         requestTanStackNeonPasswordReset(config, {
           email: data.email,
-          redirectTo: passwordResetRedirectTo(),
+          redirectTo,
         }),
       getOutcome: (result) => (result.ok ? 'success' : 'failure'),
       getFailureReasonCode: (result) =>
-        result.ok ? undefined : result.reasonCode,
+        !result.ok && result.reasonCode !== 'provider_success'
+          ? result.reasonCode
+          : undefined,
     })
     return {
       ok: isAuditedPasswordResetSuccessful(audit),
@@ -260,12 +317,24 @@ export const requestPasswordResetFn = createServerFn({ method: 'POST' })
 export const resetPasswordWithTokenFn = createServerFn({ method: 'POST' })
   .validator(passwordResetCompletionInput)
   .handler(async ({ data }) => {
+    const protection = await getPublicAuthProtectionForIdentifier(
+      'password-reset-completion',
+      data.token,
+      data.turnstileToken,
+    )
+    if (!protection.allowed) {
+      return {
+        ok: false,
+        message: invalidPasswordResetMessage,
+        requiresChallenge: protection.requiresChallenge,
+      }
+    }
     const auth = createConfiguredNeonAuthServer(process.env)
     if (!auth) {
       return { ok: false, message: invalidPasswordResetMessage }
     }
 
-    const writer = await getPasswordResetAuditWriter()
+    const writer = await getAuthAuditWriter()
     if (!writer) return { ok: false, message: invalidPasswordResetMessage }
 
     const audit = await executeAuditedPasswordReset({
@@ -287,5 +356,5 @@ export const resetPasswordWithTokenFn = createServerFn({ method: 'POST' })
 export const logout = createServerFn({ method: 'POST' }).handler(async () => {
   const auth = createConfiguredNeonAuthServer(process.env)
   if (!auth) return { ok: true }
-  return signOutCurrentSession(auth)
+  return signOutCurrentSession(auth, await getAuthActionAuditContext())
 })

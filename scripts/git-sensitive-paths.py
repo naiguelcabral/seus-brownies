@@ -9,6 +9,7 @@ from pathlib import PurePosixPath
 
 
 def sensitive(path: str) -> bool:
+    # Only this reviewed root template is exempt; *.env.*.example stays blocked.
     if path == ".env.example":
         return False
     parts = PurePosixPath(path).parts
@@ -41,6 +42,7 @@ def git_paths(mode: str) -> list[str]:
 def main() -> int:
     mode = sys.argv[1] if len(sys.argv) > 1 else "preflight"
     if any(sensitive(path) for path in git_paths(mode) if path):
+        # A filename can itself be private; never echo the rejected path.
         print("ERRO: caminho sensível detectado; operação Git bloqueada.", file=sys.stderr)
         return 1
     return 0

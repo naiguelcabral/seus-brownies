@@ -4,6 +4,7 @@ import { createFileRoute, useRouter } from '@tanstack/react-router'
 import { useServerFn } from '@tanstack/react-start'
 
 import { ManagementLayout } from '#/components/ManagementLayout'
+import { hasPermission } from '#/features/auth/authorization'
 import {
   createCategory,
   listCategories,
@@ -21,6 +22,8 @@ type CategoryFormValues = { name: string; description: string }
 
 function CategoriesPage() {
   const categories = Route.useLoaderData()
+  const { appRole } = Route.useRouteContext()
+  const canWrite = Boolean(appRole && hasPermission(appRole, 'catalog:write'))
   const router = useRouter()
   const create = useServerFn(createCategory)
   const update = useServerFn(updateCategory)
@@ -68,7 +71,13 @@ function CategoriesPage() {
       title="Categorias"
       description="Agrupe seus produtos para deixar o cadastro e os relatórios organizados. Categorias desativadas permanecem no histórico."
     >
-      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
+      <div
+        className={
+          canWrite
+            ? 'grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px]'
+            : 'grid gap-6'
+        }
+      >
         <section className="overflow-hidden rounded-2xl border border-[#ecdfd4] bg-white">
           <div className="flex items-center justify-between border-b border-[#f0e5dc] px-5 py-4">
             <h2 className="font-bold">Categorias cadastradas</h2>
@@ -78,8 +87,7 @@ function CategoriesPage() {
           </div>
           {categories.length === 0 ? (
             <p className="p-6 text-sm text-[#846859]">
-              Nenhuma categoria cadastrada. Use o formulário ao lado para criar
-              a primeira.
+              Nenhuma categoria cadastrada.
             </p>
           ) : (
             <ul className="divide-y divide-[#f0e5dc]">
@@ -99,36 +107,40 @@ function CategoriesPage() {
                       </p>
                     ) : null}
                   </div>
-                  <div className="flex gap-2">
-                    <button
-                      type="button"
-                      onClick={() => setEditing(category)}
-                      className="inline-flex items-center gap-1.5 rounded-lg border border-[#e6d4c5] px-3 py-2 text-sm font-bold text-[#72462f] hover:bg-[#fff8f2]"
-                    >
-                      <Pencil size={15} /> Editar
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => toggle(category)}
-                      className="inline-flex items-center gap-1.5 rounded-lg border border-[#e6d4c5] px-3 py-2 text-sm font-bold text-[#72462f] hover:bg-[#fff8f2]"
-                    >
-                      <Power size={15} />
-                      {category.isActive ? 'Desativar' : 'Ativar'}
-                    </button>
-                  </div>
+                  {canWrite ? (
+                    <div className="flex gap-2">
+                      <button
+                        type="button"
+                        onClick={() => setEditing(category)}
+                        className="inline-flex items-center gap-1.5 rounded-lg border border-[#e6d4c5] px-3 py-2 text-sm font-bold text-[#72462f] hover:bg-[#fff8f2]"
+                      >
+                        <Pencil size={15} /> Editar
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => toggle(category)}
+                        className="inline-flex items-center gap-1.5 rounded-lg border border-[#e6d4c5] px-3 py-2 text-sm font-bold text-[#72462f] hover:bg-[#fff8f2]"
+                      >
+                        <Power size={15} />
+                        {category.isActive ? 'Desativar' : 'Ativar'}
+                      </button>
+                    </div>
+                  ) : null}
                 </li>
               ))}
             </ul>
           )}
         </section>
 
-        <CategoryForm
-          key={editing?.id ?? 'new'}
-          category={editing}
-          onCancel={() => setEditing(null)}
-          onSave={save}
-          notice={notice}
-        />
+        {canWrite ? (
+          <CategoryForm
+            key={editing?.id ?? 'new'}
+            category={editing}
+            onCancel={() => setEditing(null)}
+            onSave={save}
+            notice={notice}
+          />
+        ) : null}
       </div>
     </ManagementLayout>
   )

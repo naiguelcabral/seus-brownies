@@ -10,23 +10,72 @@ import {
   Tags,
   Wallet,
 } from 'lucide-react'
-import { Link, useRouter } from '@tanstack/react-router'
+import { Link, getRouteApi, useRouter } from '@tanstack/react-router'
 import { useServerFn } from '@tanstack/react-start'
 import { useState } from 'react'
 import type { ReactNode } from 'react'
 
 import { logout } from '#/features/auth/functions'
+import { hasPermission } from '#/features/auth/authorization'
+import type { Permission } from '#/features/auth/authorization'
+
+const rootRoute = getRouteApi('__root__')
 
 const navigation = [
-  { to: '/', label: 'Visão geral', icon: LayoutDashboard },
-  { to: '/categorias', label: 'Categorias', icon: Tags },
-  { to: '/produtos', label: 'Produtos', icon: Package },
-  { to: '/compras', label: 'Compras', icon: ReceiptText },
-  { to: '/estoque', label: 'Estoque', icon: Boxes },
-  { to: '/producao', label: 'Produção', icon: CookingPot },
-  { to: '/vendas', label: 'Vendas', icon: ShoppingBag },
-  { to: '/despesas', label: 'Despesas', icon: Wallet },
-  { to: '/relatorios', label: 'Relatórios', icon: BarChart3 },
+  {
+    to: '/',
+    label: 'Visão geral',
+    icon: LayoutDashboard,
+    permission: 'dashboard:read',
+  },
+  {
+    to: '/categorias',
+    label: 'Categorias',
+    icon: Tags,
+    permission: 'catalog:read',
+  },
+  {
+    to: '/produtos',
+    label: 'Produtos',
+    icon: Package,
+    permission: 'catalog:read',
+  },
+  {
+    to: '/compras',
+    label: 'Compras',
+    icon: ReceiptText,
+    permission: 'purchases:write',
+  },
+  {
+    to: '/estoque',
+    label: 'Estoque',
+    icon: Boxes,
+    permission: 'inventory:read',
+  },
+  {
+    to: '/producao',
+    label: 'Produção',
+    icon: CookingPot,
+    permission: 'production:read',
+  },
+  {
+    to: '/vendas',
+    label: 'Vendas',
+    icon: ShoppingBag,
+    permission: 'sales:write',
+  },
+  {
+    to: '/despesas',
+    label: 'Despesas',
+    icon: Wallet,
+    permission: 'expenses:read',
+  },
+  {
+    to: '/relatorios',
+    label: 'Relatórios',
+    icon: BarChart3,
+    permission: 'reports:financial:read',
+  },
 ] as const
 
 export function ManagementLayout({
@@ -42,6 +91,12 @@ export function ManagementLayout({
   const signOut = useServerFn(logout)
   const [signingOut, setSigningOut] = useState(false)
   const [signOutError, setSignOutError] = useState<string | null>(null)
+  const { appRole } = rootRoute.useRouteContext()
+  const visibleNavigation = appRole
+    ? navigation.filter((item) =>
+        hasPermission(appRole, item.permission as Permission),
+      )
+    : []
 
   async function leave() {
     setSigningOut(true)
@@ -49,10 +104,17 @@ export function ManagementLayout({
     try {
       const result = await signOut()
       if (!result.ok) {
-        setSignOutError(result.message)
+        setSignOutError(
+          'message' in result && typeof result.message === 'string'
+            ? result.message
+            : 'Não foi possível encerrar a sessão. Tente novamente.',
+        )
         return
       }
-      await router.navigate({ to: '/login' })
+      await router.navigate({
+        to: '/login',
+        search: { token: undefined },
+      })
     } catch {
       setSignOutError('Não foi possível encerrar a sessão. Tente novamente.')
     } finally {
@@ -86,7 +148,7 @@ export function ManagementLayout({
             className="flex flex-wrap gap-2"
             aria-label="Navegação do cadastro"
           >
-            {navigation.map(({ to, label, icon: Icon }) => (
+            {visibleNavigation.map(({ to, label, icon: Icon }) => (
               <Link
                 key={to}
                 to={to}

@@ -2,19 +2,24 @@
 
 ## Estado
 
-Matriz atualizada em 2026-09-06. Seus guards estruturais estão aplicados às 30
+Matriz reconciliada em 2026-09-07. Seus guards estruturais estão aplicados às 30
 Server Functions existentes: sem principal Neon verificado, vínculo ativo em
 `app_user_access` e papel canônico, elas falham fechadas. A política e as
 migrations de transição para Dono, Gerente e Funcionário já estão versionadas;
 as migrations `0015` e `0016` foram aplicadas no banco HML, com a transição de
 papel e os vínculos liberados registrados em auditoria.
 
-Isso não equivale à homologação em runtime: o Worker HML público continua
-recebendo `403` na borda e a versão ali ativa ainda não recebeu o código que
-reconhece `owner`. O acesso HML end-to-end, inclusive as negações por papel,
-segue pendente de resolver esse bloqueio e fazer um deploy HML autorizado.
-Qualquer mudança material de permissões continua sujeita a
-`HUMAN-APPROVALS.md`.
+Em 6 de setembro, o Worker HML recebeu o código atual, `/login` respondeu
+`200` e `/` sem sessão redirecionou para `/login`; a versão publicada reconhece
+`owner`. O Turnstile foi publicado com o widget limitado a `localhost`,
+`127.0.0.1` e ao hostname HML; a site key pública foi incluída no bundle HML,
+o segredo foi atualizado somente no Worker HML e a validação sanitizada por
+Siteverify passou. Isso não equivale à homologação end-to-end: desafio real,
+rejeição de replay, login, OTP, reset, logout, cookie, sessão, autorização e
+negações por papel reais seguem pendentes de validação integrada autorizada. O
+diagnóstico anterior do `403` permanece preservado como registro histórico em
+`G1-CLOUDFLARE-HML.md` e não autoriza nova mudança material de permissões, que
+continua sujeita a `HUMAN-APPROVALS.md`.
 
 ## Princípios
 
@@ -26,9 +31,11 @@ Qualquer mudança material de permissões continua sujeita a
   produzir.
 - Alterações de estoque, custo, FIFO, cancelamento e devolução são operações
   financeiras/auditáveis e permanecem explicitamente restritas.
-- O escopo “dados próprios” não é habilitado até existir autoria auditável nos
-  fatos operacionais. Hoje as tabelas de venda, compra e produção não possuem
-  esse vínculo.
+- O escopo “dados próprios” não está habilitado. A autoria auditável de novas
+  compras, vendas e despesas e a trilha de lifecycle foram preparada nas
+  migrations `0017`/`0018`, ainda sem homologação; produção ainda não possui o
+  mesmo vínculo. Definir escopo próprio exige uma política separada e não
+  decorre automaticamente dessas colunas.
 
 ## Papéis
 

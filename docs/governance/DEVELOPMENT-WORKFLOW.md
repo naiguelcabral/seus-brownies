@@ -42,9 +42,15 @@ Executar conforme aplicabilidade:
 ```bash
 npm test
 npm run lint
+npm run typecheck
 npm run build
 npm run check
 ```
+
+O runtime local e de CI é Node 22 (mínimo `22.12.0`, menor que 23), fixado em
+`.nvmrc`. Instale dependências exclusivamente com `npm ci` nos ambientes de
+verificação; atualizações de versões seguem revisão separada, sem `npm update`
+por conveniência.
 
 `npm run test:e2e` deve ser usado quando o fluxo exigir homologação E2E e o ambiente estiver autorizado. Testes que escrevem em base compartilhada exigem atenção às regras de HML e referências idempotentes.
 
