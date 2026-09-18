@@ -26,24 +26,63 @@ O Codex consegue identificar estado, regras, limites e próxima tarefa sem depen
 
 ## Fase G1 — Segurança, autenticação e acesso
 
-- [ ] Definir ADR da solução de autenticação definitiva.
-- [ ] Implementar identidade de usuário.
-- [ ] Implementar login/logout.
-- [ ] Implementar sessão segura.
-- [ ] Implementar recuperação de senha sem enumeração.
-- [ ] Implementar limite de tentativas de login (máximo 5 antes de controle adicional).
-- [ ] Implementar rate limiting de autenticação.
-- [ ] Definir e implementar CAPTCHA/desafio adicional em fluxos suspeitos quando aplicável.
-- [ ] Criar RBAC inicial: Admin, Gestor, Produção, Venda e Consulta, sujeito a validação humana.
-- [ ] Proteger Server Functions por permissão.
-- [ ] Proteger rotas de UI.
-- [ ] Criar auditoria de autenticação e mudança de privilégio.
-- [ ] Testes unitários/integrados de auth.
-- [ ] Testes E2E de acesso.
+- [x] Definir ADR da solução de autenticação definitiva (`ADR-0001` aceito).
+- [x] Mapear permissões e aplicar guards estruturais nas 30 Server Functions,
+      com CSRF explícito e falha fechada sem principal válido.
+- [~] Configurar integração externa Neon Auth em HML (secrets, callbacks,
+  e-mail, Turnstile e rate limiting), sujeita a gate humano. E-mail/senha,
+  provedor compartilhado e origens confiáveis foram confirmados em leitura;
+  widget Turnstile HML e seu segredo foram configurados e publicados, mas o
+  limite distribuído e a homologação integrada seguem pendentes.
+- [x] Publicar Worker Cloudflare HML separado em `workers.dev`, sem DNS, rota
+      customizada ou alteração no Worker principal. Em 6 de setembro, o Worker
+      recebeu o código atual e o smoke público confirmou `/login` com `200` e `/`
+      sem sessão redirecionando para `/login`.
+- [x] Aplicar a migration de infraestrutura de acesso `0014` somente no branch
+      Neon de homologação autorizado, sem bootstrap de usuário.
+- [~] Implementar identidade de usuário (cadastro e verificação OTP por
+  e-mail disponíveis; a transição para Dono e um vínculo de Gerente foram
+  auditados em HML e ambos os e-mails foram verificados; o Dono concluiu
+  recuperação de senha, OTP, login e acesso operacional completo em HML;
+  homologação integrada dos demais papéis e controles ainda está pendente).
+- [~] Implementar login/logout por e-mail/senha via proxy server-side Neon Auth;
+  validação operacional depende de identidade autorizada em HML.
+- [~] Implementar sessão segura para SSR via cookies Neon Auth e adaptador
+  request-scoped; validação operacional depende de identidade autorizada em HML.
+- [~] Implementar recuperação de senha sem enumeração: fluxo por link/token,
+  rota pública, token removido do histórico, auditoria sanitizada obrigatória
+  em duas etapas e contratos/testes locais preparados; falta validação
+  integrada controlada do Neon Auth e dos controles antiabuso.
+- [~] Implementar limite de tentativas de login (máximo 5 antes de controle adicional):
+  cooldown durável e limite local por identidade HMAC preparados; falta
+  homologação com banco e limite distribuído.
+- [~] Implementar rate limiting de autenticação: limite local para login,
+  cadastro, OTP e reset preparado; binding distribuído HML permanece pendente.
+- [~] Definir e implementar CAPTCHA/desafio adicional em fluxos suspeitos:
+  verificador server-side, bloqueio fail-closed, widget e site key HML estão
+  configurados. A validação do segredo por resposta descartável passou; falta
+  homologar um desafio real e seu replay junto aos fluxos de autenticação.
+- [~] Reestruturar RBAC inicial em Dono, Gerente e Funcionário: política,
+  testes e migrations de transição aplicados em HML; o Dono e um Gerente
+  possuem vínculos auditados. A verificação de e-mail e a liberação das demais
+  identidades permanecem pendentes.
+- [x] Proteger Server Functions por permissão no código versionado, por mapa
+      central e middleware compartilhado; validar em HML após o deploy atual.
+- [x] Proteger rotas de UI com redirecionamento SSR para a rota pública de login.
+- [~] Criar auditoria de autenticação e mudança de privilégio: reset por senha,
+  transição de papel e liberações manuais possuem eventos sanitizados; falta
+  validação integrada e cobertura dos demais eventos.
+- [~] Testes unitários/integrados de auth: testes unitários locais existem;
+  testes integrados e E2E permanecem pendentes.
+- [~] Testes E2E de acesso: spec de rotas públicas criada; execução integrada
+  de login, logout, OTP, reset, sessão e negações ainda depende de ambiente e
+  identidades de teste autorizados.
 
 ### Gate
 
-A escolha final do provedor/estratégia de autenticação exige aprovação humana antes de integração irreversível.
+A estratégia Neon Auth baseada em Better Auth está aprovada. Provisionamento,
+secrets, configuração de e-mail, revisão/aplicação de migrations e autorização
+final por Server Function continuam sujeitos aos gates de `HUMAN-APPROVALS.md`.
 
 ## Fase G2 — Consolidação financeira, FIFO/CMV e margem
 
@@ -117,6 +156,8 @@ A definição de margem realizada e vínculo venda-lote é decisão de negócio/
 
 - [x] Configuração Cloudflare versionada.
 - [x] Build/deploy command disponível.
+- [~] Worker HML isolado publicado, mas indisponível publicamente por `403` de
+  borda e ainda sem deploy do RBAC atual.
 - [ ] Definir ambientes development/staging/production formalmente.
 - [ ] Configurar secrets por ambiente.
 - [ ] Definir estratégia de backup Neon.
@@ -137,7 +178,9 @@ A definição de margem realizada e vínculo venda-lote é decisão de negócio/
 
 ## Prioridade imediata
 
-1. Iniciar G1 por ADR e desenho de autenticação/RBAC.
-2. Depois consolidar G2 (CMV/margem) antes de ampliar os relatórios gerenciais.
-3. Não iniciar G4/G5 antes de segurança básica e idempotência estarem consolidadas.
+1. Decidir se haverá segundo Gerente e, se aprovado, informar a identidade a
+   verificar antes de criar o vínculo auditado.
+2. Executar a homologação integrada/E2E de G1, inclusive reset, login, sessão,
+   negações por papel, cooldown e auditoria.
+3. Depois consolidar G2 (CMV/margem) antes de ampliar os relatórios gerenciais.
 4. Preservar todos os dados HML e evidências FIFO existentes.

@@ -2,6 +2,9 @@ import assert from 'node:assert/strict'
 import test from 'node:test'
 
 import {
+  appUserAccess,
+  authAuditEvents,
+  authLoginAttempts,
   inventoryCostAllocations,
   inventoryCostLayers,
   products,
@@ -17,4 +20,15 @@ test('declara camadas e alocações FIFO com precisão monetária preservada', (
   assert.equal(inventoryCostLayers.originalCost.name, 'original_cost')
   assert.equal(inventoryCostAllocations.allocatedCost.name, 'allocated_cost')
   assert.equal(inventoryCostAllocations.unitCost.name, 'unit_cost')
+})
+
+test('declara acesso Cacau e trilha de autenticação sem credenciais', () => {
+  assert.equal(appUserAccess.authUserId.name, 'auth_user_id')
+  assert.equal(appUserAccess.role.name, 'role')
+  assert.equal(authLoginAttempts.identityHash.name, 'identity_hash')
+  assert.equal(
+    authLoginAttempts.consecutiveFailures.name,
+    'consecutive_failures',
+  )
+  assert.equal(authAuditEvents.metadata.name, 'metadata')
 })

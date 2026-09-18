@@ -21,6 +21,7 @@ import {
   recipeVersions,
   stockMovements,
 } from '#/db/schema'
+import { requireServerFunctionPermission } from '#/features/auth/server-function-middleware'
 import {
   calculateMoneyCents,
   calculateRecipeCapacity,
@@ -523,8 +524,9 @@ function previewFromPlan(
   }
 }
 
-export const getProductionWorkspace = createServerFn({ method: 'GET' }).handler(
-  async () => {
+export const getProductionWorkspace = createServerFn({ method: 'GET' })
+  .middleware([requireServerFunctionPermission('getProductionWorkspace')])
+  .handler(async () => {
     const { getDb } = await import('#/db/index')
     const database = getDb()
     const [recipes, profileRows, batches] = await Promise.all([
@@ -571,10 +573,10 @@ export const getProductionWorkspace = createServerFn({ method: 'GET' }).handler(
         .limit(60),
     ])
     return { recipes, profiles: profileRows, batches }
-  },
-)
+  })
 
 export const previewProductionBatch = createServerFn({ method: 'POST' })
+  .middleware([requireServerFunctionPermission('previewProductionBatch')])
   .validator(batchInput)
   .handler(async ({ data }) => {
     const { getDb } = await import('#/db/index')
@@ -586,6 +588,7 @@ export const previewProductionBatch = createServerFn({ method: 'POST' })
   })
 
 export const createProductionBatch = createServerFn({ method: 'POST' })
+  .middleware([requireServerFunctionPermission('createProductionBatch')])
   .validator(batchInput)
   .handler(async ({ data }) => {
     const { getDb } = await import('#/db/index')
@@ -633,6 +636,7 @@ export const createProductionBatch = createServerFn({ method: 'POST' })
   })
 
 export const getProductionBatch = createServerFn({ method: 'GET' })
+  .middleware([requireServerFunctionPermission('getProductionBatch')])
   .validator(z.object({ id: z.number().int().positive() }))
   .handler(async ({ data }) => {
     const { getDb } = await import('#/db/index')
@@ -723,6 +727,7 @@ export const getProductionBatch = createServerFn({ method: 'GET' })
   })
 
 export const completeProductionBatch = createServerFn({ method: 'POST' })
+  .middleware([requireServerFunctionPermission('completeProductionBatch')])
   .validator(z.object({ id: z.number().int().positive() }))
   .handler(async ({ data }) => {
     const { getDb } = await import('#/db/index')

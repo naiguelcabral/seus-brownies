@@ -18,6 +18,7 @@ import {
   salesLocations,
   stockMovements,
 } from '#/db/schema'
+import { requireServerFunctionPermission } from '#/features/auth/server-function-middleware'
 import {
   groupExpensesByCategory,
   groupRevenueByChannel,
@@ -52,6 +53,7 @@ function endExclusive(end: string) {
 
 /** All report calculations run on the server; the browser receives aggregates only. */
 export const getOperationalReports = createServerFn({ method: 'GET' })
+  .middleware([requireServerFunctionPermission('getOperationalReports')])
   .validator(periodValues)
   .handler(async ({ data }) => {
     const fallback = defaultPeriod()
@@ -298,7 +300,10 @@ export const getOperationalReports = createServerFn({ method: 'GET' })
             eq(inventoryCostAllocations.saleItemId, saleItems.id),
           )
           .innerJoin(sales, eq(saleItems.saleId, sales.id))
-          .innerJoin(products, eq(inventoryCostAllocations.productId, products.id))
+          .innerJoin(
+            products,
+            eq(inventoryCostAllocations.productId, products.id),
+          )
           .innerJoin(
             inventoryCostLayers,
             eq(
@@ -343,8 +348,8 @@ export const getOperationalReports = createServerFn({ method: 'GET' })
           const restoredCost = moneyToCents(reversal.restoredCost) ?? 0n
           reversedCostByAllocation.set(
             reversal.originalAllocationId,
-            (reversedCostByAllocation.get(reversal.originalAllocationId) ?? 0n)
-              + restoredCost,
+            (reversedCostByAllocation.get(reversal.originalAllocationId) ??
+              0n) + restoredCost,
           )
         }
         fifo = {

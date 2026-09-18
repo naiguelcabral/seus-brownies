@@ -7,8 +7,10 @@
   },
   "scripts": {
     "dev": "vite dev --port 3000",
+    "dev:hml": "CLOUDFLARE_ENV=hml vite dev --port 3000",
     "generate-routes": "tsr generate",
     "build": "vite build",
+    "build:hml": "bash scripts/build-hml-isolated.sh",
     "preview": "vite preview",
     "ligar": "bash ./LIGARTUDO",
     "desligar": "bash ./DESLIGARTUDO",
@@ -20,6 +22,8 @@
     "format": "prettier --write . && eslint --fix",
     "check": "prettier --check .",
     "deploy": "npm run build && wrangler deploy",
+    "deploy:hml": "HML_DEPLOY=1 bash scripts/build-hml-isolated.sh",
+    "secret:hml": "wrangler secret put --env hml",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
@@ -35,6 +39,7 @@
     "fifo:backfill:hml": "tsx scripts/backfill-hml-fifo.ts"
   },
   "dependencies": {
+    "@neondatabase/neon-js": "^0.7.0-beta",
     "@tailwindcss/vite": "^4.1.18",
     "@tanstack/react-devtools": "latest",
     "@tanstack/react-form": "latest",

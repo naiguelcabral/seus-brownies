@@ -14,6 +14,7 @@ import {
   sales,
   stockMovements,
 } from '#/db/schema'
+import { requireServerFunctionPermission } from '#/features/auth/server-function-middleware'
 import {
   calculatePriceCentsTotal,
   calculateUnitCostMillisTotal,
@@ -23,7 +24,10 @@ import {
   assertNoDuplicateLayerAllocations,
   createsSaleCostAllocation,
 } from '#/features/inventory/fifo'
-import { moneyToCents, quantityToThousandths } from '#/features/production/calculations'
+import {
+  moneyToCents,
+  quantityToThousandths,
+} from '#/features/production/calculations'
 
 const quantityPattern = /^\d+(?:[,.]\d{1,3})?$/
 const moneyPattern = /^\d+(?:[,.]\d{1,2})?$/
@@ -82,28 +86,31 @@ const purchaseValues = z.object({
 
 export const listPurchasableProducts = createServerFn({
   method: 'GET',
-}).handler(async () => {
-  const { getDb } = await import('#/db/index')
-  return getDb()
-    .select({
-      id: products.id,
-      name: products.name,
-      unit: products.unit,
-      type: products.type,
-    })
-    .from(products)
-    .where(eq(products.isActive, true))
-    .orderBy(asc(products.name))
 })
+  .middleware([requireServerFunctionPermission('listPurchasableProducts')])
+  .handler(async () => {
+    const { getDb } = await import('#/db/index')
+    return getDb()
+      .select({
+        id: products.id,
+        name: products.name,
+        unit: products.unit,
+        type: products.type,
+      })
+      .from(products)
+      .where(eq(products.isActive, true))
+      .orderBy(asc(products.name))
+  })
 
-export const listPurchases = createServerFn({ method: 'GET' }).handler(
-  async () => {
+export const listPurchases = createServerFn({ method: 'GET' })
+  .middleware([requireServerFunctionPermission('listPurchases')])
+  .handler(async () => {
     const { getDb } = await import('#/db/index')
     return getDb().select().from(purchases).orderBy(desc(purchases.purchasedAt))
-  },
-)
+  })
 
 export const createPurchase = createServerFn({ method: 'POST' })
+  .middleware([requireServerFunctionPermission('createPurchase')])
   .validator(purchaseValues)
   .handler(async ({ data }) => {
     const normalizedItems = data.items.map((item) => ({
@@ -140,10 +147,7 @@ export const createPurchase = createServerFn({ method: 'POST' })
       }
 
       const totals = normalizedItems.map((item) =>
-        calculateUnitCostMillisTotal(
-          item.unitCost!,
-          item.quantityThousandths!,
-        ),
+        calculateUnitCostMillisTotal(item.unitCost!, item.quantityThousandths!),
       )
       const total = totals.reduce((sum, item) => sum + item, 0n)
       const [purchase] = await tx
@@ -157,29 +161,39 @@ export const createPurchase = createServerFn({ method: 'POST' })
         })
         .returning({ id: purchases.id })
 
-      const insertedPurchaseItems = await tx.insert(purchaseItems).values(
-        normalizedItems.map((item, index) => ({
-          purchaseId: purchase.id,
-          productId: item.productId,
-          itemName: productById.get(item.productId)!.name,
-          quantity: item.quantity!,
-          unitCost: millisToUnitCost(item.unitCost!),
-          totalAmount: centsToMoney(totals[index]),
-        })),
-      ).returning({ id: purchaseItems.id, productId: purchaseItems.productId })
-      const purchaseMovements = await tx.insert(stockMovements).values(
-        normalizedItems.map((item) => ({
-          productId: item.productId,
-          type: 'purchase' as const,
-          quantityDelta: item.quantity!,
-          unitCost: millisToUnitCost(item.unitCost!),
-          referenceType: 'purchase',
-          referenceId: purchase.id,
-        })),
-      ).returning({ id: stockMovements.id, productId: stockMovements.productId })
+      const insertedPurchaseItems = await tx
+        .insert(purchaseItems)
+        .values(
+          normalizedItems.map((item, index) => ({
+            purchaseId: purchase.id,
+            productId: item.productId,
+            itemName: productById.get(item.productId)!.name,
+            quantity: item.quantity!,
+            unitCost: millisToUnitCost(item.unitCost!),
+            totalAmount: centsToMoney(totals[index]),
+          })),
+        )
+        .returning({ id: purchaseItems.id, productId: purchaseItems.productId })
+      const purchaseMovements = await tx
+        .insert(stockMovements)
+        .values(
+          normalizedItems.map((item) => ({
+            productId: item.productId,
+            type: 'purchase' as const,
+            quantityDelta: item.quantity!,
+            unitCost: millisToUnitCost(item.unitCost!),
+            referenceType: 'purchase',
+            referenceId: purchase.id,
+          })),
+        )
+        .returning({
+          id: stockMovements.id,
+          productId: stockMovements.productId,
+        })
       const availableAt = new Date(`${data.purchasedAt}T12:00:00.000Z`)
       const finishedPurchaseLayers = normalizedItems.flatMap((item, index) => {
-        if (productById.get(item.productId)?.type !== 'finished_product') return []
+        if (productById.get(item.productId)?.type !== 'finished_product')
+          return []
         const movement = purchaseMovements.find(
           (row) => row.productId === item.productId,
         )
@@ -188,25 +202,28 @@ export const createPurchase = createServerFn({ method: 'POST' })
         )
         if (!movement || !purchaseItem)
           throw new Error('Não foi possível criar camada FIFO da compra.')
-        return [{
-          productId: item.productId,
-          productionBatchOutputId: null,
-          sourceStockMovementId: movement.id,
-          origin: 'purchase' as const,
-          availableAt,
-          originalQuantity: item.quantity!,
-          originalCost: centsToMoney(totals[index]),
-          remainingQuantity: item.quantity!,
-          remainingCost: centsToMoney(totals[index]),
-        }]
+        return [
+          {
+            productId: item.productId,
+            productionBatchOutputId: null,
+            sourceStockMovementId: movement.id,
+            origin: 'purchase' as const,
+            availableAt,
+            originalQuantity: item.quantity!,
+            originalCost: centsToMoney(totals[index]),
+            remainingQuantity: item.quantity!,
+            remainingCost: centsToMoney(totals[index]),
+          },
+        ]
       })
       if (finishedPurchaseLayers.length)
         await tx.insert(inventoryCostLayers).values(finishedPurchaseLayers)
     })
   })
 
-export const listInventory = createServerFn({ method: 'GET' }).handler(
-  async () => {
+export const listInventory = createServerFn({ method: 'GET' })
+  .middleware([requireServerFunctionPermission('listInventory')])
+  .handler(async () => {
     const { getDb } = await import('#/db/index')
     const database = getDb()
     const [balances, movements] = await Promise.all([
@@ -242,8 +259,7 @@ export const listInventory = createServerFn({ method: 'GET' }).handler(
         .limit(80),
     ])
     return { balances, movements }
-  },
-)
+  })
 
 const saleValues = z.object({
   customerName: z.string().trim().max(120).optional(),
@@ -260,8 +276,9 @@ const saleValues = z.object({
     .min(1),
 })
 
-export const listSaleProducts = createServerFn({ method: 'GET' }).handler(
-  async () => {
+export const listSaleProducts = createServerFn({ method: 'GET' })
+  .middleware([requireServerFunctionPermission('listSaleProducts')])
+  .handler(async () => {
     const { getDb } = await import('#/db/index')
     return getDb()
       .select({
@@ -275,10 +292,10 @@ export const listSaleProducts = createServerFn({ method: 'GET' }).handler(
         sql`${products.isActive} = true and ${products.type} = 'finished_product'`,
       )
       .orderBy(asc(products.name))
-  },
-)
+  })
 
 export const createSale = createServerFn({ method: 'POST' })
+  .middleware([requireServerFunctionPermission('createSale')])
   .validator(saleValues)
   .handler(async ({ data }) => {
     const normalizedItems = data.items.map((item) => ({
@@ -367,12 +384,12 @@ export const createSale = createServerFn({ method: 'POST' })
         .insert(saleItems)
         .values(
           normalizedItems.map((item, index) => ({
-          saleId: sale.id,
-          productId: item.productId,
-          productName: byId.get(item.productId)!.name,
-          quantity: item.quantity!,
-          unitPrice: byId.get(item.productId)!.salePrice!,
-          totalAmount: centsToMoney(totals[index]),
+            saleId: sale.id,
+            productId: item.productId,
+            productName: byId.get(item.productId)!.name,
+            quantity: item.quantity!,
+            unitPrice: byId.get(item.productId)!.salePrice!,
+            totalAmount: centsToMoney(totals[index]),
           })),
         )
         .returning({ id: saleItems.id })
@@ -381,11 +398,11 @@ export const createSale = createServerFn({ method: 'POST' })
           .insert(stockMovements)
           .values(
             normalizedItems.map((item) => ({
-            productId: item.productId,
-            type: 'sale' as const,
-            quantityDelta: `-${item.quantity!}`,
-            referenceType: 'sale',
-            referenceId: sale.id,
+              productId: item.productId,
+              type: 'sale' as const,
+              quantityDelta: `-${item.quantity!}`,
+              referenceType: 'sale',
+              referenceId: sale.id,
             })),
           )
           .returning({ id: stockMovements.id })
@@ -426,7 +443,9 @@ export const createSale = createServerFn({ method: 'POST' })
             tx
               .update(inventoryCostLayers)
               .set({
-                remainingQuantity: String(layer.remainingQuantity / 1_000n).concat(
+                remainingQuantity: String(
+                  layer.remainingQuantity / 1_000n,
+                ).concat(
                   '.',
                   String(layer.remainingQuantity % 1_000n).padStart(3, '0'),
                 ),
@@ -440,10 +459,12 @@ export const createSale = createServerFn({ method: 'POST' })
     })
   })
 
-export const listSales = createServerFn({ method: 'GET' }).handler(async () => {
-  const { getDb } = await import('#/db/index')
-  return getDb().select().from(sales).orderBy(desc(sales.soldAt)).limit(60)
-})
+export const listSales = createServerFn({ method: 'GET' })
+  .middleware([requireServerFunctionPermission('listSales')])
+  .handler(async () => {
+    const { getDb } = await import('#/db/index')
+    return getDb().select().from(sales).orderBy(desc(sales.soldAt)).limit(60)
+  })
 
 const expenseValues = z.object({
   description: z.string().trim().min(2).max(180),
@@ -453,6 +474,7 @@ const expenseValues = z.object({
   notes: z.string().trim().max(1000).optional(),
 })
 export const createExpense = createServerFn({ method: 'POST' })
+  .middleware([requireServerFunctionPermission('createExpense')])
   .validator(expenseValues)
   .handler(async ({ data }) => {
     const amount = cents(data.amount)
@@ -468,19 +490,20 @@ export const createExpense = createServerFn({ method: 'POST' })
         notes: data.notes?.trim() || null,
       })
   })
-export const listExpenses = createServerFn({ method: 'GET' }).handler(
-  async () => {
+export const listExpenses = createServerFn({ method: 'GET' })
+  .middleware([requireServerFunctionPermission('listExpenses')])
+  .handler(async () => {
     const { getDb } = await import('#/db/index')
     return getDb()
       .select()
       .from(expenses)
       .orderBy(desc(expenses.occurredAt))
       .limit(60)
-  },
-)
+  })
 
-export const getDashboard = createServerFn({ method: 'GET' }).handler(
-  async () => {
+export const getDashboard = createServerFn({ method: 'GET' })
+  .middleware([requireServerFunctionPermission('getDashboard')])
+  .handler(async () => {
     const { getDb } = await import('#/db/index')
     const database = getDb()
     const monthStart = new Date()
@@ -530,5 +553,4 @@ export const getDashboard = createServerFn({ method: 'GET' }).handler(
       recentSales,
       monthExpenses: monthExpenses[0]?.total ?? '0',
     }
-  },
-)
+  })

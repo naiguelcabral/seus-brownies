@@ -15,10 +15,12 @@ import { Route as ComprasRouteImport } from './routes/compras'
 import { Route as DespesasRouteImport } from './routes/despesas'
 import { Route as EstoqueRouteImport } from './routes/estoque'
 import { Route as FifoMigrationAuditRouteImport } from './routes/fifo-migration-audit'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as ProducaoRouteImport } from './routes/producao'
 import { Route as ProdutosRouteImport } from './routes/produtos'
 import { Route as RelatoriosRouteImport } from './routes/relatorios'
 import { Route as VendasRouteImport } from './routes/vendas'
+import { Route as LoginRedefinirSenhaRouteImport } from './routes/login/redefinir-senha'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -50,6 +52,11 @@ const FifoMigrationAuditRoute = FifoMigrationAuditRouteImport.update({
   path: '/fifo-migration-audit',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProducaoRoute = ProducaoRouteImport.update({
   id: '/producao',
   path: '/producao',
@@ -70,6 +77,11 @@ const VendasRoute = VendasRouteImport.update({
   path: '/vendas',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LoginRedefinirSenhaRoute = LoginRedefinirSenhaRouteImport.update({
+  id: '/redefinir-senha',
+  path: '/redefinir-senha',
+  getParentRoute: () => LoginRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -78,10 +90,12 @@ export interface FileRoutesByFullPath {
   '/despesas': typeof DespesasRoute
   '/estoque': typeof EstoqueRoute
   '/fifo-migration-audit': typeof FifoMigrationAuditRoute
+  '/login': typeof LoginRouteWithChildren
   '/producao': typeof ProducaoRoute
   '/produtos': typeof ProdutosRoute
   '/relatorios': typeof RelatoriosRoute
   '/vendas': typeof VendasRoute
+  '/login/redefinir-senha': typeof LoginRedefinirSenhaRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -90,10 +104,12 @@ export interface FileRoutesByTo {
   '/despesas': typeof DespesasRoute
   '/estoque': typeof EstoqueRoute
   '/fifo-migration-audit': typeof FifoMigrationAuditRoute
+  '/login': typeof LoginRouteWithChildren
   '/producao': typeof ProducaoRoute
   '/produtos': typeof ProdutosRoute
   '/relatorios': typeof RelatoriosRoute
   '/vendas': typeof VendasRoute
+  '/login/redefinir-senha': typeof LoginRedefinirSenhaRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -103,10 +119,12 @@ export interface FileRoutesById {
   '/despesas': typeof DespesasRoute
   '/estoque': typeof EstoqueRoute
   '/fifo-migration-audit': typeof FifoMigrationAuditRoute
+  '/login': typeof LoginRouteWithChildren
   '/producao': typeof ProducaoRoute
   '/produtos': typeof ProdutosRoute
   '/relatorios': typeof RelatoriosRoute
   '/vendas': typeof VendasRoute
+  '/login/redefinir-senha': typeof LoginRedefinirSenhaRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -117,10 +135,12 @@ export interface FileRouteTypes {
     | '/despesas'
     | '/estoque'
     | '/fifo-migration-audit'
+    | '/login'
     | '/producao'
     | '/produtos'
     | '/relatorios'
     | '/vendas'
+    | '/login/redefinir-senha'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -129,10 +149,12 @@ export interface FileRouteTypes {
     | '/despesas'
     | '/estoque'
     | '/fifo-migration-audit'
+    | '/login'
     | '/producao'
     | '/produtos'
     | '/relatorios'
     | '/vendas'
+    | '/login/redefinir-senha'
   id:
     | '__root__'
     | '/'
@@ -141,10 +163,12 @@ export interface FileRouteTypes {
     | '/despesas'
     | '/estoque'
     | '/fifo-migration-audit'
+    | '/login'
     | '/producao'
     | '/produtos'
     | '/relatorios'
     | '/vendas'
+    | '/login/redefinir-senha'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -154,6 +178,7 @@ export interface RootRouteChildren {
   DespesasRoute: typeof DespesasRoute
   EstoqueRoute: typeof EstoqueRoute
   FifoMigrationAuditRoute: typeof FifoMigrationAuditRoute
+  LoginRoute: typeof LoginRouteWithChildren
   ProducaoRoute: typeof ProducaoRoute
   ProdutosRoute: typeof ProdutosRoute
   RelatoriosRoute: typeof RelatoriosRoute
@@ -204,6 +229,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FifoMigrationAuditRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/producao': {
       id: '/producao'
       path: '/producao'
@@ -232,8 +264,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof VendasRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/login/redefinir-senha': {
+      id: '/login/redefinir-senha'
+      path: '/redefinir-senha'
+      fullPath: '/login/redefinir-senha'
+      preLoaderRoute: typeof LoginRedefinirSenhaRouteImport
+      parentRoute: typeof LoginRoute
+    }
   }
 }
+
+interface LoginRouteChildren {
+  LoginRedefinirSenhaRoute: typeof LoginRedefinirSenhaRoute
+}
+
+const LoginRouteChildren: LoginRouteChildren = {
+  LoginRedefinirSenhaRoute: LoginRedefinirSenhaRoute,
+}
+
+const LoginRouteWithChildren = LoginRoute._addFileChildren(LoginRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
@@ -242,6 +291,7 @@ const rootRouteChildren: RootRouteChildren = {
   DespesasRoute: DespesasRoute,
   EstoqueRoute: EstoqueRoute,
   FifoMigrationAuditRoute: FifoMigrationAuditRoute,
+  LoginRoute: LoginRouteWithChildren,
   ProducaoRoute: ProducaoRoute,
   ProdutosRoute: ProdutosRoute,
   RelatoriosRoute: RelatoriosRoute,
@@ -252,10 +302,11 @@ export const routeTree = rootRouteImport
   ._addFileTypes<FileRouteTypes>()
 
 import type { getRouter } from './router.tsx'
-import type { createStart } from '@tanstack/react-start'
+import type { startInstance } from './start.ts'
 declare module '@tanstack/react-start' {
   interface Register {
     ssr: true
     router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
   }
 }

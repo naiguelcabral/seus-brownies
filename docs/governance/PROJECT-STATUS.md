@@ -1,6 +1,7 @@
 # Estado canônico do projeto — Cacau v1
 
-Atualizado em 3 de setembro de 2026.
+Atualizado em 6 de setembro de 2026, após revisão de código, migrations,
+testes, rotas, documentação e estado público de HML.
 
 Este documento é a referência canônica de alto nível para o estado atual do sistema. Registros históricos de homologação, importação e decisões específicas permanecem válidos como evidência, mas não substituem este resumo.
 
@@ -55,17 +56,65 @@ Este documento é a referência canônica de alto nível para o estado atual do 
 
 ### Qualidade
 
-- Testes determinísticos em `test/`.
-- Testes E2E em `e2e/`.
-- `lint`, `build`, `test` e `test:e2e` são verificações oficiais.
+- A suíte determinística contém 34 arquivos de teste e passou integralmente na
+  revisão de 6 de setembro; `lint` e `build` também passaram. O build emite
+  apenas o aviso não bloqueante do Wrangler por não poder escrever logs fora do
+  workspace.
+- `npm run check` não está verde para o repositório inteiro: o Prettier aponta
+  dívida de formatação em 102 arquivos, inclusive artefatos históricos e
+  snapshots gerados. Os arquivos alterados nesta revisão foram formatados
+  isoladamente; essa pendência não foi escondida com uma reescrita em massa.
+- Há 11 specs Playwright, incluindo uma de rotas públicas de autenticação.
+  Parte delas é intencionalmente `skip` ou requer autorização/referência
+  exclusiva; a execução E2E completa de autenticação ainda depende de ambiente
+  local autorizado que não carregue `.env` e de identidades de teste próprias.
+- O código versionado possui 13 módulos de rota, CSRF global para métodos
+  mutáveis e middleware estrutural de autorização aplicado às 30 Server
+  Functions operacionais. A permissão é resolvida no servidor.
 
-## Ainda não entregue
+### Autenticação e acesso (G1)
 
-- Autenticação.
-- Perfis e permissões (RBAC).
-- Auditoria vinculada a identidade de usuário.
-- Recuperação de senha e gestão de sessão.
-- Proteções específicas de login, incluindo limite de tentativas e desafio adicional quando aplicável.
+- A base versionada contém login por e-mail/senha, cadastro, OTP, logout,
+  recuperação por link/token, rate limit local, cooldown durável quando os
+  bindings existem, Turnstile fail-closed e auditoria sanitizada de reset.
+  A rota de reset é pública, mantém o token só em memória e o remove da URL.
+- A experiência local foi exercitada para recuperação e login: a tela distingue
+  sessão ausente, identidade sem allowlist e e-mail não verificado; este último
+  segue para o OTP com reenvio de código.
+- As migrations `0014`, `0015` e `0016` estão registradas no histórico Drizzle
+  do branch Neon HML. Elas criam a infraestrutura de acesso e auditam a
+  transição de `admin` para `owner`. Há um vínculo ativo de Dono e um de
+  Gerente, ambos auditados e com e-mail verificado. Em 6 de setembro, o Dono
+  concluiu manualmente recuperação de senha, OTP, login e acesso operacional
+  completo em HML.
+- A política atual é Dono, Gerente e Funcionário. Funcionário pode apenas ler
+  catálogo e registrar compras/vendas; não recebe dashboard, relatórios,
+  estoque, despesas, produção ou administração. Papéis anteriores permanecem
+  somente como compatibilidade de transição, sem concessão a novas contas.
+- O Worker HML `cacau-v1-hml` permanece publicado exclusivamente em
+  `workers.dev`. Em 6 de setembro, o código atual foi publicado e o `403` de
+  navegação pública foi corrigido: `/login` responde `200` e `/` sem sessão
+  redireciona para `/login`. A homologação end-to-end ainda depende de login,
+  OTP, sessão e autorização por papel reais.
+- Em 7 de setembro, o widget Turnstile HML existente foi limitado a
+  `localhost`, `127.0.0.1` e ao hostname HML; seu segredo foi atualizado
+  somente no Worker e a site key pública foi incluída no bundle HML. A
+  verificação descartável de Siteverify confirmou o segredo sem expô-lo.
+
+## Ainda não entregue ou não homologado
+
+- Decisão humana sobre a necessidade e a identidade do segundo Gerente; se
+  aprovado, criar o vínculo auditado somente após a verificação de e-mail.
+- Homologação integrada/E2E de login, logout, OTP, reset, cookie, sessão,
+  autorização por papel e negações de acesso.
+- Rate limit distribuído HML, validação integrada de um desafio Turnstile real
+  e de replay, confirmação de revogação de sessão e auditoria de todos os
+  eventos de autenticação.
+- Gestão de identidades/papéis por interface autorizada; hoje os vínculos HML
+  foram operações administrativas auditadas.
+- Auditoria de autoria para todas as mutações operacionais e, se desejado,
+  desenho de dupla aprovação. A confirmação de certos ajustes de estoque já
+  existe na UI, mas não é uma política geral de quatro olhos.
 - WhatsApp Cloud API e webhook.
 - Processamento idempotente completo para mensageria externa.
 - OCR e armazenamento de documentos/notas.
@@ -84,11 +133,8 @@ Este documento é a referência canônica de alto nível para o estado atual do 
 
 ## Próxima macrofase
 
-1. Governança agent-friendly do repositório.
-2. Segurança, autenticação e RBAC.
-3. Consolidação de CMV/margem e rastreabilidade.
-4. Dashboard gerencial avançado.
-5. WhatsApp com idempotência e confirmação.
-6. OCR/documentos.
-7. Operação de produção e deploy definitivo.
-8. Autonomia progressiva do Codex.
+1. Fechar a homologação segura de G1 e o acesso HML.
+2. Consolidar CMV/margem e rastreabilidade.
+3. Evoluir dashboard e gestão sobre dados já autorizados.
+4. Iniciar mensageria, OCR e pagamentos somente após os gates anteriores.
+5. Formalizar observabilidade, backup e deploy definitivo antes de produção.

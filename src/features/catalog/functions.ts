@@ -3,6 +3,7 @@ import { asc, eq } from 'drizzle-orm'
 import { z } from 'zod'
 
 import { categories, products } from '#/db/schema'
+import { requireServerFunctionPermission } from '#/features/auth/server-function-middleware'
 
 const categoryValues = z.object({
   name: z.string().trim().min(2, 'Informe ao menos 2 caracteres.').max(80),
@@ -81,14 +82,15 @@ function readableDatabaseError(error: unknown, entity: string): never {
   throw error
 }
 
-export const listCategories = createServerFn({ method: 'GET' }).handler(
-  async () => {
+export const listCategories = createServerFn({ method: 'GET' })
+  .middleware([requireServerFunctionPermission('listCategories')])
+  .handler(async () => {
     const { getDb } = await import('#/db/index')
     return getDb().select().from(categories).orderBy(asc(categories.name))
-  },
-)
+  })
 
 export const createCategory = createServerFn({ method: 'POST' })
+  .middleware([requireServerFunctionPermission('createCategory')])
   .validator(categoryValues)
   .handler(async ({ data }) => {
     const { getDb } = await import('#/db/index')
@@ -106,6 +108,7 @@ export const createCategory = createServerFn({ method: 'POST' })
   })
 
 export const updateCategory = createServerFn({ method: 'POST' })
+  .middleware([requireServerFunctionPermission('updateCategory')])
   .validator(categoryValues.extend({ id: z.number().int().positive() }))
   .handler(async ({ data }) => {
     const { getDb } = await import('#/db/index')
@@ -125,6 +128,7 @@ export const updateCategory = createServerFn({ method: 'POST' })
   })
 
 export const setCategoryActive = createServerFn({ method: 'POST' })
+  .middleware([requireServerFunctionPermission('setCategoryActive')])
   .validator(categoryId.extend({ isActive: z.boolean() }))
   .handler(async ({ data }) => {
     const { getDb } = await import('#/db/index')
@@ -134,8 +138,9 @@ export const setCategoryActive = createServerFn({ method: 'POST' })
       .where(eq(categories.id, data.id))
   })
 
-export const listProducts = createServerFn({ method: 'GET' }).handler(
-  async () => {
+export const listProducts = createServerFn({ method: 'GET' })
+  .middleware([requireServerFunctionPermission('listProducts')])
+  .handler(async () => {
     const { getDb } = await import('#/db/index')
     return getDb()
       .select({
@@ -153,10 +158,10 @@ export const listProducts = createServerFn({ method: 'GET' }).handler(
       .from(products)
       .leftJoin(categories, eq(products.categoryId, categories.id))
       .orderBy(asc(products.name))
-  },
-)
+  })
 
 export const createProduct = createServerFn({ method: 'POST' })
+  .middleware([requireServerFunctionPermission('createProduct')])
   .validator(productValues)
   .handler(async ({ data }) => {
     const { getDb } = await import('#/db/index')
@@ -179,6 +184,7 @@ export const createProduct = createServerFn({ method: 'POST' })
   })
 
 export const updateProduct = createServerFn({ method: 'POST' })
+  .middleware([requireServerFunctionPermission('updateProduct')])
   .validator(productValuesWithId)
   .handler(async ({ data }) => {
     const { getDb } = await import('#/db/index')
@@ -203,6 +209,7 @@ export const updateProduct = createServerFn({ method: 'POST' })
   })
 
 export const setProductActive = createServerFn({ method: 'POST' })
+  .middleware([requireServerFunctionPermission('setProductActive')])
   .validator(categoryId.extend({ isActive: z.boolean() }))
   .handler(async ({ data }) => {
     const { getDb } = await import('#/db/index')

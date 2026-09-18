@@ -54,6 +54,11 @@ Requisitos mínimos:
 - registro auditável de eventos de autenticação;
 - RBAC aplicado no servidor, nunca apenas escondendo elementos da UI;
 - CAPTCHA/desafio adicional em fluxo suspeito ou repetitivo quando adotado.
+- Neon Auth Beta pode permitir cadastro público de identidade. Uma sessão Neon
+  não concede acesso ao Cacau: todo principal precisa de e-mail verificado
+  quando exigido, vínculo ativo em `app_user_access`, papel canônico válido e
+  autorização explícita na Server Function. Ausência, inativação ou papel
+  inválido falham fechados.
 
 ## Auditoria
 

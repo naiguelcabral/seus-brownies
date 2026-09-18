@@ -13,6 +13,11 @@ Esta pasta contém a documentação canônica usada por humanos e agentes para d
 7. [`HUMAN-APPROVALS.md`](HUMAN-APPROVALS.md) — gates que o agente não pode ultrapassar sozinho.
 8. [`DEVELOPMENT-WORKFLOW.md`](DEVELOPMENT-WORKFLOW.md) — branch, testes, migrations, commits e PR.
 9. [`CODEX-USAGE-POLICY.md`](CODEX-USAGE-POLICY.md) — consumo, reserva obrigatória de 5%, checkpoint e regra de retomada após o reset exibido pelo Codex.
+10. [`AUTHORIZATION-MATRIX.md`](AUTHORIZATION-MATRIX.md) — menor privilégio e guards estruturais da G1.
+11. [`G1-HML-EXECUTION-PLAN.md`](G1-HML-EXECUTION-PLAN.md) — histórico e procedimento controlado da integração de autenticação em homologação.
+12. [`G1-EXTERNAL-CONFIGURATION.md`](G1-EXTERNAL-CONFIGURATION.md) — bindings, ordem e validação segura do gate externo de Neon Auth em HML.
+13. [`G1-CLOUDFLARE-HML.md`](G1-CLOUDFLARE-HML.md) — Worker HML separado,
+    bindings pendentes e comandos bloqueados de deploy/secret.
 
 O arquivo raiz [`AGENTS.md`](../../AGENTS.md) é a porta de entrada do Codex e aponta para a governança.
 
