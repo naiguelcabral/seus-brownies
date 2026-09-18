@@ -90,7 +90,9 @@ Wrangler.
 | Rate Limiting    | binding `AUTH_RATE_LIMITER` HML com `namespace_id` numérico exclusivo e política aprovada | declarado no HEAD `99c30d7`: namespace `2026091001`, 20 por 60 s; publicação HML bloqueada sem site key pública explícita no ambiente |
 | E-mail/callbacks | origem confiável, callback, verificação e provedor no Neon Auth HML                       | gate externo separado                                                                                                                 |
 
-`VITE_TURNSTILE_SITE_KEY` é client-safe e não integra `secrets.required`.
+`VITE_TURNSTILE_SITE_KEY` é client-safe e não integra `secrets.required`. O
+build HML isolado a recebe apenas pelo ambiente do processo de deploy; nem ela
+nem o segredo são versionados.
 `VITE_NEON_AUTH_URL` fica dispensado enquanto a integração permanecer mediada
 pelo servidor. Não registrar valores públicos em `wrangler.jsonc` sem uma
 necessidade concreta da UI e uma revisão do pipeline HML.

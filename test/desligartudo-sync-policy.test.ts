@@ -27,3 +27,17 @@ test('primeira publicação não executa pull e cria upstream', async () => {
     /git pull --rebase origin "\$BRANCH"/,
   )
 })
+
+test('bloqueia caminhos sensíveis antes da memória e antes do commit', async () => {
+  const script = await readScript()
+  const preflight = script.indexOf('git-sensitive-paths.py" preflight')
+  const finalize = script.indexOf('conversation_memory.py" finalize')
+  const gitAdd = script.indexOf('git add --all')
+  const stagedChecks = [...script.matchAll(/git-sensitive-paths\.py" staged/g)]
+
+  assert.ok(preflight >= 0 && preflight < finalize)
+  assert.equal(stagedChecks.length, 2)
+  assert.ok(stagedChecks[0].index < finalize)
+  assert.ok(stagedChecks[1].index > gitAdd)
+  assert.match(script, /git check-ignore -q \.codex-local\//)
+})

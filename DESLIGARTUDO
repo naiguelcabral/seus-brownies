@@ -44,12 +44,13 @@ if [[ -t 0 ]]; then
   esac
 fi
 
-# Verifica nomes rastreados, novos e staged antes de qualquer captura ou git add.
+# Bloqueia caminhos sensíveis antes de qualquer escrita da memória ou mudança
+# no staging. O verificador nunca abre o conteúdo desses arquivos.
 python3 "$ROOT_DIR/scripts/git-sensitive-paths.py" preflight
 python3 "$ROOT_DIR/scripts/git-sensitive-paths.py" staged
 
-# Fecha a memória local antes do checkpoint Git. A pasta .codex-local é
-# ignorada pelo Git para impedir que conversas brutas sejam publicadas.
+# Fecha a memória local antes do checkpoint Git. Falha da memória não impede o
+# salvamento do código e a escrita atômica preserva o último contexto válido.
 if [[ -f "$ROOT_DIR/scripts/codex/conversation_memory.py" ]]; then
   if ! python3 "$ROOT_DIR/scripts/codex/conversation_memory.py" finalize; then
     echo "⚠ A memória local do Codex não pôde ser finalizada."
@@ -57,11 +58,11 @@ if [[ -f "$ROOT_DIR/scripts/codex/conversation_memory.py" ]]; then
   fi
 fi
 
-# A memória, o contexto e os logs do Codex são estritamente locais. Confirme
-# isso antes de qualquer operação que altere o staging area.
-if ! git check-ignore -q .codex-local; then
+# A memória, o contexto e os logs precisam continuar locais antes de qualquer
+# operação que altere o staging.
+if ! git check-ignore -q .codex-local/; then
   echo "ERRO: .codex-local não está ignorada pelo Git."
-  echo "O commit foi abortado antes de executar git add."
+  echo "O checkpoint foi abortado antes de alterar o staging."
   exit 1
 fi
 
@@ -75,16 +76,6 @@ if [[ -n "$(git status --porcelain)" ]]; then
 
   git add --all
   python3 "$ROOT_DIR/scripts/git-sensitive-paths.py" staged
-  LOCAL_CODEX_STAGED="$(git diff --cached --name-only | grep -E '^\.codex(-local)?/' || true)"
-  if [[ -n "$LOCAL_CODEX_STAGED" ]]; then
-    while IFS= read -r staged_path; do
-      [[ -n "$staged_path" ]] && git restore --staged -- "$staged_path"
-    done <<< "$LOCAL_CODEX_STAGED"
-    echo "ERRO: caminhos .codex/.codex-local foram encontrados no staging."
-    echo "Eles foram removidos apenas do staging; arquivos locais foram preservados."
-    echo "O commit foi abortado."
-    exit 1
-  fi
   git commit -m "$COMMIT_MESSAGE"
 else
   echo "Não há alterações novas para criar um commit."

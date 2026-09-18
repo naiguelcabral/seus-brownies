@@ -23,26 +23,26 @@ done
 [[ "$MODE" == "--loop" || "$MAX_CYCLES" == 1 ]] || { echo "--max-cycles > 1 exige --loop"; exit 2; }
 
 QUEUE="docs/governance/AUTONOMY-QUEUE.md"; HANDOFF="docs/governance/AUTONOMY-HANDOFF.md"; LOG="docs/governance/AUTONOMY-LOG.md"
-STATE_DIR="${CODEX_AUTOPILOT_STATE_DIR:-$ROOT_DIR/.codex-local/autonomy}"
+DEFAULT_STATE_DIR="$ROOT_DIR/.codex-local/autonomy"
+STATE_DIR="${CODEX_AUTOPILOT_STATE_DIR:-$DEFAULT_STATE_DIR}"
 LOCK_DIR="$STATE_DIR/autopilot.lock"; STOP_FILE="$STATE_DIR/STOP_AUTONOMY"
+SENSITIVE_PATH_GUARD="$ROOT_DIR/scripts/git-sensitive-paths.py"
+MEMORY_SCRIPT="$ROOT_DIR/scripts/codex/conversation_memory.py"
 
 preflight() {
   [[ "$(git branch --show-current)" != "main" ]] || { echo "Gate: execução na main"; return "$EXIT_HUMAN"; }
   [[ -z "$(git status --porcelain)" ]] || { echo "Preflight: árvore Git não está limpa"; return "$EXIT_PREFLIGHT"; }
   [[ -f "$QUEUE" && -f "$HANDOFF" && -f "$LOG" ]] || { echo "Preflight: documentos de autonomia ausentes"; return "$EXIT_PREFLIGHT"; }
+  [[ -f "$SENSITIVE_PATH_GUARD" ]] || { echo "Preflight: guard de caminhos sensíveis ausente"; return "$EXIT_PREFLIGHT"; }
+  [[ -f "$MEMORY_SCRIPT" ]] || { echo "Preflight: primitivas de memória local ausentes"; return "$EXIT_PREFLIGHT"; }
   [[ ! -e "$STOP_FILE" ]] || { echo "Preflight: sentinela STOP_AUTONOMY encontrada"; return "$EXIT_PREFLIGHT"; }
-  has_sensitive_env_tracked && { echo "Gate: arquivo .env sensível rastreado"; return "$EXIT_HUMAN"; }
+  python3 "$SENSITIVE_PATH_GUARD" head || return "$EXIT_HUMAN"
+  python3 "$SENSITIVE_PATH_GUARD" preflight || return "$EXIT_HUMAN"
+  python3 "$SENSITIVE_PATH_GUARD" staged || return "$EXIT_HUMAN"
+  python3 "$MEMORY_SCRIPT" prepare >/dev/null || return "$EXIT_PREFLIGHT"
   if [[ "$MODE" != "--dry-run" ]]; then
     command -v codex >/dev/null 2>&1 || { echo "Preflight: Codex CLI indisponível"; return "$EXIT_PREFLIGHT"; }
   fi
-}
-
-has_sensitive_env_tracked() {
-  git ls-files | grep -E '(^|/)\.env($|\.)' | grep -Ev '(^|/)\.env\.example$' | grep -q .
-}
-
-has_sensitive_env_untracked() {
-  git ls-files --others --exclude-standard | grep -E '(^|/)\.env($|\.)' | grep -Ev '(^|/)\.env\.example$' | grep -q .
 }
 
 next_package() { awk -F '|' '/^\| A[0-9]+ / { gsub(/^[[:space:]]+|[[:space:]]+$/, "", $5); if ($5 == "ready") { gsub(/^[[:space:]]+|[[:space:]]+$/, "", $2); id=$2; gsub(/^[[:space:]]+|[[:space:]]+$/, "", $4); print id "|" $4; exit } }' "$QUEUE"; }
@@ -60,14 +60,21 @@ result_code() {
 }
 append_log() { printf '| %s | %s | %s | %s | ver JSONL local | %s |\n' "$(date -u +%F)" "$1" "$2" "$3" "$4" >> "$LOG"; }
 checkpoint_done() {
-  has_sensitive_env_untracked && { echo "Gate: .env não rastreado criado durante o ciclo"; return "$EXIT_HUMAN"; }
+  python3 "$SENSITIVE_PATH_GUARD" preflight || return "$EXIT_HUMAN"
+  python3 "$SENSITIVE_PATH_GUARD" staged || return "$EXIT_HUMAN"
   git diff --check || return "$EXIT_VALIDATION"
   git add --all
+  python3 "$SENSITIVE_PATH_GUARD" staged || return "$EXIT_HUMAN"
   git commit -m "chore(autonomy): complete $PACKAGE"
 }
 
 preflight
-mkdir -p "$STATE_DIR"
+if [[ "$STATE_DIR" == "$DEFAULT_STATE_DIR" ]]; then
+  [[ -d "$STATE_DIR" && ! -L "$STATE_DIR" ]] || { echo "Preflight: diretório local de autonomia inválido"; exit "$EXIT_PREFLIGHT"; }
+else
+  [[ "$STATE_DIR" == "$ROOT_DIR/"* && ! -L "$STATE_DIR" ]] || { echo "Preflight: override de estado inválido"; exit "$EXIT_PREFLIGHT"; }
+  mkdir -p "$STATE_DIR"
+fi
 if ! mkdir "$LOCK_DIR" 2>/dev/null; then
   if [[ -d "$LOCK_DIR" ]]; then
     echo "Preflight: controlador já está em execução"

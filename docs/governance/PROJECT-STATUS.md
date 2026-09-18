@@ -161,6 +161,10 @@ Este documento é a referência canônica de alto nível para o estado atual do 
   reconfirmou esse comportamento, sem enviar cookie ou ler corpo. A
   homologação end-to-end ainda depende de login, OTP, sessão e autorização por
   papel reais.
+- Em 7 de setembro, o widget Turnstile HML existente foi limitado a
+  `localhost`, `127.0.0.1` e ao hostname HML; seu segredo foi atualizado
+  somente no Worker e a site key pública foi incluída no bundle HML. A
+  verificação descartável de Siteverify confirmou o segredo sem expô-lo.
 
 ## Ainda não entregue ou não homologado
 

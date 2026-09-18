@@ -60,8 +60,8 @@ Ainda falta validar, em uma execução integrada controlada e sem expor valores:
 - Ao exceder o limite local, um token Turnstile válido passa a ser obrigatório.
   A UI renderiza o widget somente quando há uma `VITE_TURNSTILE_SITE_KEY`
   pública; sem site key, secret ou token quando o desafio é exigido, a operação
-  falha fechada. O widget e a site key já foram publicados em HML; a
-  homologação real e de replay continuam externas.
+  falha fechada. O widget HML, seu segredo no Worker e a site key do bundle
+  foram configurados; a homologação com desafio real e replay continua externa.
 - Esses controles não substituem o binding `AUTH_RATE_LIMITER` distribuído da
   Cloudflare; esse continua requisito externo antes da abertura operacional.
 
