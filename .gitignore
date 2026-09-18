@@ -22,6 +22,6 @@ dist-ssr
 __unconfig*
 todos.json
 
-# Codex local state, memory and terminal logs
+# Estado, configuração, memória operacional e logs locais do Codex
 .codex/
 .codex-local/

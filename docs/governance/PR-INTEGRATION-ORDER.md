@@ -1,19 +1,19 @@
-# Análise de integração das PRs #2 e #3
+# Ordem de integração das PRs #2 e #3
 
-Atualizada em 9 de setembro de 2026. Esta análise é somente leitura; não muda
-bases, commits, status ou ordem de merge.
+Atualizada em 17 de setembro de 2026 após a integração auditável de G1 na
+`main` pelo merge `4e784dd06b3f9068949e0bd4505ed3c5aa99ff20`.
 
 ## Relação confirmada
 
-| PR  | Base          | Head                                         | Relação                                                                                                 |
-| --- | ------------- | -------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
-| #2  | `g1-auth-adr` | `feat/codex-conversation-memory` (`c8f899f`) | memória local de conversas sobre a fundação G1                                                          |
-| #3  | `main`        | `codex/audit-remediation`                    | contém `c8f899f` como ancestral e acrescenta remediações de segurança, auth, operações, CI e governança |
+| PR  | Base      | Head                                  | Relação                                                                                        |
+| --- | --------- | ------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| #2  | integrada | `feat/codex-conversation-memory`      | memória local endurecida integrada em G1 e depois em `main`                                    |
+| #3  | `main`    | `codex/audit-remediation` (`241099a`) | remediações de segurança, auth, operações, CI, relatórios e governança sobre a linhagem antiga |
 
-As duas bases descendem de `main` em `daa318c`. O merge-base entre os heads
-das PRs é exatamente `c8f899f`: não há commit exclusivo de #2 ausente em #3.
-Assim, #3 já transporta a implementação e a documentação da memória local que
-a #2 propõe para `g1-auth-adr`.
+O hardening de memória, Turnstile e a fundação G1 agora são ancestrais da
+`main`, mas não do head histórico da PR #3. A atualização deve entrar na branch
+da PR #3 por uma PR estreita de reconciliação, preservando os dois pais de
+merge e sem rebase, force-push ou cópia manual do hardening.
 
 ## Sobreposição e risco
 
@@ -23,19 +23,15 @@ aditivas ainda não aplicadas, correções FIFO e mudanças operacionais que nã
 pertencem à #2. Revisar ou integrar #3 antes de resolver a linhagem G1 torna
 difícil separar a revisão da memória local das demais remediações.
 
-Não há conflito textual conhecido, mas há risco de revisão e histórico
-duplicados. Integrar #2 em `g1-auth-adr` depois de #3 em `main` mantém duas
-linhas com o mesmo conteúdo até que G1 também seja integrado a `main`.
+Os conflitos conhecidos concentram-se em governança, `.gitignore`, scripts de
+memória/autonomia, build HML e guards de caminhos. Segurança e G1 da `main` são
+autoridade; recursos exclusivos e seguros da autonomia permanecem na PR #3.
 
 ## Recomendação de ordem
 
-1. Revisar e, se aprovada, integrar #2 em `g1-auth-adr`, preservando seu
-   escopo restrito de memória local.
-2. Preparar uma integração revisável de `g1-auth-adr` para `main`.
-3. Só então revisar #3 contra a `main` atualizada. O Git eliminará do diff os
-   commits já ancestrais, sem rebase destrutivo da #3.
-
-Se a equipe optar por integrar #3 primeiro, a #2 deve permanecer como trabalho
-de G1 até uma decisão explícita sobre sua manutenção; não deve ser mesclada
-apenas para fechar duplicidade. Não alterar bases nem executar merge/rebase
-sem nova autorização humana.
+1. Revisar e integrar a PR estreita
+   `codex/pr3-main-reconciliation` → `codex/audit-remediation`.
+2. Revalidar a PR #3 já contendo a `main` pós-G1 e somente então decidir sua
+   integração em `main`.
+3. Após a PR #3, atualizar e revisar separadamente as PRs #4 e #5, que
+   permanecem congeladas nesta etapa.
