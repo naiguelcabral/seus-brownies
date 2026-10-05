@@ -1,6 +1,135 @@
 # Handoff de autonomia — Cacau v1
 
-Atualizado em 9 de setembro de 2026.
+Atualizado em 14 de setembro de 2026.
+
+## Missão `codex/workbook-parity` — G2-F1 concluído localmente
+
+### Subpacote G2-F1-R4 — caixa de cancelamento e saldo de crédito concluído
+
+- Objetivo: registrar recebimento e estorno de caixa da venda paga cancelada
+  antes da entrega e implementar emissão × resgate × saldo de crédito com fatos
+  imutáveis ligados à emissão original.
+- Regra humana de 14/09/2026: resgatar crédito consome apenas seu saldo, sem
+  novo efeito em receita ou caixa.
+- Não objetivos: aplicar migrations, fazer backfill, alterar dados/HML, criar
+  conta-corrente externa, automatizar a escolha do crédito ou iniciar WP-D.
+- Arquivos previstos: schema e migration aditiva, contratos/política/writers
+  financeiros, lifecycle de venda, `/financeiro`, `/vendas`, autorização,
+  mocks/testes e documentação canônica.
+- Aceite: valores e saldos fecham em centavos; resgate parcial nunca excede a
+  emissão; repetição é idempotente; períodos fechados falham fechados; venda
+  paga cancelada registra recebimento na data real e reembolso na data do
+  cancelamento, na mesma transação do estorno FIFO.
+- Validação prevista: testes financeiros/lifecycle/autorização direcionados,
+  `npm test`, lint, typecheck, Prettier direcionado, `git diff --check` e build
+  HML isolado.
+- Checkpoint funcional `8403fe1`: migration aditiva `0026`, ledger e UI de
+  saldo/resgate, recebimento no writer da venda paga e estorno de caixa no
+  cancelamento pré-entrega. Validação: 327 testes, lint, typecheck, Prettier
+  direcionado, `git diff --check` e build HML isolado verdes. Nenhuma migration
+  foi aplicada e nenhum recurso externo foi alterado.
+
+### Subpacote G2-F1-R3 — relatório por competência concluído localmente
+
+- Objetivo: calcular CMV e margem bruta do mês a partir de
+  `financial_events` e das alocações FIFO das vendas entregues, com grupos
+  reconciliáveis por produto, lote/origem sem lote e local/canal.
+- Não objetivos: aplicar migrations, fazer backfill, classificar despesas como
+  fixas/variáveis, calcular lucro gerencial, iniciar WP-D ou alterar dados/HML.
+- Arquivos previstos: cálculo puro em `src/features/finance/`, leitura em
+  `src/features/finance/functions.ts`, apresentação em
+  `src/routes/financeiro.tsx` e testes determinísticos em `test/`.
+- Aceite: receita usa a competência de cada fato; CMV entra uma única vez na
+  entrega; compensação posterior reduz receita no próprio período sem devolver
+  CMV; totais e grupos fecham em centavos, inclusive quando não há lote.
+- Validação prevista: testes financeiros direcionados, `npm test`, lint,
+  typecheck, Prettier direcionado, `git diff --check` e build HML isolado.
+- Checkpoint funcional `f2af82c`: cálculo exato e fail-closed, leitura por
+  competência, grupos na UI e snapshot de fechamento com CMV/margem. Validação:
+  315 testes, lint, typecheck, Prettier direcionado, `git diff --check` e build
+  HML isolado verdes. `npm run check` permanece vermelho apenas pela dívida de
+  formatação preexistente em 92 arquivos fora do diff.
+
+- G2-F1 foi executado após aprovação humana de 11 de setembro de 2026. Objetivo:
+  persistir fatos financeiros imutáveis, entrega, reembolso/crédito e fechamento
+  manual; corrigir cancelamento pré-entrega versus devolução pós-entrega; expor
+  indicadores separados e normalização exata do mix. Não objetivos: aplicar
+  migration, backfill, corrigir banco compartilhado ou publicar ambiente.
+- Primeiro checkpoint funcional pronto localmente: migrations aditivas
+  `0023`–`0026`, fatos imutáveis, entrega com competência, caixa separado para
+  venda paga, reembolso/crédito pós-entrega sem retorno ao estoque e bloqueio
+  de cancelamento depois da entrega. A normalização do mix e os indicadores
+  separados usam aritmética exata. Validação: 303 testes, lint, typecheck e
+  `git diff --check` e build HML isolado com chave pública sintética verdes no
+  checkpoint `e2bf666`. O aviso nominal de secrets ausentes foi esperado e
+  nenhum arquivo de ambiente foi carregado.
+- Segundo checkpoint funcional consolidado em `47074c6`: fechamento manual,
+  correções imutáveis pelo Dono, leitura mensal dos fatos e `/financeiro`
+  foram retomados do commit `a4f3c72`. O writer agora também verifica o
+  controle otimista ao atualizar o snapshot de período fechado e desfaz toda a
+  correção diante de conflito. Validação: 309 testes, lint, typecheck,
+  `git diff --check` e build HML isolado verdes; nenhuma migration, banco ou
+  ambiente externo foi alterado.
+
+- Base confirmada: `codex/audit-remediation` em `241099a`; branch da missão
+  criada com árvore inicialmente limpa. A referência original foi inspecionada
+  somente em `.codex-local/reference/` e permaneceu sem alteração.
+- Matriz canônica: `WORKBOOK-SYSTEM-PARITY.md`. A inspeção confirmou 15 abas e
+  zero fórmulas executáveis; não reutilizou a suposição histórica sem verificar
+  o pacote XLSX local.
+- WP-A/B/C/G/H estão implementados localmente: parâmetros versionados,
+  informado × calculado com rateio exato, locais/canais, métricas rastreáveis e
+  plano de ação humano com histórico append-only. Novas Server Functions e
+  rotas usam guards; causas e ações nunca são inferidas.
+- Migrations `0019`, `0020`, `0021` e `0022` são aditivas e não foram aplicadas. `0019`
+  inclui defaults reconstruídos do workbook para a linha singleton; `0020` não
+  cria dados; `0021` adiciona ponto de reposição e dados de lote/validade da
+  compra; `0022` adiciona fornecedor padrão informativo. Para rollback,
+  primeiro reverter o código; remover colunas/tabelas depois seria destrutivo
+  para fatos novos e exige decisão humana.
+- O gate de decisão financeira foi removido pela aprovação formal; fechamento,
+  correções de período, leitura dos fatos, margem por competência, caixa do
+  cancelamento pago e saldo/resgate de crédito estão implementados localmente.
+  G2-F1 está concluído; cobertura e sugestão de compra ainda exigem histórico
+  confiável.
+- WP-F1 concluído localmente: `0021` adiciona ponto de reposição no produto e
+  lote/validade no item de compra. Catálogo, compra e estoque foram conectados;
+  a comparação do alerta usa milésimos exatos e o saldo continua somente
+  derivado. Cobertura e sugestão automática continuam suspensas.
+- WP-E1 concluído localmente: a leitura histórica de lotes reais tem busca,
+  filtros de status/produto/período, paginação e estados acessíveis. Registros
+  PLAN continuam excluídos; conclusão transacional, rendimento, unidades,
+  FIFO e custos não foram alterados.
+- WP-F2 concluído localmente: filtros e paginação de saldos/movimentos estão no
+  servidor e o alerta do dashboard usa o ponto de reposição com comparação
+  exata. A lista integral de produtos das ações FIFO foi preservada separada da
+  página. Cobertura, previsão e sugestão de compra continuam suspensas.
+- WP-A2 concluído localmente: o `Fornecedor_Padrao` opcional do workbook foi
+  acrescentado ao produto, com validação no servidor e migration aditiva. O
+  campo é somente informativo; não cria entidade de fornecedores, não seleciona
+  automaticamente compras e não recomenda pedidos. O fornecedor efetivo
+  continua obrigatório e preservado em cada compra.
+- WP-I1 concluído localmente: todos os valores monetários da rota de relatórios
+  são formatados diretamente da representação decimal exata, sem conversão
+  para `Number`. O teste inclui valor além do inteiro seguro, sinal negativo e
+  rejeição de formato fora do contrato.
+- Checkpoint funcional: `123009d`. Validação local: 299 testes, lint,
+  typecheck, Prettier direcionado, `git diff --check` e build HML isolado
+  verdes. O build no HEAD limpo passou para cliente e SSR. O aviso nominal de
+  secrets ausentes foi esperado e nenhum arquivo de ambiente foi carregado.
+- A branch foi publicada e a PR #4 está em rascunho contra
+  `codex/audit-remediation`. As CIs de push `34552925067` e PR `34552929383`
+  passaram no checkpoint WP-F1 `98a1d5a`; as CIs de push `34553608287` e PR
+  `34553610770` passaram no WP-E1 `ca4cec8`. As CIs de push `34554168480` e PR
+  `34554171049` passaram no WP-F2 `bbf6db3`; as CIs de push `34554627169` e PR
+  `34554629415` passaram no WP-A2 `b9241ae`; as CIs de push `34554990879` e PR
+  `34554994350` passaram no WP-I1 `aa593c3`.
+- Próximo passo exato: iniciar WP-D com metas e cenários rastreáveis sobre fatos
+  G2 e premissas versionadas, sem classificar despesas unilateralmente. Em
+  ambiente explicitamente autorizado, aplicar `0019`–`0026` e
+  homologar os fluxos locais. Obter histórico confiável antes de calcular
+  cobertura ou sugerir compra. Nenhuma dessas ações externas foi executada
+  nesta missão.
 
 ## Atualização AR-G1-HML-2 — 10 de setembro de 2026
 

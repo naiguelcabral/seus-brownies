@@ -1,6 +1,7 @@
 import {
   boolean,
   date,
+  foreignKey,
   integer,
   index,
   jsonb,
@@ -56,6 +57,25 @@ export const saleStatus = pgEnum('sale_status', [
   'paid',
   'cancelled',
 ])
+export const saleAdjustmentKind = pgEnum('sale_adjustment_kind', [
+  'none',
+  'discount',
+  'combo',
+  'gift',
+  'manual_adjustment',
+])
+export const actionPlanPriority = pgEnum('action_plan_priority', [
+  'low',
+  'medium',
+  'high',
+  'critical',
+])
+export const actionPlanStatus = pgEnum('action_plan_status', [
+  'open',
+  'in_progress',
+  'completed',
+  'cancelled',
+])
 export const salesLocationClassification = pgEnum(
   'sales_location_classification',
   ['unclassified', 'physical', 'online', 'event', 'partner'],
@@ -104,6 +124,19 @@ export const authAuditOutcome = pgEnum('auth_audit_outcome', [
   'success',
   'failure',
   'blocked',
+])
+export const financialEventType = pgEnum('financial_event_type', [
+  'sale_revenue',
+  'cash_receipt',
+  'cash_refund',
+  'store_credit_issued',
+  'store_credit_redeemed',
+  'revenue_correction',
+  'cash_correction',
+])
+export const financialPeriodStatus = pgEnum('financial_period_status', [
+  'open',
+  'closed',
 ])
 
 /**
@@ -232,6 +265,10 @@ export const products = pgTable('products', {
   unit: measurementUnit('measurement_unit').notNull(),
   // Ingredientes e embalagens não são vendidos diretamente.
   salePrice: money('sale_price'),
+  /** Alert threshold in the product's canonical measurement unit; never a stored balance. */
+  reorderPoint: quantity('reorder_point'),
+  /** Informational default only; purchases always preserve their actual supplier. */
+  preferredSupplierName: varchar('preferred_supplier_name', { length: 160 }),
   isActive: boolean('is_active').notNull().default(true),
   createdAt: timestamp('created_at', { withTimezone: true })
     .notNull()
@@ -260,6 +297,97 @@ export const salesLocations = pgTable('sales_locations', {
     .notNull()
     .defaultNow(),
 })
+
+/** Singleton, server-validated management assumptions. Financial use still follows human gates. */
+export const managementSettings = pgTable('management_settings', {
+  id: integer().primaryKey(),
+  version: integer().notNull().default(1),
+  monthlyProfitGoal: money('monthly_profit_goal').notNull(),
+  fixedMonthlyCosts: money('fixed_monthly_costs').notNull(),
+  salesDaysPerMonth: integer('sales_days_per_month').notNull(),
+  weeksPerMonth: numeric('weeks_per_month', {
+    precision: 5,
+    scale: 2,
+  }).notNull(),
+  normalRevenueTolerance: numeric('normal_revenue_tolerance', {
+    precision: 6,
+    scale: 4,
+  }).notNull(),
+  criticalRevenueTolerance: numeric('critical_revenue_tolerance', {
+    precision: 6,
+    scale: 4,
+  }).notNull(),
+  minimumProductMargin: numeric('minimum_product_margin', {
+    precision: 6,
+    scale: 4,
+  }).notNull(),
+  feeTaxReserveRate: numeric('fee_tax_reserve_rate', {
+    precision: 6,
+    scale: 4,
+  }).notNull(),
+  updatedByAuthUserId: varchar('updated_by_auth_user_id', { length: 191 }),
+  updatedAt: timestamp('updated_at', { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+})
+
+/** Human-owned response to an observed alert; the system never asserts the cause. */
+export const actionPlans = pgTable(
+  'action_plans',
+  {
+    id: serial().primaryKey(),
+    version: integer().notNull().default(1),
+    alert: text().notNull(),
+    probableCause: text('probable_cause'),
+    action: text().notNull(),
+    priority: actionPlanPriority().notNull().default('medium'),
+    kpi: varchar({ length: 160 }),
+    responsible: varchar({ length: 160 }),
+    dueDate: date('due_date'),
+    status: actionPlanStatus().notNull().default('open'),
+    createdByAuthUserId: varchar('created_by_auth_user_id', {
+      length: 191,
+    }).notNull(),
+    updatedByAuthUserId: varchar('updated_by_auth_user_id', {
+      length: 191,
+    }).notNull(),
+    createdAt: timestamp('created_at', { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp('updated_at', { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (table) => [
+    index('action_plans_status_due_date_idx').on(table.status, table.dueDate),
+    index('action_plans_priority_idx').on(table.priority),
+  ],
+)
+
+/** Append-only snapshots preserve authorship and the evolution of every action plan. */
+export const actionPlanHistory = pgTable(
+  'action_plan_history',
+  {
+    id: serial().primaryKey(),
+    actionPlanId: integer('action_plan_id')
+      .notNull()
+      .references(() => actionPlans.id, { onDelete: 'restrict' }),
+    version: integer().notNull(),
+    event: varchar({ length: 40 }).notNull(),
+    actorAuthUserId: varchar('actor_auth_user_id', { length: 191 }).notNull(),
+    snapshot: jsonb().notNull(),
+    occurredAt: timestamp('occurred_at', { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (table) => [
+    unique('action_plan_history_plan_version_unique').on(
+      table.actionPlanId,
+      table.version,
+    ),
+    index('action_plan_history_actor_idx').on(table.actorAuthUserId),
+  ],
+)
 
 /** A signed quantityDelta forms the inventory ledger: positive enters, negative leaves. */
 export const stockMovements = pgTable('stock_movements', {
@@ -319,6 +447,8 @@ export const purchaseItems = pgTable('purchase_items', {
   quantity: quantity('quantity').notNull(),
   unitCost: unitCost('unit_cost').notNull(),
   totalAmount: money('total_amount').notNull(),
+  supplierLot: varchar('supplier_lot', { length: 80 }),
+  expiresOn: date('expires_on'),
   sourceQuantityBase: quantity('source_quantity_base'),
   sourceQuantityPurchased: quantity('source_quantity_purchased'),
   sourceUnitPrice: money('source_unit_price'),
@@ -368,9 +498,15 @@ export const sales = pgTable('sales', {
   calculatedAmount: money('calculated_amount'),
   auditStatus: varchar('audit_status', { length: 40 }),
   auditNotes: text('audit_notes'),
+  adjustmentKind: saleAdjustmentKind('adjustment_kind')
+    .notNull()
+    .default('none'),
+  adjustmentReason: text('adjustment_reason'),
   affectsStock: boolean('affects_stock').notNull().default(true),
   notes: text(),
   soldAt: timestamp('sold_at', { withTimezone: true }).notNull().defaultNow(),
+  /** Revenue competence starts at delivery; null means not delivered. */
+  deliveredAt: timestamp('delivered_at', { withTimezone: true }),
   createdAt: timestamp('created_at', { withTimezone: true })
     .notNull()
     .defaultNow(),
@@ -378,6 +514,83 @@ export const sales = pgTable('sales', {
     .notNull()
     .defaultNow(),
 })
+
+/** Manual period closure with the exact aggregates visible at the close. */
+export const financialPeriods = pgTable('financial_periods', {
+  id: serial().primaryKey(),
+  periodMonth: date('period_month').notNull().unique(),
+  status: financialPeriodStatus().notNull().default('open'),
+  version: integer().notNull().default(1),
+  closureSnapshot: jsonb('closure_snapshot'),
+  closureNotes: text('closure_notes'),
+  closedByAuthUserId: varchar('closed_by_auth_user_id', { length: 191 }),
+  closedAt: timestamp('closed_at', { withTimezone: true }),
+  createdAt: timestamp('created_at', { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+})
+
+/** Immutable accrual and cash facts; event type defines the indicator affected. */
+export const financialEvents = pgTable(
+  'financial_events',
+  {
+    id: serial().primaryKey(),
+    idempotencyKey: varchar('idempotency_key', { length: 160 })
+      .notNull()
+      .unique(),
+    idempotencyHash: varchar('idempotency_hash', { length: 64 }).notNull(),
+    type: financialEventType().notNull(),
+    saleId: integer('sale_id').references(() => sales.id, {
+      onDelete: 'restrict',
+    }),
+    saleItemId: integer('sale_item_id').references(() => saleItems.id, {
+      onDelete: 'restrict',
+    }),
+    correctsEventId: integer('corrects_event_id'),
+    settlesEventId: integer('settles_event_id'),
+    quantity: quantity('quantity'),
+    amount: money('amount').notNull(),
+    /** Signed effects keep accrual and cash views independently additive. */
+    revenueEffect: money('revenue_effect').notNull().default('0'),
+    cashEffect: money('cash_effect').notNull().default('0'),
+    competenceDate: date('competence_date').notNull(),
+    occurredAt: timestamp('occurred_at', { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    reason: text().notNull(),
+    createdByAuthUserId: varchar('created_by_auth_user_id', {
+      length: 191,
+    }).notNull(),
+    authorizedByAuthUserId: varchar('authorized_by_auth_user_id', {
+      length: 191,
+    }),
+    createdAt: timestamp('created_at', { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (table) => [
+    foreignKey({
+      columns: [table.correctsEventId],
+      foreignColumns: [table.id],
+      name: 'financial_events_correction_fk',
+    }).onDelete('restrict'),
+    foreignKey({
+      columns: [table.settlesEventId],
+      foreignColumns: [table.id],
+      name: 'financial_events_settlement_fk',
+    }).onDelete('restrict'),
+    index('financial_events_competence_idx').on(
+      table.competenceDate,
+      table.type,
+    ),
+    index('financial_events_occurred_idx').on(table.occurredAt, table.type),
+    index('financial_events_sale_idx').on(table.saleId),
+    index('financial_events_settlement_idx').on(table.settlesEventId),
+  ],
+)
 
 /** Name and price snapshots preserve the historical value of each sale. */
 export const saleItems = pgTable('sale_items', {
@@ -392,6 +605,8 @@ export const saleItems = pgTable('sale_items', {
   quantity: quantity('quantity').notNull(),
   unitPrice: money('unit_price').notNull(),
   totalAmount: money('total_amount').notNull(),
+  /** Exact share of the sale-level reported revenue allocated to this item. */
+  reportedAmount: money('reported_amount'),
 })
 
 export const expenses = pgTable('expenses', {

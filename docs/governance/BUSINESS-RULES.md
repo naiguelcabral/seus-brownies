@@ -29,6 +29,15 @@
 - O item de venda mantém snapshot do nome e do preço praticado.
 - Desconto, taxa de entrega e total devem ser reconciliáveis.
 - Canais/locais de venda permanecem historicamente vinculados à venda.
+- Receita por competência nasce na entrega, não no cadastro ou recebimento do
+  caixa. Recebimentos e pagamentos pertencem à visão separada de fluxo de caixa.
+- Cancelamento antes da entrega restaura estoque e CMV. Devolução depois da
+  entrega não retorna alimento ao estoque vendável.
+- Reembolso e crédito futuro são fatos distintos, decididos por Dono ou Gerente
+  e sempre auditados.
+- O resgate de crédito futuro reduz somente o saldo do crédito emitido, sem novo
+  efeito em receita ou caixa; consumo parcial e saldo remanescente devem ser
+  exatos, imutáveis e rastreáveis até a emissão.
 
 ## Produção
 
@@ -48,7 +57,26 @@
 - Camadas FIFO são fatos auditáveis; não podem ser reescritas silenciosamente.
 - Alocações e reversões precisam manter vínculo com o evento de origem.
 - Cenários HML e referências consumidas não devem ser reutilizados.
-- Margem realizada por produto/lote só deve ser exposta como definitiva quando houver vínculo e regra de CMV suficientes para sustentá-la.
+- CMV realizado usa FIFO e permanece ligado às camadas consumidas por item de
+  venda.
+- Receita líquida, margem bruta, margem de contribuição, lucro gerencial e
+  fluxo de caixa são indicadores separados.
+- Energia e mão de obra diretamente produtivas compõem o custo realizado do
+  lote e não podem ser descontadas novamente.
+- A margem mínima configurável é alerta e não bloqueia venda.
+
+## Períodos financeiros
+
+- O fechamento é manual e preserva a posição do período.
+- Eventos posteriores pertencem à data em que ocorreram; erros corrigem o
+  período original com fato compensatório, sem apagar o original.
+- Somente Dono pode registrar correção em período fechado.
+
+## Metas e cenários
+
+- O mix informado deve somar exatamente 100% para ser ativado.
+- O mix histórico de 103% é normalizado proporcionalmente para 100%,
+  preservando os pesos relativos e fechando o resíduo deterministicamente.
 
 ## Importações
 

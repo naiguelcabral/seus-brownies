@@ -38,48 +38,6 @@ test('cancelamento integral restaura a camada sem apagar a alocação', () => {
   assert.equal(restored.reversals[0].originalAllocationId, 10)
 })
 
-test('devolução parcial e total preservam centavos e impedem excesso', () => {
-  const sold = allocateFifoCost([productionLayer(1, 3_000n, 100n)], 3, 3_000n)
-  const partial = planStockRestoration({
-    event: 'sale_return',
-    layers: sold.layers,
-    allocations: [{ id: 10, ...sold.allocations[0] }],
-    quantities: [{ allocationId: 10, quantity: 1_000n }],
-  })
-  assert.equal(partial.restoredCost, 33n)
-  const total = planStockRestoration({
-    event: 'sale_return',
-    layers: partial.layers,
-    allocations: [
-      {
-        id: 10,
-        ...sold.allocations[0],
-        reversedQuantity: 1_000n,
-        reversedCost: 33n,
-      },
-    ],
-    quantities: [{ allocationId: 10, quantity: 2_000n }],
-  })
-  assert.equal(total.restoredCost, 67n)
-  assert.throws(
-    () =>
-      planStockRestoration({
-        event: 'sale_return',
-        layers: total.layers,
-        allocations: [
-          {
-            id: 10,
-            ...sold.allocations[0],
-            reversedQuantity: 3_000n,
-            reversedCost: 100n,
-          },
-        ],
-        quantities: [{ allocationId: 10, quantity: 1n }],
-      }),
-    /excede/,
-  )
-})
-
 test('perda e ajuste negativo consomem várias camadas FIFO com motivo', () => {
   const plan = planNegativeInventoryEvent({
     event: 'loss',

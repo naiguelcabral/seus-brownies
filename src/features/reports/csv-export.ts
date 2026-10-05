@@ -18,6 +18,33 @@ export type OperationalReportExport = {
     quantity: string
     amount: string
   }>
+  salesMetrics: {
+    total: {
+      events: number
+      units: string
+      revenue: string
+      ticketAverage: string | null
+      averageUnitPrice: string | null
+      audit: {
+        auditedEvents: number
+        reported: string | null
+        calculated: string | null
+        difference: string | null
+        differenceRate: string | null
+        normal: number
+        attention: number
+        critical: number
+      }
+    }
+    byLocation: Array<{
+      locationName: string
+      events: number
+      units: string
+      revenue: string
+      ticketAverage: string | null
+      audit: { auditedEvents: number; difference: string | null }
+    }>
+  }
   fifo: {
     netRevenue: string
     cogs: string
@@ -127,6 +154,61 @@ export function createOperationalReportCsv(
     ['Resumo', 'Despesas', '', '', '', '', report.expensesTotal, '', ''],
     [
       'Resumo',
+      'Unidades vendidas',
+      report.salesMetrics.total.units,
+      'unit',
+      '',
+      '',
+      '',
+      '',
+      '',
+    ],
+    [
+      'Resumo',
+      'Ticket médio por evento',
+      report.salesMetrics.total.events,
+      'eventos',
+      report.salesMetrics.total.ticketAverage ?? '',
+      '',
+      '',
+      '',
+      '',
+    ],
+    [
+      'Auditoria de receita',
+      'Informado',
+      report.salesMetrics.total.audit.auditedEvents,
+      'eventos auditados',
+      report.salesMetrics.total.audit.reported ?? '',
+      '',
+      '',
+      '',
+      '',
+    ],
+    [
+      'Auditoria de receita',
+      'Calculado',
+      '',
+      '',
+      report.salesMetrics.total.audit.calculated ?? '',
+      '',
+      '',
+      '',
+      '',
+    ],
+    [
+      'Auditoria de receita',
+      'Diferença informado menos calculado',
+      '',
+      '',
+      report.salesMetrics.total.audit.difference ?? '',
+      '',
+      '',
+      '',
+      report.salesMetrics.total.audit.differenceRate ?? 'sem base',
+    ],
+    [
+      'Resumo',
       'Estoque valorizado',
       '',
       '',
@@ -146,6 +228,17 @@ export function createOperationalReportCsv(
       '',
       '',
       '',
+    ]),
+    ...report.salesMetrics.byLocation.map((item): ExportRow => [
+      'Indicadores por local',
+      item.locationName,
+      item.units,
+      `${item.events} eventos`,
+      item.revenue,
+      '',
+      '',
+      item.ticketAverage ?? '',
+      item.audit.difference ?? 'sem auditoria',
     ]),
     ...report.expensesByCategory.map((item): ExportRow => [
       'Despesas por categoria',

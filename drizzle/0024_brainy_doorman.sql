@@ -1,0 +1,2 @@
+ALTER TABLE "financial_events" ADD COLUMN "revenue_effect" numeric(12, 2) DEFAULT '0' NOT NULL;--> statement-breakpoint
+ALTER TABLE "financial_events" ADD COLUMN "cash_effect" numeric(12, 2) DEFAULT '0' NOT NULL;

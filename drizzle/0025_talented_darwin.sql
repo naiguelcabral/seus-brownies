@@ -1,0 +1,1 @@
+ALTER TABLE "financial_events" ADD COLUMN "quantity" numeric(14, 3);

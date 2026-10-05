@@ -14,6 +14,7 @@ import {
 } from '#/db/schema'
 import { requireServerFunctionPermission } from '#/features/auth/server-function-middleware'
 import { assertProductStructureChangeAllowed } from '#/features/catalog/product-structure'
+import { normalizeReorderPoint } from '#/features/inventory/reorder'
 import {
   calculateProductHistoryPage,
   productHistoryPageSize,
@@ -34,6 +35,8 @@ const productValueShape = z.object({
   categoryId: z.number().int().positive().nullable(),
   description: z.string().trim().max(1000).optional(),
   salePrice: z.string().trim().max(32).optional(),
+  reorderPoint: z.string().trim().max(32).optional(),
+  preferredSupplierName: z.string().trim().max(160).optional(),
 })
 
 function validateProductValues(
@@ -54,6 +57,16 @@ function validateProductValues(
       code: 'custom',
       path: ['salePrice'],
       message: 'Use um preço válido, como 12,50.',
+    })
+  }
+  if (
+    value.reorderPoint?.trim() &&
+    normalizeReorderPoint(value.reorderPoint) === null
+  ) {
+    context.addIssue({
+      code: 'custom',
+      path: ['reorderPoint'],
+      message: 'Use uma quantidade não negativa com até três casas decimais.',
     })
   }
 }
@@ -193,6 +206,8 @@ export const listProducts = createServerFn({ method: 'GET' })
         categoryName: categories.name,
         description: products.description,
         salePrice: products.salePrice,
+        reorderPoint: products.reorderPoint,
+        preferredSupplierName: products.preferredSupplierName,
         isActive: products.isActive,
       })
       .from(products)
@@ -221,6 +236,8 @@ export const createProduct = createServerFn({ method: 'POST' })
           categoryId: data.categoryId,
           description: optionalText(data.description),
           salePrice: data.salePrice ? toDatabaseMoney(data.salePrice) : null,
+          reorderPoint: normalizeReorderPoint(data.reorderPoint),
+          preferredSupplierName: optionalText(data.preferredSupplierName),
         })
     } catch (error) {
       readableDatabaseError(error, 'um produto ou SKU')
@@ -299,6 +316,8 @@ export const updateProduct = createServerFn({ method: 'POST' })
           categoryId: data.categoryId,
           description: optionalText(data.description),
           salePrice: data.salePrice ? toDatabaseMoney(data.salePrice) : null,
+          reorderPoint: normalizeReorderPoint(data.reorderPoint),
+          preferredSupplierName: optionalText(data.preferredSupplierName),
           updatedAt: new Date(),
         })
         .where(eq(products.id, data.id))

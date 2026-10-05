@@ -1,5 +1,17 @@
 import { createServerFn } from '@tanstack/react-start'
-import { and, asc, desc, eq, inArray, lte, sql } from 'drizzle-orm'
+import {
+  and,
+  asc,
+  count,
+  desc,
+  eq,
+  exists,
+  gte,
+  ilike,
+  inArray,
+  lte,
+  sql,
+} from 'drizzle-orm'
 import { alias } from 'drizzle-orm/pg-core'
 import { z } from 'zod'
 
@@ -43,6 +55,10 @@ import {
   profileComponentToConsumption,
   recipeItemToConsumption,
 } from '#/features/production/identities'
+import {
+  calculateProductionHistoryPage,
+  productionHistoryPageSize,
+} from '#/features/production/history'
 
 const quantityInput = z
   .string()
@@ -72,6 +88,25 @@ const batchInput = z.object({
   losses: z.array(lossInput).default([]),
   notes: z.string().trim().max(1_000).optional(),
 })
+
+const productionHistoryValues = z
+  .object({
+    query: z.string().trim().max(100).optional(),
+    status: z.enum(['draft', 'planned', 'completed', 'cancelled']).optional(),
+    productId: z.number().int().positive().optional(),
+    start: z.string().date().optional(),
+    end: z.string().date().optional(),
+    page: z.number().int().min(1).max(10_000).default(1),
+  })
+  .superRefine((value, context) => {
+    if (value.start && value.end && value.end < value.start) {
+      context.addIssue({
+        code: 'custom',
+        path: ['end'],
+        message: 'A data final não pode ser anterior à data inicial.',
+      })
+    }
+  })
 
 type BatchInput = z.infer<typeof batchInput>
 type Database = ReturnType<typeof getDb>
@@ -533,10 +568,32 @@ function previewFromPlan(
 
 export const getProductionWorkspace = createServerFn({ method: 'GET' })
   .middleware([requireServerFunctionPermission('getProductionWorkspace')])
-  .handler(async () => {
+  .validator(productionHistoryValues)
+  .handler(async ({ data }) => {
     const { getDb } = await import('#/db/index')
     const database = getDb()
-    const [recipes, profileRows, batches] = await Promise.all([
+    const filterOutput = alias(productionBatchOutputs, 'filter_output')
+    const batchFilters = and(
+      sql`${productionBatches.sourceId} is null`,
+      data.query ? ilike(recipeVersions.name, `%${data.query}%`) : undefined,
+      data.status ? eq(productionBatches.status, data.status) : undefined,
+      data.start ? gte(productionBatches.plannedFor, data.start) : undefined,
+      data.end ? lte(productionBatches.plannedFor, data.end) : undefined,
+      data.productId
+        ? exists(
+            database
+              .select({ id: filterOutput.id })
+              .from(filterOutput)
+              .where(
+                and(
+                  eq(filterOutput.productionBatchId, productionBatches.id),
+                  eq(filterOutput.productId, data.productId),
+                ),
+              ),
+          )
+        : undefined,
+    )
+    const [recipes, profileRows, [{ total }]] = await Promise.all([
       database
         .select({
           id: recipeVersions.id,
@@ -559,27 +616,43 @@ export const getProductionWorkspace = createServerFn({ method: 'GET' })
         .innerJoin(products, eq(productionProfiles.productId, products.id))
         .orderBy(asc(products.name)),
       database
-        .select({
-          id: productionBatches.id,
-          status: productionBatches.status,
-          plannedFor: productionBatches.plannedFor,
-          recipeMultiplier: productionBatches.recipeMultiplier,
-          totalCost: productionBatches.totalCost,
-          unitCost: productionBatches.unitCost,
-          completedAt: productionBatches.completedAt,
-          recipeName: recipeVersions.name,
-          recipeVersion: recipeVersions.version,
-        })
+        .select({ total: count() })
         .from(productionBatches)
         .leftJoin(
           recipeVersions,
           eq(productionBatches.recipeVersionId, recipeVersions.id),
         )
-        .where(sql`${productionBatches.sourceId} is null`)
-        .orderBy(desc(productionBatches.createdAt))
-        .limit(60),
+        .where(batchFilters),
     ])
-    return { recipes, profiles: profileRows, batches }
+    const pagination = calculateProductionHistoryPage(data.page, Number(total))
+    const batches = await database
+      .select({
+        id: productionBatches.id,
+        status: productionBatches.status,
+        plannedFor: productionBatches.plannedFor,
+        recipeMultiplier: productionBatches.recipeMultiplier,
+        totalCost: productionBatches.totalCost,
+        unitCost: productionBatches.unitCost,
+        completedAt: productionBatches.completedAt,
+        recipeName: recipeVersions.name,
+        recipeVersion: recipeVersions.version,
+      })
+      .from(productionBatches)
+      .leftJoin(
+        recipeVersions,
+        eq(productionBatches.recipeVersionId, recipeVersions.id),
+      )
+      .where(batchFilters)
+      .orderBy(desc(productionBatches.createdAt))
+      .limit(productionHistoryPageSize)
+      .offset(pagination.offset)
+    return {
+      recipes,
+      profiles: profileRows,
+      batches,
+      total: Number(total),
+      ...pagination,
+    }
   })
 
 export const previewProductionBatch = createServerFn({ method: 'POST' })

@@ -1,5 +1,5 @@
 import { createServerFn } from '@tanstack/react-start'
-import { and, eq, gte, inArray, lt, lte } from 'drizzle-orm'
+import { and, eq, gte, inArray, lt, lte, sql } from 'drizzle-orm'
 import { z } from 'zod'
 
 import {
@@ -7,6 +7,7 @@ import {
   inventoryCostAllocations,
   inventoryCostLayers,
   inventoryCostReversals,
+  managementSettings,
   operationalCosts,
   products,
   productionBatchConsumptions,
@@ -32,6 +33,7 @@ import { centsToMoney, moneyToCents } from '#/features/production/calculations'
 import { isMissingOptionalSchemaError } from '#/features/reports/optional-schema'
 import { reconcileInventoryLedger } from '#/features/reports/inventory-reconciliation'
 import type { ReconciliationDivergence } from '#/features/reports/inventory-reconciliation'
+import { summarizeSalesMetrics } from '#/features/reports/sales-metrics'
 
 const periodValues = z.object({
   start: z.string().date().optional(),
@@ -73,56 +75,116 @@ export const getOperationalReports = createServerFn({ method: 'GET' })
     const until = endExclusive(period.end)
     const completedSale = inArray(sales.status, ['confirmed', 'paid'])
 
-    const [revenueRows, expenseRows, movementRows, salesByProduct] =
-      await Promise.all([
-        database
-          .select({ channel: salesLocations.name, amount: sales.totalAmount })
-          .from(sales)
-          .leftJoin(salesLocations, eq(sales.locationId, salesLocations.id))
-          .where(
-            and(
-              completedSale,
-              gte(sales.soldAt, startAt),
-              lt(sales.soldAt, until),
-            ),
+    const [
+      saleMetricRows,
+      saleUnitRows,
+      expenseRows,
+      movementRows,
+      salesByProduct,
+    ] = await Promise.all([
+      database
+        .select({
+          saleId: sales.id,
+          locationId: sales.locationId,
+          locationName: salesLocations.name,
+          amount: sales.totalAmount,
+          reportedAmount: sales.reportedAmount,
+          calculatedAmount: sales.calculatedAmount,
+          auditStatus: sales.auditStatus,
+        })
+        .from(sales)
+        .leftJoin(salesLocations, eq(sales.locationId, salesLocations.id))
+        .where(
+          and(
+            completedSale,
+            gte(sales.soldAt, startAt),
+            lt(sales.soldAt, until),
           ),
-        database
-          .select({ category: expenses.category, amount: expenses.amount })
-          .from(expenses)
-          .where(
-            and(
-              gte(expenses.occurredAt, period.start),
-              lte(expenses.occurredAt, period.end),
-            ),
+        ),
+      database
+        .select({ saleId: saleItems.saleId, quantity: saleItems.quantity })
+        .from(saleItems)
+        .innerJoin(sales, eq(saleItems.saleId, sales.id))
+        .where(
+          and(
+            completedSale,
+            gte(sales.soldAt, startAt),
+            lt(sales.soldAt, until),
           ),
-        database
-          .select({
-            productId: products.id,
-            productName: products.name,
-            unit: products.unit,
-            quantityDelta: stockMovements.quantityDelta,
-            unitCost: stockMovements.unitCost,
-            allocatedCost: stockMovements.allocatedCost,
-          })
-          .from(stockMovements)
-          .innerJoin(products, eq(stockMovements.productId, products.id))
-          .where(lt(stockMovements.occurredAt, until)),
-        database
-          .select({
-            productName: saleItems.productName,
-            quantity: saleItems.quantity,
-            amount: saleItems.totalAmount,
-          })
-          .from(saleItems)
-          .innerJoin(sales, eq(saleItems.saleId, sales.id))
-          .where(
-            and(
-              completedSale,
-              gte(sales.soldAt, startAt),
-              lt(sales.soldAt, until),
-            ),
+        ),
+      database
+        .select({ category: expenses.category, amount: expenses.amount })
+        .from(expenses)
+        .where(
+          and(
+            gte(expenses.occurredAt, period.start),
+            lte(expenses.occurredAt, period.end),
           ),
-      ])
+        ),
+      database
+        .select({
+          productId: products.id,
+          productName: products.name,
+          unit: products.unit,
+          quantityDelta: stockMovements.quantityDelta,
+          unitCost: stockMovements.unitCost,
+          allocatedCost: stockMovements.allocatedCost,
+        })
+        .from(stockMovements)
+        .innerJoin(products, eq(stockMovements.productId, products.id))
+        .where(lt(stockMovements.occurredAt, until)),
+      database
+        .select({
+          productName: saleItems.productName,
+          quantity: saleItems.quantity,
+          amount:
+            sql<string>`coalesce(${saleItems.reportedAmount}, ${saleItems.totalAmount})`.as(
+              'amount',
+            ),
+        })
+        .from(saleItems)
+        .innerJoin(sales, eq(saleItems.saleId, sales.id))
+        .where(
+          and(
+            completedSale,
+            gte(sales.soldAt, startAt),
+            lt(sales.soldAt, until),
+          ),
+        ),
+    ])
+
+    let reportSettings: {
+      monthlyProfitGoal: string
+      fixedMonthlyCosts: string
+      salesDaysPerMonth: number
+      weeksPerMonth: string
+      normalRevenueTolerance: string
+      criticalRevenueTolerance: string
+      minimumProductMargin: string
+      feeTaxReserveRate: string
+    } | null = null
+    try {
+      reportSettings =
+        (
+          await database
+            .select({
+              monthlyProfitGoal: managementSettings.monthlyProfitGoal,
+              fixedMonthlyCosts: managementSettings.fixedMonthlyCosts,
+              salesDaysPerMonth: managementSettings.salesDaysPerMonth,
+              weeksPerMonth: managementSettings.weeksPerMonth,
+              normalRevenueTolerance: managementSettings.normalRevenueTolerance,
+              criticalRevenueTolerance:
+                managementSettings.criticalRevenueTolerance,
+              minimumProductMargin: managementSettings.minimumProductMargin,
+              feeTaxReserveRate: managementSettings.feeTaxReserveRate,
+            })
+            .from(managementSettings)
+            .where(eq(managementSettings.id, 1))
+            .limit(1)
+        ).at(0) ?? null
+    } catch (error) {
+      if (!isMissingOptionalSchemaError(error)) throw error
+    }
 
     // Production facts are available only after the production migrations. Keep
     // revenue, expenses and inventory usable on the already-migrated base.
@@ -311,7 +373,10 @@ export const getOperationalReports = createServerFn({ method: 'GET' })
             productionBatchId: productionBatchOutputs.productionBatchId,
             quantity: inventoryCostAllocations.quantity,
             allocatedCost: inventoryCostAllocations.allocatedCost,
-            saleItemRevenue: saleItems.totalAmount,
+            saleItemRevenue:
+              sql<string>`coalesce(${saleItems.reportedAmount}, ${saleItems.totalAmount})`.as(
+                'sale_item_revenue',
+              ),
           })
           .from(inventoryCostAllocations)
           .innerJoin(
@@ -439,17 +504,20 @@ export const getOperationalReports = createServerFn({ method: 'GET' })
     }
 
     const revenue = groupRevenueByChannel(
-      revenueRows.map((row) => ({
-        channel: row.channel ?? 'Sem canal',
+      saleMetricRows.map((row) => ({
+        channel: row.locationName ?? 'Sem canal',
         amount: row.amount,
       })),
     )
+    const salesMetrics = summarizeSalesMetrics(saleMetricRows, saleUnitRows)
     const expensesByCategory = groupExpensesByCategory(expenseRows)
     const inventory = valueInventory(movementRows)
     return {
       period,
       revenue,
-      revenueTotal: sumReportMoney(revenueRows),
+      revenueTotal: salesMetrics.total.revenue,
+      salesMetrics,
+      managementSettings: reportSettings,
       expensesByCategory,
       expensesTotal: sumReportMoney(expenseRows),
       inventory,

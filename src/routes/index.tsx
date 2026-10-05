@@ -103,12 +103,15 @@ function DashboardPage() {
                 <span className="font-bold">{item.name}</span>
                 <strong className="text-[#b65624]">
                   {formatQuantity(item.balance, item.unit)}
+                  {item.reorderPoint
+                    ? ` · limite ${formatQuantity(item.reorderPoint, item.unit)}`
+                    : ' · limite padrão zero'}
                 </strong>
               </li>
             ))}
           </ul>
         ) : (
-          <Empty text="Nenhum item sem saldo ou com saldo negativo no momento." />
+          <Empty text="Nenhum item atingiu o ponto de reposição no momento." />
         )}
       </section>
     </ManagementLayout>

@@ -134,6 +134,62 @@
       "when": 1788878474257,
       "tag": "0018_bouncy_odin",
       "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1789083398103,
+      "tag": "0019_short_ulik",
+      "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "7",
+      "when": 1789083942881,
+      "tag": "0020_colorful_kitty_pryde",
+      "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "7",
+      "when": 1789091511705,
+      "tag": "0021_short_korvac",
+      "breakpoints": true
+    },
+    {
+      "idx": 22,
+      "version": "7",
+      "when": 1789093270876,
+      "tag": "0022_ambitious_hellcat",
+      "breakpoints": true
+    },
+    {
+      "idx": 23,
+      "version": "7",
+      "when": 1789130117098,
+      "tag": "0023_strange_union_jack",
+      "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "7",
+      "when": 1789130211788,
+      "tag": "0024_brainy_doorman",
+      "breakpoints": true
+    },
+    {
+      "idx": 25,
+      "version": "7",
+      "when": 1789130319541,
+      "tag": "0025_talented_darwin",
+      "breakpoints": true
+    },
+    {
+      "idx": 26,
+      "version": "7",
+      "when": 1789414692918,
+      "tag": "0026_shiny_edwin_jarvis",
+      "breakpoints": true
     }
   ]
 }
