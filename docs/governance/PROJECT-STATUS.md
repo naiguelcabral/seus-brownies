@@ -1,6 +1,6 @@
 # Estado canônico do projeto — Cacau v1
 
-Atualizado em 7 de setembro de 2026, após revisão de código, migrations,
+Atualizado em 5 de outubro de 2026, após revisão de código, migrations,
 testes, rotas, documentação e estado público de HML.
 
 Este documento é a referência canônica de alto nível para o estado atual do sistema. Registros históricos de homologação, importação e decisões específicas permanecem válidos como evidência, mas não substituem este resumo.
@@ -94,10 +94,19 @@ Este documento é a referência canônica de alto nível para o estado atual do 
   Funcionário. Testes direcionados, lint, typecheck e build HML isolado
   passaram localmente e na CI `34296485813`; a homologação de interface depende
   de ambiente autorizado.
+- Em 5 de outubro, a PR #9 em rascunho
+  (`codex/ci-main-isolated-build` → `main`,
+  `685ad6036b2594d503301247eae3fc9ad489b6c8`) permaneceu limpa, mergeable e
+  verde em CI de push e pull request. Ela troca exclusivamente o build proibido
+  na `main` por um build de CI arquivado/isolado; não está integrada e sua
+  revisão/integração é a próxima ação humana.
 - A CI `34278599814` também passou no checkpoint publicado mais recente, com
   suíte, lint, typecheck e build HML isolado. A análise completa de dependências
-  encontrou 13 vulnerabilidades (cinco altas); nenhuma atualização automática
-  foi aceita, pois as cadeias Drizzle e Wrangler só têm proposta incompatível.
+  de 5 de outubro encontrou 16 vulnerabilidades (sete altas); ao omitir
+  desenvolvimento, dez permanecem. Nenhuma atualização automática foi aceita:
+  o dry-run encontrou conflito de peers do Better Auth e as cadeias Drizzle,
+  Neon Auth e Wrangler exigem compatibilidade/revisão humana. O registro
+  detalhado está em `SECURITY-QUALITY-FOLLOWUP-2026-10-05.md`.
 - O build HML isolado agora reconhece checkout detached somente durante CI de
   build, usando a referência explícita da branch de trabalho; deploy nesse modo
   continua bloqueado. As CIs `34299895120` e `34299897403` passaram com essa

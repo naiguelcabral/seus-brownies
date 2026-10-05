@@ -1,5 +1,32 @@
 # Handoff de autonomia — Cacau v1
 
+## Follow-up de segurança e qualidade — 5 de outubro de 2026
+
+- PR #9 (`codex/ci-main-isolated-build` → `main`,
+  `685ad6036b2594d503301247eae3fc9ad489b6c8`) foi revisada sem alteração:
+  diff limpo, PR em rascunho/mergeable e CIs de push e pull request verdes.
+  `build:ci-isolated` usa `git archive HEAD`, ambiente limpo e somente a
+  chave pública explícita; não contém deploy, migration, carregamento de
+  `.env` ou segredo. `build:hml` continua bloqueado quando o checkout está
+  efetivamente na branch `main`. Próxima ação humana: revisar e integrar #9;
+  ela ainda não está entregue na `main`.
+- A branch independente `codex/security-quality-followup` parte de
+  `origin/main` `0c0dce2143215102ed07285c45c161deab96d01c`. O diagnóstico e
+  a política da rodada estão em
+  `SECURITY-QUALITY-FOLLOWUP-2026-10-05.md`; não houve ação externa nem
+  alteração de lockfile.
+- O audit atual encontrou 16 vulnerabilidades (7 altas, 9 moderadas), dez ao
+  omitir dependências de desenvolvimento. O dry-run de correção encontrou
+  conflito de peers do Better Auth, sem atualização mínima comprovada.
+- A decisão humana pendente de G1 permanece: comportamento quando a sessão
+  do provedor foi emitida e a persistência do contador/auditoria posterior
+  falha. A reprodução local existente preserva a evidência; não revogar ou
+  manter sessão por inferência.
+- A validação de `hostname`/`action` do Turnstile exige política versionada de
+  ambiente; contrato e testes necessários foram registrados, sem inventar
+  valores HML. Artefatos Playwright históricos foram apenas inventariados por
+  nome/rastreamento e preservados; novos caminhos estão ignorados.
+
 Atualizado em 9 de setembro de 2026.
 
 ## Atualização AR-G1-HML-2 — 10 de setembro de 2026
