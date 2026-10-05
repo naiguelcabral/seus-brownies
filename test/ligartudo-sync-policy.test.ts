@@ -60,3 +60,12 @@ test('prepare-only não consulta remoto nem inicia o runtime', async () => {
   assert.ok(remoteCheck < devServer)
   assert.match(script, /servidor não iniciado \(--prepare-only\)/)
 })
+
+test('prepara somente o contexto local e não instala configuração global', async () => {
+  const script = await readScript()
+
+  assert.match(script, /conversation_memory\.py" prepare/)
+  assert.match(script, /Captura automática exige configuração local do usuário/)
+  assert.doesNotMatch(script, /\.codex\/config\.toml|CODEX_HOME/)
+  assert.doesNotMatch(script, /mkdir -p[\s\S]*\.codex-local/)
+})

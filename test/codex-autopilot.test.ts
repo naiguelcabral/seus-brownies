@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict'
 import {
   chmod,
+  copyFile,
   mkdtemp,
   mkdir,
   readFile,
@@ -16,13 +17,25 @@ import test from 'node:test'
 const execFileAsync = promisify(execFile)
 const root = new URL('..', import.meta.url).pathname
 const script = join(root, 'scripts/codex-autopilot.sh')
+const sensitivePathGuard = join(root, 'scripts/git-sensitive-paths.py')
+const memoryScript = join(root, 'scripts/codex/conversation_memory.py')
 
 async function fixture(
   queueRows = '| A01 | seguro | documental | ready | teste |\n',
 ) {
   const dir = await mkdtemp(join(tmpdir(), 'cacau-autopilot-'))
   await mkdir(join(dir, 'docs/governance'), { recursive: true })
+  await mkdir(join(dir, 'scripts/codex'), { recursive: true })
   await mkdir(join(dir, '.codex-local/autonomy'), { recursive: true })
+  await copyFile(
+    sensitivePathGuard,
+    join(dir, 'scripts/git-sensitive-paths.py'),
+  )
+  await copyFile(
+    memoryScript,
+    join(dir, 'scripts/codex/conversation_memory.py'),
+  )
+  await writeFile(join(dir, 'AGENTS.md'), '# synthetic fixture\n')
   await writeFile(
     join(dir, 'docs/governance/AUTONOMY-QUEUE.md'),
     '| ID | Pacote | Tipo | Estado | Saída |\n| --- | --- | --- | --- | --- |\n' +
@@ -164,6 +177,13 @@ test('estado bruto e sentinela usam exclusivamente o diretório local ignorado',
   assert.match(source, /não foi possível criar a trava do controlador/)
   assert.match(source, /--approve-for-me/)
   assert.match(source, /--ephemeral/)
+  assert.match(source, /git-sensitive-paths\.py/)
+  assert.match(source, /"\$SENSITIVE_PATH_GUARD" head/)
+  assert.match(source, /"\$SENSITIVE_PATH_GUARD" preflight/)
+  assert.match(source, /"\$SENSITIVE_PATH_GUARD" staged/)
+  assert.match(source, /"\$MEMORY_SCRIPT" prepare/)
+  assert.match(source, /diretório local de autonomia inválido/)
+  assert.doesNotMatch(source, /git ls-files \| grep/)
   assert.doesNotMatch(source, /--ask-for-approval/)
   assert.doesNotMatch(source, /--sandbox workspace-write --approve-for-me/)
 })
