@@ -1,5 +1,30 @@
 # Handoff de autonomia — Cacau v1
 
+## Reconciliação workbook-parity → main — 5 de outubro de 2026
+
+- Nova branch: `codex/workbook-parity-main-reconciliation`, criada da ponta
+  imutável da PR #4 (`origin/codex/workbook-parity`, `e53d42d`) e mesclada com
+  `origin/main` (`0c0dce2`) via merge commit, sem rebase e sem modificar/retargetar a PR #4.
+- A main prevaleceu para G1, memória local, guard de segredos e hardening; não
+  houve conflito textual. As migrations aditivas `0019` a `0026`, parâmetros,
+  locais, histórico, reposição, financeiro e G2-F1 foram preservados nesta
+  branch e continuam não aplicados.
+- A reconciliação acrescenta somente uma UI local para `deliverSale`: vendas
+  confirmadas/pagas aparecem com data de entrega, exigem confirmação explícita
+  e usam a Server Function já protegida por `sales:write`. A receita por
+  competência é declarada na interface, enquanto caixa permanece separado.
+  A alteração não amplia RBAC nem altera fatos financeiros/FIFO.
+- O diagnóstico de estoque × FIFO × CMV permanece somente leitura; a UI agora
+  agrupa divergências por código e preserva cada fato detalhado. Não propõe nem
+  executa correção automática ou backfill.
+- PR #4 original permanece congelada. A próxima PR de reconciliação deve ser
+  aberta contra `main`; depois de revisão humana, a preparação WP-D compara
+  `origin/codex/wp-d-scenarios` com esta nova branch, sem abrir PR duplicada.
+- A comparação WP-D foi concluída somente em leitura e está registrada em
+  `WP-D-RECONCILIATION-PLAN.md`. Ela preserva a cadeia #9 → paridade
+  reconciliada → WP-D reconciliado, lista migrations `0027`/`0028`, conflitos
+  previsíveis, testes de retomada e o comando da próxima branch.
+
 Atualizado em 14 de setembro de 2026.
 
 ## Missão `codex/workbook-parity` — G2-F1 concluído localmente

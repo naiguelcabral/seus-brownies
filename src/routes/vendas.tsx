@@ -13,6 +13,7 @@ import {
 } from '#/features/operations/functions'
 import { listActiveSalesLocations } from '#/features/locations/functions'
 import { cancelSaleLifecycle } from '#/features/inventory/lifecycle-writers'
+import { deliverSale } from '#/features/finance/functions'
 import {
   canCancelSale,
   canSubmitLifecycle,
@@ -51,6 +52,9 @@ export const Route = createFileRoute('/vendas')({
     const canManageLifecycle = Boolean(
       context.appRole && hasPermission(context.appRole, 'fifo:lifecycle:write'),
     )
+    const canDeliverSales = Boolean(
+      context.appRole && hasPermission(context.appRole, 'sales:write'),
+    )
     const [products, locations] = await Promise.all([
       listSaleProducts(),
       listActiveSalesLocations(),
@@ -63,6 +67,7 @@ export const Route = createFileRoute('/vendas')({
         : { sales: [], total: 0, page: 1, pageSize: 20, totalPages: 1 },
       canReadHistory,
       canManageLifecycle,
+      canDeliverSales,
     }
   },
   component: SalesPage,
@@ -89,8 +94,14 @@ function today() {
 }
 
 function SalesPage() {
-  const { products, locations, history, canReadHistory, canManageLifecycle } =
-    Route.useLoaderData()
+  const {
+    products,
+    locations,
+    history,
+    canReadHistory,
+    canManageLifecycle,
+    canDeliverSales,
+  } = Route.useLoaderData()
   const search = Route.useSearch()
   const router = useRouter()
   const navigate = useNavigate({ from: Route.fullPath })
@@ -99,6 +110,7 @@ function SalesPage() {
     crypto.randomUUID(),
   )
   const cancel = useServerFn(cancelSaleLifecycle)
+  const deliver = useServerFn(deliverSale)
   const [customerName, setCustomerName] = useState('')
   const [customerPhone, setCustomerPhone] = useState('')
   const [status, setStatus] = useState<SaleStatus>('draft')
@@ -116,6 +128,9 @@ function SalesPage() {
   const [cancelReason, setCancelReason] = useState('')
   const [cancelledOn, setCancelledOn] = useState(today)
   const [cancelConfirmed, setCancelConfirmed] = useState(false)
+  const [deliveringId, setDeliveringId] = useState<number | null>(null)
+  const [deliveredOn, setDeliveredOn] = useState(today)
+  const [deliveryConfirmed, setDeliveryConfirmed] = useState(false)
   const [clientReady, setClientReady] = useState(false)
   useEffect(() => {
     setClientReady(true)
@@ -153,6 +168,34 @@ function SalesPage() {
       await router.invalidate()
     } catch (error) {
       setMessage(lifecycleErrorMessage(error))
+    } finally {
+      setSaving(false)
+    }
+  }
+  async function submitDelivery(saleId: number) {
+    if (!deliveryConfirmed) {
+      setMessage(
+        'Confirme a entrega antes de registrar a receita por competência.',
+      )
+      return
+    }
+    setSaving(true)
+    setMessage(null)
+    try {
+      await deliver({ data: { saleId, deliveredOn } })
+      setMessage(
+        'Entrega registrada; a receita foi reconhecida no período informado.',
+      )
+      setDeliveringId(null)
+      setDeliveredOn(today())
+      setDeliveryConfirmed(false)
+      await router.invalidate()
+    } catch (error) {
+      setMessage(
+        error instanceof Error
+          ? error.message
+          : 'Não foi possível registrar a entrega.',
+      )
     } finally {
       setSaving(false)
     }
@@ -369,6 +412,11 @@ function SalesPage() {
                           {formatDateTime(sale.soldAt)} ·{' '}
                           {sale.locationName ?? 'local não informado'}
                         </p>
+                        {sale.deliveredAt ? (
+                          <p className="mt-1 text-xs text-[#315a31]">
+                            Entregue em {formatDateTime(sale.deliveredAt)}
+                          </p>
+                        ) : null}
                         {sale.auditStatus ? (
                           <p className="mt-1 text-xs text-[#896d5b]">
                             Auditoria: {auditStatusLabel(sale.auditStatus)}
@@ -395,6 +443,23 @@ function SalesPage() {
                             className="mt-2 block text-xs font-bold text-[#a64f23] disabled:opacity-60"
                           >
                             Cancelar / estornar
+                          </button>
+                        ) : null}
+                        {canDeliverSales &&
+                        !sale.deliveredAt &&
+                        (sale.status === 'confirmed' ||
+                          sale.status === 'paid') ? (
+                          <button
+                            type="button"
+                            disabled={saving}
+                            onClick={() => {
+                              setDeliveringId(sale.id)
+                              setDeliveredOn(today())
+                              setDeliveryConfirmed(false)
+                            }}
+                            className="mt-2 block text-xs font-bold text-[#315a31] disabled:opacity-60"
+                          >
+                            Registrar entrega
                           </button>
                         ) : null}
                       </div>
@@ -443,6 +508,45 @@ function SalesPage() {
                               type="button"
                               disabled={saving}
                               onClick={() => setCancellingId(null)}
+                              className="text-xs font-bold"
+                            >
+                              Fechar
+                            </button>
+                          </div>
+                        </div>
+                      ) : null}
+                      {deliveringId === sale.id ? (
+                        <div className="basis-full rounded-lg bg-[#eef8ed] p-3 text-left">
+                          <Input
+                            label="Data da entrega"
+                            type="date"
+                            value={deliveredOn}
+                            onChange={setDeliveredOn}
+                          />
+                          <label className="mt-2 flex gap-2 text-xs">
+                            <input
+                              type="checkbox"
+                              checked={deliveryConfirmed}
+                              onChange={(event) =>
+                                setDeliveryConfirmed(event.target.checked)
+                              }
+                            />{' '}
+                            Confirmo a entrega. A receita será reconhecida por
+                            competência nesta data; caixa permanece separado.
+                          </label>
+                          <div className="mt-3 flex gap-2">
+                            <button
+                              type="button"
+                              disabled={saving || !deliveryConfirmed}
+                              onClick={() => submitDelivery(sale.id)}
+                              className="rounded bg-[#315a31] px-3 py-2 text-xs font-bold text-white disabled:opacity-60"
+                            >
+                              {saving ? 'Registrando...' : 'Confirmar entrega'}
+                            </button>
+                            <button
+                              type="button"
+                              disabled={saving}
+                              onClick={() => setDeliveringId(null)}
                               className="text-xs font-bold"
                             >
                               Fechar

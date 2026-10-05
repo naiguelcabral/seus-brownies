@@ -953,6 +953,7 @@ export const listSales = createServerFn({ method: 'GET' })
         locationId: sales.locationId,
         locationName: salesLocations.name,
         soldAt: sales.soldAt,
+        deliveredAt: sales.deliveredAt,
       })
       .from(sales)
       .leftJoin(salesLocations, eq(sales.locationId, salesLocations.id))

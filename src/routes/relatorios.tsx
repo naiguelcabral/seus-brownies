@@ -307,18 +307,9 @@ function ReportsPage() {
             {report.reconciliation.checked.movements} movimentos verificados.
           </p>
           {report.reconciliation.divergences.length ? (
-            <ul className="mt-4 space-y-2">
-              {report.reconciliation.divergences.map((item) => (
-                <li
-                  key={`${item.code}-${item.entityType}-${item.entityId}`}
-                  className="rounded-lg border border-[#e7c9b8] bg-[#fff5ed] p-3 text-sm"
-                >
-                  <strong>{item.code}</strong> · {item.entityType} #
-                  {item.entityId} · esperado {item.expected}, encontrado{' '}
-                  {item.actual} · relacionados {item.relatedIds.join(', ')}
-                </li>
-              ))}
-            </ul>
+            <ReconciliationDivergences
+              divergences={report.reconciliation.divergences}
+            />
           ) : (
             <p className="mt-4 rounded-lg bg-[#eef8ed] p-3 text-sm text-[#315a31]">
               Nenhuma divergência encontrada nas relações FIFO verificadas.
@@ -377,6 +368,45 @@ function ReportsPage() {
         )}
       </section>
     </ManagementLayout>
+  )
+}
+
+function ReconciliationDivergences({
+  divergences,
+}: {
+  divergences: Array<{
+    code: string
+    entityType: string
+    entityId: number
+    relatedIds: number[]
+    expected: string
+    actual: string
+  }>
+}) {
+  const byCode = divergences.reduce<Record<string, number>>((counts, item) => {
+    counts[item.code] = (counts[item.code] ?? 0) + 1
+    return counts
+  }, {})
+  return (
+    <>
+      <p className="mt-4 text-sm text-[#846859]">
+        {Object.entries(byCode)
+          .map(([code, count]) => `${code}: ${count}`)
+          .join(' · ')}
+      </p>
+      <ul className="mt-4 space-y-2">
+        {divergences.map((item) => (
+          <li
+            key={`${item.code}-${item.entityType}-${item.entityId}`}
+            className="rounded-lg border border-[#e7c9b8] bg-[#fff5ed] p-3 text-sm"
+          >
+            <strong>{item.code}</strong> · {item.entityType} #{item.entityId} ·
+            esperado {item.expected}, encontrado {item.actual} · relacionados{' '}
+            {item.relatedIds.join(', ')}
+          </li>
+        ))}
+      </ul>
+    </>
   )
 }
 
