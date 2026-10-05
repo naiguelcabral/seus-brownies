@@ -17,8 +17,9 @@
 - O diagnóstico de estoque × FIFO × CMV permanece somente leitura; a UI agora
   agrupa divergências por código e preserva cada fato detalhado. Não propõe nem
   executa correção automática ou backfill.
-- PR #4 original permanece congelada. A próxima PR de reconciliação deve ser
-  aberta contra `main`; depois de revisão humana, a preparação WP-D compara
+- PR #4 original permanece congelada. A PR #11 em rascunho
+  (`codex/workbook-parity-main-reconciliation`, `9bb52f2`) foi aberta contra
+  `main`; depois de revisão humana, a preparação WP-D compara
   `origin/codex/wp-d-scenarios` com esta nova branch, sem abrir PR duplicada.
 - A comparação WP-D foi concluída somente em leitura e está registrada em
   `WP-D-RECONCILIATION-PLAN.md`. Ela preserva a cadeia #9 → paridade
