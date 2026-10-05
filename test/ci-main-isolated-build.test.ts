@@ -23,7 +23,10 @@ test('CI separates the main build from the HML build without deploy commands', a
   ])
   const scripts = JSON.parse(packageJson).scripts as Record<string, string>
 
-  assert.equal(scripts['build:ci-isolated'], 'bash scripts/build-ci-isolated.sh')
+  assert.equal(
+    scripts['build:ci-isolated'],
+    'bash scripts/build-ci-isolated.sh',
+  )
   assert.match(
     workflow,
     /if: github\.event_name == 'push' && github\.ref == 'refs\/heads\/main'\n\s*run: npm run build:ci-isolated/,
@@ -40,7 +43,10 @@ test('CI separates the main build from the HML build without deploy commands', a
     ciBuild,
     /VITE_TURNSTILE_SITE_KEY="\$\{VITE_TURNSTILE_SITE_KEY\}"/,
   )
-  assert.doesNotMatch(ciBuild, /HML_DEPLOY|wrangler deploy|dotenv|source\s+.*\.env/)
+  assert.doesNotMatch(
+    ciBuild,
+    /HML_DEPLOY|wrangler deploy|dotenv|source\s+.*\.env/,
+  )
 })
 
 test('main isolated build uses only the archived HEAD and explicit public input', () => {
@@ -133,7 +139,10 @@ test('build HML remains blocked when called directly from main', () => {
       stdio: 'pipe',
     })
     execFileSync('git', ['add', 'scripts'], { cwd: root, stdio: 'pipe' })
-    execFileSync('git', ['commit', '-m', 'fixture'], { cwd: root, stdio: 'pipe' })
+    execFileSync('git', ['commit', '-m', 'fixture'], {
+      cwd: root,
+      stdio: 'pipe',
+    })
     const result = spawnSync('bash', ['scripts/build-hml-isolated.sh'], {
       cwd: root,
       encoding: 'utf8',
