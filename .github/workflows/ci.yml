@@ -28,6 +28,14 @@ jobs:
       - run: npm test
       - run: npm run lint
       - run: npm run typecheck
-      - run: npm run build:hml
+      - name: Validate isolated build on main
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: npm run build:ci-isolated
+        env:
+          VITE_TURNSTILE_SITE_KEY: 1x00000000000000000000AA
+
+      - name: Validate isolated HML build on pull requests and work branches
+        if: github.event_name == 'pull_request' || github.ref != 'refs/heads/main'
+        run: npm run build:hml
         env:
           VITE_TURNSTILE_SITE_KEY: 1x00000000000000000000AA

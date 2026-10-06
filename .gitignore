@@ -22,6 +22,11 @@ dist-ssr
 __unconfig*
 todos.json
 
+# New Playwright evidence stays outside the repository. Historical tracked
+# artifacts remain immutable until a human retention decision.
+playwright-report/
+test-results/
+
 # Estado, configuração, memória operacional e logs locais do Codex
 .codex/
 .codex-local/

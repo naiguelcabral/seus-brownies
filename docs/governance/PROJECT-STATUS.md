@@ -1,8 +1,7 @@
 # Estado canônico do projeto — Cacau v1
 
-Atualizado em 14 de setembro de 2026, após inspeção do workbook original,
-revisão de código, migrations, testes, rotas, documentação e estado público de
-HML.
+Atualizado em 6 de outubro de 2026, após revisão de código, migrations,
+testes, rotas, documentação e estado público de HML.
 
 Este documento é a referência canônica de alto nível para o estado atual do sistema. Registros históricos de homologação, importação e decisões específicas permanecem válidos como evidência, mas não substituem este resumo.
 
@@ -38,24 +37,7 @@ Este documento é a referência canônica de alto nível para o estado atual do 
 - Vendas: implementado; vendas confirmadas ou pagas movimentam estoque quando aplicável.
 - Despesas: implementado.
 - Produção: fluxo real implementado com rascunho e conclusão transacional.
-- Histórico de produção real: filtros por receita, status, produto e período e
-  paginação implementados localmente; homologação de interface pendente.
 - Relatórios: implementados em nível operacional inicial.
-- Paridade do workbook: matriz canônica criada em
-  `WORKBOOK-SYSTEM-PARITY.md`. Parâmetros gerenciais, auditoria exata de
-  receita, locais/canais, KPIs de venda e plano de ação foram implementados
-  localmente; dependem das migrations `0019`/`0020` e de homologação.
-- Política financeira G2 aprovada e implementada localmente: receita por
-  competência na entrega, caixa separado, compensações posteriores imutáveis e
-  devolução sem retorno de alimento ao estoque vendável. Resgates parciais
-  consomem apenas o saldo do crédito emitido, sem efeito novo em receita/caixa.
-- Fechamento financeiro manual, correções imutáveis pelo Dono, leitura mensal
-  dos fatos e a rota `/financeiro` estão implementados localmente. O relatório
-  por competência agora reconcilia receita, CMV FIFO e margem bruta por produto,
-  lote/origem e local/canal; cenários gerenciais continuam pendentes.
-- Venda paga registra recebimento imediatamente. Cancelamento pago pré-entrega
-  registra reembolso de caixa na data informada junto do estorno FIFO, sem criar
-  receita; recebimentos legados ausentes falham em período fechado.
 
 ### Custos e estoque
 
@@ -64,8 +46,6 @@ Este documento é a referência canônica de alto nível para o estado atual do 
 - Camadas, alocações, lifecycle e reconciliação FIFO possuem testes e documentação própria.
 - Energia e mão de obra são custos operacionais, nunca itens de estoque.
 - Bordinhas é coproduto, não perda automática.
-- Saldos e razão de estoque têm busca, filtros e paginação locais; o dashboard
-  usa comparação exata contra o ponto de reposição, com zero como fallback.
 
 ### Dados e migrações
 
@@ -75,38 +55,9 @@ Este documento é a referência canônica de alto nível para o estado atual do 
 - As migrations `0017` (idempotência, autoria e proteção estrutural de
   produto) e `0018` (auditoria operacional) estão preparadas para revisão;
   não foram aplicadas a nenhum banco nesta missão.
-- As migrations aditivas `0019` (parâmetros e auditoria de receita) e `0020`
-  (plano de ação e histórico append-only) também estão preparadas e não foram
-  aplicadas. Não existe autorização para aplicá-las nesta missão.
-- A migration aditiva `0021` prepara ponto de reposição por produto e
-  lote/validade por item de compra. Ela também não foi aplicada.
-- A migration aditiva `0022` prepara fornecedor padrão informativo por produto;
-  o fornecedor efetivo continua preservado em cada compra. Não foi aplicada.
-- As migrations aditivas `0023`–`0026` preparam entrega, fatos financeiros
-  imutáveis, efeitos separados de competência/caixa, fechamento manual e
-  quantidade compensada, além do vínculo entre resgate e emissão de crédito.
-  Não foram aplicadas a nenhum banco.
 - Não repetir cargas ou homologações já consumidas sem autorização explícita.
 
 ### Qualidade
-
-- Checkpoint G2-F1 concluído localmente em `8403fe1`: 327 testes, lint,
-  typecheck, Prettier direcionado, `git diff --check` e build HML isolado verdes.
-  A migration `0026` foi somente gerada para revisão. Nenhum banco, `.env`,
-  deploy ou recurso externo foi alterado.
-
-- Checkpoint G2 retomado em 14 de setembro: a correção de período fechado agora
-  falha e reverte integralmente quando o controle otimista não atualiza o
-  snapshot. Os 309 testes, lint, typecheck, `git diff --check` e o build HML
-  isolado passaram no commit `47074c6`. O aviso de secrets ausentes no SSR é
-  esperado nessa prova sintética e nenhum arquivo de ambiente foi carregado.
-
-- Checkpoint workbook-parity de 10 de setembro: 299 testes, lint, typecheck,
-  Prettier direcionado, `git diff --check` e build HML isolado passaram no
-  commit funcional `123009d`. O aviso de secrets ausentes no SSR é esperado
-  nessa prova sintética e nenhum arquivo de ambiente foi carregado.
-  As CIs de push `34554990879` e pull request `34554994350` confirmaram o
-  checkpoint documental `aa593c3`.
 
 - Checkpoint local de 8 de setembro na branch `codex/audit-remediation`:
   `npm test` aprovou 248 casos, `npm run lint` e `npm run typecheck` passaram.
@@ -143,10 +94,28 @@ Este documento é a referência canônica de alto nível para o estado atual do 
   Funcionário. Testes direcionados, lint, typecheck e build HML isolado
   passaram localmente e na CI `34296485813`; a homologação de interface depende
   de ambiente autorizado.
+- Em 5 de outubro, a PR #9 foi integrada na `main` pelo commit
+  `428bcd0f9b5b17e9cde5f1dbbcf863664ffac4aa`. A CI da PR (`37374731288`) e a
+  CI pós-merge (`37385292264`) passaram: `main` usa exclusivamente o build de
+  CI arquivado/isolado, enquanto `build:hml` permanece bloqueado para execução
+  direta nela. Não houve deploy, migration, acesso a segredo ou mudança de
+  negócio.
+- O follow-up documental de segurança/qualidade registra retenção segura de
+  artefatos Playwright, vulnerabilidades conhecidas e gates de sessão,
+  auditoria e Turnstile. Artefatos históricos rastreados foram preservados sem
+  inspeção de conteúdo; novos `playwright-report/` e `test-results/` são
+  ignorados. A PR #10 foi integrada por merge commit
+  `60ae6ec3049500cc7cad0171ddaccf03f75c8cb0`; sua CI (`37460962766`) e a CI
+  pós-merge da `main` (`37461237980`) passaram. A próxima reconciliação
+  prevista é a PR #11, que exige revisão isolada de migrations e regras
+  financeiras antes de qualquer integração.
 - A CI `34278599814` também passou no checkpoint publicado mais recente, com
   suíte, lint, typecheck e build HML isolado. A análise completa de dependências
-  encontrou 13 vulnerabilidades (cinco altas); nenhuma atualização automática
-  foi aceita, pois as cadeias Drizzle e Wrangler só têm proposta incompatível.
+  de 5 de outubro encontrou 16 vulnerabilidades (sete altas); ao omitir
+  desenvolvimento, dez permanecem. Nenhuma atualização automática foi aceita:
+  o dry-run encontrou conflito de peers do Better Auth e as cadeias Drizzle,
+  Neon Auth e Wrangler exigem compatibilidade/revisão humana. O registro
+  detalhado está em `SECURITY-QUALITY-FOLLOWUP-2026-10-05.md`.
 - O build HML isolado agora reconhece checkout detached somente durante CI de
   build, usando a referência explícita da branch de trabalho; deploy nesse modo
   continua bloqueado. As CIs `34299895120` e `34299897403` passaram com essa
@@ -178,10 +147,9 @@ Este documento é a referência canônica de alto nível para o estado atual do 
   Parte delas é intencionalmente `skip` ou requer autorização/referência
   exclusiva; a execução E2E completa de autenticação ainda depende de ambiente
   local autorizado que não carregue `.env` e de identidades de teste próprias.
-- O código da branch de paridade possui CSRF global para métodos mutáveis e
-  middleware estrutural de autorização aplicado às 40 Server Functions
-  operacionais. A permissão é resolvida no servidor; os novos cadastros
-  financeiros e de ações ficam restritos a `access:manage`.
+- O código versionado possui 13 módulos de rota, CSRF global para métodos
+  mutáveis e middleware estrutural de autorização aplicado às 30 Server
+  Functions operacionais. A permissão é resolvida no servidor.
 - O acesso ao banco valida `DATABASE_URL` com Zod no runtime server-side, sem
   carregar arquivos de ambiente nem incluir valores na mensagem de falha.
 
@@ -236,7 +204,7 @@ Este documento é a referência canônica de alto nível para o estado atual do 
 - Pagamentos online.
 - Regras completas de entrega.
 - Deploy definitivo de produção e secrets finais do Worker.
-- Relatórios gerenciais avançados, cenários e análises adicionais.
+- Relatórios gerenciais avançados, margem por produto/lote e análises adicionais.
 - Adoção multitenant: plano em `MULTITENANCY-ADOPTION.md`; depende de decidir
   memberships, escopo de chaves e mapeamento auditável dos fatos históricos
   antes de gerar uma migration aplicável.
@@ -252,7 +220,7 @@ Este documento é a referência canônica de alto nível para o estado atual do 
 ## Próxima macrofase
 
 1. Fechar a homologação segura de G1 e o acesso HML.
-2. Consolidar a reconciliação estoque × FIFO × CMV e homologar a margem.
+2. Consolidar CMV/margem e rastreabilidade.
 3. Evoluir dashboard e gestão sobre dados já autorizados.
 4. Iniciar mensageria, OCR e pagamentos somente após os gates anteriores.
 5. Formalizar observabilidade, backup e deploy definitivo antes de produção.
