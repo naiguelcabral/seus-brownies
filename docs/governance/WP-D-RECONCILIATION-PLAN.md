@@ -1,7 +1,8 @@
 # Plano de reconciliação WP-D após a paridade
 
-Atualizado em 5 de outubro de 2026. Esta é uma preparação técnica somente de
-leitura; não abre PR duplicada nem modifica a PR #5
+Atualizado em 6 de outubro de 2026. Esta é uma preparação técnica somente de
+leitura; WP-D será reconciliado em uma nova branch criada da `main` após a
+integração da PR #11. Não abre PR duplicada nem modifica a PR #5
 (`codex/wp-d-scenarios`, `c54f65b`).
 
 ## Base comparada
@@ -38,9 +39,9 @@ Server Functions protegidas, rota `/cenarios` e seis testes de cenário.
 
 ## Próxima branch e comando
 
-Somente depois de revisão e merge humanos em ordem **PR #9 → PR de
-reconciliação da paridade → WP-D**, criar uma branch nova a partir da `main`
-atualizada e mesclar WP-D sem rebase:
+Somente depois da integração da PR #11 e dos gates humanos aplicáveis, criar
+`codex/wp-d-main-reconciliation` a partir da `main` atualizada e mesclar a
+origem `origin/codex/wp-d-scenarios` sem rebase ou force-push:
 
 ```bash
 git fetch origin --prune
@@ -48,6 +49,9 @@ git worktree add -b codex/wp-d-main-reconciliation /tmp/cacau-wp-d-main-reconcil
 git -C /tmp/cacau-wp-d-main-reconciliation merge --no-edit origin/codex/wp-d-scenarios
 ```
 
-Antes de abrir a PR resultante, confirmar migrations, reexecutar os testes de
-cenário, autorização, financeiro, reconciliação e a suíte completa. A PR #5
-permanece congelada e não deve ser retargetada, fechada ou alterada.
+As migrations `0027` e `0028` serão somente versionadas e revisadas; nunca
+aplicadas nesta preparação. Antes de abrir a PR resultante, confirmar
+conflitos, migrations, autorização, financeiro, reconciliação e a suíte
+completa. Homologação HML, aplicação de schema e decisões de negócio permanecem
+gates humanos. A PR #5 permanece congelada e não deve ser retargetada, fechada
+ou alterada.

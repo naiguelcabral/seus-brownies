@@ -109,6 +109,14 @@ Este documento é a referência canônica de alto nível para o estado atual do 
   pós-merge da `main` (`37461237980`) passaram. A próxima reconciliação
   prevista é a PR #11, que exige revisão isolada de migrations e regras
   financeiras antes de qualquer integração.
+- A PR #11 foi reconciliada localmente com a `main` de partida
+  `968e9a93fe0c67611c8afcd47eb419203bccdcd8` pelo merge commit
+  `38532d0`, preservando a `main` como autoridade nos três conflitos
+  exclusivamente documentais. A revisão e a validação locais da paridade
+  seguem em curso antes de qualquer integração; as migrations `0019`–`0026`
+  continuam apenas versionadas e não foram aplicadas. PRs #4 e #5 permanecem
+  abertas e inalteradas. O próximo trabalho, depois de uma integração verde,
+  será a reconciliação WP-D em nova branch a partir da `main` atualizada.
 - A CI `34278599814` também passou no checkpoint publicado mais recente, com
   suíte, lint, typecheck e build HML isolado. A análise completa de dependências
   de 5 de outubro encontrou 16 vulnerabilidades (sete altas); ao omitir
