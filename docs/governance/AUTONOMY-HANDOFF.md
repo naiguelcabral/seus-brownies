@@ -1,6 +1,6 @@
 # Handoff de autonomia — Cacau v1
 
-## Integração controlada PR #11 — checkpoint de reconciliação, 6 de outubro de 2026
+## Integração controlada PR #11 — concluída, 6 de outubro de 2026
 
 - A `main` de partida é `968e9a93fe0c67611c8afcd47eb419203bccdcd8`, após as
   integrações #9 e #10, ambas com CI pós-merge verde. A PR #11 estava aberta,
@@ -14,14 +14,24 @@
   reconciliação.
 - `npm ci --ignore-scripts` concluiu sem alterar o lockfile; o resumo do
   registry reportou 22 vulnerabilidades (3 críticas, 8 altas e 11 moderadas),
-  registradas como dívida externa, sem atualização automática. `npm test`
-  passou com 349 testes. Ainda faltam lint, typecheck, Prettier direcionado,
-  `git diff --check` e os builds isolados antes de push/CI/merge.
+  registradas como dívida externa, sem atualização automática. No HEAD final,
+  `npm test` passou com 349 testes; lint, typecheck, Prettier dos arquivos
+  suportados e `git diff --check` passaram; `build:ci-isolated` e `build:hml`
+  passaram com chave pública sintética. SQL não tem parser Prettier e snapshots
+  Drizzle são gerados; ambos ficaram fora apenas dessa checagem de formato.
+- A PR foi integrada por merge commit
+  `baf9c4ceb97a1f66bb583f0fc6364cebf5867a6e`. A CI de PR (`37524206463`) e a
+  repetição da CI de push (`37524202791`) passaram para o SHA
+  `249bdd9e5c4b0943da45ddbe8486986959b01151`; a CI pós-merge da `main`
+  (`37528365304`) passou e executou `build:ci-isolated`, não `npm run build`.
+  A primeira tentativa de push falhou somente no teste preexistente de
+  concorrência de memória local ao encontrar diretório de backup já criado; a
+  repetição passou sem alteração fora do escopo.
 - As migrations `0019`–`0026` são entregas versionadas da PR e não foram nem
   serão aplicadas nesta missão. Não houve leitura de `.env`, secrets, banco,
   deploy, Cloudflare, Neon ou qualquer mudança externa.
-- O plano versionado `WP-D-RECONCILIATION-PLAN.md` determina que, somente após
-  a PR #11 estar integrada e seus gates concluídos, seja criada
+- O plano versionado `WP-D-RECONCILIATION-PLAN.md` determina que agora seja
+  criada
   `codex/wp-d-main-reconciliation` da `main` atualizada e nela seja mesclada
   `origin/codex/wp-d-scenarios`. As migrations `0027` e `0028` serão apenas
   versionadas/revisadas, nunca aplicadas; a PR #5 continua referência congelada.
