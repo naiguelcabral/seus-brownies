@@ -7,10 +7,13 @@ segredo, migration ou dado compartilhado foi alterado.
 
 ## Dependências
 
-O comando `npm audit --package-lock-only --ignore-scripts` reportou 16
-vulnerabilidades: sete altas e nove moderadas. A execução com `--omit=dev`
-reportou 10 (uma alta e nove moderadas), portanto não se deve classificá-las
-todas como ferramenta local.
+Em 5 de outubro, o comando `npm audit --package-lock-only --ignore-scripts`
+reportou 16 vulnerabilidades: sete altas e nove moderadas. A execução com
+`--omit=dev` reportou 10 (uma alta e nove moderadas), portanto não se deve
+classificá-las todas como ferramenta local. Em 6 de outubro, o resumo do
+registry exibido por `npm ci --ignore-scripts` passou a reportar 24 (cinco
+críticas, oito altas e onze moderadas), sem modificar o lockfile. A diferença
+é nova evidência para revisão dedicada; não autoriza uma atualização automática.
 
 | Cadeia                                             | Classe de uso                                                  | Correção indicada pelo audit                         | Decisão desta revisão                                                           |
 | -------------------------------------------------- | -------------------------------------------------------------- | ---------------------------------------------------- | ------------------------------------------------------------------------------- |

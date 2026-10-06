@@ -1,6 +1,6 @@
 # Estado canônico do projeto — Cacau v1
 
-Atualizado em 5 de outubro de 2026, após revisão de código, migrations,
+Atualizado em 6 de outubro de 2026, após revisão de código, migrations,
 testes, rotas, documentação e estado público de HML.
 
 Este documento é a referência canônica de alto nível para o estado atual do sistema. Registros históricos de homologação, importação e decisões específicas permanecem válidos como evidência, mas não substituem este resumo.
@@ -94,12 +94,18 @@ Este documento é a referência canônica de alto nível para o estado atual do 
   Funcionário. Testes direcionados, lint, typecheck e build HML isolado
   passaram localmente e na CI `34296485813`; a homologação de interface depende
   de ambiente autorizado.
-- Em 5 de outubro, a PR #9 em rascunho
-  (`codex/ci-main-isolated-build` → `main`,
-  `685ad6036b2594d503301247eae3fc9ad489b6c8`) permaneceu limpa, mergeable e
-  verde em CI de push e pull request. Ela troca exclusivamente o build proibido
-  na `main` por um build de CI arquivado/isolado; não está integrada e sua
-  revisão/integração é a próxima ação humana.
+- Em 5 de outubro, a PR #9 foi integrada na `main` pelo commit
+  `428bcd0f9b5b17e9cde5f1dbbcf863664ffac4aa`. A CI da PR (`37374731288`) e a
+  CI pós-merge (`37385292264`) passaram: `main` usa exclusivamente o build de
+  CI arquivado/isolado, enquanto `build:hml` permanece bloqueado para execução
+  direta nela. Não houve deploy, migration, acesso a segredo ou mudança de
+  negócio.
+- O follow-up documental de segurança/qualidade registra retenção segura de
+  artefatos Playwright, vulnerabilidades conhecidas e gates de sessão,
+  auditoria e Turnstile. Artefatos históricos rastreados foram preservados sem
+  inspeção de conteúdo; novos `playwright-report/` e `test-results/` são
+  ignorados. A próxima reconciliação prevista é a PR #11, que exige revisão
+  isolada de migrations e regras financeiras antes de qualquer integração.
 - A CI `34278599814` também passou no checkpoint publicado mais recente, com
   suíte, lint, typecheck e build HML isolado. A análise completa de dependências
   de 5 de outubro encontrou 16 vulnerabilidades (sete altas); ao omitir

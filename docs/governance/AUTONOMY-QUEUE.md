@@ -60,6 +60,14 @@ seleção de pacotes pelo controlador. Ela não substitui os gates de
 Esses pacotes decorrem da missão manual de até 20 pacotes. A07 continua
 `blocked`; A08–A10 continuam `needs-human`. Não há promoção de nível permanente.
 
+### Próxima reconciliação de PR
+
+| ID    | Pacote                                                            | Tipo                             | Estado           | Escopo e saída esperada                                                                                                                                                               |
+| ----- | ----------------------------------------------------------------- | -------------------------------- | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| PR-11 | Reconciliar e revisar `codex/workbook-parity-main-reconciliation` | revisão de integração/migrations | ready-after-PR10 | Atualizar a branch pela `main` com merge commit, revisar migrations e mudanças financeiras sem aplicá-las, revalidar CI e só então submeter a integração a todos os gates aplicáveis. |
+
+PR-11 não é autorizada para merge dentro da integração documental da PR #10.
+
 O controlador escolhe somente o primeiro pacote com estado exatamente `ready`.
 Antes de editar, o agente registra no handoff objetivo, não objetivos, arquivos
 previstos, critérios de aceite e comandos de validação. Um pacote não pode
