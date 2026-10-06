@@ -1,5 +1,44 @@
 # Handoff de autonomia — Cacau v1
 
+## Integração controlada PR #10 — 6 de outubro de 2026
+
+- A `main` de partida é `428bcd0f9b5b17e9cde5f1dbbcf863664ffac4aa`. A PR #9
+  foi integrada nesse commit; sua CI de PR (`37374731288`) e a CI de push da
+  `main` (`37385292264`) passaram. A etapa de `main` executou apenas
+  `build:ci-isolated`; `build:hml` permaneceu corretamente ignorado.
+- A branch `codex/security-quality-followup` partia de
+  `0c0dce2143215102ed07285c45c161deab96d01c` e foi atualizada com a `main`
+  atual pelo merge commit `6ec83d6`, sem conflito. O escopo da PR #10 continua
+  limitado à retenção segura de artefatos, ao inventário por nomes/rastreamento,
+  à análise de vulnerabilidades e aos gates documentais de G1; não houve
+  remoção de evidência histórica, alteração de lockfile, secret, migration,
+  banco, deploy ou configuração externa.
+- O diagnóstico e a política desta rodada estão em
+  `SECURITY-QUALITY-FOLLOWUP-2026-10-05.md` e
+  `BROWSER-ARTIFACT-RETENTION.md`. Novos `playwright-report/` e
+  `test-results/` não podem entrar no Git; os artefatos rastreados continuam
+  preservados e não foram abertos.
+- Em 5 de outubro, o audit registrou 16 vulnerabilidades (7 altas, 9
+  moderadas), dez ao omitir dependências de desenvolvimento. O dry-run de
+  correção encontrou conflito de peers do Better Auth, sem atualização mínima
+  comprovada. Em 6 de outubro, `npm ci --ignore-scripts` exibiu o resumo atual
+  do registry com 24 vulnerabilidades (5 críticas, 8 altas, 11 moderadas), sem
+  modificar o lockfile; a divergência requer nova revisão de dependências em
+  pacote separado, nunca `npm audit fix --force` nesta integração.
+- A decisão humana pendente de G1 permanece: comportamento quando a sessão
+  do provedor foi emitida e a persistência do contador/auditoria posterior
+  falha. A reprodução local existente preserva a evidência; não revogar ou
+  manter sessão por inferência.
+- A validação de `hostname`/`action` do Turnstile exige política versionada de
+  ambiente; contrato e testes necessários foram registrados, sem inventar
+  valores HML. Artefatos Playwright históricos foram apenas inventariados por
+  nome/rastreamento e preservados; novos caminhos estão ignorados.
+- Próxima tarefa, fora desta integração: reconciliar a PR #11
+  (`codex/workbook-parity-main-reconciliation` → `main`) com a `main` então
+  atual por merge commit, revisar separadamente suas migrations e mudanças
+  financeiras e só propor sua integração após os gates aplicáveis. Não iniciar
+  nem integrar a PR #11 nesta missão.
+
 Atualizado em 9 de setembro de 2026.
 
 ## Atualização AR-G1-HML-2 — 10 de setembro de 2026
