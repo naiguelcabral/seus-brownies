@@ -13,6 +13,11 @@
   à análise de vulnerabilidades e aos gates documentais de G1; não houve
   remoção de evidência histórica, alteração de lockfile, secret, migration,
   banco, deploy ou configuração externa.
+- A PR #10 foi integrada por merge commit em
+  `60ae6ec3049500cc7cad0171ddaccf03f75c8cb0`, preservando sua branch de
+  origem. A CI da PR (`37460962766`) e a CI pós-merge da `main`
+  (`37461237980`) passaram com testes, lint, typecheck e os builds isolados
+  aplicáveis; nenhum build convencional foi executado.
 - O diagnóstico e a política desta rodada estão em
   `SECURITY-QUALITY-FOLLOWUP-2026-10-05.md` e
   `BROWSER-ARTIFACT-RETENTION.md`. Novos `playwright-report/` e
@@ -33,7 +38,7 @@
   ambiente; contrato e testes necessários foram registrados, sem inventar
   valores HML. Artefatos Playwright históricos foram apenas inventariados por
   nome/rastreamento e preservados; novos caminhos estão ignorados.
-- Próxima tarefa, fora desta integração: reconciliar a PR #11
+- Próxima tarefa, em missão explicitamente autorizada: reconciliar a PR #11
   (`codex/workbook-parity-main-reconciliation` → `main`) com a `main` então
   atual por merge commit, revisar separadamente suas migrations e mudanças
   financeiras e só propor sua integração após os gates aplicáveis. Não iniciar

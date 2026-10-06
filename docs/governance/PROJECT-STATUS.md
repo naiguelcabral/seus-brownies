@@ -104,8 +104,11 @@ Este documento é a referência canônica de alto nível para o estado atual do 
   artefatos Playwright, vulnerabilidades conhecidas e gates de sessão,
   auditoria e Turnstile. Artefatos históricos rastreados foram preservados sem
   inspeção de conteúdo; novos `playwright-report/` e `test-results/` são
-  ignorados. A próxima reconciliação prevista é a PR #11, que exige revisão
-  isolada de migrations e regras financeiras antes de qualquer integração.
+  ignorados. A PR #10 foi integrada por merge commit
+  `60ae6ec3049500cc7cad0171ddaccf03f75c8cb0`; sua CI (`37460962766`) e a CI
+  pós-merge da `main` (`37461237980`) passaram. A próxima reconciliação
+  prevista é a PR #11, que exige revisão isolada de migrations e regras
+  financeiras antes de qualquer integração.
 - A CI `34278599814` também passou no checkpoint publicado mais recente, com
   suíte, lint, typecheck e build HML isolado. A análise completa de dependências
   de 5 de outubro encontrou 16 vulnerabilidades (sete altas); ao omitir
