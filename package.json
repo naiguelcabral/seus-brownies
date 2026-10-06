@@ -11,6 +11,7 @@
     "generate-routes": "tsr generate",
     "build": "vite build",
     "build:hml": "bash scripts/build-hml-isolated.sh",
+    "build:ci-isolated": "bash scripts/build-ci-isolated.sh",
     "preview": "vite preview",
     "ligar": "bash ./LIGARTUDO",
     "desligar": "bash ./DESLIGARTUDO",
