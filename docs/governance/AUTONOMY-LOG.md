@@ -1,5 +1,119 @@
 # Log sanitizado de autonomia — Cacau v1
 
+## Retomada G2 — 14 de setembro de 2026
+
+- Decisão humana adicional: o resgate de crédito consome somente o saldo, sem
+  novo efeito em receita ou caixa. Ela foi incorporada às regras canônicas.
+- Checkpoint `8403fe1`: venda paga registra caixa no writer da venda; o
+  cancelamento pago pré-entrega registra o reembolso na mesma transação do
+  estorno FIFO. O ledger de crédito liga resgates imutáveis à emissão, suporta
+  consumo parcial exato, bloqueia excesso/competência fechada e expõe saldo em
+  `/financeiro`. A migration aditiva `0026` foi gerada e não aplicada.
+- G2-F1 foi concluído localmente após 327 testes, lint, typecheck, Prettier
+  direcionado, `git diff --check` e build HML isolado verdes. Nenhum banco,
+  `.env`, deploy ou recurso externo foi alterado. WP-D passa a `ready`.
+- Checkpoint `f2af82c`: `/financeiro` passou a calcular receita líquida, CMV
+  FIFO e margem bruta pela competência dos fatos, agrupando e reconciliando
+  produto, lote/origem sem lote e local/canal. O fechamento e a correção de
+  período congelam também os agregados de CMV e margem.
+- Validação do checkpoint: 315 testes, lint, typecheck, Prettier direcionado,
+  `git diff --check` e build HML isolado verdes. O `npm run check` global segue
+  vermelho em 92 arquivos históricos fora do diff. Nenhuma migration, banco,
+  `.env`, deploy ou recurso externo foi alterado.
+- O commit manual `a4f3c72` foi retomado com fechamento, correções e a rota
+  financeira ainda sem checkpoint de validação canônico. A coerção de tipo que
+  bloqueava o lint foi removida.
+- A atualização otimista do snapshot fechado passou a exigir linha retornada;
+  conflito agora provoca rollback da correção, coberto por teste transacional.
+- Checkpoint `47074c6`: 309 testes, lint, typecheck, `git diff --check` e build
+  HML isolado verdes. O aviso nominal de secrets ausentes no SSR foi esperado;
+  nenhuma migration, banco, `.env`, deploy ou recurso externo foi alterado.
+- O próximo pacote elegível é WP-D: metas e cenários com premissas versionadas,
+  sem aplicar migrations ou escrever em ambientes compartilhados.
+
+## G2 financeiro — 11 de setembro de 2026
+
+- As dez decisões financeiras aprovadas pelo Dono foram registradas em
+  `HUMAN-APPROVALS.md`, `BUSINESS-RULES.md` e `G2-CMV-DECISION.md`, preservando
+  a evidência anterior como histórico e removendo o gate de decisão.
+- Migrations aditivas `0023`–`0026`, não aplicadas, modelam entrega, períodos e
+  fatos imutáveis com efeitos exatos e separados de competência e caixa.
+- Entrega registra receita na data de competência; venda paga registra caixa
+  separadamente. Compensação pós-entrega registra reembolso ou crédito auditado
+  e não restaura alimento nem CMV. Cancelamento após entrega falha fechado.
+- Normalização proporcional do mix, indicadores financeiros separados,
+  autorização de compensação e cálculo cumulativo de compensações parciais
+  foram cobertos por testes. O subpacote passou em 303 testes, lint, typecheck,
+  `git diff --check` e build HML isolado no checkpoint `e2bf666`; a primeira
+  tentativa de build recusou corretamente a ausência da chave pública e a
+  prova seguinte usou apenas a chave sintética documentada. CI ainda será
+  registrada após a publicação da branch.
+
+## Missão de paridade do workbook — 10 de setembro de 2026
+
+- Estado recuperado em `codex/audit-remediation` no SHA `241099a`, árvore
+  limpa; criada `codex/workbook-parity` sem reescrever histórico. PR #2 e PR
+  #3 foram somente consultadas. O binding `AUTH_RATE_LIMITER` já estava
+  versionado; o deploy HML continua bloqueado pela chave pública não injetada.
+- Workbook original inspecionado somente no caminho autorizado. Foram
+  confirmadas 15 abas, 12 tabelas, 3 gráficos, 1 validação, 4 comentários e
+  zero fórmulas executáveis; totais e divergências foram documentados de forma
+  sanitizada na matriz canônica.
+- WP-A/B/C/G/H implementados localmente. Migrations aditivas `0019` e `0020`
+  foram geradas e não aplicadas. Nenhuma política de margem, competência,
+  reversão, crédito ou vínculo venda–lote foi definida unilateralmente.
+- Validação local: 283 testes passaram; lint, typecheck, Prettier direcionado e
+  `git diff --check` ficaram verdes. O build isolado primeiro recusou a árvore
+  suja e depois passou no commit funcional limpo `712e0ca`; o aviso de secrets
+  ausentes no SSR foi o esperado, sem carregar `.env`.
+- Branch publicada sem deploy. A CI de push `34544769430` passou no SHA
+  `b1b6792`; a PR #4 foi aberta em rascunho contra `codex/audit-remediation`.
+  A CI de pull request `34552154672` estava na fila no último registro.
+- WP-F1 concluído localmente enquanto a CI rodava: ponto de reposição exato e
+  lote/validade/fornecedor foram conectados ao catálogo, compra e estoque. A
+  migration aditiva `0021` foi gerada e não aplicada; cobertura e sugestão de
+  compra continuam fora do escopo por falta de histórico/regra.
+- Checkpoint `b0b3faf`: 289 testes, lint, typecheck, Prettier direcionado,
+  `git diff --check` e build HML isolado verdes. O aviso de secrets ausentes no
+  SSR foi esperado; nenhuma variável privada ou arquivo `.env` foi carregado.
+- As CIs de push `34552925067` e pull request `34552929383` passaram para o
+  checkpoint publicado `98a1d5a`.
+- WP-E1 concluído localmente: consulta de lotes reais passou a filtrar no
+  servidor por receita, status, produto e período, com 20 itens por página e
+  estados de UI.
+  Registros PLAN continuam excluídos. O checkpoint funcional `2f9fd2d` passou
+  em 292 testes, lint, typecheck, `git diff --check` e build HML isolado; o
+  aviso nominal de secrets ausentes permaneceu esperado.
+- As CIs de push `34553608287` e pull request `34553610770` passaram para o
+  checkpoint WP-E1 publicado `ca4cec8`.
+- WP-F2 concluído localmente: saldos e razão de estoque ganharam filtros URL e
+  paginação no servidor, preservando uma lista independente de produtos para
+  ações FIFO. O dashboard deixou de converter saldo para `Number` e passou a
+  usar o ponto de reposição exato, com zero apenas como fallback não
+  configurado. O checkpoint funcional `85e7532` passou em 296 testes, lint,
+  typecheck, `git diff --check` e build HML isolado.
+- WP-A2 iniciado: fornecedor padrão opcional foi acrescentado ao catálogo como
+  informação validada, sem entidade própria, automação de compra ou
+  recomendação. A migration aditiva `0022` foi gerada e não aplicada.
+- As CIs de push `34554168480` e pull request `34554171049` passaram para o
+  checkpoint WP-F2 publicado `bbf6db3`.
+- WP-A2 concluído localmente: schema, migration, Server Functions, formulário,
+  teste e matriz preservam o fornecedor padrão como referência informativa e o
+  fornecedor efetivo em cada compra. O checkpoint funcional `56f0149` passou
+  em 297 testes, lint, typecheck, `git diff --check` e build HML isolado; `0022`
+  permanece não aplicada.
+- As CIs de push `34554627169` e pull request `34554629415` passaram para o
+  checkpoint WP-A2 publicado `b9241ae`.
+- WP-I1 concluído localmente: a rota de relatórios deixou de converter valores
+  monetários para `Number` durante a exibição. O formatador exato e seus testes
+  preservam centavos fora do inteiro seguro e valores negativos. O checkpoint
+  funcional `123009d` passou em 299 testes, lint, typecheck, `git diff --check`
+  e build HML isolado.
+- As CIs de push `34554990879` e pull request `34554994350` passaram para o
+  checkpoint WP-I1 publicado `aa593c3`. Não restou pacote de paridade local
+  independente: os próximos itens dependem de decisão G2, migration e
+  homologação autorizadas ou histórico confiável de consumo.
+
 ## Retomada local de 7 de setembro de 2026
 
 - Checkpoint humano `c28c267868e6aa8b80272862dcd6ba558e325cab` confirmado

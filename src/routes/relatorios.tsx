@@ -8,6 +8,7 @@ import {
   downloadCsv,
 } from '#/features/reports/csv-export'
 import { getOperationalReports } from '#/features/reports/functions'
+import { formatBrlMoney } from '#/lib/format-money'
 
 const reportSearch = z.object({
   start: z.string().date().optional(),
@@ -82,37 +83,136 @@ function ReportsPage() {
         <Metric
           icon={TrendingUp}
           title="Faturamento confirmado"
-          value={money.format(Number(report.revenueTotal))}
+          value={formatBrlMoney(report.revenueTotal)}
         />
         <Metric
           icon={Wallet}
           title="Despesas"
-          value={money.format(Number(report.expensesTotal))}
+          value={formatBrlMoney(report.expensesTotal)}
         />
         <Metric
           icon={Box}
           title="Estoque valorizado"
-          value={money.format(Number(report.inventoryTotal))}
+          value={formatBrlMoney(report.inventoryTotal)}
         />
         <Metric
           icon={ReceiptText}
           title="Itens em estoque"
           value={String(report.inventory.length)}
         />
+        <Metric
+          icon={ReceiptText}
+          title="Unidades vendidas"
+          value={quantity.format(Number(report.salesMetrics.total.units))}
+        />
+        <Metric
+          icon={Wallet}
+          title="Ticket médio por evento"
+          value={
+            report.salesMetrics.total.ticketAverage
+              ? formatBrlMoney(report.salesMetrics.total.ticketAverage)
+              : 'Sem dados'
+          }
+        />
+        <Metric
+          icon={TrendingUp}
+          title="Preço médio por unidade"
+          value={
+            report.salesMetrics.total.averageUnitPrice
+              ? formatBrlMoney(report.salesMetrics.total.averageUnitPrice)
+              : 'Sem dados'
+          }
+        />
+        <Metric
+          icon={BarChart3}
+          title="Divergência de receita"
+          value={
+            report.salesMetrics.total.audit.difference
+              ? formatBrlMoney(report.salesMetrics.total.audit.difference)
+              : 'Sem auditoria'
+          }
+        />
         {report.fifo ? (
           <Metric
             icon={TrendingUp}
             title="Margem bruta FIFO"
-            value={money.format(Number(report.fifo.grossMargin))}
+            value={formatBrlMoney(report.fifo.grossMargin)}
           />
         ) : null}
       </div>
+      <section className="mt-6 overflow-hidden rounded-2xl border border-[#ecdfd4] bg-white">
+        <div className="border-b border-[#f0e5dc] px-5 py-4">
+          <h2 className="font-bold">Locais e canais no período</h2>
+          <p className="mt-1 text-xs text-[#846859]">
+            Receita, volume, ticket e divergência calculados a partir das vendas
+            confirmadas ou pagas. Auditoria disponível em{' '}
+            {report.salesMetrics.total.audit.auditedEvents} de{' '}
+            {report.salesMetrics.total.events} eventos.
+          </p>
+        </div>
+        {report.salesMetrics.byLocation.length ? (
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[760px] text-left text-sm">
+              <thead className="bg-[#fffaf5] text-xs uppercase text-[#896d5b]">
+                <tr>
+                  <th className="px-4 py-3">Local/canal</th>
+                  <th className="px-4 py-3 text-right">Eventos</th>
+                  <th className="px-4 py-3 text-right">Unidades</th>
+                  <th className="px-4 py-3 text-right">Faturamento</th>
+                  <th className="px-4 py-3 text-right">Ticket</th>
+                  <th className="px-4 py-3 text-right">Divergência</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-[#f0e5dc]">
+                {report.salesMetrics.byLocation.map((location) => (
+                  <tr key={location.locationId ?? 'unassigned'}>
+                    <td className="px-4 py-3 font-bold">
+                      {location.locationName}
+                    </td>
+                    <td className="px-4 py-3 text-right">{location.events}</td>
+                    <td className="px-4 py-3 text-right">
+                      {quantity.format(Number(location.units))}
+                    </td>
+                    <td className="px-4 py-3 text-right">
+                      {formatBrlMoney(location.revenue)}
+                    </td>
+                    <td className="px-4 py-3 text-right">
+                      {location.ticketAverage
+                        ? formatBrlMoney(location.ticketAverage)
+                        : '—'}
+                    </td>
+                    <td className="px-4 py-3 text-right">
+                      {location.audit.difference
+                        ? formatBrlMoney(location.audit.difference)
+                        : 'Sem auditoria'}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <p className="p-6 text-sm text-[#846859]">
+            Não há vendas confirmadas ou pagas no período.
+          </p>
+        )}
+      </section>
+      {report.managementSettings ? (
+        <p className="mt-4 rounded-xl border border-[#ecdfd4] bg-white p-4 text-sm text-[#846859]">
+          Meta de lucro cadastrada:{' '}
+          <strong>
+            {formatBrlMoney(report.managementSettings.monthlyProfitGoal)}
+          </strong>
+          . O progresso de lucro não é exibido enquanto competência, reversões e
+          margem definitiva aguardam a decisão G2.
+        </p>
+      ) : null}
       <div className="mt-6 grid gap-6 xl:grid-cols-2">
         <List
           title="Faturamento por canal"
           rows={report.revenue.map((item) => [
             item.channel,
-            money.format(Number(item.total)),
+            formatBrlMoney(item.total),
           ])}
           empty="Não há vendas confirmadas ou pagas no período."
         />
@@ -120,7 +220,7 @@ function ReportsPage() {
           title="Despesas por categoria"
           rows={report.expensesByCategory.map((item) => [
             item.category,
-            money.format(Number(item.total)),
+            formatBrlMoney(item.total),
           ])}
           empty="Não há despesas no período."
         />
@@ -130,7 +230,7 @@ function ReportsPage() {
             .slice(0, 12)
             .map((item) => [
               `${item.productName} · ${quantity.format(Number(item.balance))} ${item.unit === 'unit' ? 'un.' : item.unit}`,
-              money.format(Number(item.value)),
+              formatBrlMoney(item.value),
             ])}
           empty="Não há saldo positivo até o fim do período."
         />
@@ -138,7 +238,7 @@ function ReportsPage() {
           title="Vendas por produto"
           rows={report.salesByProduct.map((item) => [
             `${item.productName} · ${quantity.format(Number(item.quantity))} un.`,
-            money.format(Number(item.amount)),
+            formatBrlMoney(item.amount),
           ])}
           empty="Não há itens de venda no período."
         />
@@ -153,17 +253,17 @@ function ReportsPage() {
             <Metric
               icon={TrendingUp}
               title="Receita líquida alocada"
-              value={money.format(Number(report.fifo.netRevenue))}
+              value={formatBrlMoney(report.fifo.netRevenue)}
             />
             <Metric
               icon={Box}
               title="CMV"
-              value={money.format(Number(report.fifo.cogs))}
+              value={formatBrlMoney(report.fifo.cogs)}
             />
             <Metric
               icon={Wallet}
               title="Margem bruta"
-              value={money.format(Number(report.fifo.grossMargin))}
+              value={formatBrlMoney(report.fifo.grossMargin)}
             />
           </div>
           <div className="mt-6 grid gap-6 xl:grid-cols-3">
@@ -171,7 +271,7 @@ function ReportsPage() {
               title="Margem por produto"
               rows={report.fifo.byProduct.map((item) => [
                 item.productName,
-                money.format(Number(item.grossMargin)),
+                formatBrlMoney(item.grossMargin),
               ])}
               empty="Não há alocações FIFO no período."
             />
@@ -179,7 +279,7 @@ function ReportsPage() {
               title="Margem por lote"
               rows={report.fifo.byBatch.map((item) => [
                 `Lote #${item.productionBatchId}`,
-                money.format(Number(item.grossMargin)),
+                formatBrlMoney(item.grossMargin),
               ])}
               empty="Não há alocações FIFO no período."
             />
@@ -187,7 +287,7 @@ function ReportsPage() {
               title="Estoque FIFO remanescente"
               rows={report.fifo.inventory.map((item) => [
                 `${item.productName} · ${quantity.format(Number(item.balance))} ${item.unit === 'unit' ? 'un.' : item.unit}`,
-                money.format(Number(item.value)),
+                formatBrlMoney(item.value),
               ])}
               empty="Não há camadas FIFO remanescentes."
             />
@@ -207,18 +307,9 @@ function ReportsPage() {
             {report.reconciliation.checked.movements} movimentos verificados.
           </p>
           {report.reconciliation.divergences.length ? (
-            <ul className="mt-4 space-y-2">
-              {report.reconciliation.divergences.map((item) => (
-                <li
-                  key={`${item.code}-${item.entityType}-${item.entityId}`}
-                  className="rounded-lg border border-[#e7c9b8] bg-[#fff5ed] p-3 text-sm"
-                >
-                  <strong>{item.code}</strong> · {item.entityType} #
-                  {item.entityId} · esperado {item.expected}, encontrado{' '}
-                  {item.actual} · relacionados {item.relatedIds.join(', ')}
-                </li>
-              ))}
-            </ul>
+            <ReconciliationDivergences
+              divergences={report.reconciliation.divergences}
+            />
           ) : (
             <p className="mt-4 rounded-lg bg-[#eef8ed] p-3 text-sm text-[#315a31]">
               Nenhuma divergência encontrada nas relações FIFO verificadas.
@@ -237,7 +328,7 @@ function ReportsPage() {
               title="Consumo de insumos"
               rows={report.production.consumptions.map((item) => [
                 item.productName,
-                `${quantity.format(Number(item.quantity))} · ${item.amount ? money.format(Number(item.amount)) : 'custo não informado'}`,
+                `${quantity.format(Number(item.quantity))} · ${item.amount ? formatBrlMoney(item.amount) : 'custo não informado'}`,
               ])}
               empty="Nenhum consumo de lote concluído no período."
             />
@@ -254,7 +345,7 @@ function ReportsPage() {
               rows={report.production.batchCosts.map((item) => [
                 `Lote #${item.id} · ${item.plannedFor ?? 'sem data'}`,
                 item.amount
-                  ? money.format(Number(item.amount))
+                  ? formatBrlMoney(item.amount)
                   : 'custo não informado',
               ])}
               empty="Nenhum custo de lote concluído no período."
@@ -263,7 +354,7 @@ function ReportsPage() {
               title="Custos operacionais"
               rows={report.production.operationalCosts.map((item) => [
                 item.type === 'energy' ? 'Energia' : 'Mão de obra',
-                money.format(Number(item.amount)),
+                formatBrlMoney(item.amount),
               ])}
               empty="Nenhum custo operacional no período."
             />
@@ -277,6 +368,45 @@ function ReportsPage() {
         )}
       </section>
     </ManagementLayout>
+  )
+}
+
+function ReconciliationDivergences({
+  divergences,
+}: {
+  divergences: Array<{
+    code: string
+    entityType: string
+    entityId: number
+    relatedIds: number[]
+    expected: string
+    actual: string
+  }>
+}) {
+  const byCode = divergences.reduce<Record<string, number>>((counts, item) => {
+    counts[item.code] = (counts[item.code] ?? 0) + 1
+    return counts
+  }, {})
+  return (
+    <>
+      <p className="mt-4 text-sm text-[#846859]">
+        {Object.entries(byCode)
+          .map(([code, count]) => `${code}: ${count}`)
+          .join(' · ')}
+      </p>
+      <ul className="mt-4 space-y-2">
+        {divergences.map((item) => (
+          <li
+            key={`${item.code}-${item.entityType}-${item.entityId}`}
+            className="rounded-lg border border-[#e7c9b8] bg-[#fff5ed] p-3 text-sm"
+          >
+            <strong>{item.code}</strong> · {item.entityType} #{item.entityId} ·
+            esperado {item.expected}, encontrado {item.actual} · relacionados{' '}
+            {item.relatedIds.join(', ')}
+          </li>
+        ))}
+      </ul>
+    </>
   )
 }
 
@@ -341,8 +471,4 @@ function List({
     </section>
   )
 }
-const money = new Intl.NumberFormat('pt-BR', {
-  style: 'currency',
-  currency: 'BRL',
-})
 const quantity = new Intl.NumberFormat('pt-BR', { maximumFractionDigits: 3 })

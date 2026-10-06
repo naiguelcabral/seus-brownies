@@ -62,12 +62,14 @@ Esses pacotes decorrem da missão manual de até 20 pacotes. A07 continua
 
 ### Próxima reconciliação de PR
 
-| ID    | Pacote                                                            | Tipo                             | Estado      | Escopo e saída esperada                                                                                                                                                                                                    |
-| ----- | ----------------------------------------------------------------- | -------------------------------- | ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| PR-11 | Reconciliar e revisar `codex/workbook-parity-main-reconciliation` | revisão de integração/migrations | needs-human | Em missão explicitamente autorizada, atualizar a branch pela `main` com merge commit, revisar migrations e mudanças financeiras sem aplicá-las, revalidar CI e só então submeter a integração a todos os gates aplicáveis. |
+| ID    | Pacote                                                            | Tipo                             | Estado            | Escopo e saída esperada                                                                                                                                                                                  |
+| ----- | ----------------------------------------------------------------- | -------------------------------- | ----------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| PR-11 | Reconciliar e revisar `codex/workbook-parity-main-reconciliation` | revisão de integração/migrations | running           | Reconciliação com `main` concluída pelo merge `38532d0`; testes locais em execução. Não aplicar migrations `0019`–`0026`; integração depende de todos os gates locais e CI remota verde.                 |
+| WP-D  | Preparar reconciliação `codex/wp-d-scenarios`                     | revisão de integração/migrations | ready-after-PR-11 | Após PR #11 verde e integrada, criar `codex/wp-d-main-reconciliation` da `main`, mesclar a origem sem rebase/force-push e abrir nova PR em rascunho. `0027`/`0028` só versionadas; PR #5 fica congelada. |
 
-PR-11 não foi iniciada nem é autorizada para merge dentro da integração
-documental da PR #10.
+PR-11 está em reconciliação controlada nesta missão explícita; não há
+autorização para integrar outra PR. WP-D só se torna selecionável após o
+checkpoint verde da PR #11.
 
 O controlador escolhe somente o primeiro pacote com estado exatamente `ready`.
 Antes de editar, o agente registra no handoff objetivo, não objetivos, arquivos

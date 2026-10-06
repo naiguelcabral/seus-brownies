@@ -30,6 +30,11 @@ import {
   planStockRestoration,
 } from '#/features/inventory/lifecycle'
 import {
+  appendPaidSaleCancellationCashRefund,
+  persistDeliveredSaleCompensation,
+} from '#/features/finance/functions'
+import { inventoryEffectForSaleLifecycle } from '#/features/finance/policy'
+import {
   moneyToCents,
   quantityToThousandths,
 } from '#/features/production/calculations'
@@ -166,7 +171,7 @@ async function applyReversal(
     allocations: Array<typeof inventoryCostAllocations.$inferSelect>
     layers: Awaited<ReturnType<typeof loadLayers>>
     requestedQuantity: bigint | null
-    event: 'sale_cancellation' | 'sale_return'
+    event: 'sale_cancellation'
     referenceId: number
     key: string
     reason: string
@@ -257,6 +262,18 @@ export async function persistSaleCancellation(
         .where(eq(sales.id, data.saleId))
       if (!['confirmed', 'paid'].includes(sale.status))
         throw new Error('Apenas venda confirmada ou paga pode ser cancelada.')
+      inventoryEffectForSaleLifecycle({
+        event: 'cancellation',
+        deliveredAt: sale.deliveredAt,
+      })
+      if (sale.status === 'paid' && !actorAuthUserId)
+        throw new Error('Cancelamento de venda paga exige autoria autenticada.')
+      await appendPaidSaleCancellationCashRefund(
+        tx,
+        sale,
+        { occurredOn: data.occurredOn, reason: data.reason },
+        actorAuthUserId ?? '',
+      )
       const items = await tx
         .select()
         .from(saleItems)
@@ -333,53 +350,9 @@ export async function persistSaleReturn(
   data: ReturnSaleInput,
   actorAuthUserId?: string,
 ) {
-  return database.transaction(async (tx) => {
-    try {
-      await requireLifecycleSchema(tx)
-      await tx.execute(
-        sql`select id from ${saleItems} where ${saleItems.id} = ${data.saleItemId} for update`,
-      )
-      const [item] = await tx
-        .select()
-        .from(saleItems)
-        .where(eq(saleItems.id, data.saleItemId))
-      if (!item.productId) throw new Error('Item de venda não encontrado.')
-      const [sale] = await tx
-        .select()
-        .from(sales)
-        .where(eq(sales.id, item.saleId))
-      if (!['confirmed', 'paid'].includes(sale.status))
-        throw new Error('Devolução exige venda confirmada ou paga.')
-      await lockProductAndLayers(tx, [item.productId])
-      const allocations = (await tx
-        .select()
-        .from(inventoryCostAllocations)
-        .where(eq(inventoryCostAllocations.saleItemId, item.id))) as Array<
-        typeof inventoryCostAllocations.$inferSelect
-      >
-      const layers = await loadLayers(tx, [item.productId])
-      const result = await applyReversal(tx, {
-        allocations,
-        layers,
-        requestedQuantity: parseQuantity(data.quantity),
-        event: 'sale_return',
-        referenceId: item.id,
-        key: sourceKey('sale-return', item.id, data.reference),
-        reason: data.reason,
-      })
-      await appendOperationalAudit(tx, {
-        actorAuthUserId,
-        action: 'sale.return',
-        entityType: 'sale_item',
-        entityId: item.id,
-        operationReference: sourceKey('sale-return', item.id, data.reference),
-        reason: data.reason,
-      })
-      return result
-    } catch (error) {
-      assertFifoLifecycleSchema(error)
-    }
-  })
+  if (!actorAuthUserId)
+    throw new Error('Compensação exige autoria autenticada no servidor.')
+  return persistDeliveredSaleCompensation(database, data, actorAuthUserId)
 }
 export const returnSaleLifecycle = createServerFn({ method: 'POST' })
   .middleware([requireServerFunctionPermission('returnSaleLifecycle')])

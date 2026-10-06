@@ -18,6 +18,8 @@ test('histórico de vendas permanece protegido, filtrado e paginado no servidor'
   )
   assert.match(source, /ilike\(sales\.customerName/)
   assert.match(source, /eq\(sales\.status, data\.status\)/)
+  assert.match(source, /eq\(sales\.locationId, data\.locationId\)/)
+  assert.match(source, /eq\(saleItems\.productId, data\.productId\)/)
   assert.match(source, /lt\(sales\.soldAt, endAt\)/)
   assert.match(
     source,
@@ -35,4 +37,6 @@ test('rota de vendas usa filtros validados como dependências do loader', async 
   assert.match(source, /loaderDeps: \(\{ search \}\)/)
   assert.match(source, /pendingComponent: SalesPending/)
   assert.match(source, /errorComponent: SalesError/)
+  assert.match(source, /locationId: search\.locationId/)
+  assert.match(source, /productId: search\.productId/)
 })

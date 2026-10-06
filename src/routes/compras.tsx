@@ -45,8 +45,20 @@ export const Route = createFileRoute('/compras')({
   errorComponent: PurchasesError,
 })
 
-type Item = { productId: string; quantity: string; unitCost: string }
-const emptyItem = (): Item => ({ productId: '', quantity: '', unitCost: '' })
+type Item = {
+  productId: string
+  quantity: string
+  unitCost: string
+  supplierLot: string
+  expiresOn: string
+}
+const emptyItem = (): Item => ({
+  productId: '',
+  quantity: '',
+  unitCost: '',
+  supplierLot: '',
+  expiresOn: '',
+})
 
 function PurchasesPage() {
   const { products, history, canReadHistory } = Route.useLoaderData()
@@ -99,6 +111,8 @@ function PurchasesPage() {
             productId: Number(item.productId),
             quantity: item.quantity,
             unitCost: item.unitCost,
+            supplierLot: item.supplierLot,
+            expiresOn: item.expiresOn || undefined,
           })),
         },
       })
@@ -334,6 +348,21 @@ function PurchasesPage() {
                   onChange={(unitCost) => updateItem(index, { unitCost })}
                   placeholder="Ex.: 12,50"
                   inputMode="decimal"
+                />
+              </div>
+              <div className="mt-3 grid grid-cols-2 gap-3">
+                <Input
+                  label="Lote do fornecedor"
+                  value={item.supplierLot}
+                  onChange={(supplierLot) => updateItem(index, { supplierLot })}
+                  maxLength={80}
+                />
+                <Input
+                  label="Validade"
+                  type="date"
+                  min={purchasedAt}
+                  value={item.expiresOn}
+                  onChange={(expiresOn) => updateItem(index, { expiresOn })}
                 />
               </div>
             </div>

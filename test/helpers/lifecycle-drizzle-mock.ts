@@ -1,4 +1,6 @@
 import {
+  financialEvents,
+  financialPeriods,
   inventoryCostAllocations,
   inventoryCostLayers,
   inventoryCostReversals,
@@ -9,8 +11,14 @@ import {
 } from '../../src/db/schema'
 
 type Rows = Record<string, Array<Record<string, unknown>>>
+type SelectionResponses = Partial<
+  Record<string, Array<Array<Record<string, unknown>>>>
+>
 
-export function createLifecycleDrizzleMock(input: Partial<Rows> = {}) {
+export function createLifecycleDrizzleMock(
+  input: Partial<Rows> = {},
+  selectionResponses: SelectionResponses = {},
+) {
   const rows: Rows = {
     sales: input.sales ?? [],
     saleItems: input.saleItems ?? [],
@@ -18,6 +26,8 @@ export function createLifecycleDrizzleMock(input: Partial<Rows> = {}) {
     layers: input.layers ?? [],
     reversals: input.reversals ?? [],
     movements: input.movements ?? [],
+    financialEvents: input.financialEvents ?? [],
+    financialPeriods: input.financialPeriods ?? [],
   }
   const journal: Array<{ kind: string; table?: string; values?: unknown }> = []
   const committed: Array<{
@@ -41,14 +51,18 @@ export function createLifecycleDrizzleMock(input: Partial<Rows> = {}) {
     if (table === inventoryCostReversals) return 'reversals'
     if (table === stockMovements) return 'movements'
     if (table === operationalAuditEvents) return 'operationalAudit'
+    if (table === financialEvents) return 'financialEvents'
+    if (table === financialPeriods) return 'financialPeriods'
     return 'unknown'
   }
   const select = () => ({
     from(table: unknown) {
-      const values = rows[name(table)]
+      const tableName = name(table)
+      const values = selectionResponses[tableName]?.shift() ?? rows[tableName]
       const query = {
         where: () => query,
         orderBy: () => query,
+        limit: () => query,
         then: (resolve: (value: typeof values) => unknown) => resolve(values),
       }
       return query
@@ -65,6 +79,8 @@ export function createLifecycleDrizzleMock(input: Partial<Rows> = {}) {
           {
             lifecycle_table:
               failAt === 'schema-missing' ? null : 'inventory_cost_reversals',
+            financial_events:
+              failAt === 'finance-schema-missing' ? null : 'financial_events',
           },
         ],
       }
@@ -88,7 +104,12 @@ export function createLifecycleDrizzleMock(input: Partial<Rows> = {}) {
           if (failAt === `update:${name(table)}` || failAt === name(table))
             throw new Error(`forced update:${name(table)} failure`)
           pending.push({ kind: 'update', table: name(table), values })
-          return { where: async () => undefined }
+          return {
+            where: () => ({
+              returning: async () =>
+                failAt === `returning:${name(table)}` ? [] : [{ id: nextId++ }],
+            }),
+          }
         },
       }
     },

@@ -1,5 +1,31 @@
 # Handoff de autonomia — Cacau v1
 
+## Integração controlada PR #11 — checkpoint de reconciliação, 6 de outubro de 2026
+
+- A `main` de partida é `968e9a93fe0c67611c8afcd47eb419203bccdcd8`, após as
+  integrações #9 e #10, ambas com CI pós-merge verde. A PR #11 estava aberta,
+  em rascunho e conflitante contra essa base; PRs #4 e #5 foram somente
+  confirmadas como abertas e permanecem preservadas, sem alteração.
+- A branch `codex/workbook-parity-main-reconciliation` foi atualizada sem
+  rebase pelo merge commit `38532d0`. Os únicos conflitos foram
+  `PROJECT-STATUS.md`, `AUTONOMY-HANDOFF.md` e `AUTONOMY-QUEUE.md`; a versão da
+  `main` foi mantida como autoridade. Não houve conflito nem modificação de
+  código de produção, CI, controles de ambiente ou migrations durante a
+  reconciliação.
+- `npm ci --ignore-scripts` concluiu sem alterar o lockfile; o resumo do
+  registry reportou 22 vulnerabilidades (3 críticas, 8 altas e 11 moderadas),
+  registradas como dívida externa, sem atualização automática. `npm test`
+  passou com 349 testes. Ainda faltam lint, typecheck, Prettier direcionado,
+  `git diff --check` e os builds isolados antes de push/CI/merge.
+- As migrations `0019`–`0026` são entregas versionadas da PR e não foram nem
+  serão aplicadas nesta missão. Não houve leitura de `.env`, secrets, banco,
+  deploy, Cloudflare, Neon ou qualquer mudança externa.
+- O plano versionado `WP-D-RECONCILIATION-PLAN.md` determina que, somente após
+  a PR #11 estar integrada e seus gates concluídos, seja criada
+  `codex/wp-d-main-reconciliation` da `main` atualizada e nela seja mesclada
+  `origin/codex/wp-d-scenarios`. As migrations `0027` e `0028` serão apenas
+  versionadas/revisadas, nunca aplicadas; a PR #5 continua referência congelada.
+
 ## Integração controlada PR #10 — 6 de outubro de 2026
 
 - A `main` de partida é `428bcd0f9b5b17e9cde5f1dbbcf863664ffac4aa`. A PR #9

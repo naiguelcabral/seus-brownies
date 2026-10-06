@@ -11,7 +11,9 @@ import {
   listSaleProducts,
   listSales,
 } from '#/features/operations/functions'
+import { listActiveSalesLocations } from '#/features/locations/functions'
 import { cancelSaleLifecycle } from '#/features/inventory/lifecycle-writers'
+import { deliverSale } from '#/features/finance/functions'
 import {
   canCancelSale,
   canSubmitLifecycle,
@@ -25,6 +27,8 @@ import type { SaleStatus } from '#/features/operations/sale-history'
 const saleSearch = z.object({
   query: z.string().trim().max(100).optional().catch(undefined),
   status: z.enum(saleStatuses).optional().catch(undefined),
+  locationId: z.coerce.number().int().positive().optional().catch(undefined),
+  productId: z.coerce.number().int().positive().optional().catch(undefined),
   start: z.string().date().optional().catch(undefined),
   end: z.string().date().optional().catch(undefined),
   page: z.number().int().min(1).max(10_000).catch(1),
@@ -35,6 +39,8 @@ export const Route = createFileRoute('/vendas')({
   loaderDeps: ({ search }) => ({
     query: search.query,
     status: search.status,
+    locationId: search.locationId,
+    productId: search.productId,
     start: search.start,
     end: search.end,
     page: search.page,
@@ -46,13 +52,22 @@ export const Route = createFileRoute('/vendas')({
     const canManageLifecycle = Boolean(
       context.appRole && hasPermission(context.appRole, 'fifo:lifecycle:write'),
     )
+    const canDeliverSales = Boolean(
+      context.appRole && hasPermission(context.appRole, 'sales:write'),
+    )
+    const [products, locations] = await Promise.all([
+      listSaleProducts(),
+      listActiveSalesLocations(),
+    ])
     return {
-      products: await listSaleProducts(),
+      products,
+      locations,
       history: canReadHistory
         ? await listSales({ data: deps })
         : { sales: [], total: 0, page: 1, pageSize: 20, totalPages: 1 },
       canReadHistory,
       canManageLifecycle,
+      canDeliverSales,
     }
   },
   component: SalesPage,
@@ -69,9 +84,24 @@ const statusLabels: Record<SaleStatus, string> = {
   cancelled: 'Cancelada',
 }
 
+function today() {
+  return new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'America/Sao_Paulo',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).format(new Date())
+}
+
 function SalesPage() {
-  const { products, history, canReadHistory, canManageLifecycle } =
-    Route.useLoaderData()
+  const {
+    products,
+    locations,
+    history,
+    canReadHistory,
+    canManageLifecycle,
+    canDeliverSales,
+  } = Route.useLoaderData()
   const search = Route.useSearch()
   const router = useRouter()
   const navigate = useNavigate({ from: Route.fullPath })
@@ -80,16 +110,27 @@ function SalesPage() {
     crypto.randomUUID(),
   )
   const cancel = useServerFn(cancelSaleLifecycle)
+  const deliver = useServerFn(deliverSale)
   const [customerName, setCustomerName] = useState('')
   const [customerPhone, setCustomerPhone] = useState('')
   const [status, setStatus] = useState<SaleStatus>('draft')
+  const [locationId, setLocationId] = useState('')
+  const [reportedAmount, setReportedAmount] = useState('')
+  const [adjustmentKind, setAdjustmentKind] = useState<
+    'none' | 'discount' | 'combo' | 'gift' | 'manual_adjustment'
+  >('none')
+  const [adjustmentReason, setAdjustmentReason] = useState('')
   const [notes, setNotes] = useState('')
   const [items, setItems] = useState<Item[]>([emptyItem()])
   const [message, setMessage] = useState<string | null>(null)
   const [saving, setSaving] = useState(false)
   const [cancellingId, setCancellingId] = useState<number | null>(null)
   const [cancelReason, setCancelReason] = useState('')
+  const [cancelledOn, setCancelledOn] = useState(today)
   const [cancelConfirmed, setCancelConfirmed] = useState(false)
+  const [deliveringId, setDeliveringId] = useState<number | null>(null)
+  const [deliveredOn, setDeliveredOn] = useState(today)
+  const [deliveryConfirmed, setDeliveryConfirmed] = useState(false)
   const [clientReady, setClientReady] = useState(false)
   useEffect(() => {
     setClientReady(true)
@@ -104,6 +145,7 @@ function SalesPage() {
   async function submitCancellation(saleId: number) {
     const validation = validateLifecycleForm('cancel', {
       saleId,
+      occurredOn: cancelledOn,
       reason: cancelReason,
     })
     if (!validation.ok) {
@@ -121,6 +163,7 @@ function SalesPage() {
       setMessage('Venda cancelada; o estoque e o custo foram estornados.')
       setCancellingId(null)
       setCancelReason('')
+      setCancelledOn(today())
       setCancelConfirmed(false)
       await router.invalidate()
     } catch (error) {
@@ -129,11 +172,43 @@ function SalesPage() {
       setSaving(false)
     }
   }
+  async function submitDelivery(saleId: number) {
+    if (!deliveryConfirmed) {
+      setMessage(
+        'Confirme a entrega antes de registrar a receita por competência.',
+      )
+      return
+    }
+    setSaving(true)
+    setMessage(null)
+    try {
+      await deliver({ data: { saleId, deliveredOn } })
+      setMessage(
+        'Entrega registrada; a receita foi reconhecida no período informado.',
+      )
+      setDeliveringId(null)
+      setDeliveredOn(today())
+      setDeliveryConfirmed(false)
+      await router.invalidate()
+    } catch (error) {
+      setMessage(
+        error instanceof Error
+          ? error.message
+          : 'Não foi possível registrar a entrega.',
+      )
+    } finally {
+      setSaving(false)
+    }
+  }
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    if (items.some((item) => !item.productId || !item.quantity)) {
+    if (
+      !locationId ||
+      !reportedAmount ||
+      items.some((item) => !item.productId || !item.quantity)
+    ) {
       setMessage(
-        'Selecione o produto e informe a quantidade em todos os itens.',
+        'Selecione o local, informe o faturamento recebido e complete todos os itens.',
       )
       return
     }
@@ -143,9 +218,13 @@ function SalesPage() {
       await save({
         data: {
           idempotencyKey,
+          locationId: Number(locationId),
           customerName,
           customerPhone,
           status,
+          reportedAmount,
+          adjustmentKind,
+          adjustmentReason,
           notes,
           items: items.map((item) => ({
             productId: Number(item.productId),
@@ -157,6 +236,10 @@ function SalesPage() {
       setCustomerPhone('')
       setNotes('')
       setStatus('draft')
+      setLocationId('')
+      setReportedAmount('')
+      setAdjustmentKind('none')
+      setAdjustmentReason('')
       setItems([emptyItem()])
       setIdempotencyKey(crypto.randomUUID())
       setMessage(
@@ -214,6 +297,8 @@ function SalesPage() {
                       )
                         ? (selectedStatus as SaleStatus)
                         : undefined,
+                      locationId: Number(form.get('locationId')) || undefined,
+                      productId: Number(form.get('productId')) || undefined,
                       start: String(form.get('start') ?? '') || undefined,
                       end: String(form.get('end') ?? '') || undefined,
                       page: 1,
@@ -255,6 +340,36 @@ function SalesPage() {
                   />
                 </label>
                 <label className="text-xs font-bold text-[#573524]">
+                  Local/canal
+                  <select
+                    className="field mt-1 block"
+                    name="locationId"
+                    defaultValue={search.locationId ?? ''}
+                  >
+                    <option value="">Todos</option>
+                    {locations.map((location) => (
+                      <option key={location.id} value={location.id}>
+                        {location.name}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <label className="text-xs font-bold text-[#573524]">
+                  Produto
+                  <select
+                    className="field mt-1 block"
+                    name="productId"
+                    defaultValue={search.productId ?? ''}
+                  >
+                    <option value="">Todos</option>
+                    {products.map((product) => (
+                      <option key={product.id} value={product.id}>
+                        {product.name}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <label className="text-xs font-bold text-[#573524]">
                   Até
                   <input
                     className="field mt-1 block"
@@ -266,7 +381,12 @@ function SalesPage() {
                 <button className="rounded-lg border border-[#4a2114] px-3 py-2 text-xs font-bold text-[#4a2114]">
                   Filtrar
                 </button>
-                {search.query || search.status || search.start || search.end ? (
+                {search.query ||
+                search.status ||
+                search.locationId ||
+                search.productId ||
+                search.start ||
+                search.end ? (
                   <button
                     type="button"
                     className="px-2 py-2 text-xs font-bold text-[#75411f]"
@@ -289,8 +409,22 @@ function SalesPage() {
                         </p>
                         <p className="mt-1 text-xs text-[#896d5b]">
                           {statusLabels[sale.status]} ·{' '}
-                          {formatDateTime(sale.soldAt)}
+                          {formatDateTime(sale.soldAt)} ·{' '}
+                          {sale.locationName ?? 'local não informado'}
                         </p>
+                        {sale.deliveredAt ? (
+                          <p className="mt-1 text-xs text-[#315a31]">
+                            Entregue em {formatDateTime(sale.deliveredAt)}
+                          </p>
+                        ) : null}
+                        {sale.auditStatus ? (
+                          <p className="mt-1 text-xs text-[#896d5b]">
+                            Auditoria: {auditStatusLabel(sale.auditStatus)}
+                            {sale.reportedAmount && sale.calculatedAmount
+                              ? ` · informado ${currency.format(Number(sale.reportedAmount))} · calculado ${currency.format(Number(sale.calculatedAmount))}`
+                              : ''}
+                          </p>
+                        ) : null}
                       </div>
                       <div className="text-right">
                         <strong>
@@ -303,11 +437,29 @@ function SalesPage() {
                             onClick={() => {
                               setCancellingId(sale.id)
                               setCancelReason('')
+                              setCancelledOn(today())
                               setCancelConfirmed(false)
                             }}
                             className="mt-2 block text-xs font-bold text-[#a64f23] disabled:opacity-60"
                           >
                             Cancelar / estornar
+                          </button>
+                        ) : null}
+                        {canDeliverSales &&
+                        !sale.deliveredAt &&
+                        (sale.status === 'confirmed' ||
+                          sale.status === 'paid') ? (
+                          <button
+                            type="button"
+                            disabled={saving}
+                            onClick={() => {
+                              setDeliveringId(sale.id)
+                              setDeliveredOn(today())
+                              setDeliveryConfirmed(false)
+                            }}
+                            className="mt-2 block text-xs font-bold text-[#315a31] disabled:opacity-60"
+                          >
+                            Registrar entrega
                           </button>
                         ) : null}
                       </div>
@@ -318,6 +470,12 @@ function SalesPage() {
                             value={cancelReason}
                             onChange={setCancelReason}
                           />
+                          <Input
+                            label="Data do cancelamento/estorno"
+                            type="date"
+                            value={cancelledOn}
+                            onChange={setCancelledOn}
+                          />
                           <label className="mt-2 flex gap-2 text-xs">
                             <input
                               type="checkbox"
@@ -326,7 +484,8 @@ function SalesPage() {
                                 setCancelConfirmed(event.target.checked)
                               }
                             />{' '}
-                            Confirmo o estorno de estoque e CMV.
+                            Confirmo o estorno de estoque, CMV e, quando a venda
+                            estiver paga, do caixa.
                           </label>
                           <div className="mt-3 flex gap-2">
                             <button
@@ -349,6 +508,45 @@ function SalesPage() {
                               type="button"
                               disabled={saving}
                               onClick={() => setCancellingId(null)}
+                              className="text-xs font-bold"
+                            >
+                              Fechar
+                            </button>
+                          </div>
+                        </div>
+                      ) : null}
+                      {deliveringId === sale.id ? (
+                        <div className="basis-full rounded-lg bg-[#eef8ed] p-3 text-left">
+                          <Input
+                            label="Data da entrega"
+                            type="date"
+                            value={deliveredOn}
+                            onChange={setDeliveredOn}
+                          />
+                          <label className="mt-2 flex gap-2 text-xs">
+                            <input
+                              type="checkbox"
+                              checked={deliveryConfirmed}
+                              onChange={(event) =>
+                                setDeliveryConfirmed(event.target.checked)
+                              }
+                            />{' '}
+                            Confirmo a entrega. A receita será reconhecida por
+                            competência nesta data; caixa permanece separado.
+                          </label>
+                          <div className="mt-3 flex gap-2">
+                            <button
+                              type="button"
+                              disabled={saving || !deliveryConfirmed}
+                              onClick={() => submitDelivery(sale.id)}
+                              className="rounded bg-[#315a31] px-3 py-2 text-xs font-bold text-white disabled:opacity-60"
+                            >
+                              {saving ? 'Registrando...' : 'Confirmar entrega'}
+                            </button>
+                            <button
+                              type="button"
+                              disabled={saving}
+                              onClick={() => setDeliveringId(null)}
                               className="text-xs font-bold"
                             >
                               Fechar
@@ -424,6 +622,22 @@ function SalesPage() {
             onChange={setCustomerPhone}
           />
           <label className="block text-sm font-bold text-[#573524]">
+            Local ou canal
+            <select
+              value={locationId}
+              onChange={(event) => setLocationId(event.target.value)}
+              className="field mt-1.5"
+              required
+            >
+              <option value="">Selecione</option>
+              {locations.map((location) => (
+                <option value={location.id} key={location.id}>
+                  {location.name}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className="block text-sm font-bold text-[#573524]">
             Status
             <select
               value={status}
@@ -492,6 +706,41 @@ function SalesPage() {
             <Plus size={16} />
             Adicionar item
           </button>
+          <Input
+            label="Faturamento recebido"
+            value={reportedAmount}
+            onChange={setReportedAmount}
+            placeholder="Ex.: 120,00"
+            inputMode="decimal"
+            required
+          />
+          <label className="block text-sm font-bold text-[#573524]">
+            Motivo da diferença
+            <select
+              value={adjustmentKind}
+              onChange={(event) =>
+                setAdjustmentKind(event.target.value as typeof adjustmentKind)
+              }
+              className="field mt-1.5"
+            >
+              <option value="none">Sem ajuste</option>
+              <option value="discount">Desconto</option>
+              <option value="combo">Combo</option>
+              <option value="gift">Brinde</option>
+              <option value="manual_adjustment">Ajuste manual</option>
+            </select>
+          </label>
+          {adjustmentKind !== 'none' ? (
+            <label className="block text-sm font-bold text-[#573524]">
+              Justificativa do ajuste
+              <textarea
+                className="field mt-1.5 min-h-20"
+                value={adjustmentReason}
+                onChange={(event) => setAdjustmentReason(event.target.value)}
+                required
+              />
+            </label>
+          ) : null}
           <label className="block text-sm font-bold text-[#573524]">
             Observações
             <textarea
@@ -578,3 +827,10 @@ const currency = new Intl.NumberFormat('pt-BR', {
   style: 'currency',
   currency: 'BRL',
 })
+
+function auditStatusLabel(value: string) {
+  if (value === 'normal') return 'normal'
+  if (value === 'attention') return 'atenção'
+  if (value === 'critical') return 'crítico'
+  return 'não classificada'
+}

@@ -93,36 +93,55 @@ final por Server Function continuam sujeitos aos gates de `HUMAN-APPROVALS.md`.
 - [x] Estrutura FIFO criada.
 - [x] Homologação FIFO G6–G9 documentada.
 - [x] Lifecycle e testes principais existentes.
-- [ ] Definir regra canônica de CMV realizado por venda.
-- [ ] Decidir vínculo entre venda e camada/lote quando necessário para margem realizada.
-- [ ] Implementar margem por produto de forma auditável.
-- [ ] Implementar margem por período/canal/parceiro quando os dados suportarem.
+- [x] Definir regra canônica de CMV realizado por venda.
+- [x] Decidir vínculo entre venda e camada/lote quando necessário para margem realizada.
+- [x] Implementar margem por produto de forma auditável.
+- [x] Implementar margem por período/canal; parceiro aguarda fonte de dados.
 - [ ] Criar reconciliação automatizada de estoque x FIFO x CMV.
 - [ ] Criar relatório de divergências sem correção automática.
-- [ ] Documentar estratégia de reversão/cancelamento de venda no FIFO.
+- [x] Documentar estratégia de reversão/cancelamento de venda no FIFO.
 
 ### Gate
 
-A definição de margem realizada e vínculo venda-lote é decisão de negócio/contabilidade e exige validação humana.
+A política G2 foi aprovada pelo Dono em 11 de setembro de 2026. A aplicação das
+migrations, o backfill do histórico e a homologação financeira continuam gates
+separados; nenhuma dessas ações externas foi autorizada nesta missão.
 
 ## Fase G3 — Dashboard e gestão
+
+A matriz detalhada workbook × sistema está em
+[`WORKBOOK-SYSTEM-PARITY.md`](./WORKBOOK-SYSTEM-PARITY.md).
 
 - [x] Dashboard operacional inicial.
 - [x] Relatórios básicos por período.
 - [ ] KPIs de faturamento e volume com comparação temporal.
-- [ ] Ticket médio.
+- [~] Ticket médio, preço médio, unidades e divergência de receita
+  implementados localmente; aguardam migrations/homologação.
 - [ ] Produtos e sabores mais vendidos, conforme modelo disponível.
 - [ ] CMV e margem quando G2 estiver fechado.
-- [ ] Estoque crítico e cobertura estimada.
-- [ ] Produção por período e rendimento real.
+- [~] Estoque crítico por ponto de reposição implementado localmente com
+  comparação exata no estoque e dashboard, filtros e razão paginada; cobertura
+  estimada continua aguardando histórico confiável.
+- [~] Histórico de produção real por receita, status, produto e período
+  implementado localmente com paginação; rendimento realizado já é rastreado
+  nos lotes concluídos e aguarda homologação gerencial.
 - [ ] Perdas e coprodutos.
-- [ ] Parceiros/canais com desempenho.
+- [~] Parceiros/canais com receita, eventos, unidades, ticket e divergência
+  implementados localmente; margem e comparação temporal continuam pendentes.
+- [~] Parâmetros gerenciais centralizados e plano de ação humano implementados
+  localmente; migrations `0019`/`0020` não aplicadas.
+- [~] Lote de fornecedor e validade por item de compra, com rastreabilidade na
+  movimentação, implementados localmente; migration `0021` não aplicada.
+- [~] Fornecedor padrão informativo por produto/insumo implementado localmente;
+  migration `0022` não aplicada e nenhuma compra é preenchida automaticamente.
 - [~] Exportação CSV segura dos relatórios operacionais concluída localmente;
   XLSX segue fora do escopo atual e não foi apresentado como integração.
+- [~] Exibição monetária dos relatórios preserva a representação decimal exata
+  sem conversão para `Number`; aguarda homologação visual.
 - [~] Busca, filtros, paginação e estados explícitos implementados para os
-  históricos de despesas, compras e vendas, e para o catálogo; os quatro
-  pacotes foram aprovados em CI. Os demais históricos seguem como pacotes
-  separados.
+  históricos de despesas, compras, vendas, produção real e razão de estoque, e
+  para catálogo/saldos; produção e estoque passaram nos checkpoints locais
+  WP-E1/WP-F2 e aguardam homologação de interface.
 
 ## Fase G4 — WhatsApp e mensageria
 
