@@ -38,8 +38,11 @@ Server Functions protegidas, rota `/cenarios` e seis testes de cenário.
 
 ## Próxima branch e comando
 
-O merge já foi feito sem rebase ou force-push. Depois dos gates locais, abrir
-uma PR em rascunho desta branch contra `main`; não integrar automaticamente:
+O merge já foi feito sem rebase ou force-push. Os gates locais passaram: 371
+testes, lint, typecheck, Prettier direcionado, diff check e builds isolados de
+CI/HML com chave pública sintética. Abrir uma PR em rascunho desta branch contra
+`main`; não integrar automaticamente. SQL sem parser Prettier e snapshots
+Drizzle gerados ficam fora apenas da checagem de formato:
 
 ```bash
 git fetch origin --prune

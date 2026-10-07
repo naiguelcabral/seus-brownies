@@ -1,6 +1,6 @@
 # Handoff de autonomia — Cacau v1
 
-## Reconciliação WP-D com a main — em execução, 6 de outubro de 2026
+## Reconciliação WP-D com a main — pronta para revisão humana, 7 de outubro de 2026
 
 - Objetivo: reconciliar metas e cenários em
   `codex/wp-d-main-reconciliation`, validar localmente e abrir somente uma PR
@@ -18,15 +18,20 @@
   `AUTONOMY-QUEUE.md`; a versão da `main` foi escolhida como autoridade e os
   fatos WP-D serão reaplicados somente após revisão. Código, schema, CI,
   controles de ambiente e migrations não conflitaram.
-- Escopo preservado para validação: cenários versionados e auditados, mix com
+- Escopo validado: cenários versionados e auditados, mix com
   peso original e normalização exata de 103% para 100%, projeções separadas de
   realizados, RBAC server-side, ativo único, revisão otimista e migrations
-  aditivas `0027`/`0028` apenas versionadas. Testes previstos: `npm ci
---ignore-scripts`, suíte, lint, tipos, Prettier direcionado, diff check e os
-  builds isolados com chave pública sintética.
+  aditivas `0027`/`0028` apenas versionadas. `npm ci --ignore-scripts`, 371
+  testes, lint, typecheck, Prettier dos arquivos suportados, `git diff --check`
+  e os builds isolados de CI/HML com chave pública sintética passaram. SQL não
+  tem parser Prettier e snapshots Drizzle são gerados; ambos ficaram fora apenas
+  dessa checagem de formato. O aviso SSR de secrets ausentes era esperado na
+  prova isolada e nenhum `.env` foi carregado.
 - Gates externos: revisão humana da PR, aplicação autorizada das migrations em
   ambiente controlado e homologação HML de Dono, Gerente e negações por papel.
   PR #5 permanece congelada e não deve ser retargetada, fechada ou alterada.
+  A próxima ação desta missão é somente fazer push da branch e abrir PR em
+  rascunho; nenhum merge é autorizado.
 
 ## Integração controlada PR #11 — concluída, 6 de outubro de 2026
 
