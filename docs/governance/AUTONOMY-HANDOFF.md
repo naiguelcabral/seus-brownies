@@ -1,5 +1,30 @@
 # Handoff de autonomia — Cacau v1
 
+## Missão autônoma de 7 de outubro de 2026 — pacote A13
+
+- Objetivo: ampliar a reconciliação somente leitura de camadas, alocações,
+  reversões, movimentos e custo FIFO para evidenciar relações ausentes,
+  produto divergente e reversão excedente.
+- Não objetivos: corrigir dados, mudar regra de CMV/estoque, aplicar migration,
+  consultar ou escrever HML, alterar permissões ou expor nova rota.
+- Branch: `codex/auto-a13-fifo-diagnostics`, criada da `origin/main`
+  `f61e9a28df7b0fdbc80864402b578a2a0aabd3f8` com árvore limpa.
+- Arquivos previstos: `src/features/reports/inventory-reconciliation.ts`,
+  `test/inventory-reconciliation.test.ts`, este handoff e log sanitizado.
+- Aceite: relações órfãs, produto incompatível, reversão além da alocação e
+  decimal inválido produzem diagnóstico rastreável; conjunto consistente
+  continua sem divergência; nenhuma escrita ou mudança de cálculo de CMV.
+- Verificações: teste direcionado, `npm test`, lint, typecheck,
+  `build:ci-isolated` quando a branch estiver limpa, Prettier direcionado,
+  `git diff --check`, revisão de diff e guard de caminhos sensíveis.
+- Dependência externa: nenhuma. A PR #14 documental está em CI e não é base
+  desta branch; o estado da fila será reconciliado após revisão das PRs.
+- Resultado local: seis testes direcionados, 375 testes da suíte, lint e
+  typecheck passaram. O diagnóstico agora sinaliza relações ausentes, produto
+  divergente, reversões cumulativas excedentes e decimais inválidos sem
+  converter entrada malformada em zero. O relatório permanece somente leitura;
+  o build isolado será executado no commit limpo antes de publicar a PR.
+
 ## Integração controlada da PR #12 — concluída, 7 de outubro de 2026
 
 - Objetivo concluído: reconciliar metas e cenários em
