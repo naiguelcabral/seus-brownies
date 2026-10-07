@@ -1,5 +1,18 @@
 # Log sanitizado de autonomia — Cacau v1
 
+## A14 — comparação operacional local, 7 de outubro de 2026
+
+- Branch `codex/auto-a14-operational-trends` criada da `main` limpa
+  `f61e9a28df7b0fdbc80864402b578a2a0aabd3f8`, independente das PRs
+  documentais/financeiras em revisão.
+- Consulta protegida agora compara vendas confirmadas por `soldAt` com o
+  período anterior de mesma duração; UI separa explicitamente essa visão da
+  competência financeira. Diferenças preservam centavos e milésimos; ticket
+  ausente não é inventado. Nenhuma regra financeira ou dado foi alterado.
+- Quatro testes direcionados e 375 da suíte, lint e typecheck passaram.
+- `build:ci-isolated` passou com chave pública sintética no commit limpo, sem
+  deploy nem leitura de arquivos de ambiente.
+
 ## WP-D metas e cenários — 14 de setembro de 2026
 
 - G2-F1 foi publicado na branch `codex/workbook-parity` sem force push; a CI

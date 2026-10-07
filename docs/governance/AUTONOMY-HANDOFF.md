@@ -1,5 +1,32 @@
 # Handoff de autonomia — Cacau v1
 
+## Missão autônoma de 7 de outubro de 2026 — pacote A14
+
+- Objetivo: comparar faturamento confirmado, volume e ticket médio por data da
+  venda com o período anterior de mesma duração, mantendo indicadores
+  operacionais separados da receita por competência de `/financeiro`.
+- Não objetivos: mudar reconhecimento de receita, fatos financeiros, CMV,
+  estoque, RBAC, schema, HML ou exports existentes.
+- Branch: `codex/auto-a14-operational-trends`, criada da `origin/main`
+  `f61e9a28df7b0fdbc80864402b578a2a0aabd3f8`, independente das PRs #14
+  e #15.
+- Arquivos previstos: `src/features/reports/functions.ts`,
+  `src/features/reports/period-comparison.ts`, `src/routes/relatorios.tsx`,
+  teste determinístico, `PROJECT-STATUS.md`, `ROADMAP-CODEX.md` e este
+  handoff/log.
+- Aceite: período anterior inclusivo e adjacente calculado em UTC; diferenças
+  de receita e volume usam inteiros exatos; ticket sem vendas retorna ausência
+  explícita; UI rotula os valores como vendas confirmadas por data da venda.
+- Verificações: testes direcionados, suíte, lint, typecheck, build CI isolado
+  com chave pública sintética no commit limpo, Prettier, diff e guard sensível.
+- Orientação TanStack Intent de Server Functions carregada antes da edição;
+  a consulta continuará protegida pelo middleware atual.
+- Resultado local: quatro testes direcionados e 375 testes da suíte passaram;
+  lint e typecheck verdes. A comparação usa consultas do mesmo endpoint
+  protegido, com datas UTC adjacentes, diferenças exatas e ticket ausente
+  explícito. O texto da tela não atribui à G2 uma decisão ainda pendente.
+  Build CI isolado passou no commit limpo com chave pública sintética.
+
 ## Integração controlada da PR #12 — concluída, 7 de outubro de 2026
 
 - Objetivo concluído: reconciliar metas e cenários em

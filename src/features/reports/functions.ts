@@ -31,6 +31,10 @@ import {
 } from '#/features/reports/calculations'
 import { centsToMoney, moneyToCents } from '#/features/production/calculations'
 import { isMissingOptionalSchemaError } from '#/features/reports/optional-schema'
+import {
+  compareOperationalTotals,
+  previousEqualLengthPeriod,
+} from '#/features/reports/period-comparison'
 import { reconcileInventoryLedger } from '#/features/reports/inventory-reconciliation'
 import type { ReconciliationDivergence } from '#/features/reports/inventory-reconciliation'
 import { summarizeSalesMetrics } from '#/features/reports/sales-metrics'
@@ -73,6 +77,8 @@ export const getOperationalReports = createServerFn({ method: 'GET' })
     const database = getDb()
     const startAt = new Date(`${period.start}T00:00:00.000Z`)
     const until = endExclusive(period.end)
+    const previousPeriod = previousEqualLengthPeriod(period.start, period.end)
+    const previousStartAt = new Date(`${previousPeriod.start}T00:00:00.000Z`)
     const completedSale = inArray(sales.status, ['confirmed', 'paid'])
 
     const [
@@ -81,6 +87,8 @@ export const getOperationalReports = createServerFn({ method: 'GET' })
       expenseRows,
       movementRows,
       salesByProduct,
+      previousSaleMetricRows,
+      previousSaleUnitRows,
     ] = await Promise.all([
       database
         .select({
@@ -149,6 +157,36 @@ export const getOperationalReports = createServerFn({ method: 'GET' })
             completedSale,
             gte(sales.soldAt, startAt),
             lt(sales.soldAt, until),
+          ),
+        ),
+      database
+        .select({
+          saleId: sales.id,
+          locationId: sales.locationId,
+          locationName: salesLocations.name,
+          amount: sales.totalAmount,
+          reportedAmount: sales.reportedAmount,
+          calculatedAmount: sales.calculatedAmount,
+          auditStatus: sales.auditStatus,
+        })
+        .from(sales)
+        .leftJoin(salesLocations, eq(sales.locationId, salesLocations.id))
+        .where(
+          and(
+            completedSale,
+            gte(sales.soldAt, previousStartAt),
+            lt(sales.soldAt, startAt),
+          ),
+        ),
+      database
+        .select({ saleId: saleItems.saleId, quantity: saleItems.quantity })
+        .from(saleItems)
+        .innerJoin(sales, eq(saleItems.saleId, sales.id))
+        .where(
+          and(
+            completedSale,
+            gte(sales.soldAt, previousStartAt),
+            lt(sales.soldAt, startAt),
           ),
         ),
     ])
@@ -510,6 +548,17 @@ export const getOperationalReports = createServerFn({ method: 'GET' })
       })),
     )
     const salesMetrics = summarizeSalesMetrics(saleMetricRows, saleUnitRows)
+    const previousSalesMetrics = summarizeSalesMetrics(
+      previousSaleMetricRows,
+      previousSaleUnitRows,
+    )
+    const operationalComparison = {
+      previousPeriod,
+      ...compareOperationalTotals(
+        salesMetrics.total,
+        previousSalesMetrics.total,
+      ),
+    }
     const expensesByCategory = groupExpensesByCategory(expenseRows)
     const inventory = valueInventory(movementRows)
     return {
@@ -517,6 +566,7 @@ export const getOperationalReports = createServerFn({ method: 'GET' })
       revenue,
       revenueTotal: salesMetrics.total.revenue,
       salesMetrics,
+      operationalComparison,
       managementSettings: reportSettings,
       expensesByCategory,
       expensesTotal: sumReportMoney(expenseRows),

@@ -142,6 +142,84 @@ function ReportsPage() {
       </div>
       <section className="mt-6 overflow-hidden rounded-2xl border border-[#ecdfd4] bg-white">
         <div className="border-b border-[#f0e5dc] px-5 py-4">
+          <h2 className="font-bold">Comparação operacional entre períodos</h2>
+          <p className="mt-1 text-xs text-[#846859]">
+            Vendas confirmadas ou pagas pela data da venda. Período anterior de
+            mesma duração: {report.operationalComparison.previousPeriod.start} a{' '}
+            {report.operationalComparison.previousPeriod.end}. Receita por
+            competência é exibida separadamente em Financeiro.
+          </p>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[620px] text-left text-sm">
+            <thead className="bg-[#fffaf5] text-xs uppercase text-[#896d5b]">
+              <tr>
+                <th className="px-4 py-3">Indicador</th>
+                <th className="px-4 py-3 text-right">Período atual</th>
+                <th className="px-4 py-3 text-right">Anterior</th>
+                <th className="px-4 py-3 text-right">Diferença</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-[#f0e5dc]">
+              <tr>
+                <th className="px-4 py-3 font-bold">Faturamento confirmado</th>
+                <td className="px-4 py-3 text-right">
+                  {formatBrlMoney(report.operationalComparison.revenue.current)}
+                </td>
+                <td className="px-4 py-3 text-right">
+                  {formatBrlMoney(
+                    report.operationalComparison.revenue.previous,
+                  )}
+                </td>
+                <td className="px-4 py-3 text-right">
+                  {formatBrlMoney(
+                    report.operationalComparison.revenue.difference,
+                  )}
+                </td>
+              </tr>
+              <tr>
+                <th className="px-4 py-3 font-bold">Unidades vendidas</th>
+                <td className="px-4 py-3 text-right">
+                  {report.operationalComparison.units.current}
+                </td>
+                <td className="px-4 py-3 text-right">
+                  {report.operationalComparison.units.previous}
+                </td>
+                <td className="px-4 py-3 text-right">
+                  {report.operationalComparison.units.difference}
+                </td>
+              </tr>
+              <tr>
+                <th className="px-4 py-3 font-bold">Ticket médio por evento</th>
+                <td className="px-4 py-3 text-right">
+                  {report.operationalComparison.ticketAverage.current === null
+                    ? 'Sem dados'
+                    : formatBrlMoney(
+                        report.operationalComparison.ticketAverage.current,
+                      )}
+                </td>
+                <td className="px-4 py-3 text-right">
+                  {report.operationalComparison.ticketAverage.previous === null
+                    ? 'Sem dados'
+                    : formatBrlMoney(
+                        report.operationalComparison.ticketAverage.previous,
+                      )}
+                </td>
+                <td className="px-4 py-3 text-right">
+                  {report.operationalComparison.ticketAverage.difference ===
+                  null
+                    ? '—'
+                    : formatBrlMoney(
+                        report.operationalComparison.ticketAverage.difference,
+                      )}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+      <section className="mt-6 overflow-hidden rounded-2xl border border-[#ecdfd4] bg-white">
+        <div className="border-b border-[#f0e5dc] px-5 py-4">
           <h2 className="font-bold">Locais e canais no período</h2>
           <p className="mt-1 text-xs text-[#846859]">
             Receita, volume, ticket e divergência calculados a partir das vendas
@@ -203,8 +281,8 @@ function ReportsPage() {
           <strong>
             {formatBrlMoney(report.managementSettings.monthlyProfitGoal)}
           </strong>
-          . O progresso de lucro não é exibido enquanto competência, reversões e
-          margem definitiva aguardam a decisão G2.
+          . O progresso de lucro depende da aplicação e homologação dos fatos
+          financeiros G2 no ambiente operacional.
         </p>
       ) : null}
       <div className="mt-6 grid gap-6 xl:grid-cols-2">
@@ -362,8 +440,7 @@ function ReportsPage() {
         ) : (
           <p className="mt-3 text-sm text-[#846859]">
             Esta seção será liberada quando as migrations de produção real forem
-            aplicadas. Não há margem realizada por produto: o modelo ainda não
-            vincula uma venda a um lote específico.
+            aplicadas e homologadas no ambiente operacional.
           </p>
         )}
       </section>

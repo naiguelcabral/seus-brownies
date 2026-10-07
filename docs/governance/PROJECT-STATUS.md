@@ -148,6 +148,10 @@ Este documento é a referência canônica de alto nível para o estado atual do 
   respostas HTTP/JSON inválidas do Turnstile. A homologação com binding HML,
   desafio real, replay, e-mail, cookies, sessão e revogação permanece externa
   e está explicitamente separada na matriz de validação G1.
+- Uma comparação operacional local de faturamento confirmado, unidades e
+  ticket médio usa o período anterior de mesma duração em UTC e diferenças
+  decimais exatas. É baseada na data da venda e rotulada separadamente da
+  receita por competência de `/financeiro`; aguarda homologação de interface.
 - O runbook de resiliência operacional documenta backup, restauração em branch
   descartável, RPO/RTO, rollback, observabilidade e retenção. Não há estratégia
   externa configurada nem ensaio de restauração: esses são gates humanos.
