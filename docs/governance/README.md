@@ -21,6 +21,11 @@ Esta pasta contém a documentação canônica usada por humanos e agentes para d
 
 O arquivo raiz [`AGENTS.md`](../../AGENTS.md) é a porta de entrada do Codex e aponta para a governança.
 
+## Procedimentos operacionais
+
+- [`GITHUB-MCP-PERSISTENT-AUTH.md`](GITHUB-MCP-PERSISTENT-AUTH.md) — configuração,
+  verificação, rotação e início do Codex com credencial no GNOME Keyring.
+
 ## Workbook padrão de consulta
 
 A referência vigente do projeto é `Workbook_Gerenciamento_Seus_Brownies(4).xlsx` (19/08/2026), preservada como fonte histórica/de consulta.

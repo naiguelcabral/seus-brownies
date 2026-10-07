@@ -217,6 +217,10 @@ A matriz detalhada workbook × sistema está em
 - [x] Testes e documentação suficientes para iniciar governança agent-friendly.
 - [x] Etapas 1–2 preparadas: fila, handoff, log, runbook, controlador local
       seguro e `LIGARTUDO --prepare-only`, todos cobertos por testes locais.
+- [x] Launcher e setup do GitHub MCP preparados para GNOME Keyring, com
+      preflight `LIGARTUDO --codex` e checks sem exibição de credencial. O
+      Secret Service e a entrada foram confirmados pelo operador no host; o
+      lookup desta execução pode exigir repetição fora do sandbox.
 - [~] Nível 1: Codex implementa tarefa explícita e apresenta diff/checks.
 - [ ] Nível 2: após revisão humana do piloto A01–A03, Codex conclui pacote
       pequeno, cria commit local e prepara PR.

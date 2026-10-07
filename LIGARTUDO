@@ -5,11 +5,14 @@
 set -euo pipefail
 
 PREPARE_ONLY=false
+CODEX_MODE=false
 
 if [[ "${1:-}" == "--prepare-only" ]]; then
   PREPARE_ONLY=true
+elif [[ "${1:-}" == "--codex" ]]; then
+  CODEX_MODE=true
 elif [[ $# -gt 0 ]]; then
-  echo "Uso: $0 [--prepare-only]"
+  echo "Uso: $0 [--prepare-only|--codex]"
   exit 2
 fi
 
@@ -50,7 +53,7 @@ if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
     echo "⚠ Não foi possível identificar a branch atual."
     echo "O painel será iniciado com o estado local."
 
-  elif [[ "$PREPARE_ONLY" == true ]]; then
+  elif [[ "$PREPARE_ONLY" == true || "$CODEX_MODE" == true ]]; then
     echo "✓ Preflight Git concluído; atualização remota foi ignorada"
   elif ! git remote get-url origin >/dev/null 2>&1; then
     echo "⚠ O remoto origin não está configurado."
@@ -132,23 +135,46 @@ fi
 echo
 echo "Verificando MCPs do Codex..."
 
-if command -v codex >/dev/null 2>&1; then
-  CODEX_MCP_LIST="$(codex mcp list 2>/dev/null || true)"
+MCP_PREFLIGHT_OK=true
+if command -v codex >/dev/null 2>&1 && command -v python3 >/dev/null 2>&1; then
+  if MCP_REPORT="$(codex mcp list --json 2>/dev/null | python3 -c '
+import json
+import sys
 
-  for MCP in \
-    "cloudflare-docs" \
-    "cloudflare-observability" \
-    "cloudflare-builds" \
-    "neon"
-  do
-    if grep -q "$MCP" <<< "$CODEX_MCP_LIST"; then
-      echo "✓ $MCP disponível no Codex"
-    else
-      echo "⚠ $MCP não encontrado no Codex"
-    fi
-  done
+required = (
+    "github", "neon", "cloudflare-api", "cloudflare-docs",
+    "cloudflare-observability", "cloudflare-builds", "openaiDeveloperDocs",
+)
+try:
+    servers = {item["name"]: item for item in json.load(sys.stdin)}
+except (ValueError, KeyError, TypeError):
+    sys.exit(1)
+missing = False
+for name in required:
+    if servers.get(name, {}).get("enabled") is True:
+        print(f"✓ {name} disponível no Codex")
+    else:
+        print(f"⚠ {name} não encontrado no Codex")
+        missing = True
+print("ℹ cloudflare-bindings OPTIONAL / NON_BLOCKING")
+sys.exit(1 if missing else 0)
+')"; then
+    echo "$MCP_REPORT"
+  else
+    echo "$MCP_REPORT"
+    echo "⚠ Não foi possível validar todos os MCPs do Codex"
+    MCP_PREFLIGHT_OK=false
+  fi
 else
-  echo "⚠ Codex CLI não encontrado neste terminal"
+  echo "⚠ Codex CLI ou Python 3 não encontrado neste terminal"
+  MCP_PREFLIGHT_OK=false
+fi
+
+if "$ROOT_DIR/scripts/codex/setup-github-mcp-credential.sh" --check >/dev/null 2>&1; then
+  echo "✓ GitHub PAT disponível no keyring"
+else
+  echo "⚠ GitHub PAT não disponível no keyring"
+  MCP_PREFLIGHT_OK=false
 fi
 
 # 7. O modo de preparação termina aqui; ele nunca inicia o servidor.
@@ -156,6 +182,14 @@ if [[ "$PREPARE_ONLY" == true ]]; then
   echo
   echo "✓ Preparação local concluída; servidor não iniciado (--prepare-only)."
   exit 0
+fi
+
+if [[ "$CODEX_MODE" == true ]]; then
+  if [[ "$MCP_PREFLIGHT_OK" != true ]]; then
+    echo "Preflight MCP incompleto; Codex não iniciado." >&2
+    exit 1
+  fi
+  exec "$ROOT_DIR/scripts/codex/start-codex.sh"
 fi
 
 echo "ℹ Para registrar comandos e saídas desta sessão, execute separadamente:"
