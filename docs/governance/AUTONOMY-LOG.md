@@ -1,5 +1,17 @@
 # Log sanitizado de autonomia — Cacau v1
 
+## A15 — top produtos local, 7 de outubro de 2026
+
+- Branch `codex/auto-a15-top-products` criada da `main` limpa
+  `f61e9a28df7b0fdbc80864402b578a2a0aabd3f8`, sem empilhar PRs.
+- Ranking por unidades com ID de catálogo, nome atual e grupo histórico sem
+  vínculo; desempate estável, limite dez e inteiros exatos. Sabor não existe
+  como campo canônico e permaneceu pendente, sem inferência de nomes.
+- 16 testes direcionados e 373 da suíte, lint e typecheck passaram. Nenhum
+  dado, migration ou ambiente compartilhado foi alterado.
+- `build:ci-isolated` passou com chave pública sintética no commit limpo, sem
+  deploy ou leitura de arquivos de ambiente.
+
 ## WP-D metas e cenários — 14 de setembro de 2026
 
 - G2-F1 foi publicado na branch `codex/workbook-parity` sem force push; a CI

@@ -24,6 +24,7 @@ import {
   groupExpensesByCategory,
   groupRevenueByChannel,
   groupSalesByProduct,
+  rankProductsByUnits,
   sumReportMoney,
   summarizeFifoMargins,
   valueFifoLayers,
@@ -135,7 +136,9 @@ export const getOperationalReports = createServerFn({ method: 'GET' })
         .where(lt(stockMovements.occurredAt, until)),
       database
         .select({
+          productId: saleItems.productId,
           productName: saleItems.productName,
+          catalogName: products.name,
           quantity: saleItems.quantity,
           amount:
             sql<string>`coalesce(${saleItems.reportedAmount}, ${saleItems.totalAmount})`.as(
@@ -144,6 +147,7 @@ export const getOperationalReports = createServerFn({ method: 'GET' })
         })
         .from(saleItems)
         .innerJoin(sales, eq(saleItems.saleId, sales.id))
+        .leftJoin(products, eq(saleItems.productId, products.id))
         .where(
           and(
             completedSale,
@@ -525,6 +529,7 @@ export const getOperationalReports = createServerFn({ method: 'GET' })
         inventory.map((item) => ({ amount: item.value })),
       ),
       salesByProduct: groupSalesByProduct(salesByProduct),
+      topProducts: rankProductsByUnits(salesByProduct),
       production,
       fifo,
       reconciliation,
