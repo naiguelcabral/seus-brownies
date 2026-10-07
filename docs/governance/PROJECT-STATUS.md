@@ -121,17 +121,18 @@ Este documento é a referência canônica de alto nível para o estado atual do 
   #5 permanecem abertas e inalteradas. A próxima tarefa é criar
   `codex/wp-d-main-reconciliation` da `main` atualizada para uma nova PR WP-D
   em rascunho.
-- A reconciliação WP-D foi concluída localmente em
-  `codex/wp-d-main-reconciliation`, criada da `main`
-  `51f9657938d2b168c963341c6246a625514dd8a8`. A origem congelada
+- A reconciliação WP-D foi concluída e integrada pela PR #12. A branch
+  `codex/wp-d-main-reconciliation` foi criada da `main`
+  `51f9657938d2b168c963341c6246a625514dd8a8`; a origem congelada
   `codex/wp-d-scenarios` (`c54f65bfa49607793b4d5e5eec7369585e42c6d3`) foi
-  incorporada pelo merge commit `f155b94`; os conflitos foram exclusivamente
-  documentais e a `main` foi preservada como autoridade. A suíte passou com
-  371 testes, lint, typecheck, Prettier direcionado, diff check e os builds
-  isolados de CI/HML com chave pública sintética. Nenhuma migration, dado,
-  ambiente ou configuração externa foi alterado. A revisão humana da PR #12 em
-  rascunho, a aplicação autorizada de `0027`/`0028` e a homologação HML seguem
-  pendentes.
+  incorporada pelo merge de reconciliação `f155b94`. O merge commit da PR em
+  `main` é `4590ca4e235f540d6552ab499e1140434355ce1f`; a CI pós-merge
+  `37671827440` aprovou instalação, testes, lint, typecheck e
+  `build:ci-isolated`. Os conflitos de reconciliação foram exclusivamente
+  documentais e a `main` foi preservada como autoridade. As migrations
+  `0027`/`0028` continuam somente versionadas, sem aplicação. A homologação
+  HML de Dono, Gerente, Funcionário e negações por papel permanece pendente;
+  requer autorização humana e navegador antes de uso operacional.
 - A CI `34278599814` também passou no checkpoint publicado mais recente, com
   suíte, lint, typecheck e build HML isolado. A análise completa de dependências
   de 5 de outubro encontrou 16 vulnerabilidades (sete altas); ao omitir

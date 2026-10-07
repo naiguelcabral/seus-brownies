@@ -1,6 +1,7 @@
 # Plano de reconciliação WP-D após a paridade
 
-Atualizado em 6 de outubro de 2026. A reconciliação está em execução na branch
+Atualizado em 7 de outubro de 2026. A reconciliação foi integrada pela PR #12
+no merge commit `4590ca4e235f540d6552ab499e1140434355ce1f`. A branch
 `codex/wp-d-main-reconciliation`, criada da `main`
 `51f9657938d2b168c963341c6246a625514dd8a8`. A origem congelada continua
 `origin/codex/wp-d-scenarios` (`c54f65bfa49607793b4d5e5eec7369585e42c6d3`);
@@ -38,11 +39,12 @@ Server Functions protegidas, rota `/cenarios` e seis testes de cenário.
 
 ## Próxima branch e comando
 
-O merge já foi feito sem rebase ou force-push. Os gates locais passaram: 371
-testes, lint, typecheck, Prettier direcionado, diff check e builds isolados de
-CI/HML com chave pública sintética. A PR #12 foi aberta em rascunho contra
-`main`; não integrar automaticamente. SQL sem parser Prettier e snapshots
-Drizzle gerados ficam fora apenas da checagem de formato:
+O merge foi feito sem rebase ou force-push e preservou a branch de origem. Os
+gates locais passaram: 371 testes, lint, typecheck, Prettier direcionado, diff
+check e builds isolados de CI/HML com chave pública sintética. A CI pós-merge
+da `main` (`37671827440`) aprovou testes, lint, typecheck e o build isolado
+apropriado. SQL sem parser Prettier e snapshots Drizzle gerados ficam fora
+apenas da checagem de formato:
 
 ```bash
 git fetch origin --prune
@@ -50,9 +52,9 @@ git worktree add -b codex/wp-d-main-reconciliation /tmp/cacau-wp-d-main-reconcil
 git -C /tmp/cacau-wp-d-main-reconciliation merge --no-edit origin/codex/wp-d-scenarios
 ```
 
-As migrations `0027` e `0028` serão somente versionadas e revisadas; nunca
-aplicadas nesta preparação. Antes de abrir a PR resultante, confirmar
-conflitos, migrations, autorização, financeiro, reconciliação e a suíte
-completa. Homologação HML, aplicação de schema e decisões de negócio permanecem
-gates humanos. A PR #5 permanece congelada e não deve ser retargetada, fechada
-ou alterada.
+As migrations `0027` e `0028` permanecem somente versionadas e revisadas;
+não foram aplicadas. O próximo gate humano é autorizar aplicação em HML com
+backup, janela e rollback, seguida da homologação por navegador de Dono,
+Gerente, Funcionário e negações por papel. Decisões de negócio permanecem
+humanas. A PR #5 permanece congelada e não deve ser retargetada, fechada ou
+alterada.

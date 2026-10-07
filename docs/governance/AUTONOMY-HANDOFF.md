@@ -1,12 +1,11 @@
 # Handoff de autonomia — Cacau v1
 
-## Reconciliação WP-D com a main — pronta para revisão humana, 7 de outubro de 2026
+## Integração controlada da PR #12 — concluída, 7 de outubro de 2026
 
-- Objetivo: reconciliar metas e cenários em
-  `codex/wp-d-main-reconciliation`, validar localmente e abrir somente uma PR
-  em rascunho para revisão humana. Não integrar PR, aplicar migrations,
-  escrever em banco, fazer deploy ou tocar em `.env`, secrets, Cloudflare ou
-  Neon.
+- Objetivo concluído: reconciliar metas e cenários em
+  `codex/wp-d-main-reconciliation`, validar, retirar o rascunho e integrar a
+  PR #12 por merge commit, sem aplicar migrations, escrever em banco, fazer
+  deploy ou tocar em `.env`, secrets, Cloudflare ou Neon.
 - Base confirmada: `origin/main`
   `51f9657938d2b168c963341c6246a625514dd8a8`; origem congelada:
   `origin/codex/wp-d-scenarios`
@@ -27,11 +26,14 @@
   tem parser Prettier e snapshots Drizzle são gerados; ambos ficaram fora apenas
   dessa checagem de formato. O aviso SSR de secrets ausentes era esperado na
   prova isolada e nenhum `.env` foi carregado.
-- Gates externos: revisão humana da PR, aplicação autorizada das migrations em
-  ambiente controlado e homologação HML de Dono, Gerente e negações por papel.
-  PR #5 permanece congelada e não deve ser retargetada, fechada ou alterada.
-  A PR #12 está em rascunho contra `main`, no SHA
-  `330422b47631e6ec14441fb6a42605b2d8c4b9d2`; nenhum merge é autorizado.
+- A PR #12 foi integrada pelo merge commit
+  `4590ca4e235f540d6552ab499e1140434355ce1f`; a CI pós-merge da `main`
+  (`37671827440`) aprovou `npm ci`, testes, lint, typecheck e
+  `build:ci-isolated`. A branch de origem foi preservada.
+- Gates externos remanescentes: autorizar aplicação de `0027`/`0028` somente
+  em HML controlada, com backup, janela e rollback; depois homologar por
+  navegador Dono, Gerente, Funcionário e negações por papel. PR #5 permanece
+  congelada e não deve ser retargetada, fechada ou alterada.
 
 ## Integração controlada PR #11 — concluída, 6 de outubro de 2026
 
