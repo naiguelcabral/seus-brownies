@@ -129,7 +129,7 @@ Este documento é a referência canônica de alto nível para o estado atual do 
   documentais e a `main` foi preservada como autoridade. A suíte passou com
   371 testes, lint, typecheck, Prettier direcionado, diff check e os builds
   isolados de CI/HML com chave pública sintética. Nenhuma migration, dado,
-  ambiente ou configuração externa foi alterado. A revisão humana da PR em
+  ambiente ou configuração externa foi alterado. A revisão humana da PR #12 em
   rascunho, a aplicação autorizada de `0027`/`0028` e a homologação HML seguem
   pendentes.
 - A CI `34278599814` também passou no checkpoint publicado mais recente, com

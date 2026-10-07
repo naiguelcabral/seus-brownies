@@ -30,8 +30,8 @@
 - Gates externos: revisão humana da PR, aplicação autorizada das migrations em
   ambiente controlado e homologação HML de Dono, Gerente e negações por papel.
   PR #5 permanece congelada e não deve ser retargetada, fechada ou alterada.
-  A próxima ação desta missão é somente fazer push da branch e abrir PR em
-  rascunho; nenhum merge é autorizado.
+  A PR #12 está em rascunho contra `main`, no SHA
+  `330422b47631e6ec14441fb6a42605b2d8c4b9d2`; nenhum merge é autorizado.
 
 ## Integração controlada PR #11 — concluída, 6 de outubro de 2026
 

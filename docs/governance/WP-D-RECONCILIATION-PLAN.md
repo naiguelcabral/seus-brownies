@@ -40,7 +40,7 @@ Server Functions protegidas, rota `/cenarios` e seis testes de cenário.
 
 O merge já foi feito sem rebase ou force-push. Os gates locais passaram: 371
 testes, lint, typecheck, Prettier direcionado, diff check e builds isolados de
-CI/HML com chave pública sintética. Abrir uma PR em rascunho desta branch contra
+CI/HML com chave pública sintética. A PR #12 foi aberta em rascunho contra
 `main`; não integrar automaticamente. SQL sem parser Prettier e snapshots
 Drizzle gerados ficam fora apenas da checagem de formato:
 
