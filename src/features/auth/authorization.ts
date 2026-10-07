@@ -34,6 +34,8 @@ export const permissions = [
   'financial:compensation:write',
   'financial:period:close',
   'financial:period:correct',
+  'scenarios:read',
+  'scenarios:write',
   'access:manage',
 ] as const
 
@@ -41,7 +43,11 @@ export type Permission = (typeof permissions)[number]
 
 const allPermissions = new Set<Permission>(permissions)
 const legacyAdminPermissions = new Set<Permission>(
-  permissions.filter((permission) => permission !== 'financial:period:correct'),
+  permissions.filter(
+    (permission) =>
+      permission !== 'financial:period:correct' &&
+      permission !== 'scenarios:write',
+  ),
 )
 
 /**
@@ -71,6 +77,7 @@ const rolePermissions: Readonly<Record<AppRole, ReadonlySet<Permission>>> = {
     'reports:financial:read',
     'dashboard:read',
     'financial:compensation:write',
+    'scenarios:read',
   ]),
   production: new Set([
     'catalog:read',

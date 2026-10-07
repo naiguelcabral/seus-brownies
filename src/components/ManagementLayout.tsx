@@ -12,6 +12,7 @@ import {
   Settings,
   ShoppingBag,
   Tags,
+  Target,
   Wallet,
 } from 'lucide-react'
 import { Link, getRouteApi, useRouter } from '@tanstack/react-router'
@@ -91,6 +92,12 @@ const navigation = [
     label: 'Financeiro',
     icon: Landmark,
     permission: 'reports:financial:read',
+  },
+  {
+    to: '/cenarios',
+    label: 'Metas e cenários',
+    icon: Target,
+    permission: 'scenarios:read',
   },
   {
     to: '/parametros',
