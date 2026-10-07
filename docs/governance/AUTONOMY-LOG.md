@@ -9,7 +9,9 @@
   decimal inválido sem expor o valor original. Nenhuma regra de CMV ou escrita
   de banco foi modificada.
 - Seis testes direcionados e 375 testes da suíte passaram; lint e typecheck
-  verdes. Build CI isolado reservado ao commit com árvore limpa.
+  verdes. O build CI isolado recusou corretamente a ausência de site key e
+  passou no commit limpo com a chave pública sintética documentada; nenhum
+  secret ou arquivo de ambiente foi carregado.
 
 ## WP-D metas e cenários — 14 de setembro de 2026
 

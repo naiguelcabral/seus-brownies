@@ -23,7 +23,8 @@
   typecheck passaram. O diagnóstico agora sinaliza relações ausentes, produto
   divergente, reversões cumulativas excedentes e decimais inválidos sem
   converter entrada malformada em zero. O relatório permanece somente leitura;
-  o build isolado será executado no commit limpo antes de publicar a PR.
+  `build:ci-isolated` passou no commit limpo com chave pública sintética. A
+  primeira tentativa sem chave falhou fechada conforme o contrato do script.
 
 ## Integração controlada da PR #12 — concluída, 7 de outubro de 2026
 
