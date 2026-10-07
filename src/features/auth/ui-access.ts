@@ -13,6 +13,7 @@ const routePermissions: Readonly<Partial<Record<string, Permission>>> = {
   '/despesas': 'expenses:read',
   '/relatorios': 'reports:financial:read',
   '/financeiro': 'reports:financial:read',
+  '/cenarios': 'scenarios:read',
   '/parametros': 'access:manage',
   '/plano-de-acao': 'access:manage',
   '/fifo-migration-audit': 'fifo:audit:read',

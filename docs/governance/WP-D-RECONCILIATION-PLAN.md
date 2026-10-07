@@ -1,15 +1,14 @@
 # Plano de reconciliação WP-D após a paridade
 
-Atualizado em 6 de outubro de 2026. Esta é uma preparação técnica somente de
-leitura; WP-D será reconciliado em uma nova branch criada da `main` após a
-integração da PR #11. Não abre PR duplicada nem modifica a PR #5
-(`codex/wp-d-scenarios`, `c54f65b`).
+Atualizado em 6 de outubro de 2026. A reconciliação está em execução na branch
+`codex/wp-d-main-reconciliation`, criada da `main`
+`51f9657938d2b168c963341c6246a625514dd8a8`. A origem congelada continua
+`origin/codex/wp-d-scenarios` (`c54f65bfa49607793b4d5e5eec7369585e42c6d3`);
+ela foi incorporada sem rebase pelo merge `f155b94`. A PR #5 não é modificada.
 
 ## Base comparada
 
-A comparação foi feita entre `origin/codex/wp-d-scenarios` e a nova branch
-`codex/workbook-parity-main-reconciliation`, que parte da ponta da PR #4
-(`e53d42d`) e incorporou `origin/main` por merge. WP-D acrescenta as
+A comparação agora é entre a origem congelada e a `main` pós-PR #11. WP-D acrescenta as
 migrations aditivas `0027` e `0028`, as tabelas de cenário/mix/histórico,
 Server Functions protegidas, rota `/cenarios` e seis testes de cenário.
 
@@ -31,7 +30,7 @@ Server Functions protegidas, rota `/cenarios` e seis testes de cenário.
 
 | Área                                 | Situação prevista                                             | Ação na retomada                                                                                                |
 | ------------------------------------ | ------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
-| Documentação de governança           | conflito provável por checkpoints posteriores da main         | preservar G1, CI, handoff e guard da main; reaplicar somente fatos WP-D verificados                             |
+| Documentação de governança           | conflitos ocorridos em status, handoff e fila                 | `main` preservada como autoridade; registrar somente fatos WP-D confirmados                                     |
 | `src/db/schema.ts` e journal Drizzle | soma aditiva após `0026`; risco de contexto se a main avançar | confirmar que `0027`/`0028` vêm imediatamente após a migração já integrada; nunca renumerar/aplicar             |
 | autorização, navegação e route tree  | alterações paralelas em políticas e links                     | manter a matriz RBAC atual da main e garantir que `/cenarios` continue protegido no servidor e na UI            |
 | relatórios/financeiro                | WP-D consome contratos G2, não deve reimplementar fatos       | preservar entrega, competência, caixa, CMV e reconciliação já integrados; testar realizado e projeção separados |
@@ -39,9 +38,11 @@ Server Functions protegidas, rota `/cenarios` e seis testes de cenário.
 
 ## Próxima branch e comando
 
-Somente depois da integração da PR #11 e dos gates humanos aplicáveis, criar
-`codex/wp-d-main-reconciliation` a partir da `main` atualizada e mesclar a
-origem `origin/codex/wp-d-scenarios` sem rebase ou force-push:
+O merge já foi feito sem rebase ou force-push. Os gates locais passaram: 371
+testes, lint, typecheck, Prettier direcionado, diff check e builds isolados de
+CI/HML com chave pública sintética. A PR #12 foi aberta em rascunho contra
+`main`; não integrar automaticamente. SQL sem parser Prettier e snapshots
+Drizzle gerados ficam fora apenas da checagem de formato:
 
 ```bash
 git fetch origin --prune

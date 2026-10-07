@@ -118,7 +118,8 @@ A matriz detalhada workbook × sistema está em
 - [~] Ticket médio, preço médio, unidades e divergência de receita
   implementados localmente; aguardam migrations/homologação.
 - [ ] Produtos e sabores mais vendidos, conforme modelo disponível.
-- [ ] CMV e margem quando G2 estiver fechado.
+- [~] CMV e margem por competência implementados localmente sobre fatos G2 e
+  FIFO; aguardam migrations e homologação integrada.
 - [~] Estoque crítico por ponto de reposição implementado localmente com
   comparação exata no estoque e dashboard, filtros e razão paginada; cobertura
   estimada continua aguardando histórico confiável.
@@ -130,6 +131,9 @@ A matriz detalhada workbook × sistema está em
   implementados localmente; margem e comparação temporal continuam pendentes.
 - [~] Parâmetros gerenciais centralizados e plano de ação humano implementados
   localmente; migrations `0019`/`0020` não aplicadas.
+- [~] Metas e cenários versionados com mix exato, lifecycle auditado,
+  projeções e comparação separada do realizado implementados localmente;
+  migrations `0027`/`0028` não aplicadas e homologação pendente.
 - [~] Lote de fornecedor e validade por item de compra, com rastreabilidade na
   movimentação, implementados localmente; migration `0021` não aplicada.
 - [~] Fornecedor padrão informativo por produto/insumo implementado localmente;
