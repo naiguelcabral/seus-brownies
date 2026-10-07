@@ -121,6 +121,14 @@ Este documento é a referência canônica de alto nível para o estado atual do 
   #5 permanecem abertas e inalteradas. A próxima tarefa é criar
   `codex/wp-d-main-reconciliation` da `main` atualizada para uma nova PR WP-D
   em rascunho.
+- A reconciliação WP-D foi iniciada em
+  `codex/wp-d-main-reconciliation`, criada da `main`
+  `51f9657938d2b168c963341c6246a625514dd8a8`. A origem congelada
+  `codex/wp-d-scenarios` (`c54f65bfa49607793b4d5e5eec7369585e42c6d3`) foi
+  incorporada pelo merge commit `f155b94`; os conflitos foram exclusivamente
+  documentais e a `main` foi preservada como autoridade. Nenhuma migration,
+  dado, ambiente ou configuração externa foi alterado; a validação e a PR em
+  rascunho ainda são pendentes.
 - A CI `34278599814` também passou no checkpoint publicado mais recente, com
   suíte, lint, typecheck e build HML isolado. A análise completa de dependências
   de 5 de outubro encontrou 16 vulnerabilidades (sete altas); ao omitir

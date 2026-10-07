@@ -1,5 +1,33 @@
 # Handoff de autonomia — Cacau v1
 
+## Reconciliação WP-D com a main — em execução, 6 de outubro de 2026
+
+- Objetivo: reconciliar metas e cenários em
+  `codex/wp-d-main-reconciliation`, validar localmente e abrir somente uma PR
+  em rascunho para revisão humana. Não integrar PR, aplicar migrations,
+  escrever em banco, fazer deploy ou tocar em `.env`, secrets, Cloudflare ou
+  Neon.
+- Base confirmada: `origin/main`
+  `51f9657938d2b168c963341c6246a625514dd8a8`; origem congelada:
+  `origin/codex/wp-d-scenarios`
+  `c54f65bfa49607793b4d5e5eec7369585e42c6d3`. A árvore principal do usuário
+  permanece suja e atrasada, por isso não foi alterada; o trabalho ocorre em
+  worktree limpo.
+- A origem foi incorporada sem rebase pelo merge commit `f155b94`. Houve
+  conflitos apenas em `PROJECT-STATUS.md`, `AUTONOMY-HANDOFF.md` e
+  `AUTONOMY-QUEUE.md`; a versão da `main` foi escolhida como autoridade e os
+  fatos WP-D serão reaplicados somente após revisão. Código, schema, CI,
+  controles de ambiente e migrations não conflitaram.
+- Escopo preservado para validação: cenários versionados e auditados, mix com
+  peso original e normalização exata de 103% para 100%, projeções separadas de
+  realizados, RBAC server-side, ativo único, revisão otimista e migrations
+  aditivas `0027`/`0028` apenas versionadas. Testes previstos: `npm ci
+--ignore-scripts`, suíte, lint, tipos, Prettier direcionado, diff check e os
+  builds isolados com chave pública sintética.
+- Gates externos: revisão humana da PR, aplicação autorizada das migrations em
+  ambiente controlado e homologação HML de Dono, Gerente e negações por papel.
+  PR #5 permanece congelada e não deve ser retargetada, fechada ou alterada.
+
 ## Integração controlada PR #11 — concluída, 6 de outubro de 2026
 
 - A `main` de partida é `968e9a93fe0c67611c8afcd47eb419203bccdcd8`, após as
