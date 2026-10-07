@@ -1,5 +1,24 @@
 # Log sanitizado de autonomia — Cacau v1
 
+## Missão autônoma — 7 de outubro de 2026
+
+- Preflight: branch inicial `codex/github-mcp-persistent-auth` limpa no SHA
+  `1922bae`; sete MCPs obrigatórios habilitados. O check do Secret Service
+  exige host no sandbox; o operador já confirmou o host e a consulta GitHub
+  MCP após o launcher funcionou.
+- PR #13: CI `37698011783` com conclusão `success`; descrição atualizada com
+  `GITHUB_MCP_AFTER_KEYRING_LAUNCH=OK`, sem valor de credencial. Aberta,
+  mergeável, não draft; merge humano pendente.
+- A12: branch `codex/auto-q1-reconcile-queue` criada da `main` limpa
+  `f61e9a28df7b0fdbc80864402b578a2a0aabd3f8`. Objetivo documental:
+  reconciliar roadmap/decisões, registrar gates e criar próximos contratos
+  locais seguros. Nenhum Neon/Cloudflare/produção ou dado compartilhado foi
+  alterado.
+- A12 concluído documentalmente: G2-CMV/A10 reclassificados após aprovação
+  humana prévia; reconciliação FIFO já existente classificada como parcial.
+  G1/HML, dependências incompatíveis e produção permaneceram em gate;
+  A13–A20 definidos como trabalho local independente.
+
 ## WP-D metas e cenários — 14 de setembro de 2026
 
 - G2-F1 foi publicado na branch `codex/workbook-parity` sem force push; a CI

@@ -97,8 +97,11 @@ final por Server Function continuam sujeitos aos gates de `HUMAN-APPROVALS.md`.
 - [x] Decidir vínculo entre venda e camada/lote quando necessário para margem realizada.
 - [x] Implementar margem por produto de forma auditável.
 - [x] Implementar margem por período/canal; parceiro aguarda fonte de dados.
-- [ ] Criar reconciliação automatizada de estoque x FIFO x CMV.
-- [ ] Criar relatório de divergências sem correção automática.
+- [~] Ampliar reconciliação automatizada de estoque x FIFO x CMV: a base
+  somente leitura já compara camadas, alocações, reversões e movimentos;
+  vínculos ausentes e entradas inválidas ainda exigem diagnóstico explícito.
+- [~] Relatório de divergências somente leitura existe em `/relatorios`;
+  ampliar a cobertura da reconciliação sem correção automática.
 - [x] Documentar estratégia de reversão/cancelamento de venda no FIFO.
 
 ### Gate
@@ -202,9 +205,10 @@ A matriz detalhada workbook × sistema está em
 - [ ] Logs estruturados.
 - [ ] Monitoramento de falhas.
 - [ ] Alertas de erro e disponibilidade.
-- [!] Revisar atualização de dependências auditadas: `npm audit` confirmou 13
-  vulnerabilidades; a correção automática de Drizzle/Wrangler exige versões
-  incompatíveis e depende de estratégia aprovada e validação completa.
+- [!] Revisar atualização de dependências auditadas: os registros de outubro
+  divergem entre 16 e 24 vulnerabilidades conforme a data/fonte; a correção
+  automática encontrou conflito de peers do Better Auth e as cadeias
+  Drizzle/Neon Auth/Wrangler exigem estratégia aprovada e validação completa.
 - [ ] Deploy definitivo somente após aprovação humana.
 
 ## Fase G8 — Autonomia progressiva do Codex
@@ -226,6 +230,10 @@ A matriz detalhada workbook × sistema está em
 - [ ] Multiagente somente após estabilidade do workflow e proteção adequada da `main`.
 
 ## Prioridade imediata
+
+Para a missão autônoma local de 7 de outubro, a classificação detalhada de
+pendências e os próximos pacotes seguros estão em `AUTONOMY-QUEUE.md`. Gates de
+HML e produção abaixo não impedem pacotes independentes locais.
 
 0. Aprovar o modelo de membership e o mapeamento histórico de tenancy descritos
    em `MULTITENANCY-ADOPTION.md` antes de gerar/aplicar migration multitenant.

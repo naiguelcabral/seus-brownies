@@ -1,7 +1,7 @@
 # Estado canônico do projeto — Cacau v1
 
-Atualizado em 6 de outubro de 2026, após revisão de código, migrations,
-testes, rotas, documentação e estado público de HML.
+Atualizado em 7 de outubro de 2026, após reconciliação da fila de autonomia
+com código, migrations, testes, rotas e decisões financeiras aprovadas.
 
 Este documento é a referência canônica de alto nível para o estado atual do sistema. Registros históricos de homologação, importação e decisões específicas permanecem válidos como evidência, mas não substituem este resumo.
 
@@ -151,6 +151,17 @@ Este documento é a referência canônica de alto nível para o estado atual do 
 - O runbook de resiliência operacional documenta backup, restauração em branch
   descartável, RPO/RTO, rollback, observabilidade e retenção. Não há estratégia
   externa configurada nem ensaio de restauração: esses são gates humanos.
+
+- A PR #13 está aberta, com CI `37698011783` verde; o operador confirmou o
+  Secret Service e a entrada no host, e a consulta GitHub MCP após lançamento
+  pelo keyring confirmou o repositório, `main` e a PR. A evidência sanitizada
+  `GITHUB_MCP_AFTER_KEYRING_LAUNCH=OK` está na descrição; o merge é humano.
+- A fila de autonomia foi reconciliada: a decisão G2 de CMV e vínculo
+  venda–camada/lote já foi aprovada e integrada localmente pela PR #11. A
+  reconciliação FIFO e o relatório de divergências existem em versão inicial,
+  mas ainda podem ampliar a detecção sem escrita. Pacotes independentes de
+  G2/G3/G6/G7/G8 foram classificados em `AUTONOMY-QUEUE.md`; migrations,
+  backfill e homologação HML continuam pendentes de autorização própria.
 
 - Rodada manual local de 7 de setembro: seis casos individuais adicionais
   de cooldown/desafio passaram; suíte de 37 arquivos e lint verdes. A07-R2

@@ -1,5 +1,30 @@
 # Handoff de autonomia — Cacau v1
 
+## Missão autônoma de 7 de outubro de 2026 — pacote A12
+
+- Objetivo: reconciliar a fila com a `main` atual, as decisões G2 aprovadas e
+  as PRs abertas, criando contratos pequenos para trabalho local seguro.
+- Não objetivos: merge, deploy, aplicação de migration, escrita HML, mudança de
+  regra financeira/estoque, RBAC ou política de sessão.
+- Branch: `codex/auto-q1-reconcile-queue`, criada da `origin/main`
+  `f61e9a28df7b0fdbc80864402b578a2a0aabd3f8` com árvore limpa.
+- Arquivos previstos: `AUTONOMY-QUEUE.md`, `ROADMAP-CODEX.md`,
+  `PROJECT-STATUS.md`, este handoff e `AUTONOMY-LOG.md`.
+- Aceite: cada pendência do roadmap recebe classificação atual, G2 aprovado
+  deixa de aparecer como decisão pendente, PR #13 e gates permanecem claros,
+  e a fila expõe pacotes locais independentes selecionáveis.
+- Verificação prevista: Prettier direcionado, `git diff --check`, revisão do
+  diff e conferência documental contra `HUMAN-APPROVALS.md` e código atual.
+- Evidência PR #13: GitHub MCP consultou repositório, `main` e PR após início
+  pelo keyring; `GITHUB_MCP_AFTER_KEYRING_LAUNCH=OK` foi registrado na
+  descrição. CI `37698011783` passou no SHA `1922bae`; PR aberta, não draft,
+  merge sujeito a humano. O check local do Secret Service exige host, já
+  confirmado pelo operador.
+- Resultado A12: fila atualizada com pendências G1–G8, distinção entre entrega
+  local e homologação, decisão G2 já aprovada e oito pacotes locais
+  independentes. Próximo pacote prioritário: A13, reconciliação FIFO sem
+  escrita, em branch nova da `main`; A12 não depende do merge da PR #13.
+
 ## Integração controlada da PR #12 — concluída, 7 de outubro de 2026
 
 - Objetivo concluído: reconciliar metas e cenários em
