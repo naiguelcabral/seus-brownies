@@ -114,7 +114,9 @@ A matriz detalhada workbook × sistema está em
 
 - [x] Dashboard operacional inicial.
 - [x] Relatórios básicos por período.
-- [ ] KPIs de faturamento e volume com comparação temporal.
+- [~] Faturamento confirmado, volume e ticket médio com comparação temporal
+  local pelo `soldAt` e período anterior de mesma duração; homologação da
+  interface permanece pendente. Receita por competência segue em `/financeiro`.
 - [~] Ticket médio, preço médio, unidades e divergência de receita
   implementados localmente; aguardam migrations/homologação.
 - [ ] Produtos e sabores mais vendidos, conforme modelo disponível.
