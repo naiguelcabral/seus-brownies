@@ -5,6 +5,10 @@ import { useServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
 
 import { ManagementLayout } from '#/components/ManagementLayout'
+import { compareOutputYield } from '#/features/production/output-yield'
+import { formatBrlMoney } from '#/lib/format-money'
+import { ingredientShortfalls } from '#/features/production/ingredient-shortfalls'
+import { productionCostDivergenceMessages } from '#/features/production/cost-reconciliation'
 import {
   completeProductionBatch,
   createProductionBatch,
@@ -724,6 +728,7 @@ function Preview({
 }: {
   preview: Awaited<ReturnType<typeof previewProductionBatch>>
 }) {
+  const shortfalls = ingredientShortfalls(preview.consumptions)
   return (
     <section className="mt-6 rounded-2xl border border-[#d6c2b3] bg-white p-5">
       <div className="flex items-start justify-between gap-4">
@@ -743,6 +748,24 @@ function Preview({
           </span>
         </div>
       </div>
+      {shortfalls.length > 0 ? (
+        <div
+          role="alert"
+          className="mt-5 rounded-xl border border-[#b65624] bg-[#fff7ec] p-3 text-sm"
+        >
+          <strong>Insumos insuficientes para concluir o lote</strong>
+          <ul className="mt-2 list-disc pl-5">
+            {shortfalls.map((item) => (
+              <li key={item.productId}>
+                {item.productName}: faltam {item.shortfall} {item.unit}
+              </li>
+            ))}
+          </ul>
+          <p className="mt-2">
+            A conclusão revalida o estoque disponível na transação.
+          </p>
+        </div>
+      ) : null}
       <div className="mt-5 grid gap-5 lg:grid-cols-2">
         <article>
           <h3 className="font-bold">Capacidade e saídas</h3>
@@ -876,11 +899,15 @@ function Details({
       </div>
       <div className="mt-5 grid gap-5 lg:grid-cols-2">
         <AuditList
-          title="Saídas"
-          rows={details.outputs.map(
-            (item) =>
-              `${item.productName} · ${formatQuantity(item.actualQuantity ?? item.plannedQuantity ?? '0', item.unit ?? 'unit')}${item.role === 'co_product' ? ' · coproduto' : ''}`,
-          )}
+          title="Rendimento e custo alocado por saída"
+          rows={details.outputs.map((item) => {
+            const yieldFacts = compareOutputYield(
+              item.plannedQuantity,
+              item.actualQuantity,
+            )
+            const unit = item.unit ?? 'unit'
+            return `${item.productName}${item.role === 'co_product' ? ' · coproduto' : ''} · planejado: ${yieldFacts.planned ?? 'não informado'} ${unit} · realizado: ${yieldFacts.actual ?? 'não informado'} ${unit} · diferença: ${yieldFacts.difference ?? 'não informada'} ${unit} · custo alocado: ${item.allocatedCost === null ? 'não informado' : formatBrlMoney(item.allocatedCost)}`
+          })}
         />
         <AuditList
           title="Consumos"
@@ -897,6 +924,25 @@ function Details({
           )}
         />
         <AuditList title="Perdas manuais" rows={lossRows} />
+        {batch.status === 'completed' ? (
+          <AuditList
+            title="Reconciliação de custo do lote e origens FIFO"
+            rows={
+              details.costReconciliation === null
+                ? [
+                    'Diagnóstico indisponível: estrutura de dados FIFO ainda não disponível.',
+                  ]
+                : details.costReconciliation.length === 0
+                  ? [
+                      'Nenhuma divergência nos custos alocados e origens FIFO consultados.',
+                    ]
+                  : details.costReconciliation.map(
+                      (item) =>
+                        `${productionCostDivergenceMessages[item.code]} · saída ${item.outputId ?? 'lote'} · camada ${item.layerId ?? 'ausente'}`,
+                    )
+            }
+          />
+        ) : null}
       </div>
       {batch.totalCost ? (
         <p className="mt-5 rounded-xl bg-[#fff7ec] p-3 text-sm">

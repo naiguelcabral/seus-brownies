@@ -1,25 +1,21 @@
 # Estado canônico do projeto — Cacau v1
 
-## Reconciliação de integração em rascunho — 8 de outubro de 2026
+## Integração de produção/readiness em revisão — 8 de outubro de 2026
 
-A `main` remota está em `f61e9a28df7b0fdbc80864402b578a2a0aabd3f8`. A PR #12
-já foi integrada; as PRs #14–#30 foram inventariadas em
-`INTEGRATION-RECONCILIATION-2026-10-08.md`. O primeiro lote em rascunho reúne
-os diagnósticos e relatórios somente leitura #15, #16, #17, #18 e #30 por
-merge commits locais, com conflitos de documentação/imports compostos. A #13
-permanece fora por `CHANGES-REQUIRED` de segurança: a credencial não aparece
-no Git, mas o launcher a expõe ao processo Codex persistente e a subprocessos.
-Nenhum lote foi integrado em `main`, nem houve deploy, migration aplicada,
-alteração de secret, Cloudflare, Neon ou banco.
+O lote que compõe #19, #20, #24, #26 e #27 preserva o writer transacional,
+diagnósticos somente leitura e precisão monetária. Não inclui migration,
+infraestrutura, segredo, banco compartilhado ou correção automática de
+estoque/FIFO/CMV. Os testes locais consolidados e os builds isolados passaram;
+a publicação da branch e a CI remota são os próximos passos. A PR #31 de
+relatórios/FIFO tem CI `37804204150` verde no SHA consolidado `1733573`.
 
-## Diagnóstico local em revisão — A28, 8 de outubro de 2026
+## Entrega local em revisão — A25, 8 de outubro de 2026
 
-O relatório financeiro distingue reconciliação aritmética de margens da
-cobertura FIFO dos itens entregues. Um diagnóstico somente leitura sinaliza
-itens/alocações ausentes, quantidade inválida ou soma divergente; não altera
-CMV, receita, fechamento ou eventos e não corrige histórico. Escopo restrito
-às entregas carregadas no mês de competência. Compensação posterior isolada
-não demanda nova alocação; origem de compra sem lote continua válida.
+Conclusão de produção com sete cenários determinísticos do writer real usando
+Drizzle fake: conclusão única, custos/saídas/FIFO, insuficiência de insumo e
+rollback em falhas posteriores. A extração do writer preserva o corpo da
+transação, a validação e a autorização do servidor. A prova local não substitui
+homologação PostgreSQL, operação física ou aprovação de produção.
 
 Atualizado em 6 de outubro de 2026, após revisão de código, migrations,
 testes, rotas, documentação e estado público de HML.
@@ -67,9 +63,11 @@ Este documento é a referência canônica de alto nível para o estado atual do 
 - Camadas, alocações, lifecycle e reconciliação FIFO possuem testes e documentação própria.
 - Energia e mão de obra são custos operacionais, nunca itens de estoque.
 - Bordinhas é coproduto, não perda automática.
-- Relatórios locais de produção distinguem perdas declaradas de saídas com
-  `role=co_product`, incluindo quantidade e custo alocado quando disponíveis;
-  dependem de migrations/homologação para uso operacional.
+- Auditoria local de produção distingue quantidades planejadas e realizadas
+  por saída, diferença física exata e custo alocado informado. Lacunas não
+  viram produção realizada; homologação visual permanece pendente.
+- Checklist `PRODUCTION-READINESS.md` preparado para revisão humana; não
+  declara produção pronta nem comprova schema ou homologação no ambiente.
 
 ### Dados e migrações
 

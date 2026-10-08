@@ -86,3 +86,22 @@ decidir separadamente sobre a #13 e qualquer migration já versionada.
 - `npm run build:ci-isolated` e `npm run build:hml`: passaram com a chave
   pública sintética. Ambos usaram os scripts isolados versionados; não houve
   chamada direta de `npm run build`, leitura de arquivo de ambiente ou deploy.
+
+### Validação remota da PR #31
+
+- PR draft #31 mantém o head `173357324fe1e76db9621c250cc1e49071d57c16`.
+- GitHub Actions CI `37804204150` terminou com `success` nesse SHA.
+
+### Validação local do lote produção/readiness
+
+- Inclui #19, #20, #24, #26 e #27 por merge commits locais na branch
+  `codex/integration-production-readiness`.
+- Não há migrations, workflows, arquivos de ambiente, secrets, bindings ou
+  infraestrutura no diff. Diagnósticos continuam somente leitura; os testes do
+  writer preservam rollback, idempotência e precisão em vez de corrigir dados.
+- `npm ci --ignore-scripts`, 16 testes direcionados, `npm test` (387 testes),
+  lint, typecheck, Prettier e `git diff --check` passaram. A primeira execução
+  paralela dos testes direcionados falhou antes dos casos com `ETXTBSY` do
+  esbuild após a instalação; a repetição serial dos mesmos testes passou.
+- `npm run build:ci-isolated` e `npm run build:hml` passaram no HEAD limpo
+  com chave pública sintética, sem leitura de `.env` ou deploy.

@@ -1,5 +1,15 @@
 # Roadmap executável para Codex — Cacau v1
 
+## Evidência local pendente de revisão — A25, 8 de outubro de 2026
+
+- G6: a conclusão de produção usa o mesmo writer transacional nos testes
+  locais com adaptador Drizzle fake. Cobertura: locks, uma conclusão por lote,
+  insuficiência de insumo antes de escrita e rollback após falhas em custos,
+  camada FIFO, saída ou status. O corpo transacional e o guard foram preservados.
+- O fake verifica composição e propagação de falhas; não comprova isolamento,
+  concorrência ou rollback do PostgreSQL real. Homologação compartilhada permanece
+  sujeita ao gate humano. Nenhum writer foi executado em HML.
+
 Legenda:
 
 - `[x]` concluído/entregue.
@@ -189,10 +199,18 @@ A matriz detalhada workbook × sistema está em
 - [x] Custos operacionais e coproduto.
 - [x] Testes/homologações principais.
 - [ ] Revisar UX de produção para operação diária.
-- [ ] Relatórios de rendimento, perdas e custo por lote.
-- [ ] Alertas de insumo insuficiente e planejamento.
+      <<<<<<< HEAD
+- [~] Auditoria local por lote apresenta planejado, realizado, diferença
+  física e custo alocado por saída; perdas declaradas e custo total já são
+  exibidos. A prévia também sinaliza o déficit exato por insumo/unidade;
+  planejamento entre lotes e homologação diária permanecem pendentes.
+  \=======
+
+> > > > > > > origin/codex/auto-a18-ingredient-shortfalls
+
 - [ ] Revisar consistência entre custo médio físico e FIFO de produto final.
-- [ ] Checklist de preparação para produção real.
+- [~] Checklist preparado em `PRODUCTION-READINESS.md`; schema, recuperação,
+  acesso, integridade e homologação operacional permanecem humanos.
 
 ## Fase G7 — Deploy e observabilidade
 
