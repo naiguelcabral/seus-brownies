@@ -104,7 +104,7 @@
   lint e typecheck verdes. A comparação usa consultas do mesmo endpoint
   protegido, com datas UTC adjacentes, diferenças exatas e ticket ausente
   explícito. O texto da tela não atribui à G2 uma decisão ainda pendente.
-   Build CI isolado passou no commit limpo com chave pública sintética.
+  Build CI isolado passou no commit limpo com chave pública sintética.
 
 ## Missão autônoma de 7 de outubro de 2026 — pacote A15
 
@@ -128,7 +128,7 @@
   lint e typecheck verdes. O ranking usa o endpoint já protegido e a mesma
   janela de vendas existente. Build CI isolado passou no commit limpo com
   chave pública sintética;
-   sabores continuam sem fonte canônica e não foram inferidos.
+  sabores continuam sem fonte canônica e não foram inferidos.
 
 ## Integração controlada da PR #12 — concluída, 7 de outubro de 2026
 

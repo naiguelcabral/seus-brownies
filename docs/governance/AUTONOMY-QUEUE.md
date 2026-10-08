@@ -6,12 +6,12 @@ seleção de pacotes pelo controlador. Ela não substitui os gates de
 
 ## Reconciliação de integração — 8 de outubro de 2026
 
-| ID | Pacote | Estado | Saída / gate |
-| --- | --- | --- | --- |
-| INT-R | Relatórios e financeiro (#15, #16, #17, #18, #30) | running | Branch `codex/integration-reports-finance`; validação consolidada e PR draft pendentes. |
-| INT-P | Produção (#19, #20, #24, #26, #27) | ready-after-INT-R | Criar lote separado; preservar guards de writer, precisão e rota protegida. |
-| INT-G | Plataforma/governança (#14, #21, #22, #23, #25, #28, #29) | ready-after-INT-R | Criar lote separado; sem browser HML, infraestrutura ou alteração de configuração. |
-| INT-13 | Credencial persistente GitHub MCP (#13) | needs-human | `CHANGES-REQUIRED`: decidir escopo de credencial no processo persistente/subprocessos. |
+| ID     | Pacote                                                    | Estado            | Saída / gate                                                                            |
+| ------ | --------------------------------------------------------- | ----------------- | --------------------------------------------------------------------------------------- |
+| INT-R  | Relatórios e financeiro (#15, #16, #17, #18, #30)         | running           | Branch `codex/integration-reports-finance`; validação consolidada e PR draft pendentes. |
+| INT-P  | Produção (#19, #20, #24, #26, #27)                        | ready-after-INT-R | Criar lote separado; preservar guards de writer, precisão e rota protegida.             |
+| INT-G  | Plataforma/governança (#14, #21, #22, #23, #25, #28, #29) | ready-after-INT-R | Criar lote separado; sem browser HML, infraestrutura ou alteração de configuração.      |
+| INT-13 | Credencial persistente GitHub MCP (#13)                   | needs-human       | `CHANGES-REQUIRED`: decidir escopo de credencial no processo persistente/subprocessos.  |
 
 Matriz completa, SHAs, CI, sobreposições e decisões:
 `INTEGRATION-RECONCILIATION-2026-10-08.md`.
