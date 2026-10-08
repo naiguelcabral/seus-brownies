@@ -14,8 +14,10 @@
   passou, sem alteração de código.
 - A CI da PR #31 foi revalidada por GitHub MCP: CI `37804204150` é `success`
   no SHA `1733573`.
-- Próxima ação exata: concluir builds isolados no HEAD limpo, revisar, publicar
-  somente esta branch e abrir PR em rascunho; consultar a CI dela.
+- `build:ci-isolated` e build HML isolado passaram no HEAD limpo com a chave
+  pública sintética; não houve leitura de `.env` ou deploy.
+- Próxima ação exata: revisar, publicar somente esta branch e abrir PR em
+  rascunho; consultar a CI dela.
 
 ## Missão autônoma — A25, 8 de outubro de 2026
 

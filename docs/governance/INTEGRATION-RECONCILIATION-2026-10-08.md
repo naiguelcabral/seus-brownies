@@ -103,3 +103,5 @@ decidir separadamente sobre a #13 e qualquer migration já versionada.
   lint, typecheck, Prettier e `git diff --check` passaram. A primeira execução
   paralela dos testes direcionados falhou antes dos casos com `ETXTBSY` do
   esbuild após a instalação; a repetição serial dos mesmos testes passou.
+- `npm run build:ci-isolated` e `npm run build:hml` passaram no HEAD limpo
+  com chave pública sintética, sem leitura de `.env` ou deploy.
