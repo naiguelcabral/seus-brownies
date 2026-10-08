@@ -1,5 +1,35 @@
 # Handoff de autonomia — Cacau v1
 
+## Fechamento documental da missão A12–A28 — 8 de outubro de 2026
+
+- Objetivo: consolidar nesta PR documental #14 as entregas, a fila e os gates
+  descobertos, sem incorporar código das PRs independentes nem fazer merge.
+- Não objetivos: integrar/deployar, aplicar migrations, corrigir HML ou mudar
+  regras financeiras, sessão/RBAC e infraestrutura.
+- Arquivos: os cinco documentos A12 e relatório sanitizado da rodada.
+- Aceite: pacotes rastreáveis por branch/SHA/PR/CI, distinção local/HML,
+  pendências classificadas sem promoção de gates, árvore limpa ao terminar.
+- Validação: comparação com roadmap/decisões/código e GitHub MCP, Prettier
+  direcionado, links locais, revisão do diff, diff/guard. Código não alterado.
+- Entregas locais A12–A28 publicadas nas PRs #14–#30. A PR #13 tem evidência
+  host/keyring/MCP e CI verde; `PR13_READY_FOR_HUMAN_MERGE=YES`. PRs #4/#5
+  permanecem abertas em rascunho, congeladas; nenhuma PR foi merged nesta missão.
+- A fila desta branch registra zero pacotes independentes exatamente ready
+  no escopo auditado. Backlog permanece em integração, decisões e homologação.
+  Após revisão/merge humano, revalidar conjuntamente e reconciliar nova fila.
+- Pacotes partem da main `f61e9a28`. PRs que tocam as mesmas rotas/functions
+  e cabeçalhos de governança podem conflitar entre si durante integração;
+  preservar fatos de cada handoff/log, sem escolher um inteiro e apagar outros.
+- Neon: somente `development` exato, SELECT 1 e introspecção; schema esperado
+  ausente. Cloudflare: GETs settings/deployments de `cacau-v1-hml`; limiter não
+  retornado. Não provar associação Worker/DB via leitura de segredo.
+- A27 passou no Brave headless com elevação limitada; tentativa sandbox
+  expirou no webServer. A26/A27 tiveram fixture Git `EPERM` no sandbox e
+  passaram fora dele. A18 CI encontrou corrida preexistente de memória; retry
+  passou e correção independente A21 preservou teste/evidência.
+- Detalhes, testes por pacote e gates em
+  [AUTONOMOUS-RUN-2026-10-08.md](./AUTONOMOUS-RUN-2026-10-08.md).
+
 ## Missão autônoma de 7 de outubro de 2026 — pacote A12
 
 - Objetivo: reconciliar a fila com a `main` atual, as decisões G2 aprovadas e

@@ -7,6 +7,33 @@ Legenda:
 - `[~]` em andamento.
 - `[!]` bloqueado por decisão, autorização ou dependência.
 
+## Rodada local em revisão — 7–8 de outubro de 2026
+
+As entregas A12–A28 estão em PRs independentes #14–#30, ainda não integradas.
+Esta seção registra sua evidência; não promove HML ou produção a concluídas.
+Rastreabilidade em [AUTONOMOUS-RUN-2026-10-08.md](./AUTONOMOUS-RUN-2026-10-08.md).
+
+- G2: A13 diagnostica razão/FIFO; A28 confere cobertura da entrega por item
+  e quantidade FIFO separada da soma de margens. Precisão/reversões aprovadas
+  permanecem; schema, backfill e homologação reais continuam humanos.
+- G3: A14 compara períodos operacionais (não competência), A15 ranqueia produtos
+  por unidades e A16 separa perdas declaradas e Bordinhas. Margens por produto,
+  lote e local, estoque crítico, histórico/filtros/paginação/CSV já possuem base
+  integrada. Sabor não tem taxonomia; atribuição de parceiro/cobertura estimada
+  exigem fonte/regra, não serão inferidas.
+- G6: A17/A18 melhoram rendimento/custo e prévia de insuficiência; A22 prepara
+  checklist; A24 confere custo distribuído e origem FIFO; A25 testa composição
+  do writer. Aceite físico, concorrência PostgreSQL e HML permanecem pendentes.
+- G1/G7: A19 sanitiza logs com correlação, A23 documenta ambientes/evidências,
+  A26 prepara sinais/hooks locais e A27 comprova smoke público isolado. OTP,
+  reset, sessão, CAPTCHA/replay reais, acesso e publicação HML seguem gates.
+- G8: A20 mantém continuidade após gates limpos e A21 corrige corrida de memória
+  local. Não promove níveis permanentes, dependências, merge ou produção.
+
+Fila reavaliada: zero pacotes independentes exatamente ready no escopo auditado.
+Próximo trabalho técnico conjunto depende da revisão/integração humana destas
+PRs; decisões financeiras já aprovadas não devem ser reabertas como bloqueio.
+
 ## Fase G0 — Governança do repositório
 
 - [x] Criar status canônico do projeto.

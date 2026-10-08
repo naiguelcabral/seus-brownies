@@ -1,5 +1,21 @@
 # Log sanitizado de autonomia — Cacau v1
 
+## Missão autônoma A12–A28 — fechamento documental, 8 de outubro de 2026
+
+- Dezessete pacotes locais independentes publicados para revisão (#14–#30),
+  sem merge ou deploy. PR #13 recebeu apenas evidência sanitizada na descrição.
+- Fila reconciliada com entregas e dependência de integração humana. O zero
+  ready é restrito ao escopo auditado, não afirma ausência de backlog.
+- Leituras externas limitadas a GitHub e HML autorizado. Neon exact development:
+  SELECT 1 e catálogo, sem tabelas esperadas. Cloudflare HML: metadados de
+  settings/deployments, sem ler valores de secrets ou alterar Worker/bindings.
+- Falha inicial CI A18 (memória local ENOTEMPTY) preservada; retry verde e
+  pacote independente A21 corrigiu a corrida. Testes não foram enfraquecidos.
+- Sandbox Git EPERM exigiu elevação mínima de validações locais; smoke A27
+  teve timeout inicial e passou com Brave headless fora do sandbox (1/1).
+- Produção Neon/Cloudflare não acessadas; deploy e migration não executados.
+  Evidência por pacote e gates no relatório desta rodada.
+
 ## Missão autônoma — 7 de outubro de 2026
 
 - Preflight: branch inicial `codex/github-mcp-persistent-auth` limpa no SHA

@@ -1,5 +1,24 @@
 # Estado canônico do projeto — Cacau v1
 
+## Propostas locais em revisão — missão de 7–8 de outubro de 2026
+
+As PRs #14–#30 entregam diagnósticos FIFO/CMV, comparações operacionais, top
+produtos, perdas/coproduto, rendimento/custo/insuficiência de produção,
+telemetria sanitizada, continuidade do controlador, regressão de memória,
+checklists/matriz de ambientes, testes do writer de conclusão, sinais locais
+e smoke público isolado. Não estão integradas na main `f61e9a28`; cada pacote
+tem evidência própria em [AUTONOMOUS-RUN-2026-10-08.md](./AUTONOMOUS-RUN-2026-10-08.md).
+
+A PR #13 está pronta para revisão/merge humano com evidência keyring/GitHub MCP.
+Nenhum merge foi feito na missão. A fila reconciliada tem zero pacote local
+independente ready no escopo auditado; integração/homologação continuam pendentes.
+
+Leitura HML de 8/10: `development` exato no projeto `cool-base-25902164` não
+contém schema esperado; não foi associado ao Worker por segredo. Settings do
+`cacau-v1-hml` não retornaram binding de rate limit/flag required. Evidências
+históricas G1 em outro alvo não são invalidadas nem apresentadas como homologação
+atual. Apenas diagnóstico, sem escrita, migration, deploy ou acesso a produção.
+
 Atualizado em 7 de outubro de 2026, após reconciliação da fila de autonomia
 com código, migrations, testes, rotas e decisões financeiras aprovadas.
 
