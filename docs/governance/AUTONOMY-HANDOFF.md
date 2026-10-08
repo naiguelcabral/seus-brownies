@@ -10,6 +10,9 @@
 - PR #33 foi integrada e sua CI `37834057113` passou. Inventário atual:
   `POST-INTEGRATION-RECONCILIATION-2026-10-08.md`.
 - PR #13 segue excluída e não é ancestral deste lote.
+- Reconciliação documental pós-integração: PR #34 em rascunho, branch
+  `codex/post-integration-reconciliation`, registra a matriz #4/#5/#13–#33,
+  migrations e gates. A CI `37840299625` passou no SHA `b7d4d3c`.
 
 ## Checkpoint de integração — produção e readiness, 8 de outubro de 2026
 
