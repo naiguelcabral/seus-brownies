@@ -1,14 +1,14 @@
 # Handoff de autonomia — Cacau v1
 
-## Integração plataforma/governança — 8 de outubro de 2026
+## Pós-integração consolidada — 8 de outubro de 2026
 
 - Branch: `codex/integration-platform-governance`, baseada na `main`
   `2f7d19bb00ca3effc628a2972271872c802a8862`, que já inclui #31 e #32.
 - Merge commits locais: #14, #21, #22, #23, #25, #28 e #29. Conflitos foram
   documentais; a governança mais recente da `main` foi preservada e os módulos
   de telemetria, memória, continuidade, sinais e smoke permaneceram intactos.
-- Testes direcionados: 55 passaram; suíte, lint e typecheck passaram. Restam
-  Prettier, builds isolados, revisão final, push e PR draft.
+- PR #33 foi integrada e sua CI `37834057113` passou. Inventário atual:
+  `POST-INTEGRATION-RECONCILIATION-2026-10-08.md`.
 - PR #13 segue excluída e não é ancestral deste lote.
 
 ## Checkpoint de integração — produção e readiness, 8 de outubro de 2026
