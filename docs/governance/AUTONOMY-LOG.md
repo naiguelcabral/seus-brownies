@@ -1,5 +1,14 @@
 # Log sanitizado de autonomia — Cacau v1
 
+## A22 — checklist de produção, 8 de outubro de 2026
+
+- Branch independente `codex/auto-a22-production-readiness`, main `f61e9a28`.
+- Checklist documental registra gates de schema, recuperação, acesso,
+  insumos/custos, integridade e homologação por lote. Diferencia testes
+  locais da composição transacional/ambiente efetivo.
+- Nenhum gate foi executado ou removido. Revisão, links, Prettier/diff/guard
+  passaram; testes de código/build não se aplicam.
+
 ## WP-D metas e cenários — 14 de setembro de 2026
 
 - G2-F1 foi publicado na branch `codex/workbook-parity` sem force push; a CI

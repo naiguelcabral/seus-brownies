@@ -46,6 +46,8 @@ Este documento é a referência canônica de alto nível para o estado atual do 
 - Camadas, alocações, lifecycle e reconciliação FIFO possuem testes e documentação própria.
 - Energia e mão de obra são custos operacionais, nunca itens de estoque.
 - Bordinhas é coproduto, não perda automática.
+- Checklist `PRODUCTION-READINESS.md` preparado para revisão humana; não
+  declara produção pronta nem comprova schema ou homologação no ambiente.
 
 ### Dados e migrações
 

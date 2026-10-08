@@ -182,7 +182,8 @@ A matriz detalhada workbook × sistema está em
 - [ ] Relatórios de rendimento, perdas e custo por lote.
 - [ ] Alertas de insumo insuficiente e planejamento.
 - [ ] Revisar consistência entre custo médio físico e FIFO de produto final.
-- [ ] Checklist de preparação para produção real.
+- [~] Checklist preparado em `PRODUCTION-READINESS.md`; schema, recuperação,
+  acesso, integridade e homologação operacional permanecem humanos.
 
 ## Fase G7 — Deploy e observabilidade
 
