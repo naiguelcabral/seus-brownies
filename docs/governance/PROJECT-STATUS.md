@@ -46,6 +46,9 @@ Este documento é a referência canônica de alto nível para o estado atual do 
 - Camadas, alocações, lifecycle e reconciliação FIFO possuem testes e documentação própria.
 - Energia e mão de obra são custos operacionais, nunca itens de estoque.
 - Bordinhas é coproduto, não perda automática.
+- Diagnóstico local de lote concluído compara custo total/alocação das
+  saídas com origens FIFO; lacunas de schema não simulam conciliação.
+  Não recalcula custo físico nem corrige dados.
 
 ### Dados e migrações
 

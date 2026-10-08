@@ -1,5 +1,16 @@
 # Log sanitizado de autonomia — Cacau v1
 
+## A24 — custo por saída e origem FIFO, 8 de outubro de 2026
+
+- Branch independente `codex/auto-a24-production-cost-reconciliation`, main
+  `f61e9a28`. Diagnóstico da leitura protegida de lote concluído compara
+  custo total, custos alocados e origens FIFO exatas; não usa saldo consumido.
+- Tabela/coluna FIFO ausente apresenta diagnóstico indisponível, não sucesso.
+  Outros erros são propagados. Nenhum writer, regra, permissão ou schema muda.
+- Validação: 4 casos determinísticos, 375 testes da suíte, lint/typecheck,
+  Prettier/diff/guard verdes; build CI isolado passou com chave pública sintética explícita.
+- Nenhuma consulta HML adicional, correção ou produção.
+
 ## WP-D metas e cenários — 14 de setembro de 2026
 
 - G2-F1 foi publicado na branch `codex/workbook-parity` sem force push; a CI

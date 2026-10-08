@@ -1,5 +1,24 @@
 # Handoff de autonomia — Cacau v1
 
+## Missão autônoma — A24, 8 de outubro de 2026
+
+- Objetivo: diagnóstico somente leitura custo total do lote × custos alocados
+  às saídas × quantidade/custo original das camadas FIFO.
+- Não objetivos: recalcular média física, lucro/CMV, validar dados HML,
+  corrigir ledger, modificar writers, regra financeira ou schema.
+- Branch independente `codex/auto-a24-production-cost-reconciliation`, main `f61e9a28`.
+- Arquivos previstos: módulo puro, testes, função protegida existente de
+  leitura de lote, UI auditoria, roadmap, status, handoff e log.
+- Aceite: comparar fatos originais mesmo após consumo FIFO; lacunas/missing
+  schema não simulam sucesso; somas em centavos e quantidades em milésimos;
+  acesso mantém a permissão existente getProductionBatch.
+- Testes: lote/custos conciliados, camada ausente/produto incorreto, centavo/
+  milésimo divergente e fatos ausentes/invalidade; suíte, lint/tipos, build
+  CI isolado, Prettier, diff e guard. Sem consultas adicionais HML.
+
+- Resultado: 4 casos determinísticos e 375 testes da suíte passaram; lint,
+  tipos, Prettier/diff/guard verdes. Build CI isolado passou com chave pública sintética explícita.
+
 ## Integração controlada da PR #12 — concluída, 7 de outubro de 2026
 
 - Objetivo concluído: reconciliar metas e cenários em

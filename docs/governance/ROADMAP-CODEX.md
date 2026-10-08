@@ -181,7 +181,9 @@ A matriz detalhada workbook × sistema está em
 - [ ] Revisar UX de produção para operação diária.
 - [ ] Relatórios de rendimento, perdas e custo por lote.
 - [ ] Alertas de insumo insuficiente e planejamento.
-- [ ] Revisar consistência entre custo médio físico e FIFO de produto final.
+- [~] Diagnóstico local por lote compara custo total registrado, alocação por
+  saída e quantidade/custo original FIFO; método físico não é recalculado.
+  Homologação dos fatos e composição transacional permanecem pendentes.
 - [ ] Checklist de preparação para produção real.
 
 ## Fase G7 — Deploy e observabilidade
