@@ -1,5 +1,19 @@
 # Log sanitizado de autonomia — Cacau v1
 
+## A21 — concorrência de memória local, 8 de outubro de 2026
+
+- CI da PR #20 falhou no teste concorrente com ENOTEMPTY durante cleanup.
+  Inspeção identificou exists/mkdir antes da trava no código de memória.
+- Branch independente `codex/auto-a21-memory-concurrency`, main `f61e9a28`: mkdir
+  idempotente e checagem de symlink após criação; teste aguarda todos os
+  processos e preserva falhas em AggregateError. Fixture determinística
+  simula outro criador entre checagens. Nenhuma memória real lida.
+- Validação: 12 testes de memória, 372 testes da suíte, lint/typecheck,
+  sintaxe Python, Prettier/diff/guard verdes. Build não aplicável.
+- CI da PR #20 passou na reexecução, preservando a falha inicial como
+  evidência; esta correção permanece independente. Sem HML, produção,
+  secrets ou mudanças de retenção.
+
 ## WP-D metas e cenários — 14 de setembro de 2026
 
 - G2-F1 foi publicado na branch `codex/workbook-parity` sem force push; a CI

@@ -1,5 +1,24 @@
 # Handoff de autonomia — Cacau v1
 
+## Missão autônoma — A21, 8 de outubro de 2026
+
+- Objetivo: corrigir inicialização concorrente de diretórios locais de memória
+  e aguardar todos os notificadores antes da limpeza do teste.
+- Evidência: CI da PR #20, run `37763029556`, falhou no teste concorrente com
+  `ENOTEMPTY` na limpeza; o código tinha exists/mkdir antes da trava.
+- Não objetivos: ler memória real, mudar retenção, suprimir falha ou escrever
+  dados externos. Fixtures usam somente eventos sintéticos.
+- Branch independente `codex/auto-a21-memory-concurrency`, main `f61e9a28`.
+- Arquivos previstos: script de memória, teste concorrente, roadmap, handoff e log.
+- Aceite: mkdir concorrente idempotente, rejeição de symlink mantida, todos os
+  subprocessos encerrados antes de cleanup; falhas continuam falhando o teste.
+- Testes: concorrência e suíte de memória, suíte completa, lint, typecheck,
+  Prettier direcionado, compilação Python sem artefato, diff e guard sensível.
+
+- Resultado local: 12 testes de memória e 372 testes da suíte passaram;
+  lint/typecheck, sintaxe Python, Prettier, diff e guard verdes. Build não
+  aplicável: somente controlador Python e testes locais, sem bundle alterado.
+
 ## Integração controlada da PR #12 — concluída, 7 de outubro de 2026
 
 - Objetivo concluído: reconciliar metas e cenários em
