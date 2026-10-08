@@ -182,6 +182,12 @@ Este documento é a referência canônica de alto nível para o estado atual do 
   descartável, RPO/RTO, rollback, observabilidade e retenção. Não há estratégia
   externa configurada nem ensaio de restauração: esses são gates humanos.
 
+- O GitHub MCP dispõe de setup e launcher baseados no GNOME Keyring / Secret
+  Service, com `LIGARTUDO --codex` para preflight e início do Codex. A presença
+  da credencial foi confirmada pelo operador no host; a verificação em sandbox
+  pode depender de teste no host. Consulte
+  `GITHUB-MCP-PERSISTENT-AUTH.md` para operação e rotação.
+
 - Rodada manual local de 7 de setembro: seis casos individuais adicionais
   de cooldown/desafio passaram; suíte de 37 arquivos e lint verdes. A07-R2
   está concluído no checkpoint humano `c28c267`, confirmado no Git local.
