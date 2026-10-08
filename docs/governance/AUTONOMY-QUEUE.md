@@ -14,6 +14,18 @@ Atualizada em 8 de setembro de 2026. Esta fila é a fonte de verdade para a
 seleção de pacotes pelo controlador. Ela não substitui os gates de
 `AGENTS.md`, `SECURITY.md` ou `HUMAN-APPROVALS.md`.
 
+## Reconciliação de integração — 8 de outubro de 2026
+
+| ID     | Pacote                                                    | Estado            | Saída / gate                                                                                                             |
+| ------ | --------------------------------------------------------- | ----------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| INT-R  | Relatórios e financeiro (#15, #16, #17, #18, #30)         | review-ready      | Branch `codex/integration-reports-finance`; testes, lint, tipos e builds isolados consolidados passaram; criar PR draft. |
+| INT-P  | Produção (#19, #20, #24, #26, #27)                        | ready-after-INT-R | Criar lote separado; preservar guards de writer, precisão e rota protegida.                                              |
+| INT-G  | Plataforma/governança (#14, #21, #22, #23, #25, #28, #29) | ready-after-INT-R | Criar lote separado; sem browser HML, infraestrutura ou alteração de configuração.                                       |
+| INT-13 | Credencial persistente GitHub MCP (#13)                   | needs-human       | `CHANGES-REQUIRED`: decidir escopo de credencial no processo persistente/subprocessos.                                   |
+
+Matriz completa, SHAs, CI, sobreposições e decisões:
+`INTEGRATION-RECONCILIATION-2026-10-08.md`.
+
 ## Estados
 
 - `ready`: único estado que o controlador pode selecionar.

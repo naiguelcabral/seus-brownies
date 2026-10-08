@@ -443,6 +443,58 @@ function FinancialPage() {
             Revise os vínculos dos fatos antes de usar os grupos gerenciais.
           </p>
         ) : null}
+        <div className="mt-4 rounded-lg border border-[#ecdfd4] p-3 text-sm">
+          <h3 className="font-bold">Cobertura da entrega no FIFO</h3>
+          <p className="mt-1 text-[#846859]">
+            {overview.accrualMargins.fifoCoverage.checkedDeliveries} entregas e{' '}
+            {overview.accrualMargins.fifoCoverage.checkedItems} itens conferidos
+            neste mês de competência. A conferência não altera o CMV ou os
+            fatos.
+          </p>
+          {overview.accrualMargins.fifoCoverage.divergences.length ? (
+            <div className="mt-2 text-[#75411f]" role="status">
+              <p>
+                Há vínculos incompletos ou quantidades divergentes. CMV zero sem
+                alocação não comprova ausência de custo; revise a cobertura
+                antes de usar a margem.
+              </p>
+              <ul className="mt-2 list-inside list-disc">
+                {overview.accrualMargins.fifoCoverage.divergences
+                  .slice(0, 20)
+                  .map((row) => (
+                    <li key={`${row.saleId}:${row.saleItemId}:${row.code}`}>
+                      Venda #{row.saleId}
+                      {row.saleItemId !== null
+                        ? ` · item #${row.saleItemId}`
+                        : ''}
+                      :{' '}
+                      {
+                        {
+                          missing_items: 'itens ausentes',
+                          missing_allocation: 'alocação FIFO ausente',
+                          quantity_mismatch: 'quantidade FIFO divergente',
+                          invalid_quantity: 'quantidade inválida',
+                        }[row.code]
+                      }
+                    </li>
+                  ))}
+              </ul>
+              {overview.accrualMargins.fifoCoverage.divergences.length > 20 ? (
+                <p className="mt-2">
+                  Exibindo as primeiras 20 de{' '}
+                  {overview.accrualMargins.fifoCoverage.divergences.length}{' '}
+                  divergências; todas participaram da conferência.
+                </p>
+              ) : null}
+            </div>
+          ) : (
+            <p className="mt-2 text-[#846859]">
+              {overview.accrualMargins.fifoCoverage.checkedItems
+                ? 'As quantidades dos itens conferidos estão cobertas pelas alocações.'
+                : 'Sem itens de entrega para conferir neste mês.'}
+            </p>
+          )}
+        </div>
         {overview.accrualMargins.unattributedRevenue !== '0.00' ? (
           <p className="mt-4 rounded-lg bg-[#fff8f0] p-3 text-sm text-[#75411f]">
             Receita sem venda vinculada:{' '}
