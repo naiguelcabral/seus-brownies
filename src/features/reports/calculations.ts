@@ -96,53 +96,6 @@ export function groupSalesByProduct(
     )
 }
 
-export function rankProductsByUnits(
-  rows: Array<{
-    productId: number | null
-    productName: string
-    catalogName: string | null
-    quantity: string
-  }>,
-  limit = 10,
-) {
-  const totals = new Map<
-    string,
-    { productId: number | null; productName: string; quantity: bigint }
-  >()
-  for (const row of rows) {
-    const quantity = quantityToThousandths(row.quantity)
-    if (quantity === null) {
-      throw new Error('Quantidade de venda inválida para o ranking.')
-    }
-    const key =
-      row.productId === null
-        ? `historical:${row.productName}`
-        : `product:${row.productId}`
-    const current = totals.get(key) ?? {
-      productId: row.productId,
-      productName: row.catalogName ?? row.productName,
-      quantity: 0n,
-    }
-    current.quantity += quantity
-    totals.set(key, current)
-  }
-  return [...totals.values()]
-    .sort(
-      (left, right) =>
-        compareBigintsDescending(left.quantity, right.quantity) ||
-        compareTextAscending(left.productName, right.productName) ||
-        (left.productId ?? Number.MAX_SAFE_INTEGER) -
-          (right.productId ?? Number.MAX_SAFE_INTEGER),
-    )
-    .slice(0, limit)
-    .map((item) => ({
-      productId: item.productId,
-      productName: item.productName,
-      quantity: thousandthsToQuantity(item.quantity),
-      historicalOnly: item.productId === null,
-    }))
-}
-
 export type FifoMarginRow = {
   allocationId: number
   saleItemId: number

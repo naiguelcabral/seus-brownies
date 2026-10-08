@@ -99,10 +99,6 @@ final por Server Function continuam sujeitos aos gates de `HUMAN-APPROVALS.md`.
 - [x] Implementar margem por período/canal; parceiro aguarda fonte de dados.
 - [ ] Criar reconciliação automatizada de estoque x FIFO x CMV.
 - [ ] Criar relatório de divergências sem correção automática.
-- [~] A28 acrescenta diagnóstico local de cobertura entrega × item × quantidade
-  FIFO em `/financeiro`, separado da reconciliação das dimensões de margem.
-  Ausência de alocação não comprova custo zero; nenhum total/fato foi alterado.
-  Conferência real, schema e correções históricas seguem gates separados.
 - [x] Documentar estratégia de reversão/cancelamento de venda no FIFO.
 
 ### Gate
@@ -118,14 +114,10 @@ A matriz detalhada workbook × sistema está em
 
 - [x] Dashboard operacional inicial.
 - [x] Relatórios básicos por período.
-- [~] Faturamento confirmado, volume e ticket médio com comparação temporal
-  local pelo `soldAt` e período anterior de mesma duração; homologação da
-  interface permanece pendente. Receita por competência segue em `/financeiro`.
+- [ ] KPIs de faturamento e volume com comparação temporal.
 - [~] Ticket médio, preço médio, unidades e divergência de receita
   implementados localmente; aguardam migrations/homologação.
-- [~] Top 10 produtos por unidades implementado localmente com vínculo de
-  catálogo e legado explícito; aguarda homologação de interface. Ranking por
-  sabor depende de uma fonte/taxonomia canônica ainda ausente no schema.
+- [ ] Produtos e sabores mais vendidos, conforme modelo disponível.
 - [~] CMV e margem por competência implementados localmente sobre fatos G2 e
   FIFO; aguardam migrations e homologação integrada.
 - [~] Estoque crítico por ponto de reposição implementado localmente com
@@ -134,9 +126,7 @@ A matriz detalhada workbook × sistema está em
 - [~] Histórico de produção real por receita, status, produto e período
   implementado localmente com paginação; rendimento realizado já é rastreado
   nos lotes concluídos e aguarda homologação gerencial.
-- [~] Perdas declaradas e coprodutos realizados agregados localmente por
-  produto a partir de lotes concluídos, sem perda automática e com custo
-  alocado separado; aguardam aplicação de migrations e homologação visual.
+- [ ] Perdas e coprodutos.
 - [~] Parceiros/canais com receita, eventos, unidades, ticket e divergência
   implementados localmente; margem e comparação temporal continuam pendentes.
 - [~] Parâmetros gerenciais centralizados e plano de ação humano implementados

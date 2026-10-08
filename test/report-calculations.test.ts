@@ -5,7 +5,6 @@ import {
   groupExpensesByCategory,
   groupRevenueByChannel,
   groupSalesByProduct,
-  rankProductsByUnits,
   summarizeFifoMargins,
   sumReportMoney,
   summarizeLifecycleFinancials,
@@ -54,82 +53,6 @@ test('ordena agregados monetários sem perder centavos fora do inteiro seguro', 
       },
     ]).map((item) => item.productName),
     ['Brownie maior', 'Brownie menor'],
-  )
-})
-
-test('ranking agrupa renomeações por ID e distingue itens históricos sem vínculo', () => {
-  assert.deepEqual(
-    rankProductsByUnits([
-      {
-        productId: 1,
-        productName: 'Nome antigo',
-        catalogName: 'Brownie atual',
-        quantity: '2.000',
-      },
-      {
-        productId: 1,
-        productName: 'Nome novo',
-        catalogName: 'Brownie atual',
-        quantity: '1.500',
-      },
-      {
-        productId: 2,
-        productName: 'Alfa',
-        catalogName: 'Alfa',
-        quantity: '3.500',
-      },
-      {
-        productId: null,
-        productName: 'Legado',
-        catalogName: null,
-        quantity: '4.000',
-      },
-    ]),
-    [
-      {
-        productId: null,
-        productName: 'Legado',
-        quantity: '4.000',
-        historicalOnly: true,
-      },
-      {
-        productId: 2,
-        productName: 'Alfa',
-        quantity: '3.500',
-        historicalOnly: false,
-      },
-      {
-        productId: 1,
-        productName: 'Brownie atual',
-        quantity: '3.500',
-        historicalOnly: false,
-      },
-    ],
-  )
-})
-
-test('ranking mantém ordem exata além do inteiro seguro e limita a dez', () => {
-  const rows = Array.from({ length: 12 }, (_, index) => ({
-    productId: index + 1,
-    productName: `Produto ${index + 1}`,
-    catalogName: `Produto ${index + 1}`,
-    quantity: `${9007199254740990n + BigInt(index)}.001`,
-  }))
-  assert.deepEqual(
-    rankProductsByUnits(rows).map((item) => item.productId),
-    [12, 11, 10, 9, 8, 7, 6, 5, 4, 3],
-  )
-  assert.throws(
-    () =>
-      rankProductsByUnits([
-        {
-          productId: 1,
-          productName: 'Produto',
-          catalogName: 'Produto',
-          quantity: '1.0001',
-        },
-      ]),
-    /Quantidade de venda inválida/,
   )
 })
 
