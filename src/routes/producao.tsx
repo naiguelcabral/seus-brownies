@@ -5,6 +5,8 @@ import { useServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
 
 import { ManagementLayout } from '#/components/ManagementLayout'
+import { compareOutputYield } from '#/features/production/output-yield'
+import { formatBrlMoney } from '#/lib/format-money'
 import {
   completeProductionBatch,
   createProductionBatch,
@@ -876,11 +878,15 @@ function Details({
       </div>
       <div className="mt-5 grid gap-5 lg:grid-cols-2">
         <AuditList
-          title="Saídas"
-          rows={details.outputs.map(
-            (item) =>
-              `${item.productName} · ${formatQuantity(item.actualQuantity ?? item.plannedQuantity ?? '0', item.unit ?? 'unit')}${item.role === 'co_product' ? ' · coproduto' : ''}`,
-          )}
+          title="Rendimento e custo alocado por saída"
+          rows={details.outputs.map((item) => {
+            const yieldFacts = compareOutputYield(
+              item.plannedQuantity,
+              item.actualQuantity,
+            )
+            const unit = item.unit ?? 'unit'
+            return `${item.productName}${item.role === 'co_product' ? ' · coproduto' : ''} · planejado: ${yieldFacts.planned ?? 'não informado'} ${unit} · realizado: ${yieldFacts.actual ?? 'não informado'} ${unit} · diferença: ${yieldFacts.difference ?? 'não informada'} ${unit} · custo alocado: ${item.allocatedCost === null ? 'não informado' : formatBrlMoney(item.allocatedCost)}`
+          })}
         />
         <AuditList
           title="Consumos"

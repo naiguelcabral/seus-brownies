@@ -1,5 +1,22 @@
 # Handoff de autonomia — Cacau v1
 
+## Missão autônoma — A17, 8 de outubro de 2026
+
+- Objetivo: tornar explícitos planejado, realizado, diferença física e custo
+  alocado por saída na auditoria de cada lote.
+- Não objetivos: percentual de eficiência, inferência de perda, novo custo,
+  alteração de writer, migration ou homologação HML.
+- Branch: `codex/auto-a17-batch-yield`, independente da main `f61e9a28`.
+- Arquivos previstos: módulo puro de rendimento, teste, tela de produção,
+  roadmap, status, handoff e log.
+- Aceite: quantidade ausente não vira zero/planejado; diferença exata em
+  milésimos somente com ambos os fatos; custo alocado exibido sem recalcular.
+- Testes: módulo com lacunas, zero e quantidade grande; suíte, lint, tipos,
+  build CI isolado, Prettier direcionado, diff e guard sensível.
+
+- Resultado: 3 casos direcionados e suíte de 374 testes passaram; lint,
+  tipos, Prettier, diff e guard verdes. Build CI isolado passou com chave pública sintética explícita.
+
 ## Integração controlada da PR #12 — concluída, 7 de outubro de 2026
 
 - Objetivo concluído: reconciliar metas e cenários em

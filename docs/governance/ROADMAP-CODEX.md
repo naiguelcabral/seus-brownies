@@ -179,7 +179,9 @@ A matriz detalhada workbook × sistema está em
 - [x] Custos operacionais e coproduto.
 - [x] Testes/homologações principais.
 - [ ] Revisar UX de produção para operação diária.
-- [ ] Relatórios de rendimento, perdas e custo por lote.
+- [~] Auditoria local por lote apresenta planejado, realizado, diferença
+  física e custo alocado por saída; perdas declaradas e custo total já são
+  exibidos. Homologação gerencial e consolidação entre lotes pendentes.
 - [ ] Alertas de insumo insuficiente e planejamento.
 - [ ] Revisar consistência entre custo médio físico e FIFO de produto final.
 - [ ] Checklist de preparação para produção real.
