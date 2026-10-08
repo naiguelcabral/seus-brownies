@@ -1,5 +1,19 @@
 # Log sanitizado de autonomia — Cacau v1
 
+## A27 — smoke público isolado, 8 de outubro de 2026
+
+- Branch independente `codex/auto-a27-isolated-public-smoke`.
+- Runner usa archive HEAD e env limpo; config seleciona apenas rotas públicas
+  locais, recusa servidor existente e desativa artefatos de browser. A spec
+  aborta tráfego externo e mutações quando chamada pelo runner.
+- Não executa login/OTP/reset real nem escritores de estoque/produção/vendas;
+  não usa HML, secrets ou produção. Instruções em `LOCAL-PUBLIC-SMOKE.md`.
+- Fixture de isolamento (dois testes), 373 testes da suíte, lint, typecheck,
+  bash -n, formato, diff e guard passaram. Subprocessos Git exigiram execução
+  autorizada fora do sandbox por `EPERM`.
+- Playwright headless com Brave no runner isolado passou: uma spec, 37,9 s.
+  A elevação foi limitada ao comando do smoke. Não homologa HML ou sessão real.
+
 ## WP-D metas e cenários — 14 de setembro de 2026
 
 - G2-F1 foi publicado na branch `codex/workbook-parity` sem force push; a CI

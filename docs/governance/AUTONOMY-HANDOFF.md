@@ -1,5 +1,19 @@
 # Handoff de autonomia — Cacau v1
 
+## Missão autônoma — A27, 8 de outubro de 2026
+
+- Objetivo: smoke Playwright das rotas públicas em archive HEAD isolado, sem
+  runtime secreto, servidor reaproveitado, autenticação real ou banco externo.
+- Não objetivos: HML, OTP/reset/login real, captura de artefatos sensíveis ou
+  alteração de auth/sessão/RBAC. Browser host pode exigir elevação mínima.
+- Branch: `codex/auto-a27-isolated-public-smoke`, independente da main.
+- Arquivos: runner shell, config dedicada, spec pública, teste do runner,
+  runbook, roadmap, handoff e log.
+- Aceite: árvore limpa, guard antes de archive, env limpo, alvo loopback fixo,
+  somente spec pública; bloqueia tráfego externo e mutações no browser.
+- Validação: fixture sintética do runner, suíte/lint/tipos, bash -n, formato,
+  diff/guard e tentativa headless; browser bloqueado não paralisa missão.
+
 ## Integração controlada da PR #12 — concluída, 7 de outubro de 2026
 
 - Objetivo concluído: reconciliar metas e cenários em

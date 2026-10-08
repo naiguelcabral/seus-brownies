@@ -81,6 +81,8 @@ O Codex consegue identificar estado, regras, limites e próxima tarefa sem depen
 - [~] Testes E2E de acesso: spec de rotas públicas criada; execução integrada
   de login, logout, OTP, reset, sessão e negações ainda depende de ambiente e
   identidades de teste autorizados.
+  A27 prepara runner público local isolado de HEAD, sem secrets, sem rede
+  externa e sem mutações; sua prova é separada da homologação G1/HML.
 
 ### Gate
 
