@@ -1,5 +1,10 @@
 # Log sanitizado de autonomia — Cacau v1
 
+## A25 — invariantes do writer de produção, 8 de outubro de 2026
+
+- Cobertura local do writer transacional preserva os controles existentes; não
+  executa banco compartilhado, seed, backfill ou migration.
+
 ## A24 — reconciliação de custo por lote, 8 de outubro de 2026
 
 - Diagnóstico local somente leitura para diferença entre custo físico ponderado

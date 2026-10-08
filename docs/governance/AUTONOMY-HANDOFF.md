@@ -1,5 +1,12 @@
 # Handoff de autonomia — Cacau v1
 
+## Missão autônoma — A25, 8 de outubro de 2026
+
+- Testes locais de invariantes da conclusão transacional de produção foram
+  adicionados com mock de Drizzle, preservando guards, rollback e precisão.
+- Não houve mudança de regra de estoque/custo, migration, escrita HML ou
+  alteração de RBAC.
+
 ## Missão autônoma — A24, 8 de outubro de 2026
 
 - Reconciliação somente leitura compara custo físico ponderado e custo final

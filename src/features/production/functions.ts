@@ -843,270 +843,273 @@ export const getProductionBatch = createServerFn({ method: 'GET' })
     }
   })
 
+export async function persistProductionBatchCompletion(
+  database: Pick<Database, 'transaction'>,
+  data: { id: number },
+) {
+  return database.transaction(async (tx) => {
+    // Garante que uma segunda conclusão espere a primeira e então enxergue
+    // o status atualizado antes de tentar criar qualquer movimento.
+    await tx.execute(
+      sql`select id from ${productionBatches} where ${productionBatches.id} = ${data.id} for update`,
+    )
+    const [batch] = await tx
+      .select()
+      .from(productionBatches)
+      .where(eq(productionBatches.id, data.id))
+    assertCompletableBatchStatus(batch.status)
+    if (!batch.recipeVersionId || !batch.plannedFor || !batch.recipeMultiplier)
+      throw new Error(
+        'O rascunho não possui receita, data ou multiplicador válidos.',
+      )
+    const productionDate = batch.plannedFor
+
+    const [outputs, completedLosses] = await Promise.all([
+      tx
+        .select({
+          productId: productionBatchOutputs.productId,
+          plannedQuantity: productionBatchOutputs.plannedQuantity,
+          role: productionBatchOutputs.role,
+        })
+        .from(productionBatchOutputs)
+        .where(eq(productionBatchOutputs.productionBatchId, batch.id)),
+      tx
+        .select({
+          productId: productionBatchLosses.productId,
+          quantity: productionBatchLosses.quantity,
+          reason: productionBatchLosses.reason,
+        })
+        .from(productionBatchLosses)
+        .where(eq(productionBatchLosses.productionBatchId, batch.id)),
+    ])
+    if (!outputs.length) throw new Error('O rascunho não possui saídas.')
+    const payload = (batch.sourcePayload ?? {}) as {
+      losses?: Array<{ productId: number; quantity: string; reason: string }>
+    }
+    const draftLosses = z.array(lossInput).safeParse(payload.losses ?? [])
+    if (!draftLosses.success)
+      throw new Error('As perdas registradas no rascunho são inválidas.')
+    assertLossReasons(draftLosses.data)
+    if (completedLosses.some((loss) => !loss.reason.trim()))
+      throw new Error('Toda perda manual exige motivo.')
+
+    const input: BatchInput = {
+      recipeVersionId: batch.recipeVersionId,
+      productionDate: batch.plannedFor,
+      recipeMultiplier: batch.recipeMultiplier,
+      outputs: outputs
+        .filter((output) => output.role === 'primary')
+        .map((output) => ({
+          productId: output.productId,
+          quantity: output.plannedQuantity ?? '0',
+        })),
+      bordinhasQuantity:
+        outputs.find((output) => output.role === 'co_product')
+          ?.plannedQuantity ?? '0',
+      losses: draftLosses.data.map((loss) => ({
+        productId: loss.productId,
+        quantity: loss.quantity,
+        reason: loss.reason,
+      })),
+      notes: batch.notes ?? undefined,
+    }
+    const plan = await loadPlan(tx, input)
+    const productIds = consumptionProductIds(plan.consumptions).sort(
+      (a, b) => a - b,
+    )
+    // Serializa conclusões concorrentes dos mesmos insumos antes de apurar saldos.
+    if (productIds.length) {
+      await tx.execute(
+        sql`select id from ${products} where ${products.id} in ${productIds} order by ${products.id} for update`,
+      )
+    }
+    const costs = await enrichCosts(tx, plan)
+    assertSufficientStock(
+      costs.costs.map((cost) => ({
+        name: cost.name,
+        available: cost.available,
+        required: cost.quantity,
+      })),
+    )
+    const outputCosts = allocateOutputCosts(
+      costs.totalCost,
+      plan.sellableOutputs.map((output) => ({
+        productId: output.product.id,
+        quantity: output.quantity,
+      })),
+    )
+    const outputCostByProductId = new Map(
+      outputCosts.map((output) => [output.productId, output.allocatedCost]),
+    )
+
+    await tx.insert(productionBatchConsumptions).values(
+      costs.costs.map((cost) => ({
+        sourceKey: `manual:production-batch:${batch.id}:consumption:${cost.id}`,
+        sourceHash: `completed-${batch.id}-consumption-${cost.id}`,
+        productionBatchId: batch.id,
+        recipeItemId:
+          plan.baseRows.find((item) => item.productId === cost.id)
+            ?.recipeItemId ?? null,
+        productId: cost.id,
+        quantity: thousandthsToQuantity(cost.quantity),
+        unitCost: millisToUnitCost(cost.unitCost),
+        totalCost: centsToMoney(cost.totalCost),
+        sourcePayload: {
+          origin: 'manual_production_completion',
+          components: cost.source,
+        },
+      })),
+    )
+    await tx.insert(stockMovements).values(
+      costs.costs.map((cost) => ({
+        productId: cost.id,
+        type: 'production' as const,
+        quantityDelta: `-${thousandthsToQuantity(cost.quantity)}`,
+        unitCost: millisToUnitCost(cost.unitCost),
+        referenceType: 'production_consumption',
+        referenceId: batch.id,
+        sourceKey: `manual:production-batch:${batch.id}:stock-consumption:${cost.id}`,
+        sourceHash: `completed-${batch.id}-stock-consumption-${cost.id}`,
+        occurredAt: new Date(`${batch.plannedFor}T12:00:00.000Z`),
+      })),
+    )
+    await tx.insert(operationalCosts).values(
+      plan.operational.map((item) => ({
+        sourceId: `manual:production-batch:${batch.id}:operational:${item.requirement.type}`,
+        sourceHash: `completed-${batch.id}-operational-${item.requirement.type}`,
+        type: item.requirement.type,
+        productionBatchId: batch.id,
+        operationalRateId: item.rate.id,
+        quantity: thousandthsToQuantity(item.quantity),
+        unit: item.requirement.unit,
+        unitAmount: item.rate.unitAmount,
+        amount: centsToMoney(item.amountCents),
+        occurredAt: productionDate,
+        notes: 'Tarifa vigente efetivamente aplicada ao lote.',
+      })),
+    )
+    const outputMovements = await tx
+      .insert(stockMovements)
+      .values(
+        plan.sellableOutputs.map((output) => ({
+          productId: output.product.id,
+          type: 'production' as const,
+          quantityDelta: thousandthsToQuantity(output.quantity),
+          unitCost: millisToUnitCost(costs.outputUnitCost),
+          allocatedCost: centsToMoney(
+            outputCostByProductId.get(output.product.id) ?? 0n,
+          ),
+          referenceType: 'production_output',
+          referenceId: batch.id,
+          sourceKey: `manual:production-batch:${batch.id}:stock-output:${output.product.id}`,
+          sourceHash: `completed-${batch.id}-stock-output-${output.product.id}`,
+          occurredAt: new Date(`${batch.plannedFor}T12:00:00.000Z`),
+        })),
+      )
+      .returning({
+        id: stockMovements.id,
+        productId: stockMovements.productId,
+        occurredAt: stockMovements.occurredAt,
+      })
+    const completedOutputs = await Promise.all(
+      plan.sellableOutputs.map((output) =>
+        tx
+          .update(productionBatchOutputs)
+          .set({
+            actualQuantity: thousandthsToQuantity(output.quantity),
+            unitCost: millisToUnitCost(costs.outputUnitCost),
+            allocatedCost: centsToMoney(
+              outputCostByProductId.get(output.product.id) ?? 0n,
+            ),
+          })
+          .where(
+            and(
+              eq(productionBatchOutputs.productionBatchId, batch.id),
+              eq(productionBatchOutputs.productId, output.product.id),
+            ),
+          )
+          .returning({
+            id: productionBatchOutputs.id,
+            productId: productionBatchOutputs.productId,
+          }),
+      ),
+    )
+    const outputByProductId = new Map(
+      completedOutputs.flat().map((output) => [output.productId, output]),
+    )
+    const movementByProductId = new Map(
+      outputMovements.map((movement) => [movement.productId, movement]),
+    )
+    await tx.insert(inventoryCostLayers).values(
+      plan.sellableOutputs.map((output) => {
+        const completedOutput = outputByProductId.get(output.product.id)
+        const movement = movementByProductId.get(output.product.id)
+        if (!completedOutput || !movement)
+          throw new Error('Não foi possível criar a camada FIFO da produção.')
+        const allocatedCost = outputCostByProductId.get(output.product.id)
+        if (allocatedCost === undefined)
+          throw new Error('Saída de produção sem custo alocado.')
+        return {
+          productId: output.product.id,
+          productionBatchOutputId: completedOutput.id,
+          sourceStockMovementId: movement.id,
+          // FIFO follows completion order, not the planned production date.
+          availableAt: new Date(),
+          originalQuantity: thousandthsToQuantity(output.quantity),
+          originalCost: centsToMoney(allocatedCost),
+          remainingQuantity: thousandthsToQuantity(output.quantity),
+          remainingCost: centsToMoney(allocatedCost),
+        }
+      }),
+    )
+    if (draftLosses.data.length) {
+      await tx.insert(productionBatchLosses).values(
+        draftLosses.data.map((loss) => ({
+          sourceKey: `manual:production-batch:${batch.id}:loss:${loss.productId}`,
+          sourceHash: `completed-${batch.id}-loss-${loss.productId}`,
+          productionBatchId: batch.id,
+          productId: loss.productId,
+          quantity: loss.quantity.trim().replace(',', '.'),
+          reason: loss.reason.trim(),
+          sourcePayload: { origin: 'manual_loss_declared_in_draft' },
+        })),
+      )
+    }
+    await tx
+      .update(productionBatches)
+      .set({
+        status: 'completed',
+        actualQuantity: thousandthsToQuantity(costs.grossQuantity),
+        totalCost: centsToMoney(costs.totalCost),
+        unitCost: millisToUnitCost(costs.outputUnitCost),
+        completedAt: new Date(),
+        completionPayload: {
+          costMethod: 'perpetual_weighted_average',
+          completedAt: new Date().toISOString(),
+          capacity: plan.capacity,
+          operationalRates: plan.operational.map((item) => ({
+            type: item.requirement.type,
+            rateId: item.rate.id,
+            unitAmount: item.rate.unitAmount,
+            effectiveFrom: item.rate.effectiveFrom,
+          })),
+        },
+        updatedAt: new Date(),
+      })
+      .where(
+        and(
+          eq(productionBatches.id, batch.id),
+          eq(productionBatches.status, 'draft'),
+        ),
+      )
+    return { id: batch.id, totalCost: centsToMoney(costs.totalCost) }
+  })
+}
+
 export const completeProductionBatch = createServerFn({ method: 'POST' })
   .middleware([requireServerFunctionPermission('completeProductionBatch')])
   .validator(z.object({ id: z.number().int().positive() }))
   .handler(async ({ data }) => {
     const { getDb } = await import('#/db/index')
-    return getDb().transaction(async (tx) => {
-      // Garante que uma segunda conclusão espere a primeira e então enxergue
-      // o status atualizado antes de tentar criar qualquer movimento.
-      await tx.execute(
-        sql`select id from ${productionBatches} where ${productionBatches.id} = ${data.id} for update`,
-      )
-      const [batch] = await tx
-        .select()
-        .from(productionBatches)
-        .where(eq(productionBatches.id, data.id))
-      assertCompletableBatchStatus(batch.status)
-      if (
-        !batch.recipeVersionId ||
-        !batch.plannedFor ||
-        !batch.recipeMultiplier
-      )
-        throw new Error(
-          'O rascunho não possui receita, data ou multiplicador válidos.',
-        )
-      const productionDate = batch.plannedFor
-
-      const [outputs, completedLosses] = await Promise.all([
-        tx
-          .select({
-            productId: productionBatchOutputs.productId,
-            plannedQuantity: productionBatchOutputs.plannedQuantity,
-            role: productionBatchOutputs.role,
-          })
-          .from(productionBatchOutputs)
-          .where(eq(productionBatchOutputs.productionBatchId, batch.id)),
-        tx
-          .select({
-            productId: productionBatchLosses.productId,
-            quantity: productionBatchLosses.quantity,
-            reason: productionBatchLosses.reason,
-          })
-          .from(productionBatchLosses)
-          .where(eq(productionBatchLosses.productionBatchId, batch.id)),
-      ])
-      if (!outputs.length) throw new Error('O rascunho não possui saídas.')
-      const payload = (batch.sourcePayload ?? {}) as {
-        losses?: Array<{ productId: number; quantity: string; reason: string }>
-      }
-      const draftLosses = z.array(lossInput).safeParse(payload.losses ?? [])
-      if (!draftLosses.success)
-        throw new Error('As perdas registradas no rascunho são inválidas.')
-      assertLossReasons(draftLosses.data)
-      if (completedLosses.some((loss) => !loss.reason.trim()))
-        throw new Error('Toda perda manual exige motivo.')
-
-      const input: BatchInput = {
-        recipeVersionId: batch.recipeVersionId,
-        productionDate: batch.plannedFor,
-        recipeMultiplier: batch.recipeMultiplier,
-        outputs: outputs
-          .filter((output) => output.role === 'primary')
-          .map((output) => ({
-            productId: output.productId,
-            quantity: output.plannedQuantity ?? '0',
-          })),
-        bordinhasQuantity:
-          outputs.find((output) => output.role === 'co_product')
-            ?.plannedQuantity ?? '0',
-        losses: draftLosses.data.map((loss) => ({
-          productId: loss.productId,
-          quantity: loss.quantity,
-          reason: loss.reason,
-        })),
-        notes: batch.notes ?? undefined,
-      }
-      const plan = await loadPlan(tx, input)
-      const productIds = consumptionProductIds(plan.consumptions).sort(
-        (a, b) => a - b,
-      )
-      // Serializa conclusões concorrentes dos mesmos insumos antes de apurar saldos.
-      if (productIds.length) {
-        await tx.execute(
-          sql`select id from ${products} where ${products.id} in ${productIds} order by ${products.id} for update`,
-        )
-      }
-      const costs = await enrichCosts(tx, plan)
-      assertSufficientStock(
-        costs.costs.map((cost) => ({
-          name: cost.name,
-          available: cost.available,
-          required: cost.quantity,
-        })),
-      )
-      const outputCosts = allocateOutputCosts(
-        costs.totalCost,
-        plan.sellableOutputs.map((output) => ({
-          productId: output.product.id,
-          quantity: output.quantity,
-        })),
-      )
-      const outputCostByProductId = new Map(
-        outputCosts.map((output) => [output.productId, output.allocatedCost]),
-      )
-
-      await tx.insert(productionBatchConsumptions).values(
-        costs.costs.map((cost) => ({
-          sourceKey: `manual:production-batch:${batch.id}:consumption:${cost.id}`,
-          sourceHash: `completed-${batch.id}-consumption-${cost.id}`,
-          productionBatchId: batch.id,
-          recipeItemId:
-            plan.baseRows.find((item) => item.productId === cost.id)
-              ?.recipeItemId ?? null,
-          productId: cost.id,
-          quantity: thousandthsToQuantity(cost.quantity),
-          unitCost: millisToUnitCost(cost.unitCost),
-          totalCost: centsToMoney(cost.totalCost),
-          sourcePayload: {
-            origin: 'manual_production_completion',
-            components: cost.source,
-          },
-        })),
-      )
-      await tx.insert(stockMovements).values(
-        costs.costs.map((cost) => ({
-          productId: cost.id,
-          type: 'production' as const,
-          quantityDelta: `-${thousandthsToQuantity(cost.quantity)}`,
-          unitCost: millisToUnitCost(cost.unitCost),
-          referenceType: 'production_consumption',
-          referenceId: batch.id,
-          sourceKey: `manual:production-batch:${batch.id}:stock-consumption:${cost.id}`,
-          sourceHash: `completed-${batch.id}-stock-consumption-${cost.id}`,
-          occurredAt: new Date(`${batch.plannedFor}T12:00:00.000Z`),
-        })),
-      )
-      await tx.insert(operationalCosts).values(
-        plan.operational.map((item) => ({
-          sourceId: `manual:production-batch:${batch.id}:operational:${item.requirement.type}`,
-          sourceHash: `completed-${batch.id}-operational-${item.requirement.type}`,
-          type: item.requirement.type,
-          productionBatchId: batch.id,
-          operationalRateId: item.rate.id,
-          quantity: thousandthsToQuantity(item.quantity),
-          unit: item.requirement.unit,
-          unitAmount: item.rate.unitAmount,
-          amount: centsToMoney(item.amountCents),
-          occurredAt: productionDate,
-          notes: 'Tarifa vigente efetivamente aplicada ao lote.',
-        })),
-      )
-      const outputMovements = await tx
-        .insert(stockMovements)
-        .values(
-          plan.sellableOutputs.map((output) => ({
-            productId: output.product.id,
-            type: 'production' as const,
-            quantityDelta: thousandthsToQuantity(output.quantity),
-            unitCost: millisToUnitCost(costs.outputUnitCost),
-            allocatedCost: centsToMoney(
-              outputCostByProductId.get(output.product.id) ?? 0n,
-            ),
-            referenceType: 'production_output',
-            referenceId: batch.id,
-            sourceKey: `manual:production-batch:${batch.id}:stock-output:${output.product.id}`,
-            sourceHash: `completed-${batch.id}-stock-output-${output.product.id}`,
-            occurredAt: new Date(`${batch.plannedFor}T12:00:00.000Z`),
-          })),
-        )
-        .returning({
-          id: stockMovements.id,
-          productId: stockMovements.productId,
-          occurredAt: stockMovements.occurredAt,
-        })
-      const completedOutputs = await Promise.all(
-        plan.sellableOutputs.map((output) =>
-          tx
-            .update(productionBatchOutputs)
-            .set({
-              actualQuantity: thousandthsToQuantity(output.quantity),
-              unitCost: millisToUnitCost(costs.outputUnitCost),
-              allocatedCost: centsToMoney(
-                outputCostByProductId.get(output.product.id) ?? 0n,
-              ),
-            })
-            .where(
-              and(
-                eq(productionBatchOutputs.productionBatchId, batch.id),
-                eq(productionBatchOutputs.productId, output.product.id),
-              ),
-            )
-            .returning({
-              id: productionBatchOutputs.id,
-              productId: productionBatchOutputs.productId,
-            }),
-        ),
-      )
-      const outputByProductId = new Map(
-        completedOutputs.flat().map((output) => [output.productId, output]),
-      )
-      const movementByProductId = new Map(
-        outputMovements.map((movement) => [movement.productId, movement]),
-      )
-      await tx.insert(inventoryCostLayers).values(
-        plan.sellableOutputs.map((output) => {
-          const completedOutput = outputByProductId.get(output.product.id)
-          const movement = movementByProductId.get(output.product.id)
-          if (!completedOutput || !movement)
-            throw new Error('Não foi possível criar a camada FIFO da produção.')
-          const allocatedCost = outputCostByProductId.get(output.product.id)
-          if (allocatedCost === undefined)
-            throw new Error('Saída de produção sem custo alocado.')
-          return {
-            productId: output.product.id,
-            productionBatchOutputId: completedOutput.id,
-            sourceStockMovementId: movement.id,
-            // FIFO follows completion order, not the planned production date.
-            availableAt: new Date(),
-            originalQuantity: thousandthsToQuantity(output.quantity),
-            originalCost: centsToMoney(allocatedCost),
-            remainingQuantity: thousandthsToQuantity(output.quantity),
-            remainingCost: centsToMoney(allocatedCost),
-          }
-        }),
-      )
-      if (draftLosses.data.length) {
-        await tx.insert(productionBatchLosses).values(
-          draftLosses.data.map((loss) => ({
-            sourceKey: `manual:production-batch:${batch.id}:loss:${loss.productId}`,
-            sourceHash: `completed-${batch.id}-loss-${loss.productId}`,
-            productionBatchId: batch.id,
-            productId: loss.productId,
-            quantity: loss.quantity.trim().replace(',', '.'),
-            reason: loss.reason.trim(),
-            sourcePayload: { origin: 'manual_loss_declared_in_draft' },
-          })),
-        )
-      }
-      await tx
-        .update(productionBatches)
-        .set({
-          status: 'completed',
-          actualQuantity: thousandthsToQuantity(costs.grossQuantity),
-          totalCost: centsToMoney(costs.totalCost),
-          unitCost: millisToUnitCost(costs.outputUnitCost),
-          completedAt: new Date(),
-          completionPayload: {
-            costMethod: 'perpetual_weighted_average',
-            completedAt: new Date().toISOString(),
-            capacity: plan.capacity,
-            operationalRates: plan.operational.map((item) => ({
-              type: item.requirement.type,
-              rateId: item.rate.id,
-              unitAmount: item.rate.unitAmount,
-              effectiveFrom: item.rate.effectiveFrom,
-            })),
-          },
-          updatedAt: new Date(),
-        })
-        .where(
-          and(
-            eq(productionBatches.id, batch.id),
-            eq(productionBatches.status, 'draft'),
-          ),
-        )
-      return { id: batch.id, totalCost: centsToMoney(costs.totalCost) }
-    })
+    return persistProductionBatchCompletion(getDb(), data)
   })

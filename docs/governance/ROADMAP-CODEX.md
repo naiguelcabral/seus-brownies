@@ -1,5 +1,15 @@
 # Roadmap executável para Codex — Cacau v1
 
+## Evidência local pendente de revisão — A25, 8 de outubro de 2026
+
+- G6: a conclusão de produção usa o mesmo writer transacional nos testes
+  locais com adaptador Drizzle fake. Cobertura: locks, uma conclusão por lote,
+  insuficiência de insumo antes de escrita e rollback após falhas em custos,
+  camada FIFO, saída ou status. O corpo transacional e o guard foram preservados.
+- O fake verifica composição e propagação de falhas; não comprova isolamento,
+  concorrência ou rollback do PostgreSQL real. Homologação compartilhada permanece
+  sujeita ao gate humano. Nenhum writer foi executado em HML.
+
 Legenda:
 
 - `[x]` concluído/entregue.
