@@ -1,5 +1,23 @@
 # Handoff de autonomia — Cacau v1
 
+## Reconciliação de integração — 8 de outubro de 2026
+
+- Objetivo: validar compatibilidade conjunta das PRs #12–#30 sem alterar
+  `main` nem PRs existentes; criar drafts independentes por domínio.
+- Lote ativo: `codex/integration-reports-finance`, da `origin/main`
+  `f61e9a28df7b0fdbc80864402b578a2a0aabd3f8`, incorpora #15, #16, #17, #18
+  e #30 por merge commits locais. A matriz canônica está em
+  `INTEGRATION-RECONCILIATION-2026-10-08.md`.
+- Resoluções feitas: documentação de autonomia composta sem perda de entradas;
+  imports de relatórios mantêm tendências e desfechos de produção juntos.
+- Não objetivos: merge de PR remota, push em `main`, deploy, migration
+  aplicada, escrita HML/produção, segredo, configuração de infraestrutura ou
+  mudança de regra financeira/RBAC.
+- Gate: #13 excluída com `CHANGES-REQUIRED` enquanto a entrega de PAT ao
+  processo Codex persistente e seus subprocessos não receber revisão humana.
+- Próximo passo: executar a matriz completa no SHA consolidado, push apenas da
+  branch de integração e abrir PR em rascunho; depois iniciar INT-P.
+
 ## Missão autônoma — A28, 8 de outubro de 2026
 
 - Objetivo: diagnosticar cobertura de quantidade entregue × alocação FIFO,

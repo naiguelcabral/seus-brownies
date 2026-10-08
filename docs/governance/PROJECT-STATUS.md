@@ -1,5 +1,17 @@
 # Estado canônico do projeto — Cacau v1
 
+## Reconciliação de integração em rascunho — 8 de outubro de 2026
+
+A `main` remota está em `f61e9a28df7b0fdbc80864402b578a2a0aabd3f8`. A PR #12
+já foi integrada; as PRs #14–#30 foram inventariadas em
+`INTEGRATION-RECONCILIATION-2026-10-08.md`. O primeiro lote em rascunho reúne
+os diagnósticos e relatórios somente leitura #15, #16, #17, #18 e #30 por
+merge commits locais, com conflitos de documentação/imports compostos. A #13
+permanece fora por `CHANGES-REQUIRED` de segurança: a credencial não aparece
+no Git, mas o launcher a expõe ao processo Codex persistente e a subprocessos.
+Nenhum lote foi integrado em `main`, nem houve deploy, migration aplicada,
+alteração de secret, Cloudflare, Neon ou banco.
+
 ## Diagnóstico local em revisão — A28, 8 de outubro de 2026
 
 O relatório financeiro distingue reconciliação aritmética de margens da
