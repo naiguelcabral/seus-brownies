@@ -1,5 +1,12 @@
 # Handoff de autonomia — Cacau v1
 
+## Missão autônoma — A24, 8 de outubro de 2026
+
+- Reconciliação somente leitura compara custo físico ponderado e custo final
+  FIFO por lote, preservando centavos em inteiros e explicitando lacunas.
+- Não altera writer, custo, FIFO, estoque, migration, dados ou HML; qualquer
+  divergência segue como diagnóstico para revisão humana.
+
 ## Missão autônoma — A22, 8 de outubro de 2026
 
 - Objetivo: checklist revisável para preparar a operação real de produção.

@@ -59,6 +59,8 @@ import {
   calculateProductionHistoryPage,
   productionHistoryPageSize,
 } from '#/features/production/history'
+import { reconcileProductionCosts } from '#/features/production/cost-reconciliation'
+import { isMissingOptionalSchemaError } from '#/features/reports/optional-schema'
 
 const quantityInput = z
   .string()
@@ -745,6 +747,7 @@ export const getProductionBatch = createServerFn({ method: 'GET' })
     const [outputs, consumptions, losses, costs] = await Promise.all([
       database
         .select({
+          id: productionBatchOutputs.id,
           productId: productionBatchOutputs.productId,
           productName: products.name,
           productSku: products.sku,
@@ -796,6 +799,38 @@ export const getProductionBatch = createServerFn({ method: 'GET' })
       losses?: Array<{ productId: number; quantity: string; reason: string }>
     }
     const plannedLosses = z.array(lossInput).safeParse(payload.losses ?? [])
+    let costReconciliation: ReturnType<typeof reconcileProductionCosts> | null =
+      null
+    if (batch.status === 'completed') {
+      try {
+        const layers =
+          outputs.length === 0
+            ? []
+            : await database
+                .select({
+                  id: inventoryCostLayers.id,
+                  productionBatchOutputId:
+                    inventoryCostLayers.productionBatchOutputId,
+                  productId: inventoryCostLayers.productId,
+                  originalQuantity: inventoryCostLayers.originalQuantity,
+                  originalCost: inventoryCostLayers.originalCost,
+                })
+                .from(inventoryCostLayers)
+                .where(
+                  inArray(
+                    inventoryCostLayers.productionBatchOutputId,
+                    outputs.map((output) => output.id),
+                  ),
+                )
+        costReconciliation = reconcileProductionCosts(
+          batch.totalCost,
+          outputs,
+          layers,
+        )
+      } catch (error) {
+        if (!isMissingOptionalSchemaError(error)) throw error
+      }
+    }
     const { sourcePayload: _sourcePayload, ...serializableBatch } = batch
     return {
       batch: serializableBatch,
@@ -803,6 +838,7 @@ export const getProductionBatch = createServerFn({ method: 'GET' })
       consumptions,
       losses,
       plannedLosses: plannedLosses.success ? plannedLosses.data : [],
+      costReconciliation,
       costs,
     }
   })

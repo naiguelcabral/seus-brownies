@@ -8,6 +8,7 @@ import { ManagementLayout } from '#/components/ManagementLayout'
 import { compareOutputYield } from '#/features/production/output-yield'
 import { formatBrlMoney } from '#/lib/format-money'
 import { ingredientShortfalls } from '#/features/production/ingredient-shortfalls'
+import { productionCostDivergenceMessages } from '#/features/production/cost-reconciliation'
 import {
   completeProductionBatch,
   createProductionBatch,
@@ -923,6 +924,25 @@ function Details({
           )}
         />
         <AuditList title="Perdas manuais" rows={lossRows} />
+        {batch.status === 'completed' ? (
+          <AuditList
+            title="Reconciliação de custo do lote e origens FIFO"
+            rows={
+              details.costReconciliation === null
+                ? [
+                    'Diagnóstico indisponível: estrutura de dados FIFO ainda não disponível.',
+                  ]
+                : details.costReconciliation.length === 0
+                  ? [
+                      'Nenhuma divergência nos custos alocados e origens FIFO consultados.',
+                    ]
+                  : details.costReconciliation.map(
+                      (item) =>
+                        `${productionCostDivergenceMessages[item.code]} · saída ${item.outputId ?? 'lote'} · camada ${item.layerId ?? 'ausente'}`,
+                    )
+            }
+          />
+        ) : null}
       </div>
       {batch.totalCost ? (
         <p className="mt-5 rounded-xl bg-[#fff7ec] p-3 text-sm">

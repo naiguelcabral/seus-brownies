@@ -1,5 +1,10 @@
 # Log sanitizado de autonomia — Cacau v1
 
+## A24 — reconciliação de custo por lote, 8 de outubro de 2026
+
+- Diagnóstico local somente leitura para diferença entre custo físico ponderado
+  e FIFO final, sem recalcular fatos, corrigir histórico ou escrever dados.
+
 ## A22 — checklist de readiness de produção, 8 de outubro de 2026
 
 - Checklist local para revisão humana separa evidência local de homologação,
