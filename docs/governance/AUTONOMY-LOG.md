@@ -1,5 +1,16 @@
 # Log sanitizado de autonomia — Cacau v1
 
+## A19 — telemetria sanitizada em runtime, 8 de outubro de 2026
+
+- Branch independente `codex/auto-a19-sanitized-telemetry`, main `f61e9a28`.
+- JSON com evento/nível/UUID e enums permitidos; campos extras não são
+  serializados. Nenhuma política de auth/sessão, RBAC ou infraestrutura muda.
+- Validação: 3 casos direcionados, 374 testes da suíte e tipos passaram.
+  Lint inicialmente apontou comparação redundante do literal stage;
+  validação runtime passou a usar allowlist, mantendo o controle sem
+  suprimir regra. Lint, diff e guard verdes; build CI isolado passou com chave pública sintética.
+- Sem acesso a HML, produção ou arquivos secretos.
+
 ## WP-D metas e cenários — 14 de setembro de 2026
 
 - G2-F1 foi publicado na branch `codex/workbook-parity` sem force push; a CI

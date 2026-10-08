@@ -1,5 +1,23 @@
 # Handoff de autonomia — Cacau v1
 
+## Missão autônoma — A19, 8 de outubro de 2026
+
+- Objetivo: logs JSON estruturados de auth com allowlist em runtime e
+  correlação UUID; entradas inesperadas não expõem segredos.
+- Não objetivos: autenticação, RBAC, política de sessão, provedor, retenção,
+  serviço externo ou monitoramento pago.
+- Branch independente `codex/auto-a19-sanitized-telemetry`, main `f61e9a28`.
+- Arquivos previstos: duas saídas de telemetria, helper de correlação, teste,
+  roadmap, status, handoff e log.
+- Aceite: copiar somente enums aprovados; excluir campos extras; UUID inválido
+  recebe marcador fixo; nenhum erro de provedor ou identidade serializado.
+- Testes previstos: captura local de console e payloads sintéticos adversos,
+  suíte, lint, tipos, build CI isolado, Prettier, diff e guard.
+
+- Resultado: 3 casos direcionados e 374 testes da suíte passaram; lint
+  passou após ajustar a validação runtime de stage sem suprimir regra;
+  tipos, Prettier, diff e guard verdes. Build CI isolado passou com chave pública sintética.
+
 ## Integração controlada da PR #12 — concluída, 7 de outubro de 2026
 
 - Objetivo concluído: reconciliar metas e cenários em
