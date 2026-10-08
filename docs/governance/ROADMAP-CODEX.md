@@ -179,10 +179,13 @@ A matriz detalhada workbook × sistema está em
 - [x] Custos operacionais e coproduto.
 - [x] Testes/homologações principais.
 - [ ] Revisar UX de produção para operação diária.
+<<<<<<< HEAD
 - [~] Auditoria local por lote apresenta planejado, realizado, diferença
   física e custo alocado por saída; perdas declaradas e custo total já são
-  exibidos. Homologação gerencial e consolidação entre lotes pendentes.
-- [ ] Alertas de insumo insuficiente e planejamento.
+  exibidos. A prévia também sinaliza o déficit exato por insumo/unidade;
+  planejamento entre lotes e homologação diária permanecem pendentes.
+=======
+>>>>>>> origin/codex/auto-a18-ingredient-shortfalls
 - [ ] Revisar consistência entre custo médio físico e FIFO de produto final.
 - [ ] Checklist de preparação para produção real.
 

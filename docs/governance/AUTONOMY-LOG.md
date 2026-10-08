@@ -1,5 +1,14 @@
 # Log sanitizado de autonomia — Cacau v1
 
+## A18 — déficit de insumo na prévia, 8 de outubro de 2026
+
+- Branch independente `codex/auto-a18-ingredient-shortfalls`, main `f61e9a28`.
+- Alerta acessível mostra quantidade faltante por insumo sem somar unidades
+  diferentes ou alterar writers/gates de conclusão. Dois casos direcionados,
+  373 testes da suíte, lint/typecheck, Prettier, diff e guard passaram.
+  Build CI isolado passou com chave pública sintética explícita.
+- Nenhum banco, HML, migration ou recurso de produção acessado.
+
 ## A17 — rendimento por saída do lote, 8 de outubro de 2026
 
 - Branch independente `codex/auto-a17-batch-yield` baseada na main `f61e9a28`.
