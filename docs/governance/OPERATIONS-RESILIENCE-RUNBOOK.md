@@ -111,6 +111,24 @@ produção, nem a proteção de branch da `main`; ambos permanecem gates externo
 
 ## Observabilidade e artefatos
 
+### Contrato local preparado — A26
+
+`src/features/operations/local-signals.ts` avalia observações de aplicação,
+banco, auditoria e rate limiter. Aceita somente `available`, `unavailable` e
+`unknown`; ausência/valor inválido é desconhecido, nunca prova saúde. Falha
+observada prevalece sobre desconhecido. O contrato é informativo e não muda
+guards, writers ou política de autenticação.
+
+O tracker, chamado sequencialmente, entrega somente mudanças de componentes e
+recuperação a um callback injetado. Valores livres e campos extras não saem do
+avaliador. Falha no callback retorna apenas `failed` e permite nova tentativa;
+não copia erros de provedor. Não há timer, persistência, endpoint, probe,
+destinatário, rede ou serviço contratado. Testes usam apenas fakes.
+
+A coleta efetiva, retenção, frequência, limiares operacionais, destinatário e
+integração com a plataforma precisam de decisão/revisão humana. Não apresentar
+este contrato local como monitoramento externo configurado ou SLA homologado.
+
 | Sinal                     | Fonte atual                                      | Regra de captura                                                                                                 |
 | ------------------------- | ------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------- |
 | Mutação operacional       | `operational_audit_events` após migration `0018` | Ator conhecido, ação, entidade, instante, motivo e referência de operação; falha de persistência impede sucesso. |
