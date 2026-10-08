@@ -94,7 +94,10 @@ controlada de `0027`/`0028` em HML com backup, janela e rollback, seguida de
 homologação por navegador; não há autorização automática para aplicação ou
 deploy.
 
-O controlador escolhe somente o primeiro pacote com estado exatamente `ready`.
+O controlador escolhe o primeiro pacote com estado exatamente `ready` ainda
+não tentado na mesma execução. No loop autorizado, gates locais sem mudanças
+pendentes são registrados e outra tarefa `ready` pode continuar; dependências
+não são promovidas. Validação falha, limite e preflight continuam interrompendo.
 Antes de editar, o agente registra no handoff objetivo, não objetivos, arquivos
 previstos, critérios de aceite e comandos de validação. Um pacote não pode
 alterar seu próprio estado para `done` com checks vermelhos ou gate pendente.
