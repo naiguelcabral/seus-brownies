@@ -1,5 +1,18 @@
 # Log sanitizado de autonomia — Cacau v1
 
+## A13 — diagnóstico FIFO local, 7 de outubro de 2026
+
+- Branch independente `codex/auto-a13-fifo-diagnostics` criada da `main`
+  `f61e9a28df7b0fdbc80864402b578a2a0aabd3f8`, sem base na PR #14.
+- Reconciliação somente leitura ampliada para detectar camada/alocação
+  ausentes, divergência de produto, reversão acumulada acima da alocação e
+  decimal inválido sem expor o valor original. Nenhuma regra de CMV ou escrita
+  de banco foi modificada.
+- Seis testes direcionados e 375 testes da suíte passaram; lint e typecheck
+  verdes. O build CI isolado recusou corretamente a ausência de site key e
+  passou no commit limpo com a chave pública sintética documentada; nenhum
+  secret ou arquivo de ambiente foi carregado.
+
 ## WP-D metas e cenários — 14 de setembro de 2026
 
 - G2-F1 foi publicado na branch `codex/workbook-parity` sem force push; a CI
