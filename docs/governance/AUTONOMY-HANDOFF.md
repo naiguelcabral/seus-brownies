@@ -15,8 +15,12 @@
   mudança de regra financeira/RBAC.
 - Gate: #13 excluída com `CHANGES-REQUIRED` enquanto a entrega de PAT ao
   processo Codex persistente e seus subprocessos não receber revisão humana.
-- Próximo passo: executar a matriz completa no SHA consolidado, push apenas da
-  branch de integração e abrir PR em rascunho; depois iniciar INT-P.
+- Validação consolidada concluída: instalação sem scripts, 34 testes
+  direcionados, suíte de 389 testes, lint, typecheck, Prettier, diff e os
+  builds CI/HML isolados com chave pública sintética passaram. Os avisos de
+  peers Better Auth/ESLint não motivaram atualização de dependências.
+- Próximo passo: push apenas da branch de integração e abrir PR em rascunho;
+  depois iniciar INT-P.
 
 ## Missão autônoma — A28, 8 de outubro de 2026
 

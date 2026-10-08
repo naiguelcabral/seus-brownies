@@ -75,3 +75,14 @@ Os checks acima pertencem aos heads individuais e servem somente como
 inventário. O lote consolidado exige suas próprias verificações e CI no SHA da
 branch de integração. A revisão humana deve avaliar os drafts resultantes e
 decidir separadamente sobre a #13 e qualquer migration já versionada.
+
+### Validação local do lote financeiro
+
+- `npm ci --ignore-scripts`: passou, com avisos preexistentes de peers de
+  Better Auth e ESLint; nenhuma dependência foi alterada.
+- Testes direcionados: 34 passaram. `npm test`: 389 passaram.
+- `npm run lint`, `npm run typecheck`, Prettier dos 20 arquivos alterados e
+  `git diff --check`: passaram.
+- `npm run build:ci-isolated` e `npm run build:hml`: passaram com a chave
+  pública sintética. Ambos usaram os scripts isolados versionados; não houve
+  chamada direta de `npm run build`, leitura de arquivo de ambiente ou deploy.
