@@ -2,11 +2,12 @@
 
 ## Reconciliação de integração — 8 de outubro de 2026
 
-| ID     | Pacote                                            | Estado       | Saída / gate                                                                         |
-| ------ | ------------------------------------------------- | ------------ | ------------------------------------------------------------------------------------ |
-| INT-R  | Relatórios e financeiro (#15, #16, #17, #18, #30) | review-ready | PR #31 draft; CI `37804204150` verde no SHA `1733573`.                               |
-| INT-P  | Produção e readiness (#19, #20, #24, #26, #27)    | review-ready | Testes, lint, tipos, Prettier e builds isolados passaram; publicar e abrir PR draft. |
-| INT-13 | Credencial persistente GitHub MCP (#13)           | needs-human  | `CHANGES-REQUIRED`; fora de qualquer lote.                                           |
+| ID     | Pacote                                                    | Estado       | Saída / gate                                                 |
+| ------ | --------------------------------------------------------- | ------------ | ------------------------------------------------------------ |
+| INT-R  | Relatórios e financeiro (#15, #16, #17, #18, #30)         | done         | PR #31 integrada em `main`; CI `37804204150` verde.          |
+| INT-P  | Produção e readiness (#19, #20, #24, #26, #27)            | done         | PR #32 integrada em `main`; CI `37813883831` verde.          |
+| INT-G  | Plataforma/governança (#14, #21, #22, #23, #25, #28, #29) | review-ready | Lote consolidado localmente; validação e PR draft pendentes. |
+| INT-13 | Credencial persistente GitHub MCP (#13)                   | needs-human  | `CHANGES-REQUIRED`; fora de qualquer lote.                   |
 
 Matriz: `INTEGRATION-RECONCILIATION-2026-10-08.md`.
 
