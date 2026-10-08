@@ -1,5 +1,19 @@
 # Log sanitizado de autonomia — Cacau v1
 
+## A25 — conclusão transacional de produção, 8 de outubro de 2026
+
+- Branch `codex/auto-a25-production-transaction-tests`, independente da main
+  `f61e9a28`. Extração tipada do writer existente, sem mudar regras ou controles.
+- Sete cenários locais com fake: custos exatos de R$ 5,00 distribuídos em duas
+  saídas/camadas, segunda conclusão negada, saldo insuficiente negado antes de
+  escrita e quatro falhas posteriores revertidas. O fake não prova isolamento
+  do PostgreSQL; não houve escrita compartilhada, migration ou deploy.
+- Revisão de diff sem espaços confirmou somente a extração e a chamada pelo
+  handler protegido; o corpo transacional mantém a sequência existente.
+- Validação local: sete testes direcionados, 378 testes da suíte, lint,
+  typecheck e build CI isolado passaram, com chave pública sintética e sem
+  carregar secrets. Prettier, diff e guard de caminhos passaram.
+
 ## WP-D metas e cenários — 14 de setembro de 2026
 
 - G2-F1 foi publicado na branch `codex/workbook-parity` sem force push; a CI

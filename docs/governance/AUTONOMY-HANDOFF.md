@@ -1,5 +1,20 @@
 # Handoff de autonomia — Cacau v1
 
+## Missão autônoma — A25, 8 de outubro de 2026
+
+- Objetivo: testar a composição real da conclusão de lote com Drizzle fake,
+  incluindo negações pré-escrita e rollback em falhas posteriores.
+- Não objetivos: alterar regra/custo/estoque, isolamento SQL, RBAC, sessão,
+  schema, completar dados históricos ou executar writer em HML.
+- Branch independente `codex/auto-a25-production-transaction-tests`, main `f61e9a28`.
+- Arquivos previstos: função de produção (seam tipado com transação existente),
+  mock local, testes, roadmap, status, handoff e log.
+- Aceite: servidor chama o mesmo writer testado; preserva locks e sequência
+  de writes; segunda conclusão e saldo insuficiente não escrevem; falha em
+  camada/custo/status posterior não confirma writes anteriores.
+- Validação: testes direcionados, suíte, lint/tipos, build CI isolado,
+  Prettier, revisão da equivalência do corpo transacional, diff e guard.
+
 ## Integração controlada da PR #12 — concluída, 7 de outubro de 2026
 
 - Objetivo concluído: reconciliar metas e cenários em

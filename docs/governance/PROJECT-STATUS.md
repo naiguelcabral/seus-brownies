@@ -1,5 +1,13 @@
 # Estado canônico do projeto — Cacau v1
 
+## Entrega local em revisão — A25, 8 de outubro de 2026
+
+Conclusão de produção com sete cenários determinísticos do writer real usando
+Drizzle fake: conclusão única, custos/saídas/FIFO, insuficiência de insumo e
+rollback em falhas posteriores. A extração do writer preserva o corpo da
+transação, a validação e a autorização do servidor. A prova local não substitui
+homologação PostgreSQL, operação física ou aprovação de produção.
+
 Atualizado em 6 de outubro de 2026, após revisão de código, migrations,
 testes, rotas, documentação e estado público de HML.
 
