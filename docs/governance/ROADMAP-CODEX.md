@@ -180,7 +180,9 @@ A matriz detalhada workbook × sistema está em
 - [x] Testes/homologações principais.
 - [ ] Revisar UX de produção para operação diária.
 - [ ] Relatórios de rendimento, perdas e custo por lote.
-- [ ] Alertas de insumo insuficiente e planejamento.
+- [~] Prévia local já sinaliza insumos insuficientes; alerta acessível detalha
+  o déficit exato por insumo/unidade. Planejamento entre lotes e homologação
+  diária permanecem pendentes.
 - [ ] Revisar consistência entre custo médio físico e FIFO de produto final.
 - [ ] Checklist de preparação para produção real.
 

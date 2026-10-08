@@ -5,6 +5,7 @@ import { useServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
 
 import { ManagementLayout } from '#/components/ManagementLayout'
+import { ingredientShortfalls } from '#/features/production/ingredient-shortfalls'
 import {
   completeProductionBatch,
   createProductionBatch,
@@ -724,6 +725,7 @@ function Preview({
 }: {
   preview: Awaited<ReturnType<typeof previewProductionBatch>>
 }) {
+  const shortfalls = ingredientShortfalls(preview.consumptions)
   return (
     <section className="mt-6 rounded-2xl border border-[#d6c2b3] bg-white p-5">
       <div className="flex items-start justify-between gap-4">
@@ -743,6 +745,24 @@ function Preview({
           </span>
         </div>
       </div>
+      {shortfalls.length > 0 ? (
+        <div
+          role="alert"
+          className="mt-5 rounded-xl border border-[#b65624] bg-[#fff7ec] p-3 text-sm"
+        >
+          <strong>Insumos insuficientes para concluir o lote</strong>
+          <ul className="mt-2 list-disc pl-5">
+            {shortfalls.map((item) => (
+              <li key={item.productId}>
+                {item.productName}: faltam {item.shortfall} {item.unit}
+              </li>
+            ))}
+          </ul>
+          <p className="mt-2">
+            A conclusão revalida o estoque disponível na transação.
+          </p>
+        </div>
+      ) : null}
       <div className="mt-5 grid gap-5 lg:grid-cols-2">
         <article>
           <h3 className="font-bold">Capacidade e saídas</h3>

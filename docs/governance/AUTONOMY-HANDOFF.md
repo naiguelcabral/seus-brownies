@@ -1,5 +1,20 @@
 # Handoff de autonomia — Cacau v1
 
+## Missão autônoma — A18, 8 de outubro de 2026
+
+- Objetivo: prévia acessível com quantidade faltante exata por insumo.
+- Não objetivos: compra automática, bloqueio novo de rascunho, mudança da
+  conclusão transacional, regra de estoque ou escrita em HML.
+- Branch independente: `codex/auto-a18-ingredient-shortfalls`, main `f61e9a28`.
+- Arquivos previstos: cálculo puro, teste, UI produção, roadmap, handoff e log.
+- Aceite: saldo igual ao requerido não gera falta; saldos negativos aumentam
+  déficit; unidades diferentes permanecem separadas; nenhum Number na conta.
+- Testes previstos: saldo exato, negativo, grande, inválido e vazio; suíte,
+  lint, typecheck, build CI isolado, Prettier, diff e guard sensível.
+
+- Resultado: 2 casos direcionados e 373 testes da suíte, lint/typecheck,
+  Prettier, diff e guard passaram. Build CI isolado passou com chave pública sintética explícita.
+
 ## Integração controlada da PR #12 — concluída, 7 de outubro de 2026
 
 - Objetivo concluído: reconciliar metas e cenários em
