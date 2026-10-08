@@ -119,7 +119,9 @@ A matriz detalhada workbook × sistema está em
   interface permanece pendente. Receita por competência segue em `/financeiro`.
 - [~] Ticket médio, preço médio, unidades e divergência de receita
   implementados localmente; aguardam migrations/homologação.
-- [ ] Produtos e sabores mais vendidos, conforme modelo disponível.
+- [~] Top 10 produtos por unidades implementado localmente com vínculo de
+  catálogo e legado explícito; aguarda homologação de interface. Ranking por
+  sabor depende de uma fonte/taxonomia canônica ainda ausente no schema.
 - [~] CMV e margem por competência implementados localmente sobre fatos G2 e
   FIFO; aguardam migrations e homologação integrada.
 - [~] Estoque crítico por ponto de reposição implementado localmente com

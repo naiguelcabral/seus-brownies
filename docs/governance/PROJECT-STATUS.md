@@ -84,6 +84,10 @@ Este documento é a referência canônica de alto nível para o estado atual do 
   Funcionário. Testes direcionados, lint, typecheck e build HML isolado
   passaram localmente e na CI `34295688527`; a homologação de interface depende
   de ambiente autorizado.
+- O ranking local de top 10 produtos por unidades usa ID de catálogo quando
+  disponível, preserva itens históricos sem vínculo em grupo explícito e
+  ordena quantidades exatas. O modelo ainda não oferece sabor canônico para
+  um ranking por sabor; a interface aguarda homologação.
 - O histórico de vendas agora filtra cliente, status e período no servidor,
   pagina 20 itens com corte final inclusivo de data em UTC e preserva a negação
   de histórico ao Funcionário. Testes direcionados, lint, typecheck e build

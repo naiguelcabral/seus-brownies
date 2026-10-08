@@ -53,6 +53,30 @@
   explícito. O texto da tela não atribui à G2 uma decisão ainda pendente.
    Build CI isolado passou no commit limpo com chave pública sintética.
 
+## Missão autônoma de 7 de outubro de 2026 — pacote A15
+
+- Objetivo: mostrar top 10 produtos por unidades vendidas no período
+  operacional já filtrado, com agregação por ID de catálogo quando existe e
+  grupo histórico explícito quando o item não tem vínculo.
+- Não objetivos: inferir sabor pelo nome, criar taxonomia, mudar receita,
+  competência, CMV, RBAC, schema, exportação ou dados HML.
+- Branch: `codex/auto-a15-top-products`, criada da `origin/main`
+  `f61e9a28df7b0fdbc80864402b578a2a0aabd3f8`, independente das PRs
+  #14–#16.
+- Arquivos previstos: `src/features/reports/calculations.ts`,
+  `src/features/reports/functions.ts`, `src/routes/relatorios.tsx`, teste
+  determinístico, status/roadmap e este handoff/log.
+- Aceite: ranking exato por milésimos, desempate estável, limite 10, produtos
+  renomeados agregados por ID, itens sem ID destacados; sabor permanece
+  pendente por falta de coluna/fonte canônica.
+- Verificações: testes direcionados e suíte, lint, typecheck, build CI
+  isolado em commit limpo, Prettier, diff e guard sensível.
+- Resultado local: 16 testes direcionados e 373 testes da suíte passaram;
+  lint e typecheck verdes. O ranking usa o endpoint já protegido e a mesma
+  janela de vendas existente. Build CI isolado passou no commit limpo com
+  chave pública sintética;
+   sabores continuam sem fonte canônica e não foram inferidos.
+
 ## Integração controlada da PR #12 — concluída, 7 de outubro de 2026
 
 - Objetivo concluído: reconciliar metas e cenários em

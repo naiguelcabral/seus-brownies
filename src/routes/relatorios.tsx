@@ -320,6 +320,14 @@ function ReportsPage() {
           ])}
           empty="Não há itens de venda no período."
         />
+        <List
+          title="Top 10 produtos por unidades"
+          rows={report.topProducts.map((item) => [
+            `${item.productName}${item.historicalOnly ? ' · sem vínculo de catálogo' : ''}`,
+            `${item.quantity} un.`,
+          ])}
+          empty="Não há produtos vendidos no período."
+        />
       </div>
       {report.fifo ? (
         <section className="mt-6 rounded-2xl border border-[#ecdfd4] bg-white p-5">
