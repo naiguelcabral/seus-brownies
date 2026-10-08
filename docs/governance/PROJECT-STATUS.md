@@ -69,6 +69,12 @@ Este documento é a referência canônica de alto nível para o estado atual do 
 - Checklist `PRODUCTION-READINESS.md` preparado para revisão humana; não
   declara produção pronta nem comprova schema ou homologação no ambiente.
 
+### Observabilidade local
+
+- Telemetria de auth em JSON estrutura evento/nível/requestId e aplica
+  allowlist em runtime. Campos extras, motivos inválidos e IDs arbitrários
+  não são serializados. Nenhuma política de sessão foi alterada.
+
 ### Dados e migrações
 
 - Catálogo e histórico de 2026 já foram importados no ambiente informado.

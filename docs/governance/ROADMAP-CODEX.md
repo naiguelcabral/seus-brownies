@@ -227,7 +227,9 @@ A matriz detalhada workbook × sistema está em
   RPO e responsáveis dependem de decisão humana.
 - [~] Runbook de restauração e ensaio descartável preparado; RTO, corte e
   validação em branch continuam dependentes de infraestrutura autorizada.
-- [ ] Logs estruturados.
+- [~] Logs locais de auditoria auth e recuperação de senha em JSON com
+  evento, nível, correlação UUID e allowlist runtime. Logs dos demais domínios
+  e homologação de observability permanecem pendentes.
 - [ ] Monitoramento de falhas.
 - [ ] Alertas de erro e disponibilidade.
 - [!] Revisar atualização de dependências auditadas: `npm audit` confirmou 13
