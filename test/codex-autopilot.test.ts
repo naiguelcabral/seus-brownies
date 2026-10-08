@@ -73,7 +73,24 @@ async function run(
   await mkdir(bin, { recursive: true })
   if (codex) {
     const mock = join(bin, 'codex')
-    await writeFile(mock, codex)
+    const implementation = join(bin, 'codex-fake')
+    await writeFile(implementation, codex)
+    await chmod(implementation, 0o755)
+    await writeFile(
+      mock,
+      `#!/usr/bin/env bash
+final=""; previous=""
+for argument in "$@"; do
+  if [[ "$previous" == --output-last-message ]]; then final="$argument"; fi
+  previous="$argument"
+done
+"${implementation}" "$@" > "${bin}/fake-output"
+status=$?
+cat "${bin}/fake-output"
+if [[ -n "$final" ]]; then cp "${bin}/fake-output" "$final"; fi
+exit "$status"
+`,
+    )
     await chmod(mock, 0o755)
   }
   return execFileAsync('bash', [script, ...args], {
@@ -277,6 +294,189 @@ test('resultado de validação vermelho interrompe com código específico', asy
         '#!/usr/bin/env bash\necho "AUTONOMY_RESULT: validation-failed"\n',
       ),
       (error: { code?: number }) => error.code === 21,
+    )
+  } finally {
+    await rm(dir, { recursive: true, force: true })
+  }
+})
+
+for (const [result, exitCode] of [
+  ['blocked', 20],
+  ['needs-human', 23],
+  ['validation-blocked', 21],
+] as const) {
+  test(`loop registra ${result} e continua sem repetir ou promover dependência`, async () => {
+    const dir = await fixture(
+      '| A01 | gate | documental | ready | teste |\n' +
+        '| A02 | depende | documental | ready-after-A01 | teste |\n' +
+        '| A03 | independente | documental | ready | teste |\n',
+    )
+    try {
+      await assert.rejects(
+        run(
+          dir,
+          ['--loop', '--max-cycles', '3'],
+          `#!/usr/bin/env bash
+printf '%s\\n' "$*" >> "$CALLS"
+if [[ "$*" == *"pacote A01 "* ]]; then echo "AUTONOMY_RESULT: ${result}"; else echo "AUTONOMY_RESULT: done"; fi
+`,
+          { CALLS: join(dir, 'state/calls') },
+        ),
+        (error: { code?: number }) => error.code === exitCode,
+      )
+      const calls = await readFile(join(dir, 'state/calls'), 'utf8')
+      assert.equal(calls.split('\n').filter(Boolean).length, 2)
+      assert.match(calls, /pacote A03 /)
+      assert.doesNotMatch(calls, /pacote A02 /)
+      const log = await readFile(
+        join(dir, 'docs/governance/AUTONOMY-LOG.md'),
+        'utf8',
+      )
+      assert.match(log, new RegExp(`\\| A01 \\| ${result} \\|`))
+      assert.match(log, /\| A03 \| done \|/)
+      assert.equal(
+        (await execFileAsync('git', ['status', '--porcelain'], { cwd: dir }))
+          .stdout,
+        '',
+      )
+    } finally {
+      await rm(dir, { recursive: true, force: true })
+    }
+  })
+}
+
+test('gate com alteração pendente preserva arquivo e não chama pacote seguinte', async () => {
+  const dir = await fixture(
+    '| A01 | gate | documental | ready | teste |\n| A02 | próximo | documental | ready | teste |\n',
+  )
+  try {
+    await assert.rejects(
+      run(
+        dir,
+        ['--loop', '--max-cycles', '2'],
+        '#!/usr/bin/env bash\nprintf "%s\\n" "$*" >> "$CALLS"\nprintf "pending" > pending-code.txt\necho "AUTONOMY_RESULT: needs-human"\n',
+        { CALLS: join(dir, 'state/calls') },
+      ),
+      (error: { code?: number }) => error.code === 23,
+    )
+    assert.equal(
+      await readFile(join(dir, 'pending-code.txt'), 'utf8'),
+      'pending',
+    )
+    assert.equal(
+      (await readFile(join(dir, 'state/calls'), 'utf8'))
+        .split('\n')
+        .filter(Boolean).length,
+      1,
+    )
+    assert.equal(
+      (
+        await execFileAsync('git', ['ls-files', 'pending-code.txt'], {
+          cwd: dir,
+        })
+      ).stdout,
+      '',
+    )
+  } finally {
+    await rm(dir, { recursive: true, force: true })
+  }
+})
+
+test('build bloqueado no loop é registrado antes do próximo pacote independente', async () => {
+  const dir = await fixture(
+    '| A01 | build | codigo-build-obrigatorio | ready | teste |\n| A02 | próximo | documental | ready | teste |\n',
+  )
+  try {
+    await assert.rejects(
+      run(
+        dir,
+        ['--loop', '--max-cycles', '2'],
+        '#!/usr/bin/env bash\nprintf "%s" "$*" > "$CALLS"\necho "AUTONOMY_RESULT: done"\n',
+        { CALLS: join(dir, 'state/calls') },
+      ),
+      (error: { code?: number }) => error.code === 21,
+    )
+    const calls = await readFile(join(dir, 'state/calls'), 'utf8')
+    assert.match(calls, /pacote A02 /)
+    assert.doesNotMatch(calls, /pacote A01 /)
+    assert.match(
+      await readFile(join(dir, 'docs/governance/AUTONOMY-LOG.md'), 'utf8'),
+      /validation-blocked/,
+    )
+  } finally {
+    await rm(dir, { recursive: true, force: true })
+  }
+})
+
+for (const [result, exitCode] of [
+  ['validation-failed', 21],
+  ['limit', 22],
+] as const) {
+  test(`loop interrompe em ${result}`, async () => {
+    const dir = await fixture(
+      '| A01 | falha | documental | ready | teste |\n| A02 | próximo | documental | ready | teste |\n',
+    )
+    try {
+      await assert.rejects(
+        run(
+          dir,
+          ['--loop', '--max-cycles', '2'],
+          `#!/usr/bin/env bash\nprintf '%s\\n' "$*" >> "$CALLS"\necho 'AUTONOMY_RESULT: ${result}'\n`,
+          { CALLS: join(dir, 'state/calls') },
+        ),
+        (error: { code?: number }) => error.code === exitCode,
+      )
+      assert.equal(
+        (await readFile(join(dir, 'state/calls'), 'utf8'))
+          .split('\n')
+          .filter(Boolean).length,
+        1,
+      )
+    } finally {
+      await rm(dir, { recursive: true, force: true })
+    }
+  })
+}
+
+test('marcador em evento JSONL não substitui mensagem final válida', async () => {
+  const dir = await fixture()
+  try {
+    await assert.rejects(
+      run(
+        dir,
+        ['--once'],
+        '#!/usr/bin/env bash\necho \'{"type":"item.completed","text":"AUTONOMY_RESULT: done"}\'\n',
+      ),
+      (error: { code?: number }) => error.code === 20,
+    )
+    assert.match(
+      await readFile(join(dir, 'docs/governance/AUTONOMY-LOG.md'), 'utf8'),
+      /\| A01 \| blocked \|/,
+    )
+  } finally {
+    await rm(dir, { recursive: true, force: true })
+  }
+})
+
+test('sentinela criada após gate bloqueia o ciclo seguinte', async () => {
+  const dir = await fixture(
+    '| A01 | gate | documental | ready | teste |\n| A02 | próximo | documental | ready | teste |\n',
+  )
+  try {
+    await assert.rejects(
+      run(
+        dir,
+        ['--loop', '--max-cycles', '2'],
+        '#!/usr/bin/env bash\nprintf "%s\\n" "$*" >> "$CALLS"\ntouch "$CODEX_AUTOPILOT_STATE_DIR/STOP_AUTONOMY"\necho "AUTONOMY_RESULT: blocked"\n',
+        { CALLS: join(dir, 'state/calls') },
+      ),
+      (error: { code?: number }) => error.code === 24,
+    )
+    assert.equal(
+      (await readFile(join(dir, 'state/calls'), 'utf8'))
+        .split('\n')
+        .filter(Boolean).length,
+      1,
     )
   } finally {
     await rm(dir, { recursive: true, force: true })

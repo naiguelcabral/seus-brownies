@@ -222,6 +222,9 @@ A matriz detalhada workbook × sistema está em
       pequeno, cria commit local e prepara PR.
 - [ ] Nível 3: após três pacotes consecutivos verdes e sem correção humana ou
       gate violado, Codex escolhe próximo item exatamente `ready` em fase autorizada.
+- [~] Continuidade local do controlador após gate em árvore limpa preparada
+  com fakes; preserva impedimentos e não seleciona dependências. Execução
+  real do loop e promoção de nível seguem os gates humanos do runbook.
 - [ ] Automação de revisão de CI/dependências, quando útil.
 - [ ] Multiagente somente após estabilidade do workflow e proteção adequada da `main`.
 

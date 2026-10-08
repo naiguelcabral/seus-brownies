@@ -1,5 +1,26 @@
 # Handoff de autonomia — Cacau v1
 
+## Missão autônoma — A20, 8 de outubro de 2026
+
+- Objetivo: loop continua em outro pacote exatamente ready após gate local
+  sem mudanças pendentes, preservando evidência e código de saída do gate.
+- Não objetivos: executar loop real, ampliar permissões, ignorar validação
+  falha/limite/sentinela, selecionar dependências ou promover autonomia.
+- Branch independente `codex/auto-a20-continue-after-gates`, main `f61e9a28`.
+- Arquivos previstos: script shell, testes com Codex fake, runbook, queue,
+  roadmap, handoff e log.
+- Aceite: não repetir pacote na mesma execução; árvore suja interrompe sem
+  commit de código bloqueado; log sanitizado é o único checkpoint de gate;
+  resultado vem da mensagem final, nunca de saída de ferramenta no JSONL.
+- Validação: bash -n, testes direcionados com fakes, suíte, lint/typecheck,
+  Prettier, diff e guard. Build não aplicável ao controlador local.
+- Fonte consultada: documentação oficial OpenAI sobre --json e
+  --output-last-message em execução não interativa, via MCP.
+
+- Resultado: suíte completa com 379 testes passou, além do caso direcionado
+  de sentinela após gate; controlador fake, lint/typecheck, bash -n,
+  Prettier/diff/guard verdes. Build não aplicável ao diff local do controlador.
+
 ## Integração controlada da PR #12 — concluída, 7 de outubro de 2026
 
 - Objetivo concluído: reconciliar metas e cenários em

@@ -1,5 +1,18 @@
 # Log sanitizado de autonomia — Cacau v1
 
+## A20 — continuidade após gate local, 8 de outubro de 2026
+
+- Branch independente `codex/auto-a20-continue-after-gates`, main `f61e9a28`.
+- Loop autorizado registra gate sem alterações pendentes em checkpoint
+  exclusivamente do log, pula IDs tentados e continua para outro ready.
+  Dependências, limite, validação falha e preflight seguem fechados.
+- Resultado somente da mensagem final exata; JSONL bruto não decide sucesso.
+  Documentação oficial OpenAI consultada via MCP. Execução real não feita.
+- Validação: 379 testes da suíte e caso adicional de sentinela após gate,
+  fakes locais, lint/typecheck, bash -n, Prettier/diff/guard verdes.
+  Build não aplicável ao diff local do controlador. Sem escrita externa,
+  deploy, migration, HML, produção ou leitura de memória/segredos reais.
+
 ## WP-D metas e cenários — 14 de setembro de 2026
 
 - G2-F1 foi publicado na branch `codex/workbook-parity` sem force push; a CI
