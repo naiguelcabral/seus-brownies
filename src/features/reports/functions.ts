@@ -31,6 +31,10 @@ import {
 } from '#/features/reports/calculations'
 import { centsToMoney, moneyToCents } from '#/features/production/calculations'
 import { isMissingOptionalSchemaError } from '#/features/reports/optional-schema'
+import {
+  summarizeCoProducts,
+  summarizeDeclaredLosses,
+} from '#/features/reports/production-outcomes'
 import { reconcileInventoryLedger } from '#/features/reports/inventory-reconciliation'
 import type { ReconciliationDivergence } from '#/features/reports/inventory-reconciliation'
 import { summarizeSalesMetrics } from '#/features/reports/sales-metrics'
@@ -204,89 +208,123 @@ export const getOperationalReports = createServerFn({ method: 'GET' })
         quantity: string
         reason: string | null
       }>
+      lossSummary: ReturnType<typeof summarizeDeclaredLosses>
+      coProducts: ReturnType<typeof summarizeCoProducts>
       operationalCosts: Array<{ type: 'energy' | 'labor'; amount: string }>
     } | null = null
     try {
-      const [batchCosts, consumptions, losses, costs] = await Promise.all([
-        database
-          .select({
-            id: productionBatches.id,
-            plannedFor: productionBatches.plannedFor,
-            amount: productionBatchConsumptions.totalCost,
-          })
-          .from(productionBatches)
-          .innerJoin(
-            productionBatchConsumptions,
-            eq(
-              productionBatchConsumptions.productionBatchId,
-              productionBatches.id,
+      const [batchCosts, consumptions, losses, costs, coProductRows] =
+        await Promise.all([
+          database
+            .select({
+              id: productionBatches.id,
+              plannedFor: productionBatches.plannedFor,
+              amount: productionBatchConsumptions.totalCost,
+            })
+            .from(productionBatches)
+            .innerJoin(
+              productionBatchConsumptions,
+              eq(
+                productionBatchConsumptions.productionBatchId,
+                productionBatches.id,
+              ),
+            )
+            .where(
+              and(
+                eq(productionBatches.status, 'completed'),
+                gte(productionBatches.plannedFor, period.start),
+                lte(productionBatches.plannedFor, period.end),
+              ),
             ),
-          )
-          .where(
-            and(
-              eq(productionBatches.status, 'completed'),
-              gte(productionBatches.plannedFor, period.start),
-              lte(productionBatches.plannedFor, period.end),
+          database
+            .select({
+              productName: products.name,
+              quantity: productionBatchConsumptions.quantity,
+              amount: productionBatchConsumptions.totalCost,
+            })
+            .from(productionBatchConsumptions)
+            .innerJoin(
+              productionBatches,
+              eq(
+                productionBatchConsumptions.productionBatchId,
+                productionBatches.id,
+              ),
+            )
+            .innerJoin(
+              products,
+              eq(productionBatchConsumptions.productId, products.id),
+            )
+            .where(
+              and(
+                eq(productionBatches.status, 'completed'),
+                gte(productionBatches.plannedFor, period.start),
+                lte(productionBatches.plannedFor, period.end),
+              ),
             ),
-          ),
-        database
-          .select({
-            productName: products.name,
-            quantity: productionBatchConsumptions.quantity,
-            amount: productionBatchConsumptions.totalCost,
-          })
-          .from(productionBatchConsumptions)
-          .innerJoin(
-            productionBatches,
-            eq(
-              productionBatchConsumptions.productionBatchId,
-              productionBatches.id,
+          database
+            .select({
+              productId: productionBatchLosses.productId,
+              productName: products.name,
+              quantity: productionBatchLosses.quantity,
+              reason: productionBatchLosses.reason,
+            })
+            .from(productionBatchLosses)
+            .innerJoin(
+              productionBatches,
+              eq(productionBatchLosses.productionBatchId, productionBatches.id),
+            )
+            .innerJoin(
+              products,
+              eq(productionBatchLosses.productId, products.id),
+            )
+            .where(
+              and(
+                eq(productionBatches.status, 'completed'),
+                gte(productionBatches.plannedFor, period.start),
+                lte(productionBatches.plannedFor, period.end),
+              ),
             ),
-          )
-          .innerJoin(
-            products,
-            eq(productionBatchConsumptions.productId, products.id),
-          )
-          .where(
-            and(
-              eq(productionBatches.status, 'completed'),
-              gte(productionBatches.plannedFor, period.start),
-              lte(productionBatches.plannedFor, period.end),
+          database
+            .select({
+              batchId: operationalCosts.productionBatchId,
+              type: operationalCosts.type,
+              amount: operationalCosts.amount,
+            })
+            .from(operationalCosts)
+            .where(
+              and(
+                gte(operationalCosts.occurredAt, period.start),
+                lte(operationalCosts.occurredAt, period.end),
+              ),
             ),
-          ),
-        database
-          .select({
-            productName: products.name,
-            quantity: productionBatchLosses.quantity,
-            reason: productionBatchLosses.reason,
-          })
-          .from(productionBatchLosses)
-          .innerJoin(
-            productionBatches,
-            eq(productionBatchLosses.productionBatchId, productionBatches.id),
-          )
-          .innerJoin(products, eq(productionBatchLosses.productId, products.id))
-          .where(
-            and(
-              eq(productionBatches.status, 'completed'),
-              gte(productionBatches.plannedFor, period.start),
-              lte(productionBatches.plannedFor, period.end),
+          database
+            .select({
+              productId: productionBatchOutputs.productId,
+              productName: products.name,
+              actualQuantity: productionBatchOutputs.actualQuantity,
+              allocatedCost: productionBatchOutputs.allocatedCost,
+            })
+            .from(productionBatchOutputs)
+            .innerJoin(
+              productionBatches,
+              eq(
+                productionBatchOutputs.productionBatchId,
+                productionBatches.id,
+              ),
+            )
+            .innerJoin(
+              products,
+              eq(productionBatchOutputs.productId, products.id),
+            )
+            .where(
+              and(
+                eq(productionBatches.status, 'completed'),
+                eq(productionBatchOutputs.role, 'co_product'),
+                gte(productionBatches.plannedFor, period.start),
+                lte(productionBatches.plannedFor, period.end),
+              ),
             ),
-          ),
-        database
-          .select({
-            batchId: operationalCosts.productionBatchId,
-            type: operationalCosts.type,
-            amount: operationalCosts.amount,
-          })
-          .from(operationalCosts)
-          .where(
-            and(
-              gte(operationalCosts.occurredAt, period.start),
-              lte(operationalCosts.occurredAt, period.end),
-            ),
-          ),
-      ])
+        ])
       const totalsByBatch = new Map<
         number,
         { plannedFor: string | null; amount: bigint }
@@ -316,6 +354,8 @@ export const getOperationalReports = createServerFn({ method: 'GET' })
         })),
         consumptions,
         losses,
+        lossSummary: summarizeDeclaredLosses(losses),
+        coProducts: summarizeCoProducts(coProductRows),
         operationalCosts: costs.map(({ type, amount }) => ({ type, amount })),
       }
     } catch (error) {

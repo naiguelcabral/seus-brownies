@@ -341,6 +341,22 @@ function ReportsPage() {
               empty="Nenhuma perda declarada no período."
             />
             <List
+              title="Perdas declaradas por produto"
+              rows={report.production.lossSummary.map((item) => [
+                item.productName,
+                `${item.quantity} · ${item.declarations} declaração(ões)`,
+              ])}
+              empty="Nenhuma perda declarada no período."
+            />
+            <List
+              title="Coprodutos realizados"
+              rows={report.production.coProducts.map((item) => [
+                item.productName,
+                `${item.quantity ?? 'quantidade não informada'} · ${item.allocatedCost === null ? 'custo não informado' : `custo alocado ${formatBrlMoney(item.allocatedCost)}`}`,
+              ])}
+              empty="Nenhum coproduto realizado no período."
+            />
+            <List
               title="Custos por lote"
               rows={report.production.batchCosts.map((item) => [
                 `Lote #${item.id} · ${item.plannedFor ?? 'sem data'}`,

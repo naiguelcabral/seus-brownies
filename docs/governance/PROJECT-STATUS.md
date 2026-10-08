@@ -46,6 +46,9 @@ Este documento é a referência canônica de alto nível para o estado atual do 
 - Camadas, alocações, lifecycle e reconciliação FIFO possuem testes e documentação própria.
 - Energia e mão de obra são custos operacionais, nunca itens de estoque.
 - Bordinhas é coproduto, não perda automática.
+- Relatórios locais de produção distinguem perdas declaradas de saídas com
+  `role=co_product`, incluindo quantidade e custo alocado quando disponíveis;
+  dependem de migrations/homologação para uso operacional.
 
 ### Dados e migrações
 

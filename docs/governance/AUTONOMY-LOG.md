@@ -1,5 +1,18 @@
 # Log sanitizado de autonomia — Cacau v1
 
+## A16 — perdas declaradas e coprodutos, 8 de outubro de 2026
+
+- Branch independente `codex/auto-a16-production-outcomes`, baseada em
+  `f61e9a28df7b0fdbc80864402b578a2a0aabd3f8`. Agregação somente leitura por
+  produto para lotes concluídos: perdas declaradas permanecem distintas das
+  saídas `co_product`, sem duplicar o custo total do lote.
+- Quantidade e custo ausentes são apresentados como não informados; somas
+  preservam milésimos e centavos com inteiros. Não há escrita de dados,
+  migration aplicada, homologação HML ou acesso à produção.
+- Validação local: 3 testes direcionados, 374 testes da suíte, lint e
+  typecheck verdes. Build CI isolado passou no commit limpo com chave
+  pública sintética explícita; guard sensível e diff sem erros.
+
 ## WP-D metas e cenários — 14 de setembro de 2026
 
 - G2-F1 foi publicado na branch `codex/workbook-parity` sem force push; a CI
