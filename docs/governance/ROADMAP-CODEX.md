@@ -200,8 +200,11 @@ A matriz detalhada workbook × sistema está em
 - [~] Runbook de restauração e ensaio descartável preparado; RTO, corte e
   validação em branch continuam dependentes de infraestrutura autorizada.
 - [ ] Logs estruturados.
-- [ ] Monitoramento de falhas.
-- [ ] Alertas de erro e disponibilidade.
+- [~] Contrato local de readiness e hooks de falha/recuperação preparado em
+  A26, com códigos sanitizados e fakes. Monitoramento efetivo, coleta, retenção,
+  frequência e destinatário continuam pendentes de decisão e infraestrutura.
+- [~] Alertas locais por mudança de componente testados sem serviço externo;
+  disponibilidade real e entrega externa não homologadas.
 - [!] Revisar atualização de dependências auditadas: `npm audit` confirmou 13
   vulnerabilidades; a correção automática de Drizzle/Wrangler exige versões
   incompatíveis e depende de estratégia aprovada e validação completa.

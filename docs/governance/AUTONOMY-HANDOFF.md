@@ -1,5 +1,18 @@
 # Handoff de autonomia — Cacau v1
 
+## Missão autônoma — A26, 8 de outubro de 2026
+
+- Objetivo: contrato local de readiness e hooks de alerta sobre observações
+  sintéticas, com transições e recuperação sem serviço externo.
+- Não objetivos: endpoint público, monitoramento contratado, secrets, política
+  de auth, consulta real, frequência/retencão/SLA ou infraestrutura.
+- Branch: `codex/auto-a26-local-operational-signals`, independente da main.
+- Arquivos: módulo puro operacional, teste, runbook, roadmap, handoff e log.
+- Aceite: desconhecido não significa saudável; saída contém somente códigos
+  permitidos; alertas não repetem estado; falha no hook não revela erro nem
+  impede próxima tentativa. Configuração/destinatário externos são gates humanos.
+- Testes: fakes determinísticos, suíte, lint/tipos, formato, diff e guard.
+
 ## Integração controlada da PR #12 — concluída, 7 de outubro de 2026
 
 - Objetivo concluído: reconciliar metas e cenários em

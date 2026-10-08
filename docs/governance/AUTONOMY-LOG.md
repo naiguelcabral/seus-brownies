@@ -1,5 +1,18 @@
 # Log sanitizado de autonomia — Cacau v1
 
+## A26 — sinais operacionais locais, 8 de outubro de 2026
+
+- Branch independente `codex/auto-a26-local-operational-signals`.
+- Avaliador puro e hook injetado: códigos permitidos, desconhecido não saudável,
+  mudanças/recuperação sem repetição, falha sanitizada com nova tentativa e
+  isolamento contra mutação do consumidor. Não consulta ambientes ou secrets.
+- Integração externa, política de coleta/retencão e disponibilidade real
+  permanecem humanas. Não há novo endpoint público ou serviço.
+- Quatro testes direcionados, 375 testes da suíte, lint/tipos, formato,
+  diff e guard passaram. A primeira suíte foi bloqueada por subprocesso Git
+  `EPERM` no sandbox; a execução autorizada fora dele passou sem alteração do
+  teste. Build local não aplicável ao módulo puro sem integração no runtime.
+
 ## WP-D metas e cenários — 14 de setembro de 2026
 
 - G2-F1 foi publicado na branch `codex/workbook-parity` sem force push; a CI
