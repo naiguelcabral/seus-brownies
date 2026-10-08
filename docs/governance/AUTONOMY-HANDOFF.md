@@ -1,5 +1,25 @@
 # Handoff de autonomia — Cacau v1
 
+## Missão autônoma — A23, 8 de outubro de 2026
+
+- Objetivo: matriz documental de ambientes e evidência sanitizada read-only HML.
+- Não objetivos: criar staging, alterar bindings/secrets/Worker, deploy,
+  promover dados, aplicar migrations ou acessar produção.
+- Branch independente `codex/auto-a23-environment-evidence`, main `f61e9a28`.
+- Arquivos previstos: matriz/evidência, roadmap, status, handoff e log.
+- Aceite: separar rótulo Git/build de ambiente externo; pin explícito de
+  branch Neon com nome exato development, Worker cacau-v1-hml;
+  nunca coletar DSN, valores de bindings, identidade ou logs brutos.
+- Validação: SELECT 1/introspecção de catálogo em HML; GET de settings e
+  deployments HML com projeção de nomes/tipos/versão; revisão de configuração
+  versionada e documentação oficial; Prettier, links, diff e guard.
+
+- Resultado read-only: projeto `cool-base-25902164`, branch development
+  `br-lively-term-ac9i0mvr`, database neondb: SELECT 1 passou; tabelas
+  consultadas de produção/FIFO/G2/cenários e histórico Drizzle ausentes.
+  Worker HML: cinco nomes de secrets presentes, rate limit não retornado,
+  última versão publicada de 7 de setembro. Nenhum valor de binding lido.
+
 ## Integração controlada da PR #12 — concluída, 7 de outubro de 2026
 
 - Objetivo concluído: reconciliar metas e cenários em

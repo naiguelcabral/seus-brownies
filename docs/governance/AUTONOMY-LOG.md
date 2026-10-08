@@ -1,5 +1,21 @@
 # Log sanitizado de autonomia — Cacau v1
 
+## A23 — matriz e evidência de ambiente HML, 8 de outubro de 2026
+
+- Branch independente `codex/auto-a23-environment-evidence`, main `f61e9a28`.
+- Neon: dois projetos com mesmo nome; branch exata development somente em
+  `cool-base-25902164`, ID `br-lively-term-ac9i0mvr`. SELECT 1 passou;
+  catálogo de neondb não contém as relações consultadas de produção/FIFO/
+  financeiro/cenários/histórico Drizzle. Nenhum SQL em outro branch.
+- Cloudflare API GET projetou somente nomes/tipos de bindings e metadados
+  da publicação de cacau-v1-hml. Rate limiter versionado não aparece na
+  configuração publicada. Nenhum valor secreto lido; nenhuma mutação.
+- Matriz mantém gates de associação, schema e publicação; não declara HML
+  homologado. Revisão documental, links, Prettier/diff/guard passaram;
+  código/build não aplicáveis.
+- PRODUCTION_NEON=NOT_ACCESSED; PRODUCTION_CLOUDFLARE=NOT_ACCESSED;
+  PRODUCTION_DEPLOY=NOT_PERFORMED; PRODUCTION_MIGRATION=NOT_PERFORMED.
+
 ## WP-D metas e cenários — 14 de setembro de 2026
 
 - G2-F1 foi publicado na branch `codex/workbook-parity` sem force push; a CI

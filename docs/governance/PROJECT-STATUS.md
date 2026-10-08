@@ -47,6 +47,15 @@ Este documento é a referência canônica de alto nível para o estado atual do 
 - Energia e mão de obra são custos operacionais, nunca itens de estoque.
 - Bordinhas é coproduto, não perda automática.
 
+### Ambientes — evidência de 8 de outubro de 2026
+
+- `ENVIRONMENT-MATRIX.md` registra SELECT 1 e introspecção no alvo exato
+  `development`/`neondb`: relações consultadas de produção/FIFO/G2/cenários
+  ausentes. Não substitui homologações históricas em outro branch.
+- Settings somente leitura de `cacau-v1-hml` não retornam o binding de
+  rate limit versionado; última publicação observada de 7 de setembro.
+  Associação Worker × database e publicação continuam gates humanos.
+
 ### Dados e migrações
 
 - Catálogo e histórico de 2026 já foram importados no ambiente informado.
