@@ -221,7 +221,9 @@ A matriz detalhada workbook × sistema está em
   Turnstile publicado, widget restrito, site key no bundle HML e diagnóstico
   histórico do `403` preservado; desafio real, replay, homologação integrada,
   rate limit distribuído e demais gates de G1 seguem pendentes.
-- [ ] Definir ambientes development/staging/production formalmente.
+- [~] Matriz/evidência somente leitura em `ENVIRONMENT-MATRIX.md`: local, CI,
+  HML autorizado e histórico separados; associação Worker × database, staging
+  e definição operacional definitiva dependem de decisão humana.
 - [ ] Configurar secrets por ambiente.
 - [~] Runbook de backup Neon e cópia independente preparado; janela, storage,
   RPO e responsáveis dependem de decisão humana.
