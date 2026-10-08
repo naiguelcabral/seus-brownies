@@ -1,5 +1,26 @@
 # Estado canônico do projeto — Cacau v1
 
+## Reconciliação de integração em rascunho — 8 de outubro de 2026
+
+A `main` remota está em `f61e9a28df7b0fdbc80864402b578a2a0aabd3f8`. A PR #12
+já foi integrada; as PRs #14–#30 foram inventariadas em
+`INTEGRATION-RECONCILIATION-2026-10-08.md`. O primeiro lote em rascunho reúne
+os diagnósticos e relatórios somente leitura #15, #16, #17, #18 e #30 por
+merge commits locais, com conflitos de documentação/imports compostos. A #13
+permanece fora por `CHANGES-REQUIRED` de segurança: a credencial não aparece
+no Git, mas o launcher a expõe ao processo Codex persistente e a subprocessos.
+Nenhum lote foi integrado em `main`, nem houve deploy, migration aplicada,
+alteração de secret, Cloudflare, Neon ou banco.
+
+## Diagnóstico local em revisão — A28, 8 de outubro de 2026
+
+O relatório financeiro distingue reconciliação aritmética de margens da
+cobertura FIFO dos itens entregues. Um diagnóstico somente leitura sinaliza
+itens/alocações ausentes, quantidade inválida ou soma divergente; não altera
+CMV, receita, fechamento ou eventos e não corrige histórico. Escopo restrito
+às entregas carregadas no mês de competência. Compensação posterior isolada
+não demanda nova alocação; origem de compra sem lote continua válida.
+
 Atualizado em 6 de outubro de 2026, após revisão de código, migrations,
 testes, rotas, documentação e estado público de HML.
 
@@ -46,6 +67,9 @@ Este documento é a referência canônica de alto nível para o estado atual do 
 - Camadas, alocações, lifecycle e reconciliação FIFO possuem testes e documentação própria.
 - Energia e mão de obra são custos operacionais, nunca itens de estoque.
 - Bordinhas é coproduto, não perda automática.
+- Relatórios locais de produção distinguem perdas declaradas de saídas com
+  `role=co_product`, incluindo quantidade e custo alocado quando disponíveis;
+  dependem de migrations/homologação para uso operacional.
 
 ### Dados e migrações
 
@@ -84,6 +108,10 @@ Este documento é a referência canônica de alto nível para o estado atual do 
   Funcionário. Testes direcionados, lint, typecheck e build HML isolado
   passaram localmente e na CI `34295688527`; a homologação de interface depende
   de ambiente autorizado.
+- O ranking local de top 10 produtos por unidades usa ID de catálogo quando
+  disponível, preserva itens históricos sem vínculo em grupo explícito e
+  ordena quantidades exatas. O modelo ainda não oferece sabor canônico para
+  um ranking por sabor; a interface aguarda homologação.
 - O histórico de vendas agora filtra cliente, status e período no servidor,
   pagina 20 itens com corte final inclusivo de data em UTC e preserva a negação
   de histórico ao Funcionário. Testes direcionados, lint, typecheck e build
@@ -148,6 +176,10 @@ Este documento é a referência canônica de alto nível para o estado atual do 
   respostas HTTP/JSON inválidas do Turnstile. A homologação com binding HML,
   desafio real, replay, e-mail, cookies, sessão e revogação permanece externa
   e está explicitamente separada na matriz de validação G1.
+- Uma comparação operacional local de faturamento confirmado, unidades e
+  ticket médio usa o período anterior de mesma duração em UTC e diferenças
+  decimais exatas. É baseada na data da venda e rotulada separadamente da
+  receita por competência de `/financeiro`; aguarda homologação de interface.
 - O runbook de resiliência operacional documenta backup, restauração em branch
   descartável, RPO/RTO, rollback, observabilidade e retenção. Não há estratégia
   externa configurada nem ensaio de restauração: esses são gates humanos.

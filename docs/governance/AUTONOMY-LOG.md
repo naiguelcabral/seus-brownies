@@ -1,5 +1,71 @@
 # Log sanitizado de autonomia — Cacau v1
 
+## A28 — cobertura da entrega no FIFO, 8 de outubro de 2026
+
+- Branch independente `codex/auto-a28-delivery-fifo-coverage`.
+- Auditoria local encontrou margem aritmeticamente reconciliada mesmo com
+  alocação ausente (CMV zero). Acrescentado diagnóstico separado de quantidades
+  e vínculos; preserva os algoritmos financeiros e writers existentes.
+- Consulta protegida lê também a quantidade já existente dos itens; UI informa
+  escopo, contagens e códigos sanitizados. Não cria regra de custo, lote
+  artificial, migration, backfill, correção compartilhada ou novo gate de fechamento.
+- Cinco testes direcionados, 376 testes da suíte, lint e typecheck passaram.
+  Revisão confirmou apenas SELECT adicional de quantidade, cálculo puro e UI;
+  escritores, algoritmos de margem e fechamento permaneceram intactos.
+- Build CI isolado passou com chave pública sintética, sem secrets/deploy.
+  Prettier, diff e guard passaram; homologação HML não foi executada.
+
+## A16 — perdas declaradas e coprodutos, 8 de outubro de 2026
+
+- Branch independente `codex/auto-a16-production-outcomes`, baseada em
+  `f61e9a28df7b0fdbc80864402b578a2a0aabd3f8`. Agregação somente leitura por
+  produto para lotes concluídos: perdas declaradas permanecem distintas das
+  saídas `co_product`, sem duplicar o custo total do lote.
+- Quantidade e custo ausentes são apresentados como não informados; somas
+  preservam milésimos e centavos com inteiros. Não há escrita de dados,
+  migration aplicada, homologação HML ou acesso à produção.
+- Validação local: 3 testes direcionados, 374 testes da suíte, lint e
+  typecheck verdes. Build CI isolado passou no commit limpo com chave
+  pública sintética explícita; guard sensível e diff sem erros.
+
+## A13 — diagnóstico FIFO local, 7 de outubro de 2026
+
+- Branch independente `codex/auto-a13-fifo-diagnostics` criada da `main`
+  `f61e9a28df7b0fdbc80864402b578a2a0aabd3f8`, sem base na PR #14.
+- Reconciliação somente leitura ampliada para detectar camada/alocação
+  ausentes, divergência de produto, reversão acumulada acima da alocação e
+  decimal inválido sem expor o valor original. Nenhuma regra de CMV ou escrita
+  de banco foi modificada.
+- Seis testes direcionados e 375 testes da suíte passaram; lint e typecheck
+  verdes. O build CI isolado recusou corretamente a ausência de site key e
+  passou no commit limpo com a chave pública sintética documentada; nenhum
+  secret ou arquivo de ambiente foi carregado.
+
+## A14 — comparação operacional local, 7 de outubro de 2026
+
+- Branch `codex/auto-a14-operational-trends` criada da `main` limpa
+  `f61e9a28df7b0fdbc80864402b578a2a0aabd3f8`, independente das PRs
+  documentais/financeiras em revisão.
+- Consulta protegida agora compara vendas confirmadas por `soldAt` com o
+  período anterior de mesma duração; UI separa explicitamente essa visão da
+  competência financeira. Diferenças preservam centavos e milésimos; ticket
+  ausente não é inventado. Nenhuma regra financeira ou dado foi alterado.
+- Quatro testes direcionados e 375 da suíte, lint e typecheck passaram.
+- `build:ci-isolated` passou com chave pública sintética no commit limpo, sem
+  deploy nem leitura de arquivos de ambiente.
+
+## A15 — top produtos local, 7 de outubro de 2026
+
+- Branch `codex/auto-a15-top-products` criada da `main` limpa
+  `f61e9a28df7b0fdbc80864402b578a2a0aabd3f8`, sem empilhar PRs.
+- Ranking por unidades com ID de catálogo, nome atual e grupo histórico sem
+  vínculo; desempate estável, limite dez e inteiros exatos. Sabor não existe
+  como campo canônico e permaneceu pendente, sem inferência de nomes.
+- 16 testes direcionados e 373 da suíte, lint e typecheck passaram. Nenhum
+  dado, migration ou ambiente compartilhado foi alterado.
+- `build:ci-isolated` passou com chave pública sintética no commit limpo, sem
+  deploy ou leitura de arquivos de ambiente.
+
 ## WP-D metas e cenários — 14 de setembro de 2026
 
 - G2-F1 foi publicado na branch `codex/workbook-parity` sem force push; a CI
