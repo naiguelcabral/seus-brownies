@@ -1,13 +1,17 @@
 # Estado canônico do projeto — Cacau v1
 
-## Integração de produção/readiness em revisão — 8 de outubro de 2026
+## Integrações consolidadas — 8 de outubro de 2026
 
 O lote que compõe #19, #20, #24, #26 e #27 preserva o writer transacional,
 diagnósticos somente leitura e precisão monetária. Não inclui migration,
 infraestrutura, segredo, banco compartilhado ou correção automática de
-estoque/FIFO/CMV. Os testes locais consolidados e os builds isolados passaram;
-a publicação da branch e a CI remota são os próximos passos. A PR #31 de
-relatórios/FIFO tem CI `37804204150` verde no SHA consolidado `1733573`.
+estoque/FIFO/CMV. A PR #32 foi integrada em `main` com CI verde. A PR #31 de
+relatórios/FIFO também foi integrada com CI `37804204150` verde.
+
+O lote plataforma/governança compõe #14, #21, #22, #23, #25, #28 e #29 sem
+migrations, deploy, escrita externa ou mudança de política. Telemetria é
+allowlisted, memória local continua privada/atômica, hooks permanecem locais e
+o smoke público bloqueia tráfego externo no modo isolado.
 
 ## Entrega local em revisão — A25, 8 de outubro de 2026
 
@@ -68,6 +72,21 @@ Este documento é a referência canônica de alto nível para o estado atual do 
   viram produção realizada; homologação visual permanece pendente.
 - Checklist `PRODUCTION-READINESS.md` preparado para revisão humana; não
   declara produção pronta nem comprova schema ou homologação no ambiente.
+
+### Observabilidade local
+
+- Telemetria de auth em JSON estrutura evento/nível/requestId e aplica
+  allowlist em runtime. Campos extras, motivos inválidos e IDs arbitrários
+  não são serializados. Nenhuma política de sessão foi alterada.
+
+### Ambientes — evidência de 8 de outubro de 2026
+
+- `ENVIRONMENT-MATRIX.md` registra SELECT 1 e introspecção no alvo exato
+  `development`/`neondb`: relações consultadas de produção/FIFO/G2/cenários
+  ausentes. Não substitui homologações históricas em outro branch.
+- Settings somente leitura de `cacau-v1-hml` não retornam o binding de
+  rate limit versionado; última publicação observada de 7 de setembro.
+  Associação Worker × database e publicação continuam gates humanos.
 
 ### Dados e migrações
 

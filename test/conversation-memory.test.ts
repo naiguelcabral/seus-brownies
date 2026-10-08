@@ -320,7 +320,14 @@ test('concurrent notifications are serialized without losing turns', async () =>
           )
         }),
     )
-    await Promise.all(runs)
+    // Every child must finish before the fixture is removed, including on failure.
+    const results = await Promise.allSettled(runs)
+    const failures = results.filter((result) => result.status === 'rejected')
+    if (failures.length > 0)
+      throw new AggregateError(
+        failures.map((result) => result.reason),
+        'notify failed',
+      )
     const transcript = readFileSync(
       join(root, '.codex-local/conversations/synthetic-thread.md'),
       'utf8',
@@ -331,6 +338,40 @@ test('concurrent notifications are serialized without losing turns', async () =>
     }
     assert.equal(transcript.match(/^## Usuário/gm)?.length, 8)
     assert.equal(transcript.match(/^## Codex/gm)?.length, 8)
+  })
+})
+
+test('directory initialization tolerates another creator between checks', () => {
+  fixture((root, script) => {
+    const output = execFileSync(
+      'python3',
+      [
+        '-B',
+        '-c',
+        `
+import importlib.util, pathlib, stat, sys
+spec = importlib.util.spec_from_file_location('memory', sys.argv[1])
+module = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(module)
+original = pathlib.Path.mkdir
+def competing_creator(path, *args, **kwargs):
+    if not path.exists():
+        original(path, *args, **kwargs)
+    return original(path, *args, **kwargs)
+pathlib.Path.mkdir = competing_creator
+try:
+    paths = module.local_paths(pathlib.Path(sys.argv[2]))
+finally:
+    pathlib.Path.mkdir = original
+assert all(path.is_dir() and stat.S_IMODE(path.stat().st_mode) == 0o700 for path in paths.values())
+print('CONCURRENT_DIRECTORY_CREATION_OK')
+`,
+        script,
+        root,
+      ],
+      { encoding: 'utf8' },
+    )
+    assert.match(output, /CONCURRENT_DIRECTORY_CREATION_OK/)
   })
 })
 

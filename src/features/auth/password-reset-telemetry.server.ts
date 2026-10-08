@@ -1,3 +1,5 @@
+import { telemetryRequestId } from './telemetry-request-id'
+
 export const passwordResetTelemetryStages = [
   'runtime_config_missing',
   'initial_audit_failed',
@@ -29,7 +31,23 @@ export type PasswordResetTelemetry = {
 export function createPasswordResetTelemetry(): PasswordResetTelemetry {
   return {
     emit: (event) => {
-      console.info('[auth.password-reset]', JSON.stringify(event))
+      if (!passwordResetTelemetryStages.includes(event.stage)) return
+      const reasonCode = [
+        'provider_timeout',
+        'provider_network_error',
+        'provider_http_error',
+      ].includes(event.reasonCode ?? '')
+        ? event.reasonCode
+        : undefined
+      console.info(
+        JSON.stringify({
+          event: 'auth.password-reset',
+          level: 'info',
+          requestId: telemetryRequestId(event.requestId),
+          stage: event.stage,
+          ...(reasonCode ? { reasonCode } : {}),
+        }),
+      )
     },
   }
 }

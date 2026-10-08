@@ -91,6 +91,8 @@ O Codex consegue identificar estado, regras, limites e próxima tarefa sem depen
 - [~] Testes E2E de acesso: spec de rotas públicas criada; execução integrada
   de login, logout, OTP, reset, sessão e negações ainda depende de ambiente e
   identidades de teste autorizados.
+  A27 prepara runner público local isolado de HEAD, sem secrets, sem rede
+  externa e sem mutações; sua prova é separada da homologação G1/HML.
 
 ### Gate
 
@@ -221,13 +223,17 @@ A matriz detalhada workbook × sistema está em
   Turnstile publicado, widget restrito, site key no bundle HML e diagnóstico
   histórico do `403` preservado; desafio real, replay, homologação integrada,
   rate limit distribuído e demais gates de G1 seguem pendentes.
-- [ ] Definir ambientes development/staging/production formalmente.
+- [~] Matriz/evidência somente leitura em `ENVIRONMENT-MATRIX.md`: local, CI,
+  HML autorizado e histórico separados; associação Worker × database, staging
+  e definição operacional definitiva dependem de decisão humana.
 - [ ] Configurar secrets por ambiente.
 - [~] Runbook de backup Neon e cópia independente preparado; janela, storage,
   RPO e responsáveis dependem de decisão humana.
 - [~] Runbook de restauração e ensaio descartável preparado; RTO, corte e
   validação em branch continuam dependentes de infraestrutura autorizada.
-- [ ] Logs estruturados.
+- [~] Logs locais de auditoria auth e recuperação de senha em JSON com
+  evento, nível, correlação UUID e allowlist runtime. Logs dos demais domínios
+  e homologação de observability permanecem pendentes.
 - [ ] Monitoramento de falhas.
 - [ ] Alertas de erro e disponibilidade.
 - [!] Revisar atualização de dependências auditadas: `npm audit` confirmou 13
@@ -250,6 +256,9 @@ A matriz detalhada workbook × sistema está em
       pequeno, cria commit local e prepara PR.
 - [ ] Nível 3: após três pacotes consecutivos verdes e sem correção humana ou
       gate violado, Codex escolhe próximo item exatamente `ready` em fase autorizada.
+- [~] Inicialização concorrente de memória local usa criação idempotente
+  e preserva rejeição de symlink; teste aguarda todos os subprocessos antes
+  de limpar fixtures. Evidência local, sem promoção de autonomia permanente.
 - [ ] Automação de revisão de CI/dependências, quando útil.
 - [ ] Multiagente somente após estabilidade do workflow e proteção adequada da `main`.
 

@@ -105,3 +105,11 @@ decidir separadamente sobre a #13 e qualquer migration já versionada.
   esbuild após a instalação; a repetição serial dos mesmos testes passou.
 - `npm run build:ci-isolated` e `npm run build:hml` passaram no HEAD limpo
   com chave pública sintética, sem leitura de `.env` ou deploy.
+
+### Lote plataforma/governança
+
+- PRs incorporadas por merge commit: #14, #21, #22, #23, #25, #28 e #29.
+- Não há migrations, arquivos de ambiente, secrets, workflows ou bindings no
+  diff. A PR #13 permanece fora e não é ancestral do lote.
+- Os 55 testes direcionados de telemetria, memória, autonomia, sinais, paths
+  sensíveis e smoke isolado passaram; a suíte, lint e typecheck passaram.
