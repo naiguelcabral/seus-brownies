@@ -1,5 +1,14 @@
 # Estado canônico do projeto — Cacau v1
 
+## Diagnóstico local em revisão — A28, 8 de outubro de 2026
+
+O relatório financeiro distingue reconciliação aritmética de margens da
+cobertura FIFO dos itens entregues. Um diagnóstico somente leitura sinaliza
+itens/alocações ausentes, quantidade inválida ou soma divergente; não altera
+CMV, receita, fechamento ou eventos e não corrige histórico. Escopo restrito
+às entregas carregadas no mês de competência. Compensação posterior isolada
+não demanda nova alocação; origem de compra sem lote continua válida.
+
 Atualizado em 6 de outubro de 2026, após revisão de código, migrations,
 testes, rotas, documentação e estado público de HML.
 

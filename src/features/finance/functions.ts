@@ -33,6 +33,7 @@ import {
   summarizeFinancialEventEffects,
 } from '#/features/finance/policy'
 import { summarizeAccrualMargins } from '#/features/finance/accrual-margins'
+import { diagnoseDeliveryFifoCoverage } from '#/features/finance/delivery-fifo-coverage'
 import type {
   AccrualMarginAllocation,
   AccrualMarginEvent,
@@ -174,12 +175,19 @@ async function loadAccrualMargins(database: any, periodMonth: string) {
     ),
   ]
   if (!saleIds.length)
-    return summarizeAccrualMargins({
-      events,
-      sales: [],
-      saleItems: [],
-      allocations: [],
-    })
+    return {
+      ...summarizeAccrualMargins({
+        events,
+        sales: [],
+        saleItems: [],
+        allocations: [],
+      }),
+      fifoCoverage: diagnoseDeliveryFifoCoverage({
+        events,
+        saleItems: [],
+        allocations: [],
+      }),
+    }
 
   const [saleRows, itemRows] = (await Promise.all([
     database
@@ -197,6 +205,7 @@ async function loadAccrualMargins(database: any, periodMonth: string) {
         saleId: saleItems.saleId,
         productId: saleItems.productId,
         productName: saleItems.productName,
+        quantity: saleItems.quantity,
         revenue:
           sql<string>`coalesce(${saleItems.reportedAmount}, ${saleItems.totalAmount})`.as(
             'revenue',
@@ -204,7 +213,10 @@ async function loadAccrualMargins(database: any, periodMonth: string) {
       })
       .from(saleItems)
       .where(inArray(saleItems.saleId, saleIds)),
-  ])) as [AccrualMarginSale[], AccrualMarginSaleItem[]]
+  ])) as [
+    AccrualMarginSale[],
+    Array<AccrualMarginSaleItem & { quantity: string }>,
+  ]
   const itemIds = itemRows.map((item) => item.id)
   const allocationRows = itemIds.length
     ? ((await database
@@ -241,12 +253,19 @@ async function loadAccrualMargins(database: any, periodMonth: string) {
       throw new Error('Alocação FIFO de venda sem item vinculado.')
     return { ...allocation, saleItemId: allocation.saleItemId }
   })
-  return summarizeAccrualMargins({
-    events,
-    sales: saleRows,
-    saleItems: itemRows,
-    allocations,
-  })
+  return {
+    ...summarizeAccrualMargins({
+      events,
+      sales: saleRows,
+      saleItems: itemRows,
+      allocations,
+    }),
+    fifoCoverage: diagnoseDeliveryFifoCoverage({
+      events,
+      saleItems: itemRows,
+      allocations,
+    }),
+  }
 }
 
 async function loadFinancialPosition(database: any, periodMonth: string) {
