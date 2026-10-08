@@ -1,5 +1,12 @@
 # Log sanitizado de autonomia — Cacau v1
 
+## A22 — checklist de readiness de produção, 8 de outubro de 2026
+
+- Checklist local para revisão humana separa evidência local de homologação,
+  sem declarar produção pronta, aplicar schema ou tocar em HML.
+- Regras, resiliência e links relativos foram revisados; Prettier, diff e
+  guard passaram na origem. Nenhuma operação externa foi executada.
+
 ## A18 — déficit de insumo na prévia, 8 de outubro de 2026
 
 - Branch independente `codex/auto-a18-ingredient-shortfalls`, main `f61e9a28`.

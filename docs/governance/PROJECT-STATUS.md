@@ -49,6 +49,8 @@ Este documento é a referência canônica de alto nível para o estado atual do 
 - Auditoria local de produção distingue quantidades planejadas e realizadas
   por saída, diferença física exata e custo alocado informado. Lacunas não
   viram produção realizada; homologação visual permanece pendente.
+- Checklist `PRODUCTION-READINESS.md` preparado para revisão humana; não
+  declara produção pronta nem comprova schema ou homologação no ambiente.
 
 ### Dados e migrações
 

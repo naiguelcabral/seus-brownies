@@ -1,5 +1,17 @@
 # Handoff de autonomia — Cacau v1
 
+## Missão autônoma — A22, 8 de outubro de 2026
+
+- Objetivo: checklist revisável para preparar a operação real de produção.
+- Não objetivos: autorizar operação/deploy, aplicar schema, ensaiar HML,
+  definir RPO/RTO, corrigir histórico ou alterar regra financeira.
+- Branch independente `codex/auto-a22-production-readiness`, main `f61e9a28`.
+- Aceite: separar evidência local de homologação; cada etapa exige responsável,
+  referência sanitizada e estado; gates mantidos e regras canônicas citadas.
+- Resultado: checklist revisado contra regras e resiliência; links relativos
+  existentes, Prettier/diff/guard verdes. Aplicação de schema/aceite físico
+  continuam humanos.
+
 ## Missão autônoma — A18, 8 de outubro de 2026
 
 - Objetivo: prévia acessível com quantidade faltante exata por insumo.

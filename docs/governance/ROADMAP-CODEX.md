@@ -187,7 +187,8 @@ A matriz detalhada workbook × sistema está em
 =======
 >>>>>>> origin/codex/auto-a18-ingredient-shortfalls
 - [ ] Revisar consistência entre custo médio físico e FIFO de produto final.
-- [ ] Checklist de preparação para produção real.
+- [~] Checklist preparado em `PRODUCTION-READINESS.md`; schema, recuperação,
+  acesso, integridade e homologação operacional permanecem humanos.
 
 ## Fase G7 — Deploy e observabilidade
 
