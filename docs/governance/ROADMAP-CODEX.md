@@ -130,7 +130,9 @@ A matriz detalhada workbook × sistema está em
 - [~] Histórico de produção real por receita, status, produto e período
   implementado localmente com paginação; rendimento realizado já é rastreado
   nos lotes concluídos e aguarda homologação gerencial.
-- [ ] Perdas e coprodutos.
+- [~] Perdas declaradas e coprodutos realizados agregados localmente por
+  produto a partir de lotes concluídos, sem perda automática e com custo
+  alocado separado; aguardam aplicação de migrations e homologação visual.
 - [~] Parceiros/canais com receita, eventos, unidades, ticket e divergência
   implementados localmente; margem e comparação temporal continuam pendentes.
 - [~] Parâmetros gerenciais centralizados e plano de ação humano implementados

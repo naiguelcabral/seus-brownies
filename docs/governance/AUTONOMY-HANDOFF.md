@@ -1,5 +1,25 @@
 # Handoff de autonomia — Cacau v1
 
+## Missão autônoma — pacote A16, retomado em 8 de outubro de 2026
+
+- Objetivo: apresentar perdas declaradas e saídas de coproduto de lotes
+  concluídos no período, separando quantidade física de custo alocado.
+- Não objetivos: inferir perda automática, reclassificar Bordinhas, alterar
+  custo/CMV, criar movimento, aplicar migration ou escrever HML.
+- Branch: `codex/auto-a16-production-outcomes`, criada da `origin/main`
+  `f61e9a28df7b0fdbc80864402b578a2a0aabd3f8`; PRs #14–#17 não são base.
+- Arquivos previstos: `src/features/reports/functions.ts`, módulo de
+  agregação, `src/routes/relatorios.tsx`, teste determinístico, status,
+  roadmap, handoff e log.
+- Aceite: consulta somente lotes concluídos e saída `role=co_product`;
+  perdas usam exclusivamente declarações com motivo; totais preservam
+  milésimos/centavos e não duplicam custos operacionais.
+- Validação: testes direcionados e suíte, lint, typecheck, build CI isolado
+  no commit limpo, Prettier, revisão do diff e guard sensível.
+- Resultado local: 3 testes direcionados e 374 testes da suíte passaram;
+  lint e typecheck verdes. Build CI isolado passou no commit limpo com
+  chave pública sintética explícita, sem arquivos secretos.
+
 ## Missão autônoma de 7 de outubro de 2026 — pacote A13
 
 - Objetivo: ampliar a reconciliação somente leitura de camadas, alocações,
