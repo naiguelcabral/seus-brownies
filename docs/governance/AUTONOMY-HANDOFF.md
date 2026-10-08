@@ -1,5 +1,18 @@
 # Handoff de autonomia — Cacau v1
 
+## Checkpoint de integração — produção e readiness, 8 de outubro de 2026
+
+- Branch: `codex/integration-production-readiness`, baseada em
+  `origin/main` `f61e9a28df7b0fdbc80864402b578a2a0aabd3f8`.
+- Merge commits locais concluídos: PRs #19, #20, #24, #26 e #27. Conflitos
+  compostos apenas em documentação e imports da rota; guards e writers foram
+  preservados.
+- Evidência atual: 16 testes direcionados e `npm run typecheck` passaram;
+  `git diff --check` e árvore limpa. Ainda faltam `npm test`, lint, Prettier,
+  builds isolados e revisão final antes de push/PR draft.
+- Próxima ação exata: executar essa matriz no HEAD desta branch, atualizar a
+  matriz de integração e abrir uma PR em rascunho somente se tudo passar.
+
 ## Missão autônoma — A25, 8 de outubro de 2026
 
 - Testes locais de invariantes da conclusão transacional de produção foram
