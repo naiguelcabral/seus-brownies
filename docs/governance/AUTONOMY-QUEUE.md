@@ -1,5 +1,15 @@
 # Fila executável de autonomia — Cacau v1
 
+## Reconciliação de integração — 8 de outubro de 2026
+
+| ID     | Pacote                                            | Estado       | Saída / gate                                                                          |
+| ------ | ------------------------------------------------- | ------------ | ------------------------------------------------------------------------------------- |
+| INT-R  | Relatórios e financeiro (#15, #16, #17, #18, #30) | review-ready | PR #31 draft; CI `37804204150` verde no SHA `1733573`.                                |
+| INT-P  | Produção e readiness (#19, #20, #24, #26, #27)    | running      | Validação local completa exceto builds isolados; concluir, publicar e abrir PR draft. |
+| INT-13 | Credencial persistente GitHub MCP (#13)           | needs-human  | `CHANGES-REQUIRED`; fora de qualquer lote.                                            |
+
+Matriz: `INTEGRATION-RECONCILIATION-2026-10-08.md`.
+
 Atualizada em 8 de setembro de 2026. Esta fila é a fonte de verdade para a
 seleção de pacotes pelo controlador. Ela não substitui os gates de
 `AGENTS.md`, `SECURITY.md` ou `HUMAN-APPROVALS.md`.

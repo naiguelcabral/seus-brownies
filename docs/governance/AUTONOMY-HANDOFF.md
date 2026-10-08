@@ -7,11 +7,15 @@
 - Merge commits locais concluídos: PRs #19, #20, #24, #26 e #27. Conflitos
   compostos apenas em documentação e imports da rota; guards e writers foram
   preservados.
-- Evidência atual: 16 testes direcionados e `npm run typecheck` passaram;
-  `git diff --check` e árvore limpa. Ainda faltam `npm test`, lint, Prettier,
-  builds isolados e revisão final antes de push/PR draft.
-- Próxima ação exata: executar essa matriz no HEAD desta branch, atualizar a
-  matriz de integração e abrir uma PR em rascunho somente se tudo passar.
+- Evidência atual: `npm ci --ignore-scripts`, 16 testes direcionados, suíte
+  de 387 testes, lint, typecheck, Prettier e `git diff --check` passaram. A
+  primeira tentativa paralela dos testes falhou antes dos casos com `ETXTBSY`
+  do esbuild logo após a instalação; a repetição serial dos mesmos testes
+  passou, sem alteração de código.
+- A CI da PR #31 foi revalidada por GitHub MCP: CI `37804204150` é `success`
+  no SHA `1733573`.
+- Próxima ação exata: concluir builds isolados no HEAD limpo, revisar, publicar
+  somente esta branch e abrir PR em rascunho; consultar a CI dela.
 
 ## Missão autônoma — A25, 8 de outubro de 2026
 

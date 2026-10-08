@@ -1,5 +1,14 @@
 # Estado canônico do projeto — Cacau v1
 
+## Integração de produção/readiness em revisão — 8 de outubro de 2026
+
+O lote que compõe #19, #20, #24, #26 e #27 preserva o writer transacional,
+diagnósticos somente leitura e precisão monetária. Não inclui migration,
+infraestrutura, segredo, banco compartilhado ou correção automática de
+estoque/FIFO/CMV. Os testes locais consolidados passaram; a publicação da
+branch e a CI remota dependem dos builds isolados finais. A PR #31 de
+relatórios/FIFO tem CI `37804204150` verde no SHA consolidado `1733573`.
+
 ## Entrega local em revisão — A25, 8 de outubro de 2026
 
 Conclusão de produção com sete cenários determinísticos do writer real usando
