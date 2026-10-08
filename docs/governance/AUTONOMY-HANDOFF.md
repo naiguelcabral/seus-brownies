@@ -1,5 +1,20 @@
 # Handoff de autonomia — Cacau v1
 
+## Missão autônoma — A28, 8 de outubro de 2026
+
+- Objetivo: diagnosticar cobertura de quantidade entregue × alocação FIFO,
+  separadamente da reconciliação aritmética de margens já existente.
+- Não objetivos: modificar CMV, compensações, fechamento, precisão, RBAC,
+  schema, histórico ou aplicar backfill. Diagnóstico somente leitura.
+- Branch: `codex/auto-a28-delivery-fifo-coverage`, independente da main.
+- Arquivos: módulo puro financeiro, teste, consulta protegida, UI, roadmap,
+  status, handoff e log (oito arquivos).
+- Aceite: entrega sem item/alocação e soma divergente são explícitas; valor
+  inválido não é zero; compensação isolada não exige nova alocação; origens de
+  compra sem lote são válidas; sem dados sensíveis ou alteração de totais.
+- Validação: testes determinísticos, suíte/lint/tipos, build isolado, formato,
+  diff/guard e revisão de queries/writers.
+
 ## Integração controlada da PR #12 — concluída, 7 de outubro de 2026
 
 - Objetivo concluído: reconciliar metas e cenários em

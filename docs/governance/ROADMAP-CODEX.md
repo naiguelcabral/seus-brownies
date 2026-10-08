@@ -99,6 +99,10 @@ final por Server Function continuam sujeitos aos gates de `HUMAN-APPROVALS.md`.
 - [x] Implementar margem por período/canal; parceiro aguarda fonte de dados.
 - [ ] Criar reconciliação automatizada de estoque x FIFO x CMV.
 - [ ] Criar relatório de divergências sem correção automática.
+- [~] A28 acrescenta diagnóstico local de cobertura entrega × item × quantidade
+  FIFO em `/financeiro`, separado da reconciliação das dimensões de margem.
+  Ausência de alocação não comprova custo zero; nenhum total/fato foi alterado.
+  Conferência real, schema e correções históricas seguem gates separados.
 - [x] Documentar estratégia de reversão/cancelamento de venda no FIFO.
 
 ### Gate

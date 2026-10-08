@@ -1,5 +1,20 @@
 # Log sanitizado de autonomia — Cacau v1
 
+## A28 — cobertura da entrega no FIFO, 8 de outubro de 2026
+
+- Branch independente `codex/auto-a28-delivery-fifo-coverage`.
+- Auditoria local encontrou margem aritmeticamente reconciliada mesmo com
+  alocação ausente (CMV zero). Acrescentado diagnóstico separado de quantidades
+  e vínculos; preserva os algoritmos financeiros e writers existentes.
+- Consulta protegida lê também a quantidade já existente dos itens; UI informa
+  escopo, contagens e códigos sanitizados. Não cria regra de custo, lote
+  artificial, migration, backfill, correção compartilhada ou novo gate de fechamento.
+- Cinco testes direcionados, 376 testes da suíte, lint e typecheck passaram.
+  Revisão confirmou apenas SELECT adicional de quantidade, cálculo puro e UI;
+  escritores, algoritmos de margem e fechamento permaneceram intactos.
+- Build CI isolado passou com chave pública sintética, sem secrets/deploy.
+  Prettier, diff e guard passaram; homologação HML não foi executada.
+
 ## WP-D metas e cenários — 14 de setembro de 2026
 
 - G2-F1 foi publicado na branch `codex/workbook-parity` sem force push; a CI
