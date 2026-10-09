@@ -27,7 +27,11 @@ export function assessAccessDiagnostic(row) {
     !row.reachable_roles.includes(row?.session_role)
   )
     blockers.push('role-identity-incomplete')
-  if (!row?.database || !row?.role || !row?.session_role)
+  if (
+    ['database', 'role', 'session_role'].some(
+      (field) => typeof row?.[field] !== 'string' || !row[field].trim(),
+    )
+  )
     blockers.push('identity-incomplete')
   return {
     acl_checks_passed: blockers.length === 0,

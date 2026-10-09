@@ -16,7 +16,7 @@ SELECT current_database() database, current_user role, session_user session_role
   current_setting('transaction_read_only') transaction_read_only,
   current_setting('default_transaction_read_only') default_read_only,
   current_setting('server_version_num') server_version_num,
-  ARRAY(SELECT rolname FROM roles ORDER BY rolname) reachable_roles,
+  ARRAY(SELECT rolname::text FROM roles ORDER BY rolname) reachable_roles,
   (SELECT count(*)::int FROM roles WHERE rolsuper OR rolcreaterole OR rolcreatedb
     OR rolreplication OR rolbypassrls) privileged_roles,
   EXISTS(SELECT 1 FROM roles r WHERE has_database_privilege(r.oid,current_database(),'CREATE')) database_create,

@@ -22,7 +22,7 @@ const queries = {
     pg_get_indexdef(x.indexrelid,0,false) definition, pg_get_expr(x.indpred,x.indrelid,false) predicate
     FROM pg_index x JOIN pg_class c ON c.oid=x.indrelid JOIN pg_class i ON i.oid=x.indexrelid
     JOIN pg_namespace n ON n.oid=c.relnamespace WHERE n.nspname='public' ORDER BY c.relname,i.relname`,
-  enums: `SELECT t.typname name, array_agg(e.enumlabel ORDER BY e.enumsortorder) values
+  enums: `SELECT t.typname name, array_agg(e.enumlabel::text ORDER BY e.enumsortorder) values
     FROM pg_type t JOIN pg_enum e ON e.enumtypid=t.oid JOIN pg_namespace n ON n.oid=t.typnamespace
     WHERE n.nspname='public' GROUP BY t.typname ORDER BY t.typname`,
   functions: `SELECT p.proname name, pg_get_function_identity_arguments(p.oid) arguments,

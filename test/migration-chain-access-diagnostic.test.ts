@@ -63,4 +63,17 @@ test('missing or writable privileges and session identities fail closed', () => 
     false,
   )
   assert.equal(assessAccessDiagnostic({}).acl_checks_passed, false)
+  assert.equal(
+    assessAccessDiagnostic({ ...row, database: 42 }).acl_checks_passed,
+    false,
+  )
+  assert.equal(
+    assessAccessDiagnostic({
+      ...row,
+      role: ' ',
+      session_role: ' ',
+      reachable_roles: [' '],
+    }).acl_checks_passed,
+    false,
+  )
 })

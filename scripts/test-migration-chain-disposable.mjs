@@ -228,6 +228,10 @@ try {
         }
         assert.deepEqual(await data(client), before)
         const catalog = await captureCatalog(client)
+        assert.ok(
+          catalog.enums.every((entry) => Array.isArray(entry.values)),
+          'enum labels must be ordered arrays',
+        )
         if (!baseline) baseline = catalog
         assert.deepEqual(
           catalog,
@@ -394,7 +398,11 @@ try {
     const observations = []
     async function check(label, expected, blocker) {
       const result = await diagnoseAccess(reader)
-      assert.equal(result.assessment.acl_checks_passed, expected, label)
+      assert.equal(
+        result.assessment.acl_checks_passed,
+        expected,
+        `${label}: ${JSON.stringify(result)}`,
+      )
       if (blocker)
         assert.ok(result.assessment.blockers.includes(blocker), label)
       assert.equal(result.assessment.application_authorized, false)
