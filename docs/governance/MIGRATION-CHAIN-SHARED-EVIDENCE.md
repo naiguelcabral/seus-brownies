@@ -1,10 +1,85 @@
 # Coleta pendente das bases compartilhadas — tarefa 36
 
+## Revalidação desta continuação — 9 de outubro de 2026
+
+Checkpoint remoto confirmado: `main` em
+`1e5bd557a1bd57c89f65fe03fa013eb0f8af6d70`, PR #38 em draft no SHA
+`eaf00fd0fca4e1b7e673db51bee7bfc1bca353af`. A CI pós-merge `37944960379`
+e as quatro execuções `37966956241`, `37966962671`, `37966956232`,
+`37966962673` estão `completed/success`. A última prova de código continua
+433 testes e 17 casos PostgreSQL 17; a continuação altera apenas registros
+documentais. Nenhum byte do caminho ativo `drizzle/` difere da `origin/main`.
+Nesta continuação, os quatro testes locais direcionados do diagnóstico de
+acesso e das candidatas passaram; Prettier nos arquivos alterados e
+`git diff --check` passaram. A publicação executa novamente a CI e o
+workflow PostgreSQL 17 no SHA do pacote documental; resultados finais ficam
+registrados na PR #38 e na issue #36, sem confundir a coleta de metadados
+com validação SQL de base compartilhada.
+
+Evidência atual sanitizada, com UTC e proveniência:
+[`evidence/migration-chain-revalidation-2026-10-09.json`](evidence/migration-chain-revalidation-2026-10-09.json).
+O inventário anterior em `test/fixtures/migration-chain-shared-inventory.json`
+foi preservado integralmente.
+
+### Acesso e abrangência
+
+O MCP Neon retornou os dois projetos vivos da organização
+`org-flat-cherry-97614229`. A consulta separada de projetos recuperáveis
+retornou zero. A listagem de branches com `include_deleted:true` retornou
+os mesmos cinco branches; nenhuma lista recebeu limite. Cada branch tem
+somente `neondb` e a API de papéis retorna apenas `neondb_owner`; os cinco
+endpoints são `read_write`. Os dois projetos não têm snapshots registrados
+na API consultada. Isso cobre o catálogo acessível dessa organização;
+**não comprova ausência de cópias externas, dumps restaurados, outras contas
+ou aplicações manuais**, nem elimina a necessidade de declaração do operador.
+Estados `archived` e `idle` continuam sem valor probatório sobre schema.
+
+A CLI Neon está autenticada e `neon psql --help` confirma seleção explícita
+de projeto, branch, database e `--role-name`. Portanto a CLI poderia usar
+um leitor aprovado; o bloqueio atual é a falta da conexão aprovada e da prova
+da role não gravável, não a ausência de seleção de role em todos os clientes.
+Os dois conectores SQL MCP disponíveis continuam sem argumento de role;
+o conector nativo declara modo de escrita ativo. Não foi obtida DSN nem
+executado SQL externo. Histórico completo, hashes e catálogo real permanecem
+`unconfirmed` em cada uma das cinco bases da tabela histórica abaixo.
+
+### Worker ativo: avanço comprovado e limite
+
+O MCP Cloudflare agora está autenticado. GETs da API confirmaram apenas o
+Worker `cacau-v1-hml`, conta `7cfc884f81d5b5e519a78407465a6e8f`, deployment
+ativo `8268b409-34bc-4881-9694-52c292da2da3`, criado em
+`2026-09-07T03:35:45.376019Z`, com 100% do tráfego na versão
+`e241b715-99bf-4a83-82ba-eef24fedadaa`. O GET dessa **versão ativa**
+confirmou `DATABASE_URL` como `secret_text`. Foram projetados somente nomes
+e tipos de bindings, sem ler valores. O destino projeto/branch/endpoint/database
+não é retornado: **vínculo Worker→database ainda bloqueado**. Não foi buscado
+conteúdo do Worker, log bruto, secret ou endpoint de diagnóstico.
+
+### Itens específicos necessários ao operador
+
+1. Disponibilizar um mecanismo de conexão de auditoria **já aprovado**, com
+   leitor comprovadamente não gravável, para cada base relevante. Informar
+   somente projeto/branch/endpoint/database, nomes de role/session_user,
+   aprovação/proveniência e identificador privado de acesso; não enviar senha,
+   token ou DSN na issue/conversa. Ou fornecer os relatórios privados já
+   coletados e revisados sob esse acesso, com conclusões/hashes sanitizados.
+2. Declarar a abrangência: listar quaisquer bases compartilhadas externas,
+   cópias ou restaurações relevantes, ou atestar que não existem, com UTC e
+   responsável. Metadados da organização não substituem essa declaração.
+3. Atestar, por conferência operacional privada do secret usado pela versão
+   ativa acima, os identificadores projeto/branch/endpoint/database do Worker,
+   UTC e responsável. O valor do secret deve permanecer privado. Se o
+   deployment mudar, repetir a identificação da versão antes de aceitar o vínculo.
+
+Até esses itens, `BLOCKED_ACCESS_INVENTORY_AND_WORKER_MAPPING`; a preferência
+de substituição não é elegível e a issue #36 continua aberta. Gates `0019`
+(parâmetros e histórico) e `0028` (mix e nomes históricos) continuam separados.
+
 **BLOCKED_ACCESS_AND_TARGET_MAPPING.** Este roteiro não autoriza aplicação,
 criação de papéis, grants, alteração de PUBLIC, secrets, endpoints ou deploy.
 Continuação da PR [#38](https://github.com/naiguelcabral/seus-brownies/pull/38).
 
-## Verificação de acesso realizada
+## Verificação de acesso anterior — preservada como histórico
 
 A API da conta lista dois projetos Seus Brownies. Nos cinco branches inventariados,
 `list_postgres_roles` retorna somente `neondb_owner`, sem prova de ACLs não graváveis.

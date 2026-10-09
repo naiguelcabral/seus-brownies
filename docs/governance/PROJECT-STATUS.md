@@ -1,5 +1,19 @@
 # Estado canônico do projeto — Cacau v1
 
+## Revalidação #36 — 9 de outubro de 2026
+
+- `main` `1e5bd557` e PR #38 draft `eaf00fd` revalidadas; CI main e
+  quatro CIs da PR verdes. A cadeia ativa e as evidências anteriores foram preservadas.
+- API Neon reconfirmou dois projetos, cinco bases `neondb`, apenas
+  `neondb_owner`, endpoints `read_write`, sem snapshots registrados. CLI
+  autenticada permite selecionar role, mas falta acesso de auditoria aprovado.
+- MCP Cloudflare autenticado confirmou deployment `8268b409` e versão
+  `e241b715` ativa a 100%; `DATABASE_URL` é secreto e seu destino não foi lido.
+- Estado: `blocked` por acesso não gravável, abrangência externa e vínculo
+  Worker→database não comprovados. Nenhum SQL externo, migration ou deploy.
+- Evidência e itens mínimos para retomada:
+  [MIGRATION-CHAIN-SHARED-EVIDENCE.md](MIGRATION-CHAIN-SHARED-EVIDENCE.md).
+
 ## Continuidade #36 — acesso externo ainda bloqueado
 
 Inventário de metadados ampliado: os cinco branches retornam somente
