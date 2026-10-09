@@ -2,8 +2,10 @@
 
 ## Revisão do pacote preparatório #35 — 9 de outubro de 2026
 
-- Integração da #35 autorizada pelo Dono exclusivamente como preparação,
-  após revisão e CI do commit final. Merge não autoriza migrations ou deploy.
+- PR #35 integrada pelo merge `a542ec73d914bcca12090b38df69bf16a49e9bbf`.
+  CI pós-merge da `main`: [37944260848](https://github.com/naiguelcabral/seus-brownies/actions/runs/37944260848),
+  `push`, mesmo SHA, `completed/success`.
+  Integração exclusivamente preparatória; não autoriza migrations ou deploy.
 - Verificador offline exige SHA/ID da CI pós-merge esperados e compara as
   definições declaradas nos snapshots, além dos nomes. Seu JSON de saída
   sempre informa `application_authorized: false`; coleta independente e
@@ -15,8 +17,9 @@
   compartilhadas relevantes. Estratégia ainda não aprovada.
 - `0019` (dados financeiros) e `0028` (cenários) são gates independentes.
   Nenhum SQL HML, alteração de migration, backfill ou deploy nesta revisão.
-- CI da revisão: consultar o SHA final e as execuções da PR #35; os IDs abaixo
-  são evidências históricas e não substituem a CI após sua integração.
+- CI da revisão `10e62c26`: PR `37943877875` e push `37943868409` verdes;
+  429 testes, lint, typecheck e build isolado passaram. A CI pós-merge acima
+  confirmou a integração. Os registros anteriores abaixo são históricos.
 
 ## Readiness das migrations 0017–0028 — 9 de outubro de 2026
 
