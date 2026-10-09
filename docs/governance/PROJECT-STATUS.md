@@ -1,5 +1,18 @@
 # Estado canônico do projeto — Cacau v1
 
+## Readiness das migrations 0017–0028 — 9 de outubro de 2026
+
+A PR #34 foi integrada na `main` `100d41c` e a CI pós-merge
+`37930101604` passou. A revisão local em PostgreSQL 17 descartável
+encontrou falha determinística na `0017`: o trigger usa `products.unit`,
+mas a coluna versionada é `measurement_unit`. A cadeia publicada foi
+revertida pelo migrador e não está pronta para HML. A consulta SQL HML
+permanece bloqueada porque a conexão MCP disponível não comprova modo
+somente leitura; metadados confirmam apenas o alvo documentado. O plano,
+matriz, backup e gates estão em
+`HML-MIGRATION-READINESS-0017-0028.md`. Nenhuma migration foi aplicada em
+ambiente compartilhado.
+
 ## Integrações consolidadas — 8 de outubro de 2026
 
 O lote que compõe #19, #20, #24, #26 e #27 preserva o writer transacional,

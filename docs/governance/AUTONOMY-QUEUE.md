@@ -1,5 +1,15 @@
 # Fila executável de autonomia — Cacau v1
 
+## Gate de migration HML — 9 de outubro de 2026
+
+| ID                | Pacote                       | Estado  | Saída / gate                                                                                                                                                                                                           |
+| ----------------- | ---------------------------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| HML-MIG-0017-0028 | Readiness da cadeia pendente | blocked | `0017` falha em PostgreSQL 17 por `products.unit` inexistente; resolver por caminho auditável aprovado. SQL HML não consultado sem conexão comprovadamente read-only. Plano em `HML-MIGRATION-READINESS-0017-0028.md`. |
+
+A indicação histórica abaixo de aplicar apenas `0027`/`0028` não é
+executável enquanto a cadeia `0017`–`0026` e o alvo efetivo permanecerem
+sem validação.
+
 ## Reconciliação de integração — 8 de outubro de 2026
 
 | ID     | Pacote                                                    | Estado      | Saída / gate                                        |

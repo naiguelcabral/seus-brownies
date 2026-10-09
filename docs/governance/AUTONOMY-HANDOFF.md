@@ -1,5 +1,28 @@
 # Handoff de autonomia — Cacau v1
 
+## Readiness HML 0017–0028 — 9 de outubro de 2026
+
+- Base `origin/main` `100d41c`; PR #34 integrada e CI pós-merge
+  `37930101604` verde. Worktree/branch `codex/hml-migration-readiness`.
+- Objetivo: preparar revisão, verificação read-only, teste descartável,
+  pre/pós-checks e recuperação. Não objetivos: aplicar HML/produção,
+  alterar migration histórica, deploy ou dado compartilhado.
+- Arquivos: `HML-MIGRATION-READINESS-0017-0028.md`,
+  `scripts/hml-migration-readiness.mjs`, teste correspondente e estes
+  registros canônicos.
+- PostgreSQL 17 local sem rede: `0000`–`0016` aplicadas com hashes
+  corretos; `0017` falhou por coluna `products.unit` inexistente.
+  Drizzle reverteu `0017`–`0028`. Cópia diagnóstica temporária da
+  `0017` permitiu testar sequência e reaplicação, sem alterar Git.
+- Metadados Neon confirmaram projeto/branch/database documentados, mas SQL
+  HML foi bloqueado porque a conexão MCP tem permissão `ADMIN` e não
+  comprova read-only. Hashes, estado e drift HML atuais não confirmados.
+- Aceite do pacote: script/teste verde, suíte/lint/tipos/builds isolados,
+  diff revisado, PR draft. Próximo passo após PR: decisão humana para ponte
+  auditável anterior à `0017`, role estritamente read-only, associação
+  Worker/banco, valores `0019`, backup/janela/RPO/RTO; só então preparar
+  autorização específica de aplicação.
+
 ## Pós-integração consolidada — 8 de outubro de 2026
 
 - Branch: `codex/integration-platform-governance`, baseada na `main`
