@@ -1,5 +1,49 @@
 # Handoff de autonomia — Cacau v1
 
+## Revisão #35 e tarefa corretiva #36 — 9 de outubro de 2026
+
+- O Dono autorizou revisar/integrar somente a preparação e confirmar CI da
+  `main`; não autorizou aplicar `0017`–`0028` em HML.
+- Correções: SHA/ID exatos e metadados da CI pós-merge, definições de snapshot,
+  enums, testes negativos para drift com nomes iguais e erros de subprocesso.
+  Verificador continua offline, sem atestação externa ou aprovação de aplicação.
+- Tarefa própria: [#36](https://github.com/naiguelcabral/seus-brownies/issues/36),
+  plano `MIGRATION-CHAIN-REPAIR-0016.md`. Nenhuma estratégia aprovada; preferência
+  inicial condicionada ao inventário completo de bases compartilhadas.
+- Próximo passo: CI do commit final da #35, merge do pacote preparatório e CI
+  pós-merge; depois comparar/provar estratégias em tarefa e PR separadas.
+- Não presumir associação Worker/banco, ausência global de `0017+`, aprovação
+  financeira `0019` ou dados de cenários `0028`.
+- Uso Codex: não disponível para esta execução. Nenhum percentual estimado.
+- Validação desta revisão: lint direcionado, typecheck e formatação passaram.
+  Cinco casos funcionais passaram em diagnóstico no mesmo processo. A suíte
+  CLI local foi bloqueada por `spawnSync EPERM` do ambiente e não é registrada
+  como aprovada; testes agora rejeitam erro de subprocesso explicitamente.
+  A CI remota completa no commit final é requisito antes do merge.
+
+## Readiness HML 0017–0028 — 9 de outubro de 2026
+
+- Base `origin/main` `100d41c`; PR #34 integrada e CI pós-merge
+  `37930101604` verde. Worktree/branch `codex/hml-migration-readiness`.
+- Objetivo: preparar revisão, verificação read-only, teste descartável,
+  pre/pós-checks e recuperação. Não objetivos: aplicar HML/produção,
+  alterar migration histórica, deploy ou dado compartilhado.
+- Arquivos: `HML-MIGRATION-READINESS-0017-0028.md`,
+  `scripts/hml-migration-readiness.mjs`, teste correspondente e estes
+  registros canônicos.
+- PostgreSQL 17 local sem rede: `0000`–`0016` aplicadas com hashes
+  corretos; `0017` falhou por coluna `products.unit` inexistente.
+  Drizzle reverteu `0017`–`0028`. Cópia diagnóstica temporária da
+  `0017` permitiu testar sequência e reaplicação, sem alterar Git.
+- Metadados Neon confirmaram projeto/branch/database documentados, mas SQL
+  HML foi bloqueado porque a conexão MCP tem permissão `ADMIN` e não
+  comprova read-only. Hashes, estado e drift HML atuais não confirmados.
+- Aceite do pacote: script/teste verde, suíte/lint/tipos/builds isolados,
+  diff revisado, PR draft. Próximo passo após PR: decisão humana para ponte
+  auditável anterior à `0017`, role estritamente read-only, associação
+  Worker/banco, valores `0019`, backup/janela/RPO/RTO; só então preparar
+  autorização específica de aplicação.
+
 ## Pós-integração consolidada — 8 de outubro de 2026
 
 - Branch: `codex/integration-platform-governance`, baseada na `main`
