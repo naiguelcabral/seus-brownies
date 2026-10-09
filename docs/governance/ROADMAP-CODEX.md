@@ -1,5 +1,16 @@
 # Roadmap executável para Codex — Cacau v1
 
+## Prioridade de migrations — 9 de outubro de 2026
+
+- [~] Revisar/corrigir e integrar somente o pacote preparatório #35; confirmar
+  a CI do SHA final e a CI pós-merge da `main` antes da próxima frente.
+- [ ] Comparar as três estratégias na tarefa separada #36, conforme
+      `MIGRATION-CHAIN-REPAIR-0016.md`, e criar PR corretiva própria.
+- [!] Substituição da cadeia pendente: aguarda comprovação de ausência de
+  `0017+` em todas as bases compartilhadas relevantes; Git não prova isso.
+- [!] Aplicação HML continua proibida nesta tarefa. `0019` e `0028` mantêm
+  decisões de dados separadas, além dos gates de recuperação e autorização.
+
 ## Evidência local pendente de revisão — A25, 8 de outubro de 2026
 
 - G6: a conclusão de produção usa o mesmo writer transacional nos testes
@@ -201,15 +212,10 @@ A matriz detalhada workbook × sistema está em
 - [x] Custos operacionais e coproduto.
 - [x] Testes/homologações principais.
 - [ ] Revisar UX de produção para operação diária.
-      <<<<<<< HEAD
 - [~] Auditoria local por lote apresenta planejado, realizado, diferença
   física e custo alocado por saída; perdas declaradas e custo total já são
   exibidos. A prévia também sinaliza o déficit exato por insumo/unidade;
   planejamento entre lotes e homologação diária permanecem pendentes.
-  \=======
-
-> > > > > > > origin/codex/auto-a18-ingredient-shortfalls
-
 - [ ] Revisar consistência entre custo médio físico e FIFO de produto final.
 - [~] Checklist preparado em `PRODUCTION-READINESS.md`; schema, recuperação,
   acesso, integridade e homologação operacional permanecem humanos.

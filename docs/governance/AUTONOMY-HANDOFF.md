@@ -1,5 +1,26 @@
 # Handoff de autonomia — Cacau v1
 
+## Revisão #35 e tarefa corretiva #36 — 9 de outubro de 2026
+
+- O Dono autorizou revisar/integrar somente a preparação e confirmar CI da
+  `main`; não autorizou aplicar `0017`–`0028` em HML.
+- Correções: SHA/ID exatos e metadados da CI pós-merge, definições de snapshot,
+  enums, testes negativos para drift com nomes iguais e erros de subprocesso.
+  Verificador continua offline, sem atestação externa ou aprovação de aplicação.
+- Tarefa própria: [#36](https://github.com/naiguelcabral/seus-brownies/issues/36),
+  plano `MIGRATION-CHAIN-REPAIR-0016.md`. Nenhuma estratégia aprovada; preferência
+  inicial condicionada ao inventário completo de bases compartilhadas.
+- Próximo passo: CI do commit final da #35, merge do pacote preparatório e CI
+  pós-merge; depois comparar/provar estratégias em tarefa e PR separadas.
+- Não presumir associação Worker/banco, ausência global de `0017+`, aprovação
+  financeira `0019` ou dados de cenários `0028`.
+- Uso Codex: não disponível para esta execução. Nenhum percentual estimado.
+- Validação desta revisão: lint direcionado, typecheck e formatação passaram.
+  Cinco casos funcionais passaram em diagnóstico no mesmo processo. A suíte
+  CLI local foi bloqueada por `spawnSync EPERM` do ambiente e não é registrada
+  como aprovada; testes agora rejeitam erro de subprocesso explicitamente.
+  A CI remota completa no commit final é requisito antes do merge.
+
 ## Readiness HML 0017–0028 — 9 de outubro de 2026
 
 - Base `origin/main` `100d41c`; PR #34 integrada e CI pós-merge

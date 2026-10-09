@@ -1,5 +1,15 @@
 # Fila executável de autonomia — Cacau v1
 
+## Próxima sequência aprovada — 9 de outubro de 2026
+
+1. Corrigir/revisar o pacote preparatório #35, validar sua CI e integrar somente
+   a preparação; confirmar a CI pós-merge da `main`.
+2. Executar a tarefa separada [#36](https://github.com/naiguelcabral/seus-brownies/issues/36)
+   conforme `MIGRATION-CHAIN-REPAIR-0016.md`: inventário das bases compartilhadas,
+   três estratégias, provas descartáveis e PR corretiva própria.
+3. Manter aplicação HML `BLOCKED`. Substituição depende da ausência comprovada
+   de `0017+`; gates `0019`/`0028` e autorização específica não são dispensados.
+
 ## Gate de migration HML — 9 de outubro de 2026
 
 | ID                | Pacote                       | Estado  | Saída / gate                                                                                                                                                                                                           |

@@ -1,5 +1,23 @@
 # Estado canônico do projeto — Cacau v1
 
+## Revisão do pacote preparatório #35 — 9 de outubro de 2026
+
+- Integração da #35 autorizada pelo Dono exclusivamente como preparação,
+  após revisão e CI do commit final. Merge não autoriza migrations ou deploy.
+- Verificador offline exige SHA/ID da CI pós-merge esperados e compara as
+  definições declaradas nos snapshots, além dos nomes. Seu JSON de saída
+  sempre informa `application_authorized: false`; coleta independente e
+  definições SQL manuais/funções/triggers permanecem pendentes.
+- Tarefa separada [#36](https://github.com/naiguelcabral/seus-brownies/issues/36):
+  comparar três estratégias e provar atualização de `0016` e instalação vazia
+  em PostgreSQL descartável. Preferência inicial pela substituição da cadeia
+  pendente condicionada à comprovação de ausência de `0017+` em todas as bases
+  compartilhadas relevantes. Estratégia ainda não aprovada.
+- `0019` (dados financeiros) e `0028` (cenários) são gates independentes.
+  Nenhum SQL HML, alteração de migration, backfill ou deploy nesta revisão.
+- CI da revisão: consultar o SHA final e as execuções da PR #35; os IDs abaixo
+  são evidências históricas e não substituem a CI após sua integração.
+
 ## Readiness das migrations 0017–0028 — 9 de outubro de 2026
 
 A PR #34 foi integrada na `main` `100d41c` e a CI pós-merge
@@ -11,7 +29,8 @@ permanece bloqueada porque a conexão MCP disponível não comprova modo
 somente leitura; metadados confirmam apenas o alvo documentado. O plano,
 matriz, backup e gates estão em
 `HML-MIGRATION-READINESS-0017-0028.md`. Nenhuma migration foi aplicada em
-ambiente compartilhado.
+ambiente compartilhado por esta preparação; ausência global de aplicação de
+`0017+` continua não comprovada.
 
 ## Integrações consolidadas — 8 de outubro de 2026
 
@@ -40,7 +59,8 @@ rollback em falhas posteriores. A extração do writer preserva o corpo da
 transação, a validação e a autorização do servidor. A prova local não substitui
 homologação PostgreSQL, operação física ou aprovação de produção.
 
-Atualizado em 6 de outubro de 2026, após revisão de código, migrations,
+Atualizado em 9 de outubro de 2026, com evidências históricas datadas abaixo,
+após revisão de código, migrations,
 testes, rotas, documentação e estado público de HML.
 
 Este documento é a referência canônica de alto nível para o estado atual do sistema. Registros históricos de homologação, importação e decisões específicas permanecem válidos como evidência, mas não substituem este resumo.

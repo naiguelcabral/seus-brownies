@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Offline validator. It never opens a database connection or loads dotenv.
-import { readFileSync } from 'node:fs'
+import { readFileSync, realpathSync } from 'node:fs'
 import { createHash } from 'node:crypto'
 import { resolve, basename } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -19,9 +19,25 @@ function fail(message) {
 
 function options(argv) {
   const result = {}
+  const allowed = new Set([
+    'mode',
+    'environment',
+    'project',
+    'branch',
+    'database',
+    'ack-read-only',
+    'evidence',
+    'expected-ci-sha',
+    'expected-ci-run-id',
+  ])
   for (let i = 0; i < argv.length; i += 2) {
     const key = argv[i]
-    if (!key?.startsWith('--') || !argv[i + 1] || result[key.slice(2)])
+    if (
+      !key?.startsWith('--') ||
+      !allowed.has(key.slice(2)) ||
+      !argv[i + 1] ||
+      result[key.slice(2)]
+    )
       fail('argumentos inválidos')
     result[key.slice(2)] = argv[i + 1]
   }
@@ -31,7 +47,14 @@ function options(argv) {
   }
   if (result['ack-read-only'] !== 'hml-read-only')
     fail('confirmação de leitura ausente')
-  if (!result.evidence || /^\.env(?:\.|$)/i.test(basename(result.evidence)))
+  if (
+    !/^[0-9a-f]{40}$/.test(result['expected-ci-sha'] ?? '') ||
+    !/^[1-9]\d*$/.test(result['expected-ci-run-id'] ?? '')
+  )
+    fail('identidade esperada da CI ausente ou inválida')
+  if (!result.evidence || /^\.env/i.test(basename(result.evidence)))
+    fail('arquivo de evidência inválido')
+  if (/^\.env/i.test(basename(realpathSync(result.evidence))))
     fail('arquivo de evidência inválido')
   return result
 }
@@ -70,6 +93,16 @@ function expectedSchema(last) {
         foreign_keys: Object.keys(table.foreignKeys).sort(),
         checks: Object.keys(table.checkConstraints).sort(),
         uniques: Object.keys(table.uniqueConstraints).sort(),
+        definitions: {
+          columns: table.columns,
+          indexes: table.indexes,
+          foreign_keys: table.foreignKeys,
+          checks: table.checkConstraints,
+          uniques: table.uniqueConstraints,
+          primary_keys: table.compositePrimaryKeys,
+          policies: table.policies,
+          rls_enabled: table.isRLSEnabled,
+        },
       },
     ]),
   )
@@ -103,11 +136,22 @@ function expectedSchema(last) {
   for (const [name, checks] of Object.entries(manualChecks)) {
     tables[name].checks = [...tables[name].checks, ...checks].sort()
   }
-  return tables
+  return { tables, enums: snapshot.enums }
+}
+
+function canonical(value) {
+  if (Array.isArray(value)) return value.map(canonical)
+  if (value !== null && typeof value === 'object')
+    return Object.fromEntries(
+      Object.keys(value)
+        .sort()
+        .map((key) => [key, canonical(value[key])]),
+    )
+  return value
 }
 
 function compare(expected, actual, label) {
-  if (JSON.stringify(expected) !== JSON.stringify(actual))
+  if (JSON.stringify(canonical(expected)) !== JSON.stringify(canonical(actual)))
     fail(`divergência em ${label}`)
 }
 
@@ -129,7 +173,13 @@ export function validate(argv) {
     fail('versão PostgreSQL não confirmada')
   if (
     evidence.ci?.conclusion !== 'success' ||
-    !/^[0-9a-f]{40}$/.test(evidence.ci.sha ?? '')
+    evidence.ci.status !== 'completed' ||
+    evidence.ci.sha !== args['expected-ci-sha'] ||
+    String(evidence.ci.run_id) !== args['expected-ci-run-id'] ||
+    evidence.ci.repository !== 'naiguelcabral/seus-brownies' ||
+    evidence.ci.workflow !== 'CI' ||
+    evidence.ci.event !== 'push' ||
+    evidence.ci.branch !== 'main'
   )
     fail('CI verde no SHA não comprovada')
   if (args.mode === 'pre' && evidence.backup?.verified !== true)
@@ -149,7 +199,7 @@ export function validate(argv) {
     })),
     'histórico e hashes',
   )
-  const schema = expectedSchema(last)
+  const { tables: schema, enums } = expectedSchema(last)
   if (!evidence.tables || typeof evidence.tables !== 'object')
     fail('catálogo ausente')
   for (const [tableName, table] of Object.entries(schema)) {
@@ -166,9 +216,11 @@ export function validate(argv) {
         fail(`catálogo incompleto: ${tableName}.${key}`)
       compare(table[key], [...observed[key]].sort(), `${tableName}.${key}`)
     }
+    compare(table.definitions, observed.definitions, `${tableName}.definitions`)
   }
   if (Object.keys(evidence.tables).length !== Object.keys(schema).length)
     fail('tabelas extras ou ausentes')
+  compare(enums, evidence.enums, 'enums e ordem dos valores')
   compare(
     args.mode === 'post'
       ? ['financial_events_immutable', 'products_preserve_used_structure']
@@ -181,6 +233,18 @@ export function validate(argv) {
     migrations: expected.length,
     tables: Object.keys(schema).length,
     ci_sha: evidence.ci.sha,
+    ci_run_id: String(evidence.ci.run_id),
+    evidence_scope: 'supplied-json-and-drizzle-snapshots',
+    application_authorized: false,
+    remaining_gates: [
+      'independent-evidence-provenance',
+      'worker-database-association',
+      'manual-sql-function-and-trigger-definitions',
+      'shared-database-migration-inventory',
+      '0019-financial-data-decision',
+      '0028-scenario-data-decision',
+      'backup-recovery-window-and-explicit-application-approval',
+    ],
   }
 }
 
