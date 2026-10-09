@@ -106,7 +106,13 @@ Consultas propostas: `SHOW transaction_read_only`,
 somente dentro de `BEGIN READ ONLY`. Retorno esperado: ambos `on`, identidade
 coincidente com a role aprovada, atributos/capacidades de escrita e ownership
 zerados. Qualquer falta/erro/resultado divergente bloqueia. Direitos sobre
-large objects são avaliados pela ACL efetiva; não existe atalho de owner readonly.
+large objects são avaliados pela ACL efetiva e pela execução de mutadores
+conhecidos em pg_catalog (inclusive criação de novos large objects); wrappers
+de dados estrangeiros também são avaliados. Não existe atalho de owner readonly.
+PUBLIC pode conceder execução desses mutadores por padrão. Não modificar PUBLIC
+externamente para satisfazer o diagnóstico: o operador decide configuração
+separadamente ou mantém o acesso bloqueado. A fixture revoga esses direitos
+somente no serviço descartável e testa que concedê-los novamente bloqueia coleta.
 Defaults READ ONLY não impedem todas as capacidades (por exemplo temporárias);
 [documentação PostgreSQL 17](https://www.postgresql.org/docs/17/runtime-config-client.html)
 e [privilégios](https://www.postgresql.org/docs/17/sql-grant.html) fundamentam os controles.

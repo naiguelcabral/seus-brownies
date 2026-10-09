@@ -47,6 +47,16 @@ try {
       [row.hash, row.created_at],
     )
   reader = new pg.Client({ ...options, user: 'fixture_audit' })
+  // PUBLIC mutators must not make an otherwise restricted role writable.
+  // This fixture configuration is confined to the disposable local service.
+  const mutators = (
+    await admin.query(`SELECT p.oid::regprocedure::text AS signature
+    FROM pg_proc p JOIN pg_namespace n ON n.oid=p.pronamespace
+    WHERE n.nspname='pg_catalog' AND p.proname IN
+    ('lo_create','lo_from_bytea','lo_import','lo_export','lo_unlink','lo_put','lowrite','lo_truncate','lo_truncate64')`)
+  ).rows
+  for (const row of mutators)
+    await admin.query(`REVOKE EXECUTE ON FUNCTION ${row.signature} FROM PUBLIC`)
   await reader.connect()
   const accessSql = readFileSync(
     new URL('./hml-evidence-access.sql', import.meta.url),
@@ -96,6 +106,19 @@ try {
   assert.equal(evidence.counts.management_scenario_mix, '1')
   assert.equal(evidence.drift, false)
   assert.equal(evidence.application_authorized, false)
+  await admin.query(
+    'GRANT EXECUTE ON FUNCTION pg_catalog.lo_create(oid) TO fixture_audit',
+  )
+  await assert.rejects(
+    verifyEvidence(reader, {
+      ...target,
+      referenceCatalogDigest: digest(catalog),
+    }),
+    /BLOCKED_READONLY_AUDIT/,
+  )
+  await admin.query(
+    'REVOKE EXECUTE ON FUNCTION pg_catalog.lo_create(oid) FROM fixture_audit',
+  )
   // Runtime read-only and ACL refusal tested independently, never externally.
   await reader.query('BEGIN READ ONLY')
   await assert.rejects(

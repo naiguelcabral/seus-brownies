@@ -38,7 +38,11 @@ SELECT current_database() AS database, current_user AS role, session_user AS ses
   (SELECT count(*) FROM pg_type WHERE typowner=(SELECT oid FROM me)))::int AS ownership,
  (SELECT count(*)::int FROM pg_proc p JOIN ns ON ns.oid=p.pronamespace
    WHERE has_function_privilege(p.oid,'EXECUTE')) AS executable_custom_functions,
- (SELECT count(*)::int FROM pg_foreign_server WHERE has_server_privilege(oid,'USAGE')) AS foreign_access,
- (SELECT count(DISTINCT l.oid)::int FROM pg_largeobject_metadata l
+ ((SELECT count(*) FROM pg_foreign_server WHERE has_server_privilege(oid,'USAGE')) +
+  (SELECT count(*) FROM pg_foreign_data_wrapper WHERE has_foreign_data_wrapper_privilege(oid,'USAGE')))::int AS foreign_access,
+ ((SELECT count(DISTINCT l.oid) FROM pg_largeobject_metadata l
    LEFT JOIN LATERAL aclexplode(coalesce(l.lomacl,acldefault('L',l.lomowner))) a ON true
-   WHERE l.lomowner=(SELECT oid FROM me) OR (a.grantee IN (0,(SELECT oid FROM me)) AND a.privilege_type='UPDATE')) AS largeobject_write;
+   WHERE l.lomowner=(SELECT oid FROM me) OR (a.grantee IN (0,(SELECT oid FROM me)) AND a.privilege_type='UPDATE')) +
+  (SELECT count(*) FROM pg_proc p JOIN pg_namespace n ON n.oid=p.pronamespace
+   WHERE n.nspname='pg_catalog' AND p.proname IN ('lo_create','lo_from_bytea','lo_import','lo_export','lo_unlink','lo_put','lowrite','lo_truncate','lo_truncate64')
+   AND has_function_privilege(p.oid,'EXECUTE')))::int AS largeobject_write;
