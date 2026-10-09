@@ -13,6 +13,12 @@ migrations, deploy, escrita externa ou mudança de política. Telemetria é
 allowlisted, memória local continua privada/atômica, hooks permanecem locais e
 o smoke público bloqueia tráfego externo no modo isolado.
 
+As três integrações #31–#33 compõem a `main` consolidada
+`98172b97076415c4bb98554e1c6c82928bbe3895`. A CI da #33
+(`37834057113`) passou. A reconciliação pós-integração está registrada em
+`POST-INTEGRATION-RECONCILIATION-2026-10-08.md`; ela mantém #13 fora da
+ancestralidade e enumera migrations e gates ainda pendentes.
+
 ## Entrega local em revisão — A25, 8 de outubro de 2026
 
 Conclusão de produção com sete cenários determinísticos do writer real usando
