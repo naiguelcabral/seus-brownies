@@ -1,5 +1,13 @@
 # Roadmap executável para Codex — Cacau v1
 
+## Gates de evidência — 9 de outubro de 2026
+
+Pacote separado em `codex/hml-migration-evidence-gates`: acesso mínimo,
+verificador sem conexão, atestação Worker e formulários 0019/0028 preparados.
+Histórico global, abrangência, backup/restore e vínculo publicado continuam
+pendentes. Não conclui a issue #36 nem substitui a PR #38. Detalhes em
+[HML-MIGRATION-EVIDENCE-GATES.md](HML-MIGRATION-EVIDENCE-GATES.md).
+
 ## Prioridade de migrations — 9 de outubro de 2026
 
 - [x] Pacote preparatório #35 revisado/corrigido e integrado em `a542ec7`;

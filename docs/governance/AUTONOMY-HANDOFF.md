@@ -1,5 +1,26 @@
 # Handoff de autonomia — Cacau v1
 
+## Pacote de gates de evidência — 9 de outubro de 2026
+
+- PR #35 integrada e CI pós-merge verde; base atual `1e5bd557` com CI
+  `37944960379` verde. Branch `codex/hml-migration-evidence-gates`.
+- Preparados matriz sanitizada, proposta de acesso mínimo, verificador sem
+  conexão/credenciais, sanitizador local do destino e formulários 0019/0028.
+- Metadados Neon e deployment/versão do Worker reconfirmados; histórico,
+  schema, backup/restore e vínculo efetivo continuam `unverified`.
+- Acesso externo `blocked`; declaração e decisões `pending-human`.
+  Cadeia ativa preservada, nenhum SQL externo, migration, backfill ou deploy.
+- Referência: [HML-MIGRATION-EVIDENCE-GATES.md](HML-MIGRATION-EVIDENCE-GATES.md).
+- Validação local: 441 testes, incluindo 12 direcionados, lint, typecheck,
+  Prettier dos arquivos alterados, sintaxe Node e diff sem whitespace passaram.
+  Os dois builds isolados passaram com chave pública Turnstile sintética.
+  Fixture PostgreSQL 17 local em loopback passou e foi descartada; CIs finais
+  são acompanhadas na PR #39, sem tratar fixture como evidência externa.
+- Próximo passo exato: operador preenche
+  [HML-DATABASE-OPERATOR-ATTESTATION.md](HML-DATABASE-OPERATOR-ATTESTATION.md),
+  fornece acesso privado já aprovado e referência independente de catálogo;
+  Dono preenche os dois formulários de decisão. Não inferir fechamento de gate.
+
 ## Revisão #35 e tarefa corretiva #36 — 9 de outubro de 2026
 
 - O Dono autorizou revisar/integrar somente a preparação e confirmar CI da

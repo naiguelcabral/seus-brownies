@@ -1,0 +1,36 @@
+name: HML evidence gates disposable PostgreSQL 17
+on:
+  push:
+    branches: [codex/hml-migration-evidence-gates]
+  pull_request:
+    paths:
+      - scripts/hml-evidence-*
+      - scripts/hml-worker-destination.mjs
+      - scripts/test-hml-evidence-disposable.mjs
+      - test/hml-evidence-gates.test.ts
+      - .github/workflows/hml-evidence-gates-disposable.yml
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: fixture_admin
+          POSTGRES_PASSWORD: synthetic-fixture-password
+          POSTGRES_DB: neondb
+        ports: ['127.0.0.1:5434:5432']
+        options: >-
+          --health-cmd "pg_isready -U fixture_admin -d neondb"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: node scripts/test-hml-evidence-disposable.mjs --ack-disposable-postgres17
