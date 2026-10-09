@@ -1,5 +1,15 @@
 # Experimentos da cadeia a partir da 0016
 
+## Continuidade #36 — acesso externo ainda bloqueado
+
+Inventário de metadados ampliado: os cinco branches retornam somente
+`neondb_owner`; seus endpoints são `read_write`. O conector SQL não permite
+selecionar papel não gravável. Nenhuma consulta SQL externa foi realizada.
+A PR #38 inclui diagnóstico conservador de ACLs, provas apenas descartáveis
+e o roteiro [MIGRATION-CHAIN-SHARED-EVIDENCE.md](MIGRATION-CHAIN-SHARED-EVIDENCE.md).
+Acesso aprovado e vínculo Worker→database continuam requisitos para finalizar
+#36; não criar papéis/grants ou substituir a cadeia implicitamente.
+
 Tarefa [#36](https://github.com/naiguelcabral/seus-brownies/issues/36), 9 de outubro de 2026.
 **Aplicação HML e substituição ativa não autorizadas.** Este pacote constrói candidatas
 somente em diretórios temporários. Nenhum SQL, journal ou snapshot em `drizzle/` é alterado.

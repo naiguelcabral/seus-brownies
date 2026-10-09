@@ -4,8 +4,10 @@ on:
   pull_request:
     paths:
       - 'scripts/migration-chain-*.mjs'
+      - 'scripts/migration-chain-*.sql'
       - 'scripts/test-migration-chain-disposable.mjs'
       - 'test/migration-chain-candidates.test.ts'
+      - 'test/migration-chain-access-diagnostic.test.ts'
       - 'test/fixtures/migration-chain-source-manifest.json'
       - 'drizzle/**'
       - '.github/workflows/migration-chain-disposable.yml'

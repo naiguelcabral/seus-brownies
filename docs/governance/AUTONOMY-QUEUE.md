@@ -1,5 +1,15 @@
 # Fila executável de autonomia — Cacau v1
 
+## Continuidade #36 — acesso externo ainda bloqueado
+
+Inventário de metadados ampliado: os cinco branches retornam somente
+`neondb_owner`; seus endpoints são `read_write`. O conector SQL não permite
+selecionar papel não gravável. Nenhuma consulta SQL externa foi realizada.
+A PR #38 inclui diagnóstico conservador de ACLs, provas apenas descartáveis
+e o roteiro [MIGRATION-CHAIN-SHARED-EVIDENCE.md](MIGRATION-CHAIN-SHARED-EVIDENCE.md).
+Acesso aprovado e vínculo Worker→database continuam requisitos para finalizar
+#36; não criar papéis/grants ou substituir a cadeia implicitamente.
+
 ## Execução da tarefa #36 — candidatas e provas separadas
 
 [PR #38](https://github.com/naiguelcabral/seus-brownies/pull/38) aberta em draft.

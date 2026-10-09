@@ -13,6 +13,7 @@ import {
   strategies,
 } from './migration-chain-candidates.mjs'
 import { captureCatalog } from './migration-chain-catalog.mjs'
+import { diagnoseAccess } from './migration-chain-access-diagnostic.mjs'
 
 assert.deepEqual(
   process.argv.slice(2),
@@ -203,6 +204,13 @@ try {
           await apply(client, base.folder)
           await seed(client)
           before = await data(client)
+          if (strategy === 'replacement')
+            save('baseline-0016-catalog', {
+              source: sourceBefore,
+              catalog: await captureCatalog(client),
+              scope: 'disposable-synthetic-baseline',
+              application_authorized: false,
+            })
         }
         const target = candidate(strategy)
         await apply(client, target.folder)
@@ -355,6 +363,99 @@ try {
       (await client.query('SELECT * FROM management_scenario_mix')).rows,
       mix,
     )
+  })
+  await fixture('readonly-access-diagnostic', async (client) => {
+    const owner = await diagnoseAccess(client)
+    assert.equal(owner.assessment.acl_checks_passed, false)
+    assert.ok(owner.assessment.blockers.includes('privileged_roles'))
+    const db = (await client.query('SELECT current_database() name')).rows[0]
+      .name
+    const role = `cacau_reader_${Date.now()}_${counter}`
+    const member = `${role}_member`
+    assert.match(role, /^cacau_reader_[0-9_]+$/)
+    await client.query(
+      `CREATE ROLE "${role}" LOGIN PASSWORD 'synthetic-reader-only'`,
+    )
+    await client.query(
+      `ALTER ROLE "${role}" SET default_transaction_read_only=on`,
+    )
+    await client.query(`REVOKE CREATE,TEMP ON DATABASE "${db}" FROM PUBLIC`)
+    await client.query(
+      'CREATE TABLE public.synthetic_acl_probe (id serial PRIMARY KEY, amount integer)',
+    )
+    await client.query(`GRANT CONNECT ON DATABASE "${db}" TO "${role}"`)
+    const reader = new pg.Client({
+      ...connection,
+      database: db,
+      user: role,
+      password: 'synthetic-reader-only',
+    })
+    await reader.connect()
+    const observations = []
+    async function check(label, expected, blocker) {
+      const result = await diagnoseAccess(reader)
+      assert.equal(result.assessment.acl_checks_passed, expected, label)
+      if (blocker)
+        assert.ok(result.assessment.blockers.includes(blocker), label)
+      assert.equal(result.assessment.application_authorized, false)
+      observations.push({ label, ...result })
+    }
+    try {
+      await check('reader-without-write', true)
+      await client.query(
+        `GRANT INSERT ON public.synthetic_acl_probe TO "${role}"`,
+      )
+      await check('table-insert-rejected', false, 'persistent_write')
+      await client.query(
+        `REVOKE INSERT ON public.synthetic_acl_probe FROM "${role}"`,
+      )
+      await client.query(
+        `GRANT UPDATE(amount) ON public.synthetic_acl_probe TO "${role}"`,
+      )
+      await check('column-update-rejected', false, 'column_write')
+      await client.query(
+        `REVOKE UPDATE(amount) ON public.synthetic_acl_probe FROM "${role}"`,
+      )
+      await client.query(
+        `GRANT USAGE ON SEQUENCE public.synthetic_acl_probe_id_seq TO "${role}"`,
+      )
+      await check('sequence-write-rejected', false, 'sequence_write')
+      await client.query(
+        `REVOKE USAGE ON SEQUENCE public.synthetic_acl_probe_id_seq FROM "${role}"`,
+      )
+      await client.query(`GRANT TEMP ON DATABASE "${db}" TO "${role}"`)
+      await check('temporary-write-rejected', false, 'database_temp')
+      await client.query(`REVOKE TEMP ON DATABASE "${db}" FROM "${role}"`)
+      await client.query(
+        `CREATE FUNCTION public.synthetic_definer() RETURNS integer LANGUAGE SQL SECURITY DEFINER AS 'SELECT 1'`,
+      )
+      await check(
+        'public-security-definer-rejected',
+        false,
+        'executable_definers',
+      )
+      await client.query(
+        'REVOKE EXECUTE ON FUNCTION public.synthetic_definer() FROM PUBLIC',
+      )
+      await client.query(`CREATE ROLE "${member}" NOINHERIT`)
+      await client.query(
+        `GRANT INSERT ON public.synthetic_acl_probe TO "${member}"`,
+      )
+      await client.query(
+        `GRANT "${member}" TO "${role}" WITH INHERIT FALSE, SET TRUE`,
+      )
+      await check('set-role-write-path-rejected', false, 'persistent_write')
+      await client.query(`REVOKE "${member}" FROM "${role}"`)
+      await check('reader-restored', true)
+      save('readonly-access-diagnostic', {
+        scope: 'disposable-fixture-only',
+        owner,
+        observations,
+        external_sql_executed: false,
+      })
+    } finally {
+      await reader.end()
+    }
   })
   assert.deepEqual(
     sourceManifest(),

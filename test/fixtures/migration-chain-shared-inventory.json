@@ -1,9 +1,10 @@
 {
   "observed_on": "2026-10-09",
-  "scope": "metadata-only-not-exhaustive",
+  "scope": "connected-account-metadata-not-exhaustive-shared-inventory",
   "sql_executed": false,
   "worker_database_mapping": "unconfirmed",
   "replacement_authorized": false,
+  "sql_connector_role_selection": false,
   "databases": [
     {
       "project_id": "cool-base-25902164",
@@ -20,7 +21,21 @@
       ],
       "schema_state": "unconfirmed",
       "migration_0017_plus": "unconfirmed",
-      "connection_read_only": "unconfirmed"
+      "connection_read_only": "unconfirmed",
+      "roles_observed": [
+        {
+          "name": "neondb_owner",
+          "protected": false
+        }
+      ],
+      "non_writable_role_proven": false,
+      "endpoint_observed": [
+        {
+          "id": "ep-raspy-resonance-ac4rhkwk",
+          "type": "read_write",
+          "current_state": "idle"
+        }
+      ]
     },
     {
       "project_id": "cool-base-25902164",
@@ -38,7 +53,21 @@
       ],
       "schema_state": "unconfirmed",
       "migration_0017_plus": "unconfirmed",
-      "connection_read_only": "unconfirmed"
+      "connection_read_only": "unconfirmed",
+      "roles_observed": [
+        {
+          "name": "neondb_owner",
+          "protected": false
+        }
+      ],
+      "non_writable_role_proven": false,
+      "endpoint_observed": [
+        {
+          "id": "ep-young-cloud-acftfl9s",
+          "type": "read_write",
+          "current_state": "idle"
+        }
+      ]
     },
     {
       "project_id": "steep-brook-51659857",
@@ -55,7 +84,21 @@
       ],
       "schema_state": "unconfirmed",
       "migration_0017_plus": "unconfirmed",
-      "connection_read_only": "unconfirmed"
+      "connection_read_only": "unconfirmed",
+      "roles_observed": [
+        {
+          "name": "neondb_owner",
+          "protected": false
+        }
+      ],
+      "non_writable_role_proven": false,
+      "endpoint_observed": [
+        {
+          "id": "ep-late-water-acahd1z1",
+          "type": "read_write",
+          "current_state": "idle"
+        }
+      ]
     },
     {
       "project_id": "steep-brook-51659857",
@@ -73,7 +116,21 @@
       ],
       "schema_state": "unconfirmed",
       "migration_0017_plus": "unconfirmed",
-      "connection_read_only": "unconfirmed"
+      "connection_read_only": "unconfirmed",
+      "roles_observed": [
+        {
+          "name": "neondb_owner",
+          "protected": false
+        }
+      ],
+      "non_writable_role_proven": false,
+      "endpoint_observed": [
+        {
+          "id": "ep-tiny-night-ac0pjhlr",
+          "type": "read_write",
+          "current_state": "idle"
+        }
+      ]
     },
     {
       "project_id": "steep-brook-51659857",
@@ -91,7 +148,21 @@
       ],
       "schema_state": "unconfirmed",
       "migration_0017_plus": "unconfirmed",
-      "connection_read_only": "unconfirmed"
+      "connection_read_only": "unconfirmed",
+      "roles_observed": [
+        {
+          "name": "neondb_owner",
+          "protected": false
+        }
+      ],
+      "non_writable_role_proven": false,
+      "endpoint_observed": [
+        {
+          "id": "ep-old-sound-acmcy3e9",
+          "type": "read_write",
+          "current_state": "idle"
+        }
+      ]
     }
   ]
 }
