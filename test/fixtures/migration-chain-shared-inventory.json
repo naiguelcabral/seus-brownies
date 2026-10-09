@@ -1,0 +1,97 @@
+{
+  "observed_on": "2026-10-09",
+  "scope": "metadata-only-not-exhaustive",
+  "sql_executed": false,
+  "worker_database_mapping": "unconfirmed",
+  "replacement_authorized": false,
+  "databases": [
+    {
+      "project_id": "cool-base-25902164",
+      "id": "br-empty-frog-acy6xycn",
+      "name": "production",
+      "default": true,
+      "current_state": "archived",
+      "databases": [
+        {
+          "id": 2418565,
+          "name": "neondb",
+          "owner_name": "neondb_owner"
+        }
+      ],
+      "schema_state": "unconfirmed",
+      "migration_0017_plus": "unconfirmed",
+      "connection_read_only": "unconfirmed"
+    },
+    {
+      "project_id": "cool-base-25902164",
+      "id": "br-lively-term-ac9i0mvr",
+      "name": "development",
+      "parent_id": "br-empty-frog-acy6xycn",
+      "default": false,
+      "current_state": "archived",
+      "databases": [
+        {
+          "id": 2418653,
+          "name": "neondb",
+          "owner_name": "neondb_owner"
+        }
+      ],
+      "schema_state": "unconfirmed",
+      "migration_0017_plus": "unconfirmed",
+      "connection_read_only": "unconfirmed"
+    },
+    {
+      "project_id": "steep-brook-51659857",
+      "id": "br-lingering-wind-acwh5wap",
+      "name": "production",
+      "default": true,
+      "current_state": "archived",
+      "databases": [
+        {
+          "id": 2418558,
+          "name": "neondb",
+          "owner_name": "neondb_owner"
+        }
+      ],
+      "schema_state": "unconfirmed",
+      "migration_0017_plus": "unconfirmed",
+      "connection_read_only": "unconfirmed"
+    },
+    {
+      "project_id": "steep-brook-51659857",
+      "id": "br-bitter-dew-ac31uci9",
+      "name": "Development",
+      "parent_id": "br-lingering-wind-acwh5wap",
+      "default": false,
+      "current_state": "archived",
+      "databases": [
+        {
+          "id": 2483533,
+          "name": "neondb",
+          "owner_name": "neondb_owner"
+        }
+      ],
+      "schema_state": "unconfirmed",
+      "migration_0017_plus": "unconfirmed",
+      "connection_read_only": "unconfirmed"
+    },
+    {
+      "project_id": "steep-brook-51659857",
+      "id": "br-patient-lake-ac2t0cvq",
+      "name": "g1-auth-hml",
+      "parent_id": "br-bitter-dew-ac31uci9",
+      "default": false,
+      "current_state": "archived",
+      "databases": [
+        {
+          "id": 2530456,
+          "name": "neondb",
+          "owner_name": "neondb_owner"
+        }
+      ],
+      "schema_state": "unconfirmed",
+      "migration_0017_plus": "unconfirmed",
+      "connection_read_only": "unconfirmed"
+    }
+  ]
+}
