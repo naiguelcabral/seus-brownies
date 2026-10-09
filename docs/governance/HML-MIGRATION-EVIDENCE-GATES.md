@@ -195,3 +195,19 @@ Próximo passo exato: operador preenche o formulário de atestação e as decis�
 0019/0028, apresenta conexão já aprovada e referência de catálogo independente;
 revisor confere IDs, versão ativa, abrangência e validade. Só então outra tarefa
 autoriza a coleta externa. Nenhum comando de aplicação faz parte deste pacote.
+
+### Evidência local e correção do pacote
+
+441 testes (12 direcionados), lint, typecheck, Prettier alterados, sintaxe Node
+e diff passaram; os dois builds isolados passaram com chave pública sintética.
+A primeira fixture CI (`37976381960`/`37976451975`) falhou com `42809`:
+PostgreSQL pode avaliar `has_sequence_privilege` antes do filtro `relkind`,
+atingindo um índice. A correção usa CASE para avaliar privilégio somente no
+tipo correto, também para tabelas/colunas. Não reduz requisitos de acesso.
+Reprodução e prova completa no container local descartável
+`cacau-evidence-gates-test`, PostgreSQL 17-alpine, imagem
+`sha256:18cfe3ef5e6815560c98237d6216d1e5119702fb0f3894c8785dd58b8bbe5d73`,
+porta loopback 5434, sem volumes ou credenciais compartilhados. Fixture passou
+em catálogo/agregados, ACL, grant por coluna, SET ROLE, recusa de escrita e drift.
+Containers descartados; nenhum dump/log bruto foi preservado. A PR #39 registra
+os resultados remotos do SHA final. Esta prova não fecha nenhum gate externo.

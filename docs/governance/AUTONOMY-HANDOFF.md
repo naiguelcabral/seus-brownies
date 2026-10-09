@@ -13,8 +13,9 @@
 - Referência: [HML-MIGRATION-EVIDENCE-GATES.md](HML-MIGRATION-EVIDENCE-GATES.md).
 - Validação local: 441 testes, incluindo 12 direcionados, lint, typecheck,
   Prettier dos arquivos alterados, sintaxe Node e diff sem whitespace passaram.
-  Builds isolados e workflow PostgreSQL serão confirmados no SHA publicado;
-  registrar os resultados na PR, sem tratar fixture como evidência externa.
+  Os dois builds isolados passaram com chave pública Turnstile sintética.
+  Fixture PostgreSQL 17 local em loopback passou e foi descartada; CIs finais
+  são acompanhadas na PR #39, sem tratar fixture como evidência externa.
 - Próximo passo exato: operador preenche
   [HML-DATABASE-OPERATOR-ATTESTATION.md](HML-DATABASE-OPERATOR-ATTESTATION.md),
   fornece acesso privado já aprovado e referência independente de catálogo;

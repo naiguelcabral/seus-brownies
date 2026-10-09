@@ -25,12 +25,12 @@ SELECT current_database() AS database, current_user AS role, session_user AS ses
  ) x CROSS JOIN LATERAL aclexplode(x.acl) a
  WHERE a.is_grantable AND a.grantee IN (0,(SELECT oid FROM me))) AS grant_options,
  (SELECT count(*)::int FROM ns WHERE has_schema_privilege(oid,'CREATE')) AS schema_create,
- (SELECT count(*)::int FROM rels WHERE relkind IN ('r','p','v','m','f') AND
-   has_table_privilege(oid,'INSERT,UPDATE,DELETE,TRUNCATE,REFERENCES,TRIGGER,MAINTAIN')) AS table_write,
+ (SELECT count(*)::int FROM rels WHERE CASE WHEN relkind IN ('r','p','v','m','f') THEN
+   has_table_privilege(oid,'INSERT,UPDATE,DELETE,TRUNCATE,REFERENCES,TRIGGER,MAINTAIN') ELSE false END) AS table_write,
  (SELECT count(*)::int FROM rels c JOIN pg_attribute a ON a.attrelid=c.oid
-   WHERE c.relkind IN ('r','p','v','m','f') AND a.attnum>0 AND NOT a.attisdropped
-   AND has_column_privilege(c.oid,a.attnum,'INSERT,UPDATE,REFERENCES')) AS column_write,
- (SELECT count(*)::int FROM rels WHERE relkind='S' AND has_sequence_privilege(oid,'USAGE,UPDATE')) AS sequence_write,
+   WHERE CASE WHEN c.relkind IN ('r','p','v','m','f') AND a.attnum>0 AND NOT a.attisdropped
+   THEN has_column_privilege(c.oid,a.attnum,'INSERT,UPDATE,REFERENCES') ELSE false END) AS column_write,
+ (SELECT count(*)::int FROM rels WHERE CASE WHEN relkind='S' THEN has_sequence_privilege(oid,'USAGE,UPDATE') ELSE false END) AS sequence_write,
  ((SELECT count(*) FROM pg_database WHERE datdba=(SELECT oid FROM me)) +
   (SELECT count(*) FROM ns WHERE nspowner=(SELECT oid FROM me)) +
   (SELECT count(*) FROM rels WHERE relowner=(SELECT oid FROM me)) +

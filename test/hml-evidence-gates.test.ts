@@ -157,6 +157,9 @@ test('every writable capability, absent field and identity mismatch fails closed
     'executable_custom_functions',
     'foreign_access',
     'largeobject_write',
+    'grant_options',
+    'parameter_write',
+    'tablespace_create',
   ])
     assert.equal(accessIsSafe({ ...access(), [key]: 1 }, target()), false)
 })
