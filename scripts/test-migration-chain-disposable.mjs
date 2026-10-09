@@ -263,6 +263,14 @@ try {
             'financial-immutability',
           ],
         })
+        console.log(
+          JSON.stringify({
+            evidence: name,
+            catalog_sha256: hash(JSON.stringify(catalog)),
+            journal_sha256: target.manifest.candidate_journal_sha256,
+            history_rows: rows.length,
+          }),
+        )
         if (strategy === 'replacement' && path === 'upgrade-0016') {
           await client.query(
             'ALTER TABLE products DISABLE TRIGGER products_preserve_used_structure',

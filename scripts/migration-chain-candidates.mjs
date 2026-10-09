@@ -79,6 +79,12 @@ export function buildCandidate(
   )
   const folder = mkdtempSync(join(tmpdir(), 'cacau-chain-candidate-'))
   mkdirSync(join(folder, 'meta'))
+  for (const name of Object.keys(source.snapshots)) {
+    const index = Number(name.slice(0, 4))
+    if (index <= (strategy === 'rebuilt-line' ? Math.min(last, 16) : last)) {
+      copyFileSync(join(root, 'drizzle/meta', name), join(folder, 'meta', name))
+    }
+  }
   let entries = originalJournal.entries
     .filter((entry) => entry.idx <= Math.min(last, 16))
     .map((entry) => ({ ...entry }))
@@ -201,6 +207,18 @@ export function buildCandidate(
       last,
       injectFailure,
       naiveCompatibility,
+      candidate_journal_sha256: hash(
+        readFileSync(join(folder, 'meta/_journal.json')),
+      ),
+      candidate_snapshots: Object.fromEntries(
+        readdirSync(join(folder, 'meta'))
+          .filter((name) => /^\d{4}_snapshot\.json$/.test(name))
+          .sort()
+          .map((name) => [
+            name,
+            hash(readFileSync(join(folder, 'meta', name))),
+          ]),
+      ),
       candidate_migrations: entries.map((entry) => ({
         tag: entry.tag,
         when: String(entry.when),

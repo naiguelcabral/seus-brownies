@@ -1,11 +1,30 @@
 # Roadmap executável para Codex — Cacau v1
 
+## Execução da tarefa #36 — candidatas e provas separadas
+
+[PR #38](https://github.com/naiguelcabral/seus-brownies/pull/38) aberta em draft.
+As três candidatas passaram em PostgreSQL 17 descartável, de `0016` e instalação
+vazia, no commit `32c0f4e5c78f324fc3be2bd8dcfe084ae2acd0ba`:
+[run 37961680179](https://github.com/naiguelcabral/seus-brownies/actions/runs/37961680179),
+16 casos aprovados, incluindo rollback, hashes/timestamps, catálogo real,
+reaplicação e invariantes. Comparação e limites em
+[MIGRATION-CHAIN-EXPERIMENTS-0016.md](MIGRATION-CHAIN-EXPERIMENTS-0016.md).
+A CI do SHA final da PR deve estar verde antes de sua revisão; não há merge automático.
+
+O inventário de metadados encontrou dois projetos Neon e cinco branches, mas
+históricos `0017+`, catálogos, papel estritamente não gravável e vínculo Worker→DB
+continuam não comprovados. Nenhum SQL externo foi executado. A substituição ativa
+permanece bloqueada; `drizzle/` continua intacto. Próxima dependência: completar
+essas evidências externas para avaliar a candidata de substituição preferida.
+Gates `0019` (finanças) e `0028` (cenários) permanecem decisões separadas.
+**HML, migrations, backfill e deploy seguem sem autorização.**
+
 ## Prioridade de migrations — 9 de outubro de 2026
 
 - [x] Pacote preparatório #35 revisado/corrigido e integrado em `a542ec7`;
       CI de PR/push verde em `10e62c26` e CI pós-merge `37944260848` verde no
       merge SHA. Migrations, snapshots e journal preservados.
-- [ ] Comparar as três estratégias na tarefa separada #36, conforme
+- [x] Comparar/provar candidatas na tarefa separada #36 e abrir PR #38; conforme
       `MIGRATION-CHAIN-REPAIR-0016.md`, e criar PR corretiva própria.
 - [!] Substituição da cadeia pendente: aguarda comprovação de ausência de
   `0017+` em todas as bases compartilhadas relevantes; Git não prova isso.

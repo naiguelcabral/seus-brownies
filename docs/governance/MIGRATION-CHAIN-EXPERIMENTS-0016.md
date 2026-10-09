@@ -38,8 +38,20 @@ continua referindo `unit` e a atualização falha com `42703`.
 
 ## Provas e limites
 
-Estado inicial: implementação pronta, execução PostgreSQL na CI pendente.
-Não considerar um teste aprovado antes da conclusão verde no SHA correspondente.
+A candidata de compatibilidade não é um pacote pronto para `drizzle-kit generate`:
+os snapshots antigos são preservados como origem, mas seus dois passos extras
+exigem revisão/geração própria antes de eventual adoção. A prova cobre aplicação
+pelo migrador oficial, não aprova manutenção futura dessa linha. A substituição
+mantém o modelo dos snapshots porque a correção é apenas no SQL manual do trigger.
+
+Primeira prova concluída no commit `32c0f4e5c78f324fc3be2bd8dcfe084ae2acd0ba`:
+[run 37961680179](https://github.com/naiguelcabral/seus-brownies/actions/runs/37961680179)
+e [run de PR 37961684514](https://github.com/naiguelcabral/seus-brownies/actions/runs/37961684514),
+ambos `completed/success`. Os **16 casos passaram**. Artefato sintético inicial:
+`11631770727`, digest `sha256:6d1f0990f887c5433ffde2b47267fe43b5f6c7d86352819881994644521707cb`,
+retenção até 16 de outubro de 2026. Código e fontes imutáveis permitem reproduzir
+as provas após expirar o artefato. PR separada: [#38](https://github.com/naiguelcabral/seus-brownies/pull/38).
+Confirmar a CI no SHA final da PR; provas não autorizam aplicação.
 
 São seis caminhos de sucesso (três estratégias, upgrade de 0016 e instalação vazia),
 seis falhas injetadas no último SQL com rollback completo (`22012`), duas

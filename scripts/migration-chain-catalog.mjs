@@ -38,6 +38,8 @@ const queries = {
     FROM pg_sequence s JOIN pg_class c ON c.oid=s.seqrelid JOIN pg_namespace n ON n.oid=c.relnamespace
     WHERE n.nspname='public' ORDER BY c.relname`,
   policies: `SELECT c.relname table_name, p.polname name, p.polpermissive permissive,
+    ARRAY(SELECT CASE WHEN role_oid=0 THEN 'PUBLIC' ELSE pg_get_userbyid(role_oid)::text END
+      FROM unnest(p.polroles) role_oid ORDER BY 1) roles,
     p.polcmd command, pg_get_expr(p.polqual,p.polrelid,false) using_expression,
     pg_get_expr(p.polwithcheck,p.polrelid,false) check_expression
     FROM pg_policy p JOIN pg_class c ON c.oid=p.polrelid JOIN pg_namespace n ON n.oid=c.relnamespace
