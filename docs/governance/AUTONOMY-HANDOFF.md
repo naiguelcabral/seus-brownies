@@ -10,8 +10,11 @@
 - Tarefa própria: [#36](https://github.com/naiguelcabral/seus-brownies/issues/36),
   plano `MIGRATION-CHAIN-REPAIR-0016.md`. Nenhuma estratégia aprovada; preferência
   inicial condicionada ao inventário completo de bases compartilhadas.
-- Próximo passo: CI do commit final da #35, merge do pacote preparatório e CI
-  pós-merge; depois comparar/provar estratégias em tarefa e PR separadas.
+- PR #35 integrada pelo merge `a542ec73d914bcca12090b38df69bf16a49e9bbf`.
+  CI pós-merge da `main`: [37944260848](https://github.com/naiguelcabral/seus-brownies/actions/runs/37944260848),
+  `push`, mesmo SHA, `completed/success`.
+- Próximo passo: comparar/provar estratégias na issue #36, em tarefa/branch e
+  PR corretivas separadas, começando pelo inventário das bases compartilhadas.
 - Não presumir associação Worker/banco, ausência global de `0017+`, aprovação
   financeira `0019` ou dados de cenários `0028`.
 - Uso Codex: não disponível para esta execução. Nenhum percentual estimado.
@@ -19,7 +22,8 @@
   Cinco casos funcionais passaram em diagnóstico no mesmo processo. A suíte
   CLI local foi bloqueada por `spawnSync EPERM` do ambiente e não é registrada
   como aprovada; testes agora rejeitam erro de subprocesso explicitamente.
-  A CI remota completa no commit final é requisito antes do merge.
+  A CI remota completa passou no commit final `10e62c26`: 429 testes,
+  lint, typecheck e build isolado; runs PR `37943877875` e push `37943868409`.
 
 ## Readiness HML 0017–0028 — 9 de outubro de 2026
 

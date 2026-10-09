@@ -1,7 +1,10 @@
 # Readiness das migrations 0017–0028 para HML
 
 Data da revisão: 9 de outubro de 2026. **Não autoriza aplicação.** A PR #35
-pode ser integrada somente como preparação, conforme instrução do Dono.
+foi integrada somente como preparação, conforme instrução do Dono.
+PR #35 integrada pelo merge `a542ec73d914bcca12090b38df69bf16a49e9bbf`.
+CI pós-merge da `main`: [37944260848](https://github.com/naiguelcabral/seus-brownies/actions/runs/37944260848),
+`push`, mesmo SHA, `completed/success`.
 A reparação é separada na issue #36 e exige uma PR corretiva própria. Base Git:
 `100d41c0f90730f5dc992fb707485468074666bf` (`origin/main`). A PR
 [#34](https://github.com/naiguelcabral/seus-brownies/pull/34) foi integrada

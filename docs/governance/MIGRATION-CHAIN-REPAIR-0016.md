@@ -6,8 +6,9 @@ Data: 9 de outubro de 2026. Pacote preparatório: PR #35.
 
 ## Sequência e condição de decisão
 
-Integrar apenas a preparação #35 após CI verde e confirmar a CI pós-merge da
-`main`. A correção deve ocorrer em tarefa/branch e PR próprias. A preferência
+A preparação #35 foi integrada em `a542ec7`, com CI pós-merge
+`37944260848` verde no mesmo SHA. Esse gate preparatório está concluído.
+A correção deve ocorrer em tarefa/branch e PR próprias. A preferência
 inicial do Dono é substituir a cadeia pendente por sequência corrigida e
 auditável a partir da `0016`, preservando todos os SQLs/hashes/journal/snapshots
 antigos e os SHAs de origem como evidência fora do caminho ativo do migrador.

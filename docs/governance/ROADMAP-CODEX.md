@@ -2,8 +2,9 @@
 
 ## Prioridade de migrations — 9 de outubro de 2026
 
-- [~] Revisar/corrigir e integrar somente o pacote preparatório #35; confirmar
-  a CI do SHA final e a CI pós-merge da `main` antes da próxima frente.
+- [x] Pacote preparatório #35 revisado/corrigido e integrado em `a542ec7`;
+      CI de PR/push verde em `10e62c26` e CI pós-merge `37944260848` verde no
+      merge SHA. Migrations, snapshots e journal preservados.
 - [ ] Comparar as três estratégias na tarefa separada #36, conforme
       `MIGRATION-CHAIN-REPAIR-0016.md`, e criar PR corretiva própria.
 - [!] Substituição da cadeia pendente: aguarda comprovação de ausência de
