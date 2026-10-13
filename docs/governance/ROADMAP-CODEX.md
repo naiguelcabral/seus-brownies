@@ -1,5 +1,15 @@
 # Roadmap executável para Codex — Cacau v1
 
+## Missão G3 — integração supervisionada, 13 de outubro de 2026
+
+- [x] Implementar clientes/adaptação MCP, IDs/fingerprints, read-only e dry-run.
+- [x] Implementar apply técnico com digest, conflitos, readback e checkpoint.
+- [x] Verificar criação real, repetição sem duplicação e dashboard de registros.
+- [x] Criar 33 testes de contratos com fixtures, sem serviço externo.
+- [~] Publicar branch/PR e confirmar testes, lint, tipos e build na CI final.
+- [!] Operação recorrente, adoção de registros manuais, HML/produção e migrations
+  não autorizadas por esta missão. Uso descrito em `PROJECT-SYNC.md`.
+
 ## Prioridade de migrations — 9 de outubro de 2026
 
 - [x] Pacote preparatório #35 revisado/corrigido e integrado em `a542ec7`;
