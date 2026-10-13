@@ -241,7 +241,7 @@ export async function apply(value, { github, notion, state, digest }) {
             },
           },
         })
-        const content = `## Snapshot supervisionado\nMain: ${source.main}\nObservado UTC: ${value.observedAt}\nTarefas: ${report.tasks.total}; distribuição: ${JSON.stringify(report.tasks.byStatus)}\nBloqueios críticos: ${report.criticalBlocks}. Riscos: ${report.risks.total}; distribuição: ${JSON.stringify(report.risks.byStatus)}\nPRs abertas: ${report.openPrs}. Decisões: ${report.decisions}.\nCI: ${JSON.stringify(report.ci)}\nPróximas tarefas prontas: ${report.next.join(', ') || 'não registradas'}\nHML, migrations e produção: não comprovados por merge/CI.\n\`CACAU_SYNC_DASHBOARD ${value.digest}\``
+        const content = `## Snapshot supervisionado\nMain: ${source.main}\nPlano UTC: ${value.observedAt}\nSnapshot gerado UTC: ${new Date().toISOString()}\nTarefas: ${report.tasks.total}; distribuição: ${JSON.stringify(report.tasks.byStatus)}\nBloqueios críticos: ${report.criticalBlocks}. Riscos: ${report.risks.total}; distribuição: ${JSON.stringify(report.risks.byStatus)}\nPRs abertas: ${report.openPrs}. Decisões: ${report.decisions}.\nCI: ${JSON.stringify(report.ci)}\nPróximas tarefas prontas: ${report.next.join(', ') || 'não registradas'}\nHML, migrations e produção: não comprovados por merge/CI.\n\`CACAU_SYNC_DASHBOARD ${value.digest}\``
         progress[key] = { status: 'intent' }
         await state.write('checkpoint.json', journal)
         await notion.dashboard(content)

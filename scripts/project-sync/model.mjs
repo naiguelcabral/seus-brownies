@@ -183,6 +183,7 @@ export function block(item, observedAt) {
     fingerprint: item.fingerprint,
     evidence: item.evidence,
     observedAt,
+    syncedAt: new Date().toISOString(),
     version: 1,
   }
   safe(metadata)
