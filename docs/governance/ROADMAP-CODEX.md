@@ -6,7 +6,8 @@
 - [x] Implementar apply técnico com digest, conflitos, readback e checkpoint.
 - [x] Verificar criação real, repetição sem duplicação e dashboard de registros.
 - [x] Criar 33 testes de contratos com fixtures, sem serviço externo.
-- [~] Publicar branch/PR e confirmar testes, lint, tipos e build na CI final.
+- [x] Publicar branch/PR #40 em draft e confirmar testes, lint, tipos e build:
+      CI `38393316644` aprovada no checkpoint `2ffa130`; sem merge na main.
 - [!] Operação recorrente, adoção de registros manuais, HML/produção e migrations
   não autorizadas por esta missão. Uso descrito em `PROJECT-SYNC.md`.
 

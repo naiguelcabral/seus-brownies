@@ -9,7 +9,11 @@ checkpoint e logs permanecem privados/ignorados. Registro manual é conflito,
 não adoção automática; merge/CI não concluem requisitos ou comprovam HML.
 Primeira criação técnica real e repetição sem duplicação verificadas. Snapshot
 do dashboard escrito e relido com contagens reais. 33 contratos com fixtures
-sem rede passam; integração/CI da PR serão conferidas separadamente.
+sem rede passam. [PR #40](https://github.com/naiguelcabral/seus-brownies/pull/40)
+publicada em draft; [CI 38393316644](https://github.com/naiguelcabral/seus-brownies/actions/runs/38393316644)
+aprovada no commit `2ffa130`, com testes/lint/tipos/build isolado. O pacote
+continua em revisão e não está integrado na main; registros manuais permanecem
+preservados e dependem de revisão somente para eventual adoção.
 Runbook: [PROJECT-SYNC.md](./PROJECT-SYNC.md). Nenhuma migration, aplicação HML,
 deploy, mudança de segredo ou automação recorrente. Gates anteriores preservados.
 

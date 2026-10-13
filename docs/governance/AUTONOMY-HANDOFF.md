@@ -10,9 +10,13 @@
   existentes sem filtro foram conferidas e funcionam com paginação por cursor.
 - Falha na primeira tentativa de append; adapter agora usa UUID e a intenção antiga
   preservada como inconclusiva, sem retry cego. Nova operação distinta validada.
-- 33 testes locais do motor passam. Suíte geral observada: 430, incluindo wrapper
-  dos contratos; a verificação final/CI deve ser repetida no HEAD da entrega.
-- Próximo passo: checks finais, commit, build isolado, push/PR e CI sem merge.
+- 33 testes locais do motor passam. Suíte geral: 430, incluindo wrapper dos
+  contratos. Lint/tipos/formatação dos alterados e build isolado aprovados.
+- PR #40 em draft, CI `38393316644` aprovada em `2ffa130`. Commits de entrega:
+  `74c4296` (motor/testes/runbook) e `2ffa130` (governança). Registro posterior
+  apenas documental; confirmar a CI no HEAD atual antes de integrar.
+- Próximo passo: revisão humana da PR; uso supervisionado conforme o runbook,
+  com novo plano/digest e sem adoção automática de registros manuais. Sem merge.
   Revalidar Git/Notion; não reaplicar criação nem limpar checkpoints privados.
 - Uso Codex: não disponível nesta execução; nenhum percentual estimado.
 
