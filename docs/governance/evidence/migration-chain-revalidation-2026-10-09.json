@@ -1,0 +1,197 @@
+{
+  "observed_at_utc": "2026-10-09 18:10:57 UTC",
+  "checkpoint": {
+    "main_sha": "1e5bd557a1bd57c89f65fe03fa013eb0f8af6d70",
+    "pr_38_sha": "eaf00fd0fca4e1b7e673db51bee7bfc1bca353af",
+    "main_ci": 37944960379,
+    "pr_ci": [37966956241, 37966962671, 37966956232, 37966962673],
+    "all_ci_success": true
+  },
+  "scope": {
+    "organization_id": "org-flat-cherry-97614229",
+    "live_projects": 2,
+    "branches": 5,
+    "metadata_pagination": "MCP list methods return every page; no limit supplied",
+    "recoverable_projects": 0,
+    "registered_snapshots": 0,
+    "external_copies_or_restores": "unconfirmed",
+    "inventory_exhaustive": false
+  },
+  "access": {
+    "neon_mcp_sql_role_selection": false,
+    "neon_cli_authenticated": true,
+    "neon_cli_psql_role_selection": true,
+    "approved_audit_connection": "not_available",
+    "non_writable_role_proven": false,
+    "external_sql_executed": false
+  },
+  "databases": [
+    {
+      "project_id": "cool-base-25902164",
+      "branch_id": "br-empty-frog-acy6xycn",
+      "branch_name": "production",
+      "current_state": "archived",
+      "databases": [
+        {
+          "id": 2418565,
+          "name": "neondb",
+          "owner_name": "neondb_owner"
+        }
+      ],
+      "roles": [
+        {
+          "name": "neondb_owner",
+          "protected": false
+        }
+      ],
+      "endpoints": [
+        {
+          "id": "ep-raspy-resonance-ac4rhkwk",
+          "type": "read_write",
+          "current_state": "idle"
+        }
+      ],
+      "migration_history": "unconfirmed",
+      "catalog": "unconfirmed",
+      "connection_read_only": "unconfirmed"
+    },
+    {
+      "project_id": "cool-base-25902164",
+      "branch_id": "br-lively-term-ac9i0mvr",
+      "branch_name": "development",
+      "current_state": "archived",
+      "databases": [
+        {
+          "id": 2418653,
+          "name": "neondb",
+          "owner_name": "neondb_owner"
+        }
+      ],
+      "roles": [
+        {
+          "name": "neondb_owner",
+          "protected": false
+        }
+      ],
+      "endpoints": [
+        {
+          "id": "ep-young-cloud-acftfl9s",
+          "type": "read_write",
+          "current_state": "idle"
+        }
+      ],
+      "migration_history": "unconfirmed",
+      "catalog": "unconfirmed",
+      "connection_read_only": "unconfirmed"
+    },
+    {
+      "project_id": "steep-brook-51659857",
+      "branch_id": "br-lingering-wind-acwh5wap",
+      "branch_name": "production",
+      "current_state": "archived",
+      "databases": [
+        {
+          "id": 2418558,
+          "name": "neondb",
+          "owner_name": "neondb_owner"
+        }
+      ],
+      "roles": [
+        {
+          "name": "neondb_owner",
+          "protected": false
+        }
+      ],
+      "endpoints": [
+        {
+          "id": "ep-late-water-acahd1z1",
+          "type": "read_write",
+          "current_state": "idle"
+        }
+      ],
+      "migration_history": "unconfirmed",
+      "catalog": "unconfirmed",
+      "connection_read_only": "unconfirmed"
+    },
+    {
+      "project_id": "steep-brook-51659857",
+      "branch_id": "br-bitter-dew-ac31uci9",
+      "branch_name": "Development",
+      "current_state": "archived",
+      "databases": [
+        {
+          "id": 2483533,
+          "name": "neondb",
+          "owner_name": "neondb_owner"
+        }
+      ],
+      "roles": [
+        {
+          "name": "neondb_owner",
+          "protected": false
+        }
+      ],
+      "endpoints": [
+        {
+          "id": "ep-tiny-night-ac0pjhlr",
+          "type": "read_write",
+          "current_state": "idle"
+        }
+      ],
+      "migration_history": "unconfirmed",
+      "catalog": "unconfirmed",
+      "connection_read_only": "unconfirmed"
+    },
+    {
+      "project_id": "steep-brook-51659857",
+      "branch_id": "br-patient-lake-ac2t0cvq",
+      "branch_name": "g1-auth-hml",
+      "current_state": "archived",
+      "databases": [
+        {
+          "id": 2530456,
+          "name": "neondb",
+          "owner_name": "neondb_owner"
+        }
+      ],
+      "roles": [
+        {
+          "name": "neondb_owner",
+          "protected": false
+        }
+      ],
+      "endpoints": [
+        {
+          "id": "ep-old-sound-acmcy3e9",
+          "type": "read_write",
+          "current_state": "idle"
+        }
+      ],
+      "migration_history": "unconfirmed",
+      "catalog": "unconfirmed",
+      "connection_read_only": "unconfirmed"
+    }
+  ],
+  "worker": {
+    "account_id": "7cfc884f81d5b5e519a78407465a6e8f",
+    "name": "cacau-v1-hml",
+    "mcp_authenticated": true,
+    "deployment_id": "8268b409-34bc-4881-9694-52c292da2da3",
+    "deployment_created_on": "2026-09-07T03:35:45.376019Z",
+    "active_versions": [
+      {
+        "version_id": "e241b715-99bf-4a83-82ba-eef24fedadaa",
+        "percentage": 100
+      }
+    ],
+    "active_version_database_binding": {
+      "name": "DATABASE_URL",
+      "type": "secret_text",
+      "value_read": false
+    },
+    "database_mapping": "unconfirmed"
+  },
+  "replacement_authorized": false,
+  "financial_0019_decision": "pending",
+  "scenario_0028_decision": "pending"
+}

@@ -1,5 +1,75 @@
 # Fila executável de autonomia — Cacau v1
 
+## Reconciliação da PR #39 — 14 de outubro de 2026 UTC
+
+A PR #38 foi integrada em `b7a8dcf9` após CI `38492599540` e PostgreSQL
+`38492599488` aprovados no HEAD `50a0b4a7`. A #40 já integra a main.
+As PRs #4/#5 foram encerradas como redundantes: os HEADs são ancestrais da main.
+A #13 foi atualizada sem conflitos, mas mantém o risco documentado de herança
+do PAT por subprocessos. A #39 preserva as evidências de #38 e os formulários
+externos; seu merge depende da CI desta reconciliação. Nenhum gate de aplicação
+de migration, alteração financeira/histórica ou deploy foi encerrado.
+Os relatos anteriores abaixo são históricos e não substituem este checkpoint.
+
+## Revalidação #36 — 9 de outubro de 2026
+
+- `main` `1e5bd557` e PR #38 draft `eaf00fd` revalidadas; CI main e
+  quatro CIs da PR verdes. A cadeia ativa e as evidências anteriores foram preservadas.
+- API Neon reconfirmou dois projetos, cinco bases `neondb`, apenas
+  `neondb_owner`, endpoints `read_write`, sem snapshots registrados. CLI
+  autenticada permite selecionar role, mas falta acesso de auditoria aprovado.
+- MCP Cloudflare autenticado confirmou deployment `8268b409` e versão
+  `e241b715` ativa a 100%; `DATABASE_URL` é secreto e seu destino não foi lido.
+- Estado: `blocked` por acesso não gravável, abrangência externa e vínculo
+  Worker→database não comprovados. Nenhum SQL externo, migration ou deploy.
+- Evidência e itens mínimos para retomada:
+  [MIGRATION-CHAIN-SHARED-EVIDENCE.md](MIGRATION-CHAIN-SHARED-EVIDENCE.md).
+
+## Continuidade #36 — acesso externo ainda bloqueado
+
+Inventário de metadados ampliado: os cinco branches retornam somente
+`neondb_owner`; seus endpoints são `read_write`. O conector SQL não permite
+selecionar papel não gravável. Nenhuma consulta SQL externa foi realizada.
+A PR #38 inclui diagnóstico conservador de ACLs, provas apenas descartáveis
+e o roteiro [MIGRATION-CHAIN-SHARED-EVIDENCE.md](MIGRATION-CHAIN-SHARED-EVIDENCE.md).
+Acesso aprovado e vínculo Worker→database continuam requisitos para finalizar
+#36; não criar papéis/grants ou substituir a cadeia implicitamente.
+
+## Execução da tarefa #36 — candidatas e provas separadas
+
+[PR #38](https://github.com/naiguelcabral/seus-brownies/pull/38) aberta em draft.
+As três candidatas passaram em PostgreSQL 17 descartável, de `0016` e instalação
+vazia, no commit `32c0f4e5c78f324fc3be2bd8dcfe084ae2acd0ba`:
+[run 37961680179](https://github.com/naiguelcabral/seus-brownies/actions/runs/37961680179),
+16 casos aprovados, incluindo rollback, hashes/timestamps, catálogo real,
+reaplicação e invariantes. Comparação e limites em
+[MIGRATION-CHAIN-EXPERIMENTS-0016.md](MIGRATION-CHAIN-EXPERIMENTS-0016.md).
+A CI do SHA final da PR deve estar verde antes de sua revisão; não há merge automático.
+
+O inventário de metadados encontrou dois projetos Neon e cinco branches, mas
+históricos `0017+`, catálogos, papel estritamente não gravável e vínculo Worker→DB
+continuam não comprovados. Nenhum SQL externo foi executado. A substituição ativa
+permanece bloqueada; `drizzle/` continua intacto. Próxima dependência: completar
+essas evidências externas para avaliar a candidata de substituição preferida.
+Gates `0019` (finanças) e `0028` (cenários) permanecem decisões separadas.
+**HML, migrations, backfill e deploy seguem sem autorização.**
+
+## Pacote de gates de evidência — 9 de outubro de 2026
+
+- PR #35 integrada e CI pós-merge verde; base atual `1e5bd557` com CI
+  `37944960379` verde. Branch `codex/hml-migration-evidence-gates`.
+- Preparados matriz sanitizada, proposta de acesso mínimo, verificador sem
+  conexão/credenciais, sanitizador local do destino e formulários 0019/0028.
+- Metadados Neon e deployment/versão do Worker reconfirmados; histórico,
+  schema, backup/restore e vínculo efetivo continuam `unverified`.
+- Acesso externo `blocked`; declaração e decisões `pending-human`.
+  Cadeia ativa preservada, nenhum SQL externo, migration, backfill ou deploy.
+- Referência: [HML-MIGRATION-EVIDENCE-GATES.md](HML-MIGRATION-EVIDENCE-GATES.md).
+- Próximo passo exato: operador preenche
+  [HML-DATABASE-OPERATOR-ATTESTATION.md](HML-DATABASE-OPERATOR-ATTESTATION.md),
+  fornece acesso privado já aprovado e referência independente de catálogo;
+  Dono preenche os dois formulários de decisão. Não inferir fechamento de gate.
+
 ## Próxima sequência aprovada — 9 de outubro de 2026
 
 1. **Concluído:** preparação #35 integrada em `a542ec7`; CI pós-merge
