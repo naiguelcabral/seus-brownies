@@ -185,6 +185,16 @@ controlada de `0027`/`0028` em HML com backup, janela e rollback, seguida de
 homologação por navegador; não há autorização automática para aplicação ou
 deploy.
 
+### Remediação da cadeia 0017–0028
+
+| ID      | Pacote                                      | Tipo                      | Estado           | Escopo e saída esperada                                                                                                             |
+| ------- | ------------------------------------------- | ------------------------- | ---------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| DB-36-R | Guard e prova local da cadeia de migrations | codigo/documental         | ready-for-review | Guard offline de `db:migrate`, regressão `0017` e ADR; não muda `drizzle/` nem acessa banco externo.                                |
+| DB-36-H | Inventário externo e decisão corretiva      | auditoria-leitura/decisão | needs-human      | Exige evidência privada de leitura estrita, abrangência das bases, backup/restauração, Worker→database e formulários `0019`/`0028`. |
+
+`DB-36-R` não promove `DB-36-H`. Qualquer execução de migration compartilhada
+permanece proibida até autorização nova, delimitada e revisável.
+
 O controlador escolhe o primeiro pacote com estado exatamente `ready` ainda
 não tentado na mesma execução. No loop autorizado, gates locais sem mudanças
 pendentes são registrados e outra tarefa `ready` pode continuar; dependências
