@@ -1,5 +1,14 @@
 # Estado canônico do projeto — Cacau v1
 
+## Reconciliação de merges — 14 de outubro de 2026 UTC
+
+A PR #40 já foi integrada em `3372cf64`. A PR #38 foi reconciliada com essa
+main preservando as duas séries de registros abaixo como histórico. Os conflitos
+eram apenas inserções documentais. Esta revisão autoriza integração do pacote
+de ferramentas e provas; a issue #36 e os gates externos continuam abertos.
+A cadeia ativa `drizzle/` permanece idêntica à main. Nenhuma migration persistente,
+backfill, mudança de credencial ou deploy foi executado.
+
 ## Sincronização supervisionada G3 — 13 de outubro de 2026
 
 Implementação em branch `codex/g3-supervised-project-sync`, baseada na `main`
@@ -16,6 +25,49 @@ continua em revisão e não está integrado na main; registros manuais permanece
 preservados e dependem de revisão somente para eventual adoção.
 Runbook: [PROJECT-SYNC.md](./PROJECT-SYNC.md). Nenhuma migration, aplicação HML,
 deploy, mudança de segredo ou automação recorrente. Gates anteriores preservados.
+
+## Revalidação #36 — 9 de outubro de 2026
+
+- `main` `1e5bd557` e PR #38 draft `eaf00fd` revalidadas; CI main e
+  quatro CIs da PR verdes. A cadeia ativa e as evidências anteriores foram preservadas.
+- API Neon reconfirmou dois projetos, cinco bases `neondb`, apenas
+  `neondb_owner`, endpoints `read_write`, sem snapshots registrados. CLI
+  autenticada permite selecionar role, mas falta acesso de auditoria aprovado.
+- MCP Cloudflare autenticado confirmou deployment `8268b409` e versão
+  `e241b715` ativa a 100%; `DATABASE_URL` é secreto e seu destino não foi lido.
+- Estado: `blocked` por acesso não gravável, abrangência externa e vínculo
+  Worker→database não comprovados. Nenhum SQL externo, migration ou deploy.
+- Evidência e itens mínimos para retomada:
+  [MIGRATION-CHAIN-SHARED-EVIDENCE.md](MIGRATION-CHAIN-SHARED-EVIDENCE.md).
+
+## Continuidade #36 — acesso externo ainda bloqueado
+
+Inventário de metadados ampliado: os cinco branches retornam somente
+`neondb_owner`; seus endpoints são `read_write`. O conector SQL não permite
+selecionar papel não gravável. Nenhuma consulta SQL externa foi realizada.
+A PR #38 inclui diagnóstico conservador de ACLs, provas apenas descartáveis
+e o roteiro [MIGRATION-CHAIN-SHARED-EVIDENCE.md](MIGRATION-CHAIN-SHARED-EVIDENCE.md).
+Acesso aprovado e vínculo Worker→database continuam requisitos para finalizar
+#36; não criar papéis/grants ou substituir a cadeia implicitamente.
+
+## Execução da tarefa #36 — candidatas e provas separadas
+
+[PR #38](https://github.com/naiguelcabral/seus-brownies/pull/38) aberta em draft.
+As três candidatas passaram em PostgreSQL 17 descartável, de `0016` e instalação
+vazia, no commit `32c0f4e5c78f324fc3be2bd8dcfe084ae2acd0ba`:
+[run 37961680179](https://github.com/naiguelcabral/seus-brownies/actions/runs/37961680179),
+16 casos aprovados, incluindo rollback, hashes/timestamps, catálogo real,
+reaplicação e invariantes. Comparação e limites em
+[MIGRATION-CHAIN-EXPERIMENTS-0016.md](MIGRATION-CHAIN-EXPERIMENTS-0016.md).
+A CI do SHA final da PR deve estar verde antes de sua revisão; não há merge automático.
+
+O inventário de metadados encontrou dois projetos Neon e cinco branches, mas
+históricos `0017+`, catálogos, papel estritamente não gravável e vínculo Worker→DB
+continuam não comprovados. Nenhum SQL externo foi executado. A substituição ativa
+permanece bloqueada; `drizzle/` continua intacto. Próxima dependência: completar
+essas evidências externas para avaliar a candidata de substituição preferida.
+Gates `0019` (finanças) e `0028` (cenários) permanecem decisões separadas.
+**HML, migrations, backfill e deploy seguem sem autorização.**
 
 ## Revisão do pacote preparatório #35 — 9 de outubro de 2026
 

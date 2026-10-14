@@ -1,0 +1,49 @@
+name: Migration chain disposable PostgreSQL 17
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/migration-chain-*.mjs'
+      - 'scripts/migration-chain-*.sql'
+      - 'scripts/test-migration-chain-disposable.mjs'
+      - 'test/migration-chain-candidates.test.ts'
+      - 'test/migration-chain-access-diagnostic.test.ts'
+      - 'test/fixtures/migration-chain-source-manifest.json'
+      - 'drizzle/**'
+      - '.github/workflows/migration-chain-disposable.yml'
+  push:
+    branches: ['codex/migration-chain-repair-candidates']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  disposable-postgres:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: cacau_chain_test
+          POSTGRES_PASSWORD: synthetic-ci-only
+          POSTGRES_DB: cacau_chain_disposable
+        ports: ['5433:5432']
+        options: >-
+          --health-cmd "pg_isready -U cacau_chain_test -d cacau_chain_disposable"
+          --health-interval 5s --health-timeout 5s --health-retries 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: node scripts/test-migration-chain-disposable.mjs --ack-disposable-postgres17
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: migration-chain-synthetic-evidence
+          path: /tmp/cacau-chain-evidence
+          retention-days: 7
