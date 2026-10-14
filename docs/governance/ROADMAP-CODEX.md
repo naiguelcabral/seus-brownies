@@ -1,5 +1,38 @@
 # Roadmap executável para Codex — Cacau v1
 
+## Missão G3 — integração supervisionada, 13 de outubro de 2026
+
+- [x] Implementar clientes/adaptação MCP, IDs/fingerprints, read-only e dry-run.
+- [x] Implementar apply técnico com digest, conflitos, readback e checkpoint.
+- [x] Verificar criação real, repetição sem duplicação e dashboard de registros.
+- [x] Criar 33 testes de contratos com fixtures, sem serviço externo.
+- [x] Publicar branch/PR #40 em draft e confirmar testes, lint, tipos e build:
+      CI `38393316644` aprovada no checkpoint `2ffa130`; sem merge na main.
+- [!] Operação recorrente, adoção de registros manuais, HML/produção e migrations
+  não autorizadas por esta missão. Uso descrito em `PROJECT-SYNC.md`.
+
+## Prioridade de migrations — 9 de outubro de 2026
+
+- [x] Pacote preparatório #35 revisado/corrigido e integrado em `a542ec7`;
+      CI de PR/push verde em `10e62c26` e CI pós-merge `37944260848` verde no
+      merge SHA. Migrations, snapshots e journal preservados.
+- [ ] Comparar as três estratégias na tarefa separada #36, conforme
+      `MIGRATION-CHAIN-REPAIR-0016.md`, e criar PR corretiva própria.
+- [!] Substituição da cadeia pendente: aguarda comprovação de ausência de
+  `0017+` em todas as bases compartilhadas relevantes; Git não prova isso.
+- [!] Aplicação HML continua proibida nesta tarefa. `0019` e `0028` mantêm
+  decisões de dados separadas, além dos gates de recuperação e autorização.
+
+## Evidência local pendente de revisão — A25, 8 de outubro de 2026
+
+- G6: a conclusão de produção usa o mesmo writer transacional nos testes
+  locais com adaptador Drizzle fake. Cobertura: locks, uma conclusão por lote,
+  insuficiência de insumo antes de escrita e rollback após falhas em custos,
+  camada FIFO, saída ou status. O corpo transacional e o guard foram preservados.
+- O fake verifica composição e propagação de falhas; não comprova isolamento,
+  concorrência ou rollback do PostgreSQL real. Homologação compartilhada permanece
+  sujeita ao gate humano. Nenhum writer foi executado em HML.
+
 Legenda:
 
 - `[x]` concluído/entregue.
@@ -81,6 +114,8 @@ O Codex consegue identificar estado, regras, limites e próxima tarefa sem depen
 - [~] Testes E2E de acesso: spec de rotas públicas criada; execução integrada
   de login, logout, OTP, reset, sessão e negações ainda depende de ambiente e
   identidades de teste autorizados.
+  A27 prepara runner público local isolado de HEAD, sem secrets, sem rede
+  externa e sem mutações; sua prova é separada da homologação G1/HML.
 
 ### Gate
 
@@ -99,6 +134,10 @@ final por Server Function continuam sujeitos aos gates de `HUMAN-APPROVALS.md`.
 - [x] Implementar margem por período/canal; parceiro aguarda fonte de dados.
 - [ ] Criar reconciliação automatizada de estoque x FIFO x CMV.
 - [ ] Criar relatório de divergências sem correção automática.
+- [~] A28 acrescenta diagnóstico local de cobertura entrega × item × quantidade
+  FIFO em `/financeiro`, separado da reconciliação das dimensões de margem.
+  Ausência de alocação não comprova custo zero; nenhum total/fato foi alterado.
+  Conferência real, schema e correções históricas seguem gates separados.
 - [x] Documentar estratégia de reversão/cancelamento de venda no FIFO.
 
 ### Gate
@@ -114,10 +153,14 @@ A matriz detalhada workbook × sistema está em
 
 - [x] Dashboard operacional inicial.
 - [x] Relatórios básicos por período.
-- [ ] KPIs de faturamento e volume com comparação temporal.
+- [~] Faturamento confirmado, volume e ticket médio com comparação temporal
+  local pelo `soldAt` e período anterior de mesma duração; homologação da
+  interface permanece pendente. Receita por competência segue em `/financeiro`.
 - [~] Ticket médio, preço médio, unidades e divergência de receita
   implementados localmente; aguardam migrations/homologação.
-- [ ] Produtos e sabores mais vendidos, conforme modelo disponível.
+- [~] Top 10 produtos por unidades implementado localmente com vínculo de
+  catálogo e legado explícito; aguarda homologação de interface. Ranking por
+  sabor depende de uma fonte/taxonomia canônica ainda ausente no schema.
 - [~] CMV e margem por competência implementados localmente sobre fatos G2 e
   FIFO; aguardam migrations e homologação integrada.
 - [~] Estoque crítico por ponto de reposição implementado localmente com
@@ -126,7 +169,9 @@ A matriz detalhada workbook × sistema está em
 - [~] Histórico de produção real por receita, status, produto e período
   implementado localmente com paginação; rendimento realizado já é rastreado
   nos lotes concluídos e aguarda homologação gerencial.
-- [ ] Perdas e coprodutos.
+- [~] Perdas declaradas e coprodutos realizados agregados localmente por
+  produto a partir de lotes concluídos, sem perda automática e com custo
+  alocado separado; aguardam aplicação de migrations e homologação visual.
 - [~] Parceiros/canais com receita, eventos, unidades, ticket e divergência
   implementados localmente; margem e comparação temporal continuam pendentes.
 - [~] Parâmetros gerenciais centralizados e plano de ação humano implementados
@@ -179,10 +224,13 @@ A matriz detalhada workbook × sistema está em
 - [x] Custos operacionais e coproduto.
 - [x] Testes/homologações principais.
 - [ ] Revisar UX de produção para operação diária.
-- [ ] Relatórios de rendimento, perdas e custo por lote.
-- [ ] Alertas de insumo insuficiente e planejamento.
+- [~] Auditoria local por lote apresenta planejado, realizado, diferença
+  física e custo alocado por saída; perdas declaradas e custo total já são
+  exibidos. A prévia também sinaliza o déficit exato por insumo/unidade;
+  planejamento entre lotes e homologação diária permanecem pendentes.
 - [ ] Revisar consistência entre custo médio físico e FIFO de produto final.
-- [ ] Checklist de preparação para produção real.
+- [~] Checklist preparado em `PRODUCTION-READINESS.md`; schema, recuperação,
+  acesso, integridade e homologação operacional permanecem humanos.
 
 ## Fase G7 — Deploy e observabilidade
 
@@ -193,13 +241,17 @@ A matriz detalhada workbook × sistema está em
   Turnstile publicado, widget restrito, site key no bundle HML e diagnóstico
   histórico do `403` preservado; desafio real, replay, homologação integrada,
   rate limit distribuído e demais gates de G1 seguem pendentes.
-- [ ] Definir ambientes development/staging/production formalmente.
+- [~] Matriz/evidência somente leitura em `ENVIRONMENT-MATRIX.md`: local, CI,
+  HML autorizado e histórico separados; associação Worker × database, staging
+  e definição operacional definitiva dependem de decisão humana.
 - [ ] Configurar secrets por ambiente.
 - [~] Runbook de backup Neon e cópia independente preparado; janela, storage,
   RPO e responsáveis dependem de decisão humana.
 - [~] Runbook de restauração e ensaio descartável preparado; RTO, corte e
   validação em branch continuam dependentes de infraestrutura autorizada.
-- [ ] Logs estruturados.
+- [~] Logs locais de auditoria auth e recuperação de senha em JSON com
+  evento, nível, correlação UUID e allowlist runtime. Logs dos demais domínios
+  e homologação de observability permanecem pendentes.
 - [ ] Monitoramento de falhas.
 - [ ] Alertas de erro e disponibilidade.
 - [!] Revisar atualização de dependências auditadas: `npm audit` confirmou 13
@@ -226,6 +278,9 @@ A matriz detalhada workbook × sistema está em
       pequeno, cria commit local e prepara PR.
 - [ ] Nível 3: após três pacotes consecutivos verdes e sem correção humana ou
       gate violado, Codex escolhe próximo item exatamente `ready` em fase autorizada.
+- [~] Inicialização concorrente de memória local usa criação idempotente
+  e preserva rejeição de symlink; teste aguarda todos os subprocessos antes
+  de limpar fixtures. Evidência local, sem promoção de autonomia permanente.
 - [ ] Automação de revisão de CI/dependências, quando útil.
 - [ ] Multiagente somente após estabilidade do workflow e proteção adequada da `main`.
 

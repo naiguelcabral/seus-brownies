@@ -108,6 +108,12 @@ else
 fi
 
 # 5. Verifica configuração MCP do VS Code sem abrir arquivos
+if [[ -f "$ROOT_DIR/scripts/project-sync/cli.mjs" && -f "$ROOT_DIR/.codex-local/project-sync/session/last-run.json" ]]; then
+  echo 'Checkpoint da sincronização supervisionada (sem executar sync):'
+  node "$ROOT_DIR/scripts/project-sync/cli.mjs" status || echo '⚠ Checkpoint indisponível; use o runbook de recuperação.'
+fi
+
+# Somente consulta sanitizada; inicialização e encerramento não aplicam sync.
 echo
 echo "Verificando MCPs do VS Code..."
 

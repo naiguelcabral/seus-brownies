@@ -24,6 +24,7 @@ import {
   groupExpensesByCategory,
   groupRevenueByChannel,
   groupSalesByProduct,
+  rankProductsByUnits,
   sumReportMoney,
   summarizeFifoMargins,
   valueFifoLayers,
@@ -31,6 +32,14 @@ import {
 } from '#/features/reports/calculations'
 import { centsToMoney, moneyToCents } from '#/features/production/calculations'
 import { isMissingOptionalSchemaError } from '#/features/reports/optional-schema'
+import {
+  compareOperationalTotals,
+  previousEqualLengthPeriod,
+} from '#/features/reports/period-comparison'
+import {
+  summarizeCoProducts,
+  summarizeDeclaredLosses,
+} from '#/features/reports/production-outcomes'
 import { reconcileInventoryLedger } from '#/features/reports/inventory-reconciliation'
 import type { ReconciliationDivergence } from '#/features/reports/inventory-reconciliation'
 import { summarizeSalesMetrics } from '#/features/reports/sales-metrics'
@@ -73,6 +82,8 @@ export const getOperationalReports = createServerFn({ method: 'GET' })
     const database = getDb()
     const startAt = new Date(`${period.start}T00:00:00.000Z`)
     const until = endExclusive(period.end)
+    const previousPeriod = previousEqualLengthPeriod(period.start, period.end)
+    const previousStartAt = new Date(`${previousPeriod.start}T00:00:00.000Z`)
     const completedSale = inArray(sales.status, ['confirmed', 'paid'])
 
     const [
@@ -81,6 +92,8 @@ export const getOperationalReports = createServerFn({ method: 'GET' })
       expenseRows,
       movementRows,
       salesByProduct,
+      previousSaleMetricRows,
+      previousSaleUnitRows,
     ] = await Promise.all([
       database
         .select({
@@ -135,7 +148,9 @@ export const getOperationalReports = createServerFn({ method: 'GET' })
         .where(lt(stockMovements.occurredAt, until)),
       database
         .select({
+          productId: saleItems.productId,
           productName: saleItems.productName,
+          catalogName: products.name,
           quantity: saleItems.quantity,
           amount:
             sql<string>`coalesce(${saleItems.reportedAmount}, ${saleItems.totalAmount})`.as(
@@ -144,11 +159,42 @@ export const getOperationalReports = createServerFn({ method: 'GET' })
         })
         .from(saleItems)
         .innerJoin(sales, eq(saleItems.saleId, sales.id))
+        .leftJoin(products, eq(saleItems.productId, products.id))
         .where(
           and(
             completedSale,
             gte(sales.soldAt, startAt),
             lt(sales.soldAt, until),
+          ),
+        ),
+      database
+        .select({
+          saleId: sales.id,
+          locationId: sales.locationId,
+          locationName: salesLocations.name,
+          amount: sales.totalAmount,
+          reportedAmount: sales.reportedAmount,
+          calculatedAmount: sales.calculatedAmount,
+          auditStatus: sales.auditStatus,
+        })
+        .from(sales)
+        .leftJoin(salesLocations, eq(sales.locationId, salesLocations.id))
+        .where(
+          and(
+            completedSale,
+            gte(sales.soldAt, previousStartAt),
+            lt(sales.soldAt, startAt),
+          ),
+        ),
+      database
+        .select({ saleId: saleItems.saleId, quantity: saleItems.quantity })
+        .from(saleItems)
+        .innerJoin(sales, eq(saleItems.saleId, sales.id))
+        .where(
+          and(
+            completedSale,
+            gte(sales.soldAt, previousStartAt),
+            lt(sales.soldAt, startAt),
           ),
         ),
     ])
@@ -204,89 +250,123 @@ export const getOperationalReports = createServerFn({ method: 'GET' })
         quantity: string
         reason: string | null
       }>
+      lossSummary: ReturnType<typeof summarizeDeclaredLosses>
+      coProducts: ReturnType<typeof summarizeCoProducts>
       operationalCosts: Array<{ type: 'energy' | 'labor'; amount: string }>
     } | null = null
     try {
-      const [batchCosts, consumptions, losses, costs] = await Promise.all([
-        database
-          .select({
-            id: productionBatches.id,
-            plannedFor: productionBatches.plannedFor,
-            amount: productionBatchConsumptions.totalCost,
-          })
-          .from(productionBatches)
-          .innerJoin(
-            productionBatchConsumptions,
-            eq(
-              productionBatchConsumptions.productionBatchId,
-              productionBatches.id,
+      const [batchCosts, consumptions, losses, costs, coProductRows] =
+        await Promise.all([
+          database
+            .select({
+              id: productionBatches.id,
+              plannedFor: productionBatches.plannedFor,
+              amount: productionBatchConsumptions.totalCost,
+            })
+            .from(productionBatches)
+            .innerJoin(
+              productionBatchConsumptions,
+              eq(
+                productionBatchConsumptions.productionBatchId,
+                productionBatches.id,
+              ),
+            )
+            .where(
+              and(
+                eq(productionBatches.status, 'completed'),
+                gte(productionBatches.plannedFor, period.start),
+                lte(productionBatches.plannedFor, period.end),
+              ),
             ),
-          )
-          .where(
-            and(
-              eq(productionBatches.status, 'completed'),
-              gte(productionBatches.plannedFor, period.start),
-              lte(productionBatches.plannedFor, period.end),
+          database
+            .select({
+              productName: products.name,
+              quantity: productionBatchConsumptions.quantity,
+              amount: productionBatchConsumptions.totalCost,
+            })
+            .from(productionBatchConsumptions)
+            .innerJoin(
+              productionBatches,
+              eq(
+                productionBatchConsumptions.productionBatchId,
+                productionBatches.id,
+              ),
+            )
+            .innerJoin(
+              products,
+              eq(productionBatchConsumptions.productId, products.id),
+            )
+            .where(
+              and(
+                eq(productionBatches.status, 'completed'),
+                gte(productionBatches.plannedFor, period.start),
+                lte(productionBatches.plannedFor, period.end),
+              ),
             ),
-          ),
-        database
-          .select({
-            productName: products.name,
-            quantity: productionBatchConsumptions.quantity,
-            amount: productionBatchConsumptions.totalCost,
-          })
-          .from(productionBatchConsumptions)
-          .innerJoin(
-            productionBatches,
-            eq(
-              productionBatchConsumptions.productionBatchId,
-              productionBatches.id,
+          database
+            .select({
+              productId: productionBatchLosses.productId,
+              productName: products.name,
+              quantity: productionBatchLosses.quantity,
+              reason: productionBatchLosses.reason,
+            })
+            .from(productionBatchLosses)
+            .innerJoin(
+              productionBatches,
+              eq(productionBatchLosses.productionBatchId, productionBatches.id),
+            )
+            .innerJoin(
+              products,
+              eq(productionBatchLosses.productId, products.id),
+            )
+            .where(
+              and(
+                eq(productionBatches.status, 'completed'),
+                gte(productionBatches.plannedFor, period.start),
+                lte(productionBatches.plannedFor, period.end),
+              ),
             ),
-          )
-          .innerJoin(
-            products,
-            eq(productionBatchConsumptions.productId, products.id),
-          )
-          .where(
-            and(
-              eq(productionBatches.status, 'completed'),
-              gte(productionBatches.plannedFor, period.start),
-              lte(productionBatches.plannedFor, period.end),
+          database
+            .select({
+              batchId: operationalCosts.productionBatchId,
+              type: operationalCosts.type,
+              amount: operationalCosts.amount,
+            })
+            .from(operationalCosts)
+            .where(
+              and(
+                gte(operationalCosts.occurredAt, period.start),
+                lte(operationalCosts.occurredAt, period.end),
+              ),
             ),
-          ),
-        database
-          .select({
-            productName: products.name,
-            quantity: productionBatchLosses.quantity,
-            reason: productionBatchLosses.reason,
-          })
-          .from(productionBatchLosses)
-          .innerJoin(
-            productionBatches,
-            eq(productionBatchLosses.productionBatchId, productionBatches.id),
-          )
-          .innerJoin(products, eq(productionBatchLosses.productId, products.id))
-          .where(
-            and(
-              eq(productionBatches.status, 'completed'),
-              gte(productionBatches.plannedFor, period.start),
-              lte(productionBatches.plannedFor, period.end),
+          database
+            .select({
+              productId: productionBatchOutputs.productId,
+              productName: products.name,
+              actualQuantity: productionBatchOutputs.actualQuantity,
+              allocatedCost: productionBatchOutputs.allocatedCost,
+            })
+            .from(productionBatchOutputs)
+            .innerJoin(
+              productionBatches,
+              eq(
+                productionBatchOutputs.productionBatchId,
+                productionBatches.id,
+              ),
+            )
+            .innerJoin(
+              products,
+              eq(productionBatchOutputs.productId, products.id),
+            )
+            .where(
+              and(
+                eq(productionBatches.status, 'completed'),
+                eq(productionBatchOutputs.role, 'co_product'),
+                gte(productionBatches.plannedFor, period.start),
+                lte(productionBatches.plannedFor, period.end),
+              ),
             ),
-          ),
-        database
-          .select({
-            batchId: operationalCosts.productionBatchId,
-            type: operationalCosts.type,
-            amount: operationalCosts.amount,
-          })
-          .from(operationalCosts)
-          .where(
-            and(
-              gte(operationalCosts.occurredAt, period.start),
-              lte(operationalCosts.occurredAt, period.end),
-            ),
-          ),
-      ])
+        ])
       const totalsByBatch = new Map<
         number,
         { plannedFor: string | null; amount: bigint }
@@ -316,6 +396,8 @@ export const getOperationalReports = createServerFn({ method: 'GET' })
         })),
         consumptions,
         losses,
+        lossSummary: summarizeDeclaredLosses(losses),
+        coProducts: summarizeCoProducts(coProductRows),
         operationalCosts: costs.map(({ type, amount }) => ({ type, amount })),
       }
     } catch (error) {
@@ -510,6 +592,17 @@ export const getOperationalReports = createServerFn({ method: 'GET' })
       })),
     )
     const salesMetrics = summarizeSalesMetrics(saleMetricRows, saleUnitRows)
+    const previousSalesMetrics = summarizeSalesMetrics(
+      previousSaleMetricRows,
+      previousSaleUnitRows,
+    )
+    const operationalComparison = {
+      previousPeriod,
+      ...compareOperationalTotals(
+        salesMetrics.total,
+        previousSalesMetrics.total,
+      ),
+    }
     const expensesByCategory = groupExpensesByCategory(expenseRows)
     const inventory = valueInventory(movementRows)
     return {
@@ -517,6 +610,7 @@ export const getOperationalReports = createServerFn({ method: 'GET' })
       revenue,
       revenueTotal: salesMetrics.total.revenue,
       salesMetrics,
+      operationalComparison,
       managementSettings: reportSettings,
       expensesByCategory,
       expensesTotal: sumReportMoney(expenseRows),
@@ -525,6 +619,7 @@ export const getOperationalReports = createServerFn({ method: 'GET' })
         inventory.map((item) => ({ amount: item.value })),
       ),
       salesByProduct: groupSalesByProduct(salesByProduct),
+      topProducts: rankProductsByUnits(salesByProduct),
       production,
       fifo,
       reconciliation,

@@ -1,5 +1,41 @@
 # Log sanitizado de autonomia — Cacau v1
 
+## A25 — invariantes do writer de produção, 8 de outubro de 2026
+
+- Cobertura local do writer transacional preserva os controles existentes; não
+  executa banco compartilhado, seed, backfill ou migration.
+
+## A24 — reconciliação de custo por lote, 8 de outubro de 2026
+
+- Diagnóstico local somente leitura para diferença entre custo físico ponderado
+  e FIFO final, sem recalcular fatos, corrigir histórico ou escrever dados.
+
+## A22 — checklist de readiness de produção, 8 de outubro de 2026
+
+- Checklist local para revisão humana separa evidência local de homologação,
+  sem declarar produção pronta, aplicar schema ou tocar em HML.
+- Regras, resiliência e links relativos foram revisados; Prettier, diff e
+  guard passaram na origem. Nenhuma operação externa foi executada.
+
+## A18 — déficit de insumo na prévia, 8 de outubro de 2026
+
+- Branch independente `codex/auto-a18-ingredient-shortfalls`, main `f61e9a28`.
+- Alerta acessível mostra quantidade faltante por insumo sem somar unidades
+  diferentes ou alterar writers/gates de conclusão. Dois casos direcionados,
+  373 testes da suíte, lint/typecheck, Prettier, diff e guard passaram.
+  Build CI isolado passou com chave pública sintética explícita.
+- Nenhum banco, HML, migration ou recurso de produção acessado.
+
+## A17 — rendimento por saída do lote, 8 de outubro de 2026
+
+- Branch independente `codex/auto-a17-batch-yield` baseada na main `f61e9a28`.
+- Auditoria apresenta planejado, realizado, diferença física em milésimos e
+  custo alocado já registrado. Nenhum cálculo de eficiência/perda automática
+  ou writer alterado. Lacunas continuam explícitas.
+- Validação: 3 casos direcionados, suíte de 374 testes, lint e tipos verdes;
+  build CI isolado passou com chave pública sintética explícita. Nenhum banco, HML, migration ou
+  produção acessado.
+
 ## WP-D metas e cenários — 14 de setembro de 2026
 
 - G2-F1 foi publicado na branch `codex/workbook-parity` sem force push; a CI

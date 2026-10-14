@@ -5,7 +5,10 @@
 O piloto opera apenas fora da `main`, em árvore limpa e com um pacote por ciclo.
 Ele nunca faz deploy, migration em ambiente compartilhado, escrita de dados,
 mudança de secrets/DNS/Worker, leitura de `.env` ou execução de
-`DESLIGARTUDO`. Diante de um gate, registra `needs-human` e para.
+`DESLIGARTUDO`. Diante de um gate, registra o impedimento sem contorná-lo.
+Em `--once`, encerra com o código correspondente. Em `--loop` autorizado,
+se não houver alterações pendentes do agente, cria somente um checkpoint
+local do log sanitizado e procura outro pacote exatamente `ready`.
 
 ## Matriz de validação por tipo de pacote
 
@@ -65,6 +68,24 @@ Na versão atual da CLI, a execução usa `--approve-for-me`, que a própria CLI
 define como revisão automática em sandbox `workspace-write`; ela não usa
 `danger-full-access` nem bypass de sandbox. Usa também `--ephemeral`, para não
 persistir arquivos de sessão fora do diretório local do controlador.
+
+## Continuidade após gate
+
+`blocked`, `needs-human` e `validation-blocked` permitem continuar no loop
+somente se a árvore estava limpa antes de registrar o resultado. Nenhum
+código pendente é descartado ou commitado para possibilitar continuidade.
+`validation-failed`, erro da CLI, `limit`, sentinela, lock, caminhos sensíveis
+e falha de preflight continuam encerrando imediatamente. O loop não
+promove `ready-after-*` e não tenta novamente um ID na mesma execução,
+mesmo que a fila ainda o apresente como `ready`. O número de ciclos limita
+as tentativas; o código final preserva gates encontrados (23 tem prioridade
+sobre 21 e 20), mesmo que outro pacote tenha concluído. Uma nova execução
+reavalia a fila e os gates; não há promoção permanente de autonomia.
+
+O resultado é lido da última linha exata de `--output-last-message`, em
+arquivo local privado, sem interpretar marcadores presentes em ferramentas
+ou outros eventos JSONL. JSONL e mensagem final ficam somente no diretório
+ignorado. Referência: [OpenAI Docs — execução não interativa](https://learn.chatgpt.com/docs/non-interactive-mode#make-output-machine-readable).
 
 ## Resultado e retomada
 

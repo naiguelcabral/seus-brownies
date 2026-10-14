@@ -1,6 +1,86 @@
 # Estado canônico do projeto — Cacau v1
 
-Atualizado em 6 de outubro de 2026, após revisão de código, migrations,
+## Sincronização supervisionada G3 — 13 de outubro de 2026
+
+Implementação em branch `codex/g3-supervised-project-sync`, baseada na `main`
+`1e5bd557`. CLI com read-only, dry-run, plano com digest e apply de observações
+técnicas; coleta por MCP autenticado da sessão, sem copiar credenciais. Perfis,
+checkpoint e logs permanecem privados/ignorados. Registro manual é conflito,
+não adoção automática; merge/CI não concluem requisitos ou comprovam HML.
+Primeira criação técnica real e repetição sem duplicação verificadas. Snapshot
+do dashboard escrito e relido com contagens reais. 33 contratos com fixtures
+sem rede passam. [PR #40](https://github.com/naiguelcabral/seus-brownies/pull/40)
+publicada em draft; [CI 38393316644](https://github.com/naiguelcabral/seus-brownies/actions/runs/38393316644)
+aprovada no commit `2ffa130`, com testes/lint/tipos/build isolado. O pacote
+continua em revisão e não está integrado na main; registros manuais permanecem
+preservados e dependem de revisão somente para eventual adoção.
+Runbook: [PROJECT-SYNC.md](./PROJECT-SYNC.md). Nenhuma migration, aplicação HML,
+deploy, mudança de segredo ou automação recorrente. Gates anteriores preservados.
+
+## Revisão do pacote preparatório #35 — 9 de outubro de 2026
+
+- PR #35 integrada pelo merge `a542ec73d914bcca12090b38df69bf16a49e9bbf`.
+  CI pós-merge da `main`: [37944260848](https://github.com/naiguelcabral/seus-brownies/actions/runs/37944260848),
+  `push`, mesmo SHA, `completed/success`.
+  Integração exclusivamente preparatória; não autoriza migrations ou deploy.
+- Verificador offline exige SHA/ID da CI pós-merge esperados e compara as
+  definições declaradas nos snapshots, além dos nomes. Seu JSON de saída
+  sempre informa `application_authorized: false`; coleta independente e
+  definições SQL manuais/funções/triggers permanecem pendentes.
+- Tarefa separada [#36](https://github.com/naiguelcabral/seus-brownies/issues/36):
+  comparar três estratégias e provar atualização de `0016` e instalação vazia
+  em PostgreSQL descartável. Preferência inicial pela substituição da cadeia
+  pendente condicionada à comprovação de ausência de `0017+` em todas as bases
+  compartilhadas relevantes. Estratégia ainda não aprovada.
+- `0019` (dados financeiros) e `0028` (cenários) são gates independentes.
+  Nenhum SQL HML, alteração de migration, backfill ou deploy nesta revisão.
+- CI da revisão `10e62c26`: PR `37943877875` e push `37943868409` verdes;
+  429 testes, lint, typecheck e build isolado passaram. A CI pós-merge acima
+  confirmou a integração. Os registros anteriores abaixo são históricos.
+
+## Readiness das migrations 0017–0028 — 9 de outubro de 2026
+
+A PR #34 foi integrada na `main` `100d41c` e a CI pós-merge
+`37930101604` passou. A revisão local em PostgreSQL 17 descartável
+encontrou falha determinística na `0017`: o trigger usa `products.unit`,
+mas a coluna versionada é `measurement_unit`. A cadeia publicada foi
+revertida pelo migrador e não está pronta para HML. A consulta SQL HML
+permanece bloqueada porque a conexão MCP disponível não comprova modo
+somente leitura; metadados confirmam apenas o alvo documentado. O plano,
+matriz, backup e gates estão em
+`HML-MIGRATION-READINESS-0017-0028.md`. Nenhuma migration foi aplicada em
+ambiente compartilhado por esta preparação; ausência global de aplicação de
+`0017+` continua não comprovada.
+
+## Integrações consolidadas — 8 de outubro de 2026
+
+O lote que compõe #19, #20, #24, #26 e #27 preserva o writer transacional,
+diagnósticos somente leitura e precisão monetária. Não inclui migration,
+infraestrutura, segredo, banco compartilhado ou correção automática de
+estoque/FIFO/CMV. A PR #32 foi integrada em `main` com CI verde. A PR #31 de
+relatórios/FIFO também foi integrada com CI `37804204150` verde.
+
+O lote plataforma/governança compõe #14, #21, #22, #23, #25, #28 e #29 sem
+migrations, deploy, escrita externa ou mudança de política. Telemetria é
+allowlisted, memória local continua privada/atômica, hooks permanecem locais e
+o smoke público bloqueia tráfego externo no modo isolado.
+
+As três integrações #31–#33 compõem a `main` consolidada
+`98172b97076415c4bb98554e1c6c82928bbe3895`. A CI da #33
+(`37834057113`) passou. A reconciliação pós-integração está registrada em
+`POST-INTEGRATION-RECONCILIATION-2026-10-08.md`; ela mantém #13 fora da
+ancestralidade e enumera migrations e gates ainda pendentes.
+
+## Entrega local em revisão — A25, 8 de outubro de 2026
+
+Conclusão de produção com sete cenários determinísticos do writer real usando
+Drizzle fake: conclusão única, custos/saídas/FIFO, insuficiência de insumo e
+rollback em falhas posteriores. A extração do writer preserva o corpo da
+transação, a validação e a autorização do servidor. A prova local não substitui
+homologação PostgreSQL, operação física ou aprovação de produção.
+
+Atualizado em 9 de outubro de 2026, com evidências históricas datadas abaixo,
+após revisão de código, migrations,
 testes, rotas, documentação e estado público de HML.
 
 Este documento é a referência canônica de alto nível para o estado atual do sistema. Registros históricos de homologação, importação e decisões específicas permanecem válidos como evidência, mas não substituem este resumo.
@@ -46,6 +126,26 @@ Este documento é a referência canônica de alto nível para o estado atual do 
 - Camadas, alocações, lifecycle e reconciliação FIFO possuem testes e documentação própria.
 - Energia e mão de obra são custos operacionais, nunca itens de estoque.
 - Bordinhas é coproduto, não perda automática.
+- Auditoria local de produção distingue quantidades planejadas e realizadas
+  por saída, diferença física exata e custo alocado informado. Lacunas não
+  viram produção realizada; homologação visual permanece pendente.
+- Checklist `PRODUCTION-READINESS.md` preparado para revisão humana; não
+  declara produção pronta nem comprova schema ou homologação no ambiente.
+
+### Observabilidade local
+
+- Telemetria de auth em JSON estrutura evento/nível/requestId e aplica
+  allowlist em runtime. Campos extras, motivos inválidos e IDs arbitrários
+  não são serializados. Nenhuma política de sessão foi alterada.
+
+### Ambientes — evidência de 8 de outubro de 2026
+
+- `ENVIRONMENT-MATRIX.md` registra SELECT 1 e introspecção no alvo exato
+  `development`/`neondb`: relações consultadas de produção/FIFO/G2/cenários
+  ausentes. Não substitui homologações históricas em outro branch.
+- Settings somente leitura de `cacau-v1-hml` não retornam o binding de
+  rate limit versionado; última publicação observada de 7 de setembro.
+  Associação Worker × database e publicação continuam gates humanos.
 
 ### Dados e migrações
 
@@ -84,6 +184,10 @@ Este documento é a referência canônica de alto nível para o estado atual do 
   Funcionário. Testes direcionados, lint, typecheck e build HML isolado
   passaram localmente e na CI `34295688527`; a homologação de interface depende
   de ambiente autorizado.
+- O ranking local de top 10 produtos por unidades usa ID de catálogo quando
+  disponível, preserva itens históricos sem vínculo em grupo explícito e
+  ordena quantidades exatas. O modelo ainda não oferece sabor canônico para
+  um ranking por sabor; a interface aguarda homologação.
 - O histórico de vendas agora filtra cliente, status e período no servidor,
   pagina 20 itens com corte final inclusivo de data em UTC e preserva a negação
   de histórico ao Funcionário. Testes direcionados, lint, typecheck e build
@@ -148,6 +252,10 @@ Este documento é a referência canônica de alto nível para o estado atual do 
   respostas HTTP/JSON inválidas do Turnstile. A homologação com binding HML,
   desafio real, replay, e-mail, cookies, sessão e revogação permanece externa
   e está explicitamente separada na matriz de validação G1.
+- Uma comparação operacional local de faturamento confirmado, unidades e
+  ticket médio usa o período anterior de mesma duração em UTC e diferenças
+  decimais exatas. É baseada na data da venda e rotulada separadamente da
+  receita por competência de `/financeiro`; aguarda homologação de interface.
 - O runbook de resiliência operacional documenta backup, restauração em branch
   descartável, RPO/RTO, rollback, observabilidade e retenção. Não há estratégia
   externa configurada nem ensaio de restauração: esses são gates humanos.

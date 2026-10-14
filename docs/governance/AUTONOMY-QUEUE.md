@@ -1,8 +1,51 @@
 # Fila executável de autonomia — Cacau v1
 
+## Próxima sequência aprovada — 9 de outubro de 2026
+
+1. **Concluído:** preparação #35 integrada em `a542ec7`; CI pós-merge
+   `37944260848` verde no mesmo SHA. Não reaplicar esse pacote.
+2. Executar a tarefa separada [#36](https://github.com/naiguelcabral/seus-brownies/issues/36)
+   conforme `MIGRATION-CHAIN-REPAIR-0016.md`: inventário das bases compartilhadas,
+   três estratégias, provas descartáveis e PR corretiva própria.
+3. Manter aplicação HML `BLOCKED`. Substituição depende da ausência comprovada
+   de `0017+`; gates `0019`/`0028` e autorização específica não são dispensados.
+
+## Gate de migration HML — 9 de outubro de 2026
+
+| ID                | Pacote                       | Estado  | Saída / gate                                                                                                                                                                                                           |
+| ----------------- | ---------------------------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| HML-MIG-0017-0028 | Readiness da cadeia pendente | blocked | `0017` falha em PostgreSQL 17 por `products.unit` inexistente; resolver por caminho auditável aprovado. SQL HML não consultado sem conexão comprovadamente read-only. Plano em `HML-MIGRATION-READINESS-0017-0028.md`. |
+
+A indicação histórica abaixo de aplicar apenas `0027`/`0028` não é
+executável enquanto a cadeia `0017`–`0026` e o alvo efetivo permanecerem
+sem validação.
+
+## Reconciliação de integração — 8 de outubro de 2026
+
+| ID     | Pacote                                                    | Estado      | Saída / gate                                        |
+| ------ | --------------------------------------------------------- | ----------- | --------------------------------------------------- |
+| INT-R  | Relatórios e financeiro (#15, #16, #17, #18, #30)         | done        | PR #31 integrada em `main`; CI `37804204150` verde. |
+| INT-P  | Produção e readiness (#19, #20, #24, #26, #27)            | done        | PR #32 integrada em `main`; CI `37813883831` verde. |
+| INT-G  | Plataforma/governança (#14, #21, #22, #23, #25, #28, #29) | done        | PR #33 integrada em `main`; CI `37834057113` verde. |
+| INT-13 | Credencial persistente GitHub MCP (#13)                   | needs-human | `CHANGES-REQUIRED`; fora de qualquer lote.          |
+
+Matriz: `INTEGRATION-RECONCILIATION-2026-10-08.md`.
+
 Atualizada em 8 de setembro de 2026. Esta fila é a fonte de verdade para a
 seleção de pacotes pelo controlador. Ela não substitui os gates de
 `AGENTS.md`, `SECURITY.md` ou `HUMAN-APPROVALS.md`.
+
+## Reconciliação de integração — 8 de outubro de 2026
+
+| ID     | Pacote                                                    | Estado            | Saída / gate                                                                                                             |
+| ------ | --------------------------------------------------------- | ----------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| INT-R  | Relatórios e financeiro (#15, #16, #17, #18, #30)         | review-ready      | Branch `codex/integration-reports-finance`; testes, lint, tipos e builds isolados consolidados passaram; criar PR draft. |
+| INT-P  | Produção (#19, #20, #24, #26, #27)                        | ready-after-INT-R | Criar lote separado; preservar guards de writer, precisão e rota protegida.                                              |
+| INT-G  | Plataforma/governança (#14, #21, #22, #23, #25, #28, #29) | ready-after-INT-R | Criar lote separado; sem browser HML, infraestrutura ou alteração de configuração.                                       |
+| INT-13 | Credencial persistente GitHub MCP (#13)                   | needs-human       | `CHANGES-REQUIRED`: decidir escopo de credencial no processo persistente/subprocessos.                                   |
+
+Matriz completa, SHAs, CI, sobreposições e decisões:
+`INTEGRATION-RECONCILIATION-2026-10-08.md`.
 
 ## Estados
 
@@ -72,7 +115,10 @@ controlada de `0027`/`0028` em HML com backup, janela e rollback, seguida de
 homologação por navegador; não há autorização automática para aplicação ou
 deploy.
 
-O controlador escolhe somente o primeiro pacote com estado exatamente `ready`.
+O controlador escolhe o primeiro pacote com estado exatamente `ready` ainda
+não tentado na mesma execução. No loop autorizado, gates locais sem mudanças
+pendentes são registrados e outra tarefa `ready` pode continuar; dependências
+não são promovidas. Validação falha, limite e preflight continuam interrompendo.
 Antes de editar, o agente registra no handoff objetivo, não objetivos, arquivos
 previstos, critérios de aceite e comandos de validação. Um pacote não pode
 alterar seu próprio estado para `done` com checks vermelhos ou gate pendente.

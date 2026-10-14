@@ -1,5 +1,163 @@
 # Handoff de autonomia — Cacau v1
 
+## Missão G3 — sincronização supervisionada, 13 de outubro de 2026
+
+- Branch `codex/g3-supervised-project-sync`, base main `1e5bd557` conferida.
+- Motor e runbook em `scripts/project-sync/` e `PROJECT-SYNC.md`; nenhuma nova
+  dependência/autenticação. Perfil real somente em `.codex-local/project-sync/`.
+- Criação técnica real com readback e repetição recuperada sem nova página;
+  leitura completa e dashboard verificados. Cota SQL terminou; views default
+  existentes sem filtro foram conferidas e funcionam com paginação por cursor.
+- Falha na primeira tentativa de append; adapter agora usa UUID e a intenção antiga
+  preservada como inconclusiva, sem retry cego. Nova operação distinta validada.
+- 33 testes locais do motor passam. Suíte geral: 430, incluindo wrapper dos
+  contratos. Lint/tipos/formatação dos alterados e build isolado aprovados.
+- PR #40 em draft, CI `38393316644` aprovada em `2ffa130`. Commits de entrega:
+  `74c4296` (motor/testes/runbook) e `2ffa130` (governança). Registro posterior
+  apenas documental; confirmar a CI no HEAD atual antes de integrar.
+- Próximo passo: revisão humana da PR; uso supervisionado conforme o runbook,
+  com novo plano/digest e sem adoção automática de registros manuais. Sem merge.
+  Revalidar Git/Notion; não reaplicar criação nem limpar checkpoints privados.
+- Uso Codex: não disponível nesta execução; nenhum percentual estimado.
+
+## Revisão #35 e tarefa corretiva #36 — 9 de outubro de 2026
+
+- O Dono autorizou revisar/integrar somente a preparação e confirmar CI da
+  `main`; não autorizou aplicar `0017`–`0028` em HML.
+- Correções: SHA/ID exatos e metadados da CI pós-merge, definições de snapshot,
+  enums, testes negativos para drift com nomes iguais e erros de subprocesso.
+  Verificador continua offline, sem atestação externa ou aprovação de aplicação.
+- Tarefa própria: [#36](https://github.com/naiguelcabral/seus-brownies/issues/36),
+  plano `MIGRATION-CHAIN-REPAIR-0016.md`. Nenhuma estratégia aprovada; preferência
+  inicial condicionada ao inventário completo de bases compartilhadas.
+- PR #35 integrada pelo merge `a542ec73d914bcca12090b38df69bf16a49e9bbf`.
+  CI pós-merge da `main`: [37944260848](https://github.com/naiguelcabral/seus-brownies/actions/runs/37944260848),
+  `push`, mesmo SHA, `completed/success`.
+- Próximo passo: comparar/provar estratégias na issue #36, em tarefa/branch e
+  PR corretivas separadas, começando pelo inventário das bases compartilhadas.
+- Não presumir associação Worker/banco, ausência global de `0017+`, aprovação
+  financeira `0019` ou dados de cenários `0028`.
+- Uso Codex: não disponível para esta execução. Nenhum percentual estimado.
+- Validação desta revisão: lint direcionado, typecheck e formatação passaram.
+  Cinco casos funcionais passaram em diagnóstico no mesmo processo. A suíte
+  CLI local foi bloqueada por `spawnSync EPERM` do ambiente e não é registrada
+  como aprovada; testes agora rejeitam erro de subprocesso explicitamente.
+  A CI remota completa passou no commit final `10e62c26`: 429 testes,
+  lint, typecheck e build isolado; runs PR `37943877875` e push `37943868409`.
+
+## Readiness HML 0017–0028 — 9 de outubro de 2026
+
+- Base `origin/main` `100d41c`; PR #34 integrada e CI pós-merge
+  `37930101604` verde. Worktree/branch `codex/hml-migration-readiness`.
+- Objetivo: preparar revisão, verificação read-only, teste descartável,
+  pre/pós-checks e recuperação. Não objetivos: aplicar HML/produção,
+  alterar migration histórica, deploy ou dado compartilhado.
+- Arquivos: `HML-MIGRATION-READINESS-0017-0028.md`,
+  `scripts/hml-migration-readiness.mjs`, teste correspondente e estes
+  registros canônicos.
+- PostgreSQL 17 local sem rede: `0000`–`0016` aplicadas com hashes
+  corretos; `0017` falhou por coluna `products.unit` inexistente.
+  Drizzle reverteu `0017`–`0028`. Cópia diagnóstica temporária da
+  `0017` permitiu testar sequência e reaplicação, sem alterar Git.
+- Metadados Neon confirmaram projeto/branch/database documentados, mas SQL
+  HML foi bloqueado porque a conexão MCP tem permissão `ADMIN` e não
+  comprova read-only. Hashes, estado e drift HML atuais não confirmados.
+- Aceite do pacote: script/teste verde, suíte/lint/tipos/builds isolados,
+  diff revisado, PR draft. Próximo passo após PR: decisão humana para ponte
+  auditável anterior à `0017`, role estritamente read-only, associação
+  Worker/banco, valores `0019`, backup/janela/RPO/RTO; só então preparar
+  autorização específica de aplicação.
+
+## Pós-integração consolidada — 8 de outubro de 2026
+
+- Branch: `codex/integration-platform-governance`, baseada na `main`
+  `2f7d19bb00ca3effc628a2972271872c802a8862`, que já inclui #31 e #32.
+- Merge commits locais: #14, #21, #22, #23, #25, #28 e #29. Conflitos foram
+  documentais; a governança mais recente da `main` foi preservada e os módulos
+  de telemetria, memória, continuidade, sinais e smoke permaneceram intactos.
+- PR #33 foi integrada e sua CI `37834057113` passou. Inventário atual:
+  `POST-INTEGRATION-RECONCILIATION-2026-10-08.md`.
+- PR #13 segue excluída e não é ancestral deste lote.
+- Reconciliação documental pós-integração: PR #34 em rascunho, branch
+  `codex/post-integration-reconciliation`, registra a matriz #4/#5/#13–#33,
+  migrations e gates. A CI `37840299625` passou no SHA `b7d4d3c`.
+
+## Checkpoint de integração — produção e readiness, 8 de outubro de 2026
+
+- Branch: `codex/integration-production-readiness`, baseada em
+  `origin/main` `f61e9a28df7b0fdbc80864402b578a2a0aabd3f8`.
+- Merge commits locais concluídos: PRs #19, #20, #24, #26 e #27. Conflitos
+  compostos apenas em documentação e imports da rota; guards e writers foram
+  preservados.
+- Evidência atual: `npm ci --ignore-scripts`, 16 testes direcionados, suíte
+  de 387 testes, lint, typecheck, Prettier e `git diff --check` passaram. A
+  primeira tentativa paralela dos testes falhou antes dos casos com `ETXTBSY`
+  do esbuild logo após a instalação; a repetição serial dos mesmos testes
+  passou, sem alteração de código.
+- A CI da PR #31 foi revalidada por GitHub MCP: CI `37804204150` é `success`
+  no SHA `1733573`.
+- `build:ci-isolated` e build HML isolado passaram no HEAD limpo com a chave
+  pública sintética; não houve leitura de `.env` ou deploy.
+- Próxima ação exata: revisar, publicar somente esta branch e abrir PR em
+  rascunho; consultar a CI dela.
+
+## Missão autônoma — A25, 8 de outubro de 2026
+
+- Testes locais de invariantes da conclusão transacional de produção foram
+  adicionados com mock de Drizzle, preservando guards, rollback e precisão.
+- Não houve mudança de regra de estoque/custo, migration, escrita HML ou
+  alteração de RBAC.
+
+## Missão autônoma — A24, 8 de outubro de 2026
+
+- Reconciliação somente leitura compara custo físico ponderado e custo final
+  FIFO por lote, preservando centavos em inteiros e explicitando lacunas.
+- Não altera writer, custo, FIFO, estoque, migration, dados ou HML; qualquer
+  divergência segue como diagnóstico para revisão humana.
+
+## Missão autônoma — A22, 8 de outubro de 2026
+
+- Objetivo: checklist revisável para preparar a operação real de produção.
+- Não objetivos: autorizar operação/deploy, aplicar schema, ensaiar HML,
+  definir RPO/RTO, corrigir histórico ou alterar regra financeira.
+- Branch independente `codex/auto-a22-production-readiness`, main `f61e9a28`.
+- Aceite: separar evidência local de homologação; cada etapa exige responsável,
+  referência sanitizada e estado; gates mantidos e regras canônicas citadas.
+- Resultado: checklist revisado contra regras e resiliência; links relativos
+  existentes, Prettier/diff/guard verdes. Aplicação de schema/aceite físico
+  continuam humanos.
+
+## Missão autônoma — A18, 8 de outubro de 2026
+
+- Objetivo: prévia acessível com quantidade faltante exata por insumo.
+- Não objetivos: compra automática, bloqueio novo de rascunho, mudança da
+  conclusão transacional, regra de estoque ou escrita em HML.
+- Branch independente: `codex/auto-a18-ingredient-shortfalls`, main `f61e9a28`.
+- Arquivos previstos: cálculo puro, teste, UI produção, roadmap, handoff e log.
+- Aceite: saldo igual ao requerido não gera falta; saldos negativos aumentam
+  déficit; unidades diferentes permanecem separadas; nenhum Number na conta.
+- Testes previstos: saldo exato, negativo, grande, inválido e vazio; suíte,
+  lint, typecheck, build CI isolado, Prettier, diff e guard sensível.
+- Resultado: 2 casos direcionados e 373 testes da suíte, lint/typecheck,
+  Prettier, diff e guard passaram. Build CI isolado passou com chave pública sintética explícita.
+
+## Missão autônoma — A17, 8 de outubro de 2026
+
+- Objetivo: tornar explícitos planejado, realizado, diferença física e custo
+  alocado por saída na auditoria de cada lote.
+- Não objetivos: percentual de eficiência, inferência de perda, novo custo,
+  alteração de writer, migration ou homologação HML.
+- Branch: `codex/auto-a17-batch-yield`, independente da main `f61e9a28`.
+- Arquivos previstos: módulo puro de rendimento, teste, tela de produção,
+  roadmap, status, handoff e log.
+- Aceite: quantidade ausente não vira zero/planejado; diferença exata em
+  milésimos somente com ambos os fatos; custo alocado exibido sem recalcular.
+- Testes: módulo com lacunas, zero e quantidade grande; suíte, lint, tipos,
+  build CI isolado, Prettier direcionado, diff e guard sensível.
+
+- Resultado: 3 casos direcionados e suíte de 374 testes passaram; lint,
+  tipos, Prettier, diff e guard verdes. Build CI isolado passou com chave pública sintética explícita.
+
 ## Integração controlada da PR #12 — concluída, 7 de outubro de 2026
 
 - Objetivo concluído: reconciliar metas e cenários em

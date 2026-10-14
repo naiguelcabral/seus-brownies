@@ -1,4 +1,5 @@
 import type { AuthAuditAction, AuthAuditOutcome } from './audit'
+import { telemetryRequestId } from './telemetry-request-id'
 
 export type AuthAuditTelemetryEvent = {
   requestId: string
@@ -19,7 +20,22 @@ export type AuthAuditTelemetry = {
 export function createAuthAuditTelemetry(): AuthAuditTelemetry {
   return {
     emit: (event) => {
-      console.warn('[auth.audit]', JSON.stringify(event))
+      if (
+        !['login', 'logout', 'email_verification'].includes(event.action) ||
+        !['success', 'failure'].includes(event.outcome) ||
+        !['persistence_failed'].includes(event.stage)
+      )
+        return
+      console.warn(
+        JSON.stringify({
+          event: 'auth.audit',
+          level: 'warn',
+          requestId: telemetryRequestId(event.requestId),
+          action: event.action,
+          outcome: event.outcome,
+          stage: event.stage,
+        }),
+      )
     },
   }
 }

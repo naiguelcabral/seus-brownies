@@ -76,3 +76,107 @@ test('emite divergências rastreáveis para quantidade, custo e produto', () => 
     true,
   )
 })
+
+test('identifica camada e alocação ausentes sem inferir vínculo fictício', () => {
+  const input = consistent()
+  input.allocations[0].layerId = 99
+  input.reversals[0].allocationId = 88
+
+  const result = reconcileInventoryLedger(input)
+  assert.deepEqual(
+    result.divergences
+      .filter((item) => item.code.startsWith('missing_'))
+      .map(({ code, entityType, entityId, relatedIds }) => ({
+        code,
+        entityType,
+        entityId,
+        relatedIds,
+      })),
+    [
+      {
+        code: 'missing_layer',
+        entityType: 'allocation',
+        entityId: 2,
+        relatedIds: [99],
+      },
+      {
+        code: 'missing_allocation',
+        entityType: 'reversal',
+        entityId: 4,
+        relatedIds: [88],
+      },
+    ],
+  )
+})
+
+test('compara o produto da alocação com o da camada de origem', () => {
+  const input = consistent()
+  input.allocations[0].productId = 9
+
+  assert.deepEqual(
+    reconcileInventoryLedger(input).divergences.filter(
+      (item) => item.entityType === 'allocation',
+    ),
+    [
+      {
+        code: 'product_mismatch',
+        entityType: 'allocation',
+        entityId: 2,
+        relatedIds: [1],
+        expected: '7',
+        actual: '9',
+      },
+    ],
+  )
+})
+
+test('soma reversões parciais antes de comparar com a alocação', () => {
+  const input = consistent()
+  input.reversals[0].quantity = '3.000'
+  input.reversals[0].restoredCost = '12.00'
+  input.reversals.push({
+    ...input.reversals[0],
+    id: 6,
+    incomingMovementId: 7,
+    quantity: '2.000',
+    restoredCost: '8.00',
+    movementQuantity: '2.000',
+    movementCost: '8.00',
+  })
+
+  const result = reconcileInventoryLedger(input)
+  assert.deepEqual(
+    result.divergences
+      .filter((item) => item.code.includes('exceeds_allocation'))
+      .map(({ code, relatedIds, actual }) => ({ code, relatedIds, actual })),
+    [
+      {
+        code: 'reversal_quantity_exceeds_allocation',
+        relatedIds: [4, 6],
+        actual: '5.000',
+      },
+      {
+        code: 'reversal_cost_exceeds_allocation',
+        relatedIds: [4, 6],
+        actual: '20.00',
+      },
+    ],
+  )
+})
+
+test('decimal inválido é diagnóstico explícito e não vira zero', () => {
+  const input = consistent()
+  input.layers[0].originalQuantity = '10.0001'
+  input.allocations[0].allocatedCost = 'token-exemplo'
+
+  const result = reconcileInventoryLedger(input)
+  assert.deepEqual(
+    result.divergences.map((item) => item.code),
+    ['invalid_decimal', 'invalid_decimal'],
+  )
+  assert.equal(
+    result.divergences.every((item) => item.actual === 'valor inválido'),
+    true,
+  )
+  assert.doesNotMatch(JSON.stringify(result), /token-exemplo/)
+})

@@ -110,10 +110,9 @@ def _reject_symlink(path: Path) -> None:
 def local_paths(root: Path) -> dict[str, Path]:
     base = root / LOCAL_DIR_NAME
     _reject_symlink(base)
-    if not base.exists():
-        base.mkdir(mode=0o700)
-    else:
-        os.chmod(base, stat.S_IMODE(base.stat().st_mode) & 0o700)
+    base.mkdir(mode=0o700, exist_ok=True)
+    _reject_symlink(base)
+    os.chmod(base, stat.S_IMODE(base.stat().st_mode) & 0o700)
 
     paths = {
         "base": base,
@@ -133,10 +132,9 @@ def local_paths(root: Path) -> dict[str, Path]:
         if name == "base":
             continue
         _reject_symlink(directory)
-        if not directory.exists():
-            directory.mkdir(mode=0o700)
-        else:
-            os.chmod(directory, stat.S_IMODE(directory.stat().st_mode) & 0o700)
+        directory.mkdir(mode=0o700, exist_ok=True)
+        _reject_symlink(directory)
+        os.chmod(directory, stat.S_IMODE(directory.stat().st_mode) & 0o700)
     return paths
 
 
