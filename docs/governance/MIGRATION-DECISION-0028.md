@@ -50,3 +50,13 @@ aplicações manuais, e writers controlados; **ou** plano de backfill explicitam
 aprovado com origem, exceções, idempotência, validação e autorização de escrita
 separada. A política de nomes também precisa de aceite. Contagem sozinha é
 triagem, não atestação temporal. Sem isso, `pending-human` e aplicação `prohibited`.
+
+## Revalidação técnica — 14 de outubro de 2026 UTC
+
+Dois cenários descartáveis foram exercitados: sem linhas de mix entre `0027` e
+`0028`, a candidata alcança o schema final; com uma linha sintética de
+`management_scenario_mix`, o `ALTER ... product_name NOT NULL` falha com
+`23502` e a transação preserva catálogo, journal e linha. Isso não prova o
+estado de qualquer base externa, nem escolhe snapshot/dinâmica, backfill ou
+tratamento de produto renomeado/inativo/excluído. Estado permanece
+`pending-human`.

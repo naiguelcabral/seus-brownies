@@ -435,3 +435,19 @@ Este documento é a referência canônica de alto nível para o estado atual do 
 3. Evoluir dashboard e gestão sobre dados já autorizados.
 4. Iniciar mensageria, OCR e pagamentos somente após os gates anteriores.
 5. Formalizar observabilidade, backup e deploy definitivo antes de produção.
+
+## Checkpoint de remediação de migrations — 14 de outubro de 2026 UTC
+
+Estado: `blocked` para aplicação compartilhada; `ready-for-review` para a
+proteção local. A `main` de referência é
+`7460420528f5a4512b824c09eb08df39a647a77b`, e a CI `38493978128` terminou
+`success`. Em PostgreSQL 17 descartável, a cadeia oficial confirmou a falha
+`42703` da `0017` e rollback integral ao estado `0016`. Não houve SQL em Neon,
+migration compartilhada, DDL/DML externo, deploy, leitura de `.env` ou secret.
+
+`npm run db:migrate` é agora um preflight offline que bloqueia a cadeia até
+haver correção formal e evidência independente. As candidatas de substituição,
+compatibilidade e linha reconstruída permanecem experimentais; a comparação,
+os limites e o próximo gate estão em
+[MIGRATION-CHAIN-REMEDIATION-ADR.md](MIGRATION-CHAIN-REMEDIATION-ADR.md).
+As decisões `0019` e `0028` continuam `pending-human`.

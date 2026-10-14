@@ -71,3 +71,11 @@ parâmetros nem aplicação retroativa.
 Só `verified` com valores exatos, fonte, unidade/precisão, vigência, escopo
 histórico, responsável e aceite explícito. Decisão incompleta permanece
 `pending-human`; implementação/aplicação/backfill exigem autorização separada.
+
+## Revalidação técnica — 14 de outubro de 2026 UTC
+
+Fixture PostgreSQL 17 confirmou que a candidata de laboratório alcança o
+singleton com os literais publicados, mas esta constatação não os aprova. A
+cadeia oficial continua bloqueada antes da `0019`, e nenhum valor, moeda,
+vigência, política de competência/caixa, crédito, reversão ou tratamento
+histórico foi escolhido nesta missão. Estado permanece `pending-human`.

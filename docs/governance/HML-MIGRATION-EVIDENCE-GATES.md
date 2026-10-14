@@ -217,3 +217,20 @@ porta loopback 5434, sem volumes ou credenciais compartilhados. Fixture passou
 em catálogo/agregados, ACL, grant por coluna, SET ROLE, recusa de escrita e drift.
 Containers descartados; nenhum dump/log bruto foi preservado. A PR #39 registra
 os resultados remotos do SHA final. Esta prova não fecha nenhum gate externo.
+
+## Revalidação de remediação — 14 de outubro de 2026 UTC
+
+`main` foi reconfirmada em `7460420528f5a4512b824c09eb08df39a647a77b`, com CI
+`38493978128` concluída com sucesso. PostgreSQL 17 local e descartável
+reproduziu a falha oficial da `0017` por `42703`, a partir de `0016`, com
+`products.measurement_unit` presente e `products.unit` ausente. Journal e
+catálogo retornaram integralmente a `0016`; não houve banco externo, deploy ou
+alteração da cadeia ativa.
+
+O comando `npm run db:migrate` agora inicia um preflight offline e fail-closed.
+Ele bloqueia a cadeia ativa, histórico incompleto/parcial, hash divergente,
+ambiente ou destino não atestado, produção, backup/restauração ausentes e as
+decisões `0019`/`0028` pendentes. A análise comparativa de substituição,
+compatibilidade e linha reconstruída está em
+[MIGRATION-CHAIN-REMEDIATION-ADR.md](MIGRATION-CHAIN-REMEDIATION-ADR.md).
+Nenhuma alternativa experimental está autorizada fora da fixture.

@@ -117,3 +117,19 @@ Revisor independente confere abrangência, correspondência com metadados
 atuais, proveniência, consistência UTC, validade do acesso e versão ativa.
 Campos pendentes mantêm os gates abertos. Aceite deste formulário não autoriza
 criação de roles, concessões, aplicação, backfill, restauração ou deploy.
+
+## Revalidação de metadados — 14 de outubro de 2026 UTC
+
+O MCP Neon reconfirmou dois projetos PostgreSQL 17 e as cinco branches
+documentadas. Todas continuam com endpoint `read_write` e permissão efetiva
+administrativa; por isso esta missão não executou SQL, leitura de catálogo ou
+histórico em nenhuma delas. Snapshots, backup, restauração, histórico de
+migrations e vínculo com o Worker continuam `unverified`.
+
+O MCP Cloudflare reconfirmou o deployment
+`8268b409-34bc-4881-9694-52c292da2da3` e a versão
+`e241b715-99bf-4a83-82ba-eef24fedadaa` com 100% do tráfego. A versão declara
+`DATABASE_URL` como `secret_text`; seu valor não foi lido nem processado. Falta
+ao operador atestar privadamente o destino desse binding. O sanitizador
+continua sendo o único mecanismo permitido para a URL e deve ser executado
+exclusivamente pelo operador em terminal privado.

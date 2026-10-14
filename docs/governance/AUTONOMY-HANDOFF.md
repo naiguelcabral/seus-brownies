@@ -1,5 +1,26 @@
 # Handoff de autonomia — Cacau v1
 
+## Remediação da cadeia 0017–0028 — 14 de outubro de 2026 UTC
+
+- Worktree/branch: `codex/migration-chain-remediation`, baseado em `main`
+  `7460420528f5a4512b824c09eb08df39a647a77b`; árvore inicial limpa.
+- PostgreSQL 17 descartável reproduziu `0017` com SQLSTATE `42703`: baseline
+  `0016` possui `products.measurement_unit`, não `products.unit`. Journal e
+  catálogo foram revertidos; 18 cenários sintéticos passaram, incluindo
+  `0028` com e sem linhas de mix e rollback injetado.
+- `npm run db:migrate` agora executa somente o preflight offline fail-closed.
+  Não chama Drizzle, dotenv nem rede; rejeita DSN em argumentos/evidência e
+  bloqueia defeito ativo, parcial, hashes, destino, produção, backup e decisões.
+- As três candidatas continuam temporárias e experimentais. Não alterar
+  `drizzle/`, journal ou snapshots para ativá-las. Referência:
+  `MIGRATION-CHAIN-REMEDIATION-ADR.md`.
+- Metadados Neon e Worker somente leitura foram reconfirmados. Não houve SQL
+  externo porque as cinco branches só expõem endpoint `read_write` e papel
+  administrativo; secret `DATABASE_URL` não foi lido.
+- Próximo passo exato: revisar a PR em rascunho e, fora desta tarefa, coletar
+  atestação privada com papel não gravável e os aceites `0019`/`0028`. Não
+  executar `db:migrate` contra qualquer destino compartilhado.
+
 ## Reconciliação da PR #39 — 14 de outubro de 2026 UTC
 
 A PR #38 foi integrada em `b7a8dcf9` após CI `38492599540` e PostgreSQL
