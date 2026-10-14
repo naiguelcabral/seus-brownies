@@ -35,6 +35,15 @@ bases relevantes, revisão de aplicações parciais e das decisões de dados.
 Aplicação, escrita externa, alteração de infraestrutura e deploy: `prohibited`
 nesta tarefa. Nenhuma base está atualmente `confirmed-hml`.
 
+## Revalidação M42 — 14 de outubro de 2026 UTC
+
+A PR #41 foi integrada na `main`; a CI pós-merge `38505897780` passou. A
+revalidação do MCP manteve dois projetos, cinco branches, endpoints `read_write`
+e `neondb_owner`, portanto não houve SQL externo. O Worker ativo permanece no
+deployment `8268b409-34bc-4881-9694-52c292da2da3`, versão
+`e241b715-99bf-4a83-82ba-eef24fedadaa`, 100%, com `DATABASE_URL: secret_text`.
+O segredo não foi lido e Worker→database segue `unverified`.
+
 ## Matriz das cinco bases
 
 Metadados atuais do MCP, UTC/proveniência e IDs completos em

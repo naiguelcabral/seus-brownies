@@ -705,3 +705,14 @@ git status --short
 
 Ao encerrar por capacidade, registrar o indicador real de uso e reset exibidos
 pelo produto; nunca estimar percentuais.
+
+## Handoff M42 — 14 de outubro de 2026 UTC
+
+Base atual: `origin/main`/`main` `961081432f7e4ade133822d7a33300a88eca8fbc`.
+Branch de trabalho: `codex/migration-external-evidence`. PR #41 está integrada
+e CI pós-merge `38505897780` está verde. Nenhuma migration, SQL externo, deploy,
+leitura de `.env` ou secret ocorreu. O próximo comando humano não deve conter
+secret: em terminal privado, executar `node scripts/hml-worker-destination.mjs`
+e devolver somente JSON sanitizado, versão, UTC e aceite. Depois, fornecer
+evidência de role temporária read-only segundo `HML-MIGRATION-EVIDENCE-GATES.md`;
+somente então reavaliar se a auditoria de catálogo/journal pode começar.

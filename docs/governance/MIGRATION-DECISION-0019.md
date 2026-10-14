@@ -79,3 +79,12 @@ singleton com os literais publicados, mas esta constatação não os aprova. A
 cadeia oficial continua bloqueada antes da `0019`, e nenhum valor, moeda,
 vigência, política de competência/caixa, crédito, reversão ou tratamento
 histórico foi escolhido nesta missão. Estado permanece `pending-human`.
+
+## Escolha explícita solicitada pela M42
+
+O Dono deve escolher: (1) aprovar todos os literais publicados apenas para
+vigência prospectiva; (2) aprovar valores diferentes com fonte oficial e desenho
+corretivo posterior; ou (3) manter bloqueado até a fonte existir. Registrar
+unidade/moeda, precisão, competência/caixa, créditos, reversões, períodos
+fechados, ausências, versão, UTC e responsável. A recomendação permanece sem
+reescrita retroativa de fatos.

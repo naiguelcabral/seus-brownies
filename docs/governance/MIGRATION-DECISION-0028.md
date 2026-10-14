@@ -60,3 +60,11 @@ Dois cenários descartáveis foram exercitados: sem linhas de mix entre `0027` e
 estado de qualquer base externa, nem escolhe snapshot/dinâmica, backfill ou
 tratamento de produto renomeado/inativo/excluído. Estado permanece
 `pending-human`.
+
+## Escolha explícita solicitada pela M42
+
+O Dono deve aceitar snapshot imutável, referência dinâmica ou bloqueio até
+existir fonte. Também deve declarar linhas entre `0027` e `0028`, janela
+controlada, renomeações, inativos/excluídos, nomes ausentes e necessidade/origem
+de backfill. A recomendação é snapshot imutável, mesma janela para ambas e nunca
+inventar nome histórico. Aceite não autoriza escrita externa.

@@ -133,3 +133,11 @@ O MCP Cloudflare reconfirmou o deployment
 ao operador atestar privadamente o destino desse binding. O sanitizador
 continua sendo o único mecanismo permitido para a URL e deve ser executado
 exclusivamente pelo operador em terminal privado.
+
+## Checkpoint M42 — 14 de outubro de 2026 UTC
+
+Os mesmos cinco identificadores foram revalidados em dois projetos PostgreSQL 17. Cada branch segue `archived`, com `neondb`, somente `neondb_owner` e endpoint
+`read_write`; a API de snapshots não retornou entradas. Isso não é prova de
+backup, restauração, histórico, catálogo ou vínculo Worker, que continuam
+`PENDING-HUMAN`; SQL externo não foi executado. Ver
+[M42-MIGRATION-EXTERNAL-EVIDENCE.md](M42-MIGRATION-EXTERNAL-EVIDENCE.md).

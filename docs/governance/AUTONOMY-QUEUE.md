@@ -195,6 +195,16 @@ deploy.
 `DB-36-R` não promove `DB-36-H`. Qualquer execução de migration compartilhada
 permanece proibida até autorização nova, delimitada e revisável.
 
+### Checkpoint M42 — 14 de outubro de 2026 UTC
+
+`DB-36-R` foi integrado via PR #41 (`9610814`, CI pós-merge `38505897780`
+verde). `DB-36-H` continua `needs-human`: o inventário MCP confirma cinco
+branches mas só owner/endpoints graváveis; auditoria SQL, atestação Worker,
+backup/restore e decisões 0019/0028 não têm evidência suficiente. Próximo passo
+seguro: operador executa atestação sanitizada e providencia role de auditoria
+temporária estritamente não gravável, conforme M42; nenhuma migration ou SQL
+externo antes disso.
+
 O controlador escolhe o primeiro pacote com estado exatamente `ready` ainda
 não tentado na mesma execução. No loop autorizado, gates locais sem mudanças
 pendentes são registrados e outra tarefa `ready` pode continuar; dependências

@@ -457,3 +457,15 @@ compatibilidade e linha reconstruída permanecem experimentais; a comparação,
 os limites e o próximo gate estão em
 [MIGRATION-CHAIN-REMEDIATION-ADR.md](MIGRATION-CHAIN-REMEDIATION-ADR.md).
 As decisões `0019` e `0028` continuam `pending-human`.
+
+## M42 — evidências externas das migrations — 14 de outubro de 2026 UTC
+
+A PR #41 foi integrada em `961081432f7e4ade133822d7a33300a88eca8fbc`; a CI
+pós-merge `38505897780` passou. Metadados sanitizados reconfirmaram dois
+projetos e cinco branches Neon, todos com `neondb_owner` e endpoint `read_write`.
+Nenhum SQL externo foi executado. O Worker `cacau-v1-hml` mantém deployment
+`8268b409-34bc-4881-9694-52c292da2da3`, versão
+`e241b715-99bf-4a83-82ba-eef24fedadaa`, a 100%; `DATABASE_URL` é `secret_text`
+e seu destino permanece não comprovado. Backup, restore, journal, catálogo e
+decisões `0019`/`0028` seguem `pending-human`; estratégia A permanece `LAB-ONLY`.
+Detalhe: [M42-MIGRATION-EXTERNAL-EVIDENCE.md](M42-MIGRATION-EXTERNAL-EVIDENCE.md).
