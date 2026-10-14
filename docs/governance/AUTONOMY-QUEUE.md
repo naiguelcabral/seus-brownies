@@ -1,5 +1,16 @@
 # Fila executável de autonomia — Cacau v1
 
+## Reconciliação da PR #39 — 14 de outubro de 2026 UTC
+
+A PR #38 foi integrada em `b7a8dcf9` após CI `38492599540` e PostgreSQL
+`38492599488` aprovados no HEAD `50a0b4a7`. A #40 já integra a main.
+As PRs #4/#5 foram encerradas como redundantes: os HEADs são ancestrais da main.
+A #13 foi atualizada sem conflitos, mas mantém o risco documentado de herança
+do PAT por subprocessos. A #39 preserva as evidências de #38 e os formulários
+externos; seu merge depende da CI desta reconciliação. Nenhum gate de aplicação
+de migration, alteração financeira/histórica ou deploy foi encerrado.
+Os relatos anteriores abaixo são históricos e não substituem este checkpoint.
+
 ## Revalidação #36 — 9 de outubro de 2026
 
 - `main` `1e5bd557` e PR #38 draft `eaf00fd` revalidadas; CI main e
@@ -42,6 +53,22 @@ permanece bloqueada; `drizzle/` continua intacto. Próxima dependência: complet
 essas evidências externas para avaliar a candidata de substituição preferida.
 Gates `0019` (finanças) e `0028` (cenários) permanecem decisões separadas.
 **HML, migrations, backfill e deploy seguem sem autorização.**
+
+## Pacote de gates de evidência — 9 de outubro de 2026
+
+- PR #35 integrada e CI pós-merge verde; base atual `1e5bd557` com CI
+  `37944960379` verde. Branch `codex/hml-migration-evidence-gates`.
+- Preparados matriz sanitizada, proposta de acesso mínimo, verificador sem
+  conexão/credenciais, sanitizador local do destino e formulários 0019/0028.
+- Metadados Neon e deployment/versão do Worker reconfirmados; histórico,
+  schema, backup/restore e vínculo efetivo continuam `unverified`.
+- Acesso externo `blocked`; declaração e decisões `pending-human`.
+  Cadeia ativa preservada, nenhum SQL externo, migration, backfill ou deploy.
+- Referência: [HML-MIGRATION-EVIDENCE-GATES.md](HML-MIGRATION-EVIDENCE-GATES.md).
+- Próximo passo exato: operador preenche
+  [HML-DATABASE-OPERATOR-ATTESTATION.md](HML-DATABASE-OPERATOR-ATTESTATION.md),
+  fornece acesso privado já aprovado e referência independente de catálogo;
+  Dono preenche os dois formulários de decisão. Não inferir fechamento de gate.
 
 ## Próxima sequência aprovada — 9 de outubro de 2026
 

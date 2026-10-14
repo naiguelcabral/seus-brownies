@@ -1,5 +1,16 @@
 # Roadmap executável para Codex — Cacau v1
 
+## Reconciliação da PR #39 — 14 de outubro de 2026 UTC
+
+A PR #38 foi integrada em `b7a8dcf9` após CI `38492599540` e PostgreSQL
+`38492599488` aprovados no HEAD `50a0b4a7`. A #40 já integra a main.
+As PRs #4/#5 foram encerradas como redundantes: os HEADs são ancestrais da main.
+A #13 foi atualizada sem conflitos, mas mantém o risco documentado de herança
+do PAT por subprocessos. A #39 preserva as evidências de #38 e os formulários
+externos; seu merge depende da CI desta reconciliação. Nenhum gate de aplicação
+de migration, alteração financeira/histórica ou deploy foi encerrado.
+Os relatos anteriores abaixo são históricos e não substituem este checkpoint.
+
 ## Reconciliação de merges — 14 de outubro de 2026 UTC
 
 A PR #40 já foi integrada em `3372cf64`. A PR #38 foi reconciliada com essa
@@ -62,6 +73,14 @@ permanece bloqueada; `drizzle/` continua intacto. Próxima dependência: complet
 essas evidências externas para avaliar a candidata de substituição preferida.
 Gates `0019` (finanças) e `0028` (cenários) permanecem decisões separadas.
 **HML, migrations, backfill e deploy seguem sem autorização.**
+
+## Gates de evidência — 9 de outubro de 2026
+
+Pacote separado em `codex/hml-migration-evidence-gates`: acesso mínimo,
+verificador sem conexão, atestação Worker e formulários 0019/0028 preparados.
+Histórico global, abrangência, backup/restore e vínculo publicado continuam
+pendentes. Não conclui a issue #36 nem substitui a PR #38. Detalhes em
+[HML-MIGRATION-EVIDENCE-GATES.md](HML-MIGRATION-EVIDENCE-GATES.md).
 
 ## Prioridade de migrations — 9 de outubro de 2026
 

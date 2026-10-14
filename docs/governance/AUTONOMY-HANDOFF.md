@@ -1,5 +1,16 @@
 # Handoff de autonomia — Cacau v1
 
+## Reconciliação da PR #39 — 14 de outubro de 2026 UTC
+
+A PR #38 foi integrada em `b7a8dcf9` após CI `38492599540` e PostgreSQL
+`38492599488` aprovados no HEAD `50a0b4a7`. A #40 já integra a main.
+As PRs #4/#5 foram encerradas como redundantes: os HEADs são ancestrais da main.
+A #13 foi atualizada sem conflitos, mas mantém o risco documentado de herança
+do PAT por subprocessos. A #39 preserva as evidências de #38 e os formulários
+externos; seu merge depende da CI desta reconciliação. Nenhum gate de aplicação
+de migration, alteração financeira/histórica ou deploy foi encerrado.
+Os relatos anteriores abaixo são históricos e não substituem este checkpoint.
+
 ## Reconciliação de merges — 14 de outubro de 2026 UTC
 
 A PR #40 já foi integrada em `3372cf64`. A PR #38 foi reconciliada com essa
@@ -77,6 +88,27 @@ permanece bloqueada; `drizzle/` continua intacto. Próxima dependência: complet
 essas evidências externas para avaliar a candidata de substituição preferida.
 Gates `0019` (finanças) e `0028` (cenários) permanecem decisões separadas.
 **HML, migrations, backfill e deploy seguem sem autorização.**
+
+## Pacote de gates de evidência — 9 de outubro de 2026
+
+- PR #35 integrada e CI pós-merge verde; base atual `1e5bd557` com CI
+  `37944960379` verde. Branch `codex/hml-migration-evidence-gates`.
+- Preparados matriz sanitizada, proposta de acesso mínimo, verificador sem
+  conexão/credenciais, sanitizador local do destino e formulários 0019/0028.
+- Metadados Neon e deployment/versão do Worker reconfirmados; histórico,
+  schema, backup/restore e vínculo efetivo continuam `unverified`.
+- Acesso externo `blocked`; declaração e decisões `pending-human`.
+  Cadeia ativa preservada, nenhum SQL externo, migration, backfill ou deploy.
+- Referência: [HML-MIGRATION-EVIDENCE-GATES.md](HML-MIGRATION-EVIDENCE-GATES.md).
+- Validação local: 441 testes, incluindo 12 direcionados, lint, typecheck,
+  Prettier dos arquivos alterados, sintaxe Node e diff sem whitespace passaram.
+  Os dois builds isolados passaram com chave pública Turnstile sintética.
+  Fixture PostgreSQL 17 local em loopback passou e foi descartada; CIs finais
+  são acompanhadas na PR #39, sem tratar fixture como evidência externa.
+- Próximo passo exato: operador preenche
+  [HML-DATABASE-OPERATOR-ATTESTATION.md](HML-DATABASE-OPERATOR-ATTESTATION.md),
+  fornece acesso privado já aprovado e referência independente de catálogo;
+  Dono preenche os dois formulários de decisão. Não inferir fechamento de gate.
 
 ## Revisão #35 e tarefa corretiva #36 — 9 de outubro de 2026
 
