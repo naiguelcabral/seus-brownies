@@ -322,6 +322,34 @@ try {
       })
     }
   const original = fileURLToPath(new URL('../drizzle', import.meta.url))
+  await fixture('official-0017-defect-rollback-from-0016', async (client) => {
+    const base = candidate('replacement', { last: 16 })
+    await apply(client, base.folder)
+    const columns = (
+      await client.query(`SELECT column_name FROM information_schema.columns
+        WHERE table_schema='public' AND table_name='products'
+        ORDER BY column_name`)
+    ).rows.map((row) => row.column_name)
+    assert.ok(columns.includes('measurement_unit'))
+    assert.ok(!columns.includes('unit'))
+    const beforeCatalog = await captureCatalog(client)
+    const beforeHistory = await history(client)
+    await fails(() => apply(client, original), '42703')
+    assert.deepEqual(await captureCatalog(client), beforeCatalog)
+    assert.deepEqual(await history(client), beforeHistory)
+    save('official-0017-defect-rollback', {
+      scope: 'synthetic-disposable-postgres17',
+      source: sourceBefore,
+      baseline: '0016',
+      products_columns_before: columns,
+      expected_column: 'measurement_unit',
+      absent_column: 'unit',
+      observed_sqlstate: '42703',
+      transaction_rollback_verified: true,
+      partial_application_verified_absent: true,
+      external_connection_attempted: false,
+    })
+  })
   for (const path of ['upgrade-0016', 'empty'])
     await fixture(`original-fails-42703-${path}`, async (client) => {
       if (path === 'upgrade-0016') {
