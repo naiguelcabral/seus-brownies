@@ -45,8 +45,32 @@ test('não abre configuração do VS Code e inicia o runtime HML', async () => {
   const script = await readScript()
 
   assert.doesNotMatch(script, /\bcode\s+.*\.vscode\/mcp\.json/)
-  assert.match(script, /codex mcp list 2>\/dev\/null/)
+  assert.match(script, /codex mcp list --json 2>\/dev\/null/)
   assert.match(script, /exec npm run dev:hml/)
+})
+
+test('modo Codex valida o keyring e não inicia o runtime HML', async () => {
+  const script = await readScript()
+
+  assert.match(script, /"--codex"/)
+  assert.match(script, /setup-github-mcp-credential\.sh" --check/)
+  assert.match(script, /exec "\$ROOT_DIR\/scripts\/codex\/start-codex\.sh"/)
+  assert.match(script, /cloudflare-bindings OPTIONAL \/ NON_BLOCKING/)
+  for (const name of [
+    'github',
+    'neon',
+    'cloudflare-api',
+    'cloudflare-docs',
+    'cloudflare-observability',
+    'cloudflare-builds',
+    'openaiDeveloperDocs',
+  ]) {
+    assert.ok(script.includes(`"${name}"`))
+  }
+  assert.ok(
+    script.indexOf('if [[ "$CODEX_MODE" == true ]]') <
+      script.indexOf('exec npm run dev:hml'),
+  )
 })
 
 test('prepare-only não consulta remoto nem inicia o runtime', async () => {
