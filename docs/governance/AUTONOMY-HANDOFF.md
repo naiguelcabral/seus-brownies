@@ -1,5 +1,25 @@
 # Handoff de autonomia — Cacau v1
 
+## Missão G3 — sincronização supervisionada, 13 de outubro de 2026
+
+- Branch `codex/g3-supervised-project-sync`, base main `1e5bd557` conferida.
+- Motor e runbook em `scripts/project-sync/` e `PROJECT-SYNC.md`; nenhuma nova
+  dependência/autenticação. Perfil real somente em `.codex-local/project-sync/`.
+- Criação técnica real com readback e repetição recuperada sem nova página;
+  leitura completa e dashboard verificados. Cota SQL terminou; views default
+  existentes sem filtro foram conferidas e funcionam com paginação por cursor.
+- Falha na primeira tentativa de append; adapter agora usa UUID e a intenção antiga
+  preservada como inconclusiva, sem retry cego. Nova operação distinta validada.
+- 33 testes locais do motor passam. Suíte geral: 430, incluindo wrapper dos
+  contratos. Lint/tipos/formatação dos alterados e build isolado aprovados.
+- PR #40 em draft, CI `38393316644` aprovada em `2ffa130`. Commits de entrega:
+  `74c4296` (motor/testes/runbook) e `2ffa130` (governança). Registro posterior
+  apenas documental; confirmar a CI no HEAD atual antes de integrar.
+- Próximo passo: revisão humana da PR; uso supervisionado conforme o runbook,
+  com novo plano/digest e sem adoção automática de registros manuais. Sem merge.
+  Revalidar Git/Notion; não reaplicar criação nem limpar checkpoints privados.
+- Uso Codex: não disponível nesta execução; nenhum percentual estimado.
+
 ## Revisão #35 e tarefa corretiva #36 — 9 de outubro de 2026
 
 - O Dono autorizou revisar/integrar somente a preparação e confirmar CI da
