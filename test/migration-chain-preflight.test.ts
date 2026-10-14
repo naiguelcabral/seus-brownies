@@ -1,14 +1,13 @@
 import assert from 'node:assert/strict'
 import { mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { spawnSync } from 'node:child_process'
-import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import test from 'node:test'
 
-const { evaluatePreflight } =
-  await import('../scripts/migration-chain-preflight.mjs')
-const { sourceManifest } =
-  await import('../scripts/migration-chain-candidates.mjs')
+const preflightModule = '../scripts/migration-chain-preflight.mjs'
+const candidatesModule = '../scripts/migration-chain-candidates.mjs'
+const { evaluatePreflight } = await import(preflightModule)
+const { sourceManifest } = await import(candidatesModule)
 
 function evidence() {
   return {
