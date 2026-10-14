@@ -1,5 +1,24 @@
 # Handoff de autonomia — Cacau v1
 
+## M43 — auditoria externa somente leitura — 14 de outubro de 2026 UTC
+
+Base: `main` `6eed5053dc9ae3f4d156440551f64c3acdb6b25e`, merge da PR #42;
+CI pós-merge `38544956647` aprovada. A revisão confirmou que #42 só contém
+documentação de gates e não inclui migration, dependência, deploy, SQL externo
+ou segredo. O Worker `cacau-v1-hml` continua no deployment
+`8268b409-34bc-4881-9694-52c292da2da3`, versão
+`e241b715-99bf-4a83-82ba-eef24fedadaa` a 100%; `DATABASE_URL` permanece
+`secret_text` e não foi lido.
+
+`VALIDATION-BLOCKED-NO-READONLY-AUDIT`: não há atestação sanitizada de
+Worker→Neon, base confirmada não produtiva, role temporária exclusiva e
+comprovadamente não gravável, evidência identificável de backup/restauração nem
+aceites formais das decisões `0019` e `0028`. Não houve conexão ou SQL externo.
+Estratégia A permanece `LAB-ONLY`; `0017`–`0028` seguem bloqueadas. Próximo
+passo: o operador entrega somente a atestação sanitizada e os comprovantes de
+role/backup/restore, e o Dono assina os dois formulários; só então reavaliar o
+verificador read-only.
+
 ## Remediação da cadeia 0017–0028 — 14 de outubro de 2026 UTC
 
 - Worktree/branch: `codex/migration-chain-remediation`, baseado em `main`
