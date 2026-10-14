@@ -1,5 +1,25 @@
 # Roadmap executável para Codex — Cacau v1
 
+## Reconciliação de merges — 14 de outubro de 2026 UTC
+
+A PR #40 já foi integrada em `3372cf64`. A PR #38 foi reconciliada com essa
+main preservando as duas séries de registros abaixo como histórico. Os conflitos
+eram apenas inserções documentais. Esta revisão autoriza integração do pacote
+de ferramentas e provas; a issue #36 e os gates externos continuam abertos.
+A cadeia ativa `drizzle/` permanece idêntica à main. Nenhuma migration persistente,
+backfill, mudança de credencial ou deploy foi executado.
+
+## Missão G3 — integração supervisionada, 13 de outubro de 2026
+
+- [x] Implementar clientes/adaptação MCP, IDs/fingerprints, read-only e dry-run.
+- [x] Implementar apply técnico com digest, conflitos, readback e checkpoint.
+- [x] Verificar criação real, repetição sem duplicação e dashboard de registros.
+- [x] Criar 33 testes de contratos com fixtures, sem serviço externo.
+- [x] Publicar branch/PR #40 em draft e confirmar testes, lint, tipos e build:
+      CI `38393316644` aprovada no checkpoint `2ffa130`; sem merge na main.
+- [!] Operação recorrente, adoção de registros manuais, HML/produção e migrations
+  não autorizadas por esta missão. Uso descrito em `PROJECT-SYNC.md`.
+
 ## Revalidação #36 — 9 de outubro de 2026
 
 - `main` `1e5bd557` e PR #38 draft `eaf00fd` revalidadas; CI main e

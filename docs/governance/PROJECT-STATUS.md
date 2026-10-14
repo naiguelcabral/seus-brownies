@@ -1,5 +1,31 @@
 # Estado canônico do projeto — Cacau v1
 
+## Reconciliação de merges — 14 de outubro de 2026 UTC
+
+A PR #40 já foi integrada em `3372cf64`. A PR #38 foi reconciliada com essa
+main preservando as duas séries de registros abaixo como histórico. Os conflitos
+eram apenas inserções documentais. Esta revisão autoriza integração do pacote
+de ferramentas e provas; a issue #36 e os gates externos continuam abertos.
+A cadeia ativa `drizzle/` permanece idêntica à main. Nenhuma migration persistente,
+backfill, mudança de credencial ou deploy foi executado.
+
+## Sincronização supervisionada G3 — 13 de outubro de 2026
+
+Implementação em branch `codex/g3-supervised-project-sync`, baseada na `main`
+`1e5bd557`. CLI com read-only, dry-run, plano com digest e apply de observações
+técnicas; coleta por MCP autenticado da sessão, sem copiar credenciais. Perfis,
+checkpoint e logs permanecem privados/ignorados. Registro manual é conflito,
+não adoção automática; merge/CI não concluem requisitos ou comprovam HML.
+Primeira criação técnica real e repetição sem duplicação verificadas. Snapshot
+do dashboard escrito e relido com contagens reais. 33 contratos com fixtures
+sem rede passam. [PR #40](https://github.com/naiguelcabral/seus-brownies/pull/40)
+publicada em draft; [CI 38393316644](https://github.com/naiguelcabral/seus-brownies/actions/runs/38393316644)
+aprovada no commit `2ffa130`, com testes/lint/tipos/build isolado. O pacote
+continua em revisão e não está integrado na main; registros manuais permanecem
+preservados e dependem de revisão somente para eventual adoção.
+Runbook: [PROJECT-SYNC.md](./PROJECT-SYNC.md). Nenhuma migration, aplicação HML,
+deploy, mudança de segredo ou automação recorrente. Gates anteriores preservados.
+
 ## Revalidação #36 — 9 de outubro de 2026
 
 - `main` `1e5bd557` e PR #38 draft `eaf00fd` revalidadas; CI main e

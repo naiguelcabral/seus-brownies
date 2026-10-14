@@ -6,6 +6,8 @@
     "#/*": "./src/*"
   },
   "scripts": {
+    "sync:project": "node scripts/project-sync/cli.mjs",
+    "test:project-sync": "node scripts/project-sync/sync.spec.mjs",
     "dev": "vite dev --port 3000",
     "dev:hml": "CLOUDFLARE_ENV=hml vite dev --port 3000",
     "generate-routes": "tsr generate",
