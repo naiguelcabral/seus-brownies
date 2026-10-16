@@ -38,6 +38,10 @@ export function accessIsSafe(row, target) {
     row.role === row.session_role &&
     typeof row.role === 'string' &&
     row.role.length > 0 &&
+    // An owner is never an audit identity, even when a client attempts to
+    // present it as the approved role. Keep this independent from ACL checks:
+    // ownership is already enough to stop the audit.
+    row.role.toLowerCase() !== 'neondb_owner' &&
     row.role === target.approvedRole &&
     typeof row.server_address === 'string' &&
     row.server_address.length > 0 &&
@@ -84,6 +88,7 @@ function requireTarget(target) {
     !/^[a-f0-9]{64}$/.test(target.destinationFingerprint ?? '') ||
     !/^[a-f0-9]{64}$/.test(target.referenceCatalogDigest ?? '') ||
     !target.approvedRole ||
+    target.approvedRole.toLowerCase() === 'neondb_owner' ||
     !target.project ||
     !target.branch ||
     !target.endpoint ||

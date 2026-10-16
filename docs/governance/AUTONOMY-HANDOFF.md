@@ -1,5 +1,31 @@
 # Handoff de autonomia — Cacau v1
 
+## M44 — preparação segura da auditoria read-only — 16 de outubro de 2026 UTC
+
+- Branch: `codex/m44-readonly-audit-readiness`, iniciada de `origin/main`
+  `6eed5053dc9ae3f4d156440551f64c3acdb6b25e`; worktree inicial limpo.
+- GitHub MCP confirmou PR #42 integrada nesse SHA e CI pós-merge
+  `38544956647` `completed/success`. Não havia PR M43/M44 pendente na busca.
+- Neon MCP administrativo foi usado somente para metadados: dois projetos
+  PostgreSQL 17, cinco branches `neondb`/`neondb_owner`, endpoints
+  `read_write`, zero snapshots e retenção de 21.600 s. `steep-brook` mudou
+  para `ready`; isso não comprova ambiente. Nenhum SQL externo foi executado.
+- GETs sanitizados do Cloudflare confirmaram Worker, deployment, versão, 100%
+  e binding `DATABASE_URL: secret_text`; o valor do secret não foi lido e o
+  destino continua `unverified`.
+- O verificador local agora recusa `neondb_owner` mesmo se apresentado como
+  role aprovada. Passaram: 12 testes direcionados, suíte com 453 testes,
+  lint, typecheck, 18 casos PostgreSQL 17 de cadeia, prova de role/read-only
+  em PostgreSQL 17 descartável e ambos os builds isolados com chave pública
+  sintética. As fixtures foram removidas. Não executar `db:migrate`, SQL Neon,
+  deploy ou o sanitizador com dado real.
+- PR #43 permanece draft; no SHA `ebdd1e4`, CI `38882993996` e workflow
+  PostgreSQL 17 `38882993832` concluíram `success`. O próximo checkpoint é
+  somente documental; não fazer merge.
+- Gate humano: credencial de auditoria transitória estritamente não gravável,
+  atestação privada Worker→banco, backup/restore e escolhas 0019/0028. Estado
+  `VALIDATION-BLOCKED-NO-READONLY-AUDIT`.
+
 ## Remediação da cadeia 0017–0028 — 14 de outubro de 2026 UTC
 
 - Worktree/branch: `codex/migration-chain-remediation`, baseado em `main`
