@@ -14,10 +14,11 @@
   e binding `DATABASE_URL: secret_text`; o valor do secret não foi lido e o
   destino continua `unverified`.
 - O verificador local agora recusa `neondb_owner` mesmo se apresentado como
-  role aprovada. Testar no PostgreSQL 17 descartável e executar suíte/lint/
-  typecheck/builds antes de publicar; documentar resultados no próximo
-  checkpoint. Não executar `db:migrate`, SQL Neon, deploy ou o sanitizador com
-  dado real.
+  role aprovada. Passaram: 12 testes direcionados, suíte com 453 testes,
+  lint, typecheck, 18 casos PostgreSQL 17 de cadeia, prova de role/read-only
+  em PostgreSQL 17 descartável e ambos os builds isolados com chave pública
+  sintética. As fixtures foram removidas. Não executar `db:migrate`, SQL Neon,
+  deploy ou o sanitizador com dado real.
 - Gate humano: credencial de auditoria transitória estritamente não gravável,
   atestação privada Worker→banco, backup/restore e escolhas 0019/0028. Estado
   `VALIDATION-BLOCKED-NO-READONLY-AUDIT`.

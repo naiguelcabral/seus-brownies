@@ -479,6 +479,8 @@ endpoints `read_write`, zero snapshots listados e histórico de seis horas. O
 Worker `cacau-v1-hml` mantém deployment/versão 100% e `DATABASE_URL` como
 `secret_text`, sem leitura do valor: Worker → Neon continua `unverified`.
 O verificador fail-closed passou a recusar explicitamente `neondb_owner`.
+Passaram a suíte local (453 testes), laboratório PostgreSQL 17 e ambos os
+builds isolados com chave pública sintética.
 Nenhuma migration, segredo, SQL externo, deploy, backup ou restore ocorreu.
 Estado: `VALIDATION-BLOCKED-NO-READONLY-AUDIT`; ver
 [M44-READONLY-AUDIT-READINESS.md](M44-READONLY-AUDIT-READINESS.md).

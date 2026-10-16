@@ -92,6 +92,13 @@ large object herdados de `PUBLIC`, e prova falha de DML em `READ ONLY` e em
 `READ WRITE`, grants de coluna, execução de função mutável, membership e
 drift. Seu SQL não é instrução nem autorização para Neon.
 
+Validação M44: os 12 testes direcionados do gate passaram; a suíte local
+passou 453 testes; lint e typecheck passaram. Em dois containers PostgreSQL 17
+descartáveis de loopback, passaram os 18 casos da cadeia e a prova de
+role/read-only (ACL, `PUBLIC`, coluna, função, membership, DML e drift). Os
+builds `build:ci-isolated` e `build:hml` também passaram no HEAD limpo com
+somente a chave pública sintética de Turnstile. As fixtures foram removidas.
+
 Após o gate humano, o procedimento futuro coleta somente identidade e
 privilégios efetivos, fingerprint sanitizado de banco/branch, catálogo e
 colunas esperadas, journal Drizzle, hashes, sinais de parcialidade, objetos
