@@ -101,6 +101,11 @@ foram removidas ao término. Os builds `build:ci-isolated` e `build:hml`
 passaram no HEAD limpo com somente a chave pública sintética de Turnstile, sem
 carregar `.env` e sem deploy.
 
+A PR #44 foi aberta em rascunho para `main`. No SHA
+`395ebd67eb39a33166e088d2b147351ad5ddfc5a`, passaram a CI de push
+`38983532128`, a CI de PR `38983546680` e PostgreSQL 17
+`38983546701`. Esse registro não autoriza merge da PR M45.
+
 ## Backup, cadeia e decisões
 
 Zero snapshots e seis horas de histórico não demonstram backup suficiente. A

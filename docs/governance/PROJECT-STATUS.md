@@ -498,3 +498,5 @@ identificado e branch `ready` não provam HML, Worker → Neon ou auditoria
 read-only. Snapshots continuam zero e retenção de seis horas não é backup.
 `0017–0028`, backup/restore e decisões `0019`/`0028` continuam bloqueados por
 evidência/decisão humana. Ver [M45-EXTERNAL-AUDIT-GATES.md](M45-EXTERNAL-AUDIT-GATES.md).
+A PR #44 permanece em rascunho; no SHA `395ebd6`, as CIs `38983532128`,
+`38983546680` e `38983546701` passaram, sem autorização de merge.

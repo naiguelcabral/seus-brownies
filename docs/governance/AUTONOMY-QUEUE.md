@@ -214,6 +214,8 @@ descartável. `DB-36-H` continua `needs-human` e
 credencial transitória comprovadamente não gravável, backup/restore e decisões
 `0019`/`0028`. Não executar SQL externo nem inferir HML de `ready`/MCP.
 Ver [M45-EXTERNAL-AUDIT-GATES.md](M45-EXTERNAL-AUDIT-GATES.md).
+A PR #44 é somente rascunho; CI de push, PR e PostgreSQL 17 passaram no SHA
+`395ebd6`, sem promover `DB-36-H` nem autorizar merge.
 
 ### Checkpoint M42 — 14 de outubro de 2026 UTC
 

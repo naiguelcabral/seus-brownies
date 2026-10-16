@@ -755,3 +755,5 @@ entregar somente o JSON sanitizado, ticket, responsável, UTC e aceite, junto
 com a prova sanitizada da role read-only e backup/restore. Sem isso, manter
 `VALIDATION-BLOCKED-NO-READONLY-AUDIT`; não executar SQL, migration, deploy ou
 ler segredo. Ver [M45-EXTERNAL-AUDIT-GATES.md](M45-EXTERNAL-AUDIT-GATES.md).
+PR #44 foi aberta em rascunho; no SHA `395ebd6`, checks `38983532128`,
+`38983546680` e `38983546701` passaram. Não fazer merge desta PR.
