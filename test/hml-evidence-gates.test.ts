@@ -162,6 +162,13 @@ test('every writable capability, absent field and identity mismatch fails closed
     'tablespace_create',
   ])
     assert.equal(accessIsSafe({ ...access(), [key]: 1 }, target()), false)
+  assert.equal(
+    accessIsSafe(
+      { ...access(), role: 'neondb_owner', session_role: 'neondb_owner' },
+      { ...target(), approvedRole: 'neondb_owner' },
+    ),
+    false,
+  )
 })
 test('unapproved, expired, wrong fingerprint and known production abort before SQL', async () => {
   for (const change of [
@@ -170,6 +177,7 @@ test('unapproved, expired, wrong fingerprint and known production abort before S
     { classification: 'candidate-hml' },
     { expiresAt: '2000-01-01T00:00:00Z' },
     { destinationFingerprint: 'a'.repeat(64) },
+    { approvedRole: 'neondb_owner' },
     { ...matrix[0], classification: 'confirmed-hml' },
     { name: 'production' },
   ]) {

@@ -469,3 +469,16 @@ Nenhum SQL externo foi executado. O Worker `cacau-v1-hml` mantém deployment
 e seu destino permanece não comprovado. Backup, restore, journal, catálogo e
 decisões `0019`/`0028` seguem `pending-human`; estratégia A permanece `LAB-ONLY`.
 Detalhe: [M42-MIGRATION-EXTERNAL-EVIDENCE.md](M42-MIGRATION-EXTERNAL-EVIDENCE.md).
+
+## M44 — preparação da auditoria read-only — 16 de outubro de 2026 UTC
+
+`main` permanece em `6eed5053`; PR #42 integrada e CI pós-merge `38544956647`
+verde foram reconfirmadas. O inventário MCP, sem SQL, encontrou as três
+branches `steep-brook` agora `ready`, mas ainda apenas `neondb_owner`,
+endpoints `read_write`, zero snapshots listados e histórico de seis horas. O
+Worker `cacau-v1-hml` mantém deployment/versão 100% e `DATABASE_URL` como
+`secret_text`, sem leitura do valor: Worker → Neon continua `unverified`.
+O verificador fail-closed passou a recusar explicitamente `neondb_owner`.
+Nenhuma migration, segredo, SQL externo, deploy, backup ou restore ocorreu.
+Estado: `VALIDATION-BLOCKED-NO-READONLY-AUDIT`; ver
+[M44-READONLY-AUDIT-READINESS.md](M44-READONLY-AUDIT-READINESS.md).

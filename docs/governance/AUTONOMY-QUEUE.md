@@ -195,6 +195,16 @@ deploy.
 `DB-36-R` não promove `DB-36-H`. Qualquer execução de migration compartilhada
 permanece proibida até autorização nova, delimitada e revisável.
 
+### M44 — preparação da auditoria read-only — 16 de outubro de 2026 UTC
+
+`DB-36-H` permanece `needs-human` e o estado externo é
+`VALIDATION-BLOCKED-NO-READONLY-AUDIT`: apenas metadados MCP foram lidos; o
+MCP administrativo não pode executar SQL. A mudança para `ready` das três
+branches `steep-brook` não comprova HML, Worker, catálogo ou backup. Próximo
+gate: credencial temporária comprovadamente não gravável, atestação Worker,
+backup/restore e decisões `0019`/`0028`; ver
+[M44-READONLY-AUDIT-READINESS.md](M44-READONLY-AUDIT-READINESS.md).
+
 ### Checkpoint M42 — 14 de outubro de 2026 UTC
 
 `DB-36-R` foi integrado via PR #41 (`9610814`, CI pós-merge `38505897780`

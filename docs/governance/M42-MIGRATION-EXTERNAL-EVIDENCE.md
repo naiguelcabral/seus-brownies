@@ -90,3 +90,14 @@ de URL como argumento e ausência de TTY. Os testes do verificador cobrem falha
 fechada, grants/membership, produção e erro de driver. A auditoria anterior
 registra 13 vulnerabilidades transitivas; nenhuma dependência foi atualizada.
 O risco da PR #13 continua documentado; ela não foi modificada.
+
+## Revalidação M44 — 16 de outubro de 2026 UTC
+
+O inventário MCP somente de metadados foi repetido sem SQL. As duas branches
+de `cool-base` seguem `archived`; as três de `steep-brook` agora retornam
+`ready`. As cinco continuam com banco `neondb`, role listada
+`neondb_owner`, endpoint `read_write` e nenhuma snapshot listada. A retenção
+informada em ambos os projetos é seis horas; isso não prova backup ou restore.
+O MCP continua administrativo, portanto a auditoria externa segue
+`VALIDATION-BLOCKED-NO-READONLY-AUDIT`. Detalhe e matriz:
+[M44-READONLY-AUDIT-READINESS.md](M44-READONLY-AUDIT-READINESS.md).
