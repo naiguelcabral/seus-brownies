@@ -97,8 +97,9 @@ nenhuma conexão ou SQL externo é permitido.
 Passaram os 12 testes direcionados do gate, `npm test` (453 testes), lint,
 typecheck e `git diff --check`. Dois PostgreSQL 17 descartáveis de loopback
 confirmaram os 18 casos da cadeia e a prova da role/read-only; as fixtures
-foram removidas ao término. Os builds isolados sem `.env` são a etapa seguinte
-desta branch antes da publicação da PR M45.
+foram removidas ao término. Os builds `build:ci-isolated` e `build:hml`
+passaram no HEAD limpo com somente a chave pública sintética de Turnstile, sem
+carregar `.env` e sem deploy.
 
 ## Backup, cadeia e decisões
 
