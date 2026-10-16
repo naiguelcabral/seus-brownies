@@ -82,7 +82,8 @@ nenhum ensaio/restauração ou nova branch está autorizado aqui.
    case normaliza e porta 5432 entra no fingerprint. Project/branch só vêm de
    match único da matriz, nunca do username. Produção é recusada.
 5. Hash do destino normalizado `host:5432/database`: SHA-256. Copiar somente
-   JSON sanitizado ao formulário. Match não comprova HML, ausência de migração
+   JSON sanitizado, inclusive `sanitizer_version` e `observed_at_utc`, ao
+   formulário. Match não comprova HML, ausência de migração
    ou a origem do secret; a atestação humana vincula a fonte à versão ativa.
    Uma URL que transporta parâmetros de roteamento especiais não é atestável
    por este normalizador: operador deve confirmar roteamento privado e parar
@@ -104,6 +105,7 @@ nenhum ensaio/restauração ou nova branch está autorizado aqui.
 | Deployment/versão reconfirmados pelo operador        | `PENDING-HUMAN`                                     |
 | UTC inicial/final, operador e revisor                | `PENDING-HUMAN`                                     |
 | Proveniência privada do destino vinculado à versão   | `PENDING-HUMAN`                                     |
+| Versão do sanitizador / UTC observado                | `PENDING-HUMAN`                                     |
 | Host sanitizado / database / fingerprint             | `PENDING-HUMAN`                                     |
 | Projeto / branch / endpoint sanitizados              | `PENDING-HUMAN`                                     |
 | Match único e declaração do ambiente efetivo         | `PENDING-HUMAN`                                     |

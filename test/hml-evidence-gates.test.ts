@@ -6,7 +6,9 @@ import { EventEmitter } from 'node:events'
 import { createHash } from 'node:crypto'
 
 const destinationModule = '../scripts/hml-worker-destination.mjs'
-const { sanitizeDestination, hiddenInput } = await import(destinationModule)
+const { sanitizeDestination, hiddenInput, SANITIZER_VERSION } = await import(
+  destinationModule
+)
 const verifierModule = '../scripts/hml-evidence-verifier.mjs'
 const {
   verifyEvidence,
@@ -95,13 +97,17 @@ function fake(
   }
 }
 test('destination discards credentials and parameters and matches metadata only', () => {
-  const a = sanitizeDestination(url, matrix)
+  const observedAtUtc = '2026-10-16T00:00:00.000Z'
+  const a = sanitizeDestination(url, matrix, observedAtUtc)
   const b = sanitizeDestination(
     `postgres://different:another@${db.host.replace('.', '-pooler.')}:5432/neondb`,
     matrix,
+    observedAtUtc,
   )
   assert.deepEqual(a, b)
   assert.equal(a.branch, db.branch)
+  assert.equal(a.sanitizer_version, SANITIZER_VERSION)
+  assert.equal(a.observed_at_utc, observedAtUtc)
   const out = JSON.stringify(a)
   for (const secret of [
     'synthetic-user',
@@ -127,6 +133,10 @@ test('destination refuses unsafe protocols, production, ambiguous or leaking fie
       /^Error: BLOCKED_DESTINATION$/,
     )
   assert.equal(sanitizeDestination(url, [db, db]).match, 'unmatched')
+  assert.throws(
+    () => sanitizeDestination(url, matrix, 'not-an-utc-timestamp'),
+    /^Error: BLOCKED_DESTINATION$/,
+  )
 })
 test('CLI rejects URL arguments without echo and secure input requires TTY', async () => {
   const r = spawnSync(
