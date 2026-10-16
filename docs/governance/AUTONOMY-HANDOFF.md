@@ -19,6 +19,9 @@
   em PostgreSQL 17 descartável e ambos os builds isolados com chave pública
   sintética. As fixtures foram removidas. Não executar `db:migrate`, SQL Neon,
   deploy ou o sanitizador com dado real.
+- PR #43 permanece draft; no SHA `ebdd1e4`, CI `38882993996` e workflow
+  PostgreSQL 17 `38882993832` concluíram `success`. O próximo checkpoint é
+  somente documental; não fazer merge.
 - Gate humano: credencial de auditoria transitória estritamente não gravável,
   atestação privada Worker→banco, backup/restore e escolhas 0019/0028. Estado
   `VALIDATION-BLOCKED-NO-READONLY-AUDIT`.

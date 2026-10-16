@@ -98,6 +98,8 @@ descartáveis de loopback, passaram os 18 casos da cadeia e a prova de
 role/read-only (ACL, `PUBLIC`, coluna, função, membership, DML e drift). Os
 builds `build:ci-isolated` e `build:hml` também passaram no HEAD limpo com
 somente a chave pública sintética de Turnstile. As fixtures foram removidas.
+A PR #43 também confirmou no SHA `ebdd1e4` a CI `38882993996` e o workflow
+`HML evidence gates disposable PostgreSQL 17` `38882993832`, ambos `success`.
 
 Após o gate humano, o procedimento futuro coleta somente identidade e
 privilégios efetivos, fingerprint sanitizado de banco/branch, catálogo e
