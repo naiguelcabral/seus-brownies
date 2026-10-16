@@ -205,6 +205,16 @@ gate: credencial temporária comprovadamente não gravável, atestação Worker,
 backup/restore e decisões `0019`/`0028`; ver
 [M44-READONLY-AUDIT-READINESS.md](M44-READONLY-AUDIT-READINESS.md).
 
+### M45 — integração e gates externos — 16 de outubro de 2026 UTC
+
+A PR #43 foi integrada em `32a9e119`; CI pós-merge `38922738966` verde. O
+pacote local de atestação/role foi reforçado e validado apenas em PostgreSQL 17
+descartável. `DB-36-H` continua `needs-human` e
+`VALIDATION-BLOCKED-NO-READONLY-AUDIT`: falta atestação privada Worker,
+credencial transitória comprovadamente não gravável, backup/restore e decisões
+`0019`/`0028`. Não executar SQL externo nem inferir HML de `ready`/MCP.
+Ver [M45-EXTERNAL-AUDIT-GATES.md](M45-EXTERNAL-AUDIT-GATES.md).
+
 ### Checkpoint M42 — 14 de outubro de 2026 UTC
 
 `DB-36-R` foi integrado via PR #41 (`9610814`, CI pós-merge `38505897780`

@@ -4,9 +4,20 @@ import { readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { resolve } from 'node:path'
 
-export function sanitizeDestination(raw, matrix) {
+export const SANITIZER_VERSION = 'm45-1'
+
+export function sanitizeDestination(
+  raw,
+  matrix,
+  observedAtUtc = new Date().toISOString(),
+) {
   try {
     if (typeof raw !== 'string' || raw.length > 8192 || /[\r\n\0]/.test(raw))
+      throw new Error()
+    if (
+      typeof observedAtUtc !== 'string' ||
+      new Date(observedAtUtc).toISOString() !== observedAtUtc
+    )
       throw new Error()
     const url = new URL(raw)
     if (
@@ -49,6 +60,8 @@ export function sanitizeDestination(raw, matrix) {
     )
       throw new Error()
     const result = {
+      sanitizer_version: SANITIZER_VERSION,
+      observed_at_utc: observedAtUtc,
       host_sanitized: host,
       database,
       project: expected?.project ?? null,

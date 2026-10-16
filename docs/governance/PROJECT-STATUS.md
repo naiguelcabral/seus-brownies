@@ -486,3 +486,15 @@ PR #43 está em rascunho; as CIs `38882993996` e `38882993832` passaram no SHA
 Nenhuma migration, segredo, SQL externo, deploy, backup ou restore ocorreu.
 Estado: `VALIDATION-BLOCKED-NO-READONLY-AUDIT`; ver
 [M44-READONLY-AUDIT-READINESS.md](M44-READONLY-AUDIT-READINESS.md).
+
+## M45 — integração e gates externos — 16 de outubro de 2026 UTC
+
+A PR #43 foi integrada por merge commit `32a9e119` após revisão do SHA
+`3e19a24`; as CIs da PR e a pós-merge `38922738966` passaram. A M45 reforçou
+somente controles locais: saída sanitizada do atestador agora inclui versão e
+UTC, e a role temporária/revogação foi provada exclusivamente em PostgreSQL 17
+descartável. O inventário MCP não autoriza SQL: MCP administrativo, banco
+identificado e branch `ready` não provam HML, Worker → Neon ou auditoria
+read-only. Snapshots continuam zero e retenção de seis horas não é backup.
+`0017–0028`, backup/restore e decisões `0019`/`0028` continuam bloqueados por
+evidência/decisão humana. Ver [M45-EXTERNAL-AUDIT-GATES.md](M45-EXTERNAL-AUDIT-GATES.md).

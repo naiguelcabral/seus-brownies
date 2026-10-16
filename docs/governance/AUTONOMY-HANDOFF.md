@@ -742,3 +742,16 @@ secret: em terminal privado, executar `node scripts/hml-worker-destination.mjs`
 e devolver somente JSON sanitizado, versão, UTC e aceite. Depois, fornecer
 evidência de role temporária read-only segundo `HML-MIGRATION-EVIDENCE-GATES.md`;
 somente então reavaliar se a auditoria de catálogo/journal pode começar.
+
+## Handoff M45 — 16 de outubro de 2026 UTC
+
+Base integrada: `origin/main` `32a9e11984d9d3957340d1ab6ae31adb3b2b22f6`;
+PR #43 (`3e19a24`) foi integrada por merge commit e a CI pós-merge
+`38922738966` passou. Trabalho atual: `codex/m45-external-audit-gates`, sem
+alterações externas. Os scripts LAB-ONLY de role/revogação e o sanitizador do
+Worker foram validados localmente; o próximo passo humano exato é o operador,
+em terminal privado, executar `node scripts/hml-worker-destination.mjs` e
+entregar somente o JSON sanitizado, ticket, responsável, UTC e aceite, junto
+com a prova sanitizada da role read-only e backup/restore. Sem isso, manter
+`VALIDATION-BLOCKED-NO-READONLY-AUDIT`; não executar SQL, migration, deploy ou
+ler segredo. Ver [M45-EXTERNAL-AUDIT-GATES.md](M45-EXTERNAL-AUDIT-GATES.md).
