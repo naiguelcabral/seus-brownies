@@ -4,14 +4,17 @@
 
 - [x] Obter autorização específica de publicação/teste temporário; revisar
       fonte `0abf78b`, 474 testes e build HML isolado com chave pública real.
-- [!] Tentativa de deploy bloqueada antes do upload por autenticação da CLI.
-      Aguardar consentimento OAuth do usuário e repetir deploy autorizado;
-      versão remota preservada, sem ativação do flag ou execução do probe.
+- [x] Confirmar login OAuth e corrigir acesso ao chaveiro no deploy isolado.
+- [x] Preservar configuração remota de observabilidade de HML no deploy.
+- [!] API recusou publicação por falta de permissão OAuth de scripts.
+      Ampliação proposta com rotas foi rejeitada pela revisão automática;
+      obter consentimento delimitado e repetir publicação já autorizada.
+      Versão remota preservada, sem ativação do flag ou execução do probe.
 
 - [x] Preparar diagnóstico manual protegido, sem dados de negócio, com
       SELECT 1 em READ ONLY, rollback e fechamento do cliente.
-- [ ] Revisar/publicar, ativar temporariamente e executar no Worker mediante
-      aprovação específica. Correlacionar versão ativa e atestação privada;
+- [ ] Publicar, ativar temporariamente e executar no Worker conforme
+      autorização já registrada. Correlacionar versão ativa e atestação privada;
       não inferir destino/schema ou liberação das migrations pelo SELECT 1.
       Runbook: [SQL-CONNECTION-DIAGNOSTIC.md](SQL-CONNECTION-DIAGNOSTIC.md).
 

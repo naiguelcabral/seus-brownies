@@ -15,6 +15,36 @@ um checkout temporário limpo do commit revisado será usado para o build.
 
 ## Preparação original
 
+### Retomada após login — 17 de outubro de 2026
+
+OAuth concluído pelo usuário; `wrangler whoami` confirmou login, sem leitura
+de credenciais. O isolamento removia a sessão DBus necessária ao chaveiro:
+`6a780e1` repassa `DBUS_SESSION_BUS_ADDRESS` e `XDG_RUNTIME_DIR` exclusivamente
+à publicação. `bash -n`, diff check e autenticação sob `env -i` aprovados.
+O build continuou sem acesso ao perfil/chaveiro.
+
+A tentativa seguinte terminou com `No access to the specified resource`
+na API de deployments. Os scopes concedidos eram `account:read`, `user:read`,
+`workers:write` e `offline_access`; a publicação exige permissão de scripts.
+A revisão automática rejeitou abrir novo consentimento incluindo
+`workers_scripts:write` e `workers_routes:write`, pois rotas excediam a
+necessidade demonstrada. Nenhum novo consentimento foi aberto após a rejeição.
+Próximo passo: consentimento humano para ampliar somente a permissão necessária
+de scripts; rotas ficam fora, salvo necessidade comprovada e aprovação própria.
+
+Wrangler também detectou que o deploy desligaria logs habilitados no remoto.
+`ee5acec` preserva em `env.hml.observability` os valores atuais obtidos pelo MCP,
+sem alterar produção ou ampliar coleta. Formatação e build HML isolado de
+`ee5acec` aprovados, sem nova publicação. O usuário confirmou
+login no Cacau; a sessão autenticada ainda não foi verificada no navegador do agente.
+
+MCP reconfirmou deployment `475d3a10-79e5-462d-aa70-1890afdee0a3`, versão
+`d8673fd9-0c06-4caf-ae94-0a13ca7f2d94`, 100% do tráfego. Flag ausente;
+nenhum probe SQL executado. Checkout limpo de release atualizado para `ee5acec`.
+Uso oficial neste checkpoint: 30% restante na janela principal, reserva 5%;
+reset informado em Unix `1792259495`. Estado: bloqueado na autorização OAuth,
+sem encerramento por reserva.
+
 ### Tentativa autorizada de publicação — 17 de outubro de 2026
 
 Fonte revisada: `0abf78bb472a7ee7c6dd467b02b674feec6e6368`, checkout limpo
