@@ -48,7 +48,7 @@ Versões de execução fixadas em `package.json`:
 
 ## Knip
 
-- Arquivo: `knip.json`, com pontos de entrada explícitos para rotas TanStack, testes, scripts e configs.
+- Arquivo: `knip.json`, com pontos de entrada explícitos para rotas TanStack, testes, scripts e configs. O plugin Drizzle tem `config: []` e `drizzle.config.ts` continua como entrada estática: evita carregar configuração que exige `DATABASE_URL` e não acessa o banco.
 - Resultados são **candidatos a revisão**, nunca autorização automática para exclusão. Entry points importados dinamicamente podem gerar falsos positivos.
 - Após triagem, aprimorar entradas e verificar módulos referenciados por metadados, scripts shell, migrations e integração Cloudflare.
 
@@ -69,3 +69,13 @@ Versões de execução fixadas em `package.json`:
 5. Confirmar CodeQL gerando resultados no Code Scanning (não apenas job verde).
 6. Reexecutar `npm test`, `npm run lint`, `npm run typecheck`, `npm run check` e build isolado.
 7. Revisar e aprovar a PR antes de qualquer merge.
+
+## Primeira execução na PR #45
+
+Workflow `Tooling Preview` run `39080685256`:
+- Oxlint: 76 warnings, 0 errors; execução concluída sem erro.
+- Oxfmt: 34 arquivos com diferenças de formatação (saída não zero, em modo advisory); nenhum arquivo foi alterado.
+- Knip: identificou candidatos não utilizados, mas falhou com erro ao carregar `drizzle.config.ts` por ausência de `DATABASE_URL`; a configuração foi ajustada em commit subsequente. Aguardando revalidação após correção.
+- O workflow reporta cada `steps.<id>.outcome` no resumo; resultado geral `success` **não** significa três checks aprovados.
+
+A correção do Knip não remove arquivos, não exige conexão nem injeta segredos.
