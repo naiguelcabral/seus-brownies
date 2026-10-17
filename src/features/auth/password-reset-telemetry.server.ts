@@ -17,7 +17,9 @@ export type PasswordResetTelemetryEvent = {
   requestId: string
   stage: PasswordResetTelemetryStage
   reasonCode?:
-    'provider_timeout' | 'provider_network_error' | 'provider_http_error'
+    | 'provider_timeout'
+    | 'provider_network_error'
+    | 'provider_http_error'
 }
 
 export type PasswordResetTelemetry = {

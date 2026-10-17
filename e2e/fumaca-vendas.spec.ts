@@ -11,7 +11,9 @@ test('fumaça: vendas não gera erro de hidratação', async ({ page }) => {
   await expect(
     page.getByRole('heading', { name: 'Vendas', exact: true }),
   ).toBeVisible()
-  await expect(page.getByRole('heading', { name: 'Vendas recentes' })).toBeVisible()
+  await expect(
+    page.getByRole('heading', { name: 'Vendas recentes' }),
+  ).toBeVisible()
   await expect(page.getByRole('heading', { name: 'Nova venda' })).toBeVisible()
   expect(hydrationErrors).toEqual([])
 })

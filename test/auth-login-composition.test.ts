@@ -2,7 +2,8 @@ import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import test from 'node:test'
 import { compileFunction } from 'node:vm'
-import ts from 'typescript'
+import { parseSync } from 'oxc-parser'
+import { transformSync } from 'oxc-transform'
 
 import { createInMemoryAuthRateLimiter } from '../src/features/auth/auth-rate-limit'
 import {
@@ -24,33 +25,40 @@ import { createTanStackNeonAuthServer } from '../src/features/auth/neon-tanstack
 
 // Execute the actual callback, without importing runtime configuration or
 // replacing its control flow. This is not a TanStack transport/cookie test.
-const source = ts.createSourceFile(
-  'functions.ts',
-  readFileSync(
-    new URL('../src/features/auth/functions.ts', import.meta.url),
-    'utf8',
-  ),
-  ts.ScriptTarget.Latest,
-  true,
+const source = readFileSync(
+  new URL('../src/features/auth/functions.ts', import.meta.url),
+  'utf8',
 )
-const declarations = source.statements
-  .filter(ts.isVariableStatement)
-  .flatMap((statement) => statement.declarationList.declarations)
+const parsed = parseSync('functions.ts', source)
+assert.deepEqual(parsed.errors, [])
+const declarations = parsed.program.body
+  .map((statement) =>
+    statement.type === 'ExportNamedDeclaration'
+      ? statement.declaration
+      : statement,
+  )
+  .filter((statement) => statement?.type === 'VariableDeclaration')
+  .flatMap((statement) => statement.declarations)
 const declaration = declarations.find(
-  (candidate) => candidate.name.getText(source) === 'loginWithEmailPassword',
+  (candidate) =>
+    candidate.id.type === 'Identifier' &&
+    candidate.id.name === 'loginWithEmailPassword',
 )
-assert.ok(declaration?.initializer)
-assert.ok(ts.isCallExpression(declaration.initializer))
-assert.ok(ts.isPropertyAccessExpression(declaration.initializer.expression))
-assert.equal(declaration.initializer.expression.name.text, 'handler')
-const callback = declaration.initializer.arguments[0]
-assert.ok(ts.isArrowFunction(callback))
-const callbackJs = ts.transpileModule(
-  `const loginCallback = (${callback.getText(source)})`,
-  {
-    compilerOptions: { target: ts.ScriptTarget.ES2022 },
-  },
-).outputText
+assert.ok(declaration?.init)
+assert.equal(declaration.init.type, 'CallExpression')
+assert.equal(declaration.init.callee.type, 'MemberExpression')
+assert.equal(declaration.init.callee.property.type, 'Identifier')
+assert.equal(declaration.init.callee.property.name, 'handler')
+assert.equal(declaration.init.arguments.length, 1)
+const callback = declaration.init.arguments[0]
+assert.equal(callback.type, 'ArrowFunctionExpression')
+const transformed = transformSync(
+  'login-callback.ts',
+  `const loginCallback = (${source.slice(callback.start, callback.end)})`,
+  { target: 'es2022' },
+)
+assert.deepEqual(transformed.errors, [])
+const callbackJs = transformed.code
 
 const now = new Date('2026-09-07T12:15:00.000Z')
 const input = {

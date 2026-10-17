@@ -148,7 +148,14 @@ function unitCost(totalAmount: string, quantity: string) {
 function readPreview(workbookPath: string, year: number): HistoryPreview {
   const raw = execFileSync(
     'python3',
-    ['scripts/preview_history_workbook.py', workbookPath, '--year', String(year), '--format', 'json'],
+    [
+      'scripts/preview_history_workbook.py',
+      workbookPath,
+      '--year',
+      String(year),
+      '--format',
+      'json',
+    ],
     { cwd: process.cwd(), encoding: 'utf8' },
   )
   return JSON.parse(raw) as HistoryPreview
@@ -167,7 +174,8 @@ const history = readPreview(workbookPath, year)
 const blockers = [
   ...history.issues,
   ...history.pendingAliases.map(
-    (alias) => `${alias.sourceId} (${alias.sourceDescription}): ${alias.reason ?? 'alias pendente'}`,
+    (alias) =>
+      `${alias.sourceId} (${alias.sourceDescription}): ${alias.reason ?? 'alias pendente'}`,
   ),
 ]
 
@@ -188,7 +196,9 @@ if (!confirm) {
 config({ path: ['.env.local', '.env'], quiet: true })
 const databaseUrl = process.env.DATABASE_URL
 if (!databaseUrl) {
-  throw new Error('Defina DATABASE_URL em .env.local antes de importar o histórico.')
+  throw new Error(
+    'Defina DATABASE_URL em .env.local antes de importar o histórico.',
+  )
 }
 
 const db = drizzle(databaseUrl, {
@@ -208,18 +218,43 @@ const db = drizzle(databaseUrl, {
 
 await db.transaction(async (tx) => {
   const importRows = [
-    ...history.locations.map((item) => ({ ...item, entityType: 'sales_location', sourceSheet: '04_Cadastro_Locais' })),
-    ...history.sales.map((item) => ({ ...item, entityType: 'sale', sourceSheet: '05_Base_Vendas' })),
-    ...history.purchases.map((item) => ({ ...item, entityType: 'purchase', sourceSheet: '07_Base_Compras_Despesas' })),
-    ...history.expenses.map((item) => ({ ...item, entityType: 'expense', sourceSheet: '07_Base_Compras_Despesas' })),
+    ...history.locations.map((item) => ({
+      ...item,
+      entityType: 'sales_location',
+      sourceSheet: '04_Cadastro_Locais',
+    })),
+    ...history.sales.map((item) => ({
+      ...item,
+      entityType: 'sale',
+      sourceSheet: '05_Base_Vendas',
+    })),
+    ...history.purchases.map((item) => ({
+      ...item,
+      entityType: 'purchase',
+      sourceSheet: '07_Base_Compras_Despesas',
+    })),
+    ...history.expenses.map((item) => ({
+      ...item,
+      entityType: 'expense',
+      sourceSheet: '07_Base_Compras_Despesas',
+    })),
   ]
   const existingImports = await tx
-    .select({ sourceKey: historicalImportRecords.sourceKey, sourceHash: historicalImportRecords.sourceHash })
+    .select({
+      sourceKey: historicalImportRecords.sourceKey,
+      sourceHash: historicalImportRecords.sourceHash,
+    })
     .from(historicalImportRecords)
     .where(
       or(
-        inArray(historicalImportRecords.sourceKey, importRows.map((item) => item.sourceKey)),
-        inArray(historicalImportRecords.sourceHash, importRows.map((item) => item.sourceHash)),
+        inArray(
+          historicalImportRecords.sourceKey,
+          importRows.map((item) => item.sourceKey),
+        ),
+        inArray(
+          historicalImportRecords.sourceHash,
+          importRows.map((item) => item.sourceHash),
+        ),
       ),
     )
   if (existingImports.length) {
@@ -234,25 +269,62 @@ await db.transaction(async (tx) => {
   }
   const targets = [...targetsBySku.values()]
   const currentTargets = await tx
-    .select({ id: products.id, sku: products.sku, name: products.name, type: products.type, unit: products.unit })
+    .select({
+      id: products.id,
+      sku: products.sku,
+      name: products.name,
+      type: products.type,
+      unit: products.unit,
+    })
     .from(products)
-    .where(inArray(products.sku, targets.map((target) => target.sku)))
-  const currentTargetBySku = new Map(currentTargets.map((target) => [target.sku, target]))
+    .where(
+      inArray(
+        products.sku,
+        targets.map((target) => target.sku),
+      ),
+    )
+  const currentTargetBySku = new Map(
+    currentTargets.map((target) => [target.sku, target]),
+  )
   const nameCollisions = await tx
-    .select({ id: products.id, sku: products.sku, name: products.name, type: products.type, unit: products.unit })
+    .select({
+      id: products.id,
+      sku: products.sku,
+      name: products.name,
+      type: products.type,
+      unit: products.unit,
+    })
     .from(products)
-    .where(inArray(products.name, targets.map((target) => target.name)))
+    .where(
+      inArray(
+        products.name,
+        targets.map((target) => target.name),
+      ),
+    )
   for (const target of targets) {
     const bySku = currentTargetBySku.get(target.sku)
-    const byName = nameCollisions.find((product) => product.name === target.name)
-    if (bySku && (bySku.name !== target.name || bySku.type !== target.type || bySku.unit !== target.unit)) {
-      throw new Error(`Produto existente incompatível com o manifesto: ${target.sku}.`)
+    const byName = nameCollisions.find(
+      (product) => product.name === target.name,
+    )
+    if (
+      bySku &&
+      (bySku.name !== target.name ||
+        bySku.type !== target.type ||
+        bySku.unit !== target.unit)
+    ) {
+      throw new Error(
+        `Produto existente incompatível com o manifesto: ${target.sku}.`,
+      )
     }
     if (!bySku && byName) {
-      throw new Error(`Produto com o nome ${target.name} já existe com SKU diferente; revise o manifesto.`)
+      throw new Error(
+        `Produto com o nome ${target.name} já existe com SKU diferente; revise o manifesto.`,
+      )
     }
   }
-  const targetsToCreate = targets.filter((target) => !currentTargetBySku.has(target.sku))
+  const targetsToCreate = targets.filter(
+    (target) => !currentTargetBySku.has(target.sku),
+  )
   if (targetsToCreate.length) {
     await tx.insert(products).values(
       targetsToCreate.map((target) => ({
@@ -268,30 +340,55 @@ await db.transaction(async (tx) => {
   const targetProducts = await tx
     .select({ id: products.id, sku: products.sku })
     .from(products)
-    .where(inArray(products.sku, targets.map((target) => target.sku)))
-  const productIdBySku = new Map(targetProducts.map((product) => [product.sku, product.id]))
+    .where(
+      inArray(
+        products.sku,
+        targets.map((target) => target.sku),
+      ),
+    )
+  const productIdBySku = new Map(
+    targetProducts.map((product) => [product.sku, product.id]),
+  )
 
-  const sourceProductIds = [...new Set(history.sales.flatMap((sale) => sale.items.map((item) => item.productSourceId)))]
+  const sourceProductIds = [
+    ...new Set(
+      history.sales.flatMap((sale) =>
+        sale.items.map((item) => item.productSourceId),
+      ),
+    ),
+  ]
   const sourceProducts = await tx
     .select({ id: products.id, sku: products.sku })
     .from(products)
     .where(inArray(products.sku, sourceProductIds))
   if (sourceProducts.length !== sourceProductIds.length) {
-    throw new Error('Importação interrompida: um produto de venda histórico não existe no catálogo.')
+    throw new Error(
+      'Importação interrompida: um produto de venda histórico não existe no catálogo.',
+    )
   }
-  const productIdBySourceSku = new Map(sourceProducts.map((product) => [product.sku, product.id]))
+  const productIdBySourceSku = new Map(
+    sourceProducts.map((product) => [product.sku, product.id]),
+  )
 
   const existingLocations = await tx
     .select({ sourceId: salesLocations.sourceId, name: salesLocations.name })
     .from(salesLocations)
     .where(
       or(
-        inArray(salesLocations.sourceId, history.locations.map((location) => location.sourceId)),
-        inArray(salesLocations.name, history.locations.map((location) => location.name)),
+        inArray(
+          salesLocations.sourceId,
+          history.locations.map((location) => location.sourceId),
+        ),
+        inArray(
+          salesLocations.name,
+          history.locations.map((location) => location.name),
+        ),
       ),
     )
   if (existingLocations.length) {
-    throw new Error('Importação interrompida: há locais/canais históricos já cadastrados.')
+    throw new Error(
+      'Importação interrompida: há locais/canais históricos já cadastrados.',
+    )
   }
   const insertedLocations = await tx
     .insert(salesLocations)
@@ -311,7 +408,10 @@ await db.transaction(async (tx) => {
     insertedLocations.map((location) => [location.sourceId, location.id]),
   )
 
-  const aliasesBySourceId = new Map<string, (typeof history.purchases)[number]>()
+  const aliasesBySourceId = new Map<
+    string,
+    (typeof history.purchases)[number]
+  >()
   for (const purchase of history.purchases) {
     aliasesBySourceId.set(purchase.sourceId, purchase)
   }
@@ -321,7 +421,9 @@ await db.transaction(async (tx) => {
     .from(productImportAliases)
     .where(inArray(productImportAliases.sourceId, aliasSourceIds))
   if (existingAliases.length) {
-    throw new Error('Importação interrompida: um alias de compra já está cadastrado.')
+    throw new Error(
+      'Importação interrompida: um alias de compra já está cadastrado.',
+    )
   }
   await tx.insert(productImportAliases).values(
     [...aliasesBySourceId.values()].map((purchase) => ({

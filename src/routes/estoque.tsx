@@ -98,11 +98,12 @@ function InventoryPage() {
                 query: String(form.get('query') ?? '').trim() || undefined,
                 type:
                   (String(form.get('type') ?? '') as
-                    (typeof inventoryProductTypes)[number] | '') || undefined,
+                    | (typeof inventoryProductTypes)[number]
+                    | '') || undefined,
                 reorderStatus:
                   (String(form.get('reorderStatus') ?? '') as
-                    (typeof inventoryReorderStatuses)[number] | '') ||
-                  undefined,
+                    | (typeof inventoryReorderStatuses)[number]
+                    | '') || undefined,
                 page: 1,
               }),
             })
@@ -251,7 +252,8 @@ function InventoryPage() {
                   String(form.get('movementQuery') ?? '').trim() || undefined,
                 movementType:
                   (String(form.get('movementType') ?? '') as
-                    (typeof inventoryMovementTypes)[number] | '') || undefined,
+                    | (typeof inventoryMovementTypes)[number]
+                    | '') || undefined,
                 start: String(form.get('start') ?? '') || undefined,
                 end: String(form.get('end') ?? '') || undefined,
                 movementPage: 1,

@@ -23,9 +23,7 @@ export function profileComponentToConsumption(
   return { ...component, id: component.productId }
 }
 
-export function consumptionProductIds(
-  consumptions: Array<{ id: number }>,
-) {
+export function consumptionProductIds(consumptions: Array<{ id: number }>) {
   return [...new Set(consumptions.map((consumption) => consumption.id))]
 }
 

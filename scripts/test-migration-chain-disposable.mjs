@@ -71,10 +71,10 @@ const history = async (client) =>
       'SELECT hash, created_at::text FROM drizzle.__drizzle_migrations ORDER BY created_at',
     )
   ).rows
-const save = (name, data) =>
+const save = (name, evidence) =>
   writeFileSync(
     join(evidenceFolder, `${name}.json`),
-    JSON.stringify(data, null, 2) + '\n',
+    JSON.stringify(evidence, null, 2) + '\n',
   )
 async function fixture(name, run) {
   const database = `cacau_chain_${Date.now()}_${++counter}`

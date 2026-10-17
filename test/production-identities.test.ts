@@ -51,5 +51,8 @@ test('consulta de movimentos usa o mesmo ID do produto comprado', () => {
 
   assert.deepEqual(consumptionProductIds([flour]), [21])
   assert.deepEqual(movementsForProduct(movements, flour.id), [movements[0]])
-  assert.equal(movementsForProduct(movements, flour.id)[0].quantityDelta, '240.000')
+  assert.equal(
+    movementsForProduct(movements, flour.id)[0].quantityDelta,
+    '240.000',
+  )
 })

@@ -1,5 +1,26 @@
 # Estado canônico do projeto — Cacau v1
 
+## TypeScript 7 e Oxc — validação local, 16 de outubro de 2026
+
+Branch `codex/typescript-7-upgrade`: TypeScript 7.0.2 é o único compilador no
+lockfile, sem alias ou API 6. ESLint/Prettier foram substituídos nos comandos
+do projeto por Oxlint 1.88.0 com tipos e Oxfmt 0.73.0. Dependências externas
+ainda podem utilizar Prettier internamente, como o gerador de rotas TanStack;
+isso não participa dos comandos de lint/formatação do projeto.
+
+O teste de composição do login extrai e executa o mesmo callback com Oxc.
+Foram preservadas as regras nativas equivalentes, adicionadas regras explícitas
+React/Hooks, ARIA e promises, e registrado o tratamento das diferenças em
+[TYPESCRIPT-7-OXC-MIGRATION.md](TYPESCRIPT-7-OXC-MIGRATION.md).
+
+Validação local: `npm ci`, typecheck, lint sem avisos, check Oxfmt de 267 arquivos
+e 456 testes aprovados. Dos 39 arquivos de código existentes alterados, 36 têm
+JavaScript emitido estruturalmente equivalente; os outros três contêm os ajustes
+revisados de teste e nome local. Build HML isolado aprovado, usando HEAD com o
+diff e os novos arquivos em diretório temporário, sem arquivos de ambiente e
+com chave pública sintética. Nenhuma migration, escrita compartilhada ou
+publicação. Revisão/integração e CI remota pendentes.
+
 ## Reconciliação da PR #39 — 14 de outubro de 2026 UTC
 
 A PR #38 foi integrada em `b7a8dcf9` após CI `38492599540` e PostgreSQL

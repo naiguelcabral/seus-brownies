@@ -99,17 +99,20 @@ export function createIncomingCostLayer(input: {
   }
 }
 
-export function orderFifoLayers(layers: InventoryCostLayer[], productId: number) {
+export function orderFifoLayers(
+  layers: InventoryCostLayer[],
+  productId: number,
+) {
   return layers
     .filter(
-      (layer) =>
-        layer.productId === productId && layer.remainingQuantity > 0n,
+      (layer) => layer.productId === productId && layer.remainingQuantity > 0n,
     )
     .sort((left, right) => {
       const byDate = left.availableAt.localeCompare(right.availableAt)
       if (byDate) return byDate
       const byOutput =
-        (left.productionBatchOutputId ?? 0) - (right.productionBatchOutputId ?? 0)
+        (left.productionBatchOutputId ?? 0) -
+        (right.productionBatchOutputId ?? 0)
       return byOutput || left.id - right.id
     })
 }
@@ -124,7 +127,9 @@ export function reverseFifoAllocations(
   requested: Array<{ allocationId: number; quantity: bigint }>,
 ): FifoReversalPlan {
   const updated = new Map(layers.map((layer) => [layer.id, { ...layer }]))
-  const byAllocation = new Map(allocations.map((allocation) => [allocation.id, allocation]))
+  const byAllocation = new Map(
+    allocations.map((allocation) => [allocation.id, allocation]),
+  )
   const seen = new Set<number>()
   const reversals: FifoReversalPlan['reversals'] = []
 
@@ -165,7 +170,10 @@ export function reverseFifoAllocations(
   return {
     reversals,
     layers: [...updated.values()],
-    restoredCost: reversals.reduce((sum, reversal) => sum + reversal.allocatedCost, 0n),
+    restoredCost: reversals.reduce(
+      (sum, reversal) => sum + reversal.allocatedCost,
+      0n,
+    ),
   }
 }
 
@@ -195,7 +203,8 @@ export function allocateFifoCost(
 
   for (const layer of orderFifoLayers([...updated.values()], productId)) {
     if (!pending) break
-    const consumed = pending < layer.remainingQuantity ? pending : layer.remainingQuantity
+    const consumed =
+      pending < layer.remainingQuantity ? pending : layer.remainingQuantity
     const cost = allocatedCents(
       layer.remainingCost,
       consumed,

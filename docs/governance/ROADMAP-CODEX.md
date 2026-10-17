@@ -1,5 +1,14 @@
 # Roadmap executável para Codex — Cacau v1
 
+## Atualização TypeScript — 16 de outubro de 2026
+
+- [x] Concluir localmente a migração integral para TypeScript 7.0.2, removendo a API 6,
+      substituindo ESLint/Prettier por Oxlint/Oxfmt e verificando a resolução
+      única do compilador. Regras tipadas, Hooks, acessibilidade e testes de
+      contrato em `codex/typescript-7-upgrade`; instalação limpa, tipos, lint,
+      check Oxfmt, 456 testes e build isolado aprovados. Revisão/integração e
+      CI remota permanecem pendentes.
+
 ## Reconciliação da PR #39 — 14 de outubro de 2026 UTC
 
 A PR #38 foi integrada em `b7a8dcf9` após CI `38492599540` e PostgreSQL

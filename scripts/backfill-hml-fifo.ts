@@ -43,87 +43,92 @@ await database.transaction(async (tx) => {
     sql`select id from ${sales} where ${sales.notes} in ${hmlFifoSalePrefixes} order by ${sales.id} for update`,
   )
 
-  const [candidateLayers, saleRows, itemRows, movementRows] = await Promise.all([
-    tx
-      .select({
-        layerId: inventoryCostLayers.id,
-        outputId: productionBatchOutputs.id,
-        productionBatchId: productionBatchOutputs.productionBatchId,
-        productId: products.id,
-        sku: products.sku,
-        sourceMovementId: stockMovements.id,
-        availableAt: stockMovements.occurredAt,
-        quantity: productionBatchOutputs.actualQuantity,
-        allocatedCost: productionBatchOutputs.allocatedCost,
-        layerOriginalQuantity: inventoryCostLayers.originalQuantity,
-        layerOriginalCost: inventoryCostLayers.originalCost,
-        remainingQuantity: inventoryCostLayers.remainingQuantity,
-        remainingCost: inventoryCostLayers.remainingCost,
-      })
-      .from(productionBatchOutputs)
-      .innerJoin(products, eq(productionBatchOutputs.productId, products.id))
-      .innerJoin(
-        productionBatches,
-        eq(productionBatchOutputs.productionBatchId, productionBatches.id),
-      )
-      .innerJoin(
-        stockMovements,
-        and(
-          eq(stockMovements.referenceType, 'production_output'),
-          eq(stockMovements.referenceId, productionBatchOutputs.productionBatchId),
-          eq(stockMovements.productId, productionBatchOutputs.productId),
+  const [candidateLayers, saleRows, itemRows, movementRows] = await Promise.all(
+    [
+      tx
+        .select({
+          layerId: inventoryCostLayers.id,
+          outputId: productionBatchOutputs.id,
+          productionBatchId: productionBatchOutputs.productionBatchId,
+          productId: products.id,
+          sku: products.sku,
+          sourceMovementId: stockMovements.id,
+          availableAt: stockMovements.occurredAt,
+          quantity: productionBatchOutputs.actualQuantity,
+          allocatedCost: productionBatchOutputs.allocatedCost,
+          layerOriginalQuantity: inventoryCostLayers.originalQuantity,
+          layerOriginalCost: inventoryCostLayers.originalCost,
+          remainingQuantity: inventoryCostLayers.remainingQuantity,
+          remainingCost: inventoryCostLayers.remainingCost,
+        })
+        .from(productionBatchOutputs)
+        .innerJoin(products, eq(productionBatchOutputs.productId, products.id))
+        .innerJoin(
+          productionBatches,
+          eq(productionBatchOutputs.productionBatchId, productionBatches.id),
+        )
+        .innerJoin(
+          stockMovements,
+          and(
+            eq(stockMovements.referenceType, 'production_output'),
+            eq(
+              stockMovements.referenceId,
+              productionBatchOutputs.productionBatchId,
+            ),
+            eq(stockMovements.productId, productionBatchOutputs.productId),
+          ),
+        )
+        .leftJoin(
+          inventoryCostLayers,
+          eq(
+            inventoryCostLayers.productionBatchOutputId,
+            productionBatchOutputs.id,
+          ),
+        )
+        .where(
+          and(
+            eq(productionBatchOutputs.productionBatchId, 18),
+            eq(products.sku, 'PROD003'),
+            eq(productionBatches.status, 'completed'),
+          ),
         ),
-      )
-      .leftJoin(
-        inventoryCostLayers,
-        eq(
-          inventoryCostLayers.productionBatchOutputId,
-          productionBatchOutputs.id,
+      tx
+        .select({ id: sales.id, prefix: sales.notes, status: sales.status })
+        .from(sales)
+        .where(inArray(sales.notes, hmlFifoSalePrefixes)),
+      tx
+        .select({
+          id: saleItems.id,
+          saleId: saleItems.saleId,
+          productId: saleItems.productId,
+          sku: products.sku,
+          quantity: saleItems.quantity,
+          unitPrice: saleItems.unitPrice,
+          totalAmount: saleItems.totalAmount,
+        })
+        .from(saleItems)
+        .innerJoin(products, eq(saleItems.productId, products.id))
+        .innerJoin(sales, eq(saleItems.saleId, sales.id))
+        .where(inArray(sales.notes, hmlFifoSalePrefixes)),
+      tx
+        .select({
+          id: stockMovements.id,
+          saleId: stockMovements.referenceId,
+          productId: stockMovements.productId,
+          quantity: stockMovements.quantityDelta,
+          allocatedCost: stockMovements.allocatedCost,
+        })
+        .from(stockMovements)
+        .innerJoin(sales, eq(stockMovements.referenceId, sales.id))
+        .where(
+          and(
+            eq(stockMovements.type, 'sale'),
+            eq(stockMovements.referenceType, 'sale'),
+            inArray(sales.notes, hmlFifoSalePrefixes),
+          ),
         ),
-      )
-      .where(
-        and(
-          eq(productionBatchOutputs.productionBatchId, 18),
-          eq(products.sku, 'PROD003'),
-          eq(productionBatches.status, 'completed'),
-        ),
-      ),
-    tx
-      .select({ id: sales.id, prefix: sales.notes, status: sales.status })
-      .from(sales)
-      .where(inArray(sales.notes, hmlFifoSalePrefixes)),
-    tx
-      .select({
-        id: saleItems.id,
-        saleId: saleItems.saleId,
-        productId: saleItems.productId,
-        sku: products.sku,
-        quantity: saleItems.quantity,
-        unitPrice: saleItems.unitPrice,
-        totalAmount: saleItems.totalAmount,
-      })
-      .from(saleItems)
-      .innerJoin(products, eq(saleItems.productId, products.id))
-      .innerJoin(sales, eq(saleItems.saleId, sales.id))
-      .where(inArray(sales.notes, hmlFifoSalePrefixes)),
-    tx
-      .select({
-        id: stockMovements.id,
-        saleId: stockMovements.referenceId,
-        productId: stockMovements.productId,
-        quantity: stockMovements.quantityDelta,
-        allocatedCost: stockMovements.allocatedCost,
-      })
-      .from(stockMovements)
-      .innerJoin(sales, eq(stockMovements.referenceId, sales.id))
-      .where(
-        and(
-          eq(stockMovements.type, 'sale'),
-          eq(stockMovements.referenceType, 'sale'),
-          inArray(sales.notes, hmlFifoSalePrefixes),
-        ),
-      ),
-  ])
+    ],
+  )
 
   if (candidateLayers.length !== 1)
     throw new Error('Backfill HML requer uma única saída PROD003 no lote 18.')
@@ -158,7 +163,9 @@ await database.transaction(async (tx) => {
     const item = itemRows.filter((row) => row.saleId === sale.id)
     const movement = movementRows.filter((row) => row.saleId === sale.id)
     if (item.length !== 1 || movement.length !== 1 || !item[0].productId)
-      throw new Error('Backfill HML requer um único item e movimento por venda.')
+      throw new Error(
+        'Backfill HML requer um único item e movimento por venda.',
+      )
     return {
       saleId: sale.id,
       prefix: sale.prefix ?? '',

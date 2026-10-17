@@ -155,12 +155,10 @@ test('cancelamento grava retorno/reversÃ£o e restaura camada sem editar a alocaÃ
       'insert:operationalAudit',
     ],
   )
+  const layerUpdate = mock.journal.find((entry) => entry.table === 'layers')
+  assert.ok(layerUpdate)
   assert.equal(
-    (
-      mock.journal.find((entry) => entry.table === 'layers')?.values as {
-        remainingQuantity: string
-      }
-    ).remainingQuantity,
+    (layerUpdate.values as { remainingQuantity: string }).remainingQuantity,
     '12.000',
   )
 })
@@ -342,12 +340,10 @@ test('ajuste positivo exige origem/custo e cria movimento seguido da camada', as
     mutations(mock).map((entry) => `${entry.kind}:${entry.table}`),
     ['insert:movements', 'insert:layers', 'insert:operationalAudit'],
   )
+  const layerInsert = mock.journal.find((entry) => entry.table === 'layers')
+  assert.ok(layerInsert)
   assert.equal(
-    (
-      mock.journal.find((entry) => entry.table === 'layers')?.values as {
-        originalCost: string
-      }
-    ).originalCost,
+    (layerInsert.values as { originalCost: string }).originalCost,
     '0.05',
   )
 })

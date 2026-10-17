@@ -62,7 +62,8 @@ export function lifecycleErrorMessage(error: unknown) {
 }
 
 type ValidationResult<T> =
-  { ok: true; data: T } | { ok: false; message: string }
+  | { ok: true; data: T }
+  | { ok: false; message: string }
 
 export function validateLifecycleForm(
   kind: 'cancel',

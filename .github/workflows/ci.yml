@@ -27,6 +27,7 @@ jobs:
       - run: npm ci
       - run: npm test
       - run: npm run lint
+      - run: npm run check
       - run: npm run typecheck
       - name: Validate isolated build on main
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'

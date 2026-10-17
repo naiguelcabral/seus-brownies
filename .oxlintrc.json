@@ -1,0 +1,244 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["typescript", "import", "unicorn", "oxc", "react", "jsx-a11y"],
+  "categories": {
+    "correctness": "off"
+  },
+  "options": {
+    "typeAware": true
+  },
+  "env": {
+    "builtin": true
+  },
+  "ignorePatterns": [
+    "src/routeTree.gen.ts",
+    "playwright-report/**",
+    "test-results/**",
+    "drizzle/**",
+    "data/**",
+    ".codex/**",
+    ".codex-local/**",
+    "dist/**",
+    ".output/**",
+    ".wrangler/**",
+    ".tanstack/**"
+  ],
+  "rules": {
+    "for-direction": [2],
+    "no-async-promise-executor": [2],
+    "no-case-declarations": [2],
+    "no-class-assign": [2],
+    "no-compare-neg-zero": [2],
+    "no-cond-assign": [2, "except-parens"],
+    "no-constant-binary-expression": [2],
+    "no-constant-condition": [
+      2,
+      {
+        "checkLoops": "allExceptWhileTrue"
+      }
+    ],
+    "no-control-regex": [2],
+    "no-debugger": [2],
+    "no-delete-var": [2],
+    "no-dupe-else-if": [2],
+    "no-duplicate-case": [2],
+    "no-empty-character-class": [2],
+    "no-empty-pattern": [
+      2,
+      {
+        "allowObjectPatternsAsParameters": false
+      }
+    ],
+    "no-empty-static-block": [2],
+    "no-ex-assign": [2],
+    "no-extra-boolean-cast": [2, {}],
+    "no-fallthrough": [
+      2,
+      {
+        "allowEmptyCase": false,
+        "reportUnusedFallthroughComment": false
+      }
+    ],
+    "no-global-assign": [
+      2,
+      {
+        "exceptions": []
+      }
+    ],
+    "no-invalid-regexp": [2, {}],
+    "no-irregular-whitespace": [
+      2,
+      {
+        "skipComments": false,
+        "skipJSXText": false,
+        "skipRegExps": false,
+        "skipStrings": true,
+        "skipTemplates": false
+      }
+    ],
+    "no-loss-of-precision": [2],
+    "no-misleading-character-class": [
+      2,
+      {
+        "allowEscape": false
+      }
+    ],
+    "no-nonoctal-decimal-escape": [2],
+    "no-regex-spaces": [2],
+    "no-self-assign": [
+      2,
+      {
+        "props": true
+      }
+    ],
+    "no-shadow": [
+      1,
+      {
+        "allow": [],
+        "builtinGlobals": false,
+        "hoist": "functions",
+        "ignoreOnInitialization": false,
+        "ignoreTypeValueShadow": true,
+        "ignoreFunctionTypeParameterNameValueShadow": true
+      }
+    ],
+    "no-shadow-restricted-names": [
+      2,
+      {
+        "reportGlobalThis": false
+      }
+    ],
+    "no-sparse-arrays": [2],
+    "no-unsafe-finally": [2],
+    "no-unsafe-optional-chaining": [
+      2,
+      {
+        "disallowArithmeticOperators": false
+      }
+    ],
+    "no-unused-labels": [2],
+    "no-unused-private-class-members": [2],
+    "no-useless-backreference": [2],
+    "no-useless-catch": [2],
+    "no-useless-escape": [
+      2,
+      {
+        "allowRegexCharacters": []
+      }
+    ],
+    "no-var": [2],
+    "no-with": [2],
+    "prefer-const": [
+      2,
+      {
+        "destructuring": "any",
+        "ignoreReadBeforeAssign": false
+      }
+    ],
+    "require-yield": [2],
+    "use-isnan": [
+      2,
+      {
+        "enforceForIndexOf": false,
+        "enforceForSwitchCase": true
+      }
+    ],
+    "valid-typeof": [
+      2,
+      {
+        "requireStringLiterals": false
+      }
+    ],
+    "typescript/ban-ts-comment": [
+      2,
+      {
+        "ts-expect-error": false,
+        "ts-ignore": "allow-with-description"
+      }
+    ],
+    "typescript/consistent-type-imports": [
+      2,
+      {
+        "prefer": "type-imports"
+      }
+    ],
+    "typescript/method-signature-style": [2, "property"],
+    "typescript/no-duplicate-enum-values": [2],
+    "typescript/no-extra-non-null-assertion": [2],
+    "typescript/no-for-in-array": [2],
+    "typescript/no-inferrable-types": [
+      2,
+      {
+        "ignoreParameters": true
+      }
+    ],
+    "typescript/no-misused-new": [2],
+    "typescript/no-namespace": [2],
+    "typescript/no-non-null-asserted-optional-chain": [2],
+    "typescript/no-unnecessary-condition": [2],
+    "typescript/no-unnecessary-type-assertion": [2],
+    "typescript/no-unsafe-function-type": [2],
+    "typescript/no-wrapper-object-types": [2],
+    "typescript/prefer-as-const": [2],
+    "typescript/prefer-for-of": [1],
+    "typescript/triple-slash-reference": [2],
+    "import/consistent-type-specifier-style": [2, "prefer-top-level"],
+    "import/first": [2],
+    "import/newline-after-import": [2],
+    "import/no-commonjs": [2],
+    "import/no-duplicates": [2],
+    "unicorn/prefer-node-protocol": "error",
+    "react/rules-of-hooks": "error",
+    "react/exhaustive-deps": "error",
+    "react/jsx-key": "error",
+    "react/jsx-no-duplicate-props": "error",
+    "react/no-direct-mutation-state": "error",
+    "typescript/no-floating-promises": "error",
+    "typescript/no-misused-promises": [
+      "error",
+      {
+        "checksVoidReturn": {
+          "attributes": false
+        }
+      }
+    ],
+    "jsx-a11y/alt-text": "error",
+    "jsx-a11y/aria-props": "error",
+    "jsx-a11y/aria-proptypes": "error",
+    "jsx-a11y/aria-unsupported-elements": "error",
+    "jsx-a11y/role-has-required-aria-props": "error",
+    "jsx-a11y/role-supports-aria-props": "error"
+  },
+  "overrides": [
+    {
+      "files": ["src/**/*.tsx"],
+      "env": {
+        "browser": true
+      }
+    },
+    {
+      "files": ["test/**", "e2e/**", "scripts/**", "*.config.ts"],
+      "env": {
+        "node": true,
+        "browser": true
+      }
+    },
+    {
+      "files": ["test/**/*.{ts,tsx}", "scripts/**/*.spec.mjs"],
+      "rules": {
+        "typescript/no-floating-promises": [
+          "error",
+          {
+            "allowForKnownSafeCalls": [
+              {
+                "from": "package",
+                "name": ["test", "it", "describe"],
+                "package": "node:test"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

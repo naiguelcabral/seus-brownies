@@ -8,7 +8,9 @@ import type {
 } from '#/features/inventory/fifo'
 
 export type LifecycleEvent =
-  'sale_cancellation' | 'loss' | 'adjustment_negative'
+  | 'sale_cancellation'
+  | 'loss'
+  | 'adjustment_negative'
 
 /** Only a pre-delivery cancellation can restore vendable stock and FIFO cost. */
 export function planStockRestoration(input: {

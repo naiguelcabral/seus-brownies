@@ -237,6 +237,8 @@ export async function verifyEvidence(client, target) {
       try {
         await client.query('ROLLBACK')
       } catch {
+        // A failed rollback must override any earlier result and require closing the connection.
+        // oxlint-disable-next-line no-unsafe-finally
         throw new Error('BLOCKED_ROLLBACK_CLOSE_CONNECTION')
       }
     }

@@ -52,6 +52,21 @@ O runtime local e de CI é Node 22 (mínimo `22.12.0`, menor que 23), fixado em
 verificação; atualizações de versões seguem revisão separada, sem `npm update`
 por conveniência.
 
+O typecheck usa exclusivamente `typescript@7.0.2`, sem alias de compatibilidade
+com TS 6. O override de TypeScript mantém também os peers transitivos na versão
+7.0.2; o teste de toolchain verifica essa propriedade no lockfile.
+
+`npm run lint` executa Oxlint com informação de tipos e bloqueia avisos;
+`npm run lint:fix` aplica somente as correções padrão do linter. `npm run format`
+usa Oxfmt e `npm run check` verifica a mesma seleção explícita de código,
+testes, scripts, workflows e configurações. A CI executa lint, check e typecheck
+separadamente. Migrations, dados importados, evidências geradas e documentação
+histórica ficam fora da formatação automática. Os ignores não substituem as
+verificações de integridade desses artefatos.
+
+Configurações em `.oxlintrc.json` e `.oxfmtrc.json`; critérios e diferenças de
+cobertura em [TYPESCRIPT-7-OXC-MIGRATION.md](TYPESCRIPT-7-OXC-MIGRATION.md).
+
 `npm run test:e2e` deve ser usado quando o fluxo exigir homologação E2E e o ambiente estiver autorizado. Testes que escrevem em base compartilhada exigem atenção às regras de HML e referências idempotentes.
 
 ## Migrations

@@ -280,7 +280,8 @@ function ProductionPage() {
                   query: String(form.get('query') ?? '').trim() || undefined,
                   status:
                     (String(form.get('status') ?? '') as
-                      (typeof productionStatuses)[number] | '') || undefined,
+                      | (typeof productionStatuses)[number]
+                      | '') || undefined,
                   productId: Number(form.get('productId')) || undefined,
                   start: String(form.get('start') ?? '') || undefined,
                   end: String(form.get('end') ?? '') || undefined,
