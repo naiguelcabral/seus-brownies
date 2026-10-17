@@ -2,6 +2,15 @@
 
 ## Incidente de restore — 17 de outubro de 2026
 
+**Recuperado após autorização específica:** original retomou nome
+`production`, default/primary e endpoint original; Auth/JWKS/origens
+reconfirmados. Cópia isolada e estacionamento preservados. Ensaio da baseline
+passou na cópia e `0000–0016` foram aplicadas na original sob aprovação
+condicional: 17 recibos, tabelas auth presentes, sem vínculo de usuário,
+sem `0017+`, catálogo gerenciado inalterado. Reset real passou na auditoria e
+no provedor (`completed` às `18:31:53.931Z`); recebimento/troca pendentes.
+Os parágrafos seguintes registram o estado histórico do incidente.
+
 Snapshot da baseline criado, mas restore com finalização padrão promoveu a
 cópia e moveu o endpoint original. Branch/dados originais preservados; nenhuma
 migration externa executada. Recuperação corretiva de endpoints foi rejeitada

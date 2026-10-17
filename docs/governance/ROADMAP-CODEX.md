@@ -2,10 +2,14 @@
 
 ## Recuperação do restore — 17 de outubro de 2026
 
-- [!] Restore finalizado moveu endpoint/nome/default para a cópia. Original
-      preservada; nenhuma migration externa. Obter autorização corretiva
-      específica após rejeição automática; recuperar endpoints/nomes/default
-      conforme `NEON-RESTORE-INCIDENT-2026-10-17.md` antes de retomar baseline.
+- [x] Recuperar endpoints/nomes/default após consentimento corretivo explícito;
+      Auth original/JWKS e isolamento da cópia reconfirmados.
+- [x] Snapshot, ensaio na cópia e aplicação autorizada de `0000–0016` na
+      original: 17 recibos conferidos, catálogo gerenciado preservado.
+- [x] Confirmar lifecycle da solicitação real: provedor aceitou e auditoria
+      concluiu às `18:31:53.931Z`.
+- [ ] Confirmar recebimento/troca pelo usuário; nenhum vínculo de usuário ou
+      `0017+` criado/aplicado nesse pacote.
 
 ## Recuperação de acesso HML — 17 de outubro de 2026
 

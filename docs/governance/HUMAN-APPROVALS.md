@@ -1,5 +1,15 @@
 # Ações que exigem aprovação humana — Cacau v1
 
+## Recuperação de endpoints após restore — 17 de outubro de 2026
+
+Após explicação do incidente e da rejeição automática, o usuário autorizou
+explicitamente realocar os endpoints pelo estacionamento, devolver o nome
+`production` e default/primary à original `br-lingering-wind-acwh5wap` e
+isolar a cópia, conforme `NEON-RESTORE-INCIDENT-2026-10-17.md`.
+As três realocações, renomeações e default foram executados e reconfirmados.
+Neon Auth e JWKS da original voltaram ao endpoint original. Não restaurar dados
+sobre a original, apagar recursos ou ampliar credenciais por essa autorização.
+
 ## Baseline até 0016 — autorização de 17 de outubro de 2026
 
 O usuário aprovou o plano `AUTH-BASELINE-0016-EXECUTION-PLAN.md`: snapshot,

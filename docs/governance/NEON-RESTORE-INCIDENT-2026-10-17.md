@@ -1,5 +1,27 @@
 # Incidente de finalização de restore — 17 de outubro de 2026
 
+## Recuperação concluída após aprovação específica
+
+Usuário aprovou as realocações corretivas depois da rejeição automática.
+Executadas em sequência: `ep-holy-grass-acgby01h` para estacionamento,
+`ep-late-water-acahd1z1` para original, `ep-holy-grass-acgby01h` para cópia.
+Renomeações e default/primary da original reconfirmados. Estado final:
+
+- Original `br-lingering-wind-acwh5wap`: `production`, default/primary,
+  endpoint `ep-late-water-acahd1z1`.
+- Cópia `br-super-waterfall-ac0mxtnt`: `cacau-baseline-0016-validation-20261017`,
+  endpoint `ep-holy-grass-acgby01h`, isolada do Worker.
+- Estacionamento `br-dawn-salad-acxz7vha`: sem endpoint, preservado.
+- Auth original e JWKS reconfirmados com o endpoint original; origens de
+  localhost e HML preservadas. Não foi necessário alterar secrets do Worker.
+
+Nenhum dado foi restaurado sobre a original para corrigir o incidente.
+Depois dessas verificações, o plano de migrations já autorizado foi retomado:
+ensaio na cópia e aplicação na original passaram, com 17 recibos reais até
+`0016`. Resultado em `AUTH-BASELINE-0016-EXECUTION-PLAN.md`.
+
+O inventário abaixo registra o estado durante o incidente, não o estado final.
+
 ## Estado e causa
 
 O usuário autorizou snapshot, cópia isolada, ensaio de `0000–0016` e aplicação

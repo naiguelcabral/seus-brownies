@@ -1,0 +1,150 @@
+{
+  "scope": "authorized-auth-baseline-0000-through-0016",
+  "observed_at_utc": "2026-10-17T18:32:30Z",
+  "target": {
+    "project_id": "steep-brook-51659857",
+    "branch_id": "br-lingering-wind-acwh5wap",
+    "name": "production",
+    "database": "neondb",
+    "endpoint_id": "ep-late-water-acahd1z1"
+  },
+  "snapshot": {
+    "id": "snap-withered-poetry-achs77uu",
+    "expires_at": "2026-10-24T18:30:00Z"
+  },
+  "validation_copy": {
+    "branch_id": "br-super-waterfall-ac0mxtnt",
+    "endpoint_id": "ep-holy-grass-acgby01h",
+    "audit_reference_consumed": "baseline-copy-validation:20261017:3cfb0309"
+  },
+  "restore_incident": {
+    "recovered": true,
+    "parking_branch_id": "br-dawn-salad-acxz7vha",
+    "parking_has_compute": false
+  },
+  "receipts": [
+    {
+      "idx": 0,
+      "tag": "0000_groovy_gamora",
+      "when": "1787423495945",
+      "sha256": "dcca272960496a589a2608f589ca32413ef4990a86f7ec6b8261bbd07775493c"
+    },
+    {
+      "idx": 1,
+      "tag": "0001_nervous_carnage",
+      "when": "1787424766901",
+      "sha256": "2b6058d807efba5a31f1b669f1446eef3aab76907108a9bec93b21f7f92a2237"
+    },
+    {
+      "idx": 2,
+      "tag": "0002_yielding_oracle",
+      "when": "1787427473223",
+      "sha256": "36d2ece9d759551f63305da9d5dd2132b636c2ca1fbc43ccbd7a915e4c10d03a"
+    },
+    {
+      "idx": 3,
+      "tag": "0003_rare_brother_voodoo",
+      "when": "1787430409236",
+      "sha256": "15387c92f37791c45c58110750a935f006833da6f54192cf706e44e463723b19"
+    },
+    {
+      "idx": 4,
+      "tag": "0004_next_gorilla_man",
+      "when": "1787432718286",
+      "sha256": "ccd5000d2ac640ef448983c2dc1be91416d07d9a4ab0b56705b19c6625d28313"
+    },
+    {
+      "idx": 5,
+      "tag": "0005_lovely_amazoness",
+      "when": "1787438077691",
+      "sha256": "5907dbd41665df9b74db7a5963aeeb241d15fcf376ed2c766dd4548e1b037f24"
+    },
+    {
+      "idx": 6,
+      "tag": "0006_dusty_jack_murdock",
+      "when": "1787438761876",
+      "sha256": "c27845a8fdc1fe320f6b5f6e7f6c25d6928f990997cf2eb9d42efe0c89fbaa9d"
+    },
+    {
+      "idx": 7,
+      "tag": "0007_unique_post",
+      "when": "1787444572984",
+      "sha256": "7c747c01a4f1e3b70a0ee622fd17f1edc8e246c9be487582a84a76d645b066bb"
+    },
+    {
+      "idx": 8,
+      "tag": "0008_high_rumiko_fujikawa",
+      "when": "1787487111317",
+      "sha256": "dc56f3df5f04b01a0b690ea88295a3e5fbb2b5a6066ea4d974826eb9fe87246f"
+    },
+    {
+      "idx": 9,
+      "tag": "0009_lethal_pyro",
+      "when": "1787487709365",
+      "sha256": "17b24cc9eb31be71a1f13a6cfa54bbcfd4faef120f72d060b646dd338787f83f"
+    },
+    {
+      "idx": 10,
+      "tag": "0010_lying_tarantula",
+      "when": "1788014906712",
+      "sha256": "9cacf93eb29d260b70c8405d42649b3187b00c3c42702024ec2231aa09d81f43"
+    },
+    {
+      "idx": 11,
+      "tag": "0011_demonic_redwing",
+      "when": "1788043052905",
+      "sha256": "4ec5efaa97d0f8ffa474a2780ee7a5d05c0b4c1e6d915594c68b15be6659875f"
+    },
+    {
+      "idx": 12,
+      "tag": "0012_fifo_cost_layers",
+      "when": "1788051976601",
+      "sha256": "88196609cbf44bc10b39c1962d1b6aa6d50871a87152f2d7a6670f4a623ed165"
+    },
+    {
+      "idx": 13,
+      "tag": "0013_fifo_lifecycle",
+      "when": "1788371973551",
+      "sha256": "5e9bac5965719c28ad6978c62058fe239da87b4a34de1607a161df4a5741dd49"
+    },
+    {
+      "idx": 14,
+      "tag": "0014_puzzling_masque",
+      "when": "1788466591688",
+      "sha256": "4f265bceb33bca9a2e71a881ed218cf5e7dae0612e691687ae6b11fe57c9e5af"
+    },
+    {
+      "idx": 15,
+      "tag": "0015_add-owner-and-employee-roles",
+      "when": "1788712205881",
+      "sha256": "8d8a2d65b4d44a07e552b724f812a914bf88e164430a1ed7c800c13120225431"
+    },
+    {
+      "idx": 16,
+      "tag": "0016_migrate-admin-to-owner",
+      "when": "1788712214871",
+      "sha256": "43e1dcd65ff1c91f72cb08d7ccc6f0d27a27c99d6ffb0745c8343bb54e223f67"
+    }
+  ],
+  "production_verification": {
+    "migrations": 17,
+    "catalog": {
+      "database_name": "neondb",
+      "read_only": "on",
+      "application_relations": 60,
+      "application_enums": 15,
+      "managed_relations": 30,
+      "managed_catalog_digest": "bcb4fd4408ebb95ee07cda6b3495acac"
+    },
+    "auth_tables": {
+      "audit_table": true,
+      "attempts_table": true,
+      "access_table": true
+    },
+    "access_links": 0,
+    "managed_digest_scope": "catalog-only, not identity contents"
+  },
+  "application_0017_or_later": false,
+  "worker_secrets_changed": false,
+  "real_email_delivery": "pending"
+}

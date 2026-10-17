@@ -1,5 +1,19 @@
 # Redefinição de senha em HML — 17 de outubro de 2026
 
+## Estrutura inicializada e teste real pendente
+
+Após recuperação autorizada do incidente de restore, ensaio de `0000–0016`
+passou na cópia privada e o mesmo pacote foi aplicado na original conforme
+aprovação condicional. Journal verificado: 17 hashes/timestamps reais, sem
+`0017+`. Três tabelas auth presentes; catálogo gerenciado preservado por digest;
+zero vínculos de usuário. Snapshot/cópias preservados, nenhum secret alterado.
+Usuário orientado a solicitar novo reset uma vez. Nova telemetria confirmou
+início de chamada, sucesso do provedor e `completed` às `18:31:53.931Z`.
+O bloqueio da auditoria foi superado e a solicitação foi aceita; entrega,
+existência de conta compatível e consumo do token não são comprovados por
+essa resposta genérica. Nenhum acesso de Dono concedido.
+Detalhes e evidência no plano de execução e registro do incidente.
+
 ## Inventário ampliado e preparação da baseline
 
 Usuário autorizou o SQL de inventário ampliado. Execução no mesmo alvo,

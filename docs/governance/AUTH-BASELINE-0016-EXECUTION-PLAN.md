@@ -1,8 +1,51 @@
-# Inicialização canônica até 0016 — proposta para aprovação
+# Inicialização canônica até 0016 — plano e execução
 
-Plano autorizado pelo usuário. Execução suspensa antes de qualquer migration:
-restore finalizado alterou endpoints/nome/default. Resolver primeiro a
-recuperação em [NEON-RESTORE-INCIDENT-2026-10-17.md](NEON-RESTORE-INCIDENT-2026-10-17.md).
+Plano autorizado pelo usuário. Incidente de restore corrigido sob autorização
+específica em [NEON-RESTORE-INCIDENT-2026-10-17.md](NEON-RESTORE-INCIDENT-2026-10-17.md).
+
+## Resultado da execução autorizada
+
+Snapshot `snap-withered-poetry-achs77uu` preservado até
+`2026-10-24T18:30:00Z`. Cópia privada `br-super-waterfall-ac0mxtnt`, endpoint
+`ep-holy-grass-acgby01h`, isolada após recuperação do incidente. Catálogo
+prévio confirmou zero relações/enums de aplicação; digest do catálogo do
+schema gerenciado era `bcb4fd4408ebb95ee07cda6b3495acac` (30 relações).
+
+Compilador offline `scripts/auth-baseline-payload.mjs` verificou os 17 hashes
+aprovados, gerando 185 instruções para uma transação MCP. Inclui timeout,
+lock, search_path público, recusa de qualquer instalação existente ou enum
+público prévio e journal na mesma transação dos DDLs. Preserva todos os SQLs
+originais e o contrato de hash/timestamp do Drizzle. Não é executor automático
+de rede nem substitui o preflight geral bloqueado.
+
+Quatro ensaios locais passaram, incluindo o lote exato do MCP, rejeição de
+repetição e rollback completo de tabelas/journal. Na cópia Neon, aplicação e
+verificação passaram: 17 hashes/timestamps idênticos ao manifesto, 60 relações
+de aplicação, 15 enums, três tabelas auth e zero vínculos de acesso. Escrita de
+auditoria validada com referência **consumida apenas na cópia**
+`baseline-copy-validation:20261017:3cfb0309`: intenção e sucesso sintéticos,
+sem chamar provedor nem enviar e-mail. Não repetir essa referência.
+
+Original `br-lingering-wind-acwh5wap`, nome `production`, default/primary e
+endpoint `ep-late-water-acahd1z1` revalidados. Antes do DDL, zero relações e
+enums de aplicação, digest gerenciado idêntico à cópia. Mesmo lote aplicado
+sob a aprovação condicional; verificações posteriores confirmaram os mesmos
+17 recibos até `0016`, três tabelas auth, 60 relações/15 enums e digest
+gerenciado inalterado. Zero vínculos de acesso. Nenhuma migration `0017+`
+executada e nenhum usuário/secret/papel Postgres alterado pelo pacote.
+
+Validação por digest é de **catálogo**, não leitura/comparação do conteúdo
+de identidades/sessões. Os SQLs limitados a `public`/`drizzle` não modificam
+o schema gerenciado. Não afirmar homologação integral ou entrega de e-mail
+antes da tentativa real pelo usuário, que foi solicitada após a aplicação.
+
+Telemetria após a aplicação já confirmou `provider_request_started` em
+epoch ms `1792261912424`, `provider_request_succeeded` em `1792261913782` e
+`completed` em `1792261913931` (`2026-10-17T18:31:53.931Z`). Provedor aceitou
+a solicitação e o lifecycle auditado concluiu; recebimento do e-mail,
+consumo do token e troca da senha ainda dependem da confirmação do usuário.
+Resposta de sucesso não prova existência da conta nem entrega SMTP.
+Evidência de aplicação: [auth-baseline-0016-execution-2026-10-17.json](evidence/auth-baseline-0016-execution-2026-10-17.json).
 
 ## Problema comprovado
 
@@ -67,7 +110,7 @@ O container sintético foi removido ao fim. CI remota ainda não executada para
 este pacote. Aplicação e migrations existentes não foram modificadas; nenhum
 novo build/deploy do Worker foi necessário nesta preparação.
 
-## Aplicação proposta — ainda não autorizada
+## Procedimento aprovado — etapas 1–5 executadas
 
 1. Criar snapshot privado da branch declarada, nome
    `cacau-before-baseline-0016-20261017`, com validade de sete dias. Confirmar
