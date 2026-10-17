@@ -7,6 +7,7 @@ on:
       - 'scripts/migration-chain-*.sql'
       - 'scripts/test-migration-chain-disposable.mjs'
       - 'scripts/test-auth-baseline-disposable.mjs'
+      - 'scripts/auth-baseline-payload.mjs'
       - 'test/migration-chain-candidates.test.ts'
       - 'test/migration-chain-access-diagnostic.test.ts'
       - 'test/migration-chain-preflight.test.ts'

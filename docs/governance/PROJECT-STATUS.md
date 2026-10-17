@@ -1,5 +1,14 @@
 # Estado canônico do projeto — Cacau v1
 
+## Incidente de restore — 17 de outubro de 2026
+
+Snapshot da baseline criado, mas restore com finalização padrão promoveu a
+cópia e moveu o endpoint original. Branch/dados originais preservados; nenhuma
+migration externa executada. Recuperação corretiva de endpoints foi rejeitada
+pela revisão automática por falta de consentimento específico e risco de
+interrupção. Plano e IDs em `NEON-RESTORE-INCIDENT-2026-10-17.md`.
+Não aplicar migrations nem inferir a branch alvo pelo nome atual/default.
+
 ## Redefinição de senha HML — 17 de outubro de 2026
 
 Inventário ampliado autorizado confirmou ausência de tabelas/views/sequences

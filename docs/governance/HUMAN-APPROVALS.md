@@ -1,5 +1,14 @@
 # Ações que exigem aprovação humana — Cacau v1
 
+## Baseline até 0016 — autorização de 17 de outubro de 2026
+
+O usuário aprovou o plano `AUTH-BASELINE-0016-EXECUTION-PLAN.md`: snapshot,
+cópia privada, ensaio e inicialização canônica da branch original até `0016`
+somente se passar. Não inclui `0017–0028`, criação de usuários ou concessão
+de Dono. A recuperação da troca acidental de endpoints/nome/default descrita
+em `NEON-RESTORE-INCIDENT-2026-10-17.md` exige consentimento explícito após
+rejeição automática; nenhuma migration externa foi executada.
+
 ## Exceção pontual de catálogo — 17 de outubro de 2026
 
 Após o resultado inicial, o usuário autorizou ampliar somente o inventário de

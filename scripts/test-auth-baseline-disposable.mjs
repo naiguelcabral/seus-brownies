@@ -5,6 +5,7 @@ import { join } from 'node:path'
 import pg from 'pg'
 import { drizzle } from 'drizzle-orm/node-postgres'
 import { migrate } from 'drizzle-orm/node-postgres/migrator'
+import { buildAuthBaselinePayload } from './auth-baseline-payload.mjs'
 import {
   buildCandidate,
   sourceManifest,
@@ -69,6 +70,75 @@ async function fixture(name, verify) {
 }
 
 try {
+  await fixture(
+    'mcp-payload-canonical-receipts-and-atomic-preconditions',
+    async (client) => {
+      const databaseName = (
+        await client.query('SELECT current_database() AS name')
+      ).rows[0].name
+      const payload = buildAuthBaselinePayload({ databaseName })
+      await client.query('BEGIN')
+      for (const sql of payload.statements) await client.query(sql)
+      await client.query('COMMIT')
+      assert.deepEqual(
+        await journal(client),
+        payload.receipts.map((entry) => ({
+          hash: entry.sha256,
+          created_at: entry.when,
+        })),
+      )
+      await client.query('BEGIN')
+      try {
+        await assert.rejects(async () => {
+          for (const sql of payload.statements) await client.query(sql)
+        }, /BASELINE_REQUIRES_UNINITIALIZED_APPLICATION_SCHEMA/)
+      } finally {
+        await client.query('ROLLBACK')
+      }
+      assert.deepEqual(
+        await journal(client),
+        payload.receipts.map((entry) => ({
+          hash: entry.sha256,
+          created_at: entry.when,
+        })),
+      )
+    },
+  )
+  await fixture(
+    'mcp-payload-late-failure-removes-application-and-journal',
+    async (client) => {
+      const databaseName = (
+        await client.query('SELECT current_database() AS name')
+      ).rows[0].name
+      const payload = buildAuthBaselinePayload({ databaseName })
+      await client.query('BEGIN')
+      try {
+        for (const sql of payload.statements) await client.query(sql)
+        await assert.rejects(
+          () => client.query('SELECT 1 / 0'),
+          (error) => error.code === '22012',
+        )
+      } finally {
+        await client.query('ROLLBACK')
+      }
+      assert.equal(
+        (
+          await client.query(
+            "SELECT to_regclass('public.auth_audit_events') AS relation",
+          )
+        ).rows[0].relation,
+        null,
+      )
+      assert.equal(
+        (
+          await client.query(
+            "SELECT to_regclass('drizzle.__drizzle_migrations') AS relation",
+          )
+        ).rows[0].relation,
+        null,
+      )
+    },
+  )
   await fixture(
     'canonical-0000-through-0016-auth-reset-and-rerun',
     async (client) => {

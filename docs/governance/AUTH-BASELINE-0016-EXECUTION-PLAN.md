@@ -1,5 +1,9 @@
 # Inicialização canônica até 0016 — proposta para aprovação
 
+Plano autorizado pelo usuário. Execução suspensa antes de qualquer migration:
+restore finalizado alterou endpoints/nome/default. Resolver primeiro a
+recuperação em [NEON-RESTORE-INCIDENT-2026-10-17.md](NEON-RESTORE-INCIDENT-2026-10-17.md).
+
 ## Problema comprovado
 
 O Worker retorna `42P01` na auditoria que antecede o envio de recuperação.

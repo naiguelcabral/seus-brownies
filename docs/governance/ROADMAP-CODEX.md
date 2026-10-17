@@ -1,5 +1,12 @@
 # Roadmap executável para Codex — Cacau v1
 
+## Recuperação do restore — 17 de outubro de 2026
+
+- [!] Restore finalizado moveu endpoint/nome/default para a cópia. Original
+      preservada; nenhuma migration externa. Obter autorização corretiva
+      específica após rejeição automática; recuperar endpoints/nomes/default
+      conforme `NEON-RESTORE-INCIDENT-2026-10-17.md` antes de retomar baseline.
+
 ## Recuperação de acesso HML — 17 de outubro de 2026
 
 - [x] Identificar novo bloqueio: três falhas na auditoria inicial, sem chamada
