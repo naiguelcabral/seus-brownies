@@ -52,7 +52,8 @@ Teste de configuração lê o arquivo real e resolve a rota pública
 Raiz de produção do Worker e arquivos locais de ambiente preservados.
 
 Verificações direcionadas: 19 testes aprovados, typecheck, lint e formatação
-aprovados. Suíte completa e build isolado registrados após sua execução.
+aprovados. Suíte completa: 475 testes aprovados. Build HML isolado do commit
+`bb1717d` aprovado, sem publicação. `git diff --check` aprovado.
 
 ## Aplicação externa pendente de autorização específica
 
