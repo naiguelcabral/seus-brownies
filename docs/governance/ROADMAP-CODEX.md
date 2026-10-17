@@ -5,6 +5,8 @@
 - [x] Isolar candidatas até `0017`, sem aplicar SQLs `0018–0028`; validar
       preservação, replay, idempotência e cada referência de produto usado.
       Os 26 casos locais PostgreSQL 17 passaram, incluindo oito novos.
+      Suíte de 464 testes, tipos, lint, check e build CI isolado de `2e56e59`
+      aprovados; CI remota e integração permanecem pendentes.
 - [!] Cadeia ativa preservada; falta atestação Worker → banco, abrangência,
       auditoria read-only do histórico e backup/restore. Metadados atuais
       retornam cinco branches `archived`, apenas owner e zero snapshots.

@@ -6,6 +6,8 @@ Candidatas temporárias agora permitem checkpoint `0017`, separado de `0019`
 e `0028`. Os 26 casos PostgreSQL 17 passaram, incluindo oito novos de sucesso
 e rollback, nove referências de produto usado, idempotência nas três tabelas
 e preservação de dados/journal. A cadeia ativa permanece intacta e bloqueada.
+Suíte geral com 464 testes, tipos, lint, check e build CI isolado no commit
+`2e56e59` aprovados. Não houve push, SQL externo, migration ou deploy.
 Metadados Neon agora retornam as cinco branches inventariadas `archived`,
 somente `neondb_owner` e zero snapshots nos dois projetos. Isso não comprova
 histórico, alvo ou recuperação. Auditoria read-only, atestação Worker e

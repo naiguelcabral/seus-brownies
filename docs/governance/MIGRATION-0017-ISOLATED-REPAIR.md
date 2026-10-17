@@ -84,7 +84,10 @@ Validação geral: `npm test` passou **464 testes**, `npm run typecheck`,
 execução restrita da suíte foi interrompida após `spawnSync git EPERM` nas
 fixtures; a repetição autorizada fora dessa restrição passou integralmente.
 O container descartável foi encerrado e removido após os 26 casos PostgreSQL.
-Build isolado do commit preparado continua como última verificação local.
+`VITE_TURNSTILE_SITE_KEY=synthetic-public-key npm run build:ci-isolated`
+passou no HEAD limpo `2e56e59`, com entrada pública sintética, sem dotenv ou
+deploy. O build emitiu avisos não bloqueantes de sourcemap CSS e tempo de
+plugins; isso não altera a prova SQL. CI remota não foi executada nesta rodada.
 
 Somente as APIs de metadados Neon foram consultadas nesta rodada:
 
