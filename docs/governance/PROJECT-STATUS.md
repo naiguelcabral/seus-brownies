@@ -1,5 +1,17 @@
 # Estado canônico do projeto — Cacau v1
 
+## Identificação do alvo pelo operador — 17 de outubro de 2026
+
+O usuário informou Worker → `steep-brook-51659857` /
+`br-lingering-wind-acwh5wap`. MCP confirmou branch `production`, principal e
+padrão, `ready`, Auth Better Auth em `neondb` e JWKS exato informado. O novo
+deployment HML `475d3a10` usa versão `d8673fd9` a 100%; `DATABASE_URL` permanece
+secret_text, sem valor lido. Declaração do destino SQL vem do usuário;
+metadados comprovam Auth → branch, não schema/journal nem conexão do runtime.
+Auditoria desse alvo principal precisa de escopo e acesso não gravável
+aprovados; não reutilizar coletores HML que recusam produção.
+Detalhes em [MIGRATION-0017-ISOLATED-REPAIR.md](MIGRATION-0017-ISOLATED-REPAIR.md).
+
 ## Reparo isolado da 0017 — 17 de outubro de 2026
 
 Candidatas temporárias agora permitem checkpoint `0017`, separado de `0019`

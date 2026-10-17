@@ -1,5 +1,15 @@
 # Roadmap executável para Codex — Cacau v1
 
+## Alvo informado — 17 de outubro de 2026
+
+- [x] Registrar declaração do usuário: Worker → `steep-brook-51659857` /
+      `br-lingering-wind-acwh5wap`; confirmar branch principal `production`
+      e associação do JWKS/Neon Auth ao banco `neondb` por metadados MCP.
+- [!] Propor auditoria somente leitura delimitada para esse alvo; falta prova
+      de ACLs, schema/journal, recuperação e abrangência. Não aplicar reparo,
+      presumir HML ou contornar coletores que recusam produção. Identificação
+      fornecida não é aprovação de mudança no banco.
+
 ## Reparo isolado da 0017 — 17 de outubro de 2026
 
 - [x] Isolar candidatas até `0017`, sem aplicar SQLs `0018–0028`; validar

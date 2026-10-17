@@ -103,6 +103,40 @@ Nenhum SQL externo foi executado; Worker → banco continua sem nova atestação
 
 ## Decisão técnica e próximo passo
 
+### Alvo informado pelo operador — 17 de outubro, 13:32 UTC
+
+O usuário informou nesta conversa que o Worker acessa o projeto
+`steep-brook-51659857`, branch `br-lingering-wind-acwh5wap`, e forneceu a URL
+JWKS pública do endpoint `ep-late-water-acahd1z1`. Essa declaração identifica
+o alvo informado; não é autorização de escrita nem leitura do secret.
+
+Os metadados MCP confirmaram independentemente:
+
+- branch `production`, principal e padrão, estado `ready`;
+- Neon Auth `better_auth`, branch exata e banco `neondb`;
+- `jwks_url` cadastrado exatamente igual ao informado;
+- roles listadas: `neondb_owner`, `authenticator`, `anonymous`, `authenticated`.
+  Esses nomes não comprovam ACLs de auditoria somente leitura.
+
+A API Cloudflare confirmou novo deployment HML `475d3a10-79e5-462d-aa70-1890afdee0a3`,
+de `2026-10-17T13:25:50.059862Z`, versão
+`d8673fd9-0c06-4caf-ae94-0a13ca7f2d94`, 100% do tráfego. A versão lista
+`DATABASE_URL` como `secret_text`; somente nomes/tipos foram retornados.
+
+Portanto, Worker → projeto/branch está **informado pelo usuário**; a associação
+Auth → branch está **confirmada por metadados**. O destino SQL do runtime,
+schema, journal, histórico compartilhado e recuperação ainda não receberam
+prova técnica nesta rodada. A tentativa de abrir o JWKS pelo navegador de
+pesquisa não foi suportada; não é evidência de indisponibilidade do serviço.
+
+O alvo deixa de ser HML presumido: chama-se `production` e é a branch principal.
+Não executar contra ele os coletores que recusam produção nem mudar sua
+classificação para contornar a recusa. A próxima proposta deve delimitar a
+auditoria desse alvo e seu acesso não gravável antes de qualquer SQL externo.
+Não pedir novamente a identificação já fornecida; solicitar prova adicional
+somente quando necessária ao gate específico. Não houve SQL, migration,
+criação de role/grant, backup, restore, deploy ou alteração de secret.
+
 A preferência permanece substituir as três referências da `0017` **somente
 após comprovar que `0017+` não foi aplicada em nenhuma base relevante**.
 Até isso, a candidata continua separada da cadeia ativa. Compatibilidade
@@ -115,9 +149,11 @@ permanece um preflight offline bloqueado, sem conexão ou aplicação implícita
 
 O próximo passo externo é fornecer evidência delimitada, não repetir laboratório:
 
-1. Operador confirma privadamente o destino do Worker com
-   `node scripts/hml-worker-destination.mjs`, sem gravação de terminal, e
-   entrega somente JSON sanitizado, versão ativa, responsável e UTC.
+1. Usar a identificação já fornecida pelo usuário e delimitar a auditoria da
+   branch principal `production`. O utilitário HML
+   `scripts/hml-worker-destination.mjs` recusa produção; não o executar contra
+   esse alvo nem alterar sua classificação. Uma comprovação adicional do
+   destino SQL deve respeitar o escopo aprovado, sem revelar credenciais.
 2. Responsável identifica backups, retenção e ensaio de recuperação e declara
    a abrangência de bases/cópias relevantes.
 3. Aprova e disponibiliza acesso transitório estritamente read-only conforme
