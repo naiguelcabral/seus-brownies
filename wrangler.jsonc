@@ -29,6 +29,7 @@
       },
       "vars": {
         "AUTH_RATE_LIMITER_REQUIRED": "true",
+        "PASSWORD_RESET_REDIRECT_ORIGIN": "https://cacau-v1-hml.naiguelcabral.workers.dev",
       },
       "ratelimits": [
         {

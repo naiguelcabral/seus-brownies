@@ -1,5 +1,17 @@
 # Estado canônico do projeto — Cacau v1
 
+## Redefinição de senha HML — 17 de outubro de 2026
+
+Relato de falha de login e e-mail de redefinição não recebido. MCP confirmou
+ausência de `PASSWORD_RESET_REDIRECT_ORIGIN` no Worker e apenas localhost
+nas origens confiáveis do Neon Auth do alvo declarado `production`.
+Configuração HML corrigida localmente e teste de regressão preparado;
+publicação e inclusão da origem no Neon aguardam autorização delimitada.
+Erro individual de login ainda sem mensagem exata/correlação; não atribuir
+à senha, SMTP ou schema por inferência. Diagnóstico SQL permanece desativado.
+Evidência, aplicação proposta e limites em
+[HML-PASSWORD-RESET-2026-10-17.md](HML-PASSWORD-RESET-2026-10-17.md).
+
 ## Diagnóstico de conexão SQL — 17 de outubro de 2026
 
 Publicado em HML a partir da fonte `ee5acec`: deployment
