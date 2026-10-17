@@ -7,6 +7,12 @@ conexão, após proposta explícita de publicação do diagnóstico, ativação
 temporária, teste com sessão administrativa existente e desativação ao fim.
 Alvo informado: `steep-brook-51659857` / `br-lingering-wind-acwh5wap`.
 
+Na retomada, autorizou explicitamente acrescentar somente
+`workers_scripts:write` ao OAuth do Wrangler para essa publicação, após
+explicação de que o scope permite modificar Workers acessíveis à conta.
+Consentimento oficial concluído pelo usuário e confirmado pela CLI.
+Não autoriza permissão de rotas nem modifica o alvo da publicação.
+
 Escopo: publicar o código revisado do diagnóstico em HML; habilitar
 temporariamente `SQL_CONNECTION_PROBE_ENABLED`; executar o probe fixo
 `SELECT 1` em READ ONLY, com rollback/fechamento; desabilitar o flag e

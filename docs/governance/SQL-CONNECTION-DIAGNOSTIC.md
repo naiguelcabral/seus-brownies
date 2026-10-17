@@ -15,6 +15,27 @@ um checkout temporário limpo do commit revisado será usado para o build.
 
 ## Preparação original
 
+### Publicação concluída — 17 de outubro de 2026
+
+Após autorização explícita, o usuário concluiu novo consentimento OAuth com
+`workers_scripts:write`, sem solicitar permissão de rotas. CLI confirmou login.
+Fonte `ee5acec` publicada pelo script isolado em checkout limpo. Build e deploy
+passaram; startup reportado de 10 ms. CLI e MCP confirmaram deployment
+`dfacbe23-55d6-4db2-8a58-3ed3d1bde48e`, criado em
+`2026-10-17T16:02:36.374834Z`, versão
+`6b737c00-e80b-4217-9b03-6d84829035e4`, 100% do tráfego.
+
+MCP confirmou os cinco bindings secretos preservados, somente por nome/tipo,
+o binding de rate limit e a configuração de observabilidade preservada.
+`SQL_CONNECTION_PROBE_ENABLED` ausente. Nenhuma migration ou consulta SQL
+do diagnóstico executada. A autenticação continua exigida: abrir a rota no
+navegador do agente redirecionou para login. Usuário confirmou login em sua
+sessão, mas relatou erro/acesso negado ao abrir o diagnóstico. Texto exato
+solicitado antes de inferir causa ou ativar o teste. Não alterar RBAC nem
+criar identidade para contornar a proteção. Se a mensagem for a resposta
+genérica após clicar no botão, o flag ausente é uma causa possível, ainda
+sem prova de problema na conexão SQL.
+
 ### Retomada após login — 17 de outubro de 2026
 
 OAuth concluído pelo usuário; `wrangler whoami` confirmou login, sem leitura

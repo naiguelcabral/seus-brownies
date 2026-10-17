@@ -2,6 +2,18 @@
 
 ## Diagnóstico de conexão SQL — 17 de outubro de 2026
 
+Publicado em HML a partir da fonte `ee5acec`: deployment
+`dfacbe23-55d6-4db2-8a58-3ed3d1bde48e`, versão
+`6b737c00-e80b-4217-9b03-6d84829035e4`, 100% do tráfego,
+confirmados pela CLI e MCP. Secrets preservados sem leitura de valores;
+observabilidade remota preservada. Flag ausente, teste SQL ainda não executado.
+Usuário confirmou login no Cacau; navegador do agente continua anônimo.
+Operador relatou erro/acesso negado na página; texto exato solicitado para
+distinguir sessão, permissão ou diagnóstico ainda desativado antes da ativação
+temporária. Gates de migrations/auditoria permanecem abertos.
+
+Histórico das tentativas anteriores:
+
 Publicação/teste temporário autorizados pelo usuário. Fonte `0abf78b`, 474
 testes e verificações aprovados; build HML isolado com chave pública real
 aprovado. Login OAuth concluído e validado. Corrigido o acesso ao chaveiro na

@@ -2,6 +2,14 @@
 
 ## Diagnóstico SQL do Worker — 17 de outubro de 2026
 
+- [x] Concluir consentimento humano delimitado a `workers_scripts:write` e
+      publicar a fonte `ee5acec` em HML; versão `6b737c00`, 100% do tráfego,
+      secrets e observabilidade preservados. Flag ainda ausente.
+- [ ] Confirmar acesso autenticado à página, habilitar temporariamente,
+      executar o probe e desativar; navegador do agente está anônimo.
+
+Histórico:
+
 - [x] Obter autorização específica de publicação/teste temporário; revisar
       fonte `0abf78b`, 474 testes e build HML isolado com chave pública real.
 - [x] Confirmar login OAuth e corrigir acesso ao chaveiro no deploy isolado.
