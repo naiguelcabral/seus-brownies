@@ -1,5 +1,15 @@
 # Estado canônico do projeto — Cacau v1
 
+## Diagnóstico de conexão SQL — 17 de outubro de 2026
+
+Preparado localmente `/diagnostico-conexao`: acionamento manual por POST,
+CSRF, permissão existente `access:manage`, flag de runtime desativado por padrão,
+resposta sanitizada e sem cache. Cliente por operação com timeout, SELECT 1
+em READ ONLY, rollback e fechamento; sem leitura de negócio/migration.
+Publicação, ativação temporária e execução externa aguardam aprovação específica;
+nenhum gate de destino ou auditoria foi fechado. Procedimento e limites em
+[SQL-CONNECTION-DIAGNOSTIC.md](SQL-CONNECTION-DIAGNOSTIC.md).
+
 ## Identificação do alvo pelo operador — 17 de outubro de 2026
 
 O usuário informou Worker → `steep-brook-51659857` /

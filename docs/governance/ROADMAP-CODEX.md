@@ -1,5 +1,14 @@
 # Roadmap executável para Codex — Cacau v1
 
+## Diagnóstico SQL do Worker — 17 de outubro de 2026
+
+- [x] Preparar diagnóstico manual protegido, sem dados de negócio, com
+      SELECT 1 em READ ONLY, rollback e fechamento do cliente.
+- [ ] Revisar/publicar, ativar temporariamente e executar no Worker mediante
+      aprovação específica. Correlacionar versão ativa e atestação privada;
+      não inferir destino/schema ou liberação das migrations pelo SELECT 1.
+      Runbook: [SQL-CONNECTION-DIAGNOSTIC.md](SQL-CONNECTION-DIAGNOSTIC.md).
+
 ## Alvo informado — 17 de outubro de 2026
 
 - [x] Registrar declaração do usuário: Worker → `steep-brook-51659857` /

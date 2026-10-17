@@ -1,5 +1,19 @@
 # Ações que exigem aprovação humana — Cacau v1
 
+## Diagnóstico SQL temporário — 17 de outubro de 2026
+
+O usuário autorizou nesta conversa publicar em `cacau-v1-hml` para testar a
+conexão, após proposta explícita de publicação do diagnóstico, ativação
+temporária, teste com sessão administrativa existente e desativação ao fim.
+Alvo informado: `steep-brook-51659857` / `br-lingering-wind-acwh5wap`.
+
+Escopo: publicar o código revisado do diagnóstico em HML; habilitar
+temporariamente `SQL_CONNECTION_PROBE_ENABLED`; executar o probe fixo
+`SELECT 1` em READ ONLY, com rollback/fechamento; desabilitar o flag e
+registrar versões/resultados sanitizados. Não autoriza migrations, reparos,
+backfill, mudança de secrets, criação de identidades, RBAC ou deploy do
+Worker `cacau-v1`. A autenticação existente permanece obrigatória.
+
 O Codex pode trabalhar de forma autônoma dentro do repositório, mas os itens abaixo são gates obrigatórios.
 
 ## Decisões financeiras aprovadas

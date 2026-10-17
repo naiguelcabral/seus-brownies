@@ -14,6 +14,7 @@ import { Route as CategoriasRouteImport } from './routes/categorias'
 import { Route as CenariosRouteImport } from './routes/cenarios'
 import { Route as ComprasRouteImport } from './routes/compras'
 import { Route as DespesasRouteImport } from './routes/despesas'
+import { Route as DiagnosticoConexaoRouteImport } from './routes/diagnostico-conexao'
 import { Route as EstoqueRouteImport } from './routes/estoque'
 import { Route as FifoMigrationAuditRouteImport } from './routes/fifo-migration-audit'
 import { Route as FinanceiroRouteImport } from './routes/financeiro'
@@ -50,6 +51,11 @@ const ComprasRoute = ComprasRouteImport.update({
 const DespesasRoute = DespesasRouteImport.update({
   id: '/despesas',
   path: '/despesas',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DiagnosticoConexaoRoute = DiagnosticoConexaoRouteImport.update({
+  id: '/diagnostico-conexao',
+  path: '/diagnostico-conexao',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EstoqueRoute = EstoqueRouteImport.update({
@@ -119,6 +125,7 @@ export interface FileRoutesByFullPath {
   '/cenarios': typeof CenariosRoute
   '/compras': typeof ComprasRoute
   '/despesas': typeof DespesasRoute
+  '/diagnostico-conexao': typeof DiagnosticoConexaoRoute
   '/estoque': typeof EstoqueRoute
   '/fifo-migration-audit': typeof FifoMigrationAuditRoute
   '/financeiro': typeof FinanceiroRoute
@@ -138,6 +145,7 @@ export interface FileRoutesByTo {
   '/cenarios': typeof CenariosRoute
   '/compras': typeof ComprasRoute
   '/despesas': typeof DespesasRoute
+  '/diagnostico-conexao': typeof DiagnosticoConexaoRoute
   '/estoque': typeof EstoqueRoute
   '/fifo-migration-audit': typeof FifoMigrationAuditRoute
   '/financeiro': typeof FinanceiroRoute
@@ -158,6 +166,7 @@ export interface FileRoutesById {
   '/cenarios': typeof CenariosRoute
   '/compras': typeof ComprasRoute
   '/despesas': typeof DespesasRoute
+  '/diagnostico-conexao': typeof DiagnosticoConexaoRoute
   '/estoque': typeof EstoqueRoute
   '/fifo-migration-audit': typeof FifoMigrationAuditRoute
   '/financeiro': typeof FinanceiroRoute
@@ -179,6 +188,7 @@ export interface FileRouteTypes {
     | '/cenarios'
     | '/compras'
     | '/despesas'
+    | '/diagnostico-conexao'
     | '/estoque'
     | '/fifo-migration-audit'
     | '/financeiro'
@@ -198,6 +208,7 @@ export interface FileRouteTypes {
     | '/cenarios'
     | '/compras'
     | '/despesas'
+    | '/diagnostico-conexao'
     | '/estoque'
     | '/fifo-migration-audit'
     | '/financeiro'
@@ -217,6 +228,7 @@ export interface FileRouteTypes {
     | '/cenarios'
     | '/compras'
     | '/despesas'
+    | '/diagnostico-conexao'
     | '/estoque'
     | '/fifo-migration-audit'
     | '/financeiro'
@@ -237,6 +249,7 @@ export interface RootRouteChildren {
   CenariosRoute: typeof CenariosRoute
   ComprasRoute: typeof ComprasRoute
   DespesasRoute: typeof DespesasRoute
+  DiagnosticoConexaoRoute: typeof DiagnosticoConexaoRoute
   EstoqueRoute: typeof EstoqueRoute
   FifoMigrationAuditRoute: typeof FifoMigrationAuditRoute
   FinanceiroRoute: typeof FinanceiroRoute
@@ -285,6 +298,13 @@ declare module '@tanstack/react-router' {
       path: '/despesas'
       fullPath: '/despesas'
       preLoaderRoute: typeof DespesasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/diagnostico-conexao': {
+      id: '/diagnostico-conexao'
+      path: '/diagnostico-conexao'
+      fullPath: '/diagnostico-conexao'
+      preLoaderRoute: typeof DiagnosticoConexaoRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/estoque': {
@@ -390,6 +410,7 @@ const rootRouteChildren: RootRouteChildren = {
   CenariosRoute: CenariosRoute,
   ComprasRoute: ComprasRoute,
   DespesasRoute: DespesasRoute,
+  DiagnosticoConexaoRoute: DiagnosticoConexaoRoute,
   EstoqueRoute: EstoqueRoute,
   FifoMigrationAuditRoute: FifoMigrationAuditRoute,
   FinanceiroRoute: FinanceiroRoute,
