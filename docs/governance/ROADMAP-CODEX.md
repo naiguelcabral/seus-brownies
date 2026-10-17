@@ -2,6 +2,12 @@
 
 ## Diagnóstico SQL do Worker — 17 de outubro de 2026
 
+- [x] Obter autorização específica de publicação/teste temporário; revisar
+      fonte `0abf78b`, 474 testes e build HML isolado com chave pública real.
+- [!] Tentativa de deploy bloqueada antes do upload por autenticação da CLI.
+      Aguardar consentimento OAuth do usuário e repetir deploy autorizado;
+      versão remota preservada, sem ativação do flag ou execução do probe.
+
 - [x] Preparar diagnóstico manual protegido, sem dados de negócio, com
       SELECT 1 em READ ONLY, rollback e fechamento do cliente.
 - [ ] Revisar/publicar, ativar temporariamente e executar no Worker mediante

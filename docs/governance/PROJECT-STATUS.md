@@ -2,6 +2,13 @@
 
 ## Diagnóstico de conexão SQL — 17 de outubro de 2026
 
+Publicação/teste temporário autorizados pelo usuário. Fonte `0abf78b`, 474
+testes e verificações aprovados; build HML isolado com chave pública real
+aprovado. Deploy parou antes do upload por ausência de autenticação Wrangler.
+Versão remota `d8673fd9` permanece ativa; flag não habilitado e probe SQL não
+executado. Consentimento OAuth da CLI aguarda usuário; autorização de deploy
+continua válida. Retomada em `SQL-CONNECTION-DIAGNOSTIC.md`.
+
 Preparado localmente `/diagnostico-conexao`: acionamento manual por POST,
 CSRF, permissão existente `access:manage`, flag de runtime desativado por padrão,
 resposta sanitizada e sem cache. Cliente por operação com timeout, SELECT 1

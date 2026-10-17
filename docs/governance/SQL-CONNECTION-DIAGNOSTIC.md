@@ -15,6 +15,32 @@ um checkout temporário limpo do commit revisado será usado para o build.
 
 ## Preparação original
 
+### Tentativa autorizada de publicação — 17 de outubro de 2026
+
+Fonte revisada: `0abf78bb472a7ee7c6dd467b02b674feec6e6368`, checkout limpo
+temporário `/tmp/cacau-worker-sql-probe-release-20261017`. O build HML isolado
+passou com a chave pública real do widget HML. Wrangler `4.151.1` interrompeu
+antes do upload por falta de autenticação da CLI; o MCP autenticado não
+fornece automaticamente credenciais à CLI. Não houve rejeição de aprovação,
+alteração remota, ativação do flag ou consulta SQL do probe.
+
+O MCP confirmou após a tentativa que permanece ativo o deployment
+`475d3a10-79e5-462d-aa70-1890afdee0a3`, versão
+`d8673fd9-0c06-4caf-ae94-0a13ca7f2d94`, com 100% do tráfego.
+
+Login OAuth oficial da CLI foi iniciado sem leitura/exibição de credenciais.
+O fluxo com callback expirou; foi preparado fluxo por dispositivo, com
+consentimento a concluir pessoalmente pelo usuário. Não registrar URLs de
+autorização, códigos ou tokens como evidência. A autorização de deploy já
+concedida continua válida, sem necessidade de repeti-la.
+
+Próximo passo: confirmar sucesso da autenticação do Wrangler, repetir o
+deploy isolado desse commit e validar a versão ativa; somente então habilitar
+temporariamente o flag e executar o probe com sessão administrativa existente.
+Se a sessão do Cacau ainda não estiver disponível, manter o flag desativado.
+O checkout temporário fica preservado para essa retomada; alteração local
+preexistente de ambiente permanece fora dele.
+
 Implementação local em 17 de outubro de 2026. Não publicada nem executada
 contra banco externo. Não fecha os gates de acesso não gravável, migrations,
 destino, abrangência, backup/restauração ou homologação.
