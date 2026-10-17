@@ -1,5 +1,17 @@
 # Estado canônico do projeto — Cacau v1
 
+## Reparo isolado da 0017 — 17 de outubro de 2026
+
+Candidatas temporárias agora permitem checkpoint `0017`, separado de `0019`
+e `0028`. Os 26 casos PostgreSQL 17 passaram, incluindo oito novos de sucesso
+e rollback, nove referências de produto usado, idempotência nas três tabelas
+e preservação de dados/journal. A cadeia ativa permanece intacta e bloqueada.
+Metadados Neon agora retornam as cinco branches inventariadas `archived`,
+somente `neondb_owner` e zero snapshots nos dois projetos. Isso não comprova
+histórico, alvo ou recuperação. Auditoria read-only, atestação Worker e
+backup/restore continuam necessários antes da escolha ativa. Detalhes em
+[MIGRATION-0017-ISOLATED-REPAIR.md](MIGRATION-0017-ISOLATED-REPAIR.md).
+
 ## Melhorias TypeScript/React — 16 de outubro de 2026
 
 Após o pacote de segurança `201a1ee`, contratos opcionais exatos e acessos a

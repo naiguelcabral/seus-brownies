@@ -83,4 +83,58 @@ test('unsupported strategy and checkpoint fail before writing a candidate', () =
     /unsupported checkpoint/,
   )
   assert.throws(() => buildCandidate('rebuilt-line', { last: 27 }), /atomic/)
+  assert.throws(() => buildCandidate('rebuilt-line', { last: 17 }), /atomic/)
+})
+
+test('isolated 0017 candidates exclude subsequent migrations and preserve the historical prefix', () => {
+  const before = sourceManifest()
+  for (const strategy of ['replacement', 'compatibility']) {
+    const candidate = buildCandidate(strategy, { last: 17 })
+    try {
+      assert.deepEqual(
+        candidate.manifest.candidate_migrations.slice(0, 17),
+        before.migrations
+          .slice(0, 17)
+          .map(
+            ({
+              tag,
+              when,
+              sha256,
+            }: {
+              tag: string
+              when: string
+              sha256: string
+            }) => ({
+              tag,
+              when,
+              sha256,
+            }),
+          ),
+      )
+      assert.equal(candidate.manifest.last, 17)
+      assert.equal(candidate.manifest.application_authorized, false)
+      assert.equal(
+        candidate.entries.length,
+        strategy === 'replacement' ? 18 : 20,
+      )
+      assert.ok(
+        !candidate.entries.some((entry: { tag: string }) =>
+          /^00(?:18|19|2[0-8])_/.test(entry.tag),
+        ),
+      )
+      for (const entry of candidate.entries.slice(17)) {
+        const sql = readFileSync(
+          join(candidate.folder, `${entry.tag}.sql`),
+          'utf8',
+        )
+        assert.doesNotMatch(
+          sql,
+          /management_settings|management_scenario_mix|financial_events/,
+        )
+      }
+    } finally {
+      rmSync(candidate.folder, { recursive: true, force: true })
+    }
+  }
+  assert.deepEqual(sourceManifest(), before)
 })

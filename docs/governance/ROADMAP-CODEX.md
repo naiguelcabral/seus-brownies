@@ -1,5 +1,16 @@
 # Roadmap executável para Codex — Cacau v1
 
+## Reparo isolado da 0017 — 17 de outubro de 2026
+
+- [x] Isolar candidatas até `0017`, sem aplicar SQLs `0018–0028`; validar
+      preservação, replay, idempotência e cada referência de produto usado.
+      Os 26 casos locais PostgreSQL 17 passaram, incluindo oito novos.
+- [!] Cadeia ativa preservada; falta atestação Worker → banco, abrangência,
+      auditoria read-only do histórico e backup/restore. Metadados atuais
+      retornam cinco branches `archived`, apenas owner e zero snapshots.
+      Estado não comprova ausência de `0017+`. Próximo passo externo e proposta
+      em [MIGRATION-0017-ISOLATED-REPAIR.md](MIGRATION-0017-ISOLATED-REPAIR.md).
+
 ## Segurança e melhorias — 16 de outubro de 2026
 
 - [x] Preparar pacote local de dependências corrigidas, com auditoria sem avisos,

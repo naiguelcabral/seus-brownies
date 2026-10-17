@@ -13,7 +13,9 @@ on:
       - 'drizzle/**'
       - '.github/workflows/migration-chain-disposable.yml'
   push:
-    branches: ['codex/migration-chain-repair-candidates']
+    branches:
+      - 'codex/migration-chain-repair-candidates'
+      - 'codex/migration-0017-isolated-repair'
   workflow_dispatch:
 
 permissions:
