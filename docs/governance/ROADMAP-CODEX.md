@@ -6,8 +6,9 @@
 - [x] Preservar snapshot antigo e preparar backup atual em branch sem compute.
 - [x] Migrar cópia derivada e validar 31 recibos, 38 consultas, preservação dos
       dados e catálogo idêntico ao laboratório. Original permanece em `0016`.
-- [ ] Receber aceite específico do backup em branch no lugar do snapshot novo.
-- [ ] Aplicar na original somente após esse aceite, com guards já ensaiados.
+- [x] Receber aceite específico do backup em branch no lugar do snapshot novo.
+- [x] Aplicar na original após aceite; conferir 31 recibos, catálogo e 38
+      consultas, preservando os dados, Dono/Gerente, endpoints e auditoria.
 
 - [x] Preparar atualização delimitada `0016–0028`, preservando hashes originais
       e acessos recém-concedidos, sem tocar na cadeia ativa.
@@ -16,7 +17,7 @@
 - [x] Preparar payload de 102 instruções e plano de cópia/restore isolado.
 - [x] Aprovar valores iniciais `0019`, mix novo vazio `0028` e plano condicional;
       a troca do método de backup está pendente conforme checkpoint acima.
-- [ ] Executar ensaio externo e atualizar original somente se aprovado/passou.
+- [x] Executar ensaio externo e atualizar original sob a aprovação condicional.
 - [ ] Confirmar painel e acesso por papel; homologações comerciais continuam
       tarefas próprias, sem operações sintéticas no banco compartilhado.
 
@@ -33,7 +34,8 @@
 - [x] Executar plano aprovado atomicamente e conferir em transação READ ONLY.
 - [ ] Validar novo login/acesso de cada papel na interface; painel tem
       dependência comprovada de `sales.delivered_at`, ausente até `0016`.
-      Resolver cadeia `0017+` com os gates próprios antes de homologar o painel.
+      Schema atualizado até `0028`; compatibilidade ORM passou. Confirmação
+      do painel protegido na sessão humana permanece pendente.
 
 - [x] Recebimento do e-mail e troca da senha confirmados pelo usuário.
 - [x] Registrar solicitação explícita de papel Gerente, sem ampliar para Dono.
