@@ -31,8 +31,39 @@ Não executar encerramento por reserva antes de confirmar o limiar obrigatório.
 
 Próximo passo proposto: publicar essa telemetria em `cacau-v1-hml`, usuário
 solicitar novamente uma única vez, ler somente código/etapa e então preparar
-correção específica. Publicação desse diagnóstico aguarda autorização própria;
+correção específica. Publicação desse diagnóstico foi autorizada e executada;
 não altera banco, roles, secrets nem política de sessão.
+
+## Handoff por reserva — 17 de outubro de 2026
+
+Franquia principal: 5% restante, reserva obrigatória atingida. Reset oficial:
+`2026-10-17 17:51:35 UTC` / `14:51:35 America/Sao_Paulo`.
+Pausar expansão; retomar somente após confirmar renovação conforme política.
+
+Publicação em andamento foi concluída: fonte `6f67aed`, deployment
+`3cfb0309-1dac-4840-9bc1-671b883368f6`, criado em
+`2026-10-17T16:34:47.641218Z`, versão
+`f168418a-fa85-40d2-96ca-32f27aa6dfdb`, 100% do tráfego, CLI/MCP confirmados.
+Bindings preservados por nome; probe SQL desativado. Nenhuma migration ou
+correção de dados executada. Diagnóstico ainda não recebeu tentativa nova
+correlacionada após esse deploy.
+
+Próximo passo exato: usuário solicita recuperação uma vez; após renovação da
+franquia, ler eventos `auth.password-reset` posteriores ao deploy e projetar
+somente stage, requestId e auditErrorCode permitido. MCP de observabilidade
+falha ao interpretar alguns eventos; alternativa API consultada e válida:
+POST `/accounts/{account_id}/workers/observability/telemetry/query`, dry=true,
+view=events, timeframe em epoch ms. Não imprimir eventos inteiros; mensagem
+está em `source`, não necessariamente no topo. Se o código for desconhecido,
+continuar diagnóstico sem inventar schema, permissão ou credencial inválida.
+
+476 testes, tipos, lint, formatação, diff check e build isolado passaram antes
+da publicação. Teste integrado de envio/entrega/troca de senha ainda pendente.
+Não contornar auditoria. Alteração preexistente `.env.example` permanece fora
+dos commits. Encerramento oficial será executado no checkout limpo de release,
+branch `codex/worker-sql-probe-release-20261017`, para não incluir essa alteração
+não revisada no `git add --all` do script. Resultado do encerramento será
+informado ao operador; root continua em `codex/worker-sql-connection-check`.
 
 ## Relato e alvo
 

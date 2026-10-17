@@ -1,5 +1,10 @@
 # Ações que exigem aprovação humana — Cacau v1
 
+O usuário autorizou também publicar o diagnóstico sanitizado de falha da
+auditoria do reset em `cacau-v1-hml`, após proposta e validação do commit
+`6f67aed`. Não autoriza dispensar auditoria, aplicar migrations ou alterar
+secrets, credenciais e papéis para contornar a falha.
+
 ## Recuperação de senha HML — 17 de outubro de 2026
 
 Após revisão dos dois bloqueios em `HML-PASSWORD-RESET-2026-10-17.md`, o usuário

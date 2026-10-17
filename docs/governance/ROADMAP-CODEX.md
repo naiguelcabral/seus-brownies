@@ -4,8 +4,10 @@
 
 - [x] Identificar novo bloqueio: três falhas na auditoria inicial, sem chamada
       ao provedor após correção de callback/origem.
-- [ ] Validar/publicar diagnóstico sanitizado do código do driver, mediante
-      autorização, e corrigir causa comprovada sem contornar auditoria.
+- [x] Validar/publicar diagnóstico sanitizado do código do driver, mediante
+      autorização: `f168418a`, 100% HML, 476 testes e build aprovados.
+- [ ] Após renovar franquia (reserva 5%, reset 17/10 14:51:35 BRT), correlacionar
+      nova tentativa e corrigir causa comprovada sem contornar auditoria.
 
 - [x] Confirmar relato de reset e inspecionar configuração sem credenciais/SQL.
 - [x] Corrigir localmente origem de callback HML e cobrir configuração real.

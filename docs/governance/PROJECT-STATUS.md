@@ -5,8 +5,11 @@
 Nova tentativa sem recebimento: observabilidade confirmou três falhas de
 auditoria inicial e nenhuma chamada ao Neon. A causa subjacente da auditoria
 ainda não é observável; preparado diagnóstico local por códigos permitidos,
-sem mensagens/SQL/segredos e sem enfraquecer o bloqueio. Publicação adicional
-pendente. Não aplicar migrations ou mudanças de credenciais por inferência.
+sem mensagens/SQL/segredos e sem enfraquecer o bloqueio. Diagnóstico publicado
+após autorização: `f168418a`, 100% do tráfego. Nova tentativa/código pendentes.
+Pausa obrigatória por reserva: 5% restante, reset 17/10 às 14:51:35 BRT.
+Handoff em `HML-PASSWORD-RESET-2026-10-17.md`.
+Não aplicar migrations ou mudanças de credenciais por inferência.
 
 Relato de falha de login e e-mail de redefinição não recebido. MCP confirmou
 ausência de `PASSWORD_RESET_REDIRECT_ORIGIN` no Worker e apenas localhost
