@@ -1,5 +1,12 @@
 # Ações que exigem aprovação humana — Cacau v1
 
+## Identificação das duas contas — 17 de outubro de 2026
+
+Usuário confirmou a conta de Gerente e identificou sua outra conta como Dono.
+Escopo de conciliação restrito a essas duas identidades, sem ampliar permissões
+de outras contas ou alterar a política RBAC. Nenhuma identidade encontrada
+na original ou cópia; nenhuma concessão executada. E-mails omitidos do Git.
+
 ## Solicitação de papel Gerente — 17 de outubro de 2026
 
 Após confirmar a recuperação da senha, o usuário identificou sua conta e

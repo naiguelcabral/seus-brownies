@@ -1,5 +1,57 @@
 # Estado canônico do projeto — Cacau v1
 
+## Diagnóstico de destino preparado — aguardando publicação HML
+
+Usuário confirmou a página `https://cacau-v1-hml.naiguelcabral.workers.dev/login`.
+Preparado `src/features/auth/destination-diagnostic.server.ts`, chamado somente
+no servidor ao resolver configuração de autenticação. Não cria endpoint nem
+altera sessão, RBAC, cadastro ou vínculo. Emite exclusivamente JSON com evento
+fixo `auth.destination-diagnostic` e booleano `matchesExpected`.
+
+Desligado por padrão. Ativação requer as três variáveis não secretas:
+`AUTH_DESTINATION_DIAGNOSTIC_ENABLED=true`,
+`AUTH_DESTINATION_EXPECTED_BASE_URL` com o endereço Neon Auth já declarado
+pelo operador e `AUTH_DESTINATION_DIAGNOSTIC_UNTIL` com expiração UTC de no
+máximo 30 minutos à frente. Ausência, expiração ou configuração inválida
+silenciam o diagnóstico. Nenhum endereço efetivo, e-mail, UUID, senha, token,
+header, cookie ou erro bruto é registrado. Falha do logger não interrompe auth.
+
+Plano delimitado para aprovação: publicar somente em `cacau-v1-hml`, ativar
+as três vars por até 30 minutos, acessar a página de login para disparar leitura
+de configuração e consultar somente o evento sanitizado. Depois desativar as
+vars e reconfirmar o estado. Preservar secrets, demais bindings, observabilidade
+e controles. Não habilitar probe SQL, aplicar migrations, criar usuários ou
+conceder papéis por inferência. Coincidência do Auth não atesta o destino SQL.
+Divergência não autoriza reescrever o secret sem decisão posterior.
+
+Validação local: nove testes direcionados aprovados, tipos, lint, formatação,
+`git diff --check` e build HML em archive + três arquivos de fonte/teste,
+sem arquivos de ambiente e com chave pública sintética, aprovados. Testes de
+isolamento Git falharam com `EPERM` no sandbox e os três passaram na execução
+permitida fora dessa restrição. Suíte geral ainda não concluída nesta etapa.
+Nenhuma publicação executada. Diff preserva `.env.example` fora do escopo.
+
+## Contas Dono/Gerente — conciliação do destino
+
+O usuário confirmou que o e-mail de Gerente é o mesmo que recebeu a
+recuperação e identificou também a conta de Dono. E-mails pessoais omitidos
+neste registro. Papéis solicitados: `owner` e `manager`, respectivamente.
+
+Consulta READ ONLY, restrita aos dois e-mails indicados, não encontrou
+nenhuma identidade na original `br-lingering-wind-acwh5wap`. Catálogo
+confirmou que `neon_auth.user` não possui RLS habilitado/forçado e a sessão
+não tem filtro RLS ativo nessa relação; portanto essa política não explica
+a ausência. A mesma busca limitada na cópia `br-super-waterfall-ac0mxtnt`
+retornou zero correspondências para ambas as contas.
+
+Metadados do Worker HML confirmam que `NEON_AUTH_BASE_URL` e `DATABASE_URL`
+são secrets; seus valores não foram lidos. O callback de recuperação aponta
+para HML, mas não comprova o destino efetivo do provedor. Código usa
+`config.baseUrl` derivado do binding para o reset. Divergência de destino é
+hipótese a verificar, não causa comprovada. Solicitada URL da página de
+bloqueio, sem query/token. Nenhuma identidade criada, vínculo concedido,
+credencial alterada ou evento de concessão gravado.
+
 ## Acesso Gerente — verificação de 17 de outubro de 2026
 
 Usuário confirmou recebimento do e-mail e troca da senha e solicitou papel

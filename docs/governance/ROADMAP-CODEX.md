@@ -6,7 +6,12 @@
 - [x] Registrar solicitação explícita de papel Gerente, sem ampliar para Dono.
 - [x] Consultar somente a identidade indicada no alvo original sob READ ONLY:
       nenhuma correspondência; zero vínculos de acesso na aplicação.
-- [ ] Conciliar e-mail/URL de login com a identidade existente; confirmar
+- [x] Confirmar os dois e-mails e papéis com o usuário; buscas direcionadas
+      na original/cópia sem correspondências, ausência não explicada por RLS.
+- [x] Confirmar URL HML e preparar diagnóstico booleano temporário, sem
+      endpoint novo e sem exposição de bindings; validações locais aprovadas.
+- [ ] Autorizar publicação/ativação delimitada HML e atestar destino efetivo.
+- [ ] Conciliar destino efetivo de autenticação com a identidade; confirmar
       verificação de e-mail antes da concessão transacional auditada.
 - [ ] Confirmar acesso pela interface após eventual concessão. Diagnóstico
       SQL continua restrito a `access:manage`, que Gerente não possui.
