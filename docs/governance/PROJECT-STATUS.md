@@ -2,12 +2,20 @@
 
 ## Redefinição de senha HML — 17 de outubro de 2026
 
+Retomada com 100% de franquia principal e preflight concluído. Tentativa
+posterior ao diagnóstico retornou `42P01` na auditoria inicial: relação SQL
+inexistente. Writer usa `auth_audit_events`, pré-requisito da migration `0014`.
+Ausência física versus resolução por schema/destino ainda requer catálogo.
+SQL mínimo READ ONLY preparado; execução externa aguarda acesso não gravável
+ou exceção explícita para o MCP administrativo, conforme M45. Nenhum SQL
+externo, migration, role/grant ou mudança de credencial nessa retomada.
+
 Nova tentativa sem recebimento: observabilidade confirmou três falhas de
 auditoria inicial e nenhuma chamada ao Neon. A causa subjacente da auditoria
 ainda não é observável; preparado diagnóstico local por códigos permitidos,
 sem mensagens/SQL/segredos e sem enfraquecer o bloqueio. Diagnóstico publicado
-após autorização: `f168418a`, 100% do tráfego. Nova tentativa/código pendentes.
-Pausa obrigatória por reserva: 5% restante, reset 17/10 às 14:51:35 BRT.
+após autorização: `f168418a`, 100% do tráfego. Código agora confirmado acima.
+Pausa anterior por reserva: 5% restante, reset 17/10 às 14:51:35 BRT; renovada.
 Handoff em `HML-PASSWORD-RESET-2026-10-17.md`.
 Não aplicar migrations ou mudanças de credenciais por inferência.
 

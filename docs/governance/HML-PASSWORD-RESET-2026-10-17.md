@@ -1,5 +1,47 @@
 # Redefinição de senha em HML — 17 de outubro de 2026
 
+## Retomada e SQLSTATE confirmado — 17 de outubro de 2026
+
+Retomada autorizada pelo usuário às `18:09 UTC`. Franquia oficial renovada:
+100% principal, 57% semanal restante; reset principal Unix `1792278554`.
+`./LIGARTUDO --prepare-only` concluiu o preflight; árvore root conserva somente
+a alteração preexistente de ambiente, portanto atualização remota adiada.
+Encerramento anterior confirmou push da branch de release no GitHub.
+
+Evento posterior à versão `f168418a`: timestamp epoch ms `1792254990423`,
+requestId `793886b0-8990-47f0-8541-6fca6b1233e2`, stage `initial_audit_failed`,
+auditErrorCode **`42P01`**. PostgreSQL define esse código como
+`undefined_table`. A consulta da auditoria recebe uma resposta SQL e falha por
+relação inexistente; não atribuir essa tentativa a senha do usuário ou SMTP.
+Não prova o projeto/branch SQL do secret nem o nome exato da relação ausente.
+O writer acessa `auth_audit_events` sem qualificação explícita de schema;
+presença e search_path ainda precisam de catálogo para distinguir os casos.
+
+Estruturas esperadas: `0014_puzzling_masque.sql` cria `auth_audit_events`,
+`auth_login_attempts` e `app_user_access`. `0015` acrescenta papéis canônicos;
+`0016` migra admin para owner e registra fatos. A falha está nesse pré-requisito
+de autenticação, não há evidência de causalidade da `0017`. Não aplicar a
+cadeia, criar vínculo de Dono ou migrar papéis automaticamente.
+
+Inventário de roles por metadados continua com `neondb_owner`, `authenticator`,
+`anonymous` e `authenticated`. Nenhuma role transitória exclusivamente de
+auditoria foi identificada. O contrato atual de `run_sql_transaction` permite
+selecionar `role_name`, mas isso não comprova ACLs das roles existentes.
+
+Preparado SQL mínimo de catálogo em
+`SQL-AUTH-CATALOG-PREFLIGHT-2026-10-17.sql`: transação READ ONLY, timeouts,
+presença/resolução das três relações, colunas/tipos, e somente presença do
+journal. Não lê dados de autenticação/negócio nem executa DDL/DML. Ainda não
+executado externamente. Gate: autorização excepcional e explícita para esse
+SQL pelo MCP administrativo, sem criar role/grants, ou provisionamento humano
+de acesso não gravável conforme M45. A exceção, se aprovada, limita-se a este
+catálogo e não libera auditoria ampla, migrations ou escrita em produção.
+
+Próximo passo após catálogo: se tabelas ausentes, preparar correção auditável
+dos pré-requisitos existentes, com histórico/backup e autorização de DDL; se
+presentes, conferir resolução de schema e correspondência do destino SQL.
+Não substituir secret nem copiar dados de outra branch por inferência.
+
 ## Nova evidência após a correção do callback
 
 Usuário repetiu a recuperação e não recebeu e-mail. Consulta sanitizada de
