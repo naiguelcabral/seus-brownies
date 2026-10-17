@@ -28,7 +28,8 @@ Validação local: nove testes direcionados aprovados, tipos, lint, formatação
 `git diff --check` e build HML em archive + três arquivos de fonte/teste,
 sem arquivos de ambiente e com chave pública sintética, aprovados. Testes de
 isolamento Git falharam com `EPERM` no sandbox e os três passaram na execução
-permitida fora dessa restrição. Suíte geral ainda não concluída nesta etapa.
+permitida fora dessa restrição. Suíte geral repetida com a permissão necessária: 479 testes aprovados,
+zero falhas. A execução inicial restrita não substitui esse resultado.
 Nenhuma publicação executada. Diff preserva `.env.example` fora do escopo.
 
 ## Contas Dono/Gerente — conciliação do destino
