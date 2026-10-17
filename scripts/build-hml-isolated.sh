@@ -68,6 +68,11 @@ run_isolated() {
   if [[ "${HML_DEPLOY:-0}" == '1' ]]; then
     # Publicação continua sendo operação separada e explicitamente autorizada.
     # Só ela usa o perfil de autenticação do operador; o build nunca o recebe.
-    run_isolated env HOME="$HOME" XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}" npx wrangler deploy --env hml
+    run_isolated env \
+      HOME="$HOME" \
+      XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}" \
+      XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-}" \
+      DBUS_SESSION_BUS_ADDRESS="${DBUS_SESSION_BUS_ADDRESS:-}" \
+      npx wrangler deploy --env hml
   fi
 )
