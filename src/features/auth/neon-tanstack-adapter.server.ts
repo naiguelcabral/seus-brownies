@@ -6,7 +6,7 @@ import type {
   CookieOptions,
   NeonAuthServer,
 } from '@neondatabase/neon-js/auth/server'
-import { getRequest, getResponseHeaders } from '@tanstack/react-start/server'
+import { appendResponseHeader, getRequest } from '@tanstack/react-start/server'
 
 import type { NeonAuthRuntimeConfig } from './runtime-config.server'
 import { requestNeonPasswordReset } from './neon-password-reset-provider.server'
@@ -20,8 +20,7 @@ export type TanStackRequestBindings = {
 function defaultBindings(): TanStackRequestBindings {
   return {
     getRequest,
-    appendSetCookie: (value) =>
-      getResponseHeaders().append('set-cookie', value),
+    appendSetCookie: (value) => appendResponseHeader('set-cookie', value),
   }
 }
 

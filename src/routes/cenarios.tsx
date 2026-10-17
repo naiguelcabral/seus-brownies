@@ -131,7 +131,7 @@ function ScenarioPage() {
   } | null>(null)
   const [form, setForm] = useState<ScenarioForm>(emptyForm)
   const [selectedProduct, setSelectedProduct] = useState('')
-  const [reasons, setReasons] = useState<Record<number, string>>({})
+  const [reasons, setReasons] = useState<Partial<Record<number, string>>>({})
   const [saving, setSaving] = useState(false)
   const [message, setMessage] = useState<string | null>(null)
 
@@ -1028,7 +1028,7 @@ function ScenarioPending() {
   )
 }
 
-function ScenarioError({ error }: { error: Error }) {
+function ScenarioError({ error }: { error: unknown }) {
   const router = useRouter()
   return (
     <ManagementLayout
@@ -1036,7 +1036,10 @@ function ScenarioError({ error }: { error: Error }) {
       description="Não foi possível carregar as premissas e versões."
     >
       <div className="rounded-2xl border border-[#e7c9b8] bg-[#fff5ed] p-5 text-sm text-[#75411f]">
-        <p>{error.message || 'Tente novamente em alguns instantes.'}</p>
+        <p>
+          {(error instanceof Error && error.message) ||
+            'Tente novamente em alguns instantes.'}
+        </p>
         <button
           className="mt-3 rounded-lg border border-[#75411f] px-3 py-2 text-xs font-bold"
           onClick={() => void router.invalidate()}

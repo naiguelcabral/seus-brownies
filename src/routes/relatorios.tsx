@@ -511,14 +511,15 @@ function ReconciliationDivergences({
   )
 }
 
-function ReportsError({ error }: { error: Error }) {
+function ReportsError({ error }: { error: unknown }) {
   return (
     <ManagementLayout
       title="Relatórios"
       description="Não foi possível carregar os indicadores solicitados."
     >
       <p className="rounded-2xl border border-[#e7c9b8] bg-[#fff5ed] p-5 text-sm text-[#75411f]">
-        {error.message || 'Tente novamente em alguns instantes.'}
+        {(error instanceof Error && error.message) ||
+          'Tente novamente em alguns instantes.'}
       </p>
     </ManagementLayout>
   )

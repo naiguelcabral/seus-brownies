@@ -397,7 +397,7 @@ function LocationsPending() {
     </ManagementLayout>
   )
 }
-function LocationsError({ error }: { error: Error }) {
+function LocationsError({ error }: { error: unknown }) {
   const router = useRouter()
   return (
     <ManagementLayout
@@ -405,7 +405,7 @@ function LocationsError({ error }: { error: Error }) {
       description="Não foi possível carregar o cadastro."
     >
       <div className="rounded-2xl border border-[#e7c9b8] bg-[#fff5ed] p-5 text-sm text-[#75411f]">
-        <p>{error.message || 'Tente novamente.'}</p>
+        <p>{(error instanceof Error && error.message) || 'Tente novamente.'}</p>
         <button
           className="mt-3 rounded border px-3 py-2 text-xs font-bold"
           onClick={() => void router.invalidate()}

@@ -1,5 +1,15 @@
 # Estado canônico do projeto — Cacau v1
 
+## Correções de segurança — 16 de outubro de 2026
+
+Pacote local após `23f9d85`: dependências corrigidas e versões TanStack explícitas;
+auditoria reduzida de 26 entradas afetadas para zero. Instalação limpa, tipos,
+lint, testes originais e regressões dos overrides, além de build isolado,
+aprovados. Compatibilidade de cookies e telas de erro adaptada às APIs atuais.
+Detalhes e limites em [SECURITY-MODERNIZATION-2026-10-16.md](SECURITY-MODERNIZATION-2026-10-16.md).
+Revisão, CI remota e homologação real de autenticação continuam pendentes.
+Nenhuma migration, escrita compartilhada ou publicação foi executada.
+
 ## TypeScript 7 e Oxc — validação local, 16 de outubro de 2026
 
 Branch `codex/typescript-7-upgrade`: TypeScript 7.0.2 é o único compilador no

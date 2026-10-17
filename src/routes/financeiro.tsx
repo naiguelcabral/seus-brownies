@@ -792,7 +792,7 @@ function FinancialPending() {
   )
 }
 
-function FinancialError({ error }: { error: Error }) {
+function FinancialError({ error }: { error: unknown }) {
   const router = useRouter()
   return (
     <ManagementLayout
@@ -800,7 +800,10 @@ function FinancialError({ error }: { error: Error }) {
       description="Não foi possível carregar o período."
     >
       <div className="rounded-2xl border border-[#e7c9b8] bg-[#fff5ed] p-5 text-sm text-[#75411f]">
-        <p>{error.message || 'Tente novamente em alguns instantes.'}</p>
+        <p>
+          {(error instanceof Error && error.message) ||
+            'Tente novamente em alguns instantes.'}
+        </p>
         <button
           className="mt-3 rounded-lg border border-[#75411f] px-3 py-2 text-xs font-bold"
           onClick={() => void router.invalidate()}

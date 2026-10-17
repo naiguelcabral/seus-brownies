@@ -195,12 +195,16 @@ function InventoryPage() {
                     ) : item.reorderStatus === 'reorder' ? (
                       <span className="font-bold text-[#b65624]">
                         Repor · limite{' '}
-                        {formatQuantity(item.reorderPoint!, item.unit)}
+                        {item.reorderPoint === null
+                          ? '—'
+                          : formatQuantity(item.reorderPoint, item.unit)}
                       </span>
                     ) : (
                       <span className="font-bold text-emerald-700">
                         OK · limite{' '}
-                        {formatQuantity(item.reorderPoint!, item.unit)}
+                        {item.reorderPoint === null
+                          ? '—'
+                          : formatQuantity(item.reorderPoint, item.unit)}
                       </span>
                     )}
                   </td>
@@ -453,7 +457,7 @@ function InventoryPending() {
   )
 }
 
-function InventoryError({ error }: { error: Error }) {
+function InventoryError({ error }: { error: unknown }) {
   const router = useRouter()
   return (
     <ManagementLayout
@@ -461,7 +465,10 @@ function InventoryError({ error }: { error: Error }) {
       description="Não foi possível carregar saldos e movimentações."
     >
       <div className="rounded-2xl border border-[#e7c9b8] bg-[#fff5ed] p-5 text-sm text-[#75411f]">
-        <p>{error.message || 'Tente novamente em alguns instantes.'}</p>
+        <p>
+          {(error instanceof Error && error.message) ||
+            'Tente novamente em alguns instantes.'}
+        </p>
         <button
           type="button"
           className="mt-3 rounded-lg border border-[#75411f] px-3 py-2 text-xs font-bold"

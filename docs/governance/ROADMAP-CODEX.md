@@ -1,5 +1,13 @@
 # Roadmap executável para Codex — Cacau v1
 
+## Segurança e melhorias — 16 de outubro de 2026
+
+- [x] Preparar pacote local de dependências corrigidas, com auditoria sem avisos,
+      compatibilidade TanStack, testes de regressão e build isolado aprovados.
+      Revisão/integração e homologação real continuam pendentes.
+- [~] Aplicar contratos opcionais exatos, acessos seguros a índices e regras
+  adicionais React, preservando todas as verificações de integridade.
+
 ## Atualização TypeScript — 16 de outubro de 2026
 
 - [x] Concluir localmente a migração integral para TypeScript 7.0.2, removendo a API 6,
