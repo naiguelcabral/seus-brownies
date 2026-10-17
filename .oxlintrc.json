@@ -1,0 +1,15 @@
+{
+  "categories": {
+    "correctness": "warn",
+    "suspicious": "warn"
+  },
+  "ignorePatterns": [
+    "src/routeTree.gen.ts",
+    "**/*.d.ts",
+    "node_modules/**",
+    "dist/**",
+    "dist-ssr/**",
+    "playwright-report/**",
+    "test-results/**"
+  ]
+}
