@@ -2,6 +2,11 @@
 
 ## Recuperação de acesso HML — 17 de outubro de 2026
 
+- [x] Identificar novo bloqueio: três falhas na auditoria inicial, sem chamada
+      ao provedor após correção de callback/origem.
+- [ ] Validar/publicar diagnóstico sanitizado do código do driver, mediante
+      autorização, e corrigir causa comprovada sem contornar auditoria.
+
 - [x] Confirmar relato de reset e inspecionar configuração sem credenciais/SQL.
 - [x] Corrigir localmente origem de callback HML e cobrir configuração real.
 - [x] Autorizar/publicar a correção HML (`9ec9856d`, 100%) e incluir origem

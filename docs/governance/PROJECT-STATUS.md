@@ -2,6 +2,12 @@
 
 ## Redefinição de senha HML — 17 de outubro de 2026
 
+Nova tentativa sem recebimento: observabilidade confirmou três falhas de
+auditoria inicial e nenhuma chamada ao Neon. A causa subjacente da auditoria
+ainda não é observável; preparado diagnóstico local por códigos permitidos,
+sem mensagens/SQL/segredos e sem enfraquecer o bloqueio. Publicação adicional
+pendente. Não aplicar migrations ou mudanças de credenciais por inferência.
+
 Relato de falha de login e e-mail de redefinição não recebido. MCP confirmou
 ausência de `PASSWORD_RESET_REDIRECT_ORIGIN` no Worker e apenas localhost
 nas origens confiáveis do Neon Auth do alvo declarado `production`.
@@ -10,7 +16,7 @@ Configuração HML corrigida localmente (`bb1717d`) e teste de regressão prepar
 Após autorização delimitada, origem HTTPS exata adicionada e reconfirmada
 no Neon; correção publicada em HML, versão `9ec9856d`, 100% do tráfego.
 Callback correto, secrets/rate limit/observabilidade preservados por MCP.
-Usuário orientado a solicitar novo link; entrega e recuperação ainda pendentes.
+Usuário solicitou novo link; entrega bloqueada pela auditoria inicial.
 Erro individual de login ainda sem mensagem exata/correlação; não atribuir
 à senha, SMTP ou schema por inferência. Diagnóstico SQL permanece desativado.
 Evidência, aplicação proposta e limites em

@@ -1,5 +1,33 @@
 # Redefinição de senha em HML — 17 de outubro de 2026
 
+## Nova evidência após a correção do callback
+
+Usuário repetiu a recuperação e não recebeu e-mail. Consulta sanitizada de
+observabilidade após `16:20:20Z` encontrou três eventos `initial_audit_failed`,
+zero `runtime_config_missing`, zero `provider_request_started`, zero resultados
+do provedor e zero `completed`. Isso comprova bloqueio na gravação da auditoria
+antes do envio nas três solicitações observadas. Não atribuir a spam/SMTP.
+
+`createDatabaseAuthAuditWriter().append()` constrói evento sanitizado e executa
+insert em `auth_audit_events` por `getDb()`. A exceção capturada não informa
+código atualmente; não há evidência suficiente para distinguir conexão,
+autorização, schema ou constraint. Não aplicar migration nem liberar acesso
+por suposição. Consulta de erros do Worker não retornou falha de driver
+classificável. A interface continua genérica por proteção contra enumeração.
+
+Preparada telemetria local que admite somente códigos fixos de driver/SQLSTATE,
+inclusive em `cause` do Drizzle, com profundidade limitada. Não lê mensagem,
+SQL, parâmetros, DSN ou credenciais. Código é omitido quando desconhecido e
+passa por nova allowlist na emissão. Mantém bloqueio antes do provedor e após
+falha da auditoria final. Testes cobrem causa encapsulada, ciclos, injeção de
+conteúdo em código e ausência de segredos na telemetria.
+Referência: [códigos PostgreSQL](https://www.postgresql.org/docs/current/errcodes-appendix.html).
+
+Próximo passo proposto: publicar essa telemetria em `cacau-v1-hml`, usuário
+solicitar novamente uma única vez, ler somente código/etapa e então preparar
+correção específica. Publicação desse diagnóstico aguarda autorização própria;
+não altera banco, roles, secrets nem política de sessão.
+
 ## Relato e alvo
 
 ### Correção aplicada após aprovação
