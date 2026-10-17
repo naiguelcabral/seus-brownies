@@ -23,6 +23,12 @@ falha da auditoria final. Testes cobrem causa encapsulada, ciclos, injeção de
 conteúdo em código e ausência de segredos na telemetria.
 Referência: [códigos PostgreSQL](https://www.postgresql.org/docs/current/errcodes-appendix.html).
 
+Commit do diagnóstico: `6f67aed`. Validação: 476 testes, typecheck, lint sem
+avisos, formatação, diff check e build HML isolado aprovados. Release limpa
+preparada em `/tmp/cacau-worker-sql-probe-release-20261017`, sem publicação.
+Uso oficial no checkpoint: 6% restante; reserva 5%; reset Unix `1792259495`.
+Não executar encerramento por reserva antes de confirmar o limiar obrigatório.
+
 Próximo passo proposto: publicar essa telemetria em `cacau-v1-hml`, usuário
 solicitar novamente uma única vez, ler somente código/etapa e então preparar
 correção específica. Publicação desse diagnóstico aguarda autorização própria;
