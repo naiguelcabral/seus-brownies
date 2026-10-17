@@ -1,5 +1,40 @@
 # Atualização delimitada da original — 0016 até 0028
 
+## Ensaio externo aprovado — aceite do método de backup pendente
+
+Usuário aprovou o plano e os valores `0019`/mix novo vazio `0028`. Preflight
+READ ONLY confirmou baseline exata `0016`, dois vínculos e sete eventos auth.
+Criação do snapshot novo foi recusada: `snapshots limit exceeded` (422).
+Snapshot antigo `snap-withered-poetry-achs77uu` permanece intocado.
+
+Preparação reversível alternativa concluída, sem DDL na original: backup
+`br-morning-star-ac9j0kkh`, sem compute, ancorado na original em LSN `0/1EA56F0`,
+`2026-10-17T19:36:11Z`. Cópia privada derivada `br-misty-surf-acbrzli5`,
+endpoint próprio `ep-bold-smoke-acrcoktt`, recebeu o lote de 102 instruções,
+com locks e guards adicionais de preservação na mesma transação. São 148
+instruções incluindo conferências; o SQL principal aprovado permanece idêntico.
+
+Ensaio passou: 31 recibos, 38 consultas ORM com LIMIT 0, 29 tabelas antigas e
+seus nove registros preservados por SHA-256, incluindo os dois acessos e a
+auditoria. Catálogo tem SHA-256
+`6832cef678c0a00c28f926fc75484ad8c6b1dd1e63a4cd29af4ff0dde30c7642`,
+exatamente o laboratório independente: 38 tabelas, 435 colunas, 152 constraints,
+112 índices, 21 enums, duas funções/dois triggers, 37 sequences e zero policies.
+Baseline/digests anteriores da cópia coincidem com a original; clone a partir
+do backup demonstrado. Nenhuma linha de negócio foi exportada.
+
+Original reconfirmada com 17 recibos; `production` continua primary/default e
+os endpoints original/G1 permanecem nas mesmas branches. Nenhum restore,
+finalização ou realocação de endpoint foi executado. A tentativa de definir
+suspensão automática da cópia foi recusada pela política da conta antes de
+criar recursos; a cópia foi criada com os parâmetros permitidos, 0,25 CU.
+
+Solicitado somente aceite da substituição do snapshot novo por backup em
+branch preservado, mantendo o snapshot antigo. **Não aplicar na original até
+essa resposta.** Valores financeiros já aprovados não exigem nova decisão.
+Recibo e lote verificado em `evidence/scoped-upgrade-execution-2026-10-17.json`
+e `evidence/scoped-upgrade-verified-batch-2026-10-17.json`.
+
 Estado: **PREPARADO E VALIDADO LOCALMENTE; aplicação externa pendente**.
 Solicitação de continuar a correção recebida após concessão de Dono/Gerente.
 Não autoriza, por inferência, novos parâmetros financeiros ou DDL na principal.

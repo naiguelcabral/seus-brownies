@@ -2,13 +2,20 @@
 
 ## Correção do schema do painel — 17 de outubro de 2026
 
+- [x] Aprovar valores/plano; Neon recusou snapshot novo pelo limite do projeto.
+- [x] Preservar snapshot antigo e preparar backup atual em branch sem compute.
+- [x] Migrar cópia derivada e validar 31 recibos, 38 consultas, preservação dos
+      dados e catálogo idêntico ao laboratório. Original permanece em `0016`.
+- [ ] Receber aceite específico do backup em branch no lugar do snapshot novo.
+- [ ] Aplicar na original somente após esse aceite, com guards já ensaiados.
+
 - [x] Preparar atualização delimitada `0016–0028`, preservando hashes originais
       e acessos recém-concedidos, sem tocar na cadeia ativa.
 - [x] Validar 481 testes, 26 cenários anteriores e cinco novos PostgreSQL 17;
       todas as 38 tabelas ORM consultáveis, catálogo equivalente e rollback.
 - [x] Preparar payload de 102 instruções e plano de cópia/restore isolado.
-- [ ] Aprovar valores iniciais `0019`, mix novo vazio `0028`, snapshot/cópia
-      e aplicação condicional do plano `SCOPED-UPGRADE-0016-0028-PLAN.md`.
+- [x] Aprovar valores iniciais `0019`, mix novo vazio `0028` e plano condicional;
+      a troca do método de backup está pendente conforme checkpoint acima.
 - [ ] Executar ensaio externo e atualizar original somente se aprovado/passou.
 - [ ] Confirmar painel e acesso por papel; homologações comerciais continuam
       tarefas próprias, sem operações sintéticas no banco compartilhado.

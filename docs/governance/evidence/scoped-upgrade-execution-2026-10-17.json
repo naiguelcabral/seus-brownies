@@ -1,0 +1,57 @@
+{
+  "status": "trial-passed-original-not-upgraded",
+  "project_id": "steep-brook-51659857",
+  "original_branch_id": "br-lingering-wind-acwh5wap",
+  "original_endpoint_id": "ep-late-water-acahd1z1",
+  "original_history_count": 17,
+  "snapshot_creation": {
+    "status": "refused",
+    "reason": "snapshots limit exceeded",
+    "existing_snapshot_preserved": "snap-withered-poetry-achs77uu"
+  },
+  "backup": {
+    "branch_id": "br-morning-star-ac9j0kkh",
+    "name": "cacau-pre-upgrade-0028-backup-20261017",
+    "parent_lsn": "0/1EA56F0",
+    "parent_timestamp": "2026-10-17T19:36:11Z",
+    "no_compute": true,
+    "retained_until_explicit_cleanup_approval": true
+  },
+  "trial": {
+    "branch_id": "br-misty-surf-acbrzli5",
+    "endpoint_id": "ep-bold-smoke-acrcoktt",
+    "history_count": 31,
+    "orm_shape_checks": 38,
+    "all_zero_rows": true,
+    "old_tables_preserved": 29,
+    "old_rows_preserved": 9,
+    "access_roles": [
+      "owner",
+      "manager"
+    ],
+    "catalog": {
+      "catalog_sha256": "6832cef678c0a00c28f926fc75484ad8c6b1dd1e63a4cd29af4ff0dde30c7642",
+      "matches_lab": true,
+      "counts": {
+        "tables": 38,
+        "columns": 435,
+        "constraints": 152,
+        "indexes": 112,
+        "enums": 21,
+        "functions": 2,
+        "triggers": 2,
+        "sequences": 37,
+        "policies": 0
+      }
+    },
+    "clone_matches_source_preflight": true,
+    "compute_suspension_requested": true
+  },
+  "core_sql_sha256": "5ceff1d04b27db07800295e9f57a9f0d775e681f4ae0a0162d18dc11d2ff2711",
+  "source_endpoint_preserved": true,
+  "g1_endpoint_preserved": true,
+  "original_application_with_branch_backup": "pending-explicit-acceptance",
+  "financial_values_0019": "approved",
+  "empty_new_mix_0028": "approved",
+  "verified_batch_sha256": "a6a7e3f77a9a7f48f984c4e61ff819c75d2e3cc8b4bc77fcfc98f542aaa17783"
+}
