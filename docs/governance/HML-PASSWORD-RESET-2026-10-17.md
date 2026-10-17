@@ -2,12 +2,35 @@
 
 ## Relato e alvo
 
+### Correção aplicada após aprovação
+
+Usuário autorizou as duas alterações externas explicitamente. MCP adicionou
+somente a origem HTTPS exata de HML no Neon Auth de
+`br-lingering-wind-acwh5wap`; nova listagem confirmou localhost preservado
+e a origem adicionada, sem wildcard.
+
+Fonte `bb1717d`, previamente validada, publicada do checkout limpo pelo script
+isolado. CLI e MCP confirmaram deployment
+`5d0fe2cb-f1ab-44d0-a629-b82b0fc011f4`, criado em
+`2026-10-17T16:20:19.999376Z`, versão
+`9ec9856d-85c0-40af-adfe-7d5132df6dd0`, 100% do tráfego.
+MCP confirmou `PASSWORD_RESET_REDIRECT_ORIGIN` com a origem pública correta,
+bindings secretos preservados por nome/tipo, rate limit e observabilidade
+preservados. Probe SQL continua desativado. Nenhum SQL, schema, senha ou
+identidade foi alterado pelo agente.
+
+Página pública `/login` respondeu HTTP 200 após a publicação.
+Usuário orientado a atualizar a página de login e solicitar uma vez novo
+link. Entrega, evento de auditoria, consumo do token e login ainda pendentes;
+não declarar o fluxo integralmente homologado antes dessa confirmação.
+
 Usuário relatou falha de senha em `cacau-v1-hml` e ausência do e-mail de
 **redefinição**, não do código de confirmação de cadastro. Mensagem exata
 do login ainda solicitada. Não concluir que a senha está incorreta nem que
 o provedor rejeitou a entrega sem evidência da requisição específica.
 
-Worker ativo: versão `6b737c00-e80b-4217-9b03-6d84829035e4`, 100%.
+Worker ativo no diagnóstico inicial: versão
+`6b737c00-e80b-4217-9b03-6d84829035e4`, 100%.
 Alvo Neon declarado pelo operador: projeto `steep-brook-51659857`, branch
 `br-lingering-wind-acwh5wap`, nome `production`. Inspeção de configuração
 somente leitura; sem consultas SQL, alteração de identidade, senha ou RBAC.
@@ -55,13 +78,12 @@ Verificações direcionadas: 19 testes aprovados, typecheck, lint e formatação
 aprovados. Suíte completa: 475 testes aprovados. Build HML isolado do commit
 `bb1717d` aprovado, sem publicação. `git diff --check` aprovado.
 
-## Aplicação externa pendente de autorização específica
+## Plano aprovado e verificação integrada pendente
 
-1. Aprovar publicar a correção no Worker `cacau-v1-hml` e adicionar somente
+1. Aprovado e aplicado: publicar a correção no Worker `cacau-v1-hml` e adicionar somente
    `https://cacau-v1-hml.naiguelcabral.workers.dev`, sem wildcard, às origens
    confiáveis do Neon Auth de `br-lingering-wind-acwh5wap` / `production`.
-   A autorização anterior cobria o diagnóstico SQL, não esta alteração da
-   configuração de autenticação de produção. Gates em `HUMAN-APPROVALS.md`.
+   A aprovação específica está registrada em `HUMAN-APPROVALS.md`.
 2. Preservar os demais bindings e origens; não alterar secrets, cadastro,
    verificação de e-mail, usuário, senha ou papéis. Publicar de checkout limpo.
 3. Usuário solicita novamente a recuperação pela interface. Confirmar etapas

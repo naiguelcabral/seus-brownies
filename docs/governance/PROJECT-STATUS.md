@@ -6,8 +6,11 @@ Relato de falha de login e e-mail de redefinição não recebido. MCP confirmou
 ausência de `PASSWORD_RESET_REDIRECT_ORIGIN` no Worker e apenas localhost
 nas origens confiáveis do Neon Auth do alvo declarado `production`.
 Configuração HML corrigida localmente (`bb1717d`) e teste de regressão preparado;
-475 testes, tipos, lint, formatação e build HML isolado aprovados;
-publicação e inclusão da origem no Neon aguardam autorização delimitada.
+475 testes, tipos, lint, formatação e build HML isolado aprovados.
+Após autorização delimitada, origem HTTPS exata adicionada e reconfirmada
+no Neon; correção publicada em HML, versão `9ec9856d`, 100% do tráfego.
+Callback correto, secrets/rate limit/observabilidade preservados por MCP.
+Usuário orientado a solicitar novo link; entrega e recuperação ainda pendentes.
 Erro individual de login ainda sem mensagem exata/correlação; não atribuir
 à senha, SMTP ou schema por inferência. Diagnóstico SQL permanece desativado.
 Evidência, aplicação proposta e limites em

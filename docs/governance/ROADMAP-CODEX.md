@@ -4,8 +4,9 @@
 
 - [x] Confirmar relato de reset e inspecionar configuração sem credenciais/SQL.
 - [x] Corrigir localmente origem de callback HML e cobrir configuração real.
-- [ ] Autorizar/publicar a correção HML e incluir origem HTTPS exata no Neon
-      Auth da branch declarada `production`; não ampliar outros controles.
+- [x] Autorizar/publicar a correção HML (`9ec9856d`, 100%) e incluir origem
+      HTTPS exata no Neon Auth da branch declarada `production`, preservando
+      os demais bindings, origens e controles.
 - [ ] Receber mensagem exata do erro de login; validar entrega e recuperação
       pelo usuário, preservando auditoria e sem compartilhar tokens/senha.
       Detalhes em [HML-PASSWORD-RESET-2026-10-17.md](HML-PASSWORD-RESET-2026-10-17.md).

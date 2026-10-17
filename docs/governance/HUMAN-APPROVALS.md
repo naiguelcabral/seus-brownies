@@ -1,5 +1,17 @@
 # Ações que exigem aprovação humana — Cacau v1
 
+## Recuperação de senha HML — 17 de outubro de 2026
+
+Após revisão dos dois bloqueios em `HML-PASSWORD-RESET-2026-10-17.md`, o usuário
+autorizou explicitamente publicar a correção do callback no Worker
+`cacau-v1-hml` e adicionar somente
+`https://cacau-v1-hml.naiguelcabral.workers.dev` às origens confiáveis do Neon
+Auth do projeto `steep-brook-51659857`, branch
+`br-lingering-wind-acwh5wap` / `production`.
+Não autoriza wildcard, mudança de secrets, usuários/senhas, RBAC, SMTP,
+cadastro ou requisitos de verificação, schema ou dados de negócio.
+A solicitação e conclusão de recuperação serão feitas pelo próprio usuário.
+
 ## Diagnóstico SQL temporário — 17 de outubro de 2026
 
 O usuário autorizou nesta conversa publicar em `cacau-v1-hml` para testar a
