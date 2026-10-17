@@ -1,5 +1,56 @@
 # Redefinição de senha em HML — 17 de outubro de 2026
 
+## Diagnóstico executado — causa comprovada e correção preparada
+
+Publicação autorizada a partir de `410665b`, em build isolado sem arquivos de
+ambiente, com chave Turnstile pública real. Primeira comparação: versão
+`148a0a88-25e2-47a2-a687-7088ff64b53b`, deployment
+`22699057-f691-4f07-902c-529041779f59`, a 100%, retorno `matchesExpected=false`
+para o Auth declarado da branch original. Diagnóstico desativado em seguida
+(`81a4a309-69b5-4140-92c1-7c5999c07d0d`).
+
+Busca restrita aos dois e-mails confirmados localizou ambas as identidades
+verificadas em `g1-auth-hml` (`br-patient-lake-ac2t0cvq`), com vínculos ativos
+`owner` e `manager` já existentes nessa branch. Segunda comparação, usando
+metadados públicos do Auth dessa branch e a mesma expiração UTC, confirmou
+`matchesExpected=true` na versão `fab87c0e-611f-4003-a73a-5cb205a86cc8`.
+Nenhum secret foi revelado/alterado; e-mails e UUIDs pessoais omitidos do Git.
+
+Destino de auditoria do Worker atestado por correlação: request_id
+`048a6f17-94e1-4776-b8b8-ad3ab7ecb999`, observado na telemetria HML como reset
+concluído, tem os eventos SQL `password_reset_requested` blocked/success na
+original, às `18:31:52.360Z`/`18:31:53.867Z`. As duas identidades não possuem
+vínculo nessa original. Auth em G1 + consulta de acesso no banco original
+explicam a aceitação da senha seguida de negação de acesso. A arquitetura
+permite identidades externas: `app_user_access.auth_user_id` não tem FK para
+o schema gerenciado; não é necessário duplicar identidades nem trocar secrets
+para conceder vínculos, se a continuidade desse destino for aprovada.
+
+Encerramento confirmado: versão `1ea59a90-c289-4c99-bf8f-a0bbd82d6b37`,
+deployment `e22b130f-6e70-4f90-a02e-dc7c70a9f3a3`, 100%, criado
+`2026-10-17T18:58:09.806473Z`. Zero bindings `AUTH_DESTINATION_*`; probe SQL
+continua sem ativação. Cinco secrets preservados por nome/tipo, sem leitura
+de valores. Demais bindings e observabilidade preservados.
+
+Proposta pronta, ainda NÃO aplicada: `SQL-ACCESS-RECONCILIATION-2026-10-17.sql`.
+Após revalidar identidades verificadas e papéis ativos na origem, associar os
+mesmos dois UUIDs ao banco original: um `owner`, um `manager`, ambos ativos.
+Transação única com timeout, lock, precondição de allowlist vazia, referência
+nova e dois eventos de auditoria. Aprovação humana fora de sessão da aplicação
+é identificada no metadata; ator de sessão permanece NULL, sem fingir sessão
+administrativa. Nenhuma identidade, senha, secret, schema ou regra RBAC muda.
+Falha/repetição/conflito impedem a concessão, preservando dados e auditoria.
+
+Quatro ensaios em PostgreSQL 17 descartável passaram: sucesso/auditoria e
+referência consumida, rollback integral por falha tardia de auditoria,
+preservação de allowlist preexistente e rejeição de alvo/identidade inválidos.
+Journal e marcador gerenciado preservados em todos. Script explícito:
+`node scripts/test-access-reconciliation-disposable.mjs --ack-disposable-postgres17`.
+Tipos, lint, formatação e diff-check aprovados; a suíte de 479 testes e build
+isolado do diagnóstico já haviam passado. Nenhuma concessão externa executada.
+A nova escrita no banco original, incluindo seu primeiro Dono, exige aprovação
+específica do plano acima; após aplicação, exigir novo login e validar acesso.
+
 ## Diagnóstico de destino preparado — aguardando publicação HML
 
 Usuário confirmou a página `https://cacau-v1-hml.naiguelcabral.workers.dev/login`.

@@ -1,5 +1,24 @@
 # Ações que exigem aprovação humana — Cacau v1
 
+## Reconciliação de vínculos na original — proposta pendente
+
+O diagnóstico autorizado concluiu sem alterar secrets ou contas e foi desligado.
+Comprovado Auth em G1 e auditoria SQL na original. Os papéis declarados pelo
+usuário já existem ativos em G1; não existem na allowlist do banco original.
+
+Preparado `SQL-ACCESS-RECONCILIATION-2026-10-17.sql`: criar somente dois
+vínculos no banco original, para os mesmos UUIDs existentes/verificados:
+Dono da conta identificada pelo usuário e Gerente da conta recuperada.
+As duas concessões e dois eventos auditáveis pertencem à mesma transação,
+com referência nova, sem overwrite e com precondição de allowlist vazia.
+Não cria usuários, muda senhas, secrets, origem Auth ou regra RBAC.
+
+**Aguardando autorização específica dessa gravação na original**, inclusive
+seu primeiro vínculo Dono. A aprovação de publicação do diagnóstico não
+substitui esse gate. Quatro cenários PostgreSQL descartáveis aprovados.
+Antes de executar, revalidar os papéis/verificação na origem e a ausência de
+vínculos no alvo. Registrar a decisão humana com a referência real consumida.
+
 ## Diagnóstico temporário de destino — autorização de 17 de outubro de 2026
 
 Usuário autorizou publicar e ativar em `cacau-v1-hml` o diagnóstico booleano

@@ -2,6 +2,16 @@
 
 ## Liberação de Gerente — 17 de outubro de 2026
 
+- [x] Publicar diagnóstico autorizado e atestar Auth em G1, diferente da
+      original; localizar as duas identidades verificadas e vínculos de origem.
+- [x] Correlacionar reset real com auditoria SQL na original, sem vínculos
+      das contas; causa da negação de acesso comprovada.
+- [x] Desativar diagnóstico; final `1ea59a90`, 100%, zero vars temporárias.
+- [x] Preparar SQL transacional e validar quatro cenários descartáveis.
+- [ ] Aprovar concessão dos dois vínculos no banco original (primeiro Dono
+      e Gerente), sem mudar Auth/secrets; revalidar origem antes da escrita.
+- [ ] Executar plano aprovado e validar novo login/acesso de cada papel.
+
 - [x] Recebimento do e-mail e troca da senha confirmados pelo usuário.
 - [x] Registrar solicitação explícita de papel Gerente, sem ampliar para Dono.
 - [x] Consultar somente a identidade indicada no alvo original sob READ ONLY:
@@ -10,9 +20,9 @@
       na original/cópia sem correspondências, ausência não explicada por RLS.
 - [x] Confirmar URL HML e preparar diagnóstico booleano temporário, sem
       endpoint novo e sem exposição de bindings; validações locais aprovadas.
-- [ ] Autorizar publicação/ativação delimitada HML e atestar destino efetivo.
-- [ ] Conciliar destino efetivo de autenticação com a identidade; confirmar
-      verificação de e-mail antes da concessão transacional auditada.
+- [x] Autorizar publicação/ativação delimitada HML e atestar destino efetivo.
+- [x] Conciliar destino efetivo e confirmar as duas identidades verificadas;
+      concessão no banco original permanece gate separado.
 - [ ] Confirmar acesso pela interface após eventual concessão. Diagnóstico
       SQL continua restrito a `access:manage`, que Gerente não possui.
 
