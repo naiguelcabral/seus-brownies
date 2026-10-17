@@ -1,5 +1,15 @@
 # Ações que exigem aprovação humana — Cacau v1
 
+## Exceção pontual de catálogo — 17 de outubro de 2026
+
+Após proposta do SQL `SQL-AUTH-CATALOG-PREFLIGHT-2026-10-17.sql`, o usuário
+autorizou o teste pelo MCP administrativo, em transação READ ONLY, no projeto
+`steep-brook-51659857`, branch `br-lingering-wind-acwh5wap`, database `neondb`.
+Escopo: presença/schema/colunas das três relações de autenticação e somente
+presença do journal. Exceção limitada ao requisito de role não gravável de M45;
+não autoriza nova role/grant, escrita, migration, leitura de usuários/negócio
+ou inventário ampliado. Executado com `transaction_read_only=on` confirmado.
+
 O usuário autorizou também publicar o diagnóstico sanitizado de falha da
 auditoria do reset em `cacau-v1-hml`, após proposta e validação do commit
 `6f67aed`. Não autoriza dispensar auditoria, aplicar migrations ou alterar

@@ -7,9 +7,11 @@
 - [x] Validar/publicar diagnóstico sanitizado do código do driver, mediante
       autorização: `f168418a`, 100% HML, 476 testes e build aprovados.
 - [x] Renovar franquia e correlacionar nova tentativa: `42P01` na auditoria.
-- [ ] Executar catálogo mínimo READ ONLY após aprovação de acesso/exceção M45,
-      distinguir ausência de tabelas e resolução por schema/destino e preparar
-      correção auditável para revisão, preservando histórico e auditoria.
+- [x] Executar catálogo mínimo READ ONLY após aprovação da exceção M45:
+      três tabelas auth e journal ausentes, sem correspondência em outro schema.
+- [ ] Autorizar inventário ampliado apenas de metadados `public`/`drizzle` e
+      enums auth; classificar baseline antes de preparar correção auditável.
+      Nenhuma migration ou criação de vínculo aprovada por este teste.
 
 - [x] Confirmar relato de reset e inspecionar configuração sem credenciais/SQL.
 - [x] Corrigir localmente origem de callback HML e cobrir configuração real.

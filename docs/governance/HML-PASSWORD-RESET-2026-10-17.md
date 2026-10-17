@@ -1,5 +1,47 @@
 # Redefinição de senha em HML — 17 de outubro de 2026
 
+## Resultado do catálogo autorizado — 17 de outubro de 2026
+
+Após autorização humana explícita de exceção M45, `run_sql_transaction` usou
+projeto `steep-brook-51659857`, branch `br-lingering-wind-acwh5wap`, database
+`neondb`, role administrativa `neondb_owner`. Primeira instrução
+`SET TRANSACTION READ ONLY`, timeouts 5s/1s, sem DDL/DML ou linhas de aplicação.
+Resultado confirmou `transaction_read_only=on`, `search_path="$user", public`:
+
+| Estrutura | Resultado |
+| --- | --- |
+| `public.auth_audit_events` | ausente |
+| `auth_audit_events` visível | ausente |
+| `public.auth_login_attempts` | ausente |
+| `public.app_user_access` | ausente |
+| `drizzle.__drizzle_migrations` | ausente |
+| Relações com os três nomes em outros schemas | nenhuma |
+| Colunas das três relações | nenhuma |
+
+A ausência das três tabelas na base declarada é comprovada; não é somente
+diferença de search_path. O SQLSTATE do Worker é consistente com essa ausência.
+A consulta pelo MCP não revela o destino do secret do Worker; a associação
+continua atestada pelo operador, sem leitura de segredo.
+
+Impactos no código: login consulta `auth_login_attempts` antes de chamar Neon;
+reset exige insert em `auth_audit_events` antes de solicitar e-mail; sessão
+precisa de vínculo ativo em `app_user_access`. Assim, criar apenas a tabela de
+auditoria não conclui a recuperação de acesso. Não há evidência de senha
+incorreta ou falha SMTP nesses erros de pré-requisito.
+
+Journal ausente não prova banco vazio nem autorização para instalar tudo.
+Migrations `0014`/`0015` contêm os DDLs canônicos de autenticação; `0016` altera
+papéis/dados e permanece gate próprio. Não aplicar `0000–0028`, criar journal
+fictício, usar db:push ou conceder owner automaticamente.
+
+Próximo pacote de investigação preparado em
+`SQL-AUTH-BASELINE-INVENTORY-2026-10-17.sql`, ainda **não autorizado/executado**:
+somente nomes/tipos de relações de `public`/`drizzle` e labels dos dois enums
+de autenticação. Distingue base não inicializada, legado e DDL parcial antes
+de preparar aplicação canônica. Não lê tabelas do provedor, usuários, eventos,
+estoque, vendas ou dinheiro. Alteração de schema exigirá plano revisado,
+recuperação validada e aprovação posterior, separada da inspeção.
+
 ## Retomada e SQLSTATE confirmado — 17 de outubro de 2026
 
 Retomada autorizada pelo usuário às `18:09 UTC`. Franquia oficial renovada:

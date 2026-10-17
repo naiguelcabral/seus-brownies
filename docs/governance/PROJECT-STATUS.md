@@ -2,13 +2,20 @@
 
 ## Redefinição de senha HML — 17 de outubro de 2026
 
+Catálogo mínimo executado após exceção humana explícita, READ ONLY confirmado:
+as três tabelas de autenticação estão ausentes em todos os schemas e o journal
+`drizzle.__drizzle_migrations` também está ausente em `neondb` do alvo declarado.
+Isso bloqueia tentativas de login, reset e autorização de sessão. Nenhum DDL,
+DML, vínculo, role/grant ou credencial alterado. Inventário mínimo de baseline
+preparado para nova autorização antes de propor migrations com histórico
+desconhecido; não presumir que a base esteja vazia.
+
 Retomada com 100% de franquia principal e preflight concluído. Tentativa
 posterior ao diagnóstico retornou `42P01` na auditoria inicial: relação SQL
 inexistente. Writer usa `auth_audit_events`, pré-requisito da migration `0014`.
 Ausência física versus resolução por schema/destino ainda requer catálogo.
-SQL mínimo READ ONLY preparado; execução externa aguarda acesso não gravável
-ou exceção explícita para o MCP administrativo, conforme M45. Nenhum SQL
-externo, migration, role/grant ou mudança de credencial nessa retomada.
+SQL mínimo READ ONLY executado sob exceção explícita para o MCP administrativo;
+resultado acima. Nenhuma migration, role/grant ou mudança de credencial.
 
 Nova tentativa sem recebimento: observabilidade confirmou três falhas de
 auditoria inicial e nenhuma chamada ao Neon. A causa subjacente da auditoria
