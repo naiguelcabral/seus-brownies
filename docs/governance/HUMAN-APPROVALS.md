@@ -1,5 +1,12 @@
 # Ações que exigem aprovação humana — Cacau v1
 
+## Diagnóstico temporário de destino — autorização de 17 de outubro de 2026
+
+Usuário autorizou publicar e ativar em `cacau-v1-hml` o diagnóstico booleano
+revisado em `2a81d4b`, por até 30 minutos, desativando-o após a conferência.
+Somente compara o endereço Auth declarado; não revela o secret nem concede
+acessos. Não autoriza alterar secrets, origem efetiva, usuários ou migrations.
+
 ## Identificação das duas contas — 17 de outubro de 2026
 
 Usuário confirmou a conta de Gerente e identificou sua outra conta como Dono.
