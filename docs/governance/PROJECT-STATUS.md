@@ -7,7 +7,9 @@ Após o pacote de segurança `201a1ee`, contratos opcionais exatos e acessos a
 falha controlada; consultas opcionais conservam ausência explícita. Regras React
 de pureza/efeitos/imutabilidade/refs habilitadas, tema sincronizado por store e
 hidratação pelo hook do framework. Tipos, lint, check e regressões direcionadas
-aprovados, com 463 testes; build em fechamento. Sem mudanças de regra financeira,
+aprovados, com 463 testes. Build HML isolado e smoke público com Chromium
+aprovados no HEAD `072cea1`; pacotes locais de segurança `201a1ee` e melhorias
+`072cea1` aguardam revisão/integração. Sem mudanças de regra financeira,
 precisão, RBAC, sessão ou dados. Detalhes no registro de modernização abaixo.
 
 ## Correções de segurança — 16 de outubro de 2026

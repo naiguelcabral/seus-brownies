@@ -64,7 +64,7 @@ React Compiler nem alterada a política de sessão/autorização.
 
 Regressões adicionais verificam valores obrigatórios sem substituir valores
 falsy, rollback antes de escritas para lote ausente e SSR do tema/rodapé sem
-navegador. Tipos, lint e check aprovados; 463 testes aprovados e build em fechamento.
+navegador. Tipos, lint, check, 463 testes e build HML isolado aprovados.
 Migrations, dados, precisão, referências idempotentes e evidências permanecem
 preservados. Homologação real, CI remota, revisão e publicação são etapas separadas.
 
@@ -72,3 +72,14 @@ Referências: [TanStack XSS](https://github.com/advisories/GHSA-qx66-fv34-fjm8),
 [esbuild](https://github.com/advisories/GHSA-67mh-4wv8-2f99),
 [parser CSS](https://github.com/advisories/GHSA-rj75-hqrm-r3gf),
 [shell-quote](https://github.com/advisories/GHSA-pqg4-j6r4-53mv).
+
+## Evidência final
+
+Pacotes locais: segurança `201a1ee` e melhorias `072cea1`, após a migração
+`23f9d85`. O HEAD `072cea1` passou no build HML isolado oficial e no smoke
+público isolado com Chromium: um cenário aprovado, cobrindo redirecionamento
+anônimo ao login e carregamento das rotas públicas de autenticação. O runner
+bloqueia rede externa, usa ambiente sem credenciais e não escreve em HML.
+A suíte final aprovou 463 testes, sem falhas. O lockfile permanece o auditado
+com zero avisos. Esta evidência não substitui login/OTP/reset/sessão reais nem
+homologação PostgreSQL. Não houve push, merge, migration ou deploy.

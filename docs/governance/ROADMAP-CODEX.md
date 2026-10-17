@@ -5,9 +5,10 @@
 - [x] Preparar pacote local de dependências corrigidas, com auditoria sem avisos,
       compatibilidade TanStack, testes de regressão e build isolado aprovados.
       Revisão/integração e homologação real continuam pendentes.
-- [~] Contratos opcionais exatos, acessos seguros a índices e regras adicionais
-  React implementados. Tipos/lint/check e regressões direcionadas aprovados;
-  463 testes aprovados e build em fechamento. Integridade e evidências preservadas.
+- [x] Contratos opcionais exatos, acessos seguros a índices e regras adicionais
+      React implementados. Tipos/lint/check e regressões direcionadas aprovados;
+      463 testes, build HML isolado e smoke público com Chromium aprovados
+      em `072cea1`. Revisão/integração e homologação real continuam pendentes. Integridade e evidências preservadas.
 
 ## Atualização TypeScript — 16 de outubro de 2026
 
