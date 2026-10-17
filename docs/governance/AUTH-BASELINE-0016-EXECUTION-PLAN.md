@@ -43,7 +43,8 @@ Telemetria após a aplicação já confirmou `provider_request_started` em
 epoch ms `1792261912424`, `provider_request_succeeded` em `1792261913782` e
 `completed` em `1792261913931` (`2026-10-17T18:31:53.931Z`). Provedor aceitou
 a solicitação e o lifecycle auditado concluiu; recebimento do e-mail,
-consumo do token e troca da senha ainda dependem da confirmação do usuário.
+consumo do token e troca da senha foram depois confirmados pelo usuário.
+A concessão de acesso permanece pendente, conforme registro de recuperação.
 Resposta de sucesso não prova existência da conta nem entrega SMTP.
 Evidência de aplicação: [auth-baseline-0016-execution-2026-10-17.json](evidence/auth-baseline-0016-execution-2026-10-17.json).
 

@@ -1,5 +1,20 @@
 # Redefinição de senha em HML — 17 de outubro de 2026
 
+## Confirmação do usuário e pendência de autorização
+
+Usuário confirmou recebimento do e-mail e alteração pessoal da senha; informou
+que a aplicação ainda exige autorização administrativa. Solicitou papel
+Gerente para sua conta. Duas consultas READ ONLY no alvo original, restritas
+ao e-mail indicado, retornaram nenhuma identidade, inclusive normalizando
+espaços e caixa. Contagem de `app_user_access`: zero. Nenhum dado de sessão,
+credencial ou outra identidade foi consultado; nenhum acesso foi concedido.
+
+Próximo passo: confirmar o e-mail efetivamente usado e a URL da página antes
+de resolver o UUID, verificar o e-mail e criar vínculo/auditoria atomicamente.
+Não criar identidade duplicada nem alterar `emailVerified` para contornar a
+pendência. Confirmação do usuário não prova acesso operacional ou conexão SQL
+do Worker. Nenhuma migration `0017+` autorizada por essa solicitação.
+
 ## Estrutura inicializada e teste real pendente
 
 Após recuperação autorizada do incidente de restore, ensaio de `0000–0016`

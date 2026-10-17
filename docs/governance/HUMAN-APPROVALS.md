@@ -1,5 +1,17 @@
 # Ações que exigem aprovação humana — Cacau v1
 
+## Solicitação de papel Gerente — 17 de outubro de 2026
+
+Após confirmar a recuperação da senha, o usuário identificou sua conta e
+solicitou explicitamente papel **Gerente**. Escopo: localizar essa identidade
+existente, confirmar e-mail verificado e conceder somente o papel solicitado,
+com vínculo e auditoria na mesma transação. Não inclui criação de identidade,
+alteração de senha/verificação, papel Dono, política RBAC ou outras contas.
+
+Consulta direcionada não encontrou a identidade no alvo original. Concessão
+não executada; depende da conciliação da conta e do ambiente. E-mail pessoal
+omitido deste registro versionado.
+
 ## Recuperação de endpoints após restore — 17 de outubro de 2026
 
 Após explicação do incidente e da rejeição automática, o usuário autorizou

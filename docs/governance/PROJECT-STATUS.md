@@ -1,5 +1,15 @@
 # Estado canônico do projeto — Cacau v1
 
+## Acesso Gerente — verificação de 17 de outubro de 2026
+
+Usuário confirmou recebimento do e-mail e troca da senha e solicitou papel
+Gerente para sua conta. Consulta direcionada READ ONLY em `neondb`, branch
+`br-lingering-wind-acwh5wap`, endpoint `ep-late-water-acahd1z1`, não encontrou
+a identidade pelo e-mail informado, inclusive após normalizar espaços/caixa.
+Contagem de vínculos da aplicação permanece zero. Nenhum vínculo ou evento de
+concessão foi gravado. Aguardando confirmação do e-mail usado e da página de
+login; não atribuir a causa a senha, replicação ou ambiente sem evidência.
+
 ## Incidente de restore — 17 de outubro de 2026
 
 **Recuperado após autorização específica:** original retomou nome

@@ -1,5 +1,16 @@
 # Roadmap executável para Codex — Cacau v1
 
+## Liberação de Gerente — 17 de outubro de 2026
+
+- [x] Recebimento do e-mail e troca da senha confirmados pelo usuário.
+- [x] Registrar solicitação explícita de papel Gerente, sem ampliar para Dono.
+- [x] Consultar somente a identidade indicada no alvo original sob READ ONLY:
+      nenhuma correspondência; zero vínculos de acesso na aplicação.
+- [ ] Conciliar e-mail/URL de login com a identidade existente; confirmar
+      verificação de e-mail antes da concessão transacional auditada.
+- [ ] Confirmar acesso pela interface após eventual concessão. Diagnóstico
+      SQL continua restrito a `access:manage`, que Gerente não possui.
+
 ## Recuperação do restore — 17 de outubro de 2026
 
 - [x] Recuperar endpoints/nomes/default após consentimento corretivo explícito;
