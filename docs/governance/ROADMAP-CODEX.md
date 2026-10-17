@@ -8,9 +8,12 @@
       das contas; causa da negação de acesso comprovada.
 - [x] Desativar diagnóstico; final `1ea59a90`, 100%, zero vars temporárias.
 - [x] Preparar SQL transacional e validar quatro cenários descartáveis.
-- [ ] Aprovar concessão dos dois vínculos no banco original (primeiro Dono
-      e Gerente), sem mudar Auth/secrets; revalidar origem antes da escrita.
-- [ ] Executar plano aprovado e validar novo login/acesso de cada papel.
+- [x] Autorizar e executar concessão Dono/Gerente na original, após revalidar
+      origem/alvo: dois vínculos ativos e dois eventos auditáveis confirmados.
+- [x] Executar plano aprovado atomicamente e conferir em transação READ ONLY.
+- [ ] Validar novo login/acesso de cada papel na interface; painel tem
+      dependência comprovada de `sales.delivered_at`, ausente até `0016`.
+      Resolver cadeia `0017+` com os gates próprios antes de homologar o painel.
 
 - [x] Recebimento do e-mail e troca da senha confirmados pelo usuário.
 - [x] Registrar solicitação explícita de papel Gerente, sem ampliar para Dono.

@@ -1,5 +1,47 @@
 # Estado canônico do projeto — Cacau v1
 
+## Concessões aprovadas e aplicadas — 17 de outubro de 2026
+
+Após apresentação do SQL e dos quatro ensaios, usuário autorizou explicitamente
+criar na original somente os vínculos Dono e Gerente das duas contas indicadas.
+Preflight revalidou as duas identidades verificadas e os mesmos papéis ativos
+em G1; original `br-lingering-wind-acwh5wap`, endpoint
+`ep-late-water-acahd1z1`, `neondb`, tinha zero vínculos e 17 migrations.
+
+Plano `SQL-ACCESS-RECONCILIATION-2026-10-17.sql` executado via MCP numa única
+transação. SHA-256 do SQL: `91403fbb43dcb8ec130a64cd9a0bce5864297dc1c7fe219dab36bd3a2684775d`.
+Referência **consumida**, não reutilizar:
+`access-reconciliation:20261017:300f24ea-2e14-4b1c-9e4c-b791856d1266`.
+
+Verificação em nova transação READ ONLY confirmou exatamente um `owner` ativo,
+um `manager` ativo e dois eventos `role_changed/success`, com motivo
+`operator_approved_access_reconciliation`, às `2026-10-17T19:19:01.429Z`.
+Journal continua com 17 recibos. Nenhuma identidade, senha, secret, schema,
+regra RBAC, vínculo de origem ou outra conta foi alterado. O ator de sessão
+permanece NULL; aprovação humana administrativa está identificada no metadata,
+sem atribuir ao operador uma sessão da aplicação inexistente.
+
+Usuário orientado a sair e entrar novamente no login HML para validar o painel.
+Concessão confirmada no banco; acesso pela interface ainda aguarda confirmação.
+Diagnósticos temporários permanecem desligados. `0017+` e homologação integral
+continuam fora desta concessão. Evidência em
+`evidence/access-reconciliation-2026-10-17.json`.
+
+## Limite operacional após a concessão
+
+Revisão do carregamento do painel encontrou incompatibilidade de schema:
+`getDashboard`, em `src/features/operations/functions.ts`, faz `select()` de
+`sales` usando o schema atual, que inclui `delivered_at`. Consulta READ ONLY
+a `information_schema.columns` confirmou a ausência dessa coluna na original.
+Ela é adicionada em `drizzle/0023_strange_union_jack.sql`; o journal permanece
+com os 17 recibos até `0016`. Portanto a concessão resolve a allowlist, mas
+não comprova painel operacional: esse caminho de consulta depende da cadeia
+posterior ainda não aplicada. Não aplicar `0023` isoladamente nem enfraquecer
+a consulta para esconder incompatibilidade. Retomar o reparo seguro de `0017`
+e os gates separados de migrations posteriores antes de homologação integral.
+Nenhuma linha de negócio foi consultada para esse diagnóstico de catálogo.
+
+
 ## Diagnóstico executado — causa comprovada e correção preparada
 
 Publicação autorizada a partir de `410665b`, em build isolado sem arquivos de

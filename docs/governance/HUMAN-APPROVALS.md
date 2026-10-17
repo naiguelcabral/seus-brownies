@@ -1,6 +1,33 @@
 # Ações que exigem aprovação humana — Cacau v1
 
-## Reconciliação de vínculos na original — proposta pendente
+## Concessões aprovadas e aplicadas — 17 de outubro de 2026
+
+Após apresentação do SQL e dos quatro ensaios, usuário autorizou explicitamente
+criar na original somente os vínculos Dono e Gerente das duas contas indicadas.
+Preflight revalidou as duas identidades verificadas e os mesmos papéis ativos
+em G1; original `br-lingering-wind-acwh5wap`, endpoint
+`ep-late-water-acahd1z1`, `neondb`, tinha zero vínculos e 17 migrations.
+
+Plano `SQL-ACCESS-RECONCILIATION-2026-10-17.sql` executado via MCP numa única
+transação. SHA-256 do SQL: `91403fbb43dcb8ec130a64cd9a0bce5864297dc1c7fe219dab36bd3a2684775d`.
+Referência **consumida**, não reutilizar:
+`access-reconciliation:20261017:300f24ea-2e14-4b1c-9e4c-b791856d1266`.
+
+Verificação em nova transação READ ONLY confirmou exatamente um `owner` ativo,
+um `manager` ativo e dois eventos `role_changed/success`, com motivo
+`operator_approved_access_reconciliation`, às `2026-10-17T19:19:01.429Z`.
+Journal continua com 17 recibos. Nenhuma identidade, senha, secret, schema,
+regra RBAC, vínculo de origem ou outra conta foi alterado. O ator de sessão
+permanece NULL; aprovação humana administrativa está identificada no metadata,
+sem atribuir ao operador uma sessão da aplicação inexistente.
+
+Usuário orientado a sair e entrar novamente no login HML para validar o painel.
+Concessão confirmada no banco; acesso pela interface ainda aguarda confirmação.
+Diagnósticos temporários permanecem desligados. `0017+` e homologação integral
+continuam fora desta concessão. Evidência em
+`evidence/access-reconciliation-2026-10-17.json`.
+
+## Reconciliação de vínculos na original — proposta aprovada e aplicada
 
 O diagnóstico autorizado concluiu sem alterar secrets ou contas e foi desligado.
 Comprovado Auth em G1 e auditoria SQL na original. Os papéis declarados pelo
@@ -13,9 +40,9 @@ As duas concessões e dois eventos auditáveis pertencem à mesma transação,
 com referência nova, sem overwrite e com precondição de allowlist vazia.
 Não cria usuários, muda senhas, secrets, origem Auth ou regra RBAC.
 
-**Aguardando autorização específica dessa gravação na original**, inclusive
-seu primeiro vínculo Dono. A aprovação de publicação do diagnóstico não
-substitui esse gate. Quatro cenários PostgreSQL descartáveis aprovados.
+Autorização específica concedida depois da proposta, inclusive para o
+primeiro vínculo Dono. Aplicação/recibo no registro acima; o diagnóstico
+sozinho não autorizava essa gravação. Quatro cenários PostgreSQL descartáveis aprovados.
 Antes de executar, revalidar os papéis/verificação na origem e a ausência de
 vínculos no alvo. Registrar a decisão humana com a referência real consumida.
 

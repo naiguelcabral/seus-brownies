@@ -1,0 +1,41 @@
+{
+  "project_id": "steep-brook-51659857",
+  "source_identity_branch_id": "br-patient-lake-ac2t0cvq",
+  "target_application_branch_id": "br-lingering-wind-acwh5wap",
+  "target_endpoint_id": "ep-late-water-acahd1z1",
+  "database_name": "neondb",
+  "sql_sha256": "91403fbb43dcb8ec130a64cd9a0bce5864297dc1c7fe219dab36bd3a2684775d",
+  "reference": "access-reconciliation:20261017:300f24ea-2e14-4b1c-9e4c-b791856d1266",
+  "reference_consumed": true,
+  "occurred_at": "2026-10-17T19:19:01.429Z",
+  "links": [
+    {
+      "role": "owner",
+      "is_active": true,
+      "count": 1
+    },
+    {
+      "role": "manager",
+      "is_active": true,
+      "count": 1
+    }
+  ],
+  "audit": {
+    "action": "role_changed",
+    "outcome": "success",
+    "count": 2,
+    "reason_code": "operator_approved_access_reconciliation",
+    "actor_auth_user_id": null,
+    "human_approver": "project_operator_via_conversation"
+  },
+  "post_migration_count": 17,
+  "external_identity_or_secret_changes": false,
+  "ui_login_verification": "pending_user_confirmation",
+  "local_postgres17_cases_passed": 4,
+  "dashboard_schema_compatibility": {
+    "status": "blocked",
+    "missing_column": "public.sales.delivered_at",
+    "introduced_by": "0023_strange_union_jack",
+    "actual_checkpoint": "0016"
+  }
+}
