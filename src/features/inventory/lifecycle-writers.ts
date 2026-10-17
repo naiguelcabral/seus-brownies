@@ -202,8 +202,8 @@ async function applyReversal(
     sourceStockMovementId: 0,
     quantity: quantityToThousandths(row.quantity)!,
     allocatedCost: moneyToCents(row.allocatedCost)!,
-    reversedQuantity: reversed.get(row.id)?.quantity,
-    reversedCost: reversed.get(row.id)?.cost,
+    reversedQuantity: reversed.get(row.id)?.quantity ?? 0n,
+    reversedCost: reversed.get(row.id)?.cost ?? 0n,
   }))
   const requested = planRemainingReversalQuantities({
     allocations: reversibleAllocations,
@@ -324,7 +324,7 @@ export async function persistSaleCancellation(
         })
         .where(eq(sales.id, sale.id))
       await appendOperationalAudit(tx, {
-        actorAuthUserId,
+        actorAuthUserId: actorAuthUserId ?? null,
         action: 'sale.cancel',
         entityType: 'sale',
         entityId: sale.id,
@@ -407,7 +407,7 @@ export async function persistNegativeInventoryEvent(
       )
       await updateBalances(tx, plan.layers)
       await appendOperationalAudit(tx, {
-        actorAuthUserId,
+        actorAuthUserId: actorAuthUserId ?? null,
         action: `inventory.${event}`,
         entityType: 'stock_movement',
         entityId: movement.id,
@@ -501,7 +501,7 @@ export async function persistPositiveInventoryAdjustment(
         })
         .returning({ id: inventoryCostLayers.id })
       await appendOperationalAudit(tx, {
-        actorAuthUserId,
+        actorAuthUserId: actorAuthUserId ?? null,
         action: 'inventory.adjustment_positive',
         entityType: 'stock_movement',
         entityId: movement.id,

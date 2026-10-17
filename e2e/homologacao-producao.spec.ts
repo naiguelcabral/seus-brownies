@@ -1,3 +1,4 @@
+import { requireDefined } from '../src/lib/required-value'
 import { expect, test } from '@playwright/test'
 import type { Locator } from '@playwright/test'
 
@@ -62,9 +63,11 @@ test.skip('criação e prévia do lote', async ({ page }) => {
       const item = page.locator('form').last().locator('.rounded-xl').nth(index)
       await selectByText(
         item.getByLabel('Produto'),
-        new RegExp(items[index][0], 'i'),
+        new RegExp(requireDefined(requireDefined(items[index])[0]), 'i'),
       )
-      await item.getByLabel('Quantidade').fill(items[index][1])
+      await item
+        .getByLabel('Quantidade')
+        .fill(requireDefined(requireDefined(items[index])[1]))
       await item.getByLabel('Custo unitário').fill('1')
     }
     await page.getByLabel('Observações').fill(prefix)

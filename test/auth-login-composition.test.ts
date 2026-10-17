@@ -1,3 +1,4 @@
+import { requireDefined } from '../src/lib/required-value'
 import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import test from 'node:test'
@@ -50,7 +51,7 @@ assert.equal(declaration.init.callee.type, 'MemberExpression')
 assert.equal(declaration.init.callee.property.type, 'Identifier')
 assert.equal(declaration.init.callee.property.name, 'handler')
 assert.equal(declaration.init.arguments.length, 1)
-const callback = declaration.init.arguments[0]
+const callback = requireDefined(declaration.init.arguments[0])
 assert.equal(callback.type, 'ArrowFunctionExpression')
 const transformed = transformSync(
   'login-callback.ts',
@@ -284,8 +285,8 @@ test('composição: falha de record propaga erro mesmo após sucesso e sessão s
     'record',
   ])
   assert.equal(fixture.session.issued, true)
-  assert.equal(fixture.records[0].succeeded, true)
-  assert.equal(fixture.events[0].outcome, 'success')
+  assert.equal(requireDefined(fixture.records[0]).succeeded, true)
+  assert.equal(requireDefined(fixture.events[0]).outcome, 'success')
   // Characterization, not approval of session policy or proof of transport sanitization.
 })
 
@@ -300,8 +301,8 @@ test('composição: falha de record após credencial rejeitada impede retorno co
     'record',
   ])
   assert.equal(fixture.session.issued, false)
-  assert.equal(fixture.records[0].succeeded, false)
-  assert.equal(fixture.events[0].outcome, 'failure')
+  assert.equal(requireDefined(fixture.records[0]).succeeded, false)
+  assert.equal(requireDefined(fixture.events[0]).outcome, 'failure')
 })
 
 test('composição: provedor indisponível tem resposta sanitizada e não grava contador', async () => {
@@ -376,8 +377,8 @@ test('adaptador Neon encaminha o cookie do provedor antes de a chamada de login 
 
   assert.equal(result.error, null)
   assert.equal(cookies.length, 1)
-  assert.match(cookies[0], /neon-auth-session=opaque-synthetic/)
-  assert.match(cookies[0], /HttpOnly/i)
-  assert.match(cookies[0], /Secure/i)
-  assert.match(cookies[0], /SameSite=Strict/i)
+  assert.match(requireDefined(cookies[0]), /neon-auth-session=opaque-synthetic/)
+  assert.match(requireDefined(cookies[0]), /HttpOnly/i)
+  assert.match(requireDefined(cookies[0]), /Secure/i)
+  assert.match(requireDefined(cookies[0]), /SameSite=Strict/i)
 })

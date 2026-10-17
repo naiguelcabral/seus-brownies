@@ -1,3 +1,4 @@
+import { requireDefined, requireFirst } from '../../lib/required-value'
 import { createServerFn } from '@tanstack/react-start'
 import {
   and,
@@ -83,7 +84,9 @@ function assertScenarioSchema(error: unknown): never {
 function normalizedRate(value: string) {
   const normalized = value.trim().replace(',', '.')
   const [whole, fraction = ''] = normalized.split('.')
-  return Number(BigInt(whole) * 10_000n + BigInt(fraction.padEnd(4, '0')))
+  return Number(
+    BigInt(requireDefined(whole)) * 10_000n + BigInt(fraction.padEnd(4, '0')),
+  )
 }
 
 function rateFromBps(value: number) {
@@ -94,7 +97,7 @@ function rateFromBps(value: number) {
 function normalizedWeeks(value: string) {
   const normalized = value.trim().replace(',', '.')
   const [whole, fraction = ''] = normalized.split('.')
-  return `${BigInt(whole)}.${fraction.padEnd(2, '0')}`
+  return `${BigInt(requireDefined(whole))}.${fraction.padEnd(2, '0')}`
 }
 
 function optionalText(value?: string) {
@@ -273,7 +276,7 @@ async function appendScenarioAudit(
     entityType: 'management_scenario',
     entityId: row.id,
     operationReference: `management-scenario:${row.scenarioKey}:version:${row.version}:revision:${row.revision}`,
-    reason,
+    reason: reason ?? null,
   })
 }
 
@@ -372,10 +375,12 @@ export const listScenarios = createServerFn({ method: 'GET' })
           : undefined,
         data.status ? eq(managementScenarios.status, data.status) : undefined,
       )
-      const [{ total }] = await database
-        .select({ total: count() })
-        .from(managementScenarios)
-        .where(where)
+      const { total } = requireFirst(
+        await database
+          .select({ total: count() })
+          .from(managementScenarios)
+          .where(where),
+      )
       const pagination = calculateScenarioPage(data.page, Number(total))
       const [rows, activeRows, activeProducts] = await Promise.all([
         database

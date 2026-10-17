@@ -1,3 +1,4 @@
+import { requireDefined } from '../../lib/required-value'
 import { z } from 'zod'
 
 const decimalText = z.string().trim().min(1).max(32)
@@ -76,10 +77,11 @@ export function parseUnsignedDecimal(value: string, scale: number) {
   if (fraction.length > scale) return null
   const paddedFraction = fraction.padEnd(scale, '0')
   const factor = 10n ** BigInt(scale)
-  const scaled = BigInt(whole) * factor + BigInt(paddedFraction || '0')
+  const scaled =
+    BigInt(requireDefined(whole)) * factor + BigInt(paddedFraction || '0')
   return {
     scaled,
-    normalized: `${BigInt(whole)}.${paddedFraction}`,
+    normalized: `${BigInt(requireDefined(whole))}.${paddedFraction}`,
   }
 }
 

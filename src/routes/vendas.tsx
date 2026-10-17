@@ -1,6 +1,11 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Plus, Trash2 } from 'lucide-react'
-import { createFileRoute, useNavigate, useRouter } from '@tanstack/react-router'
+import {
+  createFileRoute,
+  useHydrated,
+  useNavigate,
+  useRouter,
+} from '@tanstack/react-router'
 import { useServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
 
@@ -131,10 +136,7 @@ function SalesPage() {
   const [deliveringId, setDeliveringId] = useState<number | null>(null)
   const [deliveredOn, setDeliveredOn] = useState(today)
   const [deliveryConfirmed, setDeliveryConfirmed] = useState(false)
-  const [clientReady, setClientReady] = useState(false)
-  useEffect(() => {
-    setClientReady(true)
-  }, [])
+  const clientReady = useHydrated()
   function updateItem(index: number, patch: Partial<Item>) {
     setItems(
       items.map((item, itemIndex) =>

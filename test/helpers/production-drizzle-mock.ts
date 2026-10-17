@@ -1,3 +1,4 @@
+import { requireDefined } from '../../src/lib/required-value'
 import { getTableName } from 'drizzle-orm'
 import type { SQL, Table } from 'drizzle-orm'
 import { PgDialect } from 'drizzle-orm/pg-core'
@@ -13,6 +14,7 @@ export function createProductionDrizzleMock(
     available?: string
     status?: string
     failAt?: string
+    missingBatch?: boolean
   } = {},
 ) {
   const batch = {
@@ -25,7 +27,7 @@ export function createProductionDrizzleMock(
     notes: null,
   }
   const rows: Record<string, Record<string, unknown>[]> = {
-    production_batches: [batch],
+    production_batches: options.missingBatch ? [] : [batch],
     production_batch_outputs: [
       { id: 11, productId: 3, plannedQuantity: '12.000', role: 'primary' },
       { id: 12, productId: 2, plannedQuantity: '6.000', role: 'co_product' },
@@ -110,7 +112,7 @@ export function createProductionDrizzleMock(
             where: () => query,
             orderBy: () => query,
             then: (resolve: (value: Record<string, unknown>[]) => unknown) =>
-              resolve(rows[name]),
+              resolve(requireDefined(rows[name])),
           }
           return query
         },
@@ -144,7 +146,9 @@ export function createProductionDrizzleMock(
               const params = dialect.sqlToQuery(predicate).params
               const target =
                 name === 'production_batch_outputs'
-                  ? rows[name].find((row) => row.productId === params[1])
+                  ? requireDefined(rows[name]).find(
+                      (row) => row.productId === params[1],
+                    )
                   : batch
               if (!target) throw new Error('Unexpected update target')
               pending.push({

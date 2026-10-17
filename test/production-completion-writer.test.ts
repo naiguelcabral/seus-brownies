@@ -1,8 +1,25 @@
+import { requireDefined } from '../src/lib/required-value'
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import { persistProductionBatchCompletion } from '../src/features/production/functions'
 import { createProductionDrizzleMock } from './helpers/production-drizzle-mock'
 import { moneyToCents } from '../src/features/production/calculations'
+
+test('lote ausente aborta a transação antes de persistir consumo ou custos', async () => {
+  const mock = createProductionDrizzleMock({ missingBatch: true })
+  await assert.rejects(
+    persistProductionBatchCompletion(mock.db, { id: 1 }),
+    /Resultado obrigatório ausente/,
+  )
+  assert.deepEqual(mock.committed, [])
+  assert.equal(mock.journal.at(-1)?.kind, 'rollback')
+  assert.equal(
+    mock.journal.some(
+      (entry) => entry.kind === 'insert' || entry.kind === 'update',
+    ),
+    false,
+  )
+})
 
 test('conclusão persiste consumo, custos, saídas e FIFO em uma única transação', async () => {
   const mock = createProductionDrizzleMock()
@@ -18,8 +35,14 @@ test('conclusão persiste consumo, custos, saídas e FIFO em uma única transaç
   assert.equal(mock.batch.status, 'completed')
   const locks = mock.journal.filter((entry) => entry.kind === 'lock')
   assert.equal(locks.length, 2)
-  assert.match(locks[0].sql ?? '', /production_batches.*for update/)
-  assert.match(locks[1].sql ?? '', /products.*order by.*for update/)
+  assert.match(
+    requireDefined(locks[0]).sql ?? '',
+    /production_batches.*for update/,
+  )
+  assert.match(
+    requireDefined(locks[1]).sql ?? '',
+    /products.*order by.*for update/,
+  )
   const layers = mock.committed.find(
     (entry) => entry.table === 'inventory_cost_layers',
   )!.values

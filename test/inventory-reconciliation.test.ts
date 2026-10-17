@@ -1,3 +1,4 @@
+import { requireDefined } from '../src/lib/required-value'
 import assert from 'node:assert/strict'
 import test from 'node:test'
 
@@ -50,13 +51,13 @@ test('reconcilia camada, alocação, reversão, movimentos e CMV sem escrever', 
 
 test('emite divergências rastreáveis para quantidade, custo e produto', () => {
   const input = consistent()
-  input.layers[0].remainingQuantity = '6.000'
-  input.layers[0].remainingCost = '27.00'
-  input.allocations[0].movementQuantity = '-3.000'
-  input.allocations[0].movementCost = '15.00'
-  input.reversals[0].movementQuantity = '2.000'
-  input.reversals[0].movementCost = '3.00'
-  input.reversals[0].movementProductId = 9
+  requireDefined(input.layers[0]).remainingQuantity = '6.000'
+  requireDefined(input.layers[0]).remainingCost = '27.00'
+  requireDefined(input.allocations[0]).movementQuantity = '-3.000'
+  requireDefined(input.allocations[0]).movementCost = '15.00'
+  requireDefined(input.reversals[0]).movementQuantity = '2.000'
+  requireDefined(input.reversals[0]).movementCost = '3.00'
+  requireDefined(input.reversals[0]).movementProductId = 9
 
   const result = reconcileInventoryLedger(input)
   assert.deepEqual(
@@ -79,8 +80,8 @@ test('emite divergências rastreáveis para quantidade, custo e produto', () => 
 
 test('identifica camada e alocação ausentes sem inferir vínculo fictício', () => {
   const input = consistent()
-  input.allocations[0].layerId = 99
-  input.reversals[0].allocationId = 88
+  requireDefined(input.allocations[0]).layerId = 99
+  requireDefined(input.reversals[0]).allocationId = 88
 
   const result = reconcileInventoryLedger(input)
   assert.deepEqual(
@@ -111,7 +112,7 @@ test('identifica camada e alocação ausentes sem inferir vínculo fictício', (
 
 test('compara o produto da alocação com o da camada de origem', () => {
   const input = consistent()
-  input.allocations[0].productId = 9
+  requireDefined(input.allocations[0]).productId = 9
 
   assert.deepEqual(
     reconcileInventoryLedger(input).divergences.filter(
@@ -132,10 +133,10 @@ test('compara o produto da alocação com o da camada de origem', () => {
 
 test('soma reversões parciais antes de comparar com a alocação', () => {
   const input = consistent()
-  input.reversals[0].quantity = '3.000'
-  input.reversals[0].restoredCost = '12.00'
+  requireDefined(input.reversals[0]).quantity = '3.000'
+  requireDefined(input.reversals[0]).restoredCost = '12.00'
   input.reversals.push({
-    ...input.reversals[0],
+    ...requireDefined(input.reversals[0]),
     id: 6,
     incomingMovementId: 7,
     quantity: '2.000',
@@ -166,8 +167,8 @@ test('soma reversões parciais antes de comparar com a alocação', () => {
 
 test('decimal inválido é diagnóstico explícito e não vira zero', () => {
   const input = consistent()
-  input.layers[0].originalQuantity = '10.0001'
-  input.allocations[0].allocatedCost = 'token-exemplo'
+  requireDefined(input.layers[0]).originalQuantity = '10.0001'
+  requireDefined(input.allocations[0]).allocatedCost = 'token-exemplo'
 
   const result = reconcileInventoryLedger(input)
   assert.deepEqual(

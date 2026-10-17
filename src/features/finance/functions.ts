@@ -1,3 +1,4 @@
+import { requireDefined } from '../../lib/required-value'
 import { createServerFn } from '@tanstack/react-start'
 import { and, desc, eq, gte, inArray, lt, sql } from 'drizzle-orm'
 
@@ -112,7 +113,9 @@ function monthStart(value: string) {
 
 function nextMonth(value: string) {
   const [year, month] = value.slice(0, 7).split('-').map(Number)
-  const next = new Date(Date.UTC(year, month, 1))
+  const next = new Date(
+    Date.UTC(requireDefined(year), requireDefined(month), 1),
+  )
   return next.toISOString().slice(0, 10)
 }
 

@@ -1,3 +1,4 @@
+import { requireDefined } from '../src/lib/required-value'
 import assert from 'node:assert/strict'
 import test from 'node:test'
 
@@ -138,8 +139,8 @@ test('binding distribuído recebe somente chave opaca por escopo antes do limite
   assert.equal(result.allowed, true)
   assert.equal(localCalls, 1)
   assert.equal(keys.length, 1)
-  assert.match(keys[0], /^sign-up:[a-f0-9]{64}$/)
-  assert.doesNotMatch(keys[0], /admin|example/i)
+  assert.match(requireDefined(keys[0]), /^sign-up:[a-f0-9]{64}$/)
+  assert.doesNotMatch(requireDefined(keys[0]), /admin|example/i)
 })
 
 test('binding distribuído obrigatório ausente falha fechado antes do limite local', async () => {

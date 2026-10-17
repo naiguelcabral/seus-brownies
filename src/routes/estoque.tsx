@@ -1,5 +1,10 @@
-import { useEffect, useState } from 'react'
-import { createFileRoute, useNavigate, useRouter } from '@tanstack/react-router'
+import { useState } from 'react'
+import {
+  createFileRoute,
+  useHydrated,
+  useNavigate,
+  useRouter,
+} from '@tanstack/react-router'
 import { useServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
 
@@ -70,10 +75,7 @@ function InventoryPage() {
   const { balances, movements, actionProducts } = Route.useLoaderData()
   const search = Route.useSearch()
   const navigate = useNavigate({ from: Route.fullPath })
-  const [clientReady, setClientReady] = useState(false)
-  useEffect(() => {
-    setClientReady(true)
-  }, [])
+  const clientReady = useHydrated()
   return (
     <ManagementLayout
       title="Estoque"
@@ -493,7 +495,7 @@ function LifecycleActions({
   const recordPositive = useServerFn(recordPositiveAdjustmentLifecycle)
   const [pending, setPending] = useState(false)
   const [message, setMessage] = useState<string | null>(null)
-  const [returnValues, setReturnValues] = useState({
+  const [returnValues, setReturnValues] = useState(() => ({
     saleItemId: '',
     quantity: '',
     settlement: 'refund',
@@ -502,7 +504,7 @@ function LifecycleActions({
     }).format(new Date()),
     reason: '',
     reference: '',
-  })
+  }))
   const [lossValues, setLossValues] = useState(
     createNegativeInventoryFormValues,
   )

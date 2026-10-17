@@ -1,3 +1,4 @@
+import { requireDefined } from '../../lib/required-value'
 /**
  * Cálculos determinísticos de produção. Quantidades usam milésimos e valores
  * usam centavos nos totais e milésimos de real nos custos unitários para não
@@ -14,7 +15,7 @@ export function normalizeDecimal(value: string): string | null {
   const negative = normalized.startsWith('-')
   const unsigned = negative ? normalized.slice(1) : normalized
   const [whole, fraction = ''] = unsigned.split('.')
-  return `${negative ? '-' : ''}${BigInt(whole)}.${fraction.padEnd(3, '0')}`
+  return `${negative ? '-' : ''}${BigInt(requireDefined(whole))}.${fraction.padEnd(3, '0')}`
 }
 
 export function quantityToThousandths(value: string): bigint | null {
@@ -23,7 +24,9 @@ export function quantityToThousandths(value: string): bigint | null {
   const negative = normalized.startsWith('-')
   const unsigned = negative ? normalized.slice(1) : normalized
   const [whole, fraction] = unsigned.split('.')
-  const parsed = BigInt(whole) * QUANTITY_SCALE + BigInt(fraction)
+  const parsed =
+    BigInt(requireDefined(whole)) * QUANTITY_SCALE +
+    BigInt(requireDefined(fraction))
   return negative ? -parsed : parsed
 }
 
@@ -69,7 +72,7 @@ export function moneyToCents(value: string | null): bigint | null {
   const normalized = value.trim().replace(',', '.')
   if (!/^\d+(?:\.\d{1,2})?$/.test(normalized)) return null
   const [whole, fraction = ''] = normalized.split('.')
-  return BigInt(whole) * 100n + BigInt(fraction.padEnd(2, '0'))
+  return BigInt(requireDefined(whole)) * 100n + BigInt(fraction.padEnd(2, '0'))
 }
 
 export function unitCostToMillis(value: string | null): bigint | null {
@@ -77,7 +80,10 @@ export function unitCostToMillis(value: string | null): bigint | null {
   const normalized = value.trim().replace(',', '.')
   if (!/^\d+(?:\.\d{1,3})?$/.test(normalized)) return null
   const [whole, fraction = ''] = normalized.split('.')
-  return BigInt(whole) * UNIT_COST_SCALE + BigInt(fraction.padEnd(3, '0'))
+  return (
+    BigInt(requireDefined(whole)) * UNIT_COST_SCALE +
+    BigInt(fraction.padEnd(3, '0'))
+  )
 }
 
 export function millisToUnitCost(value: bigint): string {

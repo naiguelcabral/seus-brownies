@@ -1,3 +1,4 @@
+import { requireDefined, requireFirst } from '../../lib/required-value'
 import { createServerFn } from '@tanstack/react-start'
 import {
   and,
@@ -100,7 +101,7 @@ function nonnegativeCents(value: string) {
   const normalized = value.trim().replace(',', '.')
   if (!/^\d+(?:\.\d{1,2})?$/.test(normalized)) return null
   const [whole, fraction = ''] = normalized.split('.')
-  return BigInt(whole) * 100n + BigInt(fraction.padEnd(2, '0'))
+  return BigInt(requireDefined(whole)) * 100n + BigInt(fraction.padEnd(2, '0'))
 }
 
 function unitCostMillis(value: string) {
@@ -195,10 +196,9 @@ export const listPurchases = createServerFn({ method: 'GET' })
       data.start ? gte(purchases.purchasedAt, data.start) : undefined,
       data.end ? lte(purchases.purchasedAt, data.end) : undefined,
     )
-    const [{ total }] = await database
-      .select({ total: count() })
-      .from(purchases)
-      .where(filters)
+    const { total } = requireFirst(
+      await database.select({ total: count() }).from(purchases).where(filters),
+    )
     const pagination = calculatePurchaseHistoryPage(data.page, Number(total))
     const rows = await database
       .select()
@@ -329,7 +329,7 @@ export const createPurchase = createServerFn({ method: 'POST' })
               itemName: productById.get(item.productId)!.name,
               quantity: item.quantity!,
               unitCost: millisToUnitCost(item.unitCost!),
-              totalAmount: centsToMoney(totals[index]),
+              totalAmount: centsToMoney(requireDefined(totals[index])),
               supplierLot: item.supplierLot?.trim() || null,
               expiresOn: item.expiresOn || null,
             })
@@ -362,9 +362,9 @@ export const createPurchase = createServerFn({ method: 'POST' })
             origin: 'purchase' as const,
             availableAt,
             originalQuantity: item.quantity!,
-            originalCost: centsToMoney(totals[index]),
+            originalCost: centsToMoney(requireDefined(totals[index])),
             remainingQuantity: item.quantity!,
-            remainingCost: centsToMoney(totals[index]),
+            remainingCost: centsToMoney(requireDefined(totals[index])),
           })
         }
       }
@@ -374,7 +374,7 @@ export const createPurchase = createServerFn({ method: 'POST' })
         entityType: 'purchase',
         entityId: purchase.id,
         operationReference: data.idempotencyKey,
-        reason: data.notes,
+        reason: data.notes ?? null,
       })
       return { id: purchase.id, replayed: false as const }
     })
@@ -428,45 +428,46 @@ export const listInventory = createServerFn({ method: 'GET' })
       startAt ? gte(stockMovements.occurredAt, startAt) : undefined,
       endAt ? lt(stockMovements.occurredAt, endAt) : undefined,
     )
-    const [balanceRows, actionProducts, [{ total: movementTotal }]] =
-      await Promise.all([
-        database
-          .select({
-            id: products.id,
-            name: products.name,
-            sku: products.sku,
-            type: products.type,
-            unit: products.unit,
-            categoryName: categories.name,
-            isActive: products.isActive,
-            reorderPoint: products.reorderPoint,
-            balance: sql<string>`coalesce(sum(${stockMovements.quantityDelta}), 0)`,
-          })
-          .from(products)
-          .leftJoin(stockMovements, eq(stockMovements.productId, products.id))
-          .leftJoin(categories, eq(categories.id, products.categoryId))
-          .where(balanceFilters)
-          .groupBy(products.id, categories.name)
-          .orderBy(asc(products.name)),
-        database
-          .select({ id: products.id, name: products.name, sku: products.sku })
-          .from(products)
-          .where(eq(products.isActive, true))
-          .orderBy(asc(products.name)),
-        database
-          .select({ total: count() })
-          .from(stockMovements)
-          .innerJoin(products, eq(products.id, stockMovements.productId))
-          .leftJoin(
-            purchaseItems,
-            and(
-              eq(stockMovements.referenceType, 'purchase_item'),
-              eq(stockMovements.referenceId, purchaseItems.id),
-            ),
-          )
-          .leftJoin(purchases, eq(purchaseItems.purchaseId, purchases.id))
-          .where(movementFilters),
-      ])
+    const [balanceRows, actionProducts, movementCountRows] = await Promise.all([
+      database
+        .select({
+          id: products.id,
+          name: products.name,
+          sku: products.sku,
+          type: products.type,
+          unit: products.unit,
+          categoryName: categories.name,
+          isActive: products.isActive,
+          reorderPoint: products.reorderPoint,
+          balance: sql<string>`coalesce(sum(${stockMovements.quantityDelta}), 0)`,
+        })
+        .from(products)
+        .leftJoin(stockMovements, eq(stockMovements.productId, products.id))
+        .leftJoin(categories, eq(categories.id, products.categoryId))
+        .where(balanceFilters)
+        .groupBy(products.id, categories.name)
+        .orderBy(asc(products.name)),
+      database
+        .select({ id: products.id, name: products.name, sku: products.sku })
+        .from(products)
+        .where(eq(products.isActive, true))
+        .orderBy(asc(products.name)),
+      database
+        .select({ total: count() })
+        .from(stockMovements)
+        .innerJoin(products, eq(products.id, stockMovements.productId))
+        .leftJoin(
+          purchaseItems,
+          and(
+            eq(stockMovements.referenceType, 'purchase_item'),
+            eq(stockMovements.referenceId, purchaseItems.id),
+          ),
+        )
+        .leftJoin(purchases, eq(purchaseItems.purchaseId, purchases.id))
+        .where(movementFilters),
+    ])
+    const { total: movementTotal } = requireFirst(movementCountRows)
+
     const filteredBalances = balanceRows
       .map((item) => ({
         ...item,
@@ -805,8 +806,10 @@ export const createSale = createServerFn({ method: 'POST' })
               productName: byId.get(item.productId)!.name,
               quantity: item.quantity!,
               unitPrice: byId.get(item.productId)!.salePrice!,
-              totalAmount: centsToMoney(totals[index]),
-              reportedAmount: centsToMoney(reportedByItem[index]),
+              totalAmount: centsToMoney(requireDefined(totals[index])),
+              reportedAmount: centsToMoney(
+                requireDefined(reportedByItem[index]),
+              ),
             })
             .returning({ id: saleItems.id })
         ).at(0)
@@ -836,8 +839,9 @@ export const createSale = createServerFn({ method: 'POST' })
         const allocationRows = fifoPlans.flatMap((plan, itemIndex) =>
           plan.allocations.map((allocation) => ({
             inventoryCostLayerId: allocation.layerId,
-            outgoingStockMovementId: saleMovements[itemIndex].id,
-            saleItemId: insertedItems[itemIndex].id,
+            outgoingStockMovementId: requireDefined(saleMovements[itemIndex])
+              .id,
+            saleItemId: requireDefined(insertedItems[itemIndex]).id,
             productId: allocation.productId,
             quantity: String(allocation.quantity / 1_000n).concat(
               '.',
@@ -861,10 +865,14 @@ export const createSale = createServerFn({ method: 'POST' })
           await tx
             .update(stockMovements)
             .set({ allocatedCost: centsToMoney(plan.allocatedCost) })
-            .where(eq(stockMovements.id, saleMovements[index].id))
+            .where(
+              eq(stockMovements.id, requireDefined(saleMovements[index]).id),
+            )
         }
         const updatedLayers =
-          fifoPlans.length > 0 ? fifoPlans[fifoPlans.length - 1].layers : []
+          fifoPlans.length > 0
+            ? requireDefined(fifoPlans[fifoPlans.length - 1]).layers
+            : []
         await Promise.all(
           updatedLayers.map((layer) =>
             tx
@@ -889,7 +897,7 @@ export const createSale = createServerFn({ method: 'POST' })
         entityType: 'sale',
         entityId: sale.id,
         operationReference: data.idempotencyKey,
-        reason: data.adjustmentReason || data.notes,
+        reason: data.adjustmentReason || data.notes || null,
       })
       return { id: sale.id, replayed: false as const }
     })
@@ -934,10 +942,9 @@ export const listSales = createServerFn({ method: 'GET' })
       startAt ? gte(sales.soldAt, startAt) : undefined,
       endAt ? lt(sales.soldAt, endAt) : undefined,
     )
-    const [{ total }] = await database
-      .select({ total: count() })
-      .from(sales)
-      .where(filters)
+    const { total } = requireFirst(
+      await database.select({ total: count() }).from(sales).where(filters),
+    )
     const pagination = calculateSaleHistoryPage(data.page, Number(total))
     const rows = await database
       .select({
@@ -1022,7 +1029,7 @@ export const createExpense = createServerFn({ method: 'POST' })
           entityType: 'expense',
           entityId: expense.id,
           operationReference: data.idempotencyKey,
-          reason: data.notes,
+          reason: data.notes ?? null,
         })
         return { id: expense.id, replayed: false as const }
       }
@@ -1069,10 +1076,9 @@ export const listExpenses = createServerFn({ method: 'GET' })
       data.start ? gte(expenses.occurredAt, data.start) : undefined,
       data.end ? lte(expenses.occurredAt, data.end) : undefined,
     )
-    const [{ total }] = await database
-      .select({ total: count() })
-      .from(expenses)
-      .where(filters)
+    const { total } = requireFirst(
+      await database.select({ total: count() }).from(expenses).where(filters),
+    )
     const pagination = calculateExpenseHistoryPage(data.page, Number(total))
     const rows = await database
       .select()

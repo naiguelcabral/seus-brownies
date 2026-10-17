@@ -1,3 +1,4 @@
+import { requireDefined } from '../src/lib/required-value'
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import { createAuthAuditTelemetry } from '../src/features/auth/auth-audit-telemetry.server'
@@ -19,7 +20,7 @@ test('audit log is structured and excludes extra runtime fields', (t) => {
     error: new Error('SYNTHETIC_PROVIDER_RESPONSE'),
   }
   createAuthAuditTelemetry().emit(input)
-  assert.deepEqual(JSON.parse(records[0]), {
+  assert.deepEqual(JSON.parse(requireDefined(records[0])), {
     event: 'auth.audit',
     level: 'warn',
     requestId,
@@ -40,7 +41,7 @@ test('password reset log preserves correlation and allowlisted reason only', (t)
     email: 'synthetic@example.invalid',
   }
   createPasswordResetTelemetry().emit(input)
-  assert.deepEqual(JSON.parse(records[0]), {
+  assert.deepEqual(JSON.parse(requireDefined(records[0])), {
     event: 'auth.password-reset',
     level: 'info',
     requestId,
@@ -58,7 +59,7 @@ test('invalid correlation, reason and stage cannot carry arbitrary content', (t)
     stage: 'completed',
     reasonCode: 'SYNTHETIC_REASON',
   } as unknown as PasswordResetTelemetryEvent)
-  assert.deepEqual(JSON.parse(records[0]), {
+  assert.deepEqual(JSON.parse(requireDefined(records[0])), {
     event: 'auth.password-reset',
     level: 'info',
     requestId: 'invalid_request_id',

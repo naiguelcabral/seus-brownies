@@ -351,7 +351,7 @@ function Filter({
 }: {
   label: string
   name: string
-  defaultValue?: string
+  defaultValue?: string | undefined
 }) {
   return (
     <label className="text-xs font-bold">

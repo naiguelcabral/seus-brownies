@@ -1,3 +1,4 @@
+import { requireDefined, requireFirst } from '../src/lib/required-value'
 import { and, eq, inArray, sql } from 'drizzle-orm'
 
 import { getDb } from '../src/db/index.ts'
@@ -132,7 +133,7 @@ await database.transaction(async (tx) => {
 
   if (candidateLayers.length !== 1)
     throw new Error('Backfill HML requer uma única saída PROD003 no lote 18.')
-  const candidate = candidateLayers[0]
+  const candidate = requireDefined(candidateLayers[0])
   if (!candidate.quantity || !candidate.allocatedCost)
     throw new Error('Backfill HML requer quantidade e custo alocado na saída.')
   const layer = candidate.layerId
@@ -162,23 +163,29 @@ await database.transaction(async (tx) => {
   const salesForPlan = saleRows.map((sale) => {
     const item = itemRows.filter((row) => row.saleId === sale.id)
     const movement = movementRows.filter((row) => row.saleId === sale.id)
-    if (item.length !== 1 || movement.length !== 1 || !item[0].productId)
+    if (
+      item.length !== 1 ||
+      movement.length !== 1 ||
+      !requireDefined(item[0]).productId
+    )
       throw new Error(
         'Backfill HML requer um único item e movimento por venda.',
       )
+    const saleItem = requireDefined(item[0])
+    if (saleItem.productId === null) throw new Error('Item HML sem produto.')
     return {
       saleId: sale.id,
       prefix: sale.prefix ?? '',
       status: sale.status,
-      itemId: item[0].id,
-      productId: item[0].productId,
-      sku: item[0].sku,
-      quantity: item[0].quantity,
-      unitPrice: item[0].unitPrice,
-      totalAmount: item[0].totalAmount,
-      movementId: movement[0].id,
-      movementQuantity: movement[0].quantity,
-      movementAllocatedCost: movement[0].allocatedCost,
+      itemId: requireDefined(item[0]).id,
+      productId: saleItem.productId,
+      sku: requireDefined(item[0]).sku,
+      quantity: requireDefined(item[0]).quantity,
+      unitPrice: requireDefined(item[0]).unitPrice,
+      totalAmount: requireDefined(item[0]).totalAmount,
+      movementId: requireDefined(movement[0]).id,
+      movementQuantity: requireDefined(movement[0]).quantity,
+      movementAllocatedCost: requireDefined(movement[0]).allocatedCost,
     }
   })
   const plan = planHmlFifoBackfill({
@@ -198,21 +205,23 @@ await database.transaction(async (tx) => {
     return
   }
 
-  const [createdLayer] = layer
-    ? [layer]
-    : await tx
-        .insert(inventoryCostLayers)
-        .values({
-          productId: candidate.productId,
-          productionBatchOutputId: candidate.outputId,
-          sourceStockMovementId: candidate.sourceMovementId,
-          availableAt: candidate.availableAt,
-          originalQuantity: candidate.quantity,
-          originalCost: candidate.allocatedCost,
-          remainingQuantity: plan.remainingQuantity,
-          remainingCost: plan.remainingCost,
-        })
-        .returning({ id: inventoryCostLayers.id })
+  const createdLayer = requireFirst(
+    layer
+      ? [layer]
+      : await tx
+          .insert(inventoryCostLayers)
+          .values({
+            productId: candidate.productId,
+            productionBatchOutputId: candidate.outputId,
+            sourceStockMovementId: candidate.sourceMovementId,
+            availableAt: candidate.availableAt,
+            originalQuantity: candidate.quantity,
+            originalCost: candidate.allocatedCost,
+            remainingQuantity: plan.remainingQuantity,
+            remainingCost: plan.remainingCost,
+          })
+          .returning({ id: inventoryCostLayers.id }),
+  )
   await tx.insert(inventoryCostAllocations).values(
     plan.allocations.map((allocation) => ({
       inventoryCostLayerId: createdLayer.id,

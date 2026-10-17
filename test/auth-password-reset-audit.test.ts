@@ -101,8 +101,10 @@ test('falha ao registrar resultado mantém intenção explícita e não aceita s
     result: { ok: true },
     stage: 'after-provider',
   })
-  assert.equal(events[0]?.outcome, 'blocked')
-  assert.equal(events[0]?.metadata instanceof Object, true)
+  const blockedEvent = events[0]
+  assert.ok(blockedEvent)
+  assert.equal(blockedEvent.outcome, 'blocked')
+  assert.equal(blockedEvent.metadata instanceof Object, true)
   assert.deepEqual(
     telemetry.map((event) => event.stage),
     [

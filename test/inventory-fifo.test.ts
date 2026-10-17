@@ -1,3 +1,4 @@
+import { requireDefined } from '../src/lib/required-value'
 import assert from 'node:assert/strict'
 import test from 'node:test'
 
@@ -38,9 +39,12 @@ test('HML aloca duas vendas de PROD003 e preserva o resíduo da camada', () => {
 
   assert.equal(first.allocatedCost, 378n)
   assert.equal(second.allocatedCost, 378n)
-  assert.equal(second.layers[0].remainingQuantity, 10_000n)
-  assert.equal(second.layers[0].remainingCost, 3_777n)
-  assert.equal(378n + 378n + second.layers[0].remainingCost, 4_533n)
+  assert.equal(requireDefined(second.layers[0]).remainingQuantity, 10_000n)
+  assert.equal(requireDefined(second.layers[0]).remainingCost, 3_777n)
+  assert.equal(
+    378n + 378n + requireDefined(second.layers[0]).remainingCost,
+    4_533n,
+  )
 })
 
 test('consumo parcial e final reconciliam o custo exato da camada', () => {
@@ -52,8 +56,8 @@ test('consumo parcial e final reconciliam o custo exato da camada', () => {
 
   assert.equal(partial.allocatedCost, 33n)
   assert.equal(final.allocatedCost, 67n)
-  assert.equal(final.layers[0].remainingQuantity, 0n)
-  assert.equal(final.layers[0].remainingCost, 0n)
+  assert.equal(requireDefined(final.layers[0]).remainingQuantity, 0n)
+  assert.equal(requireDefined(final.layers[0]).remainingCost, 0n)
 })
 
 test('consome várias camadas pela ordem FIFO determinística', () => {

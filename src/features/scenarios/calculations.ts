@@ -1,3 +1,4 @@
+import { requireDefined } from '../../lib/required-value'
 import {
   centsToMoney,
   moneyToCents,
@@ -31,7 +32,8 @@ function unsignedDecimal(value: string, scale: number) {
   const [, whole, fraction = ''] = match
   if (fraction.length > scale) return null
   return (
-    BigInt(whole) * 10n ** BigInt(scale) + BigInt(fraction.padEnd(scale, '0'))
+    BigInt(requireDefined(whole)) * 10n ** BigInt(scale) +
+    BigInt(fraction.padEnd(scale, '0'))
   )
 }
 

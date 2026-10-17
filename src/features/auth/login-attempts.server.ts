@@ -28,7 +28,7 @@ export function createDatabaseLoginAttemptStore(): LoginAttemptStore {
         .from(authLoginAttempts)
         .where(eq(authLoginAttempts.identityHash, identityHash))
         .limit(1)
-      return attempts.length > 0 ? attempts[0] : null
+      return attempts[0] ?? null
     },
     record: async (identityHash, succeeded) => {
       if (succeeded) {

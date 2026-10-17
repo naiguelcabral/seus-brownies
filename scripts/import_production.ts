@@ -1,3 +1,4 @@
+import { requireFirst } from '../src/lib/required-value'
 import { execFileSync } from 'node:child_process'
 import { createHash } from 'node:crypto'
 import { resolve } from 'node:path'
@@ -347,17 +348,19 @@ await db.transaction(async (tx) => {
     )
   }
 
-  const [recipe] = await tx
-    .insert(recipeVersions)
-    .values({
-      sourceId: payload.recipe.externalId,
-      sourceHash: payload.recipe.sourceHash,
-      name: payload.recipe.name,
-      version: 1,
-      status: 'active',
-      sourcePayload: payload.recipe.source,
-    })
-    .returning({ id: recipeVersions.id })
+  const recipe = requireFirst(
+    await tx
+      .insert(recipeVersions)
+      .values({
+        sourceId: payload.recipe.externalId,
+        sourceHash: payload.recipe.sourceHash,
+        name: payload.recipe.name,
+        version: 1,
+        status: 'active',
+        sourcePayload: payload.recipe.source,
+      })
+      .returning({ id: recipeVersions.id }),
+  )
 
   await tx.insert(recipeItems).values(
     payload.recipe.items.map((item) => ({
@@ -423,20 +426,22 @@ await db.transaction(async (tx) => {
   )
 
   for (const plan of payload.plans) {
-    const [batch] = await tx
-      .insert(productionBatches)
-      .values({
-        sourceId: plan.sourceId,
-        sourceHash: plan.sourceHash,
-        productionProfileId: profileIdBySourceId.get(plan.profileSourceId)!,
-        recipeVersionId: recipe.id,
-        status: 'planned',
-        plannedBatchCount: plan.plannedBatches,
-        plannedQuantity: plan.plannedQuantity,
-        sourcePayload: plan.source,
-        notes: plan.notes,
-      })
-      .returning({ id: productionBatches.id })
+    const batch = requireFirst(
+      await tx
+        .insert(productionBatches)
+        .values({
+          sourceId: plan.sourceId,
+          sourceHash: plan.sourceHash,
+          productionProfileId: profileIdBySourceId.get(plan.profileSourceId)!,
+          recipeVersionId: recipe.id,
+          status: 'planned',
+          plannedBatchCount: plan.plannedBatches,
+          plannedQuantity: plan.plannedQuantity,
+          sourcePayload: plan.source,
+          notes: plan.notes,
+        })
+        .returning({ id: productionBatches.id }),
+    )
     await tx.insert(productionBatchOutputs).values({
       sourceKey: `workbook:production-plan-output:${plan.sourceId}`,
       sourceHash: sourceHash(plan),

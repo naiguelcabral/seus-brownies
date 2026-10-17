@@ -1,3 +1,4 @@
+import { requireDefined } from '../../lib/required-value'
 import type { AppRole } from '#/features/auth/authorization'
 import { centsToMoney, moneyToCents } from '#/features/production/calculations'
 
@@ -61,7 +62,9 @@ function parseWeight(value: string) {
   if (!/^\d+(?:\.\d{1,6})?$/.test(normalized))
     throw new Error('Peso do mix inválido.')
   const [whole, fraction = ''] = normalized.split('.')
-  return BigInt(whole) * 1_000_000n + BigInt(fraction.padEnd(6, '0'))
+  return (
+    BigInt(requireDefined(whole)) * 1_000_000n + BigInt(fraction.padEnd(6, '0'))
+  )
 }
 
 function formatRate(value: bigint) {
@@ -168,5 +171,7 @@ function parseQuantity(value: string) {
   if (!/^\d+(?:\.\d{1,3})?$/.test(normalized))
     throw new Error('Quantidade de compensação inválida.')
   const [whole, fraction = ''] = normalized.split('.')
-  return BigInt(whole) * 1_000n + BigInt(fraction.padEnd(3, '0'))
+  return (
+    BigInt(requireDefined(whole)) * 1_000n + BigInt(fraction.padEnd(3, '0'))
+  )
 }

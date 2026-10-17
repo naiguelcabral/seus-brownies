@@ -1,3 +1,4 @@
+import { requireDefined } from '../src/lib/required-value'
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import {
@@ -62,9 +63,9 @@ test('falha do hook é sanitizada e permite repetir a entrega', async () => {
 
 test('mutação pelo consumidor não corrompe o estado retido', async () => {
   const track = createLocalSignalTracker((event) => {
-    event.checks[0].state = 'unavailable'
+    requireDefined(event.checks[0]).state = 'unavailable'
   })
   const result = await track(healthy)
-  assert.equal(result.readiness.checks[0].state, 'available')
+  assert.equal(requireDefined(result.readiness.checks[0]).state, 'available')
   assert.equal((await track(healthy)).delivery, 'unchanged')
 })

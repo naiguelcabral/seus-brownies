@@ -1,3 +1,4 @@
+import { requireDefined } from '../src/lib/required-value'
 import assert from 'node:assert/strict'
 import test from 'node:test'
 
@@ -143,7 +144,7 @@ test('cancelamento grava retorno/reversão e restaura camada sem editar a aloca�
     occurredOn: '2026-09-14',
     reason: 'Cliente desistiu',
   })
-  assert.equal(mock.journal[1].kind, 'schema')
+  assert.equal(requireDefined(mock.journal[1]).kind, 'schema')
   assert.equal(mock.journal.filter((entry) => entry.kind === 'lock').length, 4)
   assert.deepEqual(
     mutations(mock).map((entry) => `${entry.kind}:${entry.table}`),
@@ -165,7 +166,7 @@ test('cancelamento grava retorno/reversão e restaura camada sem editar a aloca�
 
 test('cancelamento de venda paga registra recebimento e estorno de caixa na mesma transação', async () => {
   const mock = base()
-  mock.rows.sales[0].status = 'paid'
+  requireDefined(requireDefined(mock.rows.sales)[0]).status = 'paid'
   await persistSaleCancellation(
     database(mock),
     {
@@ -218,7 +219,7 @@ test('cancelamento pago reutiliza recebimento já registrado sem duplicar caixa'
   const mock = base({
     financialEvents: [[{ id: 80, idempotencyHash: receiptHash }], []],
   })
-  mock.rows.sales[0].status = 'paid'
+  requireDefined(requireDefined(mock.rows.sales)[0]).status = 'paid'
   await persistSaleCancellation(
     database(mock),
     {
@@ -233,12 +234,17 @@ test('cancelamento pago reutiliza recebimento já registrado sem duplicar caixa'
     (entry) => entry.table === 'financialEvents',
   )
   assert.equal(financial.length, 1)
-  assert.equal((financial[0].values as { type: string }).type, 'cash_refund')
+  assert.equal(
+    (requireDefined(financial[0]).values as { type: string }).type,
+    'cash_refund',
+  )
 })
 
 test('cancelamento após entrega falha antes de restaurar estoque ou alterar venda', async () => {
   const mock = base()
-  mock.rows.sales[0].deliveredAt = new Date('2026-09-10T12:00:00Z')
+  requireDefined(requireDefined(mock.rows.sales)[0]).deliveredAt = new Date(
+    '2026-09-10T12:00:00Z',
+  )
   await assert.rejects(
     persistSaleCancellation(database(mock), {
       saleId: 1,
@@ -252,7 +258,9 @@ test('cancelamento após entrega falha antes de restaurar estoque ou alterar ven
 
 test('devolução pós-entrega registra compensação sem restaurar alimento ou CMV', async () => {
   const mock = base()
-  mock.rows.sales[0].deliveredAt = new Date('2026-09-10T12:00:00Z')
+  requireDefined(requireDefined(mock.rows.sales)[0]).deliveredAt = new Date(
+    '2026-09-10T12:00:00Z',
+  )
   await persistSaleReturn(
     database(mock),
     {
@@ -273,12 +281,15 @@ test('devolução pós-entrega registra compensação sem restaurar alimento ou 
     mock.journal.some((entry) => entry.table === 'movements'),
     false,
   )
-  assert.equal(mock.rows.allocations[0].allocatedCost, '7.56')
+  assert.equal(
+    requireDefined(requireDefined(mock.rows.allocations)[0]).allocatedCost,
+    '7.56',
+  )
 })
 
 test('perda multicamada cria um movimento e alocações por camada na ordem FIFO', async () => {
   const mock = base()
-  mock.rows.layers.push({
+  requireDefined(mock.rows.layers).push({
     id: 6,
     productId: 3,
     productionBatchOutputId: null,
@@ -308,7 +319,7 @@ test('perda multicamada cria um movimento e alocações por camada na ordem FIFO
 
 test('ajuste negativo idempotente aborta antes de nova mutação', async () => {
   const mock = base()
-  mock.rows.movements.push({ id: 90 })
+  requireDefined(mock.rows.movements).push({ id: 90 })
   await assert.rejects(
     persistNegativeInventoryEvent(
       database(mock),
@@ -350,7 +361,7 @@ test('ajuste positivo exige origem/custo e cria movimento seguido da camada', as
 
 test('cancelamento pago sem schema financeiro falha antes do estorno FIFO', async () => {
   const mock = base()
-  mock.rows.sales[0].status = 'paid'
+  requireDefined(requireDefined(mock.rows.sales)[0]).status = 'paid'
   mock.fail('finance-schema-missing')
   await assert.rejects(
     persistSaleCancellation(
@@ -408,7 +419,9 @@ const rollbackCases = [
     name: 'devolução',
     stages: ['schema', 'lock', 'financialEvents', 'operationalAudit'],
     write: (mock: ReturnType<typeof base>) => {
-      mock.rows.sales[0].deliveredAt = new Date('2026-09-10T12:00:00Z')
+      requireDefined(requireDefined(mock.rows.sales)[0]).deliveredAt = new Date(
+        '2026-09-10T12:00:00Z',
+      )
       return persistSaleReturn(
         database(mock),
         {
@@ -486,7 +499,9 @@ for (const scenario of rollbackCases) {
   for (const stage of scenario.stages) {
     test(`${scenario.name}: falha em ${stage} desfaz todas as mutations pendentes`, async () => {
       const mock = base()
-      const originalAllocation = structuredClone(mock.rows.allocations)
+      const originalAllocation = structuredClone(
+        requireDefined(mock.rows.allocations),
+      )
       mock.fail(stage)
       await assert.rejects(
         scenario.write(mock),
@@ -495,14 +510,17 @@ for (const scenario of rollbackCases) {
         ),
       )
       assertRolledBack(mock)
-      assert.deepEqual(mock.rows.allocations, originalAllocation)
+      assert.deepEqual(
+        requireDefined(mock.rows.allocations),
+        originalAllocation,
+      )
     })
   }
 }
 
 test('cancelamento repetido falha sem criar novo fato', async () => {
   const mock = base()
-  mock.rows.movements.push({ id: 91 })
+  requireDefined(mock.rows.movements).push({ id: 91 })
   await assert.rejects(
     persistSaleCancellation(database(mock), {
       saleId: 1,
@@ -517,7 +535,7 @@ test('cancelamento repetido falha sem criar novo fato', async () => {
 for (const event of ['loss', 'adjustment_negative'] as const) {
   test(`${event} repetido com sourceKey falha sem mutation`, async () => {
     const mock = base()
-    mock.rows.movements.push({ id: 93 })
+    requireDefined(mock.rows.movements).push({ id: 93 })
     await assert.rejects(
       persistNegativeInventoryEvent(
         database(mock),
@@ -537,7 +555,7 @@ for (const event of ['loss', 'adjustment_negative'] as const) {
 
 test('ajuste positivo repetido com referência igual falha sem nova camada', async () => {
   const mock = base()
-  mock.rows.movements.push({ id: 94 })
+  requireDefined(mock.rows.movements).push({ id: 94 })
   await assert.rejects(
     persistPositiveInventoryAdjustment(database(mock), {
       productId: 3,

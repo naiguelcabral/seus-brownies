@@ -359,7 +359,7 @@ function FilterInput({
 }: {
   label: string
   name: string
-  defaultValue?: string
+  defaultValue?: string | undefined
 }) {
   return (
     <label className="text-xs font-bold">
@@ -381,7 +381,7 @@ function FilterSelect({
 }: {
   label: string
   name: string
-  defaultValue?: string
+  defaultValue?: string | undefined
   options: readonly string[]
   labels: Record<string, string>
 }) {

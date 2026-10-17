@@ -85,7 +85,7 @@ async function recordAuthAction(
         outcome,
         targetType,
         requestId: audit.requestId,
-        metadata: reasonCode ? { reasonCode } : undefined,
+        ...(reasonCode ? { metadata: { reasonCode } } : {}),
       }),
     )
   } catch {

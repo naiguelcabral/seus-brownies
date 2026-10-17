@@ -1,3 +1,4 @@
+import { requireDefined } from '../src/lib/required-value'
 import assert from 'node:assert/strict'
 import test from 'node:test'
 
@@ -52,7 +53,7 @@ test('consulta de movimentos usa o mesmo ID do produto comprado', () => {
   assert.deepEqual(consumptionProductIds([flour]), [21])
   assert.deepEqual(movementsForProduct(movements, flour.id), [movements[0]])
   assert.equal(
-    movementsForProduct(movements, flour.id)[0].quantityDelta,
+    requireDefined(movementsForProduct(movements, flour.id)[0]).quantityDelta,
     '240.000',
   )
 })

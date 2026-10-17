@@ -39,10 +39,34 @@ Build isolado de HEAD mais diff aprovado, sem credenciais, com chave pública
 sintética. Nenhum banco compartilhado, migration, deploy ou login real foi executado.
 OTP/reset/login/sessão reais permanecem sujeitos à homologação autorizada.
 
-## Próximo pacote
+## Pacote de melhorias
 
-Contratos opcionais exatos, acessos a índices com tratamento explícito da ausência
-e regras React de pureza/efeitos serão implementados após o pacote acima.
+Após o pacote de segurança `201a1ee`, habilitados `exactOptionalPropertyTypes` e
+`noUncheckedIndexedAccess` no projeto inteiro, incluindo testes e scripts.
+Os 24 e 267 diagnósticos identificados separadamente na análise foram tratados
+sem desligar verificações nem adicionar non-null assertions para silenciá-los.
+
+Consultas obrigatórias e acessos que dependem de invariantes usam `requireFirst`
+ou `requireDefined`: ausência provoca erro controlado, sem fabricar dinheiro,
+quantidades ou linhas. Consultas opcionais de identidade/tentativas retornam
+`null` quando não há resultado. Campos opcionais são omitidos quando necessário;
+eventos auditáveis mantêm a normalização já existente para `null`. Uma entrada
+Zod e props de filtros permitem `undefined` explicitamente onde esse é o contrato.
+Ausência de reversões continua significando zero revertido, como os planners
+FIFO já tratavam anteriormente.
+
+Regras React adicionais: pureza, imutabilidade, refs e set-state-in-effect.
+Datas iniciais de formulários são calculadas em inicializadores de estado;
+sentinelas de hidratação usam `useHydrated`. O tema usa `useSyncExternalStore`,
+snapshot SSR estável e eventos de armazenamento, sem setState síncrono no efeito.
+O rodapé preserva o ano obtido na inicialização do componente. Não foi adicionado
+React Compiler nem alterada a política de sessão/autorização.
+
+Regressões adicionais verificam valores obrigatórios sem substituir valores
+falsy, rollback antes de escritas para lote ausente e SSR do tema/rodapé sem
+navegador. Tipos, lint e check aprovados; 463 testes aprovados e build em fechamento.
+Migrations, dados, precisão, referências idempotentes e evidências permanecem
+preservados. Homologação real, CI remota, revisão e publicação são etapas separadas.
 
 Referências: [TanStack XSS](https://github.com/advisories/GHSA-qx66-fv34-fjm8),
 [esbuild](https://github.com/advisories/GHSA-67mh-4wv8-2f99),

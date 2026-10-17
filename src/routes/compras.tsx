@@ -70,7 +70,7 @@ function PurchasesPage() {
     crypto.randomUUID(),
   )
   const [supplierName, setSupplierName] = useState('')
-  const [purchasedAt, setPurchasedAt] = useState(
+  const [purchasedAt, setPurchasedAt] = useState(() =>
     new Date().toISOString().slice(0, 10),
   )
   const [invoiceFileReference, setInvoiceFileReference] = useState('')

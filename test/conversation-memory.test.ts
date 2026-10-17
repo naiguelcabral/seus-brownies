@@ -1,3 +1,4 @@
+import { requireDefined } from '../src/lib/required-value'
 import assert from 'node:assert/strict'
 import {
   chmodSync,
@@ -221,9 +222,9 @@ print(json.dumps([module.redact(value) for value in values]))
   const results = JSON.parse(output) as string[]
 
   for (const [index, { name, value }] of sensitive.entries()) {
-    assert.ok(results[index].includes(name))
-    assert.match(results[index], /\[REDACTED\]/)
-    assert.equal(results[index].includes(value), false)
+    assert.ok(requireDefined(results[index]).includes(name))
+    assert.match(requireDefined(results[index]), /\[REDACTED\]/)
+    assert.equal(requireDefined(results[index]).includes(value), false)
   }
   assert.deepEqual(results.slice(sensitive.length), preserved)
 })
@@ -246,7 +247,7 @@ test('notify separates roles, ignores tool payloads, blocks traversal and dedupl
     const files = readdirSync(join(root, '.codex-local/conversations'))
     assert.deepEqual(files, ['------synthetic-thread.md'])
     const transcript = readFileSync(
-      join(root, '.codex-local/conversations', files[0]),
+      join(root, '.codex-local/conversations', requireDefined(files[0])),
       'utf8',
     )
     assert.equal(transcript.match(/^## Usuário/gm)?.length, 1)

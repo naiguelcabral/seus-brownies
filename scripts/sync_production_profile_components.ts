@@ -1,3 +1,4 @@
+import { requireDefined } from '../src/lib/required-value'
 import { execFileSync } from 'node:child_process'
 import { resolve } from 'node:path'
 
@@ -259,7 +260,12 @@ await db.transaction(async (tx) => {
     }
     if (
       matches.length !== 1 ||
-      !sameComponent(matches[0], component, profileId, productId)
+      !sameComponent(
+        requireDefined(matches[0]),
+        component,
+        profileId,
+        productId,
+      )
     ) {
       throw new Error(
         `Sincronização interrompida: componente existente diverge de ${component.sourceId}.`,

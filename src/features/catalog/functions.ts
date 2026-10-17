@@ -1,3 +1,4 @@
+import { requireFirst } from '../../lib/required-value'
 import { createServerFn } from '@tanstack/react-start'
 import { and, asc, count, eq, ilike, or } from 'drizzle-orm'
 import { z } from 'zod'
@@ -190,10 +191,9 @@ export const listProducts = createServerFn({ method: 'GET' })
         ? eq(products.isActive, data.activity === 'active')
         : undefined,
     )
-    const [{ total }] = await database
-      .select({ total: count() })
-      .from(products)
-      .where(filters)
+    const { total } = requireFirst(
+      await database.select({ total: count() }).from(products).where(filters),
+    )
     const pagination = calculateProductHistoryPage(data.page, Number(total))
     const rows = await database
       .select({

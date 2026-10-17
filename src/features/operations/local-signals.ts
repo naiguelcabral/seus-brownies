@@ -1,3 +1,4 @@
+import { requireDefined } from '../../lib/required-value'
 /** Local diagnostic contract. No probes, network, secrets or public endpoint. */
 const components = ['application', 'database', 'audit', 'rateLimiter'] as const
 type Component = (typeof components)[number]
@@ -42,7 +43,8 @@ export function createLocalSignalTracker(
     const changed =
       !previous ||
       readiness.checks.some(
-        (check, index) => check.state !== previous!.checks[index].state,
+        (check, index) =>
+          check.state !== requireDefined(previous!.checks[index]).state,
       )
     if (!changed) return { readiness, delivery: 'unchanged' as const }
     const signal: LocalSignal = {

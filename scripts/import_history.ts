@@ -1,3 +1,4 @@
+import { requireDefined, requireFirst } from '../src/lib/required-value'
 import { execFileSync } from 'node:child_process'
 import { resolve } from 'node:path'
 
@@ -116,7 +117,7 @@ function parseArguments() {
   let confirm = false
 
   for (let index = 0; index < args.length; index += 1) {
-    const argument = args[index]
+    const argument = requireDefined(args[index])
     if (argument === '--confirm') {
       confirm = true
       continue
@@ -438,26 +439,28 @@ await db.transaction(async (tx) => {
   )
 
   for (const sale of history.sales) {
-    const [insertedSale] = await tx
-      .insert(sales)
-      .values({
-        sourceId: sale.sourceId,
-        sourceHash: sale.sourceHash,
-        locationId: locationIdBySourceId.get(sale.locationSourceId)!,
-        status: 'paid',
-        subtotalAmount: sale.reportedAmount,
-        discountAmount: '0.00',
-        deliveryFeeAmount: '0.00',
-        totalAmount: sale.reportedAmount,
-        reportedAmount: sale.reportedAmount,
-        calculatedAmount: sale.calculatedAmount,
-        auditStatus: sale.auditStatus,
-        auditNotes: sale.auditNotes,
-        affectsStock: false,
-        notes: 'Importação histórica financeira do workbook.',
-        soldAt: new Date(sale.soldAt),
-      })
-      .returning({ id: sales.id })
+    const insertedSale = requireFirst(
+      await tx
+        .insert(sales)
+        .values({
+          sourceId: sale.sourceId,
+          sourceHash: sale.sourceHash,
+          locationId: locationIdBySourceId.get(sale.locationSourceId)!,
+          status: 'paid',
+          subtotalAmount: sale.reportedAmount,
+          discountAmount: '0.00',
+          deliveryFeeAmount: '0.00',
+          totalAmount: sale.reportedAmount,
+          reportedAmount: sale.reportedAmount,
+          calculatedAmount: sale.calculatedAmount,
+          auditStatus: sale.auditStatus,
+          auditNotes: sale.auditNotes,
+          affectsStock: false,
+          notes: 'Importação histórica financeira do workbook.',
+          soldAt: new Date(sale.soldAt),
+        })
+        .returning({ id: sales.id }),
+    )
     await tx.insert(saleItems).values(
       sale.items.map((item) => ({
         saleId: insertedSale.id,
@@ -471,17 +474,19 @@ await db.transaction(async (tx) => {
   }
 
   for (const purchase of history.purchases) {
-    const [insertedPurchase] = await tx
-      .insert(purchases)
-      .values({
-        sourceId: purchase.sourceId,
-        sourceHash: purchase.sourceHash,
-        supplierName: purchase.supplierName,
-        purchasedAt: purchase.purchasedAt,
-        totalAmount: purchase.totalAmount,
-        notes: 'Importação histórica do workbook.',
-      })
-      .returning({ id: purchases.id })
+    const insertedPurchase = requireFirst(
+      await tx
+        .insert(purchases)
+        .values({
+          sourceId: purchase.sourceId,
+          sourceHash: purchase.sourceHash,
+          supplierName: purchase.supplierName,
+          purchasedAt: purchase.purchasedAt,
+          totalAmount: purchase.totalAmount,
+          notes: 'Importação histórica do workbook.',
+        })
+        .returning({ id: purchases.id }),
+    )
     await tx.insert(purchaseItems).values({
       sourceId: purchase.sourceId,
       sourceHash: purchase.sourceHash,

@@ -67,6 +67,13 @@ verificações de integridade desses artefatos.
 Configurações em `.oxlintrc.json` e `.oxfmtrc.json`; critérios e diferenças de
 cobertura em [TYPESCRIPT-7-OXC-MIGRATION.md](TYPESCRIPT-7-OXC-MIGRATION.md).
 
+O compilador exige `exactOptionalPropertyTypes` e `noUncheckedIndexedAccess`,
+inclusive nos testes/scripts. Declare ausência explicitamente; não acrescente
+`!` ou casts para contornar os diagnósticos. Em resultados obrigatórios,
+`requireDefined`/`requireFirst` falham de forma controlada; resultados opcionais
+devem conservar seu contrato de ausência. O lint também verifica pureza,
+imutabilidade, refs e atualizações síncronas de estado em efeitos React.
+
 `npm run test:e2e` deve ser usado quando o fluxo exigir homologação E2E e o ambiente estiver autorizado. Testes que escrevem em base compartilhada exigem atenção às regras de HML e referências idempotentes.
 
 ## Migrations

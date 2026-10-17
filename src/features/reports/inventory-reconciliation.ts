@@ -1,3 +1,4 @@
+import { requireDefined } from '../../lib/required-value'
 import {
   moneyToCents,
   quantityToThousandths,
@@ -303,7 +304,7 @@ export function reconcileInventoryLedger(input: ReconciliationInput) {
     allocationsByMovement.set(allocation.outgoingMovementId, rows)
   }
   for (const [movementId, allocations] of allocationsByMovement) {
-    const movement = allocations[0]
+    const movement = requireDefined(allocations[0])
     const expectedQuantity = allocations.reduce(
       (sum, row) => sum + asQuantity(row.quantity),
       0n,
@@ -344,8 +345,8 @@ export function reconcileInventoryLedger(input: ReconciliationInput) {
         entityType: 'stock_movement',
         entityId: movementId,
         relatedIds: mismatched.map((row) => row.id),
-        expected: String(mismatched[0].productId),
-        actual: String(mismatched[0].movementProductId),
+        expected: String(requireDefined(mismatched[0]).productId),
+        actual: String(requireDefined(mismatched[0]).movementProductId),
       })
     }
   }

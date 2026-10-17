@@ -120,7 +120,7 @@ test('desafio durável sem token ou secret bloqueia antes de chamar verificador'
         {
           scope: 'login',
           identifier: 'synthetic@example.invalid',
-          turnstileToken: withToken ? 'synthetic-token' : undefined,
+          ...(withToken ? { turnstileToken: 'synthetic-token' } : {}),
         },
         {
           AUTH_LOGIN_HASH_PEPPER: environment.AUTH_LOGIN_HASH_PEPPER,

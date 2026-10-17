@@ -1,3 +1,4 @@
+import { requireDefined } from '../../lib/required-value'
 import {
   calculateInventoryState,
   calculateWeightedAverageCost,
@@ -172,7 +173,8 @@ function allocateRevenueAcrossLayers(rows: FifoMarginRow[]) {
   }
   const revenueByAllocation = new Map<number, bigint>()
   for (const allocations of byItem.values()) {
-    const revenue = moneyToCents(allocations[0].saleItemRevenue) ?? 0n
+    const revenue =
+      moneyToCents(requireDefined(allocations[0]).saleItemRevenue) ?? 0n
     const totalQuantity = allocations.reduce(
       (sum, allocation) =>
         sum + (quantityToThousandths(allocation.quantity) ?? 0n),
@@ -349,7 +351,7 @@ export function valueInventory(
   }
   return [...byProduct.values()]
     .map((movements) => {
-      const first = movements[0]
+      const first = requireDefined(movements[0])
       const state = calculateInventoryState(movements)
       const balance = state.quantity
       const unitCost = calculateWeightedAverageCost(movements)

@@ -1,3 +1,4 @@
+import { requireDefined } from '../lib/required-value'
 import { useState } from 'react'
 import { createFileRoute, useNavigate, useRouter } from '@tanstack/react-router'
 import { useServerFn } from '@tanstack/react-start'
@@ -1007,7 +1008,7 @@ function formatRate(value: string) {
   const normalized = value.replace(',', '.')
   const [whole, fraction = ''] = normalized.split('.')
   const millionths =
-    BigInt(whole) * 1_000_000n + BigInt(fraction.padEnd(6, '0'))
+    BigInt(requireDefined(whole)) * 1_000_000n + BigInt(fraction.padEnd(6, '0'))
   const hundredthsOfPercent = (millionths + 50n) / 100n
   return `${hundredthsOfPercent / 100n},${String(hundredthsOfPercent % 100n).padStart(2, '0')}%`
 }

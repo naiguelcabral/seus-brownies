@@ -39,7 +39,7 @@ function ExpensesPage() {
   const [description, setDescription] = useState('')
   const [category, setCategory] = useState('')
   const [amount, setAmount] = useState('')
-  const [occurredAt, setOccurredAt] = useState(
+  const [occurredAt, setOccurredAt] = useState(() =>
     new Date().toISOString().slice(0, 10),
   )
   const [notes, setNotes] = useState('')

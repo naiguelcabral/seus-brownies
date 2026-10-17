@@ -13,7 +13,7 @@ async function readCacauAccess(authUserId: string) {
     .from(appUserAccess)
     .where(eq(appUserAccess.authUserId, authUserId))
     .limit(1)
-  return access
+  return access ?? null
 }
 
 /**

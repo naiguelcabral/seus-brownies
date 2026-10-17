@@ -1,3 +1,4 @@
+import { requireDefined } from '../src/lib/required-value'
 import assert from 'node:assert/strict'
 import test from 'node:test'
 
@@ -59,7 +60,9 @@ test('contrato aceita rascunho vazio, mas ativação bloqueia mix vazio', () => 
 test('contrato rejeita peso que excede a precisão persistida', () => {
   const oversized = {
     ...draft,
-    mix: [{ ...draft.mix[0], originalWeight: '1000000.000001' }],
+    mix: [
+      { ...requireDefined(draft.mix[0]), originalWeight: '1000000.000001' },
+    ],
   }
   assert.equal(scenarioDraftValues.safeParse(oversized).success, false)
 })
@@ -68,18 +71,18 @@ test('ativação bloqueia produto inativo ou que não seja produto final', () =>
   assert.throws(
     () =>
       validateScenarioActivation(draft, [
-        { ...products[0], isActive: false },
-        products[1],
-        products[2],
+        { ...requireDefined(products[0]), isActive: false },
+        requireDefined(products[1]),
+        requireDefined(products[2]),
       ]),
     /está inativo/,
   )
   assert.throws(
     () =>
       validateScenarioActivation(draft, [
-        { ...products[0], type: 'ingredient' },
-        products[1],
-        products[2],
+        { ...requireDefined(products[0]), type: 'ingredient' },
+        requireDefined(products[1]),
+        requireDefined(products[2]),
       ]),
     /não é um produto final/,
   )
@@ -87,8 +90,8 @@ test('ativação bloqueia produto inativo ou que não seja produto final', () =>
 
 test('normaliza soma abaixo de 100% com fechamento exato', () => {
   const result = normalizeScenarioMix([
-    { ...draft.mix[0], originalWeight: '0.40' },
-    { ...draft.mix[1], originalWeight: '0.50' },
+    { ...requireDefined(draft.mix[0]), originalWeight: '0.40' },
+    { ...requireDefined(draft.mix[1]), originalWeight: '0.50' },
   ])
   assert.equal(result.originalTotal, '0.900000')
   assert.equal(result.wasNormalized, true)
@@ -100,8 +103,8 @@ test('normaliza soma abaixo de 100% com fechamento exato', () => {
 
 test('preserva soma exatamente igual a 100%', () => {
   const result = normalizeScenarioMix([
-    { ...draft.mix[0], originalWeight: '0.40' },
-    { ...draft.mix[1], originalWeight: '0.60' },
+    { ...requireDefined(draft.mix[0]), originalWeight: '0.40' },
+    { ...requireDefined(draft.mix[1]), originalWeight: '0.60' },
   ])
   assert.equal(result.originalTotal, '1.000000')
   assert.equal(result.wasNormalized, false)
@@ -143,7 +146,10 @@ test('projeção usa centavos, milésimos e pontos-base sem ponto flutuante', ()
     ),
     10_000,
   )
-  assert.equal(projection.productLines[0].plannedUnitCost, '2.517')
+  assert.equal(
+    requireDefined(projection.productLines[0]).plannedUnitCost,
+    '2.517',
+  )
 })
 
 test('precisão monetária permanece exata no limite persistido', () => {
@@ -152,9 +158,9 @@ test('precisão monetária permanece exata no limite persistido', () => {
       ...draft,
       monthlyProfitGoal: '9999999999.99',
       fixedMonthlyCosts: '0.01',
-      mix: [draft.mix[0]],
+      mix: [requireDefined(draft.mix[0])],
     },
-    [products[0]],
+    [requireDefined(products[0])],
   )
   assert.equal(projection.marginNeededBeforeFixedCosts, '10000000000.00')
   assert.ok(BigInt(projection.unitsPerMonth) > 0n)
@@ -181,6 +187,6 @@ test('resultado realizado fica separado da projeção e explicita ausência', ()
     ],
   })
   assert.equal(realized.status, 'available')
-  assert.equal(realized.productLines[0].realizedMargin, '70.00')
-  assert.equal(realized.productLines[1].status, 'missing')
+  assert.equal(requireDefined(realized.productLines[0]).realizedMargin, '70.00')
+  assert.equal(requireDefined(realized.productLines[1]).status, 'missing')
 })

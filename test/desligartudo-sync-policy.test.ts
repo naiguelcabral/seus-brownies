@@ -1,3 +1,4 @@
+import { requireDefined } from '../src/lib/required-value'
 import assert from 'node:assert/strict'
 import { readFile } from 'node:fs/promises'
 import test from 'node:test'
@@ -37,7 +38,7 @@ test('bloqueia caminhos sensíveis antes da memória e antes do commit', async (
 
   assert.ok(preflight >= 0 && preflight < finalize)
   assert.equal(stagedChecks.length, 2)
-  assert.ok(stagedChecks[0].index < finalize)
-  assert.ok(stagedChecks[1].index > gitAdd)
+  assert.ok(requireDefined(stagedChecks[0]).index < finalize)
+  assert.ok(requireDefined(stagedChecks[1]).index > gitAdd)
   assert.match(script, /git check-ignore -q \.codex-local\//)
 })

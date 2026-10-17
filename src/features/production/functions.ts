@@ -1,3 +1,4 @@
+import { requireFirst } from '../../lib/required-value'
 import { createServerFn } from '@tanstack/react-start'
 import {
   and,
@@ -157,15 +158,17 @@ function addConsumption(
 }
 
 async function loadPlan(tx: Transaction, input: BatchInput) {
-  const [recipe] = await tx
-    .select({
-      id: recipeVersions.id,
-      name: recipeVersions.name,
-      status: recipeVersions.status,
-      version: recipeVersions.version,
-    })
-    .from(recipeVersions)
-    .where(eq(recipeVersions.id, input.recipeVersionId))
+  const recipe = requireFirst(
+    await tx
+      .select({
+        id: recipeVersions.id,
+        name: recipeVersions.name,
+        status: recipeVersions.status,
+        version: recipeVersions.version,
+      })
+      .from(recipeVersions)
+      .where(eq(recipeVersions.id, input.recipeVersionId)),
+  )
   if (recipe.status !== 'active')
     throw new Error('Selecione uma receita-base ativa.')
 
@@ -595,7 +598,7 @@ export const getProductionWorkspace = createServerFn({ method: 'GET' })
           )
         : undefined,
     )
-    const [recipes, profileRows, [{ total }]] = await Promise.all([
+    const [recipes, profileRows, productionCountRows] = await Promise.all([
       database
         .select({
           id: recipeVersions.id,
@@ -626,6 +629,8 @@ export const getProductionWorkspace = createServerFn({ method: 'GET' })
         )
         .where(batchFilters),
     ])
+    const { total } = requireFirst(productionCountRows)
+
     const pagination = calculateProductionHistoryPage(data.page, Number(total))
     const batches = await database
       .select({
@@ -681,27 +686,29 @@ export const createProductionBatch = createServerFn({ method: 'POST' })
         quantity: requireQuantity(loss.quantity, 'Quantidade de perda'),
         reason: loss.reason.trim(),
       }))
-      const [batch] = await tx
-        .insert(productionBatches)
-        .values({
-          recipeVersionId: plan.recipe.id,
-          status: 'draft',
-          plannedFor: data.productionDate,
-          recipeMultiplier: data.recipeMultiplier.trim().replace(',', '.'),
-          plannedQuantity: plan.capacity.multiplier,
-          sourcePayload: {
-            origin: 'manual_production_draft',
-            plannedAt: new Date().toISOString(),
-            capacity: plan.capacity,
-            losses: losses.map((loss) => ({
-              productId: loss.productId,
-              quantity: thousandthsToQuantity(loss.quantity),
-              reason: loss.reason,
-            })),
-          },
-          notes: data.notes?.trim() || null,
-        })
-        .returning({ id: productionBatches.id })
+      const batch = requireFirst(
+        await tx
+          .insert(productionBatches)
+          .values({
+            recipeVersionId: plan.recipe.id,
+            status: 'draft',
+            plannedFor: data.productionDate,
+            recipeMultiplier: data.recipeMultiplier.trim().replace(',', '.'),
+            plannedQuantity: plan.capacity.multiplier,
+            sourcePayload: {
+              origin: 'manual_production_draft',
+              plannedAt: new Date().toISOString(),
+              capacity: plan.capacity,
+              losses: losses.map((loss) => ({
+                productId: loss.productId,
+                quantity: thousandthsToQuantity(loss.quantity),
+                reason: loss.reason,
+              })),
+            },
+            notes: data.notes?.trim() || null,
+          })
+          .returning({ id: productionBatches.id }),
+      )
       await tx.insert(productionBatchOutputs).values(
         plan.sellableOutputs.map((output) => ({
           sourceKey: `manual:production-batch:${batch.id}:output:${output.product.id}`,
@@ -723,27 +730,29 @@ export const getProductionBatch = createServerFn({ method: 'GET' })
   .handler(async ({ data }) => {
     const { getDb } = await import('#/db/index')
     const database = getDb()
-    const [batch] = await database
-      .select({
-        id: productionBatches.id,
-        status: productionBatches.status,
-        plannedFor: productionBatches.plannedFor,
-        recipeMultiplier: productionBatches.recipeMultiplier,
-        totalCost: productionBatches.totalCost,
-        unitCost: productionBatches.unitCost,
-        completedAt: productionBatches.completedAt,
-        notes: productionBatches.notes,
-        sourcePayload: productionBatches.sourcePayload,
-        recipeId: recipeVersions.id,
-        recipeName: recipeVersions.name,
-        recipeVersion: recipeVersions.version,
-      })
-      .from(productionBatches)
-      .leftJoin(
-        recipeVersions,
-        eq(productionBatches.recipeVersionId, recipeVersions.id),
-      )
-      .where(eq(productionBatches.id, data.id))
+    const batch = requireFirst(
+      await database
+        .select({
+          id: productionBatches.id,
+          status: productionBatches.status,
+          plannedFor: productionBatches.plannedFor,
+          recipeMultiplier: productionBatches.recipeMultiplier,
+          totalCost: productionBatches.totalCost,
+          unitCost: productionBatches.unitCost,
+          completedAt: productionBatches.completedAt,
+          notes: productionBatches.notes,
+          sourcePayload: productionBatches.sourcePayload,
+          recipeId: recipeVersions.id,
+          recipeName: recipeVersions.name,
+          recipeVersion: recipeVersions.version,
+        })
+        .from(productionBatches)
+        .leftJoin(
+          recipeVersions,
+          eq(productionBatches.recipeVersionId, recipeVersions.id),
+        )
+        .where(eq(productionBatches.id, data.id)),
+    )
     const [outputs, consumptions, losses, costs] = await Promise.all([
       database
         .select({
@@ -853,10 +862,12 @@ export async function persistProductionBatchCompletion(
     await tx.execute(
       sql`select id from ${productionBatches} where ${productionBatches.id} = ${data.id} for update`,
     )
-    const [batch] = await tx
-      .select()
-      .from(productionBatches)
-      .where(eq(productionBatches.id, data.id))
+    const batch = requireFirst(
+      await tx
+        .select()
+        .from(productionBatches)
+        .where(eq(productionBatches.id, data.id)),
+    )
     assertCompletableBatchStatus(batch.status)
     if (!batch.recipeVersionId || !batch.plannedFor || !batch.recipeMultiplier)
       throw new Error(

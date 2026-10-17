@@ -1,3 +1,4 @@
+import { requireFirst } from '../../lib/required-value'
 import { createServerFn } from '@tanstack/react-start'
 import { and, asc, count, eq, ilike } from 'drizzle-orm'
 import { z } from 'zod'
@@ -63,10 +64,12 @@ export const listSalesLocations = createServerFn({ method: 'GET' })
         ? eq(salesLocations.isActive, data.activity === 'active')
         : undefined,
     )
-    const [{ total }] = await database
-      .select({ total: count() })
-      .from(salesLocations)
-      .where(filters)
+    const { total } = requireFirst(
+      await database
+        .select({ total: count() })
+        .from(salesLocations)
+        .where(filters),
+    )
     const pagination = calculateSalesLocationPage(data.page, Number(total))
     const rows = await database
       .select()

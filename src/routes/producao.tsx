@@ -74,7 +74,7 @@ function ProductionPage() {
   const [recipeVersionId, setRecipeVersionId] = useState(
     String(workspace.recipes[0]?.id ?? ''),
   )
-  const [productionDate, setProductionDate] = useState(
+  const [productionDate, setProductionDate] = useState(() =>
     new Date().toISOString().slice(0, 10),
   )
   const [recipeMultiplier, setRecipeMultiplier] = useState('1')
