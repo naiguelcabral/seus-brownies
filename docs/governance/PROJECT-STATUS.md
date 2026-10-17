@@ -2,6 +2,13 @@
 
 ## Redefinição de senha HML — 17 de outubro de 2026
 
+Inventário ampliado autorizado confirmou ausência de tabelas/views/sequences
+de aplicação em `public`/`drizzle` e dos dois enums auth. Plano restrito a
+`0000–0016`, sem alterar originais, validado em PostgreSQL 17 descartável:
+journal real, reset auditado com provedor simulado, reaplicação sem duplicação
+e rollback preservando schema do provedor. Plano/snapshot/cópia/DDL pendentes
+em `AUTH-BASELINE-0016-EXECUTION-PLAN.md`; nenhuma escrita externa realizada.
+
 Catálogo mínimo executado após exceção humana explícita, READ ONLY confirmado:
 as três tabelas de autenticação estão ausentes em todos os schemas e o journal
 `drizzle.__drizzle_migrations` também está ausente em `neondb` do alvo declarado.

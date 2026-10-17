@@ -9,9 +9,13 @@
 - [x] Renovar franquia e correlacionar nova tentativa: `42P01` na auditoria.
 - [x] Executar catálogo mínimo READ ONLY após aprovação da exceção M45:
       três tabelas auth e journal ausentes, sem correspondência em outro schema.
-- [ ] Autorizar inventário ampliado apenas de metadados `public`/`drizzle` e
-      enums auth; classificar baseline antes de preparar correção auditável.
-      Nenhuma migration ou criação de vínculo aprovada por este teste.
+- [x] Executar inventário ampliado autorizado: nenhuma relação de aplicação
+      nos tipos consultados e enums auth ausentes; preparar baseline canônica.
+- [x] Validar localmente `0000–0016`: journal, reset auditado, reaplicação,
+      rollback e preservação de schema gerenciado em PostgreSQL 17 descartável.
+- [ ] Aprovar snapshot, restauração em cópia privada e inicialização canônica
+      do alvo original somente se o ensaio passar, conforme plano dedicado.
+      `0017–0028` e vínculo do primeiro Dono continuam fora desse pacote.
 
 - [x] Confirmar relato de reset e inspecionar configuração sem credenciais/SQL.
 - [x] Corrigir localmente origem de callback HML e cobrir configuração real.

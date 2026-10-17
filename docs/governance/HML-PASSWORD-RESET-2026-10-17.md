@@ -1,5 +1,21 @@
 # Redefinição de senha em HML — 17 de outubro de 2026
 
+## Inventário ampliado e preparação da baseline
+
+Usuário autorizou o SQL de inventário ampliado. Execução no mesmo alvo,
+role administrativa sob transação READ ONLY confirmada, retornou zero relações
+dos tipos `r`, `p`, `v`, `m`, `S` em `public`/`drizzle`, e zero dos dois enums
+auth. Nenhuma linha de usuário ou negócio foi consultada. Isso caracteriza
+ausência da instalação da aplicação nessas estruturas, não banco inteiro vazio.
+
+Plano de inicialização canônica, restrito a `0000–0016`, preparado em
+`AUTH-BASELINE-0016-EXECUTION-PLAN.md`, com manifesto de 17 hashes. Dois ensaios
+locais PostgreSQL 17 passaram: baseline/fluxo de auditoria/reaplicação e rollback
+de falha forçada, preservando marcador de schema gerenciado. Nenhum snapshot
+existe na listagem atual do projeto. Criação/restore de snapshot, branch de
+ensaio e DDL no alvo original ainda dependem de autorização explícita do plano.
+Nenhuma instalação, importação, credencial ou vínculo foi alterado no Neon.
+
 ## Resultado do catálogo autorizado — 17 de outubro de 2026
 
 Após autorização humana explícita de exceção M45, `run_sql_transaction` usou

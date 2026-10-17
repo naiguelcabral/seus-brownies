@@ -2,6 +2,12 @@
 
 ## Exceção pontual de catálogo — 17 de outubro de 2026
 
+Após o resultado inicial, o usuário autorizou ampliar somente o inventário de
+metadados conforme `SQL-AUTH-BASELINE-INVENTORY-2026-10-17.sql`: relações de
+`public`/`drizzle` e labels dos dois enums auth, no mesmo alvo e sob READ ONLY.
+Executado sem DDL/DML e sem leitura de dados do provedor/aplicação.
+Não autoriza inicializar schema, criar snapshot/branch ou aplicar migrations.
+
 Após proposta do SQL `SQL-AUTH-CATALOG-PREFLIGHT-2026-10-17.sql`, o usuário
 autorizou o teste pelo MCP administrativo, em transação READ ONLY, no projeto
 `steep-brook-51659857`, branch `br-lingering-wind-acwh5wap`, database `neondb`.
