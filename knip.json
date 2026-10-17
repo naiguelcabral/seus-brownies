@@ -9,7 +9,8 @@
     "scripts/*.{ts,js,mjs}",
     "scripts/project-sync/cli.mjs",
     "scripts/codex/**/*.{ts,js,mjs}",
-    "*.config.{ts,js}"
+    "*.config.{ts,js}",
+    "drizzle.config.ts"
   ],
   "project": [
     "src/**/*.{ts,tsx}",
@@ -21,5 +22,8 @@
   "ignore": [
     "src/routeTree.gen.ts",
     "**/*.d.ts"
-  ]
+  ],
+  "drizzle": {
+    "config": []
+  }
 }
