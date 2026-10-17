@@ -8,6 +8,8 @@ on:
       - 'scripts/test-migration-chain-disposable.mjs'
       - 'scripts/test-auth-baseline-disposable.mjs'
       - 'scripts/auth-baseline-payload.mjs'
+      - 'scripts/test-scoped-upgrade-disposable.mjs'
+      - 'test/migration-chain-scoped-payload.test.ts'
       - 'test/migration-chain-candidates.test.ts'
       - 'test/migration-chain-access-diagnostic.test.ts'
       - 'test/migration-chain-preflight.test.ts'
@@ -47,6 +49,7 @@ jobs:
       - run: npm ci
       - run: node scripts/test-migration-chain-disposable.mjs --ack-disposable-postgres17
       - run: node --import tsx scripts/test-auth-baseline-disposable.mjs --ack-disposable-postgres17
+      - run: node --import tsx scripts/test-scoped-upgrade-disposable.mjs --ack-disposable-postgres17
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -54,4 +57,5 @@ jobs:
           path: |
             /tmp/cacau-chain-evidence
             /tmp/cacau-auth-baseline-evidence.json
+            /tmp/cacau-scoped-upgrade-evidence
           retention-days: 7

@@ -1,0 +1,29 @@
+{
+  "scope": "synthetic-disposable-postgres17",
+  "application_authorized": false,
+  "source_unchanged": true,
+  "orm_tables_checked": 38,
+  "cases": [
+    {
+      "name": "full upgrade, current ORM schema, money, guards and repeat rejection",
+      "result": "passed"
+    },
+    {
+      "name": "late failure restores complete catalog and original receipts",
+      "result": "passed"
+    },
+    {
+      "name": "historical hash drift rejected before migration",
+      "result": "passed"
+    },
+    {
+      "name": "partial application rejected without overwriting objects",
+      "result": "passed"
+    },
+    {
+      "name": "catalog equals independently migrated corrected reference",
+      "result": "passed"
+    }
+  ],
+  "catalog_sha256": "6832cef678c0a00c28f926fc75484ad8c6b1dd1e63a4cd29af4ff0dde30c7642"
+}

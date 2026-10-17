@@ -1,5 +1,27 @@
 # Estado canônico do projeto — Cacau v1
 
+## Atualização 0016–0028 — correção delimitada preparada
+
+Continuidade autorizada para corrigir o painel após a liberação de acesso.
+Preparado lote offline de 102 instruções, mantendo todos os SQLs e hashes
+originais; ponte de compatibilidade corrige a `0017` dentro de uma transação.
+Final esperado: 31 recibos (29 originais + dois da ponte), com schema completo
+compatível com as 38 tabelas ORM. Não reescreve a cadeia ativa nem presume o
+histórico de outras bases. `npm run db:migrate` e os gates globais permanecem.
+
+Validação: 481 testes gerais, 26 cenários anteriores PostgreSQL 17 e cinco
+casos novos aprovados, incluindo rollback, drift de hashes, aplicação parcial,
+proteções de produto/idempotência e equivalência do catálogo com migrador
+independente. Dinheiro, quantidades, acessos e auditoria preservados nas fixtures.
+Tipos, lint e formatação aprovados. Nenhum SQL externo ou DDL nesta rodada.
+
+Plano revisável em `SCOPED-UPGRADE-0016-0028-PLAN.md`, com payload exato,
+consultas LIMIT 0 e evidências versionadas. Antes da aplicação: aprovar valores
+iniciais da `0019`, mix novo vazio na `0028`, snapshot novo e restore em cópia
+isolada com `finalize:false` explícito; somente após ensaio positivo aplicar
+na original. Não promove branch nem muda endpoint, secret ou cadastro.
+A autorização anterior até `0016` não cobre automaticamente esse pacote.
+
 ## Concessões aprovadas e aplicadas — 17 de outubro de 2026
 
 Após apresentação do SQL e dos quatro ensaios, usuário autorizou explicitamente

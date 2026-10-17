@@ -1,5 +1,15 @@
 # Ações que exigem aprovação humana — Cacau v1
 
+## Atualização delimitada até 0028 — plano para decisão
+
+Após a liberação de acessos, usuário pediu continuidade da correção. Preparação
+local concluída em `SCOPED-UPGRADE-0016-0028-PLAN.md`, com lote/hash e testes.
+A nova gravação na principal e os valores financeiros iniciais exigem aprovação
+específica do plano: snapshot novo, cópia privada com `finalize:false`, ensaio
+e aplicação na original somente se passar. Não reaproveitar a autorização
+limitada a `0000–0016`; não alterar secrets, endpoints/defaults, identidades
+ou fazer backfill. Decisão dos valores `0019` e mix novo vazio `0028` pendente.
+
 ## Concessões aprovadas e aplicadas — 17 de outubro de 2026
 
 Após apresentação do SQL e dos quatro ensaios, usuário autorizou explicitamente

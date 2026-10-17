@@ -1,5 +1,18 @@
 # Roadmap executável para Codex — Cacau v1
 
+## Correção do schema do painel — 17 de outubro de 2026
+
+- [x] Preparar atualização delimitada `0016–0028`, preservando hashes originais
+      e acessos recém-concedidos, sem tocar na cadeia ativa.
+- [x] Validar 481 testes, 26 cenários anteriores e cinco novos PostgreSQL 17;
+      todas as 38 tabelas ORM consultáveis, catálogo equivalente e rollback.
+- [x] Preparar payload de 102 instruções e plano de cópia/restore isolado.
+- [ ] Aprovar valores iniciais `0019`, mix novo vazio `0028`, snapshot/cópia
+      e aplicação condicional do plano `SCOPED-UPGRADE-0016-0028-PLAN.md`.
+- [ ] Executar ensaio externo e atualizar original somente se aprovado/passou.
+- [ ] Confirmar painel e acesso por papel; homologações comerciais continuam
+      tarefas próprias, sem operações sintéticas no banco compartilhado.
+
 ## Liberação de Gerente — 17 de outubro de 2026
 
 - [x] Publicar diagnóstico autorizado e atestar Auth em G1, diferente da
