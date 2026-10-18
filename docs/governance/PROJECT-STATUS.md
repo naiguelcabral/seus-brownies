@@ -1,5 +1,12 @@
 # Estado canônico do projeto — Cacau v1
 
+## Relatórios como segunda guia — 18 de outubro de 2026
+
+Usuário pediu mover Relatórios para a segunda posição e deixar tudo disponível.
+Ordem local: Visão geral → Relatórios → Estoque → Metas e cenários; demais guias
+preservam sua sequência. Rotas, ícones e permissões mantidos. Publicação HML
+autorizada no pedido; comprovante da versão final registrado após o deploy.
+
 ## Guias e compras em kg publicadas em HML — 18 de outubro de 2026
 
 Usuário autorizou concluir integralmente após a apresentação do gate HML.

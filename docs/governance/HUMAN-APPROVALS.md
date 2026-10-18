@@ -1,5 +1,12 @@
 # Ações que exigem aprovação humana — Cacau v1
 
+## Relatórios em segundo — autorização de 18 de outubro de 2026
+
+Usuário solicitou “coloque a aba de relatórios como a segunda aba na ordem faça
+as atualizações necessárias e deixe tudo disponível”. Autoriza a alteração
+de ordem e sua publicação no HML já utilizado, `cacau-v1-hml`. Não altera
+permissões, dados ou configuração de produção.
+
 ## Publicação HML das guias e compras em kg — 18 de outubro de 2026
 
 Após apresentação explícita da publicação pendente, usuário solicitou:

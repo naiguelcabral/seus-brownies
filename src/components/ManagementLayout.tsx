@@ -34,6 +34,12 @@ const navigation = [
     permission: 'dashboard:read',
   },
   {
+    to: '/relatorios',
+    label: 'Relatórios',
+    icon: BarChart3,
+    permission: 'reports:financial:read',
+  },
+  {
     to: '/estoque',
     label: 'Estoque',
     icon: Boxes,
@@ -44,12 +50,6 @@ const navigation = [
     label: 'Metas e cenários',
     icon: Target,
     permission: 'scenarios:read',
-  },
-  {
-    to: '/relatorios',
-    label: 'Relatórios',
-    icon: BarChart3,
-    permission: 'reports:financial:read',
   },
   {
     to: '/compras',
