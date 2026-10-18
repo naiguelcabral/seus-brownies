@@ -18,6 +18,26 @@ ovos, requisitos de 1 kWh e duas horas, tarifas de R$ 0,85/kWh e R$ 12,50/h,
 vínculo de embalagem. Sem compras, lotes ou movimentos: ainda não há custo
 realizado ou preço atual de aquisição para substituir referências históricas.
 
+## Embalagem e adesivo dos brownies — confirmação recebida
+
+Usuário respondeu “Sim” à pergunta se cada brownie simples ou recheado,
+nos dois tamanhos, leva uma embalagem e um adesivo. Regra física confirmada
+para **PROD003–PROD016 (14 SKUs)**: uma embalagem específica já vinculada ao
+perfil e **um adesivo INS006 por unidade de brownie**. Não ampliar essa resposta
+para Bordinhas, Bombom ou Kit, cujas apresentações ainda serão definidas.
+
+A evidência agora contém os 14 vínculos adicionais preparados por SKU,
+quantidade 1/unidade final, mantendo as embalagens existentes. Nenhum vínculo
+foi gravado no banco nesta etapa, nem referência de importação reutilizada.
+Aplicar em pacote aditivo próprio após revisar o restante das fichas e o ensaio.
+A decisão física deixa de ser inferência; o preço atual do adesivo continua
+não confirmado por compra recente. R$ 0,16 é referência histórica já compatível
+com o resíduo embutido dos brownies, e não deve ser somado novamente.
+
+Próxima pergunta: peso por pacote, embalagem, rendimento de pacotes por receita
+e adesivo de Bordinhas. Não assumir que o rendimento isolado 12 implique
+12 pacotes adicionais a qualquer fornada de brownies.
+
 ## Energia também incluída nos fixos — resposta recebida
 
 Usuário respondeu “Sim, está incluso” à inclusão de energia nos R$ 1.600
@@ -229,18 +249,18 @@ definido antes de tratar esse custo como válido. Não recomendar reajuste com
 base nessa hipótese. Adesivo já parece estar embutido no resíduo histórico:
 ao definir o vínculo físico, evitar somar R$ 0,16 novamente ao custo histórico.
 
-## Decisões solicitadas ao usuário
+## Definições concluídas e pendências
 
-1. Diária definida em R$ 150 com capacidade máxima de 12 receitas completas.
-   Falta produção habitual e rateio da ociosidade. Confirmar se 1 kWh é por
-   receita ou por ciclo do forno.
-2. Confirmar adesivo por brownie; apresentação, rendimento e rateio de
-   Bordinhas; gramagem de cobertura e montagem/embalagens de bombom/Kit;
-   recheios comprados versus fabricados e chocolate em barra versus pó.
-3. Confirmar meta de lucro de R$ 10.000, fixos R$ 2.200, 20 dias, quatro
-   semanas e limiar de 70%. Detalhar o que compõe os fixos e taxas/impostos
-   efetivos. Não contar novamente MO/energia produtiva dentro dos fixos.
-   Reserva 0% não está homologada por ausência de informação.
+- Concluído: R$ 150/dia × quatro dias = R$ 600/mês de MO incluída nos fixos;
+  14–16 receitas completas por dia e energia também incluída nos R$ 2.200.
+- Concluído: uma embalagem e um adesivo por brownie PROD003–PROD016.
+- Pendente: apresentação/rendimento e rateio de Bordinhas; cobertura,
+  montagem e embalagens de bombom/Kit; recheios prontos versus fabricados e
+  chocolate da massa; taxas/impostos e preços atuais de aquisição.
+- Premissas herdadas ainda a validar no fechamento: meta de lucro R$ 10.000,
+  20 dias de venda, quatro semanas e limiar de margem de 70%. O consumo de
+  energia por ciclo/receita continua não medido, sem cobrança duplicada no
+  planejamento que mantém a energia dentro do orçamento fixo integral.
 
 Se forem várias receitas por sessão, distribuir o recurso pela base física
 confirmada; não dividir automaticamente os demais ingredientes ou presumir

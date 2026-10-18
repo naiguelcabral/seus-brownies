@@ -1,5 +1,16 @@
 # Ações que exigem aprovação humana — Cacau v1
 
+## Embalagem e adesivo dos brownies — confirmação de 18/10/2026
+
+Usuário respondeu “Sim” a uma embalagem e um adesivo por brownie simples ou
+recheado, nos dois tamanhos. Abrange PROD003–PROD016, mantendo embalagem
+existente e preparando consumo adicional de um INS006 por unidade final.
+Não abrange Bordinhas, Bombom ou Kit. Regra física definida explicitamente;
+preço do adesivo continua referência histórica até evidência atual. Evitar
+somar esse custo novamente à referência que já o contém. Preparação na
+reconciliação de custos; sem aplicação compartilhada nesta etapa.
+
+
 ## Mão de obra diária — definição de 18/10/2026
 
 Usuário definiu R$ 150 por dia, com até 12 receitas cortadas, recheadas e

@@ -600,5 +600,143 @@
         }
       ]
     }
+  },
+  "browniePackagingDecision": {
+    "question": "Cada brownie vendido — simples ou recheado, nos dois tamanhos — leva uma embalagem e um adesivo?",
+    "answer": "Sim",
+    "scope": "PROD003 through PROD016 only; no inference for Bordinhas, Bombom or Kit",
+    "physicalRule": "one existing profile-specific package and one INS006 adhesive per finished brownie",
+    "costTreatment": "Reconcile existing historical cost first; do not add another adhesive cost to a historical reference that already includes it. Physical component binding and historical price evidence remain separate.",
+    "pendingApplication": true,
+    "applicationReference": "not assigned or consumed; prepare additive package after remaining review",
+    "adhesiveBindings": [
+      {
+        "productSku": "PROD003",
+        "componentSku": "INS006",
+        "quantity": "1",
+        "unit": "unit",
+        "basis": "per_finished_unit",
+        "role": "packaging",
+        "source": "explicit_user_decision_2026-10-18"
+      },
+      {
+        "productSku": "PROD004",
+        "componentSku": "INS006",
+        "quantity": "1",
+        "unit": "unit",
+        "basis": "per_finished_unit",
+        "role": "packaging",
+        "source": "explicit_user_decision_2026-10-18"
+      },
+      {
+        "productSku": "PROD005",
+        "componentSku": "INS006",
+        "quantity": "1",
+        "unit": "unit",
+        "basis": "per_finished_unit",
+        "role": "packaging",
+        "source": "explicit_user_decision_2026-10-18"
+      },
+      {
+        "productSku": "PROD006",
+        "componentSku": "INS006",
+        "quantity": "1",
+        "unit": "unit",
+        "basis": "per_finished_unit",
+        "role": "packaging",
+        "source": "explicit_user_decision_2026-10-18"
+      },
+      {
+        "productSku": "PROD007",
+        "componentSku": "INS006",
+        "quantity": "1",
+        "unit": "unit",
+        "basis": "per_finished_unit",
+        "role": "packaging",
+        "source": "explicit_user_decision_2026-10-18"
+      },
+      {
+        "productSku": "PROD008",
+        "componentSku": "INS006",
+        "quantity": "1",
+        "unit": "unit",
+        "basis": "per_finished_unit",
+        "role": "packaging",
+        "source": "explicit_user_decision_2026-10-18"
+      },
+      {
+        "productSku": "PROD009",
+        "componentSku": "INS006",
+        "quantity": "1",
+        "unit": "unit",
+        "basis": "per_finished_unit",
+        "role": "packaging",
+        "source": "explicit_user_decision_2026-10-18"
+      },
+      {
+        "productSku": "PROD010",
+        "componentSku": "INS006",
+        "quantity": "1",
+        "unit": "unit",
+        "basis": "per_finished_unit",
+        "role": "packaging",
+        "source": "explicit_user_decision_2026-10-18"
+      },
+      {
+        "productSku": "PROD011",
+        "componentSku": "INS006",
+        "quantity": "1",
+        "unit": "unit",
+        "basis": "per_finished_unit",
+        "role": "packaging",
+        "source": "explicit_user_decision_2026-10-18"
+      },
+      {
+        "productSku": "PROD012",
+        "componentSku": "INS006",
+        "quantity": "1",
+        "unit": "unit",
+        "basis": "per_finished_unit",
+        "role": "packaging",
+        "source": "explicit_user_decision_2026-10-18"
+      },
+      {
+        "productSku": "PROD013",
+        "componentSku": "INS006",
+        "quantity": "1",
+        "unit": "unit",
+        "basis": "per_finished_unit",
+        "role": "packaging",
+        "source": "explicit_user_decision_2026-10-18"
+      },
+      {
+        "productSku": "PROD014",
+        "componentSku": "INS006",
+        "quantity": "1",
+        "unit": "unit",
+        "basis": "per_finished_unit",
+        "role": "packaging",
+        "source": "explicit_user_decision_2026-10-18"
+      },
+      {
+        "productSku": "PROD015",
+        "componentSku": "INS006",
+        "quantity": "1",
+        "unit": "unit",
+        "basis": "per_finished_unit",
+        "role": "packaging",
+        "source": "explicit_user_decision_2026-10-18"
+      },
+      {
+        "productSku": "PROD016",
+        "componentSku": "INS006",
+        "quantity": "1",
+        "unit": "unit",
+        "basis": "per_finished_unit",
+        "role": "packaging",
+        "source": "explicit_user_decision_2026-10-18"
+      }
+    ],
+    "preserveExistingPackaging": true
   }
 }
