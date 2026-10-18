@@ -1,5 +1,13 @@
 # Ações que exigem aprovação humana — Cacau v1
 
+## Bordinhas — materiais definidos em 18/10/2026
+
+Usuário confirmou um saquinho e um adesivo por pacote de Bordinhas de 100 g.
+Identidade e preço do saquinho ainda não definidos; não usar custo de outra
+embalagem por inferência. Preço atual do adesivo e rateio da massa pendentes.
+Sem aplicação compartilhada ou alteração de regra de custeio nesta etapa.
+
+
 ## Bordinhas — apresentação e preço definidos em 18/10/2026
 
 Usuário informou “100 gramas a cada 6 reais para as bordinhas”. Autoriza usar
@@ -8,7 +16,9 @@ adesivo e rateio ainda pendentes. Não interpretar rendimento histórico 12 como
 12 pacotes de 100 g, nem converter unidade do SKU por inferência. Preço novo
 preparado para atualização rastreável de catálogo/cenário após a revisão;
 nenhuma escrita compartilhada nesta etapa.
-
+Depois esclareceu que Bordinhas aproveita massa fora do padrão de brownie
+regular para evitar desperdício. Usar rendimento variável medido, sem produção
+fixa presumida. Não define custo zero ou critério de rateio do coproduto.
 
 ## Embalagem e adesivo dos brownies — confirmação de 18/10/2026
 

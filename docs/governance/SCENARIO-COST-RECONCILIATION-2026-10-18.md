@@ -18,6 +18,44 @@ ovos, requisitos de 1 kWh e duas horas, tarifas de R$ 0,85/kWh e R$ 12,50/h,
 vínculo de embalagem. Sem compras, lotes ou movimentos: ainda não há custo
 realizado ou preço atual de aquisição para substituir referências históricas.
 
+## Bordinhas — saquinho e adesivo confirmados
+
+Usuário confirmou “Um saquinho e um adesivo” por pacote de Bordinhas de
+100 g vendido a R$ 6,00. Regra física: uma unidade de saquinho e uma unidade
+de adesivo por pacote vendido. Não inferir que o saquinho seja a embalagem de
+brownie simples de R$ 0,11 ou outra embalagem já existente no catálogo.
+
+Solicitado preço por pacote de compra e quantidade de saquinhos para calcular
+custo unitário, além de confirmar se o adesivo ainda custa R$ 0,16. Embalagem
+física definida; identidade do item e preço atual ainda pendentes. Ao reconstruir
+o custo, separar massa aproveitada, saquinho e adesivo sem duplicar resíduos
+já embutidos nos custos históricos. Rateio da massa continua pendente e não
+foi alterado no writer. Sem cadastro novo nem preço aplicado ao sistema.
+
+## Bordinhas — aproveitamento de massa fora do padrão
+
+Usuário esclareceu: “As bordas são massas que não tem qualidade para ser o
+brownie só, aí para não ter desperdício viram bordas”. Trata-se de massa
+aproveitada que não atende ao padrão de venda como brownie regular. A origem
+não se limita necessariamente às aparas geométricas de um corte.
+
+O rendimento de Bordinhas é variável e depende da massa efetivamente
+aproveitada; não assumir doze unidades adicionais por receita ou produção
+independente obrigatória. Registrar peso recuperado e pacotes completos de
+100 g a partir do que for medido em cada lote. Qualquer sobra menor que 100 g
+precisa permanecer rastreável; a forma de armazenamento/uso ainda não foi
+definida. A capacidade declarada de receitas/dia não garante massa recuperada.
+
+A decisão de aproveitamento não define custo zero. A massa já teve custo e
+não deve ser contada simultaneamente como brownie regular e Bordinhas, nem
+receber duas vezes o mesmo custo de consumo. O critério de rateio continua
+pendente para manter conservação de custo entre saídas e eventual perda.
+Não alterar o writer nem a regra de FIFO por inferência desta explicação.
+
+A pergunta de rendimento fixo foi substituída pela necessidade de pesar o
+aproveitamento real. Próxima pergunta enviada somente sobre embalagem e
+adesivo do pacote de 100 g a R$ 6,00. Sem escrita no sistema nesta etapa.
+
 ## Bordinhas — apresentação e preço informados
 
 Usuário informou “100 gramas a cada 6 reais para as bordinhas”. Referência

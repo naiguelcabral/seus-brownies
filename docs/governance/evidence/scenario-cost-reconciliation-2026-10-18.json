@@ -749,11 +749,21 @@
     "priceDeltaBRL": "1.00",
     "physicalYieldFromHistorical12": "not confirmed; do not interpret as twelve 100 g packs",
     "pending": [
-      "package identity and quantity",
-      "adhesive per package",
-      "packages of 100 g produced per recipe",
-      "coproduct cost allocation"
+      "bag purchase pack price and count",
+      "current adhesive unit price",
+      "measured recovered grams and complete 100 g packs in each batch",
+      "coproduct cost allocation method"
     ],
-    "applicationStatus": "review reference only; no catalog, profile, scenario or historical data changed"
+    "applicationStatus": "review reference only; no catalog, profile, scenario or historical data changed",
+    "originUserStatement": "As bordas são massas que não tem qualidade para ser o brownie só, aí para não ter desperdício viram bordas",
+    "origin": "mass that does not meet quality standard for sale as a regular brownie; recovered as Bordinhas to reduce waste",
+    "yieldTreatment": "variable recovered mass, not an independent batch or guaranteed fixed yield; record actual grams and complete 100 g packs when measured",
+    "allocationStatus": "same base mass already bears cost; zero cost or any allocation method not approved. Must not charge the same mass twice or count it as both a regular brownie and recovered output.",
+    "packagingUserStatement": "Um saquinho e um adesivo",
+    "packageQuantity": "1",
+    "packageDescription": "saquinho",
+    "adhesiveQuantity": "1",
+    "packagingBasis": "per sold 100 g package",
+    "bagCatalogMapping": "pending identification; do not assume same bag as any existing brownie package"
   }
 }

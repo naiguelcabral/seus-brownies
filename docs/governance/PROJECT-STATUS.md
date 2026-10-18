@@ -13,8 +13,12 @@ R$ 2.200 integrais e sem alterar custeio realizado. Confirmada uma embalagem
 e um adesivo por brownie PROD003–PROD016; 14 vínculos preparados na evidência,
 sem aplicar no banco nem somar novamente o custo histórico do adesivo.
 Bordinhas definida pelo usuário como pacote de 100 g a R$ 6,00 (referência
-histórica R$ 5,00); proposta ainda sem aplicação. Faltam embalagem, adesivo,
-rendimento e rateio de Bordinhas; demais fichas/taxas e aquisições pendentes.
+histórica R$ 5,00), aproveitando massa fora do padrão de brownie regular.
+Rendimento variável a pesar por lote, sem assumir doze pacotes/receita.
+Confirmado um saquinho e um adesivo por pacote; identidade/preço do saquinho
+e preço atual do adesivo pendentes, além do critério de rateio da massa.
+Não atribuir custo zero nem duplicar custo/volume. Demais fichas/taxas e
+aquisições pendentes.
 Sem alteração de tarifas horárias, fichas, código ou cenário.
 Detalhes: [SCENARIO-COST-RECONCILIATION-2026-10-18.md](SCENARIO-COST-RECONCILIATION-2026-10-18.md).
 
