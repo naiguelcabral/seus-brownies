@@ -1,5 +1,14 @@
 # Ações que exigem aprovação humana — Cacau v1
 
+## Saquinho das Bordinhas — preço confirmado em 18/10/2026
+
+Usuário informou “A embalagem das bordinhas custam 0,11 centavos por unidade”.
+Referência normalizada, com explicitação, para R$ 0,11 (11 centavos) por
+saquinho no contexto do custo antes discutido. Não altera a quantidade de um
+saquinho por pacote de 100 g, nem autoriza fundir estoque com outra embalagem
+pelo mesmo preço. Preço confirmado para revisão; sem aplicação compartilhada.
+
+
 ## Bombom — cobertura definida em 18/10/2026
 
 Usuário informou “Uns 50 gramas por chocolate de bombom” e confirmou que são

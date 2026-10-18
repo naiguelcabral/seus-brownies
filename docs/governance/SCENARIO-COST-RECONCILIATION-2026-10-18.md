@@ -18,6 +18,22 @@ ovos, requisitos de 1 kWh e duas horas, tarifas de R$ 0,85/kWh e R$ 12,50/h,
 vínculo de embalagem. Sem compras, lotes ou movimentos: ainda não há custo
 realizado ou preço atual de aquisição para substituir referências históricas.
 
+## Bordinhas — custo do saquinho confirmado pelo usuário
+
+Usuário informou “A embalagem das bordinhas custam 0,11 centavos por unidade”.
+No contexto da referência de R$ 0,11 já discutida e presente no workbook,
+normalizado e explicitado ao usuário como **R$ 0,11 (11 centavos) por saquinho**.
+Essa confirmação substitui a ressalva de preço apenas inferido para o saquinho;
+a reconciliação original da fonte permanece abaixo como histórico.
+
+Cada pacote de 100 g vendido a R$ 6,00 usa um saquinho R$ 0,11 e um adesivo
+com referência R$ 0,16: acabamento **R$ 0,27 por pacote**. Os números da
+simulação não mudam, pois já usavam esse complemento; não somá-lo novamente.
+Confirmação de preço não significa que o saquinho compartilhe estoque com
+embalagem de brownie ou bombom só pelo mesmo preço. Definir identidade de
+catálogo no pacote aditivo. Peso/rateio da massa e taxas de venda ainda faltam;
+nenhuma alteração de banco nesta etapa.
+
 ## Embalagens e adesivos de Bombom/Kit fechados
 
 Usuário confirmou “Sim, um adesivo por embalagem vendida”. Bombom avulso:

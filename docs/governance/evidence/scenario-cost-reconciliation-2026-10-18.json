@@ -764,7 +764,7 @@
     "priceDeltaBRL": "1.00",
     "physicalYieldFromHistorical12": "not confirmed; do not interpret as twelve 100 g packs",
     "pending": [
-      "bag product identity; unit-cost reference derived from source, not asked again",
+      "catalog stock identity for Bordinhas bag; do not merge by price alone",
       "measured recovered grams and complete 100 g packs in each batch",
       "coproduct cost allocation method"
     ],
@@ -778,7 +778,7 @@
     "packageDescription": "saquinho",
     "adhesiveQuantity": "1",
     "packagingBasis": "per sold 100 g package",
-    "bagCatalogMapping": "pending identification; do not assume same bag as any existing brownie package",
+    "bagCatalogMapping": "bag for Bordinhas identified by user and unit price confirmed; do not merge with another existing package SKU only by price",
     "costSourceInstruction": "O custo está no workbook",
     "historicalFinishingCost": {
       "totalBRL": "0.2700000000000000",
@@ -791,6 +791,16 @@
       "bagSkuResolved": false,
       "sourceSha256": "25aa62df5fc9b2e01402e9c242142322d9c6f54a345e800cb947b77865ce5b64",
       "use": "historical review reference only; do not add finishing again to old H/I values"
+    },
+    "bagUnitPriceConfirmation": {
+      "userStatement": "A embalagem das bordinhas custam 0,11 centavos por unidade",
+      "normalizedUnitPriceBRL": "0.11",
+      "display": "R$ 0,11 (11 centavos) por saquinho",
+      "basis": "interpreted against previous workbook discussion of BRL 0.11; normalization explicitly communicated to user",
+      "quantityPer100gPack": "1",
+      "packagingAndAdhesiveReferenceBRL": "0.27",
+      "scope": "unit price of bag confirmed; does not confirm a shared stock SKU with another package",
+      "appliedToDatabase": false
     }
   },
   "chocolateAndPurchasedFillingsDecision": {

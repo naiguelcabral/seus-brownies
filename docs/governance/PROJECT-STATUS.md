@@ -1,5 +1,15 @@
 # Estado canônico do projeto — Cacau v1
 
+## Saquinho das Bordinhas — custo confirmado em 18/10/2026
+
+Usuário confirmou saquinho a R$ 0,11 por unidade, explicitado como 11 centavos
+no contexto da fonte. Com referência de adesivo R$ 0,16, acabamento R$ 0,27
+por pacote de 100 g/R$ 6,00. Valor já usado na comparação, sem recálculo ou
+soma duplicada. Identidade de estoque deve ser própria ou validada, sem
+fundir embalagens só por preço. Peso/rateio da massa e taxas de venda seguem
+pendentes; sem escrita no banco.
+
+
 ## Ensaio de taxas e capacidade — 18/10/2026
 
 Continuidade da revisão: simulações ilustrativas de 0%/3%/5%/8%, sem adotar
