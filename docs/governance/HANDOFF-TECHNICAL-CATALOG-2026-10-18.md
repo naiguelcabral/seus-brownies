@@ -1,6 +1,38 @@
 # Handoff — preparação do cadastro técnico
 
-## Checkpoint atual — cadastro aplicado e conferido
+## Checkpoint atual — auditoria detalhada posterior
+
+Pedido do usuário: analisar detalhadamente o workbook e verificar informações
+faltantes. Concluída leitura das 15 abas, estruturas XML/comentários e banco
+atual em READ ONLY. Nenhuma alteração do workbook ou banco nesta análise.
+Relatório: `WORKBOOK-COMPLETENESS-REVIEW-2026-10-18.md`; evidências novas
+`evidence/workbook-completeness-{analysis,db-readonly}-2026-10-18.json`.
+
+Principais achados: adesivo INS006 sem vínculo; resíduo de R$ 0,16 compatível
+com adesivo nos 14 brownies, mas quantidade não explícita na fonte; Bordinhas
+com R$ 0,27 sem acabamento definido; bombom/kit e recheios caseiros sem regras
+completas. MO/energia históricos divergem das tarifas e quantidades explícitas:
+base física histórica + tarifas resultam em R$ 55,46, frente aos R$ 31,35
+antigos. Valores são referências teóricas, sem compra/produção realizada.
+Fonte estática sem fórmulas de célula; markup sugerido compatível com margem
+60% frente a mínimo 70%; mix 103%. Nove cadastros adicionais são do histórico.
+
+Catálogo/receita/ovos e parâmetros conferem com o pacote aprovado. Metadado de
+perfil completo não homologa BOM física. Fonte tem campos vazios de
+fornecedor, reposição, lote/validade, pagamentos, responsáveis e causas de
+divergência. Os quatro arquivos anteriores citados no consolidado não foram
+fornecidos para rastrear a origem das fórmulas/custos.
+
+Próximo passo: obter as definições operacionais W01–W05, apresentar eventual
+pacote aditivo concreto e ensaiado com referência nova. Não alterar regra de
+consumo/financeira por inferência ou reutilizar TECH-CATALOG-2026-10-18-001.
+Homologação produtiva permanece pendente. Esta tarefa não pede importação de
+histórico, ajuste de estoque ou deploy. Checks: assertions do levantamento,
+conferência de links, hashes e diff; sem suíte/build de código não alterado.
+
+## Histórico do cadastro aplicado
+
+## Checkpoint anterior — cadastro aplicado e conferido
 
 Autorização humana explícita recebida para reconferir workbook, receita e ficha,
 incluir ovos, ensaiar e prosseguir somente após sucesso. Tudo confirmado na

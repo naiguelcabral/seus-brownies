@@ -1,0 +1,796 @@
+{
+  "project": "steep-brook-51659857",
+  "branch": "br-lingering-wind-acwh5wap",
+  "mode": "READ ONLY",
+  "catalog": [
+    {
+      "sku": "HIS-OVOS-GRANDES",
+      "name": "Ovos Grandes",
+      "product_type": "ingredient",
+      "measurement_unit": "unit",
+      "sale_price": null,
+      "preferred_supplier_name": null,
+      "reorder_point": null,
+      "is_active": true,
+      "category": "Insumos do workbook"
+    },
+    {
+      "sku": "INS001",
+      "name": "Açúcar",
+      "product_type": "ingredient",
+      "measurement_unit": "g",
+      "sale_price": null,
+      "preferred_supplier_name": null,
+      "reorder_point": null,
+      "is_active": true,
+      "category": "Insumos do workbook"
+    },
+    {
+      "sku": "INS002",
+      "name": "Óleo",
+      "product_type": "ingredient",
+      "measurement_unit": "ml",
+      "sale_price": null,
+      "preferred_supplier_name": null,
+      "reorder_point": null,
+      "is_active": true,
+      "category": "Insumos do workbook"
+    },
+    {
+      "sku": "INS003",
+      "name": "Chocolate",
+      "product_type": "ingredient",
+      "measurement_unit": "g",
+      "sale_price": null,
+      "preferred_supplier_name": null,
+      "reorder_point": null,
+      "is_active": true,
+      "category": "Insumos do workbook"
+    },
+    {
+      "sku": "INS004",
+      "name": "Farinha de Trigo",
+      "product_type": "ingredient",
+      "measurement_unit": "g",
+      "sale_price": null,
+      "preferred_supplier_name": null,
+      "reorder_point": null,
+      "is_active": true,
+      "category": "Insumos do workbook"
+    },
+    {
+      "sku": "INS005",
+      "name": "Papel Manteiga (rolo)",
+      "product_type": "packaging",
+      "measurement_unit": "m",
+      "sale_price": null,
+      "preferred_supplier_name": null,
+      "reorder_point": null,
+      "is_active": true,
+      "category": "Insumos do workbook"
+    },
+    {
+      "sku": "INS006",
+      "name": "Adesivo",
+      "product_type": "packaging",
+      "measurement_unit": "unit",
+      "sale_price": null,
+      "preferred_supplier_name": null,
+      "reorder_point": null,
+      "is_active": true,
+      "category": "Insumos do workbook"
+    },
+    {
+      "sku": "INS007",
+      "name": "Embalagem Simples 5x5",
+      "product_type": "packaging",
+      "measurement_unit": "unit",
+      "sale_price": null,
+      "preferred_supplier_name": null,
+      "reorder_point": null,
+      "is_active": true,
+      "category": "Insumos do workbook"
+    },
+    {
+      "sku": "INS008",
+      "name": "Embalagem Simples 7x7",
+      "product_type": "packaging",
+      "measurement_unit": "unit",
+      "sale_price": null,
+      "preferred_supplier_name": null,
+      "reorder_point": null,
+      "is_active": true,
+      "category": "Insumos do workbook"
+    },
+    {
+      "sku": "INS009",
+      "name": "Embalagem Recheado 5x5",
+      "product_type": "packaging",
+      "measurement_unit": "unit",
+      "sale_price": null,
+      "preferred_supplier_name": null,
+      "reorder_point": null,
+      "is_active": true,
+      "category": "Insumos do workbook"
+    },
+    {
+      "sku": "INS010",
+      "name": "Embalagem Recheado 7x7",
+      "product_type": "packaging",
+      "measurement_unit": "unit",
+      "sale_price": null,
+      "preferred_supplier_name": null,
+      "reorder_point": null,
+      "is_active": true,
+      "category": "Insumos do workbook"
+    },
+    {
+      "sku": "INS011",
+      "name": "Embalagem Bombom Unitário",
+      "product_type": "packaging",
+      "measurement_unit": "unit",
+      "sale_price": null,
+      "preferred_supplier_name": null,
+      "reorder_point": null,
+      "is_active": true,
+      "category": "Insumos do workbook"
+    },
+    {
+      "sku": "INS012",
+      "name": "Embalagem Kit 4 Bombons",
+      "product_type": "packaging",
+      "measurement_unit": "unit",
+      "sale_price": null,
+      "preferred_supplier_name": null,
+      "reorder_point": null,
+      "is_active": true,
+      "category": "Insumos do workbook"
+    },
+    {
+      "sku": "INS013",
+      "name": "Brigadeiro (Recheio)",
+      "product_type": "ingredient",
+      "measurement_unit": "g",
+      "sale_price": null,
+      "preferred_supplier_name": null,
+      "reorder_point": null,
+      "is_active": true,
+      "category": "Insumos do workbook"
+    },
+    {
+      "sku": "INS014",
+      "name": "Doce de Leite (Recheio)",
+      "product_type": "ingredient",
+      "measurement_unit": "g",
+      "sale_price": null,
+      "preferred_supplier_name": null,
+      "reorder_point": null,
+      "is_active": true,
+      "category": "Insumos do workbook"
+    },
+    {
+      "sku": "INS015",
+      "name": "Leite Ninho (Recheio)",
+      "product_type": "ingredient",
+      "measurement_unit": "g",
+      "sale_price": null,
+      "preferred_supplier_name": null,
+      "reorder_point": null,
+      "is_active": true,
+      "category": "Insumos do workbook"
+    },
+    {
+      "sku": "INS016",
+      "name": "Creme de Avelã (Recheio)",
+      "product_type": "ingredient",
+      "measurement_unit": "g",
+      "sale_price": null,
+      "preferred_supplier_name": null,
+      "reorder_point": null,
+      "is_active": true,
+      "category": "Insumos do workbook"
+    },
+    {
+      "sku": "INS017",
+      "name": "Goiabada (Recheio)",
+      "product_type": "ingredient",
+      "measurement_unit": "g",
+      "sale_price": null,
+      "preferred_supplier_name": null,
+      "reorder_point": null,
+      "is_active": true,
+      "category": "Insumos do workbook"
+    },
+    {
+      "sku": "INS018",
+      "name": "Maracujá (Recheio)",
+      "product_type": "ingredient",
+      "measurement_unit": "g",
+      "sale_price": null,
+      "preferred_supplier_name": null,
+      "reorder_point": null,
+      "is_active": true,
+      "category": "Insumos do workbook"
+    },
+    {
+      "sku": "INS019",
+      "name": "Chocolate Ao Leite / Branco",
+      "product_type": "ingredient",
+      "measurement_unit": "g",
+      "sale_price": null,
+      "preferred_supplier_name": null,
+      "reorder_point": null,
+      "is_active": true,
+      "category": "Insumos do workbook"
+    },
+    {
+      "sku": "PROD001",
+      "name": "Bombom Brownie Unitário",
+      "product_type": "finished_product",
+      "measurement_unit": "unit",
+      "sale_price": "5.00",
+      "preferred_supplier_name": null,
+      "reorder_point": null,
+      "is_active": true,
+      "category": "Bombom"
+    },
+    {
+      "sku": "PROD002",
+      "name": "Bordinhas",
+      "product_type": "finished_product",
+      "measurement_unit": "unit",
+      "sale_price": "5.00",
+      "preferred_supplier_name": null,
+      "reorder_point": null,
+      "is_active": true,
+      "category": "Bordinha"
+    },
+    {
+      "sku": "PROD003",
+      "name": "Brownie Recheado 5x5 (Brigadeiro)",
+      "product_type": "finished_product",
+      "measurement_unit": "unit",
+      "sale_price": "12.00",
+      "preferred_supplier_name": null,
+      "reorder_point": null,
+      "is_active": true,
+      "category": "Brownie"
+    },
+    {
+      "sku": "PROD004",
+      "name": "Brownie Recheado 5x5 (Creme de Avelã)",
+      "product_type": "finished_product",
+      "measurement_unit": "unit",
+      "sale_price": "12.00",
+      "preferred_supplier_name": null,
+      "reorder_point": null,
+      "is_active": true,
+      "category": "Brownie"
+    },
+    {
+      "sku": "PROD005",
+      "name": "Brownie Recheado 5x5 (Doce de Leite)",
+      "product_type": "finished_product",
+      "measurement_unit": "unit",
+      "sale_price": "12.00",
+      "preferred_supplier_name": null,
+      "reorder_point": null,
+      "is_active": true,
+      "category": "Brownie"
+    },
+    {
+      "sku": "PROD006",
+      "name": "Brownie Recheado 5x5 (Goiabada)",
+      "product_type": "finished_product",
+      "measurement_unit": "unit",
+      "sale_price": "12.00",
+      "preferred_supplier_name": null,
+      "reorder_point": null,
+      "is_active": true,
+      "category": "Brownie"
+    },
+    {
+      "sku": "PROD007",
+      "name": "Brownie Recheado 5x5 (Leite Ninho)",
+      "product_type": "finished_product",
+      "measurement_unit": "unit",
+      "sale_price": "12.00",
+      "preferred_supplier_name": null,
+      "reorder_point": null,
+      "is_active": true,
+      "category": "Brownie"
+    },
+    {
+      "sku": "PROD008",
+      "name": "Brownie Recheado 5x5 (Maracujá)",
+      "product_type": "finished_product",
+      "measurement_unit": "unit",
+      "sale_price": "12.00",
+      "preferred_supplier_name": null,
+      "reorder_point": null,
+      "is_active": true,
+      "category": "Brownie"
+    },
+    {
+      "sku": "PROD009",
+      "name": "Brownie Recheado 7x7 (Brigadeiro)",
+      "product_type": "finished_product",
+      "measurement_unit": "unit",
+      "sale_price": "17.00",
+      "preferred_supplier_name": null,
+      "reorder_point": null,
+      "is_active": true,
+      "category": "Brownie"
+    },
+    {
+      "sku": "PROD010",
+      "name": "Brownie Recheado 7x7 (Creme de avelã)",
+      "product_type": "finished_product",
+      "measurement_unit": "unit",
+      "sale_price": "17.00",
+      "preferred_supplier_name": null,
+      "reorder_point": null,
+      "is_active": true,
+      "category": "Brownie"
+    },
+    {
+      "sku": "PROD011",
+      "name": "Brownie Recheado 7x7 (Doce de Leite)",
+      "product_type": "finished_product",
+      "measurement_unit": "unit",
+      "sale_price": "17.00",
+      "preferred_supplier_name": null,
+      "reorder_point": null,
+      "is_active": true,
+      "category": "Brownie"
+    },
+    {
+      "sku": "PROD012",
+      "name": "Brownie Recheado 7x7 (Goiabada)",
+      "product_type": "finished_product",
+      "measurement_unit": "unit",
+      "sale_price": "17.00",
+      "preferred_supplier_name": null,
+      "reorder_point": null,
+      "is_active": true,
+      "category": "Brownie"
+    },
+    {
+      "sku": "PROD013",
+      "name": "Brownie Recheado 7x7 (Leite Ninho)",
+      "product_type": "finished_product",
+      "measurement_unit": "unit",
+      "sale_price": "17.00",
+      "preferred_supplier_name": null,
+      "reorder_point": null,
+      "is_active": true,
+      "category": "Brownie"
+    },
+    {
+      "sku": "PROD014",
+      "name": "Brownie Recheado 7x7 (Maracujá)",
+      "product_type": "finished_product",
+      "measurement_unit": "unit",
+      "sale_price": "17.00",
+      "preferred_supplier_name": null,
+      "reorder_point": null,
+      "is_active": true,
+      "category": "Brownie"
+    },
+    {
+      "sku": "PROD015",
+      "name": "Brownie Simples 5x5",
+      "product_type": "finished_product",
+      "measurement_unit": "unit",
+      "sale_price": "6.00",
+      "preferred_supplier_name": null,
+      "reorder_point": null,
+      "is_active": true,
+      "category": "Brownie"
+    },
+    {
+      "sku": "PROD016",
+      "name": "Brownie Simples 7x7",
+      "product_type": "finished_product",
+      "measurement_unit": "unit",
+      "sale_price": "8.00",
+      "preferred_supplier_name": null,
+      "reorder_point": null,
+      "is_active": true,
+      "category": "Brownie"
+    },
+    {
+      "sku": "PROD017",
+      "name": "Kit 4 Bombons",
+      "product_type": "finished_product",
+      "measurement_unit": "unit",
+      "sale_price": "18.00",
+      "preferred_supplier_name": null,
+      "reorder_point": null,
+      "is_active": true,
+      "category": "Kit"
+    }
+  ],
+  "managementSettings": [
+    {
+      "monthly_profit_goal": "10000.00",
+      "fixed_monthly_costs": "2200.00",
+      "sales_days_per_month": 20,
+      "weeks_per_month": "4.00",
+      "normal_revenue_tolerance": "0.0300",
+      "critical_revenue_tolerance": "0.0800",
+      "minimum_product_margin": "0.7000",
+      "fee_tax_reserve_rate": "0.0000"
+    }
+  ],
+  "locations": [
+    {
+      "source_id": null,
+      "name": "OneCoffee",
+      "classification": "physical",
+      "is_active": true
+    }
+  ],
+  "counts": [
+    {
+      "entity": "sales",
+      "n": 0
+    },
+    {
+      "entity": "purchases",
+      "n": 0
+    },
+    {
+      "entity": "expenses",
+      "n": 0
+    },
+    {
+      "entity": "stock_movements",
+      "n": 0
+    },
+    {
+      "entity": "production_batches",
+      "n": 0
+    },
+    {
+      "entity": "management_scenarios",
+      "n": 0
+    },
+    {
+      "entity": "management_scenario_mix",
+      "n": 0
+    },
+    {
+      "entity": "action_plans",
+      "n": 0
+    }
+  ],
+  "profiles": [
+    {
+      "sku": "PROD001",
+      "profile": "RECIPE-BASE-001:PROD001",
+      "packaging_sku": null,
+      "packaging_quantity": null,
+      "expected_yield": "77.000",
+      "source_complete": "false",
+      "components": []
+    },
+    {
+      "sku": "PROD002",
+      "profile": "RECIPE-BASE-001:PROD002",
+      "packaging_sku": null,
+      "packaging_quantity": null,
+      "expected_yield": "12.000",
+      "source_complete": "true",
+      "components": []
+    },
+    {
+      "sku": "PROD003",
+      "profile": "RECIPE-BASE-001:PROD003",
+      "packaging_sku": "INS009",
+      "packaging_quantity": "1.000",
+      "expected_yield": "24.000",
+      "source_complete": "true",
+      "components": [
+        {
+          "sku": "INS013",
+          "role": "filling",
+          "unit": "g",
+          "quantity": "20.000"
+        }
+      ]
+    },
+    {
+      "sku": "PROD004",
+      "profile": "RECIPE-BASE-001:PROD004",
+      "packaging_sku": "INS009",
+      "packaging_quantity": "1.000",
+      "expected_yield": "24.000",
+      "source_complete": "true",
+      "components": [
+        {
+          "sku": "INS016",
+          "role": "filling",
+          "unit": "g",
+          "quantity": "20.000"
+        }
+      ]
+    },
+    {
+      "sku": "PROD005",
+      "profile": "RECIPE-BASE-001:PROD005",
+      "packaging_sku": "INS009",
+      "packaging_quantity": "1.000",
+      "expected_yield": "24.000",
+      "source_complete": "true",
+      "components": [
+        {
+          "sku": "INS014",
+          "role": "filling",
+          "unit": "g",
+          "quantity": "20.000"
+        }
+      ]
+    },
+    {
+      "sku": "PROD006",
+      "profile": "RECIPE-BASE-001:PROD006",
+      "packaging_sku": "INS009",
+      "packaging_quantity": "1.000",
+      "expected_yield": "24.000",
+      "source_complete": "true",
+      "components": [
+        {
+          "sku": "INS017",
+          "role": "filling",
+          "unit": "g",
+          "quantity": "20.000"
+        }
+      ]
+    },
+    {
+      "sku": "PROD007",
+      "profile": "RECIPE-BASE-001:PROD007",
+      "packaging_sku": "INS009",
+      "packaging_quantity": "1.000",
+      "expected_yield": "24.000",
+      "source_complete": "true",
+      "components": [
+        {
+          "sku": "INS015",
+          "role": "filling",
+          "unit": "g",
+          "quantity": "20.000"
+        }
+      ]
+    },
+    {
+      "sku": "PROD008",
+      "profile": "RECIPE-BASE-001:PROD008",
+      "packaging_sku": "INS009",
+      "packaging_quantity": "1.000",
+      "expected_yield": "24.000",
+      "source_complete": "true",
+      "components": [
+        {
+          "sku": "INS018",
+          "role": "filling",
+          "unit": "g",
+          "quantity": "20.000"
+        }
+      ]
+    },
+    {
+      "sku": "PROD009",
+      "profile": "RECIPE-BASE-001:PROD009",
+      "packaging_sku": "INS010",
+      "packaging_quantity": "1.000",
+      "expected_yield": "12.000",
+      "source_complete": "true",
+      "components": [
+        {
+          "sku": "INS013",
+          "role": "filling",
+          "unit": "g",
+          "quantity": "40.000"
+        }
+      ]
+    },
+    {
+      "sku": "PROD010",
+      "profile": "RECIPE-BASE-001:PROD010",
+      "packaging_sku": "INS010",
+      "packaging_quantity": "1.000",
+      "expected_yield": "12.000",
+      "source_complete": "true",
+      "components": [
+        {
+          "sku": "INS016",
+          "role": "filling",
+          "unit": "g",
+          "quantity": "40.000"
+        }
+      ]
+    },
+    {
+      "sku": "PROD011",
+      "profile": "RECIPE-BASE-001:PROD011",
+      "packaging_sku": "INS010",
+      "packaging_quantity": "1.000",
+      "expected_yield": "12.000",
+      "source_complete": "true",
+      "components": [
+        {
+          "sku": "INS014",
+          "role": "filling",
+          "unit": "g",
+          "quantity": "40.000"
+        }
+      ]
+    },
+    {
+      "sku": "PROD012",
+      "profile": "RECIPE-BASE-001:PROD012",
+      "packaging_sku": "INS010",
+      "packaging_quantity": "1.000",
+      "expected_yield": "12.000",
+      "source_complete": "true",
+      "components": [
+        {
+          "sku": "INS017",
+          "role": "filling",
+          "unit": "g",
+          "quantity": "40.000"
+        }
+      ]
+    },
+    {
+      "sku": "PROD013",
+      "profile": "RECIPE-BASE-001:PROD013",
+      "packaging_sku": "INS010",
+      "packaging_quantity": "1.000",
+      "expected_yield": "12.000",
+      "source_complete": "true",
+      "components": [
+        {
+          "sku": "INS015",
+          "role": "filling",
+          "unit": "g",
+          "quantity": "40.000"
+        }
+      ]
+    },
+    {
+      "sku": "PROD014",
+      "profile": "RECIPE-BASE-001:PROD014",
+      "packaging_sku": "INS010",
+      "packaging_quantity": "1.000",
+      "expected_yield": "12.000",
+      "source_complete": "true",
+      "components": [
+        {
+          "sku": "INS018",
+          "role": "filling",
+          "unit": "g",
+          "quantity": "40.000"
+        }
+      ]
+    },
+    {
+      "sku": "PROD015",
+      "profile": "RECIPE-BASE-001:PROD015",
+      "packaging_sku": "INS007",
+      "packaging_quantity": "1.000",
+      "expected_yield": "48.000",
+      "source_complete": "true",
+      "components": []
+    },
+    {
+      "sku": "PROD016",
+      "profile": "RECIPE-BASE-001:PROD016",
+      "packaging_sku": "INS008",
+      "packaging_quantity": "1.000",
+      "expected_yield": "24.000",
+      "source_complete": "true",
+      "components": []
+    },
+    {
+      "sku": "PROD017",
+      "profile": "RECIPE-BASE-001:PROD017",
+      "packaging_sku": null,
+      "packaging_quantity": null,
+      "expected_yield": "19.250",
+      "source_complete": "false",
+      "components": []
+    }
+  ],
+  "checkedAt": [
+    {
+      "checked_at": "2026-10-18 15:42:03.213795+00",
+      "mode": "on"
+    }
+  ],
+  "recipeItems": [
+    {
+      "source_name": "Açúcar",
+      "sku": "INS001",
+      "quantity": "500.000",
+      "unit": "g",
+      "historical_cost": null
+    },
+    {
+      "source_name": "Farinha de Trigo",
+      "sku": "INS004",
+      "quantity": "240.000",
+      "unit": "g",
+      "historical_cost": null
+    },
+    {
+      "source_name": "Ovos",
+      "sku": "HIS-OVOS-GRANDES",
+      "quantity": "8.000",
+      "unit": "unit",
+      "historical_cost": null
+    },
+    {
+      "source_name": "Óleo (Massa)",
+      "sku": "INS002",
+      "quantity": "200.000",
+      "unit": "ml",
+      "historical_cost": null
+    },
+    {
+      "source_name": "Chocolate Meio Amargo",
+      "sku": "INS003",
+      "quantity": "300.000",
+      "unit": "g",
+      "historical_cost": null
+    },
+    {
+      "source_name": "Óleo (Untar)",
+      "sku": "INS002",
+      "quantity": "15.000",
+      "unit": "ml",
+      "historical_cost": null
+    },
+    {
+      "source_name": "Papel Manteiga",
+      "sku": "INS005",
+      "quantity": "0.800",
+      "unit": "m",
+      "historical_cost": null
+    }
+  ],
+  "requirements": [
+    {
+      "type": "energy",
+      "quantity": "1.000",
+      "unit": "kWh",
+      "historical_cost": null
+    },
+    {
+      "type": "labor",
+      "quantity": "2.000",
+      "unit": "hours",
+      "historical_cost": null
+    }
+  ],
+  "rates": [
+    {
+      "source_id": "OPRATE-ENERGY-2026-001",
+      "type": "energy",
+      "unit": "kWh",
+      "unit_amount": "0.85",
+      "effective_from": "2026-01-01"
+    },
+    {
+      "source_id": "OPRATE-LABOR-2026-001",
+      "type": "labor",
+      "unit": "hour",
+      "unit_amount": "12.50",
+      "effective_from": "2026-01-01"
+    }
+  ],
+  "stickerRecipeOrProfileReferences": [],
+  "writes": false
+}

@@ -1,0 +1,490 @@
+{
+  "sourceFile": "Workbook_Gerenciamento_Seus_Brownies.xlsx",
+  "sha256": "25aa62df5fc9b2e01402e9c242142322d9c6f54a345e800cb947b77865ce5b64",
+  "mode": "READ_ONLY_ANALYSIS",
+  "writesToWorkbookOrDatabase": false,
+  "sheets": [
+    {
+      "sheet": "00_Instrucoes",
+      "dimension": "A1:J16",
+      "nonemptyRows": 13,
+      "cellFormulas": 0,
+      "errorCells": []
+    },
+    {
+      "sheet": "01_Parametros",
+      "dimension": "A1:H11",
+      "nonemptyRows": 10,
+      "cellFormulas": 0,
+      "errorCells": []
+    },
+    {
+      "sheet": "02_Cadastro_Produtos",
+      "dimension": "A1:P21",
+      "nonemptyRows": 20,
+      "cellFormulas": 0,
+      "errorCells": []
+    },
+    {
+      "sheet": "03_Cadastro_Insumos",
+      "dimension": "A1:J40",
+      "nonemptyRows": 37,
+      "cellFormulas": 0,
+      "errorCells": []
+    },
+    {
+      "sheet": "04_Cadastro_Locais",
+      "dimension": "A1:H9",
+      "nonemptyRows": 8,
+      "cellFormulas": 0,
+      "errorCells": []
+    },
+    {
+      "sheet": "05_Base_Vendas",
+      "dimension": "A1:R205",
+      "nonemptyRows": 202,
+      "cellFormulas": 0,
+      "errorCells": []
+    },
+    {
+      "sheet": "06_Auditoria_Receita",
+      "dimension": "A1:L19",
+      "nonemptyRows": 18,
+      "cellFormulas": 0,
+      "errorCells": []
+    },
+    {
+      "sheet": "07_Base_Compras_Despesas",
+      "dimension": "A1:R34",
+      "nonemptyRows": 33,
+      "cellFormulas": 0,
+      "errorCells": []
+    },
+    {
+      "sheet": "08_Estoque_Insumos",
+      "dimension": "A1:O27",
+      "nonemptyRows": 26,
+      "cellFormulas": 0,
+      "errorCells": []
+    },
+    {
+      "sheet": "09_Producao_Fornadas",
+      "dimension": "A1:P21",
+      "nonemptyRows": 20,
+      "cellFormulas": 0,
+      "errorCells": []
+    },
+    {
+      "sheet": "10_Metas_e_Cenarios",
+      "dimension": "A1:L35",
+      "nonemptyRows": 31,
+      "cellFormulas": 0,
+      "errorCells": []
+    },
+    {
+      "sheet": "11_Plano_de_Acao",
+      "dimension": "A1:I10",
+      "nonemptyRows": 9,
+      "cellFormulas": 0,
+      "errorCells": []
+    },
+    {
+      "sheet": "12_Dashboard_Atual_V2",
+      "dimension": "A1:Q33",
+      "nonemptyRows": 24,
+      "cellFormulas": 0,
+      "errorCells": []
+    },
+    {
+      "sheet": "13_Dashboard_Meta_10k",
+      "dimension": "A1:O30",
+      "nonemptyRows": 24,
+      "cellFormulas": 0,
+      "errorCells": []
+    },
+    {
+      "sheet": "14_Dashboard_Gerencial_Futuro",
+      "dimension": "A1:L10",
+      "nonemptyRows": 9,
+      "cellFormulas": 0,
+      "errorCells": []
+    }
+  ],
+  "catalogMatches": {
+    "finishedProductSkus": [
+      "PROD001",
+      "PROD002",
+      "PROD003",
+      "PROD004",
+      "PROD005",
+      "PROD006",
+      "PROD007",
+      "PROD008",
+      "PROD009",
+      "PROD010",
+      "PROD011",
+      "PROD012",
+      "PROD013",
+      "PROD014",
+      "PROD015",
+      "PROD016",
+      "PROD017"
+    ],
+    "inputs": 19,
+    "eggs": true,
+    "managementSettings": 8,
+    "physicalRecipeItems": 7,
+    "operationalRequirements": 2,
+    "operationalRates": 2,
+    "profiles": 17,
+    "packagingLinks": 14,
+    "approvedFillings": 12
+  },
+  "stickerFinding": {
+    "sku": "INS006",
+    "sourceUnitCost": "0.16",
+    "profilesWithCompatibleUnexplainedResidue": 14,
+    "liveRecipeOrProfileLinks": 0,
+    "status": "STRONG_NUMERIC_INFERENCE_NOT_AN_APPROVED_CONSUMPTION_RULE",
+    "reconstruction": [
+      {
+        "sku": "PROD001",
+        "row": 5,
+        "extraBeyondDough": "1.27000000000000009",
+        "explicitPackaging": "0",
+        "approvedFillingAtSourcePrices": "0",
+        "unexplainedResidue": "1.27000000000000009",
+        "historicalLaborPerBatch": "1.699999999999994",
+        "suggestedPriceMarkup": "2.49999999999999964223640962984631041622770918"
+      },
+      {
+        "sku": "PROD002",
+        "row": 6,
+        "extraBeyondDough": "0.2700000000000000",
+        "explicitPackaging": "0",
+        "approvedFillingAtSourcePrices": "0",
+        "unexplainedResidue": "0.2700000000000000",
+        "historicalLaborPerBatch": "1.6999999999999884",
+        "suggestedPriceMarkup": "2.50000000000000041635878819031720790872047371"
+      },
+      {
+        "sku": "PROD003",
+        "row": 7,
+        "extraBeyondDough": "1.2100000000000008",
+        "explicitPackaging": "0.15",
+        "approvedFillingAtSourcePrices": "0.9",
+        "unexplainedResidue": "0.1600000000000008",
+        "historicalLaborPerBatch": "1.6999999999999680",
+        "suggestedPriceMarkup": "2.50000000000000053655215559276520511289665507"
+      },
+      {
+        "sku": "PROD004",
+        "row": 8,
+        "extraBeyondDough": "0.9099999999999997",
+        "explicitPackaging": "0.15",
+        "approvedFillingAtSourcePrices": "0.6",
+        "unexplainedResidue": "0.1599999999999997",
+        "historicalLaborPerBatch": "1.7000000000000208",
+        "suggestedPriceMarkup": "2.49999999999999936824952472475823692735916395"
+      },
+      {
+        "sku": "PROD005",
+        "row": 9,
+        "extraBeyondDough": "0.9499999999999997",
+        "explicitPackaging": "0.15",
+        "approvedFillingAtSourcePrices": "0.64",
+        "unexplainedResidue": "0.1599999999999997",
+        "historicalLaborPerBatch": "1.7000000000000208",
+        "suggestedPriceMarkup": "2.49999999999999964540025856231149408793100389"
+      },
+      {
+        "sku": "PROD006",
+        "row": 10,
+        "extraBeyondDough": "0.6499999999999999",
+        "explicitPackaging": "0.15",
+        "approvedFillingAtSourcePrices": "0.34",
+        "unexplainedResidue": "0.1599999999999999",
+        "historicalLaborPerBatch": "1.700000000000016",
+        "suggestedPriceMarkup": "2.49999999999999959101559726397012226781877220"
+      },
+      {
+        "sku": "PROD007",
+        "row": 11,
+        "extraBeyondDough": "1.4638461538461538",
+        "explicitPackaging": "0.15",
+        "approvedFillingAtSourcePrices": "1.15384615384615384615384615384615384615384615",
+        "unexplainedResidue": "0.15999999999999995384615384615384615384615385",
+        "historicalLaborPerBatch": "1.7000000000000208",
+        "suggestedPriceMarkup": "2.49999999999999972923317446460557319399974029"
+      },
+      {
+        "sku": "PROD008",
+        "row": 12,
+        "extraBeyondDough": "0.9099999999999997",
+        "explicitPackaging": "0.15",
+        "approvedFillingAtSourcePrices": "0.6",
+        "unexplainedResidue": "0.1599999999999997",
+        "historicalLaborPerBatch": "1.7000000000000208",
+        "suggestedPriceMarkup": "2.49999999999999936824952472475823692735916395"
+      },
+      {
+        "sku": "PROD009",
+        "row": 13,
+        "extraBeyondDough": "2.1600000000000001",
+        "explicitPackaging": "0.2",
+        "approvedFillingAtSourcePrices": "1.8",
+        "unexplainedResidue": "0.1600000000000001",
+        "historicalLaborPerBatch": "1.6999999999999884",
+        "suggestedPriceMarkup": "2.49999999999999952851238867653614320568157650"
+      },
+      {
+        "sku": "PROD010",
+        "row": 14,
+        "extraBeyondDough": "1.5599999999999996",
+        "explicitPackaging": "0.2",
+        "approvedFillingAtSourcePrices": "1.2",
+        "unexplainedResidue": "0.1599999999999996",
+        "historicalLaborPerBatch": "1.6999999999999992",
+        "suggestedPriceMarkup": "2.49999999999999922102132759271171634603356111"
+      },
+      {
+        "sku": "PROD011",
+        "row": 15,
+        "extraBeyondDough": "1.6399999999999997",
+        "explicitPackaging": "0.2",
+        "approvedFillingAtSourcePrices": "1.28",
+        "unexplainedResidue": "0.1599999999999997",
+        "historicalLaborPerBatch": "1.6999999999999992",
+        "suggestedPriceMarkup": "2.49999999999999894170677002809044216259368224"
+      },
+      {
+        "sku": "PROD012",
+        "row": 16,
+        "extraBeyondDough": "1.0400000000000000",
+        "explicitPackaging": "0.2",
+        "approvedFillingAtSourcePrices": "0.68",
+        "unexplainedResidue": "0.1600000000000000",
+        "historicalLaborPerBatch": "1.7000000000000052",
+        "suggestedPriceMarkup": "2.49999999999999980833100930456611263547353609"
+      },
+      {
+        "sku": "PROD013",
+        "row": 17,
+        "extraBeyondDough": "2.6676923076923078",
+        "explicitPackaging": "0.2",
+        "approvedFillingAtSourcePrices": "2.30769230769230769230769230769230769230769231",
+        "unexplainedResidue": "0.16000000000000010769230769230769230769230769",
+        "historicalLaborPerBatch": "1.6999999999999884",
+        "suggestedPriceMarkup": "2.49999999999999971589950990641947208513615390"
+      },
+      {
+        "sku": "PROD014",
+        "row": 18,
+        "extraBeyondDough": "1.5599999999999996",
+        "explicitPackaging": "0.2",
+        "approvedFillingAtSourcePrices": "1.2",
+        "unexplainedResidue": "0.1599999999999996",
+        "historicalLaborPerBatch": "1.6999999999999992",
+        "suggestedPriceMarkup": "2.49999999999999922102132759271171634603356111"
+      },
+      {
+        "sku": "PROD015",
+        "row": 19,
+        "extraBeyondDough": "0.27000000000000002",
+        "explicitPackaging": "0.11",
+        "approvedFillingAtSourcePrices": "0",
+        "unexplainedResidue": "0.16000000000000002",
+        "historicalLaborPerBatch": "1.69999999999999920",
+        "suggestedPriceMarkup": "2.49999999999999986457680250783697923874175765"
+      },
+      {
+        "sku": "PROD016",
+        "row": 20,
+        "extraBeyondDough": "0.3099999999999998",
+        "explicitPackaging": "0.15",
+        "approvedFillingAtSourcePrices": "0",
+        "unexplainedResidue": "0.1599999999999998",
+        "historicalLaborPerBatch": "1.6999999999999944",
+        "suggestedPriceMarkup": "2.50000000000000068066576904345867532923296659"
+      },
+      {
+        "sku": "PROD017",
+        "row": 21,
+        "extraBeyondDough": "4.3600000000000003",
+        "explicitPackaging": "0",
+        "approvedFillingAtSourcePrices": "0",
+        "unexplainedResidue": "4.3600000000000003",
+        "historicalLaborPerBatch": "1.699999999999988225",
+        "suggestedPriceMarkup": "2.50000000000000012524337818560358293125437202"
+      }
+    ]
+  },
+  "recipeCostFinding": {
+    "physicalSourceCost": "29.6055555555555557",
+    "storedEnergyCost": "0.04",
+    "energyAtCatalogTariff": "0.85",
+    "storedLaborCost": "1.70",
+    "laborAtCatalogTariff": "25.00",
+    "storedFullCost": "31.345555555555549",
+    "theoreticalFullCostAtSourceTariffs": "55.4555555555555557",
+    "differenceRounded": "24.11",
+    "basis": "Historical physical reference costs retained; only energy/labor aligned to explicit quantities and catalog tariffs; not realized cost"
+  },
+  "pricing": {
+    "suggestedMarkupInferred": "2.5",
+    "impliedMargin": "0.60",
+    "minimumMargin": "0.70",
+    "belowMargin": [
+      {
+        "sku": "PROD001",
+        "name": "Bombom Brownie Unitário",
+        "margin": "0.66458297258297261"
+      },
+      {
+        "sku": "PROD002",
+        "name": "Bordinhas",
+        "margin": "0.42357407407407421"
+      },
+      {
+        "sku": "PROD013",
+        "name": "Brownie Recheado 7x7 (Leite Ninho)",
+        "margin": "0.68942223898106247"
+      },
+      {
+        "sku": "PROD017",
+        "name": "Kit 4 Bombons",
+        "margin": "0.6673144139810806"
+      }
+    ],
+    "dashboardReviewListExtraAboveThreshold": [
+      "PROD009",
+      "PROD011"
+    ]
+  },
+  "history": {
+    "events": 15,
+    "saleItems": 182,
+    "units": "1198",
+    "reportedRevenue": "12479.00",
+    "calculatedRevenue": "12914.00",
+    "difference": "-435.00",
+    "salesDivergences": [
+      {
+        "sourceId": "VEND0002",
+        "reportedAmount": "1536.00",
+        "calculatedAmount": "1752.00",
+        "differenceAmount": "-216.00",
+        "status": "Crítico"
+      },
+      {
+        "sourceId": "VEND0007",
+        "reportedAmount": "1520.00",
+        "calculatedAmount": "1739.00",
+        "differenceAmount": "-219.00",
+        "status": "Crítico"
+      }
+    ],
+    "purchases": 23,
+    "expenses": 7,
+    "stockTemplateRows": 23,
+    "planningRows": 17,
+    "realProductionRows": 0,
+    "historyYearFromApprovedManifest": 2026,
+    "extraCatalogProductsMissingNow": [
+      {
+        "sku": "HIS-BISNAGA-MOLHO-200ML",
+        "name": "Bisnaga para Molho 200 ml",
+        "type": "packaging",
+        "unit": "unit"
+      },
+      {
+        "sku": "HIS-CREME-DE-LEITE",
+        "name": "Creme de Leite",
+        "type": "ingredient",
+        "unit": "g"
+      },
+      {
+        "sku": "HIS-LEITE-CONDENSADO",
+        "name": "Leite Condensado",
+        "type": "ingredient",
+        "unit": "g"
+      },
+      {
+        "sku": "HIS-RECHEIO-ALISPEC-AVELA-FORNEAVEL",
+        "name": "Recheio Alispec Avelã — Forneável",
+        "type": "ingredient",
+        "unit": "g"
+      },
+      {
+        "sku": "HIS-RECHEIO-ALISPEC-AVELA-NAO-FORNEAVEL",
+        "name": "Recheio Alispec Avelã — Não forneável",
+        "type": "ingredient",
+        "unit": "g"
+      },
+      {
+        "sku": "HIS-SACOLA-KRAFT-12-8-5-16",
+        "name": "Sacola Kraft 12 × 8,5 × 16 cm",
+        "type": "packaging",
+        "unit": "unit"
+      },
+      {
+        "sku": "HIS-SACOLA-KRAFT-M",
+        "name": "Sacola Kraft M",
+        "type": "packaging",
+        "unit": "unit"
+      },
+      {
+        "sku": "HIS-SACOLA-KRAFT-P",
+        "name": "Sacola Kraft P",
+        "type": "packaging",
+        "unit": "unit"
+      },
+      {
+        "sku": "HIS-SACOLA-KRAFT-PP",
+        "name": "Sacola Kraft PP",
+        "type": "packaging",
+        "unit": "unit"
+      }
+    ],
+    "allAliasesResolvedOffline": true,
+    "duplicateIds": {
+      "locais": [],
+      "vendas": [],
+      "itens de venda": [],
+      "saídas": [],
+      "planos": []
+    }
+  },
+  "scenarios": {
+    "sourceMixTotal": "1.03",
+    "monthlyUnits": "1535",
+    "sumWeeklyUnits": "391",
+    "fourWeeklyTotals": "1564",
+    "differenceDueToPerProductWeeklyCeiling": "29",
+    "referenceRevenue": "16307",
+    "referenceProjectedProfit": "10441.92235923798",
+    "liveScenarioCount": 0
+  },
+  "missingSourceFields": {
+    "inputSupplier": 21,
+    "inputReorderPoint": 21,
+    "purchaseExpenseSupplier": 30,
+    "purchaseExpensePaymentMethod": 30,
+    "stockDate": 23,
+    "stockBalance": 23,
+    "stockExpiry": 23,
+    "stockLot": 23,
+    "stockSupplier": 23,
+    "plannedActualQuantity": 17,
+    "plannedLossQuantity": 17,
+    "actionOwner": 6,
+    "auditReason": 15
+  },
+  "sourcePaymentMethodColumnAbsentFromSales": true,
+  "limits": [
+    "No four upstream workbooks available to trace original pricing formulas",
+    "No workbook cell formulas; numeric decompositions are inferences from stored values",
+    "Not an authenticated UI or end-to-end operational test",
+    "No source or live data corrected by this analysis"
+  ]
+}

@@ -1,5 +1,30 @@
 # Estado canônico do projeto — Cacau v1
 
+## Revisão de completude do workbook — 18/10/2026
+
+Auditoria somente leitura das 15 abas e da original atual confirmou 17
+produtos/preços/categorias, 19 insumos físicos mais ovos, sete linhas da
+receita/8 ovos e oito parâmetros gerenciais. Detectadas lacunas além das duas
+fichas ressalvadas: INS006 não tem vínculo de consumo; os 14 brownies deixam
+resíduo histórico compatível com um adesivo de R$ 0,16/unidade. É inferência
+numérica forte, não regra física aprovada. Bordinhas tem acréscimo de R$ 0,27
+sem acabamento definido; bombom/kit têm cobertura/embalagem ainda sem BOM.
+
+Energia/MO da ficha histórica (R$ 0,04/R$ 1,70) divergem das quantidades e
+tarifas explícitas (1 kWh × R$ 0,85; 2 h × R$ 12,50). Total teórico com os
+mesmos custos físicos: R$ 55,46 versus R$ 31,35 antigo, antes de adicionais;
+não é custo realizado. Confirmar base de rateio antes de homologar produção.
+Metadados `operationallyComplete` não certificam completude física das fichas.
+
+Fonte não tem fórmulas de célula; preços sugeridos são compatíveis com markup
+2,5/margem 60%, frente ao mínimo 70%; mix soma 103%. Nove SKUs adicionais
+pertencem ao histórico não importado. Fornecedores/reposição, validade/lote,
+responsáveis das ações e motivos das duas divergências de receita faltam na
+própria fonte. Histórico, cinco locais, cenário e ações permanecem escopos
+separados, sem autorizar carga por esta análise. Nenhuma alteração de banco,
+workbook ou código operacional. Plano priorizado e células de origem em
+[WORKBOOK-COMPLETENESS-REVIEW-2026-10-18.md](WORKBOOK-COMPLETENESS-REVIEW-2026-10-18.md).
+
 ## Ficha técnica cadastrada na original — 18/10/2026
 
 Usuário autorizou reconferir workbook/receita/ficha, incluir os ovos, ensaiar

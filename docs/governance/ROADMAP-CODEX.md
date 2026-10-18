@@ -1,5 +1,20 @@
 # Roadmap executável para Codex — Cacau v1
 
+## Completude da fonte e ficha — revisão de 18/10/2026
+
+- [x] Auditar as 15 abas do workbook e confrontar cadastros/parametrização
+      com a original atual em READ ONLY; registrar evidência e células.
+- [!] W01–W05: confirmar adesivo por SKU, acabamento de Bordinhas,
+      cobertura/montagem de bombom/kit, recheios fabricados versus prontos e
+      base de energia/MO. Bloqueia declarar fichas/custos homologados; o
+      cadastro aprovado anterior continua aplicado e seu recibo consumido.
+- [ ] Após decisões, preparar pacote aditivo separado com ensaio e nova
+      referência; não repetir a carga técnica nem inventar consumo por custo.
+- [ ] Reconciliar markup/margem, mix 103%, parâmetros operacionais ausentes
+      e decisão de corte/histórico antes do QA e primeiro cenário.
+
+Detalhes e prioridades: `WORKBOOK-COMPLETENESS-REVIEW-2026-10-18.md`.
+
 ## Pendências reconciliadas — 18 de outubro de 2026
 
 Inventário completo e ordem de execução em
@@ -20,8 +35,9 @@ checkpoints antigos abaixo não devem reabrir carga/deploy já comprovados.
       e preservação das 38 tabelas/33 recibos. Referência consumida
       `TECH-CATALOG-2026-10-18-001`; não repetir nem importar os 17 PLAN.
 - [~] O03 — cadastrados 17 perfis de referência, 14 embalagens e 12 recheios
-      aprovados; bombom/kit ainda precisam de regras completas de embalagem/
-      cobertura e homologação operacional. Cópia privada anterior reutilizada
+      aprovados; revisão posterior apontou adesivo sem consumo nos brownies e
+      acabamento indefinido de Bordinhas, além de bombom/kit. Fichas/custos
+      ainda precisam de decisões e homologação operacional. Cópia privada anterior reutilizada
       após equivalência de dados/schema porque a quota recusou nova branch;
       compute suspenso/idle. Ver `TECHNICAL-CATALOG-EXECUTION-PLAN-2026-10-18.md`.
 - [ ] Preparar estoque rastreável e cenário de QA; homologar acesso por papel,
