@@ -17,6 +17,13 @@ quatro conclusões, custo/razão/FIFO e rollback tardio de compra e produção.
 Não houve escrita externa, backfill ou deploy. A versão HML abaixo ainda
 contém C01; não está homologada para esse custo novo.
 
+Código salvo em `8313eab`; build HML isolado desse HEAD aprovado com chave
+pública de teste e sem publicação. Regressão direcionada posterior dos writers
+de lifecycle e custos exatos também passou. Contêiner PostgreSQL descartável
+encerrado ao fim do ensaio. CI/CodeQL remotos desse código não foram executados
+nesta tarefa; os resultados remotos citados nos checkpoints antigos não o
+cobrem. A implementação está somente no Git local, sem push nesta rodada.
+
 [ADR-0002](../ADR-0002-CUSTOS-EXATOS-E-EXIBICAO-MONETARIA.md) documenta decisão,
 precisão, apresentação e rollout. Nove colunas em oito tabelas estão no pacote
 `drizzle/pending-exact-costs/`, fora da cadeia ativa congelada da issue #36.
