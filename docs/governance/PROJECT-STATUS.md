@@ -1,5 +1,16 @@
 # Estado canônico do projeto — Cacau v1
 
+## Leitura integral do anexo atual — 18/10/2026
+
+Lidas 15 abas, 483 linhas preenchidas/5.627 células, 12 tabelas e três gráficos;
+sem fórmulas de célula. Hash do anexo `add0174b…` difere da fonte anterior;
+única diferença de valores: retirada de LOC005/PATRÍCIA, sem referência nas
+vendas do anexo. Agora são quatro locais. Demais valores reconciliados iguais.
+Relatório separa dados já presentes, respostas já confirmadas, inconsistências,
+faltas reais e pacote técnico HML. Nenhuma gravação ou deploy nesta leitura.
+[ATTACHED-WORKBOOK-COMPLETE-REVIEW-2026-10-18.md](ATTACHED-WORKBOOK-COMPLETE-REVIEW-2026-10-18.md).
+
+
 ## Saquinho das Bordinhas — custo confirmado em 18/10/2026
 
 Usuário confirmou saquinho a R$ 0,11 por unidade, explicitado como 11 centavos

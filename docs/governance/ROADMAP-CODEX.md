@@ -1,5 +1,20 @@
 # Roadmap executável para Codex — Cacau v1
 
+## Anexo integral relido — 18/10/2026
+
+- [x] Ler as 15 abas e reconciliar fonte anexada, estrutura e números.
+      Quatro locais no anexo; removida apenas PATRÍCIA em relação ao anterior.
+- [x] Consolidar definições já aprovadas, evitando perguntar preços/receita
+      que constam da fonte ou decisões respondidas na conversa.
+- [ ] Executar pacote técnico aditivo de materiais, Bordinhas variável,
+      revisão de cenário e ensaio antes da atualização HML autorizada.
+- [!] Taxas reais e base física/rateio de Bordinhas ainda não constam da fonte;
+      separar pendências de ativação das melhorias parciais publicáveis.
+
+Lista completa e evidência:
+`ATTACHED-WORKBOOK-COMPLETE-REVIEW-2026-10-18.md`.
+
+
 ## Usabilidade priorizada antes das tarifas — 18/10/2026
 
 - [x] Estruturar Visão geral com indicadores navegáveis, reposição, atalhos,
