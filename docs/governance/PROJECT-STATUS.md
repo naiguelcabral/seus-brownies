@@ -1,5 +1,25 @@
 # Estado canônico do projeto — Cacau v1
 
+## Levantamento consolidado e bloqueio de custo — 18 de outubro de 2026
+
+Revisão de código, documentos, Git/GitHub, auditoria npm e contagens agregadas
+READ ONLY concluída em [LEVANTAMENTO-PENDENCIAS-2026-10-18.md](LEVANTAMENTO-PENDENCIAS-2026-10-18.md).
+Base `736953e`: 57 commits fora da main; PRs #44/#45 draft e issue #36 abertas.
+Original: 36 produtos; zero receitas, perfis, tarifas, movimentos, compras,
+lotes e vendas. Ovos Grandes, usado pela ficha técnica, ainda não cadastrado.
+CI/CodeQL da base aprovados, zero alertas abertos da branch e npm audit atual
+sem vulnerabilidades; esse resultado não comprova integridade de todo caminho.
+
+**C01 — corrigir antes de homologar custo produtivo:** entrada de 1000 g com
+valor exato R$ 12,50 conserva esse total, mas `enrichCosts` multiplica o custo
+médio previamente arredondado de R$ 0,013/g, calculando R$ 13,00 para consumir
+os 1000 g. Reprodução pura confirmada; a validação anterior de compras em kg
+não cobriu a composição até o consumo. Falta conservar o valor em centavos
+nos consumos e testar consumo parcial/sucessivo/integral. Nenhum dado ou código
+foi corrigido neste levantamento. Homologação financeira/produtiva depende
+dessa correção. Publicação HML existente permanece evidência técnica, sem
+promover o fluxo produtivo a homologado.
+
 ## Relatórios como segunda guia — 18 de outubro de 2026
 
 Usuário pediu mover Relatórios para a segunda posição e deixar tudo disponível.

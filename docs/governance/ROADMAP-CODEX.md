@@ -1,5 +1,22 @@
 # Roadmap executável para Codex — Cacau v1
 
+## Pendências reconciliadas — 18 de outubro de 2026
+
+Inventário completo e ordem de execução em
+[LEVANTAMENTO-PENDENCIAS-2026-10-18.md](LEVANTAMENTO-PENDENCIAS-2026-10-18.md).
+Ele distingue implementação, cadastro, homologação, integração e decisões;
+checkpoints antigos abaixo não devem reabrir carga/deploy já comprovados.
+
+- [ ] **P0/C01:** corrigir custo de consumo em g para conservar o valor total
+      de entrada; caso reproduzido: 1000 g/R$ 12,50 → R$ 13,00 ao consumir tudo.
+      Validar parciais, consumos sucessivos, total, múltiplas compras e rollback.
+- [ ] Reconciliar Ovos Grandes e demais itens necessários; cadastrar receita,
+      perfis, componentes e tarifas na original sob escopo autorizado.
+- [ ] Preparar estoque rastreável e cenário de QA; homologar acesso por papel,
+      compra → produção → venda, lifecycle financeiro e interface.
+- [ ] Integrar main/PRs, finalizar cadeia genérica da issue #36, cobertura de
+      auditoria, indicadores restantes, documentação e resiliência operacional.
+
 ## Organização das guias — 18 de outubro de 2026
 
 - [x] Reordenar navegação pela preferência final do usuário: Visão geral,
