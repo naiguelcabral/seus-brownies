@@ -1,5 +1,20 @@
 # Estado canônico do projeto — Cacau v1
 
+## Knip e CodeQL — integração na branch de trabalho
+
+Pedido do usuário para todo o projeto: Knip 6.41.0 fixado em manifesto/lockfile,
+configuração estática de fontes/testes/E2E/scripts, análise integral e gate
+incremental na CI com 48 ocorrências iniciais visíveis. Novos achados, retorno
+de item resolvido ou falha da ferramenta bloqueiam; nada foi apagado por Knip.
+TypeScript/Oxc e todas as versões de pacotes anteriores foram preservados.
+
+CodeQL configurado para JavaScript/TypeScript, Python e GitHub Actions,
+`security-extended`, sem build da aplicação, secrets ou operações em banco.
+Instalação limpa, 492 testes, tipos, lint, formatação e gate Knip aprovados.
+Build isolado e execução remota ainda em validação. Integração em main/PR #45
+e triagem de Code Scanning continuam separadas. Sem deploy ou alteração de dados.
+Procedimento: [KNIP-CODEQL.md](KNIP-CODEQL.md).
+
 ## Balanço de linguagens e procedimentos — 17 de outubro de 2026
 
 Revisão documental após cadastro dos 17 produtos e preparação da correção de

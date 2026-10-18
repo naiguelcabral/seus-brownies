@@ -23,8 +23,8 @@
     "typecheck": "tsc --noEmit",
     "test": "node --import tsx --test test/**/*.test.ts",
     "test:e2e": "playwright test",
-    "format": "oxfmt src test e2e scripts .github package.json tsconfig.json vite.config.ts playwright.config.ts playwright.auth-hml.config.ts playwright.public-local.config.ts drizzle.config.ts tsr.config.json .oxlintrc.json .oxfmtrc.json .vscode/settings.json",
-    "check": "oxfmt --check src test e2e scripts .github package.json tsconfig.json vite.config.ts playwright.config.ts playwright.auth-hml.config.ts playwright.public-local.config.ts drizzle.config.ts tsr.config.json .oxlintrc.json .oxfmtrc.json .vscode/settings.json",
+    "format": "oxfmt src test e2e scripts .github package.json knip.json knip-baseline.json tsconfig.json vite.config.ts playwright.config.ts playwright.auth-hml.config.ts playwright.public-local.config.ts drizzle.config.ts tsr.config.json .oxlintrc.json .oxfmtrc.json .vscode/settings.json",
+    "check": "oxfmt --check src test e2e scripts .github package.json knip.json knip-baseline.json tsconfig.json vite.config.ts playwright.config.ts playwright.auth-hml.config.ts playwright.public-local.config.ts drizzle.config.ts tsr.config.json .oxlintrc.json .oxfmtrc.json .vscode/settings.json",
     "deploy": "npm run build && wrangler deploy",
     "deploy:hml": "HML_DEPLOY=1 bash scripts/build-hml-isolated.sh",
     "secret:hml": "wrangler secret put --env hml",
@@ -42,7 +42,10 @@
     "production:import": "tsx scripts/import_production.ts",
     "production:profiles:sync": "tsx scripts/sync_production_profile_components.ts",
     "fifo:backfill:hml": "tsx scripts/backfill-hml-fifo.ts",
-    "lint:fix": "npm run lint -- --fix"
+    "lint:fix": "npm run lint -- --fix",
+    "knip:audit": "knip --config knip.json --no-progress",
+    "knip:report": "knip --config knip.json --no-progress --reporter json",
+    "knip:check": "node scripts/check-knip.mjs"
   },
   "engines": {
     "node": ">=22.12.0 <23"
@@ -81,6 +84,7 @@
     "@types/react-dom": "19.3.0",
     "@vitejs/plugin-react": "6.1.2",
     "dotenv": "^17.3.1",
+    "knip": "6.41.0",
     "oxc-parser": "0.154.0",
     "oxc-transform": "0.154.0",
     "oxfmt": "0.73.0",

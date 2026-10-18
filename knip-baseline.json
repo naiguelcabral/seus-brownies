@@ -1,0 +1,247 @@
+{
+  "version": 1,
+  "knipVersion": "6.41.0",
+  "review": "Initial findings retained for manual triage; see docs/governance/KNIP-CODEQL.md",
+  "findings": [
+    {
+      "file": "package.json",
+      "type": "dependencies",
+      "name": "@tanstack/react-devtools"
+    },
+    {
+      "file": "package.json",
+      "type": "dependencies",
+      "name": "@tanstack/react-form"
+    },
+    {
+      "file": "package.json",
+      "type": "dependencies",
+      "name": "@tanstack/react-router-devtools"
+    },
+    {
+      "file": "package.json",
+      "type": "dependencies",
+      "name": "class-variance-authority"
+    },
+    {
+      "file": "package.json",
+      "type": "dependencies",
+      "name": "clsx"
+    },
+    {
+      "file": "package.json",
+      "type": "dependencies",
+      "name": "radix-ui"
+    },
+    {
+      "file": "package.json",
+      "type": "dependencies",
+      "name": "tailwind-merge"
+    },
+    {
+      "file": "package.json",
+      "type": "dependencies",
+      "name": "tw-animate-css"
+    },
+    {
+      "file": "src/components/Header.tsx",
+      "type": "files",
+      "name": "src/components/Header.tsx"
+    },
+    {
+      "file": "src/components/ui/button.tsx",
+      "type": "files",
+      "name": "src/components/ui/button.tsx"
+    },
+    {
+      "file": "src/components/ui/input.tsx",
+      "type": "files",
+      "name": "src/components/ui/input.tsx"
+    },
+    {
+      "file": "src/components/ui/label.tsx",
+      "type": "files",
+      "name": "src/components/ui/label.tsx"
+    },
+    {
+      "file": "src/components/ui/select.tsx",
+      "type": "files",
+      "name": "src/components/ui/select.tsx"
+    },
+    {
+      "file": "src/components/ui/slider.tsx",
+      "type": "files",
+      "name": "src/components/ui/slider.tsx"
+    },
+    {
+      "file": "src/components/ui/switch.tsx",
+      "type": "files",
+      "name": "src/components/ui/switch.tsx"
+    },
+    {
+      "file": "src/components/ui/textarea.tsx",
+      "type": "files",
+      "name": "src/components/ui/textarea.tsx"
+    },
+    {
+      "file": "src/features/auth/audit.ts",
+      "type": "exports",
+      "name": "authAuditActions"
+    },
+    {
+      "file": "src/features/auth/auth-audit-telemetry.server.ts",
+      "type": "types",
+      "name": "AuthAuditTelemetryEvent"
+    },
+    {
+      "file": "src/features/auth/authorization.ts",
+      "type": "exports",
+      "name": "permissions"
+    },
+    {
+      "file": "src/features/auth/cloudflare-rate-limit.server.ts",
+      "type": "unlisted",
+      "name": "cloudflare"
+    },
+    {
+      "file": "src/features/auth/external-contracts.ts",
+      "type": "types",
+      "name": "PasswordResetCompletion"
+    },
+    {
+      "file": "src/features/auth/external-contracts.ts",
+      "type": "types",
+      "name": "PasswordResetDispatcher"
+    },
+    {
+      "file": "src/features/auth/login-actions.ts",
+      "type": "exports",
+      "name": "invalidSignUpMessage"
+    },
+    {
+      "file": "src/features/auth/neon-password-reset-provider.server.ts",
+      "type": "exports",
+      "name": "passwordResetProviderTimeoutMs"
+    },
+    {
+      "file": "src/features/auth/neon-password-reset-provider.server.ts",
+      "type": "types",
+      "name": "PasswordResetProviderReasonCode"
+    },
+    {
+      "file": "src/features/auth/neon-password-reset-provider.server.ts",
+      "type": "types",
+      "name": "PasswordResetRequestBindings"
+    },
+    {
+      "file": "src/features/auth/password-reset-audit.ts",
+      "type": "types",
+      "name": "PasswordResetAuditAction"
+    },
+    {
+      "file": "src/features/auth/password-reset-telemetry.server.ts",
+      "type": "exports",
+      "name": "passwordResetTelemetryStages"
+    },
+    {
+      "file": "src/features/auth/password-reset-telemetry.server.ts",
+      "type": "types",
+      "name": "PasswordResetTelemetryStage"
+    },
+    {
+      "file": "src/features/auth/principal-resolver.server.ts",
+      "type": "exports",
+      "name": "createConfiguredPrincipalResolver"
+    },
+    {
+      "file": "src/features/auth/principal.ts",
+      "type": "exports",
+      "name": "assertAuthenticated"
+    },
+    {
+      "file": "src/features/auth/principal.ts",
+      "type": "exports",
+      "name": "assertVerifiedPrincipal"
+    },
+    {
+      "file": "src/features/auth/principal.ts",
+      "type": "exports",
+      "name": "isAuthorizationError"
+    },
+    {
+      "file": "src/features/catalog/catalog.ts",
+      "type": "files",
+      "name": "src/features/catalog/catalog.ts"
+    },
+    {
+      "file": "src/features/finance/contracts.ts",
+      "type": "types",
+      "name": "FinancialOverviewInput"
+    },
+    {
+      "file": "src/features/inventory/fifo-migration-audit.ts",
+      "type": "exports",
+      "name": "positiveAdjustmentG6Prefix"
+    },
+    {
+      "file": "src/features/inventory/fifo.ts",
+      "type": "types",
+      "name": "InventoryCostAllocation"
+    },
+    {
+      "file": "src/features/inventory/lifecycle-writers.ts",
+      "type": "exports",
+      "name": "assertFifoLifecycleSchema"
+    },
+    {
+      "file": "src/features/inventory/lifecycle.ts",
+      "type": "types",
+      "name": "LifecycleEvent"
+    },
+    {
+      "file": "src/features/management/settings.ts",
+      "type": "exports",
+      "name": "parseUnsignedDecimal"
+    },
+    {
+      "file": "src/features/operations/revenue-audit.ts",
+      "type": "exports",
+      "name": "revenueAuditStatuses"
+    },
+    {
+      "file": "src/features/operations/revenue-audit.ts",
+      "type": "types",
+      "name": "RevenueAuditStatus"
+    },
+    {
+      "file": "src/features/production/calculations.ts",
+      "type": "exports",
+      "name": "divideQuantities"
+    },
+    {
+      "file": "src/features/production/calculations.ts",
+      "type": "exports",
+      "name": "normalizeDecimal"
+    },
+    {
+      "file": "src/features/scenarios/contracts.ts",
+      "type": "exports",
+      "name": "scenarioMixValues"
+    },
+    {
+      "file": "src/features/scenarios/contracts.ts",
+      "type": "types",
+      "name": "ScenarioMixInput"
+    },
+    {
+      "file": "src/lib/utils.ts",
+      "type": "files",
+      "name": "src/lib/utils.ts"
+    },
+    {
+      "file": "test/security-dependencies.test.ts",
+      "type": "unlisted",
+      "name": "@esbuild-kit/core-utils"
+    }
+  ]
+}

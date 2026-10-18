@@ -1,0 +1,15 @@
+name: Cacau project security
+
+paths-ignore:
+  - node_modules
+  - dist
+  - dist-ssr
+  - .output
+  - .wrangler
+  - .tanstack
+  - .codex
+  - .codex-local
+  - playwright-report
+  - test-results
+  - '**/__pycache__/**'
+  - src/routeTree.gen.ts

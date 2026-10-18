@@ -1,5 +1,19 @@
 # Roadmap executável para Codex — Cacau v1
 
+## Knip e CodeQL em todo o projeto
+
+- [x] Reconciliar a proposta #45 sem substituir as regras atuais TypeScript/Oxc.
+- [x] Fixar Knip 6.41.0 em manifesto/lockfile e validar instalação limpa.
+- [x] Cobrir aplicação, testes, E2E, scripts e configs estaticamente; provar
+      que configs perigosas não são executadas durante o diagnóstico.
+- [x] Registrar 48 ocorrências e instalar gate contra novos achados/retornos;
+      preservar o relatório integral e rejeitar falha/JSON inválido da ferramenta.
+- [x] Configurar CodeQL JS/TS, Python e Actions, consultas ampliadas e token mínimo.
+- [ ] Concluir suíte e build isolado; publicar branch e conferir CI/CodeQL remoto.
+- [ ] Triar alertas Code Scanning e baseline Knip com revisão; integrar main/PR #45.
+
+Procedimento e limites: [KNIP-CODEQL.md](KNIP-CODEQL.md).
+
 ## Reconciliação de linguagens e procedimentos — 17 de outubro de 2026
 
 - [x] Documentar catálogo aplicado e correção de sessão ainda local; distinguir

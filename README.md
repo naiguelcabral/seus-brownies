@@ -17,6 +17,11 @@ Use Node 22.23.2 (`.nvmrc`) e `npm ci`. Os comandos atuais são `npm run lint`,
 Para builds de validação, siga o
 [workflow isolado](docs/governance/DEVELOPMENT-WORKFLOW.md).
 
+Knip está instalado no lockfile: `npm run knip:audit` mostra o diagnóstico
+completo e `npm run knip:check` aplica o gate da baseline revisável na CI.
+CodeQL analisa JS/TS, Python e GitHub Actions. Veja
+[cobertura, achados e procedimentos](docs/governance/KNIP-CODEQL.md).
+
 Na original `production` / `neondb`, foram cadastrados em 17/10/2026 apenas
 os 17 produtos de venda `PROD001–PROD017`, com recibo
 `CATALOG-SALES-2026-10-17-001` consumido. Insumos, receita, perfis, histórico e

@@ -29,6 +29,8 @@ jobs:
       - run: npm run lint
       - run: npm run check
       - run: npm run typecheck
+      - name: Check full-project Knip baseline
+        run: npm run knip:check
       - name: Validate isolated build on main
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: npm run build:ci-isolated

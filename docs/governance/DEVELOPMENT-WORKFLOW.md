@@ -44,6 +44,7 @@ npm test
 npm run lint
 npm run typecheck
 npm run check
+npm run knip:check
 ```
 
 Quando a alteração exigir build, em HEAD versionado e árvore limpa use um dos
@@ -87,6 +88,13 @@ esta branch da main ainda em TS 6 e da PR informativa de tooling. Não substitui
 as regras tipadas locais por configs informativas ao integrar Knip/CodeQL.
 O piloto ainda contém uma instrução ativa de Prettier; reconciliá-la e testar
 o controlador antes de usá-lo para executar a migração de procedimentos.
+
+Knip executa análise completa com `knip:audit`/`knip:report`; `knip:check` é o
+gate da CI contra mudanças não revisadas da baseline. Relatório não zero pode
+conter os 48 achados iniciais; não usar `--fix` nem regenerar a baseline para
+ocultar uma regressão. Remover entradas resolvidas junto com a correção.
+CodeQL cobre JS/TS, Python e Actions em jobs próprios. Consulte
+[KNIP-CODEQL.md](KNIP-CODEQL.md) para cobertura, limites e triagem.
 
 O compilador exige `exactOptionalPropertyTypes` e `noUncheckedIndexedAccess`,
 inclusive nos testes/scripts. Declare ausência explicitamente; não acrescente
