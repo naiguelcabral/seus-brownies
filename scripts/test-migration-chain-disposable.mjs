@@ -1,6 +1,7 @@
 // Intentionally ignores environment DSNs, dotenv and Neon. Fixed local CI fixture only.
 import assert from 'node:assert/strict'
-import { mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import pg from 'pg'
@@ -31,8 +32,7 @@ const connection = {
   password: 'synthetic-ci-only',
   database: 'cacau_chain_disposable',
 }
-const evidenceFolder = '/tmp/cacau-chain-evidence'
-mkdirSync(evidenceFolder, { recursive: true })
+const evidenceFolder = mkdtempSync(join(tmpdir(), 'cacau-chain-evidence-'))
 const admin = new pg.Client(connection)
 await admin.connect()
 const identity = (
@@ -79,6 +79,7 @@ const save = (name, evidence) =>
   writeFileSync(
     join(evidenceFolder, `${name}.json`),
     JSON.stringify(evidence, null, 2) + '\n',
+    { mode: 0o600, flag: 'wx' },
   )
 async function fixture(name, run) {
   const database = `cacau_chain_${Date.now()}_${++counter}`

@@ -55,7 +55,7 @@ jobs:
         with:
           name: migration-chain-synthetic-evidence
           path: |
-            /tmp/cacau-chain-evidence
-            /tmp/cacau-auth-baseline-evidence.json
-            /tmp/cacau-scoped-upgrade-evidence
+            /tmp/cacau-chain-evidence-*/*.json
+            /tmp/cacau-auth-baseline-evidence-*/*.json
+            /tmp/cacau-scoped-upgrade-evidence-*/*.json
           retention-days: 7

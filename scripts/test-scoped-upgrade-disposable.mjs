@@ -1,6 +1,8 @@
 // Synthetic loopback only. No dotenv, environment DSNs or external SQL.
 import assert from 'node:assert/strict'
-import { mkdirSync, rmSync, writeFileSync } from 'node:fs'
+import { mkdtempSync, rmSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
 import pg from 'pg'
 import { is } from 'drizzle-orm'
 import { PgTable } from 'drizzle-orm/pg-core'
@@ -273,9 +275,11 @@ try {
     },
   )
   assert.deepEqual(sourceManifest(), sourceBefore)
-  mkdirSync('/tmp/cacau-scoped-upgrade-evidence', { recursive: true })
+  const evidenceFolder = mkdtempSync(
+    join(tmpdir(), 'cacau-scoped-upgrade-evidence-'),
+  )
   writeFileSync(
-    '/tmp/cacau-scoped-upgrade-evidence/orm-shape-readonly.json',
+    join(evidenceFolder, 'orm-shape-readonly.json'),
     JSON.stringify(
       {
         scope: 'read-only-shape-checks',
@@ -286,9 +290,10 @@ try {
       null,
       2,
     ) + '\n',
+    { mode: 0o600, flag: 'wx' },
   )
   writeFileSync(
-    '/tmp/cacau-scoped-upgrade-evidence/result.json',
+    join(evidenceFolder, 'result.json'),
     JSON.stringify(
       {
         scope: 'synthetic-disposable-postgres17',
@@ -301,6 +306,7 @@ try {
       null,
       2,
     ) + '\n',
+    { mode: 0o600, flag: 'wx' },
   )
   console.log(`${cases.length} scoped upgrade cases passed`)
 } finally {

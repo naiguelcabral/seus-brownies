@@ -1,6 +1,7 @@
 // Fixed synthetic loopback fixture only. Never reads dotenv or environment DSNs.
 import assert from 'node:assert/strict'
-import { readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import pg from 'pg'
 import { drizzle } from 'drizzle-orm/node-postgres'
@@ -251,8 +252,11 @@ try {
     },
   )
   assert.deepEqual(sourceManifest(), before)
+  const evidenceFolder = mkdtempSync(
+    join(tmpdir(), 'cacau-auth-baseline-evidence-'),
+  )
   writeFileSync(
-    '/tmp/cacau-auth-baseline-evidence.json',
+    join(evidenceFolder, 'result.json'),
     JSON.stringify(
       {
         scope: 'synthetic-disposable-postgres17',
@@ -265,6 +269,7 @@ try {
       null,
       2,
     ) + '\n',
+    { mode: 0o600, flag: 'wx' },
   )
 } finally {
   for (const folder of folders) rmSync(folder, { recursive: true, force: true })

@@ -87,6 +87,25 @@ pertencem à adição do Knip e sua árvore, incluindo binários opcionais por p
 Os avisos de peers Better Auth preexistentes continuam fora do escopo; nenhuma
 versão de autenticação foi atualizada para eliminá-los.
 
+Primeira execução publicada em `9144f99`:
+[CI 39087671208](https://github.com/naiguelcabral/seus-brownies/actions/runs/39087671208)
+e [CodeQL 39087671218](https://github.com/naiguelcabral/seus-brownies/actions/runs/39087671218)
+aprovados. Upload ao Code Scanning confirmado pela API: 103 regras JS/TS,
+50 Python e 23 Actions; Python/Actions sem resultados e oito resultados JS/TS.
+
+Os oito alertas iniciais eram quatro criações previsíveis de arquivo temporário
+nos scripts PostgreSQL descartáveis, três pares stat/leitura por caminho nos
+testes de memória e uma construção de regex no contrato de URL HML. Preparada
+correção sem ignorar queries/arquivos nem remover testes: diretórios `mkdtemp`,
+arquivos 0600/exclusivos, leitura e verificação pelo mesmo descritor com
+`O_NOFOLLOW`, comparação literal da URL. Coleta de artefatos sintéticos da CI
+ajustada para os diretórios exclusivos. Reanálise e teste PostgreSQL descartável
+são necessários para confirmar a remediação, não apenas job CodeQL verde.
+
+Os runners avisaram depreciação do runtime Node 20 interno de Actions v4 e
+migração futura de `ubuntu-latest`. Isso é separado do Node 22 da aplicação;
+atualizar Actions/imagem exige revisão própria e não foi misturado neste pacote.
+
 Tipos, lint e formatação aprovados; gate Knip aprovado com 48 achados conhecidos,
 zero novos e zero resolvidos. Os testes da integração verificam detecção real,
 recusa de relatórios inválidos e regressão da baseline. Build isolado, suíte
