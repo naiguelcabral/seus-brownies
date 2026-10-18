@@ -193,3 +193,107 @@ for (const failAt of [
     assert.equal(mock.batch.status, 'draft')
   })
 }
+
+for (const available of ['12.000', '11.999']) {
+  test(`cobertura e adesivo têm consumo físico atômico: adesivos ${available}`, async () => {
+    const mock = createProductionDrizzleMock({
+      components: [
+        {
+          profileId: 1,
+          productId: 20,
+          sku: 'INS019',
+          name: 'Cobertura',
+          role: 'coating',
+          quantityBasis: 'per_finished_unit',
+          quantity: '50.000',
+          unit: 'g',
+          type: 'ingredient',
+        },
+        {
+          profileId: 1,
+          productId: 21,
+          sku: 'INS006',
+          name: 'Adesivo',
+          role: 'packaging',
+          quantityBasis: 'per_finished_unit',
+          quantity: '1.000',
+          unit: 'unit',
+          type: 'packaging',
+        },
+      ],
+      componentMovements: [
+        {
+          productId: 20,
+          quantityDelta: '1000.000',
+          unitCost: '0.040',
+          allocatedCost: null,
+        },
+        {
+          productId: 21,
+          quantityDelta: available,
+          unitCost: '0.160',
+          allocatedCost: null,
+        },
+      ],
+    })
+    if (available === '11.999') {
+      await assert.rejects(
+        persistProductionBatchCompletion(mock.db, { id: 1 }),
+        /Estoque insuficiente/,
+      )
+      assert.deepEqual(mock.committed, [])
+      assert.equal(mock.batch.status, 'draft')
+      assert.equal(mock.journal.at(-1)?.kind, 'rollback')
+      return
+    }
+    await persistProductionBatchCompletion(mock.db, { id: 1 })
+    const consumed = mock.committed
+      .filter((write) => write.table === 'production_batch_consumptions')
+      .flatMap((write) => write.values)
+    assert.equal(consumed.filter((item) => item.productId === 20).length, 1)
+    assert.equal(consumed.filter((item) => item.productId === 21).length, 1)
+    assert.equal(
+      consumed.find((item) => item.productId === 20)?.quantity,
+      '600.000',
+    )
+    assert.equal(
+      consumed.find((item) => item.productId === 21)?.quantity,
+      '12.000',
+    )
+    const before = structuredClone(mock.committed)
+    await assert.rejects(
+      persistProductionBatchCompletion(mock.db, { id: 1 }),
+      /rascunho/,
+    )
+    assert.deepEqual(mock.committed, before)
+  })
+}
+
+for (const invalid of ['type', 'basis', 'duplicate'] as const) {
+  test(`componente inválido aborta sem escrita: ${invalid}`, async () => {
+    const mock = createProductionDrizzleMock({
+      ...(invalid === 'duplicate' ? { profilePackagingId: 21 } : {}),
+      components: [
+        {
+          profileId: 1,
+          productId: 21,
+          sku: 'INS006',
+          name: 'Adesivo',
+          role: 'packaging',
+          quantity: '1.000',
+          unit: 'unit',
+          type: invalid === 'type' ? 'ingredient' : 'packaging',
+          quantityBasis:
+            invalid === 'basis' ? 'per_recipe' : 'per_finished_unit',
+        },
+      ],
+    })
+    await assert.rejects(
+      persistProductionBatchCompletion(mock.db, { id: 1 }),
+      /Componente de perfil inválido|por unidade pronta|duplicada/,
+    )
+    assert.deepEqual(mock.committed, [])
+    assert.equal(mock.batch.status, 'draft')
+    assert.equal(mock.journal.at(-1)?.kind, 'rollback')
+  })
+}

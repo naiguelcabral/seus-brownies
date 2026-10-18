@@ -25,6 +25,8 @@ test('item de receita usa o ID do produto de catálogo, não o ID de recipe_item
 
 test('componente de recheio preserva o ID do produto de catálogo', () => {
   const consumption = profileComponentToConsumption({
+    role: 'filling',
+    quantityBasis: 'per_finished_unit',
     productId: 34,
     sku: 'INS013',
     name: 'Brigadeiro (Recheio)',
@@ -55,5 +57,38 @@ test('consulta de movimentos usa o mesmo ID do produto comprado', () => {
   assert.equal(
     requireDefined(movementsForProduct(movements, flour.id)[0]).quantityDelta,
     '240.000',
+  )
+})
+
+test('papel do componente exige tipo físico compatível e base por unidade pronta', () => {
+  const adhesive = {
+    productId: 21,
+    sku: 'INS006',
+    name: 'Adesivo',
+    unit: 'unit' as const,
+    type: 'packaging' as const,
+    role: 'packaging' as const,
+    quantityBasis: 'per_finished_unit',
+  }
+  assert.equal(profileComponentToConsumption(adhesive).id, 21)
+  assert.throws(
+    () => profileComponentToConsumption({ ...adhesive, role: 'coating' }),
+    /Componente de perfil inválido/,
+  )
+  assert.throws(
+    () => profileComponentToConsumption({ ...adhesive, role: 'filling' }),
+    /Componente de perfil inválido/,
+  )
+  assert.throws(
+    () => profileComponentToConsumption({ ...adhesive, type: 'ingredient' }),
+    /Componente de perfil inválido/,
+  )
+  assert.throws(
+    () =>
+      profileComponentToConsumption({
+        ...adhesive,
+        quantityBasis: 'per_recipe',
+      }),
+    /por unidade pronta/,
   )
 })

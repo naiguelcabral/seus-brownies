@@ -1,5 +1,19 @@
 # Estado canônico do projeto — Cacau v1
 
+## Materiais de ficha — implementação local em 18/10/2026
+
+Implementado suporte a cobertura e materiais de embalagem além de recheios.
+Conclusão do lote valida tipo/base de quantidade, impede repetir a embalagem
+individual nos componentes e usa os materiais na mesma transação de estoque,
+custos e FIFO. Migration candidata `0031_brave_thor.sql` acrescenta somente
+dois valores de enum; cadeia histórica e pacote de custos exatos preservados.
+Suíte completa com 512 testes aprovada; casos adicionais de rejeição e build
+em conferência. Ainda sem publicação, migration ou componentes no HML.
+Cadastro das fichas, preço/apresentação das Bordinhas, MEI/taxas por pagamento
+e revisão de cenário permanecem pendentes. Não ativar cenário com rateio de
+Bordinhas indefinido. Plano/resultado: `PROFILE-MATERIALS-2026-10-18.md`.
+
+
 ## MEI e taxas de pagamento definidos — 18/10/2026
 
 MEI R$ 88/mês adicional confirmado: fixos revistos R$ 2.288. Débito 1,43%,

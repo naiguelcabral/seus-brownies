@@ -299,6 +299,8 @@ async function loadPlan(tx: Transaction, input: BatchInput) {
   const components = await tx
     .select({
       profileId: productionProfileComponents.productionProfileId,
+      role: productionProfileComponents.role,
+      quantityBasis: productionProfileComponents.quantityBasis,
       id: products.id,
       quantity: productionProfileComponents.quantity,
       productId: products.id,
@@ -342,8 +344,10 @@ async function loadPlan(tx: Transaction, input: BatchInput) {
       requireQuantity(output.quantity, 'Quantidade de saída') +
       (lossByProductId.get(output.productId) ?? 0n)
     for (const component of componentsByProfile.get(profile.id) ?? []) {
-      if (component.type === 'finished_product')
-        throw new Error(`Componente de perfil inválido: ${component.name}.`)
+      if (component.productId === profile.packagingId)
+        throw new Error(
+          'A embalagem individual está duplicada nos componentes.',
+        )
       addConsumption(
         consumptions,
         profileComponentToConsumption(component),
@@ -351,7 +355,11 @@ async function loadPlan(tx: Transaction, input: BatchInput) {
           requireQuantity(component.quantity, 'Quantidade de componente'),
           grossQuantity,
         ),
-        'recheio',
+        component.role === 'filling'
+          ? 'recheio'
+          : component.role === 'coating'
+            ? 'cobertura'
+            : 'material de embalagem',
       )
     }
     if (profile.packagingId && profile.packagingQuantity) {

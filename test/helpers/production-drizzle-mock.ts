@@ -18,6 +18,9 @@ export function createProductionDrizzleMock(
     status?: string
     failAt?: string
     missingBatch?: boolean
+    components?: Record<string, unknown>[]
+    componentMovements?: Record<string, unknown>[]
+    profilePackagingId?: number
   } = {},
 ) {
   const batch = {
@@ -46,7 +49,7 @@ export function createProductionDrizzleMock(
         productName: 'Brownie',
         productUnit: 'unit',
         productType: 'finished_product',
-        packagingId: null,
+        packagingId: options.profilePackagingId ?? null,
       },
       {
         id: 2,
@@ -71,7 +74,7 @@ export function createProductionDrizzleMock(
         type: 'ingredient',
       },
     ],
-    production_profile_components: [],
+    production_profile_components: options.components ?? [],
     recipe_operational_requirements: [
       { type: 'energy', quantity: '1.000', unit: 'kwh' },
       { type: 'labor', quantity: '1.000', unit: 'hour' },
@@ -97,6 +100,9 @@ export function createProductionDrizzleMock(
       },
     ],
   }
+  requireDefined(rows.stock_movements).push(
+    ...(options.componentMovements ?? []),
+  )
   const journal: Array<{ kind: string; table?: string; sql?: string }> = []
   const committed: Write[] = []
   let pending: Write[] = []

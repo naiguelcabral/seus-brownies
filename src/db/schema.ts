@@ -96,7 +96,7 @@ export const productionBatchOutputRole = pgEnum(
 )
 export const productionProfileComponentRole = pgEnum(
   'production_profile_component_role',
-  ['filling'],
+  ['filling', 'coating', 'packaging'],
 )
 export const operationalCostType = pgEnum('operational_cost_type', [
   'energy',

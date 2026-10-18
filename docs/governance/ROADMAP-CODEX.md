@@ -6,8 +6,10 @@
       Quatro locais no anexo; removida apenas PATRÍCIA em relação ao anterior.
 - [x] Consolidar definições já aprovadas, evitando perguntar preços/receita
       que constam da fonte ou decisões respondidas na conversa.
-- [ ] Executar pacote técnico aditivo de materiais, Bordinhas variável,
+- [~] Executar pacote técnico aditivo de materiais, Bordinhas variável,
       revisão de cenário e ensaio antes da atualização HML autorizada.
+      Papéis/validação/consumo de materiais implementados localmente;
+      migration, vínculos e publicação ainda não aplicados.
 - [x] Taxas informadas fora da fonte: MEI R$ 88 adicional (fixos R$ 2.288),
       débito 1,43%, crédito 3,36%, Pix R$ 0,49/transação; combinação varia
       por local. Preparar representação por meio, sem média universal.

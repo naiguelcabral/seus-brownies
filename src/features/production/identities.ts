@@ -18,8 +18,19 @@ export function recipeItemToConsumption(
 }
 
 export function profileComponentToConsumption(
-  component: CatalogProductIdentity,
+  component: CatalogProductIdentity & {
+    role: 'filling' | 'coating' | 'packaging'
+    quantityBasis: string
+  },
 ): ConsumptionProduct {
+  if (component.quantityBasis !== 'per_finished_unit')
+    throw new Error('A quantidade do componente deve ser por unidade pronta.')
+  const valid =
+    component.role === 'packaging'
+      ? component.type === 'packaging'
+      : component.type === 'ingredient'
+  if (!valid)
+    throw new Error(`Componente de perfil inválido: ${component.name}.`)
   return { ...component, id: component.productId }
 }
 
