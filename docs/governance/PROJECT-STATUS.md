@@ -1,5 +1,19 @@
 # Estado canônico do projeto — Cacau v1
 
+## Mão de obra diária e mensal definida — 18/10/2026
+
+Confirmados R$ 150/dia, quatro dias de produção por mês, 14–16 receitas por
+dia e serviço completo de corte/recheio/embalagem. MO mensal R$ 600 já
+incluída nos R$ 2.200 fixos; outros fixos R$ 1.600. Rateio informativo
+R$ 10,71–R$ 9,38/receita, com volume mensal condicional 56–64 receitas.
+Contar MO uma única vez e reconciliar eventual diferença de alocação/ociosidade.
+Energia também confirmada dentro dos R$ 1.600 restantes. Comparação de
+planejamento retira MO/energia já orçadas dos custos variáveis, mantendo
+R$ 2.200 integrais e sem alterar custeio realizado. Próxima pergunta: embalagem
+e adesivo por brownie; demais fichas/taxas e custos de aquisição pendentes.
+Sem alteração de tarifas horárias, fichas, código ou cenário.
+Detalhes: [SCENARIO-COST-RECONCILIATION-2026-10-18.md](SCENARIO-COST-RECONCILIATION-2026-10-18.md).
+
 ## Reconciliação de custos em revisão — 18/10/2026
 
 Usuário escolheu revisar custos/premissas antes da ativação. Fonte original

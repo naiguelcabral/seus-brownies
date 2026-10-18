@@ -18,7 +18,167 @@ ovos, requisitos de 1 kWh e duas horas, tarifas de R$ 0,85/kWh e R$ 12,50/h,
 vínculo de embalagem. Sem compras, lotes ou movimentos: ainda não há custo
 realizado ou preço atual de aquisição para substituir referências históricas.
 
-## Comparação condicional, sem aplicação
+## Energia também incluída nos fixos — resposta recebida
+
+Usuário respondeu “Sim, está incluso” à inclusão de energia nos R$ 1.600
+restantes dos fixos. Assim, os **R$ 2.200 mensais já incluem MO e energia**.
+Para uma projeção por orçamento mantendo esse total, não somar novamente as
+mesmas parcelas nos custos variáveis por produto. O comparativo atualizado
+parte dos valores completos da fonte e retira `(1,70 + 0,04) ÷ rendimento`,
+ou seja, a MO e energia históricas que já estavam embutidas. O custo físico
+base fica R$ 29,61/receita (inclui materiais da receita), antes de recheios e
+embalagens específicos. Referência histórica, não custo de aquisição atual.
+
+Cálculo preparatório por SKU está na evidência; ainda não foi salvo no cenário.
+Somar um adesivo de novo ao valor histórico, se ele já estiver embutido, também
+duplicaria custo: o vínculo físico precisa ser confirmado sem somar o resíduo
+pela segunda vez. A confirmação financeira de energia nos fixos não define
+consumo por ciclo ou por receita. Essa medição continua necessária para
+custeio físico de lotes futuros, preservando a regra produtiva de energia/MO
+no custo realizado. Nenhuma tarifa, requisito ou lógica de FIFO foi alterada.
+
+Próxima definição solicitada: uma embalagem e um adesivo por brownie simples
+ou recheado nos dois tamanhos. Bombom/Kit/Bordinhas, recheios, chocolate e taxas
+continuam pendentes. As comparações anteriores abaixo são históricas e não
+podem ser somadas ao orçamento fixo integral de R$ 2.200.
+
+## Mão de obra fechada para a revisão
+
+Confirmação final: “150 reais por cada dia de produção”. Com quatro dias
+mensais e inclusão já confirmada nos fixos:
+
+- Diária: **R$ 150,00**; MO mensal: **R$ 600,00**.
+- Fixos totais: **R$ 2.200,00**, dos quais **R$ 1.600,00** são outros custos.
+- Produção habitual informada: **14–16 receitas completas por dia**;
+  planejamento condicionado a **56–64 receitas/mês** nos quatro dias.
+- Rateio informativo da MO: **R$ 10,71/receita em 14/dia** ou
+  **R$ 9,38/receita em 16/dia**, calculado sem arredondamento intermediário.
+- Corte, recheio e embalagem já fazem parte do serviço remunerado pela diária.
+
+A pergunta de inclusão e a de total mensal estão resolvidas. Na projeção
+financeira, preservar os R$ 600 uma única vez. Uma projeção por orçamento pode
+manter os R$ 2.200 e retirar dos custos variáveis a mesma MO. Se usar custo
+unitário completo e R$ 1.600 de outros fixos, conferir que a MO alocada aos
+volumes do cenário reconcilia com R$ 600; diferença de volume/ociosidade não
+pode desaparecer. Apenas retirar R$ 600 dos fixos não resolve automaticamente
+essa reconciliação. Nenhuma mudança do custeio de lotes foi implementada.
+
+Próxima pergunta enviada: energia já incluída nos R$ 1.600 restantes ou à
+parte? O 1 kWh a R$ 0,85 é por receita ou por ciclo com várias receitas?
+Ficha física, taxas, preços de aquisição e demais premissas seguem abertos.
+Cenário 1 continua rascunho; nenhuma tarifa horária ou custo unitário foi salvo.
+
+## Calendário mensal informado — quatro dias
+
+Na sequência, usuário respondeu “150 reais em 4 dias de produção”. Pelo
+contexto da pergunta, calendário de quatro dias de produção por mês; com a
+faixa habitual de 14–16 receitas, capacidade planejada de 56–64 receitas/mês.
+Não equivale a 20 dias de produção nem garante esse volume efetivamente feito.
+
+Solicitada confirmação do valor: R$ 150 por dia em quatro dias dá R$ 600/mês
+(incluídos nos R$ 2.200; demais fixos R$ 1.600). Se a resposta significar
+R$ 150 no total dos quatro dias, MO mensal R$ 150 e demais fixos R$ 2.050.
+A ambiguidade foi resolvida pela confirmação seguinte de R$ 150 por dia;
+ver a seção de mão de obra fechada acima. As duas alternativas são preservadas
+aqui como histórico da pergunta, sem aplicação da opção não escolhida.
+
+## Diária incluída nos fixos — confirmação mais recente
+
+Usuário confirmou que a diária de R$ 150 **já está incluída nos R$ 2.200**.
+Isso resolve a pergunta de inclusão, mas ainda não a composição mensal dos
+fixos ou o número de dias pagos de produção. Os 20 dias da fonte são dias de
+venda e não estabelecem, por si, 20 dias de produção.
+
+A mão de obra deve aparecer uma única vez no lucro planejado. Se a projeção
+mantiver os R$ 2.200 integrais incluindo essa MO, não somar a mesma diária por
+fora nem a parcela de MO por unidade novamente. A comparação anterior de custo
+unitário completo não pode ser combinada com esses fixos integrais como se
+fossem parcelas independentes.
+
+Alternativamente, uma projeção que use custo unitário completo, com MO
+produtiva, precisa separar dos fixos a mesma parcela de MO e reconciliar
+a alocação aos volumes com o orçamento mensal, inclusive ociosidade. A regra de incorporar MO produtiva ao custo realizado
+dos lotes continua válida; o ajuste de apresentação do planejamento não altera
+FIFO, estoque ou custo contábil dos lotes. Não mudar o modelo silenciosamente.
+
+| Dias pagos de produção no mês (exemplos) | MO mensal | Restante dentro dos R$ 2.200 |
+| ---: | ---: | ---: |
+| 4 | R$ 600,00 | R$ 1.600,00 |
+| 8 | R$ 1.200,00 | R$ 1.000,00 |
+| 12 | R$ 1.800,00 | R$ 400,00 |
+| 14 | R$ 2.100,00 | R$ 100,00 |
+| 15 | R$ 2.250,00 | −R$ 50,00 |
+| 20 | R$ 3.000,00 | −R$ 800,00 |
+
+Exemplos não são calendário aprovado. Acima de 14 dias inteiros, a própria
+MO já ultrapassa R$ 2.200. Perguntado quantos dias de produção são pagos e
+quanto dos fixos corresponde à MO. Ainda falta saber se energia também está
+nos fixos para evitar a mesma duplicidade nesse recurso.
+
+Apenas para preparar uma alternativa coerente com MO inteiramente nos fixos,
+o custo variável de referência por receita fica em R$ 30,46 (físicos históricos
+mais energia condicional de R$ 0,85), sem a MO já contida nos fixos. Na evidência,
+o comparativo por SKU retira a MO histórica de R$ 1,70/rendimento antes de
+ajustar energia. Isso não é custo completo do produto nem valor homologado;
+não foi gravado no campo planejado do cenário. Os custos completos de
+R$ 41,17/R$ 39,83 continuam exemplos econômicos de rateio em 14/16 receitas,
+sem autorizar somá-los à mesma MO dentro dos R$ 2.200.
+
+## Produção habitual atualizada — 14 a 16 receitas por dia
+
+Ao ser perguntado sobre a produção habitual, usuário respondeu “14 ou 16”.
+Essa informação mais recente passa a orientar a faixa de planejamento;
+a referência anterior de até 12 permanece abaixo como histórico. Não inferir
+nova capacidade máxima nem duração da jornada. Mantendo R$ 150 como custo
+total da diária, o rateio fica:
+
+| Receitas completas por dia | MO por receita | Base com físicos históricos + R$ 0,85 de energia |
+| ---: | ---: | ---: |
+| 14 | R$ 10,71 | R$ 41,17 |
+| 16 | R$ 9,38 | R$ 39,83 |
+
+A conta usa R$ 150 ÷ quantidade sem arredondamento intermediário, com exibição
+em centavos. Energia ainda é condicional; custos físicos históricos e lacunas
+de ficha permanecem. Não fixar R$ 9,38 para todos os dias ou tratar 16 como
+produção garantida. Os dois resumos de comparação estão na evidência; custos por SKU podem ser
+recalculados das fontes preservadas após fechar a base mensal.
+Na etapa seguinte, a inclusão nos fixos foi confirmada (ver seção acima).
+As demais pendências de ficha/taxas continuam abertas.
+
+## Mão de obra diária — definição recebida
+
+Usuário informou: “Um dia de trabalho equivale a 150 reais e podem ser feitas
+até 12 receitas com os brownies cortados recheados e embalados”. Referência:
+**R$ 150 por dia; capacidade máxima de 12 receitas completas por dia**.
+Corte, recheio e embalagem já estão abrangidos nessa diária; não acrescentar
+novamente mão de obra desses mesmos serviços. A definição não informa jornada
+em horas nem garante produção diária de 12 receitas.
+
+O rateio de planejamento em capacidade máxima é R$ 150 ÷ 12 = R$ 12,50 por
+receita. Esse valor é por receita, não por hora. Para um dia de custo integral
+R$ 150, o rateio depende da quantidade efetivamente concluída:
+
+| Receitas completas no dia | MO por receita | Base com físicos históricos + R$ 0,85 de energia |
+| ---: | ---: | ---: |
+| 3 | R$ 50,00 | R$ 80,46 |
+| 6 | R$ 25,00 | R$ 55,46 |
+| 10 | R$ 15,00 | R$ 45,46 |
+| 12 | R$ 12,50 | R$ 42,96 |
+
+A referência na capacidade máxima é **R$ 42,96 por receita-base**, em vez dos
+R$ 55,46 da hipótese anterior de duas horas por receita. O total mantém os
+custos físicos históricos e supõe R$ 0,85 de energia por receita; a base da
+energia ainda precisa de confirmação. Não é custo realizado nem ficha completa
+por SKU. A tabela não prova viabilidade dos rendimentos de Bordinhas ou Kit.
+
+Produção habitual e inclusão nos fixos foram esclarecidas depois desta
+primeira referência: 14 a 16 receitas e diária já nos R$ 2.200. Falta o
+calendário mensal e a composição dos fixos, conforme as seções acima.
+A antiga parametrização horária não deve ser substituída por horas fictícias
+para reproduzir a diária. Aplicação requer representação coerente de diária,
+capacidade e rateio; qualquer mudança no modelo financeiro será revisada à parte.
+
+## Comparação anterior: duas horas por receita, sem aplicação
 
 **Hipótese para mensurar o efeito:** uma receita absorve integralmente 1 kWh
 e duas horas. Custos físicos, complementos e rendimentos históricos são
@@ -71,8 +231,9 @@ ao definir o vínculo físico, evitar somar R$ 0,16 novamente ao custo históric
 
 ## Decisões solicitadas ao usuário
 
-1. As duas horas cobrem uma receita ou uma sessão com várias? Informar
-   receitas por sessão; confirmar se 1 kWh é por receita ou por ciclo do forno.
+1. Diária definida em R$ 150 com capacidade máxima de 12 receitas completas.
+   Falta produção habitual e rateio da ociosidade. Confirmar se 1 kWh é por
+   receita ou por ciclo do forno.
 2. Confirmar adesivo por brownie; apresentação, rendimento e rateio de
    Bordinhas; gramagem de cobertura e montagem/embalagens de bombom/Kit;
    recheios comprados versus fabricados e chocolate em barra versus pó.

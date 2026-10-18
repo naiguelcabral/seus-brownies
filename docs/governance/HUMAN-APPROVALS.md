@@ -1,5 +1,27 @@
 # Ações que exigem aprovação humana — Cacau v1
 
+## Mão de obra diária — definição de 18/10/2026
+
+Usuário definiu R$ 150 por dia, com até 12 receitas cortadas, recheadas e
+embaladas. Autoriza usar essa referência na revisão de planejamento. Não
+informa horas de jornada, produção habitual ou composição dos custos fixos.
+R$ 12,50/receita é rateio em capacidade máxima; não é nova tarifa horária.
+Sem aplicação compartilhada nesta etapa nem homologação das demais premissas.
+Na resposta seguinte, usuário informou produção habitual de “14 ou 16”. Usar
+a faixa mais recente na comparação, mantendo diária de R$ 150 como hipótese
+informada; 12 permanece referência anterior, não capacidade máxima vigente.
+Depois confirmou que a diária já está incluída nos R$ 2.200 fixos. Na revisão,
+a mesma MO deve contar uma única vez. Depois informou “150 reais em 4 dias
+de produção”; calendário de quatro dias mensais pela pergunta anterior.
+Confirmação recebida: “150 reais por cada dia de produção”. MO R$ 600/mês
+incluída nos R$ 2.200; demais fixos R$ 1.600. Rateio informativo por volume,
+contando MO uma única vez na projeção. Energia depois confirmada também incluída nos fixos (“Sim, está incluso”).
+Na projeção com R$ 2.200 integrais, contar essas parcelas uma única vez.
+Demais premissas pendentes;
+não autoriza mudança silenciosa de custeio de lote/FIFO ou homologação da
+projeção.
+
+
 ## Publicação UX — autorização de 18/10/2026
 
 Após dashboard e modal de Produtos implementados e validados, usuário

@@ -299,5 +299,306 @@
     "sourceUnchanged": true,
     "arithmetic": "Decimal, ROUND_HALF_UP; full source values; scenario comparison only, no application",
     "costMissingPolicy": "No purchases or realized production costs; historical references do not establish current purchase prices"
+  },
+  "laborDailyDecision": {
+    "userDecision": "Um dia de trabalho equivale a 150 reais e podem ser feitas até 12 receitas com os brownies cortados recheados e embalados",
+    "dailyLaborBRL": "150.00",
+    "covers": [
+      "cutting",
+      "filling",
+      "packaging"
+    ],
+    "interpretation": "12 is maximum capacity, not confirmed actual or typical production. 150/12 is full-capacity planned labor, not an hourly rate. No additional finishing labor added for the same work.",
+    "pending": [
+      "physical recipe/profile completion",
+      "fees and taxes",
+      "current acquisition references",
+      "energy consumption basis only for productive costing, not an extra planning charge"
+    ],
+    "conditionalEnergyBRLPerRecipe": "0.85; existing reference, basis unconfirmed",
+    "sensitivity": [
+      {
+        "recipesCompletedInDay": 3,
+        "dailyLabor": "150.00",
+        "laborPerRecipe": "50.00",
+        "recipeBaseWithSourcePhysicalAndConditionalEnergy": "80.46"
+      },
+      {
+        "recipesCompletedInDay": 6,
+        "dailyLabor": "150.00",
+        "laborPerRecipe": "25.00",
+        "recipeBaseWithSourcePhysicalAndConditionalEnergy": "55.46"
+      },
+      {
+        "recipesCompletedInDay": 10,
+        "dailyLabor": "150.00",
+        "laborPerRecipe": "15.00",
+        "recipeBaseWithSourcePhysicalAndConditionalEnergy": "45.46"
+      },
+      {
+        "recipesCompletedInDay": 12,
+        "dailyLabor": "150.00",
+        "laborPerRecipe": "12.50",
+        "recipeBaseWithSourcePhysicalAndConditionalEnergy": "42.96"
+      }
+    ],
+    "below70AtFullCapacity": 8,
+    "appliedToDatabase": false,
+    "initialReportedMaxCompleteRecipesPerDay": 12,
+    "latestUserProductionReply": "14 ou 16",
+    "latestReportedNormalRecipesPerDay": [
+      14,
+      16
+    ],
+    "currentInterpretation": "Latest normal production range 14–16 supersedes earlier capacity reference 12 for planning comparison. Maximum capacity not reconfirmed. Comparisons assume daily total remains BRL 150; fixed-cost inclusion still unknown.",
+    "sensitivityStatus": "earlier 3/6/10/12 sensitivities retained as historical comparisons, not current normal production",
+    "fullCapacityComparisonStatus": "Earlier 12-recipe scenario, not current assumption; 8 products below 70 percent under unchanged historical components and conditional energy. Detailed old comparison omitted as superseded.",
+    "latestComparisons": [
+      {
+        "recipesPerDay": 14,
+        "dailyLabor": "150.00",
+        "laborPerRecipeExactExpression": "150/14",
+        "laborPerRecipeDisplay": "10.71",
+        "recipeBaseWithHistoricalPhysicalAndConditionalEnergy": "41.17",
+        "below70": 5
+      },
+      {
+        "recipesPerDay": 16,
+        "dailyLabor": "150.00",
+        "laborPerRecipeExactExpression": "150/16",
+        "laborPerRecipeDisplay": "9.38",
+        "recipeBaseWithHistoricalPhysicalAndConditionalEnergy": "39.83",
+        "below70": 5
+      }
+    ],
+    "fixedCostReply": "Já está incluída nos R$ 2.200",
+    "dailyLaborIncludedInFixedCosts": true,
+    "planningWarning": "Do not combine full BRL 2200 fixed costs including labor with an additional daily labor cost or per-unit labor allocation for the same work. Full unit-cost sensitivities above are not additive to those full fixed costs. Removing 600 from fixed costs only reconciles a full-unit-cost method if allocated unit labor sums to that monthly budget; preserve or explicitly reconcile idle-capacity and volume differences.",
+    "monthlyPaidProductionDaysExamples": [
+      {
+        "paidDays": 4,
+        "laborTotal": "600",
+        "remainingWithin2200": "1600"
+      },
+      {
+        "paidDays": 8,
+        "laborTotal": "1200",
+        "remainingWithin2200": "1000"
+      },
+      {
+        "paidDays": 12,
+        "laborTotal": "1800",
+        "remainingWithin2200": "400"
+      },
+      {
+        "paidDays": 14,
+        "laborTotal": "2100",
+        "remainingWithin2200": "100"
+      },
+      {
+        "paidDays": 15,
+        "laborTotal": "2250",
+        "remainingWithin2200": "-50"
+      },
+      {
+        "paidDays": 20,
+        "laborTotal": "3000",
+        "remainingWithin2200": "-800"
+      }
+    ],
+    "planningCostExcludingAlreadyFixedLabor": {
+      "basis": "Illustrative only, not applied. Remove historical direct labor from unit reference when full fixed costs retain same labor; keep energy at conditional 0.85 per recipe. If financial planning instead uses full production cost, reclassify the corresponding labor out of fixed costs after defining monthly production days and amounts.",
+      "recipePhysicalAndEnergy": "30.4555555555555557",
+      "items": [
+        {
+          "sku": "PROD001",
+          "costExcludingLabor": "1.666"
+        },
+        {
+          "sku": "PROD002",
+          "costExcludingLabor": "2.808"
+        },
+        {
+          "sku": "PROD003",
+          "costExcludingLabor": "2.479"
+        },
+        {
+          "sku": "PROD004",
+          "costExcludingLabor": "2.179"
+        },
+        {
+          "sku": "PROD005",
+          "costExcludingLabor": "2.219"
+        },
+        {
+          "sku": "PROD006",
+          "costExcludingLabor": "1.919"
+        },
+        {
+          "sku": "PROD007",
+          "costExcludingLabor": "2.733"
+        },
+        {
+          "sku": "PROD008",
+          "costExcludingLabor": "2.179"
+        },
+        {
+          "sku": "PROD009",
+          "costExcludingLabor": "4.698"
+        },
+        {
+          "sku": "PROD010",
+          "costExcludingLabor": "4.098"
+        },
+        {
+          "sku": "PROD011",
+          "costExcludingLabor": "4.178"
+        },
+        {
+          "sku": "PROD012",
+          "costExcludingLabor": "3.578"
+        },
+        {
+          "sku": "PROD013",
+          "costExcludingLabor": "5.206"
+        },
+        {
+          "sku": "PROD014",
+          "costExcludingLabor": "4.098"
+        },
+        {
+          "sku": "PROD015",
+          "costExcludingLabor": "0.904"
+        },
+        {
+          "sku": "PROD016",
+          "costExcludingLabor": "1.579"
+        },
+        {
+          "sku": "PROD017",
+          "costExcludingLabor": "5.942"
+        }
+      ],
+      "status": "Superseded for planning by confirmation energy is also in fixed costs; earlier illustrative comparison retained"
+    },
+    "paidProductionDaysReply": "150 reais em 4 dias de produção",
+    "reportedProductionDaysPerMonth": 4,
+    "conditionalRecipesPerMonthRange": [
+      56,
+      64
+    ],
+    "pendingLaborTotalClarification": {
+      "optionPerDay": {
+        "dailyLabor": "150.00",
+        "productionDaysPerMonth": 4,
+        "monthlyLabor": "600.00",
+        "remainingWithinFixed2200": "1600.00"
+      },
+      "optionTotalForFourDays": {
+        "monthlyLabor": "150.00",
+        "productionDaysPerMonth": 4,
+        "impliedAveragePerDay": "37.50",
+        "remainingWithinFixed2200": "2050.00"
+      },
+      "status": "resolved: 150 per production day; monthly labor 600 included in fixed 2200"
+    },
+    "finalLaborReply": "150 reais por cada dia de produção",
+    "confirmedMonthlyLabor": {
+      "dailyLabor": "150.00",
+      "paidDaysPerMonth": 4,
+      "monthlyLabor": "600.00",
+      "includedInFixedMonthly": "2200.00",
+      "otherFixedMonthly": "1600.00",
+      "normalRecipesPerProductionDay": [
+        14,
+        16
+      ],
+      "conditionalRecipesPerMonth": [
+        56,
+        64
+      ],
+      "costAllocationReferencePerRecipe": [
+        "150/14",
+        "150/16"
+      ],
+      "scopeIncludesCutFillPack": true
+    },
+    "energyFixedCostReply": "Sim, está incluso.",
+    "energyIncludedInOtherFixedCosts": true,
+    "planningCostExcludingAlreadyFixedLaborAndEnergy": {
+      "basis": "Planning comparison only: fixed monthly 2200 already includes monthly labor 600 and energy. Strip old source unit labor and energy (1.70+0.04)/yield before variable-cost projection, preserving original full source values and physical-cost gaps. No DB changes. This does not alter actual production lot costing.",
+      "recipePhysicalReference": "29.6055555555555557",
+      "recipePhysicalReferenceDisplay": "29.61",
+      "items": [
+        {
+          "sku": "PROD001",
+          "plannedVariableReferenceThreePlaces": "1.654"
+        },
+        {
+          "sku": "PROD002",
+          "plannedVariableReferenceThreePlaces": "2.737"
+        },
+        {
+          "sku": "PROD003",
+          "plannedVariableReferenceThreePlaces": "2.444"
+        },
+        {
+          "sku": "PROD004",
+          "plannedVariableReferenceThreePlaces": "2.144"
+        },
+        {
+          "sku": "PROD005",
+          "plannedVariableReferenceThreePlaces": "2.184"
+        },
+        {
+          "sku": "PROD006",
+          "plannedVariableReferenceThreePlaces": "1.884"
+        },
+        {
+          "sku": "PROD007",
+          "plannedVariableReferenceThreePlaces": "2.697"
+        },
+        {
+          "sku": "PROD008",
+          "plannedVariableReferenceThreePlaces": "2.144"
+        },
+        {
+          "sku": "PROD009",
+          "plannedVariableReferenceThreePlaces": "4.627"
+        },
+        {
+          "sku": "PROD010",
+          "plannedVariableReferenceThreePlaces": "4.027"
+        },
+        {
+          "sku": "PROD011",
+          "plannedVariableReferenceThreePlaces": "4.107"
+        },
+        {
+          "sku": "PROD012",
+          "plannedVariableReferenceThreePlaces": "3.507"
+        },
+        {
+          "sku": "PROD013",
+          "plannedVariableReferenceThreePlaces": "5.135"
+        },
+        {
+          "sku": "PROD014",
+          "plannedVariableReferenceThreePlaces": "4.027"
+        },
+        {
+          "sku": "PROD015",
+          "plannedVariableReferenceThreePlaces": "0.887"
+        },
+        {
+          "sku": "PROD016",
+          "plannedVariableReferenceThreePlaces": "1.544"
+        },
+        {
+          "sku": "PROD017",
+          "plannedVariableReferenceThreePlaces": "5.898"
+        }
+      ]
+    }
   }
 }
