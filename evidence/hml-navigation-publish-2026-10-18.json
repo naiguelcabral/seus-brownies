@@ -1,0 +1,115 @@
+{
+  "worker": "cacau-v1-hml",
+  "gitHead": "d8369bd",
+  "version": "36960752-1cc0-4fee-8db7-76093d96a348",
+  "deploymentId": "1b302c9f-5982-4f47-91af-b875539cf165",
+  "createdAt": "2026-10-18T09:01:45.683074Z",
+  "traffic": [
+    {
+      "version_id": "36960752-1cc0-4fee-8db7-76093d96a348",
+      "percentage": 100
+    }
+  ],
+  "rollbackVersion": "1ea59a90-c289-4c99-bf8f-a0bbd82d6b37",
+  "bindings": [
+    {
+      "name": "AUTH_LOGIN_HASH_PEPPER",
+      "type": "secret_text"
+    },
+    {
+      "name": "AUTH_RATE_LIMITER",
+      "type": "ratelimit"
+    },
+    {
+      "name": "AUTH_RATE_LIMITER_REQUIRED",
+      "type": "plain_text"
+    },
+    {
+      "name": "DATABASE_URL",
+      "type": "secret_text"
+    },
+    {
+      "name": "NEON_AUTH_BASE_URL",
+      "type": "secret_text"
+    },
+    {
+      "name": "NEON_AUTH_COOKIE_SECRET",
+      "type": "secret_text"
+    },
+    {
+      "name": "PASSWORD_RESET_REDIRECT_ORIGIN",
+      "type": "plain_text"
+    },
+    {
+      "name": "TURNSTILE_SECRET_KEY",
+      "type": "secret_text"
+    }
+  ],
+  "checks": {
+    "login": {
+      "status": 200,
+      "loginForm": true
+    },
+    "navigation": {
+      "asset": "/assets/ManagementLayout-R2aSpw8r.js",
+      "labels": [
+        "Visão geral",
+        "Estoque",
+        "Metas e cenários",
+        "Relatórios",
+        "Compras",
+        "Produção",
+        "Vendas",
+        "Despesas",
+        "Financeiro",
+        "Plano de ação",
+        "Categorias",
+        "Produtos",
+        "Locais",
+        "Parâmetros"
+      ],
+      "matchesExpected": true
+    },
+    "purchaseAssets": [
+      {
+        "asset": "/assets/compras-BH2ggQT6.js",
+        "kgQuantityLabel": true,
+        "kgPriceLabel": true,
+        "conversionLabel": true
+      },
+      {
+        "asset": "/assets/compras-Co7V4jyG.js",
+        "kgQuantityLabel": false,
+        "kgPriceLabel": false,
+        "conversionLabel": false
+      }
+    ],
+    "/": {
+      "status": 200,
+      "redirectedToLogin": true,
+      "protectedContentAbsent": true
+    },
+    "/estoque": {
+      "status": 200,
+      "redirectedToLogin": true,
+      "protectedContentAbsent": true
+    },
+    "/cenarios": {
+      "status": 200,
+      "redirectedToLogin": true,
+      "protectedContentAbsent": true
+    },
+    "/relatorios": {
+      "status": 200,
+      "redirectedToLogin": true,
+      "protectedContentAbsent": true
+    },
+    "/compras": {
+      "status": 200,
+      "redirectedToLogin": true,
+      "protectedContentAbsent": true
+    }
+  },
+  "authenticatedVisualQA": "pending human sign-in",
+  "sharedDatabaseWritesDuringDeployment": false
+}

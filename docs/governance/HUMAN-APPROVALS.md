@@ -1,5 +1,14 @@
 # Ações que exigem aprovação humana — Cacau v1
 
+## Publicação HML das guias e compras em kg — 18 de outubro de 2026
+
+Após apresentação explícita da publicação pendente, usuário solicitou:
+“Pode concluir a tarefa integralmente”. Autorização aplicada exclusivamente
+ao deploy HML de `d8369bd`, incluindo a ordem final das guias e o ajuste de
+Compras em kg preparados nesta conversa. Versão publicada
+`36960752-1cc0-4fee-8db7-76093d96a348`, confirmada a 100%. Não autoriza deploy
+de produção, alteração de secrets/DNS/RBAC, compra real ou estoque fictício.
+
 ## Cadastro de insumos — autorização de 18 de outubro de 2026
 
 Após a conferência dos 19 insumos físicos, o usuário esclareceu que os itens

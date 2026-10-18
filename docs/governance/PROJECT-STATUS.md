@@ -1,5 +1,26 @@
 # Estado canônico do projeto — Cacau v1
 
+## Guias e compras em kg publicadas em HML — 18 de outubro de 2026
+
+Usuário autorizou concluir integralmente após a apresentação do gate HML.
+Publicado HEAD `d8369bd` exclusivamente em `cacau-v1-hml`, pelo build isolado
+com a chave pública real recuperada do bundle público anterior. Versão
+`36960752-1cc0-4fee-8db7-76093d96a348` confirmada a 100% pela API de deployments.
+Versão anterior `1ea59a90-c289-4c99-bf8f-a0bbd82d6b37` continua referência de rollback.
+Cinco secrets preservados por nome/tipo; limiter, duas vars e ausência de flags
+diagnósticos confirmados. Nenhum secret lido/alterado ou SQL de escrita aplicado.
+
+HTTP confirmou a ordem exata dos 14 links no `ManagementLayout-R2aSpw8r.js`,
+iniciando Visão geral → Estoque → Metas e cenários → Relatórios; bundle de
+Compras contém quantidade/preço por kg e indicação de 1000 g no estoque.
+Login público HTTP 200 e renderizado no navegador. GETs anônimos de `/`,
+`/estoque`, `/cenarios`, `/relatorios` e `/compras` redirecionam ao login.
+Conferência autenticada depende da entrada humana solicitada na aba HML;
+não foi criada compra ou movimentação de teste no banco compartilhado.
+Evidência: `evidence/hml-navigation-publish-2026-10-18.json`.
+Este checkpoint substitui as pendências de publicação abaixo; homologação
+operacional autenticada continua distinta da conferência do código publicado.
+
 ## Ordem das guias do sistema — 18 de outubro de 2026
 
 Navegação local reorganizada em `ManagementLayout`, com prioridade explícita

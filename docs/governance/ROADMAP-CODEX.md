@@ -6,7 +6,10 @@
       Estoque, Metas e cenários, Relatórios; depois operação, finanças, plano
       de ação, cadastros e parâmetros; preservar destinos e permissões.
 - [x] Conferir tipos, lint, formatação e diff da mudança de apresentação.
-- [ ] Publicação HML autorizada e conferência visual da navegação por perfil.
+- [x] Publicar em HML sob autorização de conclusão integral; versão
+      `36960752-1cc0-4fee-8db7-76093d96a348` a 100%; conferir ordem dos links
+      no bundle servido, formulário público e redirecionamentos protegidos.
+- [ ] Conferência visual autenticada da navegação por perfil após login humano.
 
 ## Insumos e compra em kg — 18 de outubro de 2026
 
@@ -19,8 +22,9 @@
       preservando valor total, origem e idempotência; 495 testes aprovados.
 - [x] Ensaiar SQL em PostgreSQL 17 descartável: sucesso, preservação,
       repetição rejeitada e rollback por falha tardia.
-- [ ] Publicação HML autorizada e homologação visual de compra em kg,
-      estoque em g e consumo produtivo. Nenhuma compra real foi criada.
+- [x] Publicar em HML e conferir os campos kg e conversão no bundle servido.
+- [ ] Homologação autenticada de compra em kg, estoque em g e consumo produtivo
+      em cenário autorizado. Nenhuma compra real foi criada por esta tarefa.
 
 ## Knip e CodeQL em todo o projeto
 
