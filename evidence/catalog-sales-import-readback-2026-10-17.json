@@ -1,0 +1,153 @@
+{
+  "projectId": "steep-brook-51659857",
+  "branchId": "br-lingering-wind-acwh5wap",
+  "database": "neondb",
+  "verified_at": "2026-10-18T00:25:56.363Z",
+  "products": [
+    {
+      "id": 1,
+      "sku": "PROD001",
+      "name": "Bombom Brownie Unitário",
+      "active": true,
+      "category": "Bombom",
+      "sale_price": 5
+    },
+    {
+      "id": 2,
+      "sku": "PROD002",
+      "name": "Bordinhas",
+      "active": true,
+      "category": "Bordinha",
+      "sale_price": 5
+    },
+    {
+      "id": 16,
+      "sku": "PROD003",
+      "name": "Brownie Recheado 5x5 (Brigadeiro)",
+      "active": true,
+      "category": "Brownie",
+      "sale_price": 12
+    },
+    {
+      "id": 15,
+      "sku": "PROD004",
+      "name": "Brownie Recheado 5x5 (Creme de Avelã)",
+      "active": true,
+      "category": "Brownie",
+      "sale_price": 12
+    },
+    {
+      "id": 14,
+      "sku": "PROD005",
+      "name": "Brownie Recheado 5x5 (Doce de Leite)",
+      "active": true,
+      "category": "Brownie",
+      "sale_price": 12
+    },
+    {
+      "id": 13,
+      "sku": "PROD006",
+      "name": "Brownie Recheado 5x5 (Goiabada)",
+      "active": true,
+      "category": "Brownie",
+      "sale_price": 12
+    },
+    {
+      "id": 12,
+      "sku": "PROD007",
+      "name": "Brownie Recheado 5x5 (Leite Ninho)",
+      "active": true,
+      "category": "Brownie",
+      "sale_price": 12
+    },
+    {
+      "id": 11,
+      "sku": "PROD008",
+      "name": "Brownie Recheado 5x5 (Maracujá)",
+      "active": true,
+      "category": "Brownie",
+      "sale_price": 12
+    },
+    {
+      "id": 10,
+      "sku": "PROD009",
+      "name": "Brownie Recheado 7x7 (Brigadeiro)",
+      "active": true,
+      "category": "Brownie",
+      "sale_price": 17
+    },
+    {
+      "id": 9,
+      "sku": "PROD010",
+      "name": "Brownie Recheado 7x7 (Creme de avelã)",
+      "active": true,
+      "category": "Brownie",
+      "sale_price": 17
+    },
+    {
+      "id": 8,
+      "sku": "PROD011",
+      "name": "Brownie Recheado 7x7 (Doce de Leite)",
+      "active": true,
+      "category": "Brownie",
+      "sale_price": 17
+    },
+    {
+      "id": 7,
+      "sku": "PROD012",
+      "name": "Brownie Recheado 7x7 (Goiabada)",
+      "active": true,
+      "category": "Brownie",
+      "sale_price": 17
+    },
+    {
+      "id": 6,
+      "sku": "PROD013",
+      "name": "Brownie Recheado 7x7 (Leite Ninho)",
+      "active": true,
+      "category": "Brownie",
+      "sale_price": 17
+    },
+    {
+      "id": 5,
+      "sku": "PROD014",
+      "name": "Brownie Recheado 7x7 (Maracujá)",
+      "active": true,
+      "category": "Brownie",
+      "sale_price": 17
+    },
+    {
+      "id": 4,
+      "sku": "PROD015",
+      "name": "Brownie Simples 5x5",
+      "active": true,
+      "category": "Brownie",
+      "sale_price": 6
+    },
+    {
+      "id": 3,
+      "sku": "PROD016",
+      "name": "Brownie Simples 7x7",
+      "active": true,
+      "category": "Brownie",
+      "sale_price": 8
+    },
+    {
+      "id": 17,
+      "sku": "PROD017",
+      "name": "Kit 4 Bombons",
+      "active": true,
+      "category": "Kit",
+      "sale_price": 18
+    }
+  ],
+  "audit_events": "17",
+  "receipt": {
+    "source_key": "CATALOG-SALES-2026-10-17-001",
+    "imported_at": "2026-10-18T00:25:50.456422+00:00",
+    "source_hash": "8ea777ccfc69015ef3562283fd8ea66c21da111005f4b70cadfedae4409652d2"
+  },
+  "recipes": "0",
+  "production_profiles": "0",
+  "stock_movements": "0"
+}

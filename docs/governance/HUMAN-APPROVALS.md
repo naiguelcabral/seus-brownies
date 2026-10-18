@@ -320,3 +320,16 @@ Ao encontrar qualquer gate desta lista, o agente deve:
 2. registrar o estado atual;
 3. explicar exatamente qual decisão é necessária;
 4. não contornar o gate por outro caminho técnico.
+
+## Cadastro de produtos de venda — autorização de 17 de outubro de 2026
+
+Usuário solicitou: “Quero que esses produtos sejam listados e constem no banco
+de dados que está disponível no momento”, após apresentação dos 17 produtos,
+SKUs e preços do workbook disponível. Autorização aplicada exclusivamente ao
+catálogo de venda da original `br-lingering-wind-acwh5wap` / `neondb`.
+
+Executado em transação única: 17 produtos finais, quatro categorias da fonte,
+recibo `CATALOG-SALES-2026-10-17-001` e 17 auditorias; categoria anterior
+preservada. Leitura independente confirmou persistência. Referência consumida,
+não repetir. Não autoriza carga de insumos/histórico, estoque, receitas,
+produção ou alteração de preços diferente dos valores apresentados.

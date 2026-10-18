@@ -1,5 +1,32 @@
 # Estado canônico do projeto — Cacau v1
 
+## Catálogo de venda cadastrado — 17 de outubro de 2026
+
+Após solicitação explícita do usuário, cadastrados na original
+`steep-brook-51659857` / `br-lingering-wind-acwh5wap` (`production`) /
+`neondb` os 17 produtos finais `PROD001–PROD017`, ativos, unidade `unit`,
+com nomes e preços praticados da cópia disponível do workbook. Preflight
+confirmou zero produtos e zero recibos de importação; a categoria preexistente
+`Bombons` foi preservada e quatro categorias da fonte foram acrescentadas.
+
+Transação única com locks, guards de catálogo vazio, referência/hash não
+consumidos e conferência exata dos 17 registros. Recibo
+`CATALOG-SALES-2026-10-17-001` **consumido**, com 17 eventos de auditoria;
+ator Auth não atribuído, execução Codex sob instrução humana registrada no motivo.
+Consulta independente após commit às `2026-10-18T00:25:56.363Z` confirmou
+os 17 produtos, preços/categorias/atividade e recibo. Estoque, receitas e
+perfis continuam com zero registros; insumos e histórico não foram importados.
+
+Fonte disponível tem SHA-256
+`25aa62df5fc9b2e01402e9c242142322d9c6f54a345e800cb947b77865ce5b64`,
+idêntico às prévias históricas. Não comprova equivalência ao arquivo `(4)`
+citado na governança; preços são os da cópia apresentada e aceita na conversa.
+Manifesto, SQL executado e leitura posterior em
+`evidence/catalog-sales-import-{manifest-,readback-}2026-10-17.json` e
+`evidence/catalog-sales-import-2026-10-17.sql`. Não reaplicar a referência.
+Nenhum schema, deploy, secret, venda ou movimento foi alterado/criado.
+Listagem pelo banco confirmada; renderização na sessão autenticada não verificada.
+
 ## Original atualizada até 0028 — 17 de outubro de 2026
 
 Usuário aceitou explicitamente o backup em branch no lugar do snapshot novo

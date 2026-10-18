@@ -1,5 +1,18 @@
 # Roadmap executável para Codex — Cacau v1
 
+## Catálogo de venda — 17 de outubro de 2026
+
+- [x] Analisar workbook disponível, regras e manifestos; identificar os 17
+      produtos finais e separar insumos/histórico do escopo de venda.
+- [x] Receber solicitação explícita de cadastro na base atual; reconfirmar
+      original, catálogo vazio e ausência de recibos.
+- [x] Cadastrar `PROD001–PROD017` e quatro categorias da fonte atomicamente,
+      preservando a categoria `Bombons`; gravar recibo único e 17 auditorias.
+- [x] Conferir após commit os 17 SKUs/nomes/preços/categorias/atividade.
+      Referência consumida `CATALOG-SALES-2026-10-17-001`; recibos em `evidence/`.
+- [ ] Confirmar visualização na sessão autenticada. Insumos, receitas, perfis,
+      estoque e histórico continuam fora desta carga; nenhuma produção real criada.
+
 ## Correção do schema do painel — 17 de outubro de 2026
 
 - [x] Aprovar valores/plano; Neon recusou snapshot novo pelo limite do projeto.
