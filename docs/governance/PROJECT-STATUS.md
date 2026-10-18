@@ -3,13 +3,16 @@
 ## Mix 100% — rascunho solicitado — 18/10/2026
 
 Usuário limitou a correção ao sistema como cenário em rascunho. Payload dos
-17 produtos preparado com IDs reais, pesos originais 103% preservados e
+17 produtos criado com IDs reais, pesos originais 103% preservados e
 normalização existente fechando em 10.000 pontos-base. Contrato, cálculo
 independente, invariância à ordem e 14 testes de cenários passaram. Preços
 conferidos; custos são referências históricas com três casas e ressalvas
-explícitas. Workbook permanece inalterado. Criação ainda **pendente de sessão
-autenticada**: `/cenarios` redirecionou ao login. Nenhuma escrita compartilhada
-ou ativação realizada. Detalhes/payload em
+explícitas. Workbook permanece inalterado. Cenário **ID 1, versão 1, revisão 1,
+status draft**, criado pela sessão autenticada do Dono às 13:28:58 de Brasília.
+Leitura independente confirmou payload, 17 itens, soma 10.000, um histórico
+e uma auditoria com autoria consistente. Zero cenários ativos e zero fatos
+operacionais. Recibo `evidence/scenario-mix-draft-execution-2026-10-18.json`;
+não repetir criação nem ativar por inferência. Detalhes/payload em
 [SCENARIO-MIX-DRAFT-2026-10-18.md](SCENARIO-MIX-DRAFT-2026-10-18.md).
 
 ## Revisão de completude do workbook — 18/10/2026

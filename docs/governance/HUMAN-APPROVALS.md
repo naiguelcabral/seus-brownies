@@ -7,8 +7,10 @@ cenário em rascunho”. Autoriza criar um cenário `draft` com os 17 produtos,
 normalização existente e premissas históricas explicitamente ressalvadas.
 Preservar workbook e pesos originais; não ativar, inventar consumo/custos,
 alterar parâmetros globais ou executar operações financeiras/de estoque.
-Payload validado em `SCENARIO-MIX-DRAFT-2026-10-18.md`; criação aguarda login
-para autoria auditada pela função nativa do sistema, sem nova aprovação.
+Payload validado em `SCENARIO-MIX-DRAFT-2026-10-18.md`; criação concluída pela
+sessão autenticada do Dono: ID 1/v1/rev1 em `draft`, 17 itens e 10.000
+pontos-base, com histórico/auditoria conferidos por leitura independente.
+Não repetir criação ou ativar. Recibo `evidence/scenario-mix-draft-execution-2026-10-18.json`.
 
 ## Cadastro técnico — autorização de 18 de outubro de 2026
 

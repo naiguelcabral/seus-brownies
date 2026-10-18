@@ -1,10 +1,27 @@
 # Mix de referência normalizado — 18/10/2026
 
-Estado: **preparado; criação autenticada pendente**. O usuário esclareceu:
+Estado: **criado e conferido, mantido em rascunho**. O usuário esclareceu:
 “Somente o sistema, como cenário em rascunho”. A autorização cobre cadastrar
 um cenário `draft` pela funcionalidade existente, preservando o workbook e
 sem ativação. Não autoriza corrigir por inferência os custos históricos ou
 criar fatos operacionais.
+
+## Execução concluída
+
+Criado pela sessão autenticada do Dono na interface existente, em
+`2026-10-18T16:28:58.299Z` (13:28:58 de Brasília): cenário ID **1**, versão
+**1**, revisão **1**, chave `64bc47d5-11e7-4ca7-8827-326abaa0fc70`.
+Uma leitura independente READ ONLY confirmou os 17 itens e todas as premissas
+iguais ao payload, pesos originais `1.030000`, soma normalizada **10.000**,
+status `draft` e nenhuma data de ativação/arquivamento. Um evento `created`
+com snapshot dos 17 itens e uma auditoria `management_scenario.create`
+conferem com o autor da criação, sem exportar a identidade autenticada.
+
+Nenhum cenário ativo; vendas, compras, movimentos e lotes continuam vazios.
+Workbook preservado; nenhuma alteração de regra, schema, deploy ou SQL de
+escrita direta. Não repetir a criação. Próxima revisão dos custos/premissas
+ou ativação é outra tarefa. Recibo:
+[scenario-mix-draft-execution-2026-10-18.json](evidence/scenario-mix-draft-execution-2026-10-18.json).
 
 ## Conteúdo conferido
 
@@ -38,17 +55,15 @@ estimativas condicionadas aos custos históricos, sem resultado realizado.
 
 Contrato, soma exata, cálculo independente dos maiores restos e invariância
 à ordem passaram. Os 14 testes existentes de cálculos/rota de cenários
-passaram. Sem alteração de código, schema, deploy ou operação compartilhada.
+passaram. Sem alteração de código, schema ou deploy; a única nova escrita
+operacional desta tarefa é o cenário em rascunho com mix/histórico/auditoria.
 
 Evidência e payload nativo:
 [scenario-mix-draft-preparation-2026-10-18.json](evidence/scenario-mix-draft-preparation-2026-10-18.json).
 
-O navegador abriu `/cenarios` e foi redirecionado ao login. Solicitação de
-login enviada ao usuário; não solicitar senha na conversa. A função nativa
-`createScenario` exige principal autorizado e registra autor, histórico e
-auditoria em transação. Criar pela sessão autenticada, conferir os 17 itens,
-o status `draft`, total normalizado 10.000 e histórico, sem clicar em ativar.
-Antes de salvar, conferir se já existe o cenário para evitar duplicação.
-Após sucesso, registrar ID/revisão e readback independente sanitizado e
-atualizar este estado. Não atribuir a criação a um usuário por SQL para
-substituir a sessão ausente.
+O acesso inicial foi feito no Brave, separado do navegador conectado. Após
+abrir a tarefa no aplicativo, a primeira sessão permitia somente consulta
+como Gerente. O usuário entrou como Dono; a interface confirmou zero cenários
+antes de salvar. A função nativa `createScenario` registrou o autor, histórico
+e auditoria em transação. Nenhuma senha, cookie ou identidade autenticada foi
+exportada; nenhuma permissão foi alterada. Criação concluída, sem ativação.
