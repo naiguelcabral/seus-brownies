@@ -1,5 +1,13 @@
 # Ações que exigem aprovação humana — Cacau v1
 
+## Aplicação e publicação dos custos exatos — 18 de outubro de 2026
+
+Após a entrega local e apresentação explícita do gate, usuário respondeu
+“Aprovado” à aplicação da migration e publicação HML. Autoriza as nove colunas
+JSONB de ADR-0002 na original já utilizada, backup/ensaio e deploy somente
+em `cacau-v1-hml`. Não autoriza backfill, compras de teste na base compartilhada,
+alteração de secrets, DNS, RBAC ou publicação no Worker principal.
+
 ## Relatórios em segundo — autorização de 18 de outubro de 2026
 
 Usuário solicitou “coloque a aba de relatórios como a segunda aba na ordem faça

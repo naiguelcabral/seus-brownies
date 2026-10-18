@@ -1,5 +1,19 @@
 # Estado canônico do projeto — Cacau v1
 
+## Custos exatos — schema aplicado sob aprovação — 18 de outubro de 2026
+
+Usuário aprovou aplicar o pacote e publicar em HML. Snapshot novo recusado
+pela quota; backup sem compute `br-bold-union-acju2qrp`, LSN `0/2072808`,
+preservado. Ensaio na derivada `br-aged-violet-ac5aap1s` passou; original
+recebeu o mesmo lote em transação única com locks, guards de 31 recibos e
+preservação SHA-256 dos registros de todas as 38 tabelas. Nove colunas JSONB
+adicionadas sem backfill; 33 recibos finais, incluindo as duas pontes antigas.
+Leitura independente e 38 consultas de schema LIMIT 0 aprovadas. Nenhum fato
+operacional foi criado ou alterado; nenhuma cadeia histórica foi reescrita.
+CI 39121760695 e CodeQL 39121760660 aprovados em `e599a86`, zero alertas
+abertos conferidos. Publicação HML autorizada é o próximo passo. Plano e
+recibo em `evidence/exact-costs-rollout*-2026-10-18.json`.
+
 ## P0 — custos exatos preparados localmente — 18 de outubro de 2026
 
 Usuário definiu compra dos insumos de massa sempre em kg pelo valor total do

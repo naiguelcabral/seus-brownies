@@ -1,0 +1,220 @@
+{
+  "sourceCommit": "e599a86",
+  "authorization": "User approved applying the migration and publishing HML in this conversation.",
+  "backup": {
+    "branch": "br-bold-union-acju2qrp",
+    "parent": "br-lingering-wind-acwh5wap",
+    "lsn": "0/2072808",
+    "compute": false,
+    "newSnapshot": "quota rejected; previous backups preserved"
+  },
+  "rehearsal": {
+    "branch": "br-aged-violet-ac5aap1s",
+    "receipts": 33,
+    "exactColumns": 9,
+    "preservationChecks": "all 38 public tables unchanged within transaction"
+  },
+  "application": {
+    "branch": "br-lingering-wind-acwh5wap",
+    "receipts": 33,
+    "exactColumns": 9,
+    "statementsHash": "57315c639edae47528f754964273761124ab82381e12cf92ff0074eb0c606bff",
+    "preservedTables": [
+      {
+        "name": "action_plan_history",
+        "rows": "0",
+        "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "action_plans",
+        "rows": "0",
+        "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "app_user_access",
+        "rows": "2",
+        "digest": "36df1894d19a46993f8cb3ec8c79c3a13dc0c4bed2950fbfab853e9413d496c8"
+      },
+      {
+        "name": "auth_audit_events",
+        "rows": "15",
+        "digest": "bce0e0b16006afc4947fc9a82702dbb3b0b7c30550889c84dfc55943349148bf"
+      },
+      {
+        "name": "auth_login_attempts",
+        "rows": "0",
+        "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "categories",
+        "rows": "6",
+        "digest": "f74cb40a9d260716d920fcef696939077d405236b287d5194594270b005679d7"
+      },
+      {
+        "name": "expenses",
+        "rows": "0",
+        "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "financial_events",
+        "rows": "0",
+        "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "financial_periods",
+        "rows": "0",
+        "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "historical_import_records",
+        "rows": "2",
+        "digest": "d40fc04d9452a1286871728c18cec7213b0f3536830e4239d3405ef57ecce8be"
+      },
+      {
+        "name": "inventory_cost_allocations",
+        "rows": "0",
+        "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "inventory_cost_layers",
+        "rows": "0",
+        "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "inventory_cost_reversals",
+        "rows": "0",
+        "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "management_scenario_history",
+        "rows": "0",
+        "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "management_scenario_mix",
+        "rows": "0",
+        "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "management_scenarios",
+        "rows": "0",
+        "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "management_settings",
+        "rows": "1",
+        "digest": "53b12543ad71edee41e16de3c886511be0649ebedeb04dd7017d1958beb99624"
+      },
+      {
+        "name": "message_processing_records",
+        "rows": "0",
+        "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "operational_audit_events",
+        "rows": "47",
+        "digest": "8752757e3ecdaf5e47a9939731132ae8813e2c891f91fb812926edb447f1f61f"
+      },
+      {
+        "name": "operational_cost_rates",
+        "rows": "0",
+        "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "operational_costs",
+        "rows": "0",
+        "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "product_import_aliases",
+        "rows": "10",
+        "digest": "2132e99b586d4ca80b324b7cd6e5ec8f4f31efd58ff6e51508f734c16083383c"
+      },
+      {
+        "name": "production_batch_consumptions",
+        "rows": "0",
+        "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "production_batch_losses",
+        "rows": "0",
+        "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "production_batch_outputs",
+        "rows": "0",
+        "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "production_batches",
+        "rows": "0",
+        "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "production_profile_components",
+        "rows": "0",
+        "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "production_profiles",
+        "rows": "0",
+        "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "products",
+        "rows": "36",
+        "digest": "f8049217191b8c9bdde0a4b8b288caee8ae0a03af9d2cb038bcf582cd4e5ebc1"
+      },
+      {
+        "name": "purchase_items",
+        "rows": "0",
+        "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "purchases",
+        "rows": "0",
+        "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "recipe_items",
+        "rows": "0",
+        "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "recipe_operational_requirements",
+        "rows": "0",
+        "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "recipe_versions",
+        "rows": "0",
+        "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "sale_items",
+        "rows": "0",
+        "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "sales",
+        "rows": "0",
+        "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "sales_locations",
+        "rows": "1",
+        "digest": "9b87b60cba8b97d56ac1231337911ac7758c0de1761eba2d230f950d5a6be08c"
+      },
+      {
+        "name": "stock_movements",
+        "rows": "0",
+        "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ],
+    "readback": "passed"
+  },
+  "ci": 39121760695,
+  "codeql": 39121760660,
+  "openSecurityAlerts": 0,
+  "deployment": "not yet executed"
+}
