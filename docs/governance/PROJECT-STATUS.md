@@ -1,5 +1,18 @@
 # Estado canônico do projeto — Cacau v1
 
+## Sessão limitada pelo provedor — correção local preparada
+
+Relato de retorno ao login ao abrir Estoque em HML. Formulário público
+renderizado/HTTP 200; três logins `success` na auditoria coincidem com três
+erros 429 do Neon Auth ao criar `session_data` na versão HML `1ea59a90`.
+Correção local elimina a consulta duplicada em `getSessionStatus` e distingue
+falha temporária de sessão ausente, preservando negação de acesso, 401,
+cookies, permissões e revalidação do vínculo. Sem retry/cache global.
+489 testes, tipos, lint e formatação aprovados; build isolado ainda em
+andamento. Publicação específica HML e confirmação
+humana de login → Estoque pendentes. Não foi aplicado deploy nem SQL de escrita.
+Detalhes: [AUTH-SESSION-THROTTLING-2026-10-17.md](AUTH-SESSION-THROTTLING-2026-10-17.md).
+
 ## Catálogo de venda cadastrado — 17 de outubro de 2026
 
 Após solicitação explícita do usuário, cadastrados na original

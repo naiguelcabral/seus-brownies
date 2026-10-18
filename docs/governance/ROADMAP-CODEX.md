@@ -1,5 +1,15 @@
 # Roadmap executável para Codex — Cacau v1
 
+## Sessão ao abrir Estoque — 17 de outubro de 2026
+
+- [x] Correlacionar login `success` com 429 no minting do cookie de sessão;
+      confirmar que o formulário HML continua disponível.
+- [x] Preparar leitura única de identidade/papel e distinguir erro temporário
+      de sessão anônima; testar isolamento, revogação, 401 e falhas 429/5xx/rede.
+- [ ] Concluir suíte completa e build isolado; revisar/registrar a correção.
+- [ ] Autorizar/publicar exclusivamente em HML e validar login → Estoque →
+      recarga na sessão humana. Redução de chamadas não prova fim do limite 429.
+
 ## Catálogo de venda — 17 de outubro de 2026
 
 - [x] Analisar workbook disponível, regras e manifestos; identificar os 17
