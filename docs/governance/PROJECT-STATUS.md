@@ -28,7 +28,11 @@ A seleção kg/g depende de publicação HML autorizada; cadastro já persistido
 
 495 testes, tipos, lint, formatação e Knip aprovados. PostgreSQL 17 descartável:
 sucesso/preservação, repetição rejeitada e rollback por falha tardia de auditoria.
-Build isolado e homologação visual tratados no fechamento desta tarefa.
+Build HML isolado de `021cf74` aprovado, com chave pública de teste e sem
+publicação. Primeira suíte sob sandbox interrompida após falha de ambiente;
+reexecução completa fora do sandbox passou os 495 testes. Homologação visual
+e publicação HML permanecem pendentes de autorização específica. Nenhuma
+alteração da sessão/auth preparada na branch anterior foi publicada por esta carga.
 
 ## Revisão Knip — 18 de outubro de 2026 (UTC)
 
