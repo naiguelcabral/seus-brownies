@@ -1,5 +1,16 @@
 # Estado canônico do projeto — Cacau v1
 
+## Próxima etapa — ficha técnica preparada para revisão — 18/10/2026
+
+Preflight READ ONLY reconfirmou 36 produtos e zero receitas/perfis/tarifas,
+movimentos e lotes. Candidato offline inclui Ovos Grandes, receita de sete
+linhas, dois requisitos/tarifas, 17 perfis e 12 componentes aprovados.
+Importador antigo inclui 17 PLAN históricos fora desse escopo; não executar
+com confirmação. Falta gerar e ensaiar SQL separado antes da autorização de
+cadastro. Bombom/kit continuam sem regra explícita completa de embalagem e
+cobertura. Plano e handoff: `TECHNICAL-CATALOG-PREPARATION-2026-10-18.md` e
+`HANDOFF-TECHNICAL-CATALOG-2026-10-18.md`. Nenhuma escrita externa nesta etapa.
+
 ## Custos exatos — schema aplicado e HML publicado — 18 de outubro de 2026
 
 Usuário aprovou aplicar o pacote e publicar em HML. Snapshot novo recusado

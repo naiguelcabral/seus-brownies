@@ -13,8 +13,10 @@ checkpoints antigos abaixo não devem reabrir carga/deploy já comprovados.
       HML publicado em `2e649847-ec1b-4997-bf74-bcad310977f7`, a 100%.
       Conferência HTTP/bundle passou após um 500 inicial recuperado; falta
       homologação operacional autenticada em cenário autorizado. Sem backfill.
-- [ ] Reconciliar Ovos Grandes e demais itens necessários; cadastrar receita,
-      perfis, componentes e tarifas na original sob escopo autorizado.
+- [~] O01–O04: preflight READ ONLY e candidato de ficha técnica reconciliados;
+      Ovos Grandes ausente. Falta SQL exclusivo de cadastro e ensaio PG17
+      antes da autorização/aplicação; não importar os 17 PLAN antigos.
+      Ver `TECHNICAL-CATALOG-PREPARATION-2026-10-18.md`.
 - [ ] Preparar estoque rastreável e cenário de QA; homologar acesso por papel,
       compra → produção → venda, lifecycle financeiro e interface.
 - [ ] Integrar main/PRs, finalizar cadeia genérica da issue #36, cobertura de
