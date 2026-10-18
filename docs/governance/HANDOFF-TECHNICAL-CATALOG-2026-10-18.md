@@ -44,9 +44,14 @@ ou tarifas já documentados; não inventar embalagem/cobertura de bombom e kit.
 
 ## Capacidade
 
-Última leitura oficial: 4% restantes na janela de cinco horas, 74% na semanal;
+Última leitura oficial: 3% restantes na janela de cinco horas, 74% na semanal;
 reserva operacional 5%. Reset exibido: 18/10/2026, 10:29:36 America/Sao_Paulo.
 Estado: pausado por reserva; encerramento oficial com DESLIGARTUDO a seguir.
 Na retomada confirmar o saldo oficial e seguir CODEX-USAGE-POLICY.md; não há
 retomada automática agendada por esta tarefa. Ao alcançar 5%, fechar checkpoint
 e executar `./DESLIGARTUDO` em branch de trabalho, conforme a política.
+
+Tentativa de retomada em 18/10/2026 às 10:29 America/Sao_Paulo: árvore limpa,
+branch correta e consulta oficial ainda com 3% restantes antes do reset.
+Nenhuma implementação iniciada; próximo passo e gates acima preservados.
+Encerramento oficial repetido conforme a reserva obrigatória.
