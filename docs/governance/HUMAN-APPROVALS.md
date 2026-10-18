@@ -1,5 +1,15 @@
 # Ações que exigem aprovação humana — Cacau v1
 
+## Publicação UX — autorização de 18/10/2026
+
+Após dashboard e modal de Produtos implementados e validados, usuário
+autorizou revisão final de praticidade e publicação: “depois disso pode
+publicar e atualizar tudo no banco e no hml”. Autoriza publicar o pacote
+da branch de trabalho somente no `cacau-v1-hml`, com verificação autenticada.
+As melhorias não exigem schema, carga ou escrita no banco; conferir os dados
+existentes em READ ONLY. Não autoriza produção, alteração de secrets/RBAC,
+repetição de importações ou ativação do cenário em rascunho.
+
 ## Mix 100% em rascunho — autorização de 18/10/2026
 
 Ao pedir a correção do mix, usuário esclareceu: “Somente o sistema, como
