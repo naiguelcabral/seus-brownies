@@ -8,7 +8,7 @@ e datas. Orientação sem operações e layout móvel compacto. Despesas limitad
 ao mês exibido em Brasília, sem incluir meses futuros. Sem novos fatos,
 alteração de custo/CMV, schema ou permissões. 509 testes, quatro cenários de
 dashboard e cinco do modal passaram; tipos/lint/Oxfmt e baseline Knip aprovados.
-Build isolado pendente neste checkpoint; dashboard e modal de Produtos
+Build isolado de CI aprovado em `bae3fa1`; dashboard e modal de Produtos
 aguardam autorização específica de publicação HML. Detalhes em
 [DASHBOARD-UX-2026-10-18.md](DASHBOARD-UX-2026-10-18.md).
 

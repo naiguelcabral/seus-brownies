@@ -43,7 +43,8 @@ Sem schema, nova dependência, mudança de RBAC, dado compartilhado ou deploy.
   aplicação, dados sintéticos e configuração/ambiente isolados; não acessam
   auth ou banco. Entradas HTML declaradas no Knip, sem alterar a baseline.
 - Tipos, lint e Oxfmt aprovados. Knip mantém três achados anteriores e zero
-  novos. Build isolado de CI pendente neste checkpoint.
+  novos. Build isolado de CI aprovado no commit `bae3fa1`, com chave pública
+  sintética explícita e árvore limpa. Warning CSS sourcemap não bloqueante.
 
 Ensaio: `node node_modules/@playwright/test/cli.js test --config
 playwright.dashboard.config.ts`. Artefatos locais em

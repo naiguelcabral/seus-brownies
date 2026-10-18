@@ -6,8 +6,9 @@
       datas/situação dos registros e estados vazio/carregamento/erro.
       Mês das despesas em Brasília com dois limites; 509 testes e quatro
       cenários locais de dashboard aprovados. Sem escrita compartilhada.
-- [ ] Validar build isolado do dashboard e publicar no HML somente com
-      autorização específica, junto do modal de Produtos pendente.
+- [x] Validar build isolado do dashboard (`bae3fa1`).
+- [ ] Publicar no HML somente com autorização específica, junto do modal
+      de Produtos pendente.
 - [x] Produtos: botão Adicionar produto, editor modal acessível para cadastro
       e edição, lista em largura total, campos opcionais agrupados, preservação
       em erro e confirmação de descarte. 507 testes e cinco ensaios locais
