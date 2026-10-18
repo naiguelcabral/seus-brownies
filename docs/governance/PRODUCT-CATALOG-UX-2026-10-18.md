@@ -42,7 +42,9 @@ acompanha a extração do formulário sem retirar sua asserção.
 - Lint, tipos e Oxfmt aprovados.
 - Knip: três achados anteriores, zero novos; baseline preservada. A fixture
   tem entrada explícita em `knip.json` porque é carregada por HTML no Vite.
-- Build isolado de CI: pendente neste checkpoint.
+- Build isolado de CI aprovado no commit `8b39b67`, com chave pública sintética
+  explícita e árvore limpa. Warning não bloqueante de sourcemap CSS do Vite.
+  Nenhuma publicação, CI remota ou CodeQL remoto executado nesta entrega local.
 
 Comando do ensaio: `node node_modules/@playwright/test/cli.js test --config
 playwright.product-editor.config.ts`. A configuração constrói somente o

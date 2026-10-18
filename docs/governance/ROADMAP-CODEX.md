@@ -6,8 +6,9 @@
       e edição, lista em largura total, campos opcionais agrupados, preservação
       em erro e confirmação de descarte. 507 testes e cinco ensaios locais
       de navegador passaram; sem dados reais modificados.
-- [ ] Concluir build isolado e obter autorização específica para publicar
-      o incremento no HML; nenhuma publicação de produção.
+- [x] Validar build isolado de CI do incremento (`8b39b67`).
+- [ ] Obter autorização específica para publicar o incremento no HML;
+      nenhuma publicação de produção.
 - [ ] Avaliar padrão para Categorias/Locais e simplificação de Cenários,
       depois revisar o fluxo de Compras/Produção sem mudar regras de domínio.
 
