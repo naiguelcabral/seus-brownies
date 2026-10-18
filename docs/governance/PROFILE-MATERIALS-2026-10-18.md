@@ -28,7 +28,9 @@ Recuperação preserva o enum e reverte o código; sem remover valores/dados.
 Suíte completa: 512 testes passaram antes da inclusão de três casos adicionais
 de rejeição transacional. Casos abrangem 50 g de cobertura por unidade,
 adesivo por unidade, falta de adesivos, tipos/base incompatíveis, embalagem
-duplicada e tentativa de segunda conclusão. Conferência final/build em curso.
+duplicada e tentativa de segunda conclusão. Os 20 testes focados finais
+passaram. Lint, tipos, Oxfmt e builds isolados CI/HML passaram; Knip manteve
+três achados de baseline e zero novos. CI/CodeQL remotos ainda pendentes.
 Ensaio PostgreSQL usa somente destino loopback fixo e credenciais sintéticas:
 
 ```sh
@@ -37,8 +39,9 @@ env -i PATH="$PATH" node scripts/test-profile-materials-disposable.mjs --ack-dis
 
 Exige fixture PostgreSQL 17 local na porta 5438 com enum inicial `filling`;
 o DDL é executado dentro de transação revertida. Não procura arquivos locais
-de ambiente nem acessa Neon. Tentativa inicial encontrou o serviço desligado;
-preparação de fixture nova está em andamento.
+de ambiente nem acessa Neon. Após iniciar fixture nova PostgreSQL 17 Alpine
+e criar o enum inicial, ensaio do SQL exato passou: novos valores visíveis
+na transação e enum original preservado após rollback.
 
 ## Pendências operacionais
 

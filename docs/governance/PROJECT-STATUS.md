@@ -7,8 +7,9 @@ Conclusão do lote valida tipo/base de quantidade, impede repetir a embalagem
 individual nos componentes e usa os materiais na mesma transação de estoque,
 custos e FIFO. Migration candidata `0031_brave_thor.sql` acrescenta somente
 dois valores de enum; cadeia histórica e pacote de custos exatos preservados.
-Suíte completa com 512 testes aprovada; casos adicionais de rejeição e build
-em conferência. Ainda sem publicação, migration ou componentes no HML.
+Suíte completa com 512 testes aprovada; 20 testes focados finais, lint,
+tipos, formatação e builds isolados CI/HML aprovados. Ensaio do DDL em
+PostgreSQL 17 descartável passou com rollback integral. Ainda sem publicação, migration ou componentes no HML.
 Cadastro das fichas, preço/apresentação das Bordinhas, MEI/taxas por pagamento
 e revisão de cenário permanecem pendentes. Não ativar cenário com rateio de
 Bordinhas indefinido. Plano/resultado: `PROFILE-MATERIALS-2026-10-18.md`.

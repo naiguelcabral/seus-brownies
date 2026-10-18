@@ -260,6 +260,27 @@ for (const available of ['12.000', '11.999']) {
       consumed.find((item) => item.productId === 21)?.quantity,
       '12.000',
     )
+    assert.deepEqual(
+      recordedCost(
+        requireDefined(consumed.find((item) => item.productId === 20))
+          .exactCost,
+      ),
+      decimalCost('24.00'),
+    )
+    assert.deepEqual(
+      recordedCost(
+        requireDefined(consumed.find((item) => item.productId === 21))
+          .exactCost,
+      ),
+      decimalCost('1.92'),
+    )
+    const layers = mock.committed
+      .filter((write) => write.table === 'inventory_cost_layers')
+      .flatMap((write) => write.values)
+    assert.deepEqual(
+      sumCosts(layers.map((layer) => recordedCost(layer.exactOriginalCost))),
+      decimalCost('30.92'),
+    )
     const before = structuredClone(mock.committed)
     await assert.rejects(
       persistProductionBatchCompletion(mock.db, { id: 1 }),
