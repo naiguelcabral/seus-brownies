@@ -1,5 +1,18 @@
 # Estado canônico do projeto — Cacau v1
 
+## Chocolate e recheios esclarecidos — 18/10/2026
+
+Usuário confirmou Melken 50% em pó na massa e recheios comprados prontos
+conforme o workbook. Histórico confirma a descrição do chocolate; referência
+mestre preservada a R$ 60/kg, 300 g = R$ 18/receita. Sem sub-receitas de recheio;
+20/40 g aprovados mantidos. Não confundir pó INS003 com cobertura INS019 nem
+remapear fruta histórica para recheio pronto. Falta Bombom/Kit, rateio de
+Bordinhas e taxas antes de ativar. Especificações registradas, sem escrita na
+base. Meta confirmada pelo usuário continua R$ 10.000 de lucro após custos,
+incluindo todos os produtos, inclusive Bordinhas.
+Detalhes: [SCENARIO-COST-RECONCILIATION-2026-10-18.md](SCENARIO-COST-RECONCILIATION-2026-10-18.md).
+
+
 ## Simulação de orçamento revisado — 18/10/2026
 
 Comparação local preparada com R$ 2.200 fixos integrais, MO/energia retiradas

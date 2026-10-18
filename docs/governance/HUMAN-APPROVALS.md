@@ -1,5 +1,16 @@
 # Ações que exigem aprovação humana — Cacau v1
 
+## Meta, chocolate e recheios — definições de 18/10/2026
+
+Usuário confirmou R$ 10.000 de lucro após custos somando todos os produtos,
+incluindo Bordinhas; não é meta de faturamento. Depois especificou chocolate
+Melken 50% em pó e recheios comprados como no workbook. Usar referência mestre
+dos insumos e consumos previamente aprovados; não fabricar sub-receitas de
+recheio nem substituir preços pela compra histórica sem decisão própria.
+Preservar SKU/metadados e distinguir chocolate em pó da cobertura. Especificação
+registrada para revisão; sem escrita compartilhada ou homologação completa.
+
+
 ## Bordinhas — materiais definidos em 18/10/2026
 
 Usuário confirmou um saquinho e um adesivo por pacote de Bordinhas de 100 g.

@@ -792,5 +792,82 @@
       "sourceSha256": "25aa62df5fc9b2e01402e9c242142322d9c6f54a345e800cb947b77865ce5b64",
       "use": "historical review reference only; do not add finishing again to old H/I values"
     }
+  },
+  "chocolateAndPurchasedFillingsDecision": {
+    "userStatement": "Chocolate é o maleken 50% em pó e está descrito no workbook e os recheios são comprados como estão no workbook também",
+    "massChocolate": {
+      "productSku": "INS003",
+      "operationalDescription": "Chocolate em pó 50% Harald Melken",
+      "confirmation": "user specifies powder, not chocolate bar",
+      "workbookCatalog": "03_Cadastro_Insumos!A7:F7",
+      "workbookRecipe": "03_Cadastro_Insumos!A33:D33",
+      "recipeOriginalLabel": "Chocolate Meio Amargo",
+      "recipeGrams": "300",
+      "plannedReferencePriceBRLPerKg": "60.00",
+      "plannedReferenceRecipeCostBRL": "18.00",
+      "historicalPurchaseDescriptions": [
+        {
+          "cells": "07_Base_Compras_Despesas!F27:J27",
+          "description": "CHOC PÓ HARALD MELKEN 50%",
+          "packageKg": "1.01",
+          "priceBRL": "54.99"
+        },
+        {
+          "cells": "07_Base_Compras_Despesas!F34:J34",
+          "description": "CHOCOLATE EM PÓ 50% MELKEN",
+          "packageKg": "1.01",
+          "priceBRL": "39.49"
+        }
+      ],
+      "costSelection": "master catalog reference; do not silently replace with unimported historical purchase prices",
+      "recipeQuantityChanged": false,
+      "originalSourceMetadataPreserved": true
+    },
+    "fillings": {
+      "acquisitionMode": "purchased ready-made as workbook catalog; no manufacturing subrecipes required by current user instruction",
+      "sourceRange": "03_Cadastro_Insumos!A17:F22",
+      "retainApprovedUsage": "20 g per 5x5 filled brownie and 40 g per 7x7 filled brownie from prior operational decision",
+      "references": [
+        {
+          "sku": "INS013",
+          "name": "Brigadeiro",
+          "purchaseAmountBRL": "45",
+          "packageGrams": "1000"
+        },
+        {
+          "sku": "INS014",
+          "name": "Doce de Leite",
+          "purchaseAmountBRL": "80",
+          "packageGrams": "2500"
+        },
+        {
+          "sku": "INS015",
+          "name": "Leite Ninho",
+          "purchaseAmountBRL": "150",
+          "packageGrams": "2600"
+        },
+        {
+          "sku": "INS016",
+          "name": "Creme de Avelã",
+          "purchaseAmountBRL": "30",
+          "packageGrams": "1000"
+        },
+        {
+          "sku": "INS017",
+          "name": "Goiabada",
+          "purchaseAmountBRL": "17",
+          "packageGrams": "1000"
+        },
+        {
+          "sku": "INS018",
+          "name": "Maracujá",
+          "purchaseAmountBRL": "30",
+          "packageGrams": "1000"
+        }
+      ],
+      "historicalFruitAlias": "current ready-made filling definition does not prove historical raw fruit purchase equivalence; no history imported"
+    },
+    "coverageChocolate": "INS019 remains separate from INS003 powder; grams and assembly not inferred",
+    "applicationStatus": "confirmed operational specification and preparation; no DB mutation or history import"
   }
 }

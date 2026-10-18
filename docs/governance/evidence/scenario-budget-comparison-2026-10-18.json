@@ -418,7 +418,6 @@
   "pending": [
     "Bombom coverage and Kit assembly/packaging",
     "Bordinhas recovered-mass cost allocation and variable yield",
-    "Ready-made or manufactured fillings, mass chocolate specification",
     "Fees/taxes; 0 retained only as inherited unapproved comparison",
     "Current purchase prices and final productive capacity validation"
   ],
@@ -429,7 +428,8 @@
     "normalizedMixBps": 10000,
     "noSharedWrites": true,
     "noSourceWorkbookChange": true,
-    "independentDecimalRevenueAndProfit": "passed; sum price*quantity minus per-line rounded variable costs minus full fixed budget 2200, reserve comparison zero"
+    "independentDecimalRevenueAndProfit": "passed; sum price*quantity minus per-line rounded variable costs minus full fixed budget 2200, reserve comparison zero",
+    "chocolateAndFillings": "user confirmed powder 50% Melken and bought ready-made fillings as master workbook; references unchanged, previous local comparison arithmetic unchanged"
   },
   "capacityDiagnostic": {
     "scope": "14 brownie SKUs only; historical alternative yields treated as recipe equivalents, without whole-batch schedules",
@@ -530,5 +530,9 @@
         "equivalentRecipes": "31/12"
       }
     ]
+  },
+  "confirmedProfitGoal": {
+    "userReply": "Não, R$ 10.000 de lucro após os custos",
+    "includesAllProductsIncludingBordinhas": true
   }
 }

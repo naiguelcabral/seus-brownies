@@ -18,6 +18,44 @@ ovos, requisitos de 1 kWh e duas horas, tarifas de R$ 0,85/kWh e R$ 12,50/h,
 vínculo de embalagem. Sem compras, lotes ou movimentos: ainda não há custo
 realizado ou preço atual de aquisição para substituir referências históricas.
 
+## Chocolate da massa e recheios comprados — definição recebida
+
+Usuário definiu chocolate “maleken 50% em pó” e recheios comprados conforme o
+workbook. Histórico `07_Base_Compras_Despesas!F27:J27` e `F34:J34` identifica
+**Harald Melken 50% em pó**. INS003 passa a ter essa especificação operacional
+na revisão, preservando a identificação e quantidade da receita. O rótulo
+original “Chocolate Meio Amargo” em `03_Cadastro_Insumos!A33:D33` fica como
+origem histórica, não como instrução para usar barra. Planejar ajuste rastreável
+de descrição sem trocar SKU ou apagar metadados da fonte.
+
+Custo-base de referência: `03_Cadastro_Insumos!C7:F7` = R$ 60/1.000 g;
+300 g por receita = **R$ 18,00**. Histórico mostra preços diferentes para
+pacotes de 1,01 kg; não substituir a referência mestre por compra histórica
+não importada ou afirmar preço atual de mercado. Não há recálculo de insumo
+necessário pela mudança de descrição, pois a quantidade/tarifa mestre não mudou.
+
+Recheios comprados prontos: referências `03_Cadastro_Insumos!A17:F22`.
+
+| Recheio | Preço da apresentação | Quantidade |
+| --- | ---: | ---: |
+| Brigadeiro | R$ 45,00 | 1.000 g |
+| Doce de Leite | R$ 80,00 | 2.500 g |
+| Leite Ninho | R$ 150,00 | 2.600 g |
+| Creme de Avelã | R$ 30,00 | 1.000 g |
+| Goiabada | R$ 17,00 | 1.000 g |
+| Maracujá | R$ 30,00 | 1.000 g |
+
+Não criar sub-receitas de fabricação desses recheios. Consumos já aprovados
+permanecem 20 g no recheado 5×5 e 40 g no 7×7. O caso antigo de fruta Maracujá
+não comprova equivalência com recheio pronto nem autoriza importar histórico.
+A decisão resolve a especificação operacional W05 para o planejamento atual;
+a ressalva do alias histórico é preservada.
+
+Chocolate ao leite/branco INS019 para cobertura continua separado do pó
+INS003 da massa. Gramagem de cobertura por bombom, montagem do kit com quatro
+bombons e embalagem individual dentro do kit ainda não foram definidos;
+pergunta reenviada. Sem alteração de receita, catálogo, preços ou cenário na base.
+
 ## Bordinhas — custo localizado na fonte original
 
 Usuário orientou: “O custo está no workbook”. Conferência em leitura de todas
@@ -338,8 +376,9 @@ ao definir o vínculo físico, evitar somar R$ 0,16 novamente ao custo históric
   14–16 receitas completas por dia e energia também incluída nos R$ 2.200.
 - Concluído: uma embalagem e um adesivo por brownie PROD003–PROD016.
 - Pendente: apresentação/rendimento e rateio de Bordinhas; cobertura,
-  montagem e embalagens de bombom/Kit; recheios prontos versus fabricados e
-  chocolate da massa; taxas/impostos e preços atuais de aquisição.
+  montagem e embalagens de bombom/Kit; taxas/impostos e preços atuais de aquisição.
+- Concluído: chocolate da massa Melken 50% em pó; recheios comprados prontos
+  nas apresentações mestre, preservados os consumos aprovados de 20/40 g.
 - Premissas herdadas ainda a validar no fechamento: meta de lucro R$ 10.000,
   20 dias de venda, quatro semanas e limiar de margem de 70%. O consumo de
   energia por ciclo/receita continua não medido, sem cobrança duplicada no

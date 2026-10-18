@@ -32,10 +32,13 @@ Escopo e validação: `PRODUCT-CATALOG-UX-2026-10-18.md`.
 
 - [x] Auditar as 15 abas do workbook e confrontar cadastros/parametrização
       com a original atual em READ ONLY; registrar evidência e células.
-- [!] W01–W05: confirmar adesivo por SKU, acabamento de Bordinhas,
-      cobertura/montagem de bombom/kit, recheios fabricados versus prontos e
-      base de energia/MO. Bloqueia declarar fichas/custos homologados; o
-      cadastro aprovado anterior continua aplicado e seu recibo consumido.
+- [~] W01–W05: adesivo confirmado para os 14 brownies; diária/energia
+      incluídas nos R$ 2.200; Bordinhas 100 g/R$ 6 com saquinho e adesivo;
+      Melken 50% em pó e recheios comprados prontos definidos. Falta
+      cobertura/montagem de Bombom/Kit, rateio de Bordinhas e aplicação aditiva
+      ensaiada das definições físicas; não declarar fichas/custos homologados.
+      O cadastro aprovado anterior continua aplicado e seu recibo consumido.
+      Alias histórico de fruta/recheio continua ressalvado.
 - [ ] Após decisões, preparar pacote aditivo separado com ensaio e nova
       referência; não repetir a carga técnica nem inventar consumo por custo.
 - [x] Mix 103%: cenário ID 1/v1/rev1 criado como rascunho pela sessão do Dono;

@@ -70,7 +70,11 @@ Payload de simulação, comparação, projeção detalhada e diagnóstico de
 capacidade: [scenario-budget-comparison-2026-10-18.json](evidence/scenario-budget-comparison-2026-10-18.json).
 Este arquivo não é instrução de aplicar nem referência idempotente consumida.
 
-Pergunta enviada sobre recheios comprados/fabricados e chocolate da massa.
+Recheios e chocolate esclarecidos: comprados prontos e Melken 50% em pó,
+respectivamente. Meta de R$ 10.000 de lucro após custos confirmada, incluindo
+Bordinhas na soma dos produtos. Referências mestre de custos não mudaram,
+portanto a comparação numérica anterior continua sendo a mesma simulação
+condicional, sem necessidade de repetir os cálculos por mera mudança de rótulo.
 A pergunta anterior sobre cobertura por bombom e montagem/embalagem do Kit
 continua sem resposta. Faltam também rateio físico de Bordinhas, taxas e
 referências atuais de aquisição. Após as definições, recalcular capacidade,
