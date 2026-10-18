@@ -19,7 +19,10 @@
       de produção. Banco conferido antes/depois em READ ONLY; sem migration.
 - [x] Categorias/Locais: lista em largura total, modal de cadastro/edição,
       filtros e limpeza; 13 ensaios de navegador, incluindo Produtos.
-- [ ] Publicar e conferir Categorias/Locais no HML autorizado.
+- [x] Publicar e conferir Categorias/Locais no HML autorizado: versão
+      `29df3f6d-48be-4a80-b11c-a3c2b992cd69`, 100%; filtros e modais
+      autenticados conferidos, contagens/digests do banco preservados.
+- [ ] Conferir CI/CodeQL remoto de `e890e3d` na integração GitHub.
 - [ ] Simplificar Cenários; depois revisar Compras/Produção sem mudar regras
       de domínio.
 

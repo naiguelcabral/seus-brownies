@@ -35,6 +35,22 @@ e `/tmp/cacau-local-editor-mobile.png`.
 Conferência anterior ao deploy em READ ONLY: seis categorias, um local,
 37 produtos, um cenário draft, nenhum ativo e zero vendas/compras/movimentos.
 Digests completos dos dois cadastros registrados para comparar após deploy.
-Build, publicação e conferência final serão registrados no recibo de entrega.
+Builds isolados de CI e HML aprovados; Knip mantém três apontamentos
+preexistentes e nenhum novo. Publicado do commit `e890e3d`, versão
+`29df3f6d-48be-4a80-b11c-a3c2b992cd69`, deployment
+`4f1829bf-944d-40ed-b034-9909e7424c6c`, confirmado a 100% pela API.
+
+Conferência autenticada: busca Brownie e filtro Inativas em Categorias;
+abertura/cancelamento de cadastro e edição. Em Locais, busca/tipo sem resultado,
+limpeza retornando OneCoffee com campos reiniciados; cadastro e edição abertos
+e cancelados, dados existentes preservados. Sem submissões ou alterações de
+situação. Contagens e digests completos dos dois cadastros iguais antes/depois.
+
+Recibo: [evidence/category-location-ux-hml-2026-10-18.json](evidence/category-location-ux-hml-2026-10-18.json).
+Capturas: `/tmp/cacau-category-modal-hml-published.jpg`,
+`/tmp/cacau-location-modal-hml-published.jpg` e
+`/tmp/cacau-locations-hml-published.jpg`.
+CI/CodeQL remoto deste commit aguarda integração GitHub; não foi executado
+por estes builds locais.
 
 Cenários e revisão de Compras/Produção permanecem próximas tarefas separadas.

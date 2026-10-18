@@ -7,7 +7,13 @@ Categorias e limpeza dos filtros de Locais. Diálogo compartilhado com Produtos;
 valores preservados em erro, confirmação de descarte e envio bloqueado contra
 repetição. 509 testes e 13 ensaios locais de navegador aprovados, incluindo
 regressão de Produtos e celular. Lint, tipos e Oxfmt aprovados. Sem schema,
-regras de domínio ou dados alterados; publicação HML autorizada pelo usuário.
+regras de domínio ou dados alterados. Publicado do commit `e890e3d`, versão
+`29df3f6d-48be-4a80-b11c-a3c2b992cd69`, confirmada a 100% pela API. Filtros,
+criação e edição conferidos na sessão autenticada, sem envio dos cadastros.
+Contagens e digests completos de categorias/locais iguais antes/depois.
+Builds isolados de CI e HML aprovados; CI/CodeQL remoto deste commit pendente
+na integração GitHub. Recibo:
+[evidence/category-location-ux-hml-2026-10-18.json](evidence/category-location-ux-hml-2026-10-18.json).
 Detalhes: [CATEGORY-LOCATION-UX-2026-10-18.md](CATEGORY-LOCATION-UX-2026-10-18.md).
 
 

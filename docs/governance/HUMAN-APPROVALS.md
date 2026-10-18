@@ -18,6 +18,9 @@ Continuidade: após proposta explícita de aplicar o padrão em Categorias e
 Locais e publicar no HML, usuário respondeu “Pode seguir”. Autoriza este
 incremento de interface e sua conferência autenticada sem cadastros sintéticos
 na base compartilhada. Sem migration ou escrita de dados necessária.
+Executado do commit `e890e3d`, versão `29df3f6d-48be-4a80-b11c-a3c2b992cd69`
+confirmada a 100%; filtros e modais conferidos, banco preservado. Recibo
+`evidence/category-location-ux-hml-2026-10-18.json`.
 
 ## Mix 100% em rascunho — autorização de 18/10/2026
 
