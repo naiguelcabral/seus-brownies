@@ -1,5 +1,18 @@
 # Estado canônico do projeto — Cacau v1
 
+## Simulação de orçamento revisado — 18/10/2026
+
+Comparação local preparada com R$ 2.200 fixos integrais, MO/energia retiradas
+somente das referências variáveis e Bordinhas proposta a R$ 6,00. Funções
+nativas e conta Decimal independente conferem: R$ 15.551 de faturamento,
+1.437 unidades e R$ 10.057,87 de lucro projetado com reserva 0% ainda não
+aprovada. BOM e custos históricos pendentes impedem homologação. Capacidade:
+só brownies somam 58,625 receitas equivalentes frente a 56–64/mês informadas,
+antes de fechar Bombom/Kit. Cenário real permanece draft/rev1, preço anterior;
+nenhuma escrita compartilhada. Detalhes:
+[SCENARIO-BUDGET-COMPARISON-2026-10-18.md](SCENARIO-BUDGET-COMPARISON-2026-10-18.md).
+
+
 ## Mão de obra diária e mensal definida — 18/10/2026
 
 Confirmados R$ 150/dia, quatro dias de produção por mês, 14–16 receitas por

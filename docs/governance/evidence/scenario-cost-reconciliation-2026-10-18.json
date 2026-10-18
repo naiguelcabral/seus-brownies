@@ -616,8 +616,9 @@
         "quantity": "1",
         "unit": "unit",
         "basis": "per_finished_unit",
-        "role": "packaging",
-        "source": "explicit_user_decision_2026-10-18"
+        "source": "explicit_user_decision_2026-10-18",
+        "materialPurpose": "adhesive",
+        "databaseRole": null
       },
       {
         "productSku": "PROD004",
@@ -625,8 +626,9 @@
         "quantity": "1",
         "unit": "unit",
         "basis": "per_finished_unit",
-        "role": "packaging",
-        "source": "explicit_user_decision_2026-10-18"
+        "source": "explicit_user_decision_2026-10-18",
+        "materialPurpose": "adhesive",
+        "databaseRole": null
       },
       {
         "productSku": "PROD005",
@@ -634,8 +636,9 @@
         "quantity": "1",
         "unit": "unit",
         "basis": "per_finished_unit",
-        "role": "packaging",
-        "source": "explicit_user_decision_2026-10-18"
+        "source": "explicit_user_decision_2026-10-18",
+        "materialPurpose": "adhesive",
+        "databaseRole": null
       },
       {
         "productSku": "PROD006",
@@ -643,8 +646,9 @@
         "quantity": "1",
         "unit": "unit",
         "basis": "per_finished_unit",
-        "role": "packaging",
-        "source": "explicit_user_decision_2026-10-18"
+        "source": "explicit_user_decision_2026-10-18",
+        "materialPurpose": "adhesive",
+        "databaseRole": null
       },
       {
         "productSku": "PROD007",
@@ -652,8 +656,9 @@
         "quantity": "1",
         "unit": "unit",
         "basis": "per_finished_unit",
-        "role": "packaging",
-        "source": "explicit_user_decision_2026-10-18"
+        "source": "explicit_user_decision_2026-10-18",
+        "materialPurpose": "adhesive",
+        "databaseRole": null
       },
       {
         "productSku": "PROD008",
@@ -661,8 +666,9 @@
         "quantity": "1",
         "unit": "unit",
         "basis": "per_finished_unit",
-        "role": "packaging",
-        "source": "explicit_user_decision_2026-10-18"
+        "source": "explicit_user_decision_2026-10-18",
+        "materialPurpose": "adhesive",
+        "databaseRole": null
       },
       {
         "productSku": "PROD009",
@@ -670,8 +676,9 @@
         "quantity": "1",
         "unit": "unit",
         "basis": "per_finished_unit",
-        "role": "packaging",
-        "source": "explicit_user_decision_2026-10-18"
+        "source": "explicit_user_decision_2026-10-18",
+        "materialPurpose": "adhesive",
+        "databaseRole": null
       },
       {
         "productSku": "PROD010",
@@ -679,8 +686,9 @@
         "quantity": "1",
         "unit": "unit",
         "basis": "per_finished_unit",
-        "role": "packaging",
-        "source": "explicit_user_decision_2026-10-18"
+        "source": "explicit_user_decision_2026-10-18",
+        "materialPurpose": "adhesive",
+        "databaseRole": null
       },
       {
         "productSku": "PROD011",
@@ -688,8 +696,9 @@
         "quantity": "1",
         "unit": "unit",
         "basis": "per_finished_unit",
-        "role": "packaging",
-        "source": "explicit_user_decision_2026-10-18"
+        "source": "explicit_user_decision_2026-10-18",
+        "materialPurpose": "adhesive",
+        "databaseRole": null
       },
       {
         "productSku": "PROD012",
@@ -697,8 +706,9 @@
         "quantity": "1",
         "unit": "unit",
         "basis": "per_finished_unit",
-        "role": "packaging",
-        "source": "explicit_user_decision_2026-10-18"
+        "source": "explicit_user_decision_2026-10-18",
+        "materialPurpose": "adhesive",
+        "databaseRole": null
       },
       {
         "productSku": "PROD013",
@@ -706,8 +716,9 @@
         "quantity": "1",
         "unit": "unit",
         "basis": "per_finished_unit",
-        "role": "packaging",
-        "source": "explicit_user_decision_2026-10-18"
+        "source": "explicit_user_decision_2026-10-18",
+        "materialPurpose": "adhesive",
+        "databaseRole": null
       },
       {
         "productSku": "PROD014",
@@ -715,8 +726,9 @@
         "quantity": "1",
         "unit": "unit",
         "basis": "per_finished_unit",
-        "role": "packaging",
-        "source": "explicit_user_decision_2026-10-18"
+        "source": "explicit_user_decision_2026-10-18",
+        "materialPurpose": "adhesive",
+        "databaseRole": null
       },
       {
         "productSku": "PROD015",
@@ -724,8 +736,9 @@
         "quantity": "1",
         "unit": "unit",
         "basis": "per_finished_unit",
-        "role": "packaging",
-        "source": "explicit_user_decision_2026-10-18"
+        "source": "explicit_user_decision_2026-10-18",
+        "materialPurpose": "adhesive",
+        "databaseRole": null
       },
       {
         "productSku": "PROD016",
@@ -733,11 +746,13 @@
         "quantity": "1",
         "unit": "unit",
         "basis": "per_finished_unit",
-        "role": "packaging",
-        "source": "explicit_user_decision_2026-10-18"
+        "source": "explicit_user_decision_2026-10-18",
+        "materialPurpose": "adhesive",
+        "databaseRole": null
       }
     ],
-    "preserveExistingPackaging": true
+    "preserveExistingPackaging": true,
+    "implementationConstraint": "Conceptual bindings only: current production_profile_component_role enum supports filling only. Adhesive requires reviewed additive representation/migration or other supported consumable model; do not store it as filling or apply these entries directly."
   },
   "bordinhasDecision": {
     "userStatement": "100 gramas a cada 6 reais para as bordinhas",

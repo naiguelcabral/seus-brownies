@@ -1,0 +1,534 @@
+{
+  "status": "conditional-local-simulation-not-applied",
+  "confirmedFixedBudget": {
+    "total": "2200.00",
+    "laborIncluded": "600.00",
+    "otherIncludingEnergy": "1600.00"
+  },
+  "candidate": {
+    "name": "Revisão de orçamento — simulação não aplicada",
+    "description": "Comparação condicional: MO e energia nos fixos; custos variáveis físicos de referência histórica. Bordinhas 100 g a 6,00. BOM, rateio de coproduto e taxas ainda pendentes. Não homologado para ativação.",
+    "effectiveOn": "2026-10-18",
+    "monthlyProfitGoal": "10000.00",
+    "fixedMonthlyCosts": "2200.00",
+    "salesDaysPerMonth": 20,
+    "weeksPerMonth": "4.00",
+    "minimumMarginRate": "0.7000",
+    "feeTaxReserveRate": "0.0000",
+    "mix": [
+      {
+        "productId": 1,
+        "originalWeight": "0.02",
+        "plannedUnitPrice": "5.00",
+        "plannedUnitCost": "1.654"
+      },
+      {
+        "productId": 2,
+        "originalWeight": "0.02",
+        "plannedUnitPrice": "6.00",
+        "plannedUnitCost": "2.737"
+      },
+      {
+        "productId": 16,
+        "originalWeight": "0.05",
+        "plannedUnitPrice": "12.00",
+        "plannedUnitCost": "2.444"
+      },
+      {
+        "productId": 15,
+        "originalWeight": "0.1",
+        "plannedUnitPrice": "12.00",
+        "plannedUnitCost": "2.144"
+      },
+      {
+        "productId": 14,
+        "originalWeight": "0.1",
+        "plannedUnitPrice": "12.00",
+        "plannedUnitCost": "2.184"
+      },
+      {
+        "productId": 13,
+        "originalWeight": "0.1",
+        "plannedUnitPrice": "12.00",
+        "plannedUnitCost": "1.884"
+      },
+      {
+        "productId": 12,
+        "originalWeight": "0.05",
+        "plannedUnitPrice": "12.00",
+        "plannedUnitCost": "2.697"
+      },
+      {
+        "productId": 11,
+        "originalWeight": "0.1",
+        "plannedUnitPrice": "12.00",
+        "plannedUnitCost": "2.144"
+      },
+      {
+        "productId": 10,
+        "originalWeight": "0.05",
+        "plannedUnitPrice": "17.00",
+        "plannedUnitCost": "4.627"
+      },
+      {
+        "productId": 9,
+        "originalWeight": "0.05",
+        "plannedUnitPrice": "17.00",
+        "plannedUnitCost": "4.027"
+      },
+      {
+        "productId": 8,
+        "originalWeight": "0.05",
+        "plannedUnitPrice": "17.00",
+        "plannedUnitCost": "4.107"
+      },
+      {
+        "productId": 7,
+        "originalWeight": "0.05",
+        "plannedUnitPrice": "17.00",
+        "plannedUnitCost": "3.507"
+      },
+      {
+        "productId": 6,
+        "originalWeight": "0.02",
+        "plannedUnitPrice": "17.00",
+        "plannedUnitCost": "5.135"
+      },
+      {
+        "productId": 5,
+        "originalWeight": "0.05",
+        "plannedUnitPrice": "17.00",
+        "plannedUnitCost": "4.027"
+      },
+      {
+        "productId": 4,
+        "originalWeight": "0.1",
+        "plannedUnitPrice": "6.00",
+        "plannedUnitCost": "0.887"
+      },
+      {
+        "productId": 3,
+        "originalWeight": "0.1",
+        "plannedUnitPrice": "8.00",
+        "plannedUnitCost": "1.544"
+      },
+      {
+        "productId": 17,
+        "originalWeight": "0.02",
+        "plannedUnitPrice": "18.00",
+        "plannedUnitCost": "5.898"
+      }
+    ]
+  },
+  "comparison": {
+    "storedHistoricalReference": {
+      "targetRevenue": "15868.00",
+      "projectedManagerialProfit": "10101.81",
+      "unitsPerMonth": "1492",
+      "unitsPerWeek": "380",
+      "belowMinimum": 4,
+      "mixBps": 10000
+    },
+    "budgetReference": {
+      "targetRevenue": "15551.00",
+      "projectedManagerialProfit": "10057.87",
+      "unitsPerMonth": "1437",
+      "unitsPerWeek": "365",
+      "belowMinimum": 4,
+      "mixBps": 10000
+    }
+  },
+  "projection": {
+    "kind": "projection",
+    "label": "Estimativa baseada nas premissas da versão do cenário",
+    "originalMixTotal": "1.030000",
+    "mixWasNormalized": true,
+    "normalizedMixTotalBps": 10000,
+    "marginNeededBeforeFixedCosts": "12200.00",
+    "targetRevenue": "15551.00",
+    "mixGeneratedProfit": "12257.87",
+    "feeTaxReserve": "0.00",
+    "projectedManagerialProfit": "10057.87",
+    "gapToTarget": "57.87",
+    "unitsPerMonth": "1437",
+    "unitsPerWeek": "365",
+    "targetAverageTicket": "10.82",
+    "targetAverageTicketBasis": "por unidade planejada",
+    "productLines": [
+      {
+        "productId": 1,
+        "productName": "Bombom Brownie Unitário",
+        "originalWeight": "0.020000",
+        "normalizedWeightBps": 194,
+        "plannedUnitPrice": "5.00",
+        "plannedUnitCost": "1.654",
+        "quantityPerMonth": "71",
+        "quantityPerWeek": "18",
+        "projectedRevenue": "355.00",
+        "projectedMargin": "237.57",
+        "projectedFeeTaxReserve": "0.00",
+        "projectedMarginBps": "6692",
+        "belowMinimumMargin": true
+      },
+      {
+        "productId": 2,
+        "productName": "Bordinhas",
+        "originalWeight": "0.020000",
+        "normalizedWeightBps": 194,
+        "plannedUnitPrice": "6.00",
+        "plannedUnitCost": "2.737",
+        "quantityPerMonth": "73",
+        "quantityPerWeek": "19",
+        "projectedRevenue": "438.00",
+        "projectedMargin": "238.20",
+        "projectedFeeTaxReserve": "0.00",
+        "projectedMarginBps": "5438",
+        "belowMinimumMargin": true
+      },
+      {
+        "productId": 3,
+        "productName": "Brownie Simples 7x7",
+        "originalWeight": "0.100000",
+        "normalizedWeightBps": 971,
+        "plannedUnitPrice": "8.00",
+        "plannedUnitCost": "1.544",
+        "quantityPerMonth": "184",
+        "quantityPerWeek": "46",
+        "projectedRevenue": "1472.00",
+        "projectedMargin": "1187.90",
+        "projectedFeeTaxReserve": "0.00",
+        "projectedMarginBps": "8070",
+        "belowMinimumMargin": false
+      },
+      {
+        "productId": 4,
+        "productName": "Brownie Simples 5x5",
+        "originalWeight": "0.100000",
+        "normalizedWeightBps": 971,
+        "plannedUnitPrice": "6.00",
+        "plannedUnitCost": "0.887",
+        "quantityPerMonth": "232",
+        "quantityPerWeek": "58",
+        "projectedRevenue": "1392.00",
+        "projectedMargin": "1186.22",
+        "projectedFeeTaxReserve": "0.00",
+        "projectedMarginBps": "8522",
+        "belowMinimumMargin": false
+      },
+      {
+        "productId": 5,
+        "productName": "Brownie Recheado 7x7 (Maracujá)",
+        "originalWeight": "0.050000",
+        "normalizedWeightBps": 486,
+        "plannedUnitPrice": "17.00",
+        "plannedUnitCost": "4.027",
+        "quantityPerMonth": "46",
+        "quantityPerWeek": "12",
+        "projectedRevenue": "782.00",
+        "projectedMargin": "596.76",
+        "projectedFeeTaxReserve": "0.00",
+        "projectedMarginBps": "7631",
+        "belowMinimumMargin": false
+      },
+      {
+        "productId": 6,
+        "productName": "Brownie Recheado 7x7 (Leite Ninho)",
+        "originalWeight": "0.020000",
+        "normalizedWeightBps": 194,
+        "plannedUnitPrice": "17.00",
+        "plannedUnitCost": "5.135",
+        "quantityPerMonth": "20",
+        "quantityPerWeek": "5",
+        "projectedRevenue": "340.00",
+        "projectedMargin": "237.30",
+        "projectedFeeTaxReserve": "0.00",
+        "projectedMarginBps": "6979",
+        "belowMinimumMargin": true
+      },
+      {
+        "productId": 7,
+        "productName": "Brownie Recheado 7x7 (Goiabada)",
+        "originalWeight": "0.050000",
+        "normalizedWeightBps": 486,
+        "plannedUnitPrice": "17.00",
+        "plannedUnitCost": "3.507",
+        "quantityPerMonth": "44",
+        "quantityPerWeek": "11",
+        "projectedRevenue": "748.00",
+        "projectedMargin": "593.69",
+        "projectedFeeTaxReserve": "0.00",
+        "projectedMarginBps": "7937",
+        "belowMinimumMargin": false
+      },
+      {
+        "productId": 8,
+        "productName": "Brownie Recheado 7x7 (Doce de Leite)",
+        "originalWeight": "0.050000",
+        "normalizedWeightBps": 486,
+        "plannedUnitPrice": "17.00",
+        "plannedUnitCost": "4.107",
+        "quantityPerMonth": "46",
+        "quantityPerWeek": "12",
+        "projectedRevenue": "782.00",
+        "projectedMargin": "593.08",
+        "projectedFeeTaxReserve": "0.00",
+        "projectedMarginBps": "7584",
+        "belowMinimumMargin": false
+      },
+      {
+        "productId": 9,
+        "productName": "Brownie Recheado 7x7 (Creme de avelã)",
+        "originalWeight": "0.050000",
+        "normalizedWeightBps": 485,
+        "plannedUnitPrice": "17.00",
+        "plannedUnitCost": "4.027",
+        "quantityPerMonth": "46",
+        "quantityPerWeek": "12",
+        "projectedRevenue": "782.00",
+        "projectedMargin": "596.76",
+        "projectedFeeTaxReserve": "0.00",
+        "projectedMarginBps": "7631",
+        "belowMinimumMargin": false
+      },
+      {
+        "productId": 10,
+        "productName": "Brownie Recheado 7x7 (Brigadeiro)",
+        "originalWeight": "0.050000",
+        "normalizedWeightBps": 485,
+        "plannedUnitPrice": "17.00",
+        "plannedUnitCost": "4.627",
+        "quantityPerMonth": "48",
+        "quantityPerWeek": "12",
+        "projectedRevenue": "816.00",
+        "projectedMargin": "593.90",
+        "projectedFeeTaxReserve": "0.00",
+        "projectedMarginBps": "7278",
+        "belowMinimumMargin": false
+      },
+      {
+        "productId": 11,
+        "productName": "Brownie Recheado 5x5 (Maracujá)",
+        "originalWeight": "0.100000",
+        "normalizedWeightBps": 971,
+        "plannedUnitPrice": "12.00",
+        "plannedUnitCost": "2.144",
+        "quantityPerMonth": "121",
+        "quantityPerWeek": "31",
+        "projectedRevenue": "1452.00",
+        "projectedMargin": "1192.58",
+        "projectedFeeTaxReserve": "0.00",
+        "projectedMarginBps": "8213",
+        "belowMinimumMargin": false
+      },
+      {
+        "productId": 12,
+        "productName": "Brownie Recheado 5x5 (Leite Ninho)",
+        "originalWeight": "0.050000",
+        "normalizedWeightBps": 485,
+        "plannedUnitPrice": "12.00",
+        "plannedUnitCost": "2.697",
+        "quantityPerMonth": "64",
+        "quantityPerWeek": "16",
+        "projectedRevenue": "768.00",
+        "projectedMargin": "595.39",
+        "projectedFeeTaxReserve": "0.00",
+        "projectedMarginBps": "7753",
+        "belowMinimumMargin": false
+      },
+      {
+        "productId": 13,
+        "productName": "Brownie Recheado 5x5 (Goiabada)",
+        "originalWeight": "0.100000",
+        "normalizedWeightBps": 971,
+        "plannedUnitPrice": "12.00",
+        "plannedUnitCost": "1.884",
+        "quantityPerMonth": "118",
+        "quantityPerWeek": "30",
+        "projectedRevenue": "1416.00",
+        "projectedMargin": "1193.69",
+        "projectedFeeTaxReserve": "0.00",
+        "projectedMarginBps": "8430",
+        "belowMinimumMargin": false
+      },
+      {
+        "productId": 14,
+        "productName": "Brownie Recheado 5x5 (Doce de Leite)",
+        "originalWeight": "0.100000",
+        "normalizedWeightBps": 971,
+        "plannedUnitPrice": "12.00",
+        "plannedUnitCost": "2.184",
+        "quantityPerMonth": "121",
+        "quantityPerWeek": "31",
+        "projectedRevenue": "1452.00",
+        "projectedMargin": "1187.74",
+        "projectedFeeTaxReserve": "0.00",
+        "projectedMarginBps": "8180",
+        "belowMinimumMargin": false
+      },
+      {
+        "productId": 15,
+        "productName": "Brownie Recheado 5x5 (Creme de Avelã)",
+        "originalWeight": "0.100000",
+        "normalizedWeightBps": 971,
+        "plannedUnitPrice": "12.00",
+        "plannedUnitCost": "2.144",
+        "quantityPerMonth": "121",
+        "quantityPerWeek": "31",
+        "projectedRevenue": "1452.00",
+        "projectedMargin": "1192.58",
+        "projectedFeeTaxReserve": "0.00",
+        "projectedMarginBps": "8213",
+        "belowMinimumMargin": false
+      },
+      {
+        "productId": 16,
+        "productName": "Brownie Recheado 5x5 (Brigadeiro)",
+        "originalWeight": "0.050000",
+        "normalizedWeightBps": 485,
+        "plannedUnitPrice": "12.00",
+        "plannedUnitCost": "2.444",
+        "quantityPerMonth": "62",
+        "quantityPerWeek": "16",
+        "projectedRevenue": "744.00",
+        "projectedMargin": "592.47",
+        "projectedFeeTaxReserve": "0.00",
+        "projectedMarginBps": "7963",
+        "belowMinimumMargin": false
+      },
+      {
+        "productId": 17,
+        "productName": "Kit 4 Bombons",
+        "originalWeight": "0.020000",
+        "normalizedWeightBps": 194,
+        "plannedUnitPrice": "18.00",
+        "plannedUnitCost": "5.898",
+        "quantityPerMonth": "20",
+        "quantityPerWeek": "5",
+        "projectedRevenue": "360.00",
+        "projectedMargin": "242.04",
+        "projectedFeeTaxReserve": "0.00",
+        "projectedMarginBps": "6723",
+        "belowMinimumMargin": true
+      }
+    ],
+    "pendingAssumptions": [
+      "Despesas variáveis fora da reserva de taxas e impostos não estão classificadas neste cenário."
+    ]
+  },
+  "pending": [
+    "Bombom coverage and Kit assembly/packaging",
+    "Bordinhas recovered-mass cost allocation and variable yield",
+    "Ready-made or manufactured fillings, mass chocolate specification",
+    "Fees/taxes; 0 retained only as inherited unapproved comparison",
+    "Current purchase prices and final productive capacity validation"
+  ],
+  "verification": {
+    "contract": "passed",
+    "technicalMixValidation": "passed; does not certify business premises",
+    "uniqueProducts": 17,
+    "normalizedMixBps": 10000,
+    "noSharedWrites": true,
+    "noSourceWorkbookChange": true,
+    "independentDecimalRevenueAndProfit": "passed; sum price*quantity minus per-line rounded variable costs minus full fixed budget 2200, reserve comparison zero"
+  },
+  "capacityDiagnostic": {
+    "scope": "14 brownie SKUs only; historical alternative yields treated as recipe equivalents, without whole-batch schedules",
+    "brownieEquivalentRecipesFraction": "469/8",
+    "brownieEquivalentRecipesApprox": 58.62,
+    "reportedMonthlyRecipeRange": [
+      56,
+      64
+    ],
+    "excludes": [
+      "Bordinhas variable recovered mass",
+      "Bombom and Kit until assembly is defined"
+    ],
+    "status": "partial lower demand subtotal only; does not prove all-product feasibility or plan capacity",
+    "details": [
+      {
+        "sku": "PROD016",
+        "units": "184",
+        "historicalYield": "24",
+        "equivalentRecipes": "23/3"
+      },
+      {
+        "sku": "PROD015",
+        "units": "232",
+        "historicalYield": "48",
+        "equivalentRecipes": "29/6"
+      },
+      {
+        "sku": "PROD014",
+        "units": "46",
+        "historicalYield": "12",
+        "equivalentRecipes": "23/6"
+      },
+      {
+        "sku": "PROD013",
+        "units": "20",
+        "historicalYield": "12",
+        "equivalentRecipes": "5/3"
+      },
+      {
+        "sku": "PROD012",
+        "units": "44",
+        "historicalYield": "12",
+        "equivalentRecipes": "11/3"
+      },
+      {
+        "sku": "PROD011",
+        "units": "46",
+        "historicalYield": "12",
+        "equivalentRecipes": "23/6"
+      },
+      {
+        "sku": "PROD010",
+        "units": "46",
+        "historicalYield": "12",
+        "equivalentRecipes": "23/6"
+      },
+      {
+        "sku": "PROD009",
+        "units": "48",
+        "historicalYield": "12",
+        "equivalentRecipes": "4"
+      },
+      {
+        "sku": "PROD008",
+        "units": "121",
+        "historicalYield": "24",
+        "equivalentRecipes": "121/24"
+      },
+      {
+        "sku": "PROD007",
+        "units": "64",
+        "historicalYield": "24",
+        "equivalentRecipes": "8/3"
+      },
+      {
+        "sku": "PROD006",
+        "units": "118",
+        "historicalYield": "24",
+        "equivalentRecipes": "59/12"
+      },
+      {
+        "sku": "PROD005",
+        "units": "121",
+        "historicalYield": "24",
+        "equivalentRecipes": "121/24"
+      },
+      {
+        "sku": "PROD004",
+        "units": "121",
+        "historicalYield": "24",
+        "equivalentRecipes": "121/24"
+      },
+      {
+        "sku": "PROD003",
+        "units": "62",
+        "historicalYield": "24",
+        "equivalentRecipes": "31/12"
+      }
+    ]
+  }
+}

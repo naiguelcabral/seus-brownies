@@ -47,8 +47,11 @@ Escopo e validação: `PRODUCT-CATALOG-UX-2026-10-18.md`.
       e decisão de corte/histórico antes do QA e homologação de cenário.
 
 Revisão de custos escolhida pelo usuário, antes de ativar: comparação dos
-17 SKUs preparada sem aplicação; faltam respostas de rateio, composição física,
-fixos e taxas. Ver `SCENARIO-COST-RECONCILIATION-2026-10-18.md`.
+17 SKUs preparada sem aplicação. MO e energia confirmadas nos R$ 2.200 fixos;
+comparação sem duplicidade preparada, com capacidade parcial de 58,625 receitas
+só em brownies. Faltam composição física, rateio de Bordinhas e taxas.
+Ver `SCENARIO-BUDGET-COMPARISON-2026-10-18.md` e
+`SCENARIO-COST-RECONCILIATION-2026-10-18.md`.
 
 Detalhes e prioridades: `WORKBOOK-COMPLETENESS-REVIEW-2026-10-18.md`.
 
