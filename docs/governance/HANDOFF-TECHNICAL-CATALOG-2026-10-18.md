@@ -1,5 +1,43 @@
 # Handoff — preparação do cadastro técnico
 
+## Checkpoint atual — pacote SQL ensaiado
+
+Retomada autorizada em 18/10/2026, após consulta oficial confirmar renovação:
+100% restantes na janela de cinco horas e 74% na semanal. LIGARTUDO em modo
+prepare-only executado, branch limpa e pull --ff-only sem mudanças.
+Aviso de keyring no preflight não bloqueou os tools conectados utilizados.
+
+Concluído: workbook reaberto e hash preservado; SQL separado compilado com
+guards e readbacks, sem PLAN históricos. Inclui somente o catálogo técnico
+apresentado em TECHNICAL-CATALOG-EXECUTION-PLAN-2026-10-18.md. Custos históricos
+fracionários são metadados brutos e bombom/kit continuam incompletos.
+Nova consulta READ ONLY real confirma catálogo/domínio/referência disponíveis.
+
+Arquivos novos: três scripts `*technical-catalog*.mjs`,
+`test/technical-catalog-package.test.ts`, plano de execução e evidências
+`technical-catalog-{apply,package,source-revalidated,test,readonly-refresh}-2026-10-18.*`.
+Status/roadmap e plano de preparação atualizados. Nenhuma fonte da aplicação,
+schema ou migration alterados; nenhuma escrita compartilhada ou publicação.
+
+Validação: 507 testes, 16 casos PG17, tipos/lint/check/Knip verdes. Suite no
+sandbox falhou em subprocessos e foi interrompida; repetição permitida fora
+dele passou. Na primeira fixture PG17, o guard de produto usado rejeitou a
+própria montagem do conflito; a fixture foi corrigida para outro insumo, sem
+enfraquecer o guard, e os ensaios finais completos passaram. Contêiner PG17
+encerrado; sequências podem avançar após falhas, sem fatos persistidos.
+Build não repetido por não haver mudança de runtime. CI/CodeQL deste pacote,
+backup novo/cópia real de ensaio, aplicação real e QA autenticado não executados.
+
+Próximo passo exato: obter autorização específica do pacote/SQL com SHA-256
+`01fdc56d23954ef5ba9a92de501cb65834cab2ef36cecb2ee5aeac1d5332a645`, incluindo
+backup atual em branch sem compute e ensaio em cópia privada; aplicar na
+original somente após passar. Revalidar alvo e preflight; seguir o plano de
+execução. Referência `TECH-CATALOG-2026-10-18-001` não consumida na base real.
+Não repetir importadores antigos, criar estoque sintético ou presumir gate
+resolvido por esta preparação. Sem retomada automática agendada.
+
+## Histórico da preparação anterior
+
 Tarefa: próxima etapa O01–O04 após custos exatos publicados em HML.
 Branch: `feat/input-catalog-kg-purchases`; início limpo em `b7da33e`.
 

@@ -1,5 +1,31 @@
 # Estado canônico do projeto — Cacau v1
 
+## Ficha técnica — SQL separado ensaiado — 18/10/2026
+
+Pacote O01–O04 pronto para revisão, sem aplicação real. Workbook reaberto,
+mesmo SHA-256 e zero issues; manifesto v4 e candidato reconciliados.
+SQL exclusivo inclui Ovos Grandes, receita de sete linhas, dois requisitos,
+duas tarifas, 17 perfis de referência, 14 embalagens e 12 recheios, com
+recibo e 43 auditorias. Exclui os 17 PLAN e todo fato operacional; custos
+históricos fracionários ficam brutos em JSONB, sem projeção monetária.
+Bombom/kit conservam ressalva de ficha incompleta, sem bloqueio novo na UI.
+
+507 testes, 16 cenários PostgreSQL 17, tipos, lint, Oxfmt e Knip aprovados.
+Suíte restrita ao sandbox falhou em subprocessos e foi interrompida; repetição
+fora da restrição passou. Preservação das 38 tabelas e 33 recibos conferida
+no laboratório. Build não repetido, pois não mudou runtime da aplicação;
+CI/CodeQL remotos deste pacote não executados. Contêiner descartável encerrado.
+Nova leitura real READ ONLY confirma 36 produtos, domínio técnico vazio,
+zero compras/movimentos/lotes/vendas e referência/hash não consumidos.
+
+Plano concreto: [TECHNICAL-CATALOG-EXECUTION-PLAN-2026-10-18.md](TECHNICAL-CATALOG-EXECUTION-PLAN-2026-10-18.md).
+SQL e recibos em `evidence/technical-catalog-{apply,package,test,readonly-refresh}-2026-10-18.*`.
+Falta autorização específica para backup atual em branch sem compute, ensaio
+em cópia privada e cadastro na original somente após sucesso. Nenhum deploy,
+estoque, operação real, migration ou alteração de segredo nesta etapa.
+Referência `TECH-CATALOG-2026-10-18-001` continua disponível na base real.
+O checkpoint anterior abaixo descreve a preparação histórica já superada.
+
 ## Próxima etapa — ficha técnica preparada para revisão — 18/10/2026
 
 Preflight READ ONLY reconfirmou 36 produtos e zero receitas/perfis/tarifas,

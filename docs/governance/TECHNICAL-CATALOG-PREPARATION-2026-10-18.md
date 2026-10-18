@@ -1,6 +1,11 @@
 # Preparação da ficha técnica — O01 a O04
 
-Estado: **prévia reconciliada, não executável**, 18/10/2026.
+Estado histórico: **prévia reconciliada, não executável**, 18/10/2026.
+
+Atualização posterior: SQL separado gerado e ensaiado com 16 cenários PG17;
+workbook revalidado, 507 testes e checks aprovados. A aplicação real continua
+pendente. O [plano de execução](TECHNICAL-CATALOG-EXECUTION-PLAN-2026-10-18.md)
+substitui os próximos passos de preparação abaixo; não substitui autorização.
 Base: `b7da33e`, branch `feat/input-catalog-kg-purchases`.
 
 ## Conferência realizada
