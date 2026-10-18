@@ -51,6 +51,7 @@ type Item = {
   unitCost: string
   supplierLot: string
   expiresOn: string
+  purchaseInKg: boolean
 }
 const emptyItem = (): Item => ({
   productId: '',
@@ -58,6 +59,7 @@ const emptyItem = (): Item => ({
   unitCost: '',
   supplierLot: '',
   expiresOn: '',
+  purchaseInKg: false,
 })
 
 function PurchasesPage() {
@@ -111,6 +113,7 @@ function PurchasesPage() {
             productId: Number(item.productId),
             quantity: item.quantity,
             unitCost: item.unitCost,
+            ...(item.purchaseInKg ? { purchaseUnit: 'kg' as const } : {}),
             supplierLot: item.supplierLot,
             expiresOn: item.expiresOn || undefined,
           })),
@@ -322,7 +325,16 @@ function PurchasesPage() {
                 <select
                   value={item.productId}
                   onChange={(event) =>
-                    updateItem(index, { productId: event.target.value })
+                    updateItem(index, {
+                      productId: event.target.value,
+                      quantity: '',
+                      unitCost: '',
+                      purchaseInKg:
+                        products.find(
+                          (product) =>
+                            String(product.id) === event.target.value,
+                        )?.unit === 'g',
+                    })
                   }
                   className="field mt-1.5"
                 >
@@ -334,16 +346,38 @@ function PurchasesPage() {
                   ))}
                 </select>
               </label>
+              {products.find((product) => String(product.id) === item.productId)
+                ?.unit === 'g' ? (
+                <label className="mt-3 block text-sm font-bold text-[#573524]">
+                  Unidade da compra
+                  <select
+                    className="field mt-1.5"
+                    value={item.purchaseInKg ? 'kg' : 'g'}
+                    onChange={(event) =>
+                      updateItem(index, {
+                        purchaseInKg: event.target.value === 'kg',
+                        quantity: '',
+                        unitCost: '',
+                      })
+                    }
+                  >
+                    <option value="kg">kg (1 kg = 1.000 g no estoque)</option>
+                    <option value="g">g</option>
+                  </select>
+                </label>
+              ) : null}
               <div className="mt-3 grid grid-cols-2 gap-3">
                 <Input
-                  label="Quantidade"
+                  label={item.purchaseInKg ? 'Quantidade (kg)' : 'Quantidade'}
                   value={item.quantity}
                   onChange={(quantity) => updateItem(index, { quantity })}
                   placeholder="Ex.: 1,500"
                   inputMode="decimal"
                 />
                 <Input
-                  label="Custo unitário"
+                  label={
+                    item.purchaseInKg ? 'Preço por kg (R$)' : 'Custo unitário'
+                  }
                   value={item.unitCost}
                   onChange={(unitCost) => updateItem(index, { unitCost })}
                   placeholder="Ex.: 12,50"

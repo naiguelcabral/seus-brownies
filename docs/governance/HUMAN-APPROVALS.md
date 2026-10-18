@@ -1,5 +1,20 @@
 # Ações que exigem aprovação humana — Cacau v1
 
+## Cadastro de insumos — autorização de 18 de outubro de 2026
+
+Após a conferência dos 19 insumos físicos, o usuário esclareceu que os itens
+em gramas entram em kg e solicitou: “Faça as correções necessárias e inclua
+todos os insumos em nosso banco de dados”. Autorização aplicada ao cadastro
+`INS001–INS019` na original `br-lingering-wind-acwh5wap` / `neondb`, categoria
+`Insumos do workbook`, com dez conversões de compra kg→g e 29 auditorias.
+Referência **consumida** `CATALOG-INPUTS-2026-10-18-001`; não repetir.
+
+Saldo permanece derivado dos movimentos, sem entradas fictícias. Energia e
+mão de obra foram excluídas do estoque físico conforme as regras existentes.
+Não autoriza importação de histórico, saldo inicial, receitas/perfis, produção,
+mudança de precisão financeira ou deploy. A correção local de Compras para kg
+aguarda autorização específica de publicação HML e homologação humana.
+
 ## Original atualizada até 0028 — 17 de outubro de 2026
 
 Usuário aceitou explicitamente o backup em branch no lugar do snapshot novo

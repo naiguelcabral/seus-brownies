@@ -1,5 +1,35 @@
 # Estado canônico do projeto — Cacau v1
 
+## Insumos cadastrados e compra em kg — 18 de outubro de 2026
+
+Solicitação explícita do usuário autorizou a carga de `INS001–INS019` na original
+`steep-brook-51659857` / `br-lingering-wind-acwh5wap` / `neondb`: 11 ingredientes
+e oito embalagens/materiais, ativos, sem preço de venda, categoria
+`Insumos do workbook`. Dez ingredientes usam compra em kg e estoque/consumo em g,
+com dez aliases `purchase-kg:INS…`, multiplicador 1000. Óleo continua em ml;
+papel manteiga em m; demais materiais em unidades. Energia e mão de obra não
+integram estoque físico.
+
+Transação única com locks, guards e conferência exata, preservando todos os
+produtos, categorias, recibos e auditorias anteriores. Referência **consumida**
+`CATALOG-INPUTS-2026-10-18-001`; 29 auditorias, ator Auth não atribuído.
+Readback independente às `2026-10-18T08:42:13.546Z` confirmou os 19 itens,
+dez conversões, 17 produtos finais e zero movimentos. Manifesto, SQL e readback
+em `evidence/catalog-inputs-import*-2026-10-18.*`. Fonte tem o mesmo SHA-256 da
+carga anterior; nenhum saldo, compra, receita, perfil ou histórico foi importado.
+
+Correção local de Compras permite kg e preço por kg para produtos com estoque
+em g. Servidor valida a unidade e converte sem ponto flutuante; preserva a
+quantidade e preço originais e inclui a unidade no hash de idempotência.
+O total em centavos acompanha a entrada via `allocated_cost`; custo unitário
+conserva as três casas existentes, com arredondamento informativo. Não altera
+precisão nem algoritmo de consumo/CMV. Sem migration ou deploy nesta tarefa.
+A seleção kg/g depende de publicação HML autorizada; cadastro já persistido.
+
+495 testes, tipos, lint, formatação e Knip aprovados. PostgreSQL 17 descartável:
+sucesso/preservação, repetição rejeitada e rollback por falha tardia de auditoria.
+Build isolado e homologação visual tratados no fechamento desta tarefa.
+
 ## Revisão Knip — 18 de outubro de 2026 (UTC)
 
 Todas as 48 ocorrências iniciais foram revisadas: 10 arquivos órfãos e sete

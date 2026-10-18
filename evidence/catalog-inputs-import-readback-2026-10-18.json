@@ -1,0 +1,226 @@
+[
+  {
+    "checked_at": "2026-10-18T08:42:13.546Z",
+    "inputs": [
+      {
+        "sku": "INS001",
+        "name": "Açúcar",
+        "type": "ingredient",
+        "active": true,
+        "category": "Insumos do workbook",
+        "multiplier": 1000,
+        "sale_price": null,
+        "stock_unit": "g",
+        "purchase_unit": "kg"
+      },
+      {
+        "sku": "INS002",
+        "name": "Óleo",
+        "type": "ingredient",
+        "active": true,
+        "category": "Insumos do workbook",
+        "multiplier": null,
+        "sale_price": null,
+        "stock_unit": "ml",
+        "purchase_unit": null
+      },
+      {
+        "sku": "INS003",
+        "name": "Chocolate",
+        "type": "ingredient",
+        "active": true,
+        "category": "Insumos do workbook",
+        "multiplier": 1000,
+        "sale_price": null,
+        "stock_unit": "g",
+        "purchase_unit": "kg"
+      },
+      {
+        "sku": "INS004",
+        "name": "Farinha de Trigo",
+        "type": "ingredient",
+        "active": true,
+        "category": "Insumos do workbook",
+        "multiplier": 1000,
+        "sale_price": null,
+        "stock_unit": "g",
+        "purchase_unit": "kg"
+      },
+      {
+        "sku": "INS005",
+        "name": "Papel Manteiga (rolo)",
+        "type": "packaging",
+        "active": true,
+        "category": "Insumos do workbook",
+        "multiplier": null,
+        "sale_price": null,
+        "stock_unit": "m",
+        "purchase_unit": null
+      },
+      {
+        "sku": "INS006",
+        "name": "Adesivo",
+        "type": "packaging",
+        "active": true,
+        "category": "Insumos do workbook",
+        "multiplier": null,
+        "sale_price": null,
+        "stock_unit": "unit",
+        "purchase_unit": null
+      },
+      {
+        "sku": "INS007",
+        "name": "Embalagem Simples 5x5",
+        "type": "packaging",
+        "active": true,
+        "category": "Insumos do workbook",
+        "multiplier": null,
+        "sale_price": null,
+        "stock_unit": "unit",
+        "purchase_unit": null
+      },
+      {
+        "sku": "INS008",
+        "name": "Embalagem Simples 7x7",
+        "type": "packaging",
+        "active": true,
+        "category": "Insumos do workbook",
+        "multiplier": null,
+        "sale_price": null,
+        "stock_unit": "unit",
+        "purchase_unit": null
+      },
+      {
+        "sku": "INS009",
+        "name": "Embalagem Recheado 5x5",
+        "type": "packaging",
+        "active": true,
+        "category": "Insumos do workbook",
+        "multiplier": null,
+        "sale_price": null,
+        "stock_unit": "unit",
+        "purchase_unit": null
+      },
+      {
+        "sku": "INS010",
+        "name": "Embalagem Recheado 7x7",
+        "type": "packaging",
+        "active": true,
+        "category": "Insumos do workbook",
+        "multiplier": null,
+        "sale_price": null,
+        "stock_unit": "unit",
+        "purchase_unit": null
+      },
+      {
+        "sku": "INS011",
+        "name": "Embalagem Bombom Unitário",
+        "type": "packaging",
+        "active": true,
+        "category": "Insumos do workbook",
+        "multiplier": null,
+        "sale_price": null,
+        "stock_unit": "unit",
+        "purchase_unit": null
+      },
+      {
+        "sku": "INS012",
+        "name": "Embalagem Kit 4 Bombons",
+        "type": "packaging",
+        "active": true,
+        "category": "Insumos do workbook",
+        "multiplier": null,
+        "sale_price": null,
+        "stock_unit": "unit",
+        "purchase_unit": null
+      },
+      {
+        "sku": "INS013",
+        "name": "Brigadeiro (Recheio)",
+        "type": "ingredient",
+        "active": true,
+        "category": "Insumos do workbook",
+        "multiplier": 1000,
+        "sale_price": null,
+        "stock_unit": "g",
+        "purchase_unit": "kg"
+      },
+      {
+        "sku": "INS014",
+        "name": "Doce de Leite (Recheio)",
+        "type": "ingredient",
+        "active": true,
+        "category": "Insumos do workbook",
+        "multiplier": 1000,
+        "sale_price": null,
+        "stock_unit": "g",
+        "purchase_unit": "kg"
+      },
+      {
+        "sku": "INS015",
+        "name": "Leite Ninho (Recheio)",
+        "type": "ingredient",
+        "active": true,
+        "category": "Insumos do workbook",
+        "multiplier": 1000,
+        "sale_price": null,
+        "stock_unit": "g",
+        "purchase_unit": "kg"
+      },
+      {
+        "sku": "INS016",
+        "name": "Creme de Avelã (Recheio)",
+        "type": "ingredient",
+        "active": true,
+        "category": "Insumos do workbook",
+        "multiplier": 1000,
+        "sale_price": null,
+        "stock_unit": "g",
+        "purchase_unit": "kg"
+      },
+      {
+        "sku": "INS017",
+        "name": "Goiabada (Recheio)",
+        "type": "ingredient",
+        "active": true,
+        "category": "Insumos do workbook",
+        "multiplier": 1000,
+        "sale_price": null,
+        "stock_unit": "g",
+        "purchase_unit": "kg"
+      },
+      {
+        "sku": "INS018",
+        "name": "Maracujá (Recheio)",
+        "type": "ingredient",
+        "active": true,
+        "category": "Insumos do workbook",
+        "multiplier": 1000,
+        "sale_price": null,
+        "stock_unit": "g",
+        "purchase_unit": "kg"
+      },
+      {
+        "sku": "INS019",
+        "name": "Chocolate Ao Leite / Branco",
+        "type": "ingredient",
+        "active": true,
+        "category": "Insumos do workbook",
+        "multiplier": 1000,
+        "sale_price": null,
+        "stock_unit": "g",
+        "purchase_unit": "kg"
+      }
+    ],
+    "finished_products": "17",
+    "stock_movements": "0",
+    "audits": "29",
+    "receipt": [
+      {
+        "source_key": "CATALOG-INPUTS-2026-10-18-001",
+        "entity_type": "catalog_production_inputs",
+        "source_hash": "5702cb91703dce2df2d60305ea0fa647d9190ee12ed30aa336a2ad3014314a23"
+      }
+    ]
+  }
+]

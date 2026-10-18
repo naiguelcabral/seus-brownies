@@ -17,6 +17,10 @@
 
 ## Compras
 
+- Para os dez ingredientes do workbook com estoque em g, a compra pode ser
+  informada em kg: 1 kg corresponde a 1000 g. Quantidade e preço originais devem
+  permanecer rastreáveis; o valor total em centavos não pode ser recalculado
+  pelo custo por grama arredondado. A unidade canônica de consumo permanece g.
 - Compra confirmada registra seus itens e entradas de estoque na mesma transação.
 - Quantidade, custo unitário e valor total precisam manter precisão definida no schema.
 - Importações devem ser idempotentes e abortar diante de conflito relevante.

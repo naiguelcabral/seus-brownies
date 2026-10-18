@@ -1,5 +1,19 @@
 # Roadmap executável para Codex — Cacau v1
 
+## Insumos e compra em kg — 18 de outubro de 2026
+
+- [x] Conferir os 19 insumos físicos do workbook e receber autorização de carga
+      e conversão de compra em kg para estoque/consumo em g.
+- [x] Cadastrar `INS001–INS019`, dez aliases kg→g, recibo e 29 auditorias na
+      original; conferir em leitura independente. Referência consumida
+      `CATALOG-INPUTS-2026-10-18-001`; sem saldo ou histórico importado.
+- [x] Preparar seleção kg/g em Compras e conversão validada no servidor,
+      preservando valor total, origem e idempotência; 495 testes aprovados.
+- [x] Ensaiar SQL em PostgreSQL 17 descartável: sucesso, preservação,
+      repetição rejeitada e rollback por falha tardia.
+- [ ] Publicação HML autorizada e homologação visual de compra em kg,
+      estoque em g e consumo produtivo. Nenhuma compra real foi criada.
+
 ## Knip e CodeQL em todo o projeto
 
 - [x] Reconciliar a proposta #45 sem substituir as regras atuais TypeScript/Oxc.

@@ -50,6 +50,7 @@ import {
   resolveIdempotentReplay,
 } from '#/features/operations/idempotency'
 import { appendOperationalAudit } from '#/features/operations/audit'
+import { convertKilogramPurchase } from '#/features/operations/purchase-units'
 import { calculateReorderStatus } from '#/features/inventory/reorder'
 import {
   calculateInventoryPage,
@@ -139,6 +140,7 @@ const purchaseValues = z
           productId: z.number().int().positive(),
           quantity: z.string().trim(),
           unitCost: z.string().trim(),
+          purchaseUnit: z.literal('kg').optional(),
           supplierLot: z.string().trim().max(80).optional(),
           expiresOn: z.string().date().optional(),
         }),
@@ -245,6 +247,7 @@ export const createPurchase = createServerFn({ method: 'POST' })
         productId: item.productId,
         quantity: item.quantity,
         unitCost: millisToUnitCost(item.unitCost!),
+        ...(item.purchaseUnit ? { purchaseUnit: item.purchaseUnit } : {}),
         supplierLot: item.supplierLot?.trim() || null,
         expiresOn: item.expiresOn || null,
       })),
@@ -270,6 +273,7 @@ export const createPurchase = createServerFn({ method: 'POST' })
           name: products.name,
           type: products.type,
           isActive: products.isActive,
+          unit: products.unit,
         })
         .from(products)
         .where(inArray(products.id, productIds))
@@ -283,6 +287,23 @@ export const createPurchase = createServerFn({ method: 'POST' })
       ) {
         throw new Error('Um dos produtos selecionados não está disponível.')
       }
+
+      const stockItems = normalizedItems.map((item) => {
+        if (!item.purchaseUnit) return item
+        if (item.quantityThousandths === null || item.unitCost === null) {
+          throw new Error('Quantidade ou custo inválido.')
+        }
+        const converted = convertKilogramPurchase(
+          requireDefined(productById.get(item.productId)).unit,
+          item.quantityThousandths,
+          item.unitCost,
+        )
+        return {
+          ...item,
+          quantity: converted.quantity,
+          unitCost: converted.unitCostMillis,
+        }
+      })
 
       const purchase = (
         await tx
@@ -319,7 +340,9 @@ export const createPurchase = createServerFn({ method: 'POST' })
       }
 
       const availableAt = new Date(`${data.purchasedAt}T12:00:00.000Z`)
-      for (const [index, item] of normalizedItems.entries()) {
+      for (const [index, item] of stockItems.entries()) {
+        const sourceItem = requireDefined(normalizedItems[index])
+        if (sourceItem.unitCost === null) throw new Error('Custo inválido.')
         const purchaseItem = (
           await tx
             .insert(purchaseItems)
@@ -330,6 +353,13 @@ export const createPurchase = createServerFn({ method: 'POST' })
               quantity: item.quantity!,
               unitCost: millisToUnitCost(item.unitCost!),
               totalAmount: centsToMoney(requireDefined(totals[index])),
+              ...(item.purchaseUnit
+                ? {
+                    sourceQuantityBase: '1000.000',
+                    sourceQuantityPurchased: sourceItem.quantity,
+                    sourceUnitPrice: centsToMoney(sourceItem.unitCost / 10n),
+                  }
+                : {}),
               supplierLot: item.supplierLot?.trim() || null,
               expiresOn: item.expiresOn || null,
             })
@@ -346,6 +376,9 @@ export const createPurchase = createServerFn({ method: 'POST' })
               type: 'purchase' as const,
               quantityDelta: item.quantity!,
               unitCost: millisToUnitCost(item.unitCost!),
+              ...(item.purchaseUnit
+                ? { allocatedCost: centsToMoney(requireDefined(totals[index])) }
+                : {}),
               referenceType: 'purchase_item',
               referenceId: purchaseItem.id,
             })
