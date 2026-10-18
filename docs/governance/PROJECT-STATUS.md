@@ -1,5 +1,17 @@
 # Estado canônico do projeto — Cacau v1
 
+## Visão geral estruturada — 18/10/2026
+
+Dashboard local com resumo/atualização, quatro cartões navegáveis, atenção
+para reposição, seis atalhos por permissão e últimos registros com situação
+e datas. Orientação sem operações e layout móvel compacto. Despesas limitadas
+ao mês exibido em Brasília, sem incluir meses futuros. Sem novos fatos,
+alteração de custo/CMV, schema ou permissões. 509 testes, quatro cenários de
+dashboard e cinco do modal passaram; tipos/lint/Oxfmt e baseline Knip aprovados.
+Build isolado pendente neste checkpoint; dashboard e modal de Produtos
+aguardam autorização específica de publicação HML. Detalhes em
+[DASHBOARD-UX-2026-10-18.md](DASHBOARD-UX-2026-10-18.md).
+
 ## Usabilidade de Produtos — 18/10/2026
 
 Primeiro incremento solicitado antes das tarifas: lista em largura total,

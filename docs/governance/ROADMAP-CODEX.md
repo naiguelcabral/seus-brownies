@@ -2,6 +2,12 @@
 
 ## Usabilidade priorizada antes das tarifas — 18/10/2026
 
+- [x] Estruturar Visão geral com indicadores navegáveis, reposição, atalhos,
+      datas/situação dos registros e estados vazio/carregamento/erro.
+      Mês das despesas em Brasília com dois limites; 509 testes e quatro
+      cenários locais de dashboard aprovados. Sem escrita compartilhada.
+- [ ] Validar build isolado do dashboard e publicar no HML somente com
+      autorização específica, junto do modal de Produtos pendente.
 - [x] Produtos: botão Adicionar produto, editor modal acessível para cadastro
       e edição, lista em largura total, campos opcionais agrupados, preservação
       em erro e confirmação de descarte. 507 testes e cinco ensaios locais

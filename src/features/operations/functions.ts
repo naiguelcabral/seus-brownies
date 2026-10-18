@@ -53,6 +53,7 @@ import {
   resolveIdempotentReplay,
 } from '#/features/operations/idempotency'
 import { appendOperationalAudit } from '#/features/operations/audit'
+import { dashboardMonth } from '#/features/dashboard/period'
 import {
   convertKilogramPurchase,
   convertKilogramTotalPurchase,
@@ -1202,9 +1203,8 @@ export const getDashboard = createServerFn({ method: 'GET' })
   .handler(async () => {
     const { getDb } = await import('#/db/index')
     const database = getDb()
-    const monthStart = new Date()
-    monthStart.setDate(1)
-    const monthStartValue = monthStart.toISOString().slice(0, 10)
+    const generatedAt = new Date()
+    const period = dashboardMonth(generatedAt)
     const [
       activeProducts,
       balances,
@@ -1237,7 +1237,12 @@ export const getDashboard = createServerFn({ method: 'GET' })
       database
         .select({ total: sql<string>`coalesce(sum(${expenses.amount}), 0)` })
         .from(expenses)
-        .where(gte(expenses.occurredAt, monthStartValue)),
+        .where(
+          and(
+            gte(expenses.occurredAt, period.start),
+            lt(expenses.occurredAt, period.end),
+          ),
+        ),
     ])
 
     const balancesWithStatus = balances.map((item) => ({
@@ -1251,6 +1256,8 @@ export const getDashboard = createServerFn({ method: 'GET' })
       (item) => item.reorderStatus === 'reorder',
     )
     return {
+      generatedAt: generatedAt.toISOString(),
+      period,
       activeProducts: activeProducts[0]?.total ?? 0,
       lowStock,
       productsWithStock: balancesWithStatus.filter(

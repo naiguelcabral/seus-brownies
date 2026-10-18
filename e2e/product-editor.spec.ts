@@ -1,65 +1,14 @@
 import { test, expect } from '@playwright/test'
-import { build } from 'vite'
-import react from '@vitejs/plugin-react'
-import tailwindcss from '@tailwindcss/vite'
-import { createServer } from 'node:http'
-import { mkdtemp, readFile, rm } from 'node:fs/promises'
-import { tmpdir } from 'node:os'
-import { resolve, extname } from 'node:path'
+import { startPreview } from './preview-server'
 
-let temporaryDirectory: string
+let preview: Awaited<ReturnType<typeof startPreview>>
 let baseURL: string
-const server = createServer()
-
 test.beforeAll(async () => {
-  temporaryDirectory = await mkdtemp(resolve(tmpdir(), 'cacau-product-editor-'))
-  // Explicit config and empty env directory: no application config, auth or .env.
-  await build({
-    configFile: false,
-    root: resolve('e2e/fixtures/product-editor'),
-    envDir: temporaryDirectory,
-    plugins: [react(), tailwindcss()],
-    logLevel: 'error',
-    build: { outDir: resolve(temporaryDirectory, 'dist'), emptyOutDir: true },
-  })
-  server.on('request', (request, response) => {
-    const path = new URL(request.url ?? '/', 'http://localhost').pathname
-    const file = resolve(
-      temporaryDirectory,
-      'dist',
-      path === '/' ? 'index.html' : path.slice(1),
-    )
-    if (!file.startsWith(resolve(temporaryDirectory, 'dist') + '/')) {
-      response.writeHead(403).end()
-      return
-    }
-    void readFile(file)
-      .then((body) => {
-        response.setHeader(
-          'Content-Type',
-          extname(file) === '.js'
-            ? 'text/javascript'
-            : extname(file) === '.css'
-              ? 'text/css'
-              : 'text/html',
-        )
-        response.end(body)
-      })
-      .catch(() => response.writeHead(404).end())
-  })
-  await new Promise<void>((done) => server.listen(0, '127.0.0.1', done))
-  const address = server.address()
-  if (!address || typeof address === 'string')
-    throw new Error('Servidor local indisponível.')
-  baseURL = `http://127.0.0.1:${address.port}`
+  preview = await startPreview('e2e/fixtures/product-editor')
+  baseURL = preview.url
 })
-
 test.afterAll(async () => {
-  await new Promise<void>((done, reject) =>
-    server.close((error) => (error ? reject(error) : done())),
-  )
-  if (temporaryDirectory)
-    await rm(temporaryDirectory, { recursive: true, force: true })
+  await preview.close()
 })
 
 test.beforeEach(async ({ page }) => {
