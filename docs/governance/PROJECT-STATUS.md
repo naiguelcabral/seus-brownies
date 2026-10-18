@@ -7,7 +7,8 @@ Estoque; Produção; Vendas; Despesas; Financeiro; Relatórios; Metas e cenário
 Plano de ação; Categorias; Produtos; Locais; Parâmetros. Rótulo geral passa de
 Cadastro para Gestão; navegação acessível identificada como Navegação principal.
 Rotas, ícones, filtros de permissão e conteúdo das páginas preservados.
-Tipos, lint, formatação e revisão de diff aprovados. Sem alteração de banco,
+Tipos, lint, formatação, revisão de diff e build HML isolado de `25484b7`
+(chave pública de teste) aprovados. Sem alteração de banco,
 permissão ou deploy. Publicação HML e conferência visual permanecem pendentes.
 
 ## Insumos cadastrados e compra em kg — 18 de outubro de 2026
