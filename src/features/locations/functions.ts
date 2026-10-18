@@ -11,13 +11,9 @@ import {
   salesLocationPageSize,
 } from '#/features/locations/pagination'
 
-export const salesLocationClassifications = [
-  'unclassified',
-  'physical',
-  'online',
-  'event',
-  'partner',
-] as const
+import { salesLocationClassifications } from './classifications'
+
+export { salesLocationClassifications } from './classifications'
 
 const locationShape = z.object({
   name: z.string().trim().min(2).max(120),

@@ -1,5 +1,16 @@
 # Estado canônico do projeto — Cacau v1
 
+## Categorias e Locais — incremento de UX em 18/10/2026
+
+Listas em largura total e criação/edição em modal, com busca/situação em
+Categorias e limpeza dos filtros de Locais. Diálogo compartilhado com Produtos;
+valores preservados em erro, confirmação de descarte e envio bloqueado contra
+repetição. 509 testes e 13 ensaios locais de navegador aprovados, incluindo
+regressão de Produtos e celular. Lint, tipos e Oxfmt aprovados. Sem schema,
+regras de domínio ou dados alterados; publicação HML autorizada pelo usuário.
+Detalhes: [CATEGORY-LOCATION-UX-2026-10-18.md](CATEGORY-LOCATION-UX-2026-10-18.md).
+
+
 ## UX publicada e conferida no HML — 18/10/2026
 
 Sob autorização explícita, dashboard e modal de Produtos publicados pelo

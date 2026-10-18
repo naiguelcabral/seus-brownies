@@ -3,6 +3,8 @@ import { Pencil, Plus, Power } from 'lucide-react'
 import { createFileRoute, useRouter } from '@tanstack/react-router'
 import { useServerFn } from '@tanstack/react-start'
 
+import { CategoryEditor } from '#/features/catalog/CategoryEditor'
+import type { CategoryFormValues } from '#/features/catalog/CategoryEditor'
 import { ManagementLayout } from '#/components/ManagementLayout'
 import { hasPermission } from '#/features/auth/authorization'
 import {
@@ -18,7 +20,6 @@ export const Route = createFileRoute('/categorias')({
 })
 
 type Category = Awaited<ReturnType<typeof listCategories>>[number]
-type CategoryFormValues = { name: string; description: string }
 
 function CategoriesPage() {
   const categories = Route.useLoaderData()
@@ -28,24 +29,35 @@ function CategoriesPage() {
   const create = useServerFn(createCategory)
   const update = useServerFn(updateCategory)
   const setActive = useServerFn(setCategoryActive)
+  const [editorOpen, setEditorOpen] = useState(false)
+  const [query, setQuery] = useState('')
+  const [activity, setActivity] = useState('all')
+  const visibleCategories = categories.filter((category) => {
+    const matchesQuery = `${category.name} ${category.description ?? ''}`
+      .toLocaleLowerCase('pt-BR')
+      .includes(query.trim().toLocaleLowerCase('pt-BR'))
+    return (
+      matchesQuery &&
+      (activity === 'all' || category.isActive === (activity === 'active'))
+    )
+  })
   const [editing, setEditing] = useState<Category | null>(null)
   const [notice, setNotice] = useState<string | null>(null)
 
   async function save(values: CategoryFormValues) {
-    setNotice(null)
-
+    if (editing) await update({ data: { id: editing.id, ...values } })
+    else await create({ data: values })
+    setNotice(
+      editing
+        ? 'Categoria atualizada com sucesso.'
+        : 'Categoria criada com sucesso.',
+    )
+    setEditorOpen(false)
+    setEditing(null)
     try {
-      if (editing) {
-        await update({ data: { id: editing.id, ...values } })
-        setNotice('Categoria atualizada com sucesso.')
-      } else {
-        await create({ data: values })
-        setNotice('Categoria criada com sucesso.')
-      }
-      setEditing(null)
       await router.invalidate()
-    } catch (error) {
-      setNotice(readableError(error))
+    } catch {
+      setNotice('Categoria salva. Atualize a página para conferir a lista.')
     }
   }
 
@@ -71,27 +83,88 @@ function CategoriesPage() {
       title="Categorias"
       description="Agrupe seus produtos para deixar o cadastro e os relatórios organizados. Categorias desativadas permanecem no histórico."
     >
-      <div
-        className={
-          canWrite
-            ? 'grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px]'
-            : 'grid gap-6'
-        }
-      >
+      {notice ? (
+        <p
+          role="status"
+          className="mb-4 rounded-xl border border-[#ecdfd4] bg-[#fff5e7] p-4 text-sm text-[#75411f]"
+        >
+          {notice}
+        </p>
+      ) : null}
+      <div className="grid gap-6">
         <section className="overflow-hidden rounded-2xl border border-[#ecdfd4] bg-white">
-          <div className="flex items-center justify-between border-b border-[#f0e5dc] px-5 py-4">
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#f0e5dc] px-5 py-4">
             <h2 className="font-bold">Categorias cadastradas</h2>
-            <span className="rounded-full bg-[#f8eee4] px-2.5 py-1 text-xs font-bold text-[#92522e]">
-              {categories.length}
-            </span>
+            <div className="flex flex-wrap items-center gap-3">
+              <span className="rounded-full bg-[#f8eee4] px-2.5 py-1 text-xs font-bold text-[#92522e]">
+                {visibleCategories.length} de {categories.length}
+              </span>
+              {canWrite ? (
+                <button
+                  type="button"
+                  aria-haspopup="dialog"
+                  onClick={() => {
+                    setEditing(null)
+                    setNotice(null)
+                    setEditorOpen(true)
+                  }}
+                  className="inline-flex items-center gap-2 rounded-lg bg-[#4a2114] px-4 py-2.5 text-sm font-bold text-white hover:bg-[#653321]"
+                >
+                  <Plus size={17} aria-hidden="true" />
+                  Adicionar categoria
+                </button>
+              ) : null}
+            </div>
           </div>
-          {categories.length === 0 ? (
+          <form
+            role="search"
+            onSubmit={(event) => event.preventDefault()}
+            className="flex flex-wrap items-end gap-3 border-b border-[#f0e5dc] p-5"
+          >
+            <label className="min-w-48 flex-1 text-xs font-bold text-[#573524]">
+              Buscar categoria
+              <input
+                className="field mt-1 block"
+                value={query}
+                onChange={(event) => setQuery(event.target.value)}
+                maxLength={100}
+                placeholder="Nome ou descrição"
+              />
+            </label>
+            <label className="text-xs font-bold text-[#573524]">
+              Situação
+              <select
+                className="field mt-1 block"
+                value={activity}
+                onChange={(event) => setActivity(event.target.value)}
+              >
+                <option value="all">Todas</option>
+                <option value="active">Ativas</option>
+                <option value="inactive">Inativas</option>
+              </select>
+            </label>
+            {query || activity !== 'all' ? (
+              <button
+                type="button"
+                className="px-3 py-2 text-xs font-bold text-[#75411f]"
+                onClick={() => {
+                  setQuery('')
+                  setActivity('all')
+                }}
+              >
+                Limpar filtros
+              </button>
+            ) : null}
+          </form>
+          {visibleCategories.length === 0 ? (
             <p className="p-6 text-sm text-[#846859]">
-              Nenhuma categoria cadastrada.
+              {categories.length
+                ? 'Nenhuma categoria encontrada para esses filtros.'
+                : 'Nenhuma categoria cadastrada.'}
             </p>
           ) : (
             <ul className="divide-y divide-[#f0e5dc]">
-              {categories.map((category) => (
+              {visibleCategories.map((category) => (
                 <li
                   key={category.id}
                   className="flex flex-col gap-3 px-5 py-4 sm:flex-row sm:items-center sm:justify-between"
@@ -111,7 +184,13 @@ function CategoriesPage() {
                     <div className="flex gap-2">
                       <button
                         type="button"
-                        onClick={() => setEditing(category)}
+                        aria-haspopup="dialog"
+                        aria-label={`Editar ${category.name}`}
+                        onClick={() => {
+                          setEditing(category)
+                          setNotice(null)
+                          setEditorOpen(true)
+                        }}
                         className="inline-flex items-center gap-1.5 rounded-lg border border-[#e6d4c5] px-3 py-2 text-sm font-bold text-[#72462f] hover:bg-[#fff8f2]"
                       >
                         <Pencil size={15} /> Editar
@@ -132,138 +211,19 @@ function CategoriesPage() {
           )}
         </section>
 
-        {canWrite ? (
-          <CategoryForm
+        {canWrite && editorOpen ? (
+          <CategoryEditor
             key={editing?.id ?? 'new'}
             category={editing}
-            onCancel={() => setEditing(null)}
+            onCancel={() => {
+              setEditorOpen(false)
+              setEditing(null)
+            }}
             onSave={save}
-            notice={notice}
           />
         ) : null}
       </div>
     </ManagementLayout>
-  )
-}
-
-function CategoryForm({
-  category,
-  onCancel,
-  onSave,
-  notice,
-}: {
-  category: Category | null
-  onCancel: () => void
-  onSave: (values: CategoryFormValues) => Promise<void>
-  notice: string | null
-}) {
-  const [values, setValues] = useState<CategoryFormValues>({
-    name: category?.name ?? '',
-    description: category?.description ?? '',
-  })
-  const [error, setError] = useState<string | null>(null)
-  const [submitting, setSubmitting] = useState(false)
-
-  async function submit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault()
-    if (values.name.trim().length < 2) {
-      setError('O nome da categoria deve ter pelo menos 2 caracteres.')
-      return
-    }
-
-    setError(null)
-    setSubmitting(true)
-    await onSave(values)
-    setSubmitting(false)
-  }
-
-  return (
-    <aside className="h-fit rounded-2xl border border-[#ecdfd4] bg-white p-5">
-      <div className="flex items-center gap-2">
-        <span className="rounded-lg bg-[#fff0e3] p-2 text-[#a64f23]">
-          <Plus size={17} />
-        </span>
-        <h2 className="font-bold">
-          {category ? 'Editar categoria' : 'Nova categoria'}
-        </h2>
-      </div>
-      <form className="mt-5 space-y-4" onSubmit={submit} noValidate>
-        <Field label="Nome" required error={error}>
-          <input
-            value={values.name}
-            onChange={(event) =>
-              setValues({ ...values, name: event.target.value })
-            }
-            className="field"
-            maxLength={80}
-            autoFocus
-          />
-        </Field>
-        <Field label="Descrição">
-          <textarea
-            value={values.description}
-            onChange={(event) =>
-              setValues({ ...values, description: event.target.value })
-            }
-            className="field min-h-24 resize-y"
-            maxLength={500}
-          />
-        </Field>
-        {notice ? (
-          <p className="rounded-lg bg-[#fff5e7] p-3 text-sm text-[#75411f]">
-            {notice}
-          </p>
-        ) : null}
-        <div className="flex gap-2 pt-1">
-          <button
-            disabled={submitting}
-            className="rounded-lg bg-[#4a2114] px-4 py-2.5 text-sm font-bold text-white disabled:opacity-60"
-          >
-            {submitting
-              ? 'Salvando...'
-              : category
-                ? 'Salvar alterações'
-                : 'Criar categoria'}
-          </button>
-          {category ? (
-            <button
-              type="button"
-              onClick={onCancel}
-              className="rounded-lg px-3 py-2 text-sm font-bold text-[#795747]"
-            >
-              Cancelar
-            </button>
-          ) : null}
-        </div>
-      </form>
-    </aside>
-  )
-}
-
-function Field({
-  label,
-  required = false,
-  error,
-  children,
-}: {
-  label: string
-  required?: boolean
-  error?: string | null
-  children: React.ReactNode
-}) {
-  return (
-    <label className="block text-sm font-bold text-[#573524]">
-      <span>
-        {label}
-        {required ? ' *' : ''}
-      </span>
-      <span className="mt-1.5 block">{children}</span>
-      {error ? (
-        <span className="mt-1 block text-xs font-medium text-red-700">
-          {error}
-        </span>
-      ) : null}
-    </label>
   )
 }
 

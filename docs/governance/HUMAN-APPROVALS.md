@@ -14,6 +14,11 @@ Publicação concluída pelo build isolado do commit `339eb80`, versão
 conferidos na sessão autenticada; banco preservado por leitura antes/depois.
 Recibo `evidence/ux-hml-publication-2026-10-18.json`.
 
+Continuidade: após proposta explícita de aplicar o padrão em Categorias e
+Locais e publicar no HML, usuário respondeu “Pode seguir”. Autoriza este
+incremento de interface e sua conferência autenticada sem cadastros sintéticos
+na base compartilhada. Sem migration ou escrita de dados necessária.
+
 ## Mix 100% em rascunho — autorização de 18/10/2026
 
 Ao pedir a correção do mix, usuário esclareceu: “Somente o sistema, como

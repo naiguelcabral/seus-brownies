@@ -17,8 +17,11 @@
 - [x] Validar build isolado de CI do incremento (`8b39b67`).
 - [x] Receber autorização e publicar o incremento no HML; nenhuma publicação
       de produção. Banco conferido antes/depois em READ ONLY; sem migration.
-- [ ] Avaliar padrão para Categorias/Locais e simplificação de Cenários,
-      depois revisar o fluxo de Compras/Produção sem mudar regras de domínio.
+- [x] Categorias/Locais: lista em largura total, modal de cadastro/edição,
+      filtros e limpeza; 13 ensaios de navegador, incluindo Produtos.
+- [ ] Publicar e conferir Categorias/Locais no HML autorizado.
+- [ ] Simplificar Cenários; depois revisar Compras/Produção sem mudar regras
+      de domínio.
 
 Escopo e validação: `PRODUCT-CATALOG-UX-2026-10-18.md`.
 
