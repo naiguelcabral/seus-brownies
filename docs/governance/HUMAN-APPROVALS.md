@@ -3,8 +3,10 @@
 ## Bordinhas — materiais definidos em 18/10/2026
 
 Usuário confirmou um saquinho e um adesivo por pacote de Bordinhas de 100 g.
-Identidade e preço do saquinho ainda não definidos; não usar custo de outra
-embalagem por inferência. Preço atual do adesivo e rateio da massa pendentes.
+Usuário orientou buscar custo no workbook: acabamento histórico R$ 0,27,
+adesivo R$ 0,16 e resíduo calculado R$ 0,11 para o saquinho. Decomposição
+calculada, não vínculo nominal de embalagem na fonte; não escolher outro SKU
+por preço coincidente. Rateio da massa e identidade do saquinho pendentes.
 Sem aplicação compartilhada ou alteração de regra de custeio nesta etapa.
 
 

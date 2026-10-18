@@ -749,8 +749,7 @@
     "priceDeltaBRL": "1.00",
     "physicalYieldFromHistorical12": "not confirmed; do not interpret as twelve 100 g packs",
     "pending": [
-      "bag purchase pack price and count",
-      "current adhesive unit price",
+      "bag product identity; unit-cost reference derived from source, not asked again",
       "measured recovered grams and complete 100 g packs in each batch",
       "coproduct cost allocation method"
     ],
@@ -764,6 +763,19 @@
     "packageDescription": "saquinho",
     "adhesiveQuantity": "1",
     "packagingBasis": "per sold 100 g package",
-    "bagCatalogMapping": "pending identification; do not assume same bag as any existing brownie package"
+    "bagCatalogMapping": "pending identification; do not assume same bag as any existing brownie package",
+    "costSourceInstruction": "O custo está no workbook",
+    "historicalFinishingCost": {
+      "totalBRL": "0.2700000000000000",
+      "formula": "02_Cadastro_Produtos!H6 - G6",
+      "adhesiveBRL": "0.16",
+      "adhesiveCells": "03_Cadastro_Insumos!C10:F10",
+      "bagResidualBRL": "0.1100000000000000",
+      "bagFormula": "H6 - G6 - 03_Cadastro_Insumos!F10",
+      "basis": "derived decomposition consistent with user-confirmed one bag and one adhesive; not an explicit bag SKU link in source",
+      "bagSkuResolved": false,
+      "sourceSha256": "25aa62df5fc9b2e01402e9c242142322d9c6f54a345e800cb947b77865ce5b64",
+      "use": "historical review reference only; do not add finishing again to old H/I values"
+    }
   }
 }

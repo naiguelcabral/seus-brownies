@@ -15,8 +15,10 @@ sem aplicar no banco nem somar novamente o custo histórico do adesivo.
 Bordinhas definida pelo usuário como pacote de 100 g a R$ 6,00 (referência
 histórica R$ 5,00), aproveitando massa fora do padrão de brownie regular.
 Rendimento variável a pesar por lote, sem assumir doze pacotes/receita.
-Confirmado um saquinho e um adesivo por pacote; identidade/preço do saquinho
-e preço atual do adesivo pendentes, além do critério de rateio da massa.
+Confirmado um saquinho e um adesivo por pacote. Usuário remeteu custo à fonte:
+acabamento histórico R$ 0,27, adesivo R$ 0,16 e resíduo calculado de saquinho
+R$ 0,11; vínculo nominal do saquinho não consta. Não escolher SKU apenas
+por preço. Rateio da massa aproveitada ainda pendente.
 Não atribuir custo zero nem duplicar custo/volume. Demais fichas/taxas e
 aquisições pendentes.
 Sem alteração de tarifas horárias, fichas, código ou cenário.

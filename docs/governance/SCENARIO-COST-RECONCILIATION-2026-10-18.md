@@ -18,6 +18,35 @@ ovos, requisitos de 1 kWh e duas horas, tarifas de R$ 0,85/kWh e R$ 12,50/h,
 vínculo de embalagem. Sem compras, lotes ou movimentos: ainda não há custo
 realizado ou preço atual de aquisição para substituir referências históricas.
 
+## Bordinhas — custo localizado na fonte original
+
+Usuário orientou: “O custo está no workbook”. Conferência em leitura de todas
+as abas por referências a embalagem, adesivo, saquinho e Bordinhas confirmou:
+
+- `02_Cadastro_Produtos!H6 − G6` = R$ 2,740462… − R$ 2,470462… = **R$ 0,27**
+  de complemento além da massa, antes de MO.
+- `03_Cadastro_Insumos!C10:F10`: adesivo INS006 a **R$ 0,16 por unidade**.
+- Com um saquinho e um adesivo confirmados pelo usuário, o resíduo do saquinho
+  é **R$ 0,27 − R$ 0,16 = R$ 0,11**. É decomposição calculada, não registro
+  nominal de “saquinho de Bordinhas” na fonte.
+
+R$ 0,11 coincide com duas embalagens do cadastro (Simples 5×5, linha 11,
+e Bombom Unitário, linha 15); o workbook não define qual delas é o saquinho
+usado em Bordinhas. Não escolher SKU por preço coincidente. A revisão pode
+preservar **R$ 0,27 de acabamento histórico por pacote** com essa ressalva,
+sem pedir novamente ao usuário valores que a fonte permite reconciliar.
+Não afirmar compra recente ou preço atual sem essa evidência.
+
+O complemento já está embutido no custo antigo: não acrescentar novamente
+saquinho/adesivo ao total histórico. A parte de massa, anteriormente rateada
+por rendimento isolado 12, ainda não está validada para pacote de 100 g de
+aproveitamento variável. Portanto este achado fecha a referência histórica do
+acabamento, mas não certifica custo total ou margem das Bordinhas.
+
+Hash da fonte reconferido, inalterado; nenhum arquivo original, cadastro ou
+cenário modificado. Próxima definição solicitada: cobertura por bombom,
+montagem de quatro unidades por kit e embalagem individual dentro do kit.
+
 ## Bordinhas — saquinho e adesivo confirmados
 
 Usuário confirmou “Um saquinho e um adesivo” por pacote de Bordinhas de
