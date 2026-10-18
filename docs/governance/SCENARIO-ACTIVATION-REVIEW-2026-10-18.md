@@ -39,6 +39,12 @@ ativar como referência provisória com os valores históricos e ressalvas.
 Pedido genérico de ativar não foi usado para inventar decisões físicas ou
 certificar custos como homologados. Não há falha técnica de integridade.
 
+## Decisão recebida
+
+Usuário escolheu “Vamos revisar custos e premissas”. Não autorizou a alternativa
+de referência provisória. Revisão em
+[SCENARIO-COST-RECONCILIATION-2026-10-18.md](SCENARIO-COST-RECONCILIATION-2026-10-18.md).
+
 ## Execução após a decisão
 
 Se reconciliar: obter as definições físicas e gerenciais faltantes, recalcular

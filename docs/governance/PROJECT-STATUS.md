@@ -1,5 +1,16 @@
 # Estado canônico do projeto — Cacau v1
 
+## Reconciliação de custos em revisão — 18/10/2026
+
+Usuário escolheu revisar custos/premissas antes da ativação. Fonte original
+reconferida com mesmo hash; receita com oito ovos e parâmetros atuais
+confirmados em READ ONLY. Comparação condicional de 1 kWh + 2 h por receita
+resulta em R$ 55,46 versus R$ 31,35 histórico e 11 margens abaixo de 70%.
+Não aplicado: falta definir base de rateio, ficha física, composição dos fixos
+e taxas. Cenário 1/v1/rev1 segue draft, mix 100%; sem dados modificados.
+Detalhes: [SCENARIO-COST-RECONCILIATION-2026-10-18.md](SCENARIO-COST-RECONCILIATION-2026-10-18.md).
+
+
 ## Revisão de ativação solicitada — 18/10/2026
 
 Usuário pediu tirar o cenário do rascunho. Conferência atual: ID 1/v1/rev1,

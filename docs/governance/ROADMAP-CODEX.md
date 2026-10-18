@@ -43,8 +43,12 @@ Escopo e validação: `PRODUCT-CATALOG-UX-2026-10-18.md`.
       e projeção validados; readback independente, histórico e auditoria
       conferidos. Workbook preservado e nenhuma ativação.
       Ver `SCENARIO-MIX-DRAFT-2026-10-18.md`.
-- [ ] Reconciliar markup/margem, custos, parâmetros operacionais ausentes
+- [~] Reconciliar markup/margem, custos, parâmetros operacionais ausentes
       e decisão de corte/histórico antes do QA e homologação de cenário.
+
+Revisão de custos escolhida pelo usuário, antes de ativar: comparação dos
+17 SKUs preparada sem aplicação; faltam respostas de rateio, composição física,
+fixos e taxas. Ver `SCENARIO-COST-RECONCILIATION-2026-10-18.md`.
 
 Detalhes e prioridades: `WORKBOOK-COMPLETENESS-REVIEW-2026-10-18.md`.
 
