@@ -16,7 +16,9 @@
 - [x] Triar as 48 ocorrências Knip: 45 resolvidas (10 arquivos, sete dependências,
       21 exports internos e sete declarações sem uso); três referências mantidas
       com justificativa individual, sem ampliar ignores ou remover testes.
-- [ ] Conferir validação local e CI/CodeQL da revisão Knip publicada.
+- [x] Conferir revisão `00ae5be`: 492 testes, tipos/lint/check, instalação limpa,
+      build isolado, CI `39089405535`, CodeQL `39089405457`; API confirmou
+      zero resultados por linguagem e zero alertas abertos na branch.
 - [ ] Integrar main/PR #45 após revisão humana.
 
 Procedimento e limites: [KNIP-CODEQL.md](KNIP-CODEQL.md).
@@ -30,12 +32,14 @@ Procedimento e limites: [KNIP-CODEQL.md](KNIP-CODEQL.md).
 - [x] Inspecionar PR #45/CI: passos Oxc/Knip e CodeQL passaram; identificar
       divergências de regras, scripts e ausência de lockfile para as ferramentas.
 - [x] Atualizar README, status histórico, workflow e DoD para procedimentos atuais.
-- [ ] Reconciliar TS 7/segurança/contratos com main e a PR #45, preservando lint
-      tipado e escopo Oxfmt; fixar Knip no lockfile e revisar Code Scanning final.
+- [x] Fixar Knip no lockfile, incorporar CodeQL e triar os resultados na branch;
+      configuração tipada Oxc preservada. Evidências no checkpoint acima.
+- [ ] Reconciliar TS 7/segurança/contratos com main e a PR #45 após revisão humana.
 - [ ] Atualizar o prompt ativo Prettier do piloto e sua matriz; testar controlador.
 - [ ] Declarar/validar Python suportado na CI e confirmar extensão Oxc no editor.
-- [ ] Obter CI remota do código final e homologar sessão/navegação após publicação
-      HML especificamente autorizada. Não confundir checks da PR #45 com esta branch.
+- [x] Obter CI remota própria da branch, inclusive código da correção de sessão.
+- [ ] Homologar sessão/navegação após publicação HML especificamente autorizada.
+      CI/build local não comprovam login humano no ambiente publicado.
 
 Inventário: [ATUALIZACOES-E-PENDENCIAS-2026-10-17.md](ATUALIZACOES-E-PENDENCIAS-2026-10-17.md).
 

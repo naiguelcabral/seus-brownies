@@ -74,9 +74,18 @@ permanecem separados; nenhuma atualização de autenticação foi feita.
 492 testes aprovados na instalação final, incluindo contratos de autenticação,
 RBAC, FIFO, precisão e o loader Drizzle corrigido. Tipos, lint tipado e
 formatação aprovados; `knip:check`: três conhecidos, zero novos/zero resolvidos.
-Nenhum teste foi alterado ou removido. Build isolado e scans remotos desta
-revisão serão conferidos no commit publicado; evidências anteriores estão
-identificadas como históricas abaixo.
+Nenhum teste foi alterado ou removido. Build HML isolado aprovado em `00ae5be`,
+sem deploy, com chave pública de teste. Evidências remotas do mesmo commit:
+
+- [CI 39089405535](https://github.com/naiguelcabral/seus-brownies/actions/runs/39089405535): sucesso, incluindo instalação normal `npm ci`, testes, tipos/lint/check, gate Knip e build isolado.
+- [CodeQL 39089405457](https://github.com/naiguelcabral/seus-brownies/actions/runs/39089405457): três jobs aprovados. API de análises confirmou `results_count: 0` e ausência de erro para JS/TS (103 regras, análise `1974520007`), Python (50, `1974519876`) e Actions (23, `1974519585`).
+- API de alertas da branch: zero abertos em `2026-10-18T08:29:46Z`; não foram fechados manualmente alertas para produzir esse resultado.
+
+Todas as 48 ocorrências estão classificadas; não há remediação Knip pendente
+neste inventário. Continuam a revisão/integração em main/PR #45 e a publicação
+HML especificamente autorizada da correção de sessão, seguida da homologação
+humana login → Estoque → recarga. Scans e build não substituem essa homologação.
+Evidências da integração inicial estão identificadas como históricas abaixo.
 
 ### Inventário completo da triagem
 
@@ -229,7 +238,7 @@ referências contextuais justificadas.
    correções ou falsos positivos com evidência, sem concluir segurança pelo job verde.
 3. Manter as três justificativas contextuais sob revisão quando seus
    consumidores ou dependências transitivas mudarem; as 48 ocorrências iniciais
-   estão classificadas e as 45 correções foram preparadas.
+   estão classificadas e as 45 correções foram validadas/publicadas.
 4. Reconciliar a main e a PR #45 para evitar dois workflows ou perfis concorrentes.
    Merge continua sendo gate humano; nenhuma publicação de aplicação decorre disso.
 

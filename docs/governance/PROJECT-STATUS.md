@@ -11,8 +11,12 @@ regra operacional ou teste removido. Inventário completo em
 [KNIP-CODEQL.md](KNIP-CODEQL.md). Instalação limpa (`npm ci --ignore-scripts`),
 492 testes, tipos, lint, formatação e Knip aprovados. Lockfile perdeu 43 pacotes,
 sem alterar versões/resoluções/integridades dos restantes; auditoria npm sem
-vulnerabilidades. Build isolado e CI/CodeQL desta revisão aguardam publicação;
-resultados anteriores abaixo são históricos. Integração em main permanece pendente.
+vulnerabilidades. Build HML isolado e [CI 39089405535](https://github.com/naiguelcabral/seus-brownies/actions/runs/39089405535)
+aprovados em `00ae5be`; [CodeQL 39089405457](https://github.com/naiguelcabral/seus-brownies/actions/runs/39089405457)
+aprovado nas três linguagens, com zero resultados por análise e zero alertas
+abertos conferidos na API em `2026-10-18T08:29:46Z`. Sem deploy/escrita em banco.
+Resultados anteriores abaixo são históricos. Integração em main e homologação
+humana da sessão após publicação HML autorizada permanecem pendentes.
 
 ## Knip e CodeQL — integração inicial na branch de trabalho
 

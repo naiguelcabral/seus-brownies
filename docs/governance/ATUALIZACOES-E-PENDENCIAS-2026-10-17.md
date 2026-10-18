@@ -1,5 +1,11 @@
 # Atualizações de linguagens, ferramentas e procedimentos
 
+Registro histórico do diagnóstico anterior à integração Knip/CodeQL.
+A implantação das ferramentas e a revisão das 48 ocorrências estão em
+[KNIP-CODEQL.md](KNIP-CODEQL.md); consulte o
+[estado canônico](PROJECT-STATUS.md) para a situação atual. As linhas
+“ausente” e a fila abaixo descrevem o checkpoint original, não pendências atuais.
+
 Verificação em 17 de outubro de 2026 (consulta remota em 18/10 UTC).
 Base local inspecionada: `776b669`, branch `codex/worker-sql-connection-check`.
 `git fetch origin` confirmou `origin/main` em `32a9e11`.
