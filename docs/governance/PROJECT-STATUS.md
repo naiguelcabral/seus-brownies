@@ -3,9 +3,17 @@
 ## Relatórios como segunda guia — 18 de outubro de 2026
 
 Usuário pediu mover Relatórios para a segunda posição e deixar tudo disponível.
-Ordem local: Visão geral → Relatórios → Estoque → Metas e cenários; demais guias
-preservam sua sequência. Rotas, ícones e permissões mantidos. Publicação HML
-autorizada no pedido; comprovante da versão final registrado após o deploy.
+Ordem publicada: Visão geral → Relatórios → Estoque → Metas e cenários; demais
+guias preservam sua sequência. Rotas, ícones e permissões mantidos. Publicado
+`161e6a5` pelo build isolado com a mesma chave pública real do HML; versão
+`b60a9d12-12b1-4458-81b4-53edaf674730` confirmada a 100%. Bundle servido
+`ManagementLayout-B6_qt7YQ.js` confere exatamente os 14 links. Login HTTP 200;
+páginas protegidas continuam redirecionando anônimos ao login. Tipos, lint,
+formatação, diff e build aprovados. Nenhuma escrita em banco ou mudança de
+configuração/secrets. Recibo: `evidence/hml-reports-second-publish-2026-10-18.json`.
+[CI 39114028314](https://github.com/naiguelcabral/seus-brownies/actions/runs/39114028314)
+e [CodeQL 39114028337](https://github.com/naiguelcabral/seus-brownies/actions/runs/39114028337)
+aprovados para `161e6a5`; três análises sem erro e zero resultados na API.
 
 ## Guias e compras em kg publicadas em HML — 18 de outubro de 2026
 

@@ -1,0 +1,87 @@
+{
+  "worker": "cacau-v1-hml",
+  "validation": {
+    "ciRun": 39114028314,
+    "ciConclusion": "success",
+    "codeqlRun": 39114028337,
+    "codeqlConclusion": "success",
+    "codeScanningAnalyses": 3,
+    "codeScanningResults": 0
+  },
+  "gitHead": "161e6a57b31e5dd2dbbba411840119e64952cbfd",
+  "deploymentId": "6dce984b-00d6-4de4-b666-d98eb80c6ab2",
+  "createdAt": "2026-10-18T09:06:43.397658Z",
+  "traffic": [
+    {
+      "version_id": "b60a9d12-12b1-4458-81b4-53edaf674730",
+      "percentage": 100
+    }
+  ],
+  "rollbackVersion": "36960752-1cc0-4fee-8db7-76093d96a348",
+  "checks": {
+    "login": {
+      "status": 200,
+      "loginForm": true
+    },
+    "navigation": {
+      "asset": "/assets/ManagementLayout-B6_qt7YQ.js",
+      "labels": [
+        "Visão geral",
+        "Relatórios",
+        "Estoque",
+        "Metas e cenários",
+        "Compras",
+        "Produção",
+        "Vendas",
+        "Despesas",
+        "Financeiro",
+        "Plano de ação",
+        "Categorias",
+        "Produtos",
+        "Locais",
+        "Parâmetros"
+      ],
+      "matchesExpected": true
+    },
+    "purchaseAssets": [
+      {
+        "asset": "/assets/compras-BJ4KuYZ1.js",
+        "kgQuantityLabel": false,
+        "kgPriceLabel": false,
+        "conversionLabel": false
+      },
+      {
+        "asset": "/assets/compras-NPHGe7qn.js",
+        "kgQuantityLabel": true,
+        "kgPriceLabel": true,
+        "conversionLabel": true
+      }
+    ],
+    "/": {
+      "status": 200,
+      "redirectedToLogin": true,
+      "protectedContentAbsent": true
+    },
+    "/estoque": {
+      "status": 200,
+      "redirectedToLogin": true,
+      "protectedContentAbsent": true
+    },
+    "/cenarios": {
+      "status": 200,
+      "redirectedToLogin": true,
+      "protectedContentAbsent": true
+    },
+    "/relatorios": {
+      "status": 200,
+      "redirectedToLogin": true,
+      "protectedContentAbsent": true
+    },
+    "/compras": {
+      "status": 200,
+      "redirectedToLogin": true,
+      "protectedContentAbsent": true
+    }
+  },
+  "databaseWrites": false
+}

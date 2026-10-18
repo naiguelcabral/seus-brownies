@@ -7,7 +7,8 @@
       de ação, cadastros e parâmetros; preservar destinos e permissões.
 - [x] Conferir tipos, lint, formatação e diff da mudança de apresentação.
 - [x] Publicar em HML sob autorização de conclusão integral; versão
-      `36960752-1cc0-4fee-8db7-76093d96a348` a 100%; conferir ordem dos links
+      atualizada para `b60a9d12-12b1-4458-81b4-53edaf674730` a 100%, com
+      Relatórios em segundo conforme pedido posterior; conferir ordem dos links
       no bundle servido, formulário público e redirecionamentos protegidos.
 - [ ] Conferência visual autenticada da navegação por perfil após login humano.
 
