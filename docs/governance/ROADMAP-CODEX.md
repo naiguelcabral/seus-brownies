@@ -10,8 +10,12 @@
       cadastro aprovado anterior continua aplicado e seu recibo consumido.
 - [ ] Após decisões, preparar pacote aditivo separado com ensaio e nova
       referência; não repetir a carga técnica nem inventar consumo por custo.
-- [ ] Reconciliar markup/margem, mix 103%, parâmetros operacionais ausentes
-      e decisão de corte/histórico antes do QA e primeiro cenário.
+- [~] Mix 103%: usuário autorizou somente cenário em rascunho no sistema;
+      17 produtos associados aos IDs reais, normalização exata 100%, payload
+      e projeção validados. Cadastro aguarda login autenticado; sem ativação.
+      Ver `SCENARIO-MIX-DRAFT-2026-10-18.md`.
+- [ ] Reconciliar markup/margem, custos, parâmetros operacionais ausentes
+      e decisão de corte/histórico antes do QA e homologação de cenário.
 
 Detalhes e prioridades: `WORKBOOK-COMPLETENESS-REVIEW-2026-10-18.md`.
 

@@ -1,5 +1,17 @@
 # Estado canônico do projeto — Cacau v1
 
+## Mix 100% — rascunho solicitado — 18/10/2026
+
+Usuário limitou a correção ao sistema como cenário em rascunho. Payload dos
+17 produtos preparado com IDs reais, pesos originais 103% preservados e
+normalização existente fechando em 10.000 pontos-base. Contrato, cálculo
+independente, invariância à ordem e 14 testes de cenários passaram. Preços
+conferidos; custos são referências históricas com três casas e ressalvas
+explícitas. Workbook permanece inalterado. Criação ainda **pendente de sessão
+autenticada**: `/cenarios` redirecionou ao login. Nenhuma escrita compartilhada
+ou ativação realizada. Detalhes/payload em
+[SCENARIO-MIX-DRAFT-2026-10-18.md](SCENARIO-MIX-DRAFT-2026-10-18.md).
+
 ## Revisão de completude do workbook — 18/10/2026
 
 Auditoria somente leitura das 15 abas e da original atual confirmou 17

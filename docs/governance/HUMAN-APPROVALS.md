@@ -1,5 +1,15 @@
 # Ações que exigem aprovação humana — Cacau v1
 
+## Mix 100% em rascunho — autorização de 18/10/2026
+
+Ao pedir a correção do mix, usuário esclareceu: “Somente o sistema, como
+cenário em rascunho”. Autoriza criar um cenário `draft` com os 17 produtos,
+normalização existente e premissas históricas explicitamente ressalvadas.
+Preservar workbook e pesos originais; não ativar, inventar consumo/custos,
+alterar parâmetros globais ou executar operações financeiras/de estoque.
+Payload validado em `SCENARIO-MIX-DRAFT-2026-10-18.md`; criação aguarda login
+para autoria auditada pela função nativa do sistema, sem nova aprovação.
+
 ## Cadastro técnico — autorização de 18 de outubro de 2026
 
 Após apresentação do pacote `1f23276`, usuário autorizou seguir, reconferir a
