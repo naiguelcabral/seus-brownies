@@ -1,7 +1,9 @@
 # Usabilidade do catálogo — 18/10/2026
 
-Estado: implementação local concluída; publicação HML pendente de autorização
-específica. O usuário priorizou usabilidade antes das tarifas e solicitou
+Estado: publicado e conferido no HML, versão
+`3790b237-6f04-4c9a-aa5b-6c8425d20270`, a 100%, sob autorização específica.
+Recibo `evidence/ux-hml-publication-2026-10-18.json`.
+O usuário priorizou usabilidade antes das tarifas e solicitou
 cadastro prático com botão para abrir um modal de preenchimento.
 
 ## Primeiro incremento: Produtos
@@ -69,6 +71,7 @@ as classes Tailwind do componente antes de conferir dimensões e capturas.
 
 Esses itens ainda não foram implementados. A entrega atual cobre Produtos;
 tarifas, fichas e rascunho de cenário permanecem em seu estado aprovado.
-Publicação requer o gate de `DEVELOPMENT-WORKFLOW.md`: “deploy exige
-autorização específica e chave pública real do alvo”. Produção permanece
-fora do escopo; o próximo alvo proposto é somente o Worker HML já utilizado.
+O gate de `DEVELOPMENT-WORKFLOW.md` (“deploy exige autorização específica e
+chave pública real do alvo”) foi atendido pela autorização posterior e pelo
+reuso da chave pública já publicada. HML atualizado e conferido; produção
+permanece fora do escopo. Nenhuma migration necessária para este incremento.

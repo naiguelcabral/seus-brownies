@@ -1,7 +1,9 @@
 # Visão geral estruturada — 18/10/2026
 
-Estado: dashboard implementado localmente; publicação HML pendente de
-autorização. Solicitação: dashboard estruturada e prática na Visão geral.
+Estado: publicado e conferido no HML, versão
+`3790b237-6f04-4c9a-aa5b-6c8425d20270`, a 100%, sob autorização específica.
+Recibo `evidence/ux-hml-publication-2026-10-18.json`.
+Solicitação: dashboard estruturada e prática na Visão geral.
 
 ## Organização entregue
 
@@ -51,6 +53,7 @@ playwright.dashboard.config.ts`. Artefatos locais em
 `/tmp/cacau-dashboard-{desktop,mobile,empty}.png` e
 `/tmp/cacau-dashboard-results`; apenas dados sintéticos.
 
-Não foram executados CI/CodeQL remotos ou escrita no banco. Próximo gate:
-autorização específica para publicar no Worker HML já utilizado, incluindo
-o modal de Produtos que está na mesma branch. Não autoriza produção.
+Não foram executados CI/CodeQL remotos ou escrita no banco. Sob autorização
+posterior, dashboard e modal de Produtos publicados no Worker HML utilizado,
+com versão/tráfego e sessão autenticada conferidos. Banco preservado por
+leitura antes/depois, sem migration necessária. Produção fora do escopo.

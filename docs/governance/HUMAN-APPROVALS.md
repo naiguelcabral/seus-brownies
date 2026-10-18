@@ -9,6 +9,10 @@ da branch de trabalho somente no `cacau-v1-hml`, com verificação autenticada.
 As melhorias não exigem schema, carga ou escrita no banco; conferir os dados
 existentes em READ ONLY. Não autoriza produção, alteração de secrets/RBAC,
 repetição de importações ou ativação do cenário em rascunho.
+Publicação concluída pelo build isolado do commit `339eb80`, versão
+`3790b237-6f04-4c9a-aa5b-6c8425d20270`, confirmada a 100%. Dashboard e modal
+conferidos na sessão autenticada; banco preservado por leitura antes/depois.
+Recibo `evidence/ux-hml-publication-2026-10-18.json`.
 
 ## Mix 100% em rascunho — autorização de 18/10/2026
 

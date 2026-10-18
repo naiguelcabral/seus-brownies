@@ -7,15 +7,16 @@
       Mês das despesas em Brasília com dois limites; 509 testes e quatro
       cenários locais de dashboard aprovados. Sem escrita compartilhada.
 - [x] Validar build isolado do dashboard (`bae3fa1`).
-- [ ] Publicar no HML somente com autorização específica, junto do modal
-      de Produtos pendente.
+- [x] Publicar dashboard e modal no HML sob autorização explícita: versão
+      `3790b237-6f04-4c9a-aa5b-6c8425d20270`, confirmada a 100%; conferir
+      dashboard autenticado e abrir/cancelar o modal sem criar registros.
 - [x] Produtos: botão Adicionar produto, editor modal acessível para cadastro
       e edição, lista em largura total, campos opcionais agrupados, preservação
       em erro e confirmação de descarte. 507 testes e cinco ensaios locais
       de navegador passaram; sem dados reais modificados.
 - [x] Validar build isolado de CI do incremento (`8b39b67`).
-- [ ] Obter autorização específica para publicar o incremento no HML;
-      nenhuma publicação de produção.
+- [x] Receber autorização e publicar o incremento no HML; nenhuma publicação
+      de produção. Banco conferido antes/depois em READ ONLY; sem migration.
 - [ ] Avaliar padrão para Categorias/Locais e simplificação de Cenários,
       depois revisar o fluxo de Compras/Produção sem mudar regras de domínio.
 

@@ -1,5 +1,23 @@
 # Estado canônico do projeto — Cacau v1
 
+## UX publicada e conferida no HML — 18/10/2026
+
+Sob autorização explícita, dashboard e modal de Produtos publicados pelo
+build HML isolado do commit `339eb80`. Versão
+`3790b237-6f04-4c9a-aa5b-6c8425d20270`, deployment
+`449caf92-cde8-4614-b772-f8bfd0fc49ce`, confirmados pela API com **100%**.
+Dashboard autenticado conferido com dados reais e modal aberto/cancelado sem
+gravação. Primeiro carregamento falhou temporariamente na verificação da
+sessão; reload recuperou o acesso e as duas telas foram confirmadas.
+
+Banco verificado antes/depois em READ ONLY: 37 produtos, um cenário draft,
+mix 10.000, nenhum cenário ativo e zero vendas/compras/movimentos. Não havia
+migration ou carga necessária para estas melhorias. Sem alteração de secrets,
+RBAC, tarifas, fichas ou produção. 509 testes, nove ensaios locais, tipos,
+lint, Oxfmt, Knip e builds aprovados. Recibo:
+[ux-hml-publication-2026-10-18.json](evidence/ux-hml-publication-2026-10-18.json).
+Checkpoints locais abaixo antecedem a autorização/publicação agora concluída.
+
 ## Visão geral estruturada — 18/10/2026
 
 Dashboard local com resumo/atualização, quatro cartões navegáveis, atenção
