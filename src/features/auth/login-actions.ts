@@ -14,9 +14,6 @@ export const accessDeniedLoginMessage =
 export const emailVerificationRequiredMessage =
   'Verifique seu e-mail antes de acessar o Cacau. Use o código enviado ou solicite um novo.'
 
-export const invalidSignUpMessage =
-  'Não foi possível concluir o cadastro. Confira os dados e tente novamente.'
-
 export const invalidOtpMessage =
   'Não foi possível verificar o código. Solicite um novo código e tente novamente.'
 

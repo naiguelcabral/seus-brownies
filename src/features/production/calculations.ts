@@ -9,7 +9,7 @@ export type DecimalQuantity = string
 const QUANTITY_SCALE = 1_000n
 const UNIT_COST_SCALE = 1_000n
 
-export function normalizeDecimal(value: string): string | null {
+function normalizeDecimal(value: string): string | null {
   const normalized = value.trim().replace(',', '.')
   if (!/^-?\d+(?:\.\d{1,3})?$/.test(normalized)) return null
   const negative = normalized.startsWith('-')
@@ -42,7 +42,7 @@ export function multiplyQuantities(left: bigint, right: bigint): bigint {
   return (left * right + QUANTITY_SCALE / 2n) / QUANTITY_SCALE
 }
 
-export function divideQuantities(dividend: bigint, divisor: bigint): bigint {
+function divideQuantities(dividend: bigint, divisor: bigint): bigint {
   if (divisor <= 0n) throw new Error('Rendimento inválido para o perfil.')
   return (dividend * QUANTITY_SCALE + divisor / 2n) / divisor
 }

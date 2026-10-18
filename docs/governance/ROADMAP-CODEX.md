@@ -13,7 +13,11 @@
       branch e conferir CI `39088191790`/CodeQL `39088191746` em `a96a0f9`.
 - [x] Corrigir os oito alertas iniciais sem supressões; confirmar zero alertas
       abertos/resultados nas três linguagens e PostgreSQL descartável aprovado.
-- [ ] Triar as 48 ocorrências da baseline Knip com revisão; integrar main/PR #45.
+- [x] Triar as 48 ocorrências Knip: 45 resolvidas (10 arquivos, sete dependências,
+      21 exports internos e sete declarações sem uso); três referências mantidas
+      com justificativa individual, sem ampliar ignores ou remover testes.
+- [ ] Conferir validação local e CI/CodeQL da revisão Knip publicada.
+- [ ] Integrar main/PR #45 após revisão humana.
 
 Procedimento e limites: [KNIP-CODEQL.md](KNIP-CODEQL.md).
 

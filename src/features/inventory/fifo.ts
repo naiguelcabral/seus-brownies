@@ -11,7 +11,7 @@ export type InventoryCostLayer = {
   remainingCost: bigint
 }
 
-export type InventoryCostAllocation = {
+type InventoryCostAllocation = {
   layerId: number
   productId: number
   productionBatchOutputId: number | null

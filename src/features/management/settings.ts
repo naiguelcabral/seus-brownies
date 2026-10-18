@@ -69,7 +69,7 @@ export const managementSettingsValues = z
 
 export type ManagementSettingsInput = z.infer<typeof managementSettingsValues>
 
-export function parseUnsignedDecimal(value: string, scale: number) {
+function parseUnsignedDecimal(value: string, scale: number) {
   const normalized = value.trim().replace(',', '.')
   const match = /^(\d+)(?:\.(\d+))?$/.exec(normalized)
   if (!match) return null

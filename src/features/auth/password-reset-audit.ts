@@ -6,7 +6,7 @@ import type {
 import type { PasswordResetTelemetry } from './password-reset-telemetry.server'
 import { readAuditErrorCode } from './password-reset-telemetry.server'
 
-export type PasswordResetAuditAction = Extract<
+type PasswordResetAuditAction = Extract<
   AuthAuditAction,
   'password_reset_requested' | 'password_reset_completed'
 >

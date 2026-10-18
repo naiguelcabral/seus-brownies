@@ -1,6 +1,6 @@
-export const revenueAuditStatuses = ['normal', 'attention', 'critical'] as const
+const revenueAuditStatuses = ['normal', 'attention', 'critical'] as const
 
-export type RevenueAuditStatus = (typeof revenueAuditStatuses)[number]
+type RevenueAuditStatus = (typeof revenueAuditStatuses)[number]
 
 function absolute(value: bigint) {
   return value < 0n ? -value : value

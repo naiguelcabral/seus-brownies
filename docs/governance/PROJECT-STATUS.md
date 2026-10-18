@@ -1,6 +1,20 @@
 # Estado canônico do projeto — Cacau v1
 
-## Knip e CodeQL — integração na branch de trabalho
+## Revisão Knip — 18 de outubro de 2026 (UTC)
+
+Todas as 48 ocorrências iniciais foram revisadas: 10 arquivos órfãos e sete
+dependências diretas removidos, 21 exports tornados internos e sete declarações
+sem uso eliminadas. Baseline reduzida a três referências contextuais, com
+justificativa por item: CSS `tw-animate-css`, módulo virtual `cloudflare:workers`
+e loader transitivo Drizzle no teste de segurança. Nenhuma supressão ampla,
+regra operacional ou teste removido. Inventário completo em
+[KNIP-CODEQL.md](KNIP-CODEQL.md). Instalação limpa (`npm ci --ignore-scripts`),
+492 testes, tipos, lint, formatação e Knip aprovados. Lockfile perdeu 43 pacotes,
+sem alterar versões/resoluções/integridades dos restantes; auditoria npm sem
+vulnerabilidades. Build isolado e CI/CodeQL desta revisão aguardam publicação;
+resultados anteriores abaixo são históricos. Integração em main permanece pendente.
+
+## Knip e CodeQL — integração inicial na branch de trabalho
 
 Pedido do usuário para todo o projeto: Knip 6.41.0 fixado em manifesto/lockfile,
 configuração estática de fontes/testes/E2E/scripts, análise integral e gate
@@ -16,8 +30,8 @@ Build HML isolado local e CI remota `39088191790` aprovados; código final
 zero resultados por linguagem/zero alertas abertos na branch. Oito alertas
 iniciais foram corrigidos em testes/scripts, sem suprimir queries nem arquivos.
 PostgreSQL 17 descartável `39088137292` passou e preservou 17 arquivos em
-artefato. Integração em main/PR #45 e triagem manual das 48 ocorrências Knip
-continuam separadas. Sem deploy ou alteração em banco compartilhado.
+artefato. Integração em main/PR #45 continua separada; a triagem Knip foi concluída
+no checkpoint acima. Sem deploy ou alteração em banco compartilhado.
 Procedimento: [KNIP-CODEQL.md](KNIP-CODEQL.md).
 
 ## Balanço de linguagens e procedimentos — 17 de outubro de 2026

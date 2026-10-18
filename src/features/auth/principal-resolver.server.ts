@@ -21,7 +21,7 @@ async function readCacauAccess(authUserId: string) {
  * bindings. Missing configuration is intentionally indistinguishable from an
  * anonymous request, keeping every protected Server Function closed.
  */
-export function createConfiguredPrincipalResolver(
+function createConfiguredPrincipalResolver(
   environment: Record<string, string | undefined>,
 ): PrincipalResolver {
   const resolveSession = createConfiguredSessionResolver(environment)

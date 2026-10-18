@@ -91,7 +91,8 @@ o controlador antes de usá-lo para executar a migração de procedimentos.
 
 Knip executa análise completa com `knip:audit`/`knip:report`; `knip:check` é o
 gate da CI contra mudanças não revisadas da baseline. Relatório não zero pode
-conter os 48 achados iniciais; não usar `--fix` nem regenerar a baseline para
+conter as três referências contextuais revisadas (48 ocorrências iniciais
+triadas, 45 resolvidas); não usar `--fix` nem regenerar a baseline para
 ocultar uma regressão. Remover entradas resolvidas junto com a correção.
 CodeQL cobre JS/TS, Python e Actions em jobs próprios. Consulte
 [KNIP-CODEQL.md](KNIP-CODEQL.md) para cobertura, limites e triagem.

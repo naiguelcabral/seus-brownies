@@ -1,7 +1,7 @@
 import type { AuthAuditAction, AuthAuditOutcome } from './audit'
 import { telemetryRequestId } from './telemetry-request-id'
 
-export type AuthAuditTelemetryEvent = {
+type AuthAuditTelemetryEvent = {
   requestId: string
   action: Extract<AuthAuditAction, 'login' | 'logout' | 'email_verification'>
   outcome: Extract<AuthAuditOutcome, 'success' | 'failure'>

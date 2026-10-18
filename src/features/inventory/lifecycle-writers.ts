@@ -46,7 +46,7 @@ export class FifoLifecycleSchemaUnavailableError extends Error {
   }
 }
 
-export function assertFifoLifecycleSchema(error: unknown): never {
+function assertFifoLifecycleSchema(error: unknown): never {
   const code = (error as { code?: string } | null)?.code
   if (code === '42P01' || code === '42703')
     throw new FifoLifecycleSchemaUnavailableError()

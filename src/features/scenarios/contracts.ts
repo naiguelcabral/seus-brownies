@@ -50,7 +50,7 @@ const weeks = z
   .regex(/^\d+(?:[,.]\d{1,2})?$/, 'Informe uma quantidade de semanas válida.')
 const reason = z.string().trim().min(3).max(500)
 
-export const scenarioMixValues = z.object({
+const scenarioMixValues = z.object({
   productId: z.number().int().positive(),
   originalWeight: positiveWeight,
   plannedUnitPrice: positiveMoney,
@@ -136,7 +136,6 @@ export const archiveScenarioValues = z.object({
 })
 
 export type ScenarioDraftInput = z.infer<typeof scenarioDraftValues>
-export type ScenarioMixInput = z.infer<typeof scenarioMixValues>
 export type UpdateScenarioDraftInput = z.infer<typeof updateScenarioDraftValues>
 export type CreateScenarioVersionInput = z.infer<
   typeof createScenarioVersionValues

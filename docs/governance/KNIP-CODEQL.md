@@ -25,19 +25,111 @@ ambiente, iniciar o Worker ou conectar ao banco. O teste de integração usa
 configs sintéticas que lançam erro se executadas e confirma a geração do
 relatório, imports ausentes, dependência sem uso e arquivo órfão.
 
-## Baseline inicial: 48 ocorrências
+## Revisão das 48 ocorrências — 18 de outubro de 2026 (UTC)
 
-| Tipo | Quantidade | Triagem inicial |
+Revisão manual de consumidores em fontes, rotas, testes, E2E, scripts e
+configurações: **45 ocorrências resolvidas e três referências contextuais
+mantidas, todas justificadas**. Nenhuma ocorrência ficou sem classificação.
+Não foram ampliados ignores, entradas artificiais ou supressões no Knip/CodeQL.
+
+| Disposição | Quantidade | Evidência/limite |
 | --- | ---: | --- |
-| Arquivos sem uso alcançável | 10 | Header, sete componentes UI, utilitário e catálogo estático antigo; preservar até revisão dos consumidores |
-| Dependências sem uso alcançável | 8 | Ferramentas TanStack e dependências dos componentes órfãos; `tw-animate-css` é importado por CSS e precisa desse contexto |
-| Exports candidatos | 16 | Incluem símbolos usados apenas internamente; revisar necessidade de export sem alterar regras do domínio |
-| Tipos candidatos | 12 | Revisar contratos e consumidores antes de remover |
-| Referências não declaradas | 2 | `cloudflare:workers` é módulo virtual do runtime; `@esbuild-kit/core-utils` é transitivo exercitado pelo teste de segurança |
+| Arquivos órfãos removidos | 10 | Header antigo, sete controles UI, utilitário `cn` e catálogo estático de demonstração; nenhum consumidor nas rotas atuais |
+| Dependências diretas removidas | 7 | Três pacotes React TanStack sem imports e quatro bibliotecas exclusivas dos controles/utilitário órfãos |
+| Exports tornados internos | 21 | Funções, constantes e tipos continuam usados no próprio módulo; corpos de validações, cálculos e regras preservados |
+| Declarações sem qualquer uso removidas | 7 | Dois exports de valor e cinco tipos; contratos ativos de autenticação, validação financeira e lifecycle preservados |
+| Referências contextuais mantidas | 3 | Usos reais fora da modelagem usual do grafo JS/TS, detalhados abaixo |
 
-Os nomes/arquivos completos ficam em `knip-baseline.json`. Essa lista registra
-dívida e casos contextuais; não afirma 48 bugs nem autoriza exclusão automática.
-Não há `--fix`, supressão ampla de dependências ou exclusão de domínio.
+A baseline contém somente:
+
+- `tw-animate-css`, importado por `src/styles.css`, alcançado pela rota raiz.
+  Manter a dependência CSS; o relatório JS/TS não reconhece esse consumidor.
+- `cloudflare` em `src/features/auth/cloudflare-rate-limit.server.ts`: import
+  de `cloudflare:workers`, módulo virtual fornecido pelo runtime. Não instalar
+  um pacote npm chamado `cloudflare` para satisfazer o diagnóstico.
+- `@esbuild-kit/core-utils` em `test/security-dependencies.test.ts`: o teste
+  exercita intencionalmente o loader transitivo do Drizzle e seu esbuild
+  corrigido. Declarar outra dependência direta poderia mascarar a ausência
+  desse caminho transitivo; preservar o teste e o override de segurança.
+
+Cada item retido tem `reason` em `knip-baseline.json`. Não são correções
+pendentes. Se um consumidor ou a árvore transitiva mudar, rever a justificativa
+e remover a tolerância resolvida; novos achados continuam bloqueantes.
+`knip:audit`/`knip:report` continuam retornando 1 pelas três referências,
+enquanto `knip:check` aceita apenas a lista exata revisada.
+
+O catálogo estático removido não é o catálogo operacional nem contém os 17
+SKUs importados do workbook. Esta limpeza não executa escrita em banco,
+importação, migration ou deploy. Não altera a estratégia de login/RBAC,
+precisão monetária, FIFO ou regras de estoque.
+
+### Validação da revisão
+
+Instalação limpa com `npm ci --ignore-scripts` aprovada: 463 pacotes instalados,
+464 auditados, zero vulnerabilidades reportadas. O lockfile perdeu 43 nós sem
+adicionar pacotes ou alterar versão, resolução e integridade de nenhum nó
+restante. Avisos preexistentes de peers Better Auth e deprecações transitivas
+permanecem separados; nenhuma atualização de autenticação foi feita.
+
+492 testes aprovados na instalação final, incluindo contratos de autenticação,
+RBAC, FIFO, precisão e o loader Drizzle corrigido. Tipos, lint tipado e
+formatação aprovados; `knip:check`: três conhecidos, zero novos/zero resolvidos.
+Nenhum teste foi alterado ou removido. Build isolado e scans remotos desta
+revisão serão conferidos no commit publicado; evidências anteriores estão
+identificadas como históricas abaixo.
+
+### Inventário completo da triagem
+
+| Arquivo | Tipo Knip | Símbolo/referência | Decisão |
+| --- | --- | --- | --- |
+| `package.json` | dependencies | `@tanstack/react-devtools` | Removida dependência direta sem uso; lockfile reconciliado |
+| `package.json` | dependencies | `@tanstack/react-form` | Removida dependência direta sem uso; lockfile reconciliado |
+| `package.json` | dependencies | `@tanstack/react-router-devtools` | Removida dependência direta sem uso; lockfile reconciliado |
+| `package.json` | dependencies | `class-variance-authority` | Removida dependência direta sem uso; lockfile reconciliado |
+| `package.json` | dependencies | `clsx` | Removida dependência direta sem uso; lockfile reconciliado |
+| `package.json` | dependencies | `radix-ui` | Removida dependência direta sem uso; lockfile reconciliado |
+| `package.json` | dependencies | `tailwind-merge` | Removida dependência direta sem uso; lockfile reconciliado |
+| `package.json` | dependencies | `tw-animate-css` | Mantido com justificativa na baseline contextual |
+| `src/components/Header.tsx` | files | `src/components/Header.tsx` | Removido: sem consumidores nas rotas, testes ou scripts |
+| `src/components/ui/button.tsx` | files | `src/components/ui/button.tsx` | Removido: sem consumidores nas rotas, testes ou scripts |
+| `src/components/ui/input.tsx` | files | `src/components/ui/input.tsx` | Removido: sem consumidores nas rotas, testes ou scripts |
+| `src/components/ui/label.tsx` | files | `src/components/ui/label.tsx` | Removido: sem consumidores nas rotas, testes ou scripts |
+| `src/components/ui/select.tsx` | files | `src/components/ui/select.tsx` | Removido: sem consumidores nas rotas, testes ou scripts |
+| `src/components/ui/slider.tsx` | files | `src/components/ui/slider.tsx` | Removido: sem consumidores nas rotas, testes ou scripts |
+| `src/components/ui/switch.tsx` | files | `src/components/ui/switch.tsx` | Removido: sem consumidores nas rotas, testes ou scripts |
+| `src/components/ui/textarea.tsx` | files | `src/components/ui/textarea.tsx` | Removido: sem consumidores nas rotas, testes ou scripts |
+| `src/features/auth/audit.ts` | exports | `authAuditActions` | Tornado interno: implementação/tipo preservado, somente export retirado |
+| `src/features/auth/auth-audit-telemetry.server.ts` | types | `AuthAuditTelemetryEvent` | Tornado interno: implementação/tipo preservado, somente export retirado |
+| `src/features/auth/authorization.ts` | exports | `permissions` | Tornado interno: implementação/tipo preservado, somente export retirado |
+| `src/features/auth/cloudflare-rate-limit.server.ts` | unlisted | `cloudflare` | Mantido com justificativa na baseline contextual |
+| `src/features/auth/external-contracts.ts` | types | `PasswordResetCompletion` | Declaração removida: nenhum uso interno ou externo |
+| `src/features/auth/external-contracts.ts` | types | `PasswordResetDispatcher` | Declaração removida: nenhum uso interno ou externo |
+| `src/features/auth/login-actions.ts` | exports | `invalidSignUpMessage` | Declaração removida: nenhum uso interno ou externo |
+| `src/features/auth/neon-password-reset-provider.server.ts` | exports | `passwordResetProviderTimeoutMs` | Tornado interno: implementação/tipo preservado, somente export retirado |
+| `src/features/auth/neon-password-reset-provider.server.ts` | types | `PasswordResetProviderReasonCode` | Tornado interno: implementação/tipo preservado, somente export retirado |
+| `src/features/auth/neon-password-reset-provider.server.ts` | types | `PasswordResetRequestBindings` | Tornado interno: implementação/tipo preservado, somente export retirado |
+| `src/features/auth/password-reset-audit.ts` | types | `PasswordResetAuditAction` | Tornado interno: implementação/tipo preservado, somente export retirado |
+| `src/features/auth/password-reset-telemetry.server.ts` | exports | `passwordResetTelemetryStages` | Tornado interno: implementação/tipo preservado, somente export retirado |
+| `src/features/auth/password-reset-telemetry.server.ts` | types | `PasswordResetTelemetryStage` | Tornado interno: implementação/tipo preservado, somente export retirado |
+| `src/features/auth/principal-resolver.server.ts` | exports | `createConfiguredPrincipalResolver` | Tornado interno: implementação/tipo preservado, somente export retirado |
+| `src/features/auth/principal.ts` | exports | `assertAuthenticated` | Tornado interno: implementação/tipo preservado, somente export retirado |
+| `src/features/auth/principal.ts` | exports | `assertVerifiedPrincipal` | Tornado interno: implementação/tipo preservado, somente export retirado |
+| `src/features/auth/principal.ts` | exports | `isAuthorizationError` | Declaração removida: nenhum uso interno ou externo |
+| `src/features/catalog/catalog.ts` | files | `src/features/catalog/catalog.ts` | Removido: sem consumidores nas rotas, testes ou scripts |
+| `src/features/finance/contracts.ts` | types | `FinancialOverviewInput` | Declaração removida: nenhum uso interno ou externo |
+| `src/features/inventory/fifo-migration-audit.ts` | exports | `positiveAdjustmentG6Prefix` | Tornado interno: implementação/tipo preservado, somente export retirado |
+| `src/features/inventory/fifo.ts` | types | `InventoryCostAllocation` | Tornado interno: implementação/tipo preservado, somente export retirado |
+| `src/features/inventory/lifecycle-writers.ts` | exports | `assertFifoLifecycleSchema` | Tornado interno: implementação/tipo preservado, somente export retirado |
+| `src/features/inventory/lifecycle.ts` | types | `LifecycleEvent` | Declaração removida: nenhum uso interno ou externo |
+| `src/features/management/settings.ts` | exports | `parseUnsignedDecimal` | Tornado interno: implementação/tipo preservado, somente export retirado |
+| `src/features/operations/revenue-audit.ts` | exports | `revenueAuditStatuses` | Tornado interno: implementação/tipo preservado, somente export retirado |
+| `src/features/operations/revenue-audit.ts` | types | `RevenueAuditStatus` | Tornado interno: implementação/tipo preservado, somente export retirado |
+| `src/features/production/calculations.ts` | exports | `divideQuantities` | Tornado interno: implementação/tipo preservado, somente export retirado |
+| `src/features/production/calculations.ts` | exports | `normalizeDecimal` | Tornado interno: implementação/tipo preservado, somente export retirado |
+| `src/features/scenarios/contracts.ts` | exports | `scenarioMixValues` | Tornado interno: implementação/tipo preservado, somente export retirado |
+| `src/features/scenarios/contracts.ts` | types | `ScenarioMixInput` | Declaração removida: nenhum uso interno ou externo |
+| `src/lib/utils.ts` | files | `src/lib/utils.ts` | Removido: sem consumidores nas rotas, testes ou scripts |
+| `test/security-dependencies.test.ts` | unlisted | `@esbuild-kit/core-utils` | Mantido com justificativa na baseline contextual |
 
 `scripts/check-knip.mjs` normaliza por arquivo/tipo/nome, sem números de linha.
 Achado novo bloqueia a CI. Achado resolvido também exige remover sua entrada
@@ -74,7 +166,7 @@ linguagem de análise. As provas PostgreSQL, testes de domínio e checagens dos
 scripts continuam necessários. Job CodeQL aprovado comprova execução/análise;
 os alertas enviados ao Code Scanning ainda precisam de triagem.
 
-## Integração e validação
+## Integração e validação iniciais (histórico)
 
 Este pacote reconcilia a proposta da PR #45 com a branch TypeScript 7/Oxc,
 sem copiar suas configurações reduzidas nem reintroduzir scripts alternativos
@@ -114,7 +206,7 @@ de URL. Build HML isolado local aprovado em `9144f99`; CI remota do código fina
 `a96a0f9` passou com build isolado e todos os gates. O CLI CodeQL não está
 instalado localmente; a análise real foi executada no GitHub.
 
-### Resultado final publicado
+### Resultado publicado da integração inicial
 
 - [CI 39088191790](https://github.com/naiguelcabral/seus-brownies/actions/runs/39088191790): sucesso em `a96a0f9`.
 - [CodeQL 39088191746](https://github.com/naiguelcabral/seus-brownies/actions/runs/39088191746): três jobs aprovados; API confirmou zero resultados em JS/TS, Python e Actions, e zero alertas abertos na branch em `2026-10-18T01:56:25Z`.
@@ -126,16 +218,18 @@ A primeira troca de regex por substring provocou um alerta adicional no teste;
 a versão final extrai as URLs da configuração, exige lista exata e compara a
 origem por `new URL`. Nenhum alerta foi fechado manualmente para simular
 correção. Zero resultados é o resultado destas queries neste commit, não uma
-garantia geral de ausência de vulnerabilidades. As 48 ocorrências do Knip
-permanecem conhecidas e pendentes de triagem, com bloqueio de regressões ativo.
+garantia geral de ausência de vulnerabilidades. As 48 ocorrências iniciais do
+Knip foram triadas na revisão acima; a baseline atual contém apenas três
+referências contextuais justificadas.
 
 ## Próximas ações
 
 1. Integrar o pacote validado após revisão; scans desta branch já estão conferidos.
 2. Manter triagem de novos alertas Code Scanning por linguagem e registrar
    correções ou falsos positivos com evidência, sem concluir segurança pelo job verde.
-3. Triar a baseline Knip por grupos pequenos; somente então remover arquivos,
-   exports ou dependências com os testes correspondentes.
+3. Manter as três justificativas contextuais sob revisão quando seus
+   consumidores ou dependências transitivas mudarem; as 48 ocorrências iniciais
+   estão classificadas e as 45 correções foram preparadas.
 4. Reconciliar a main e a PR #45 para evitar dois workflows ou perfis concorrentes.
    Merge continua sendo gate humano; nenhuma publicação de aplicação decorre disso.
 

@@ -33,7 +33,7 @@ export function readAuditErrorCode(error: unknown): AuditErrorCode | undefined {
   return undefined
 }
 
-export const passwordResetTelemetryStages = [
+const passwordResetTelemetryStages = [
   'runtime_config_missing',
   'initial_audit_failed',
   'provider_request_started',
@@ -43,8 +43,7 @@ export const passwordResetTelemetryStages = [
   'completed',
 ] as const
 
-export type PasswordResetTelemetryStage =
-  (typeof passwordResetTelemetryStages)[number]
+type PasswordResetTelemetryStage = (typeof passwordResetTelemetryStages)[number]
 
 export type PasswordResetTelemetryEvent = {
   requestId: string
