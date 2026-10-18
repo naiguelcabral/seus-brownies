@@ -53,7 +53,9 @@ Escopo e validação: `PRODUCT-CATALOG-UX-2026-10-18.md`.
 Revisão de custos escolhida pelo usuário, antes de ativar: comparação dos
 17 SKUs preparada sem aplicação. MO e energia confirmadas nos R$ 2.200 fixos;
 comparação sem duplicidade preparada, com capacidade parcial de 58,625 receitas
-só em brownies. Faltam composição física, rateio de Bordinhas e taxas.
+só em brownies; com Bombom/Kit, 61,495. Sensibilidade de taxas e procedimento
+de pesagem preparados. Faltam rateio de Bordinhas e taxas reais.
+Ver `SCENARIO-READINESS-2026-10-18.md`.
 Ver `SCENARIO-BUDGET-COMPARISON-2026-10-18.md` e
 `SCENARIO-COST-RECONCILIATION-2026-10-18.md`.
 

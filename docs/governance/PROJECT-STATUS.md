@@ -1,5 +1,17 @@
 # Estado canônico do projeto — Cacau v1
 
+## Ensaio de taxas e capacidade — 18/10/2026
+
+Continuidade da revisão: simulações ilustrativas de 0%/3%/5%/8%, sem adotar
+percentuais nem escrever no banco. Meta R$ 10 mil de lucro pede R$ 15.881 a
+R$ 17.783 de vendas e 61,495 a 68,705 receitas equivalentes. A 3%, cerca de
+64 receitas antes de perdas, praticamente no teto informado. Fonte não traz
+peso assado nem taxas operacionais; preparado procedimento de medição das
+Bordinhas. Preparação técnica identifica enum só de recheio e writer de
+Bordinhas por capacidade residual como itens a revisar antes de homologação.
+Detalhes: [SCENARIO-READINESS-2026-10-18.md](SCENARIO-READINESS-2026-10-18.md).
+
+
 ## Bombom/Kit reconstruídos — 18/10/2026
 
 Confirmados cerca de 50 g de cobertura por bombom, Kit com quatro bombons
