@@ -5,6 +5,35 @@ Estado: pausado por reserva obrigatória de capacidade. Franquia primária ofici
 2026-10-18 21:31:53 America/Sao_Paulo (1792369913). Confirmar renovação antes
 de retomar; executar LIGARTUDO conforme política. Não há retomada agendada.
 
+## Complemento após checkpoint — rendimento confirmado e publicação autorizada
+
+Consulta oficial na nova tentativa de execução: franquia primária 99% usada,
+1% restante; secundária 58% usada. Janela ainda não renovou; mesmo reset
+1792369913, 18/10/2026 21:31:53 America/Sao_Paulo. Não iniciar implementação
+até confirmar renovação, conforme CODEX-USAGE-POLICY.md.
+
+Usuário confirmou que 32 ovos fazem quatro formas de 44 × 31,3 × 3 cm.
+Cada forma corresponde à receita-base de oito ovos e pesa 850 g assada/fria,
+sem a forma. Quatro formas totalizam 3.400 g. Na mesma forma, corte 5×5 rende
+48 simples OU 24 recheados; corte 7×7 rende 24 simples OU 12 recheados.
+São alternativas de montagem; não somar os rendimentos como saídas simultâneas
+integrais. Recheado usa duas partes da massa. Cortes escolhidos para aproveitar
+a forma; no 5×5 a sobra é ínfima. Bordinhas variam conforme corte/lote.
+
+Implementar apontamento do peso efetivamente recuperado por lote, inclusive
+zero, pacotes de 100 g e custo alocado preservando o total da fornada. Não
+presumir rendimento fixo de Bordinhas nem inventar percentual de recuperação.
+As informações obrigatórias de receita/rendimento foram esclarecidas; não
+repetir perguntas já respondidas. A medição efetiva de sobras pertence ao
+apontamento da produção, não a uma premissa fixa exigida antes de implementar.
+A projeção do cenário precisa explicitar sua hipótese de aproveitamento,
+sem usar uma quantidade futura não informada como receita garantida.
+
+Última instrução: “Pode fazer tudo e publicar”. Autoriza concluir código,
+fichas, premissas financeiras, testes/ensaio, atualização do banco HML e
+publicação HML. Não pedir novamente essa autorização. Não autoriza produção,
+secrets, limpeza de histórico ou reaplicação de referências consumidas.
+
 ## Objetivo e autorização
 
 Usuário autorizou continuar implementação, atualizar banco e publicar no HML.

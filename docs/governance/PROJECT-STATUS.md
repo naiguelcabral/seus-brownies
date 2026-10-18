@@ -1,5 +1,21 @@
 # Estado canônico do projeto — Cacau v1
 
+## Rendimento esclarecido e publicação autorizada — 18/10/2026
+
+Usuário confirmou 32 ovos para quatro formas 44 × 31,3 × 3 cm, cada uma com
+850 g de massa assada/fria sem forma: oito ovos/receita, 3,4 kg nas quatro.
+Por forma: corte5×5 rende48 simples ou24 recheados; corte7×7 rende24 simples
+ou12 recheados. Alternativas, sem somar produção integral dos dois formatos.
+Sobra ínfima no5×5 e variável por corte/lote: implementar peso recuperado real,
+inclusive zero, sem rendimento fixo e sem duplicar custo. Não falta outra
+informação obrigatória prévia do usuário para implementar esse fluxo.
+
+“Pode fazer tudo e publicar” renova autorização para completar e publicar no
+HML. Ainda sem escrita compartilhada nem deploy. Execução permanece pausada:
+consulta oficial99% usado/1% restante, reset18/10/2026 21:31:53 Brasília, ainda
+não renovado. Detalhes no HANDOFF-PROFILE-MATERIALS-2026-10-18.md.
+
+
 ## Materiais de ficha — implementação local em 18/10/2026
 
 Implementado suporte a cobertura e materiais de embalagem além de recheios.
