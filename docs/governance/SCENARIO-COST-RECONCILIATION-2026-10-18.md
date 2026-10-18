@@ -1,5 +1,11 @@
 # Revisão dos custos e premissas do cenário — 18/10/2026
 
+Atualização posterior: MEI e taxas respondidos, fixos R$ 2.288. Débito 1,43%,
+crédito 3,36%, Pix R$ 0,49/transação e divisão variável por local. As seções
+anteriores com fixos R$ 2.200/ausência de taxas são histórico da revisão.
+Estado atual: [MEI-PAYMENT-FEES-2026-10-18.md](MEI-PAYMENT-FEES-2026-10-18.md).
+
+
 Usuário escolheu revisar custos/premissas antes de ativar. A alternativa de
 ativar como referência provisória não foi aceita. O cenário 1 permanece draft,
 versão 1, revisão 1. Nenhuma escrita compartilhada foi realizada.

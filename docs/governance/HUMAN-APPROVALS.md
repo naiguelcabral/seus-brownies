@@ -1,5 +1,16 @@
 # Ações que exigem aprovação humana — Cacau v1
 
+## MEI e taxas — definições de 18/10/2026
+
+Usuário definiu MEI R$ 88/mês e confirmou adicional aos R$ 2.200: orçamento
+fixo R$ 2.288. Informou débito 1,43 e crédito 3,36 no contexto percentual;
+confirmou Pix R$ 0,49 por transação. “Não tem padrão depende do local de venda”
+para a combinação de pagamentos. Preservar meios separados, sem média
+inventada, Pix em percentual ou taxa por produto. A referência genérica 1,99
+foi substituída. Preparação de premissas, sem lançar despesa paga, inventar
+pagamentos históricos ou alterar política de caixa silenciosamente.
+
+
 ## Saquinho das Bordinhas — preço confirmado em 18/10/2026
 
 Usuário informou “A embalagem das bordinhas custam 0,11 centavos por unidade”.

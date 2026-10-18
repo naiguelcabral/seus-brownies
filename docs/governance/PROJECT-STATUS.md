@@ -1,5 +1,17 @@
 # Estado canônico do projeto — Cacau v1
 
+## MEI e taxas de pagamento definidos — 18/10/2026
+
+MEI R$ 88/mês adicional confirmado: fixos revistos R$ 2.288. Débito 1,43%,
+crédito 3,36% e Pix R$ 0,49 por transação; substituem referência genérica de
+1,99. Combinação de pagamentos varia por local: não inferir taxa média global
+nem contar Pix por produto. Comparações locais preparadas e conferidas em
+Decimal; falta representar tarifas por pagamento no sistema e aplicar o pacote
+HML, sem ativação ou escrita compartilhada nesta etapa. Massa/rateio de
+Bordinhas continua pendente. Detalhes:
+[MEI-PAYMENT-FEES-2026-10-18.md](MEI-PAYMENT-FEES-2026-10-18.md).
+
+
 ## Leitura integral do anexo atual — 18/10/2026
 
 Lidas 15 abas, 483 linhas preenchidas/5.627 células, 12 tabelas e três gráficos;

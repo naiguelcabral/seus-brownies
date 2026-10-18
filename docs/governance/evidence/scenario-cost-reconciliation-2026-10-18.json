@@ -947,5 +947,15 @@
     },
     "actualCost": false,
     "applicationStatus": "prepared only"
+  },
+  "laterFeesDecision": {
+    "monthlyMeiBRL": "88.00",
+    "fixedMonthlyBRL": "2288.00",
+    "debitRate": "0.0143",
+    "creditRate": "0.0336",
+    "pixFlatBRLPerTransaction": "0.49",
+    "paymentMix": "varies by sales location; no fixed average",
+    "evidence": "scenario-mei-payment-fees-2026-10-18.json",
+    "applied": false
   }
 }

@@ -8,8 +8,11 @@
       que constam da fonte ou decisões respondidas na conversa.
 - [ ] Executar pacote técnico aditivo de materiais, Bordinhas variável,
       revisão de cenário e ensaio antes da atualização HML autorizada.
-- [!] Taxas reais e base física/rateio de Bordinhas ainda não constam da fonte;
-      separar pendências de ativação das melhorias parciais publicáveis.
+- [x] Taxas informadas fora da fonte: MEI R$ 88 adicional (fixos R$ 2.288),
+      débito 1,43%, crédito 3,36%, Pix R$ 0,49/transação; combinação varia
+      por local. Preparar representação por meio, sem média universal.
+- [!] Base física/rateio de Bordinhas ainda pendente; separar ativação das
+      melhorias parciais publicáveis. Ver `MEI-PAYMENT-FEES-2026-10-18.md`.
 
 Lista completa e evidência:
 `ATTACHED-WORKBOOK-COMPLETE-REVIEW-2026-10-18.md`.
