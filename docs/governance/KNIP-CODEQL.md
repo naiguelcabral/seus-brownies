@@ -99,8 +99,8 @@ testes de memória e uma construção de regex no contrato de URL HML. Preparada
 correção sem ignorar queries/arquivos nem remover testes: diretórios `mkdtemp`,
 arquivos 0600/exclusivos, leitura e verificação pelo mesmo descritor com
 `O_NOFOLLOW`, comparação literal da URL. Coleta de artefatos sintéticos da CI
-ajustada para os diretórios exclusivos. Reanálise e teste PostgreSQL descartável
-são necessários para confirmar a remediação, não apenas job CodeQL verde.
+ajustada para os diretórios exclusivos. A reanálise e o teste PostgreSQL
+descartável foram executados conforme o checkpoint final abaixo.
 
 Os runners avisaram depreciação do runtime Node 20 interno de Actions v4 e
 migração futura de `ubuntu-latest`. Isso é separado do Node 22 da aplicação;
@@ -108,15 +108,32 @@ atualizar Actions/imagem exige revisão própria e não foi misturado neste paco
 
 Tipos, lint e formatação aprovados; gate Knip aprovado com 48 achados conhecidos,
 zero novos e zero resolvidos. Os testes da integração verificam detecção real,
-recusa de relatórios inválidos e regressão da baseline. Build isolado, suíte
-completa e execução GitHub do CodeQL ficam registrados no checkpoint canônico
-após sua conclusão. O CLI CodeQL não está instalado localmente.
+recusa de relatórios inválidos e regressão da baseline. Suíte: 492 testes
+aprovados após remediação, mais os dois testes direcionados da comparação final
+de URL. Build HML isolado local aprovado em `9144f99`; CI remota do código final
+`a96a0f9` passou com build isolado e todos os gates. O CLI CodeQL não está
+instalado localmente; a análise real foi executada no GitHub.
+
+### Resultado final publicado
+
+- [CI 39088191790](https://github.com/naiguelcabral/seus-brownies/actions/runs/39088191790): sucesso em `a96a0f9`.
+- [CodeQL 39088191746](https://github.com/naiguelcabral/seus-brownies/actions/runs/39088191746): três jobs aprovados; API confirmou zero resultados em JS/TS, Python e Actions, e zero alertas abertos na branch em `2026-10-18T01:56:25Z`.
+- Análises Code Scanning `1974474017` (JS/TS, 103 regras), `1974473250`
+  (Python, 50 regras) e `1974473163` (Actions, 23 regras), sem erro de análise.
+- [PostgreSQL descartável 39088137292](https://github.com/naiguelcabral/seus-brownies/actions/runs/39088137292): sucesso em `dd5110c`, cujos scripts de evidência são idênticos aos de `a96a0f9`. Os três comandos descartáveis passaram e os 17 arquivos foram coletados no artefato `migration-chain-synthetic-evidence` (152763 bytes).
+
+A primeira troca de regex por substring provocou um alerta adicional no teste;
+a versão final extrai as URLs da configuração, exige lista exata e compara a
+origem por `new URL`. Nenhum alerta foi fechado manualmente para simular
+correção. Zero resultados é o resultado destas queries neste commit, não uma
+garantia geral de ausência de vulnerabilidades. As 48 ocorrências do Knip
+permanecem conhecidas e pendentes de triagem, com bloqueio de regressões ativo.
 
 ## Próximas ações
 
-1. Conferir CI e as três análises CodeQL no commit publicado desta branch.
-2. Revisar alertas do Code Scanning por linguagem e registrar correções ou
-   falsos positivos com evidência, sem concluir segurança pelo job verde.
+1. Integrar o pacote validado após revisão; scans desta branch já estão conferidos.
+2. Manter triagem de novos alertas Code Scanning por linguagem e registrar
+   correções ou falsos positivos com evidência, sem concluir segurança pelo job verde.
 3. Triar a baseline Knip por grupos pequenos; somente então remover arquivos,
    exports ou dependências com os testes correspondentes.
 4. Reconciliar a main e a PR #45 para evitar dois workflows ou perfis concorrentes.

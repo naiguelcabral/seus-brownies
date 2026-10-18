@@ -11,8 +11,13 @@ TypeScript/Oxc e todas as versões de pacotes anteriores foram preservados.
 CodeQL configurado para JavaScript/TypeScript, Python e GitHub Actions,
 `security-extended`, sem build da aplicação, secrets ou operações em banco.
 Instalação limpa, 492 testes, tipos, lint, formatação e gate Knip aprovados.
-Build isolado e execução remota ainda em validação. Integração em main/PR #45
-e triagem de Code Scanning continuam separadas. Sem deploy ou alteração de dados.
+Build HML isolado local e CI remota `39088191790` aprovados; código final
+`a96a0f9`. CodeQL `39088191746` passou nas três linguagens e a API confirmou
+zero resultados por linguagem/zero alertas abertos na branch. Oito alertas
+iniciais foram corrigidos em testes/scripts, sem suprimir queries nem arquivos.
+PostgreSQL 17 descartável `39088137292` passou e preservou 17 arquivos em
+artefato. Integração em main/PR #45 e triagem manual das 48 ocorrências Knip
+continuam separadas. Sem deploy ou alteração em banco compartilhado.
 Procedimento: [KNIP-CODEQL.md](KNIP-CODEQL.md).
 
 ## Balanço de linguagens e procedimentos — 17 de outubro de 2026

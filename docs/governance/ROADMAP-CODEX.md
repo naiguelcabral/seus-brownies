@@ -9,8 +9,11 @@
 - [x] Registrar 48 ocorrências e instalar gate contra novos achados/retornos;
       preservar o relatório integral e rejeitar falha/JSON inválido da ferramenta.
 - [x] Configurar CodeQL JS/TS, Python e Actions, consultas ampliadas e token mínimo.
-- [ ] Concluir suíte e build isolado; publicar branch e conferir CI/CodeQL remoto.
-- [ ] Triar alertas Code Scanning e baseline Knip com revisão; integrar main/PR #45.
+- [x] Concluir 492 testes, tipos/lint/check, build isolado e gate Knip; publicar
+      branch e conferir CI `39088191790`/CodeQL `39088191746` em `a96a0f9`.
+- [x] Corrigir os oito alertas iniciais sem supressões; confirmar zero alertas
+      abertos/resultados nas três linguagens e PostgreSQL descartável aprovado.
+- [ ] Triar as 48 ocorrências da baseline Knip com revisão; integrar main/PR #45.
 
 Procedimento e limites: [KNIP-CODEQL.md](KNIP-CODEQL.md).
 

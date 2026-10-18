@@ -34,6 +34,10 @@ Quando houver alteração de schema:
   `build:ci-isolated`), conforme `DEVELOPMENT-WORKFLOW.md`; não executar o
   build padrão no checkout com arquivos locais de ambiente.
 - `npm run check` aprovado quando fizer parte do escopo.
+- `npm run knip:check` aprovado nas mudanças que afetem fontes, entradas ou
+  dependências; baseline alterada somente com revisão e justificativa.
+- Conferir CodeQL e seus alertas na CI do commit publicado; sucesso do job não
+  substitui triagem dos resultados de segurança.
 - Nenhum teste removido apenas para fazer a suíte passar.
 
 Para alterações apenas em Markdown, revisão de links e `git diff --check`
