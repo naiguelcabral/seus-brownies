@@ -6,6 +6,7 @@
     "src/routes/**/*.{ts,tsx}",
     "test/**/*.test.ts",
     "e2e/**/*.spec.ts",
+    "e2e/fixtures/product-editor/main.tsx",
     "scripts/**/*.{ts,js,mjs}",
     "*.config.{ts,js,mjs}",
     "playwright.*.config.ts"

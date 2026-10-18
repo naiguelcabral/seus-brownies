@@ -70,12 +70,15 @@ test('schema e migration de estoque gerencial são somente aditivos', async () =
 
 test('fornecedor padrão é informativo, validado e adicionado sem mutação destrutiva', async () => {
   assert.equal(products.preferredSupplierName.name, 'preferred_supplier_name')
-  const [catalog, route, migration] = await Promise.all([
+  const [catalog, editor, migration] = await Promise.all([
     readFile(
       new URL('../src/features/catalog/functions.ts', import.meta.url),
       'utf8',
     ),
-    readFile(new URL('../src/routes/produtos.tsx', import.meta.url), 'utf8'),
+    readFile(
+      new URL('../src/features/catalog/ProductEditor.tsx', import.meta.url),
+      'utf8',
+    ),
     readFile(
       new URL('../drizzle/0022_ambitious_hellcat.sql', import.meta.url),
       'utf8',
@@ -89,7 +92,7 @@ test('fornecedor padrão é informativo, validado e adicionado sem mutação des
     catalog,
     /preferredSupplierName: optionalText\(data\.preferredSupplierName\)/,
   )
-  assert.match(route, /Campo informativo/)
+  assert.match(editor, /Campo informativo/)
   assert.match(migration, /products.*preferred_supplier_name/s)
   assert.doesNotMatch(migration, /DROP|TRUNCATE|DELETE FROM/i)
 })

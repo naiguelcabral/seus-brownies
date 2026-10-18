@@ -1,5 +1,18 @@
 # Roadmap executável para Codex — Cacau v1
 
+## Usabilidade priorizada antes das tarifas — 18/10/2026
+
+- [x] Produtos: botão Adicionar produto, editor modal acessível para cadastro
+      e edição, lista em largura total, campos opcionais agrupados, preservação
+      em erro e confirmação de descarte. 507 testes e cinco ensaios locais
+      de navegador passaram; sem dados reais modificados.
+- [ ] Concluir build isolado e obter autorização específica para publicar
+      o incremento no HML; nenhuma publicação de produção.
+- [ ] Avaliar padrão para Categorias/Locais e simplificação de Cenários,
+      depois revisar o fluxo de Compras/Produção sem mudar regras de domínio.
+
+Escopo e validação: `PRODUCT-CATALOG-UX-2026-10-18.md`.
+
 ## Completude da fonte e ficha — revisão de 18/10/2026
 
 - [x] Auditar as 15 abas do workbook e confrontar cadastros/parametrização

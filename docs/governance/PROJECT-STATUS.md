@@ -1,5 +1,16 @@
 # Estado canônico do projeto — Cacau v1
 
+## Usabilidade de Produtos — 18/10/2026
+
+Primeiro incremento solicitado antes das tarifas: lista em largura total,
+botão Adicionar produto e editor modal para cadastro/edição. Campos opcionais
+agrupados, teclado/foco, confirmação de descarte, estado de envio e retenção
+dos valores em erro. Mesmas funções de servidor e permissões; sem escrita
+na base compartilhada. 507 testes e cinco cenários locais de navegador
+aprovados, incluindo celular; lint/tipos/Oxfmt e baseline Knip conferidos.
+Build isolado pendente neste checkpoint; publicação HML ainda não autorizada.
+Detalhes em [PRODUCT-CATALOG-UX-2026-10-18.md](PRODUCT-CATALOG-UX-2026-10-18.md).
+
 ## Mix 100% — rascunho solicitado — 18/10/2026
 
 Usuário limitou a correção ao sistema como cenário em rascunho. Payload dos
