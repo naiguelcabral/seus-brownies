@@ -29,9 +29,16 @@ Quando houver alteração de schema:
 ## Qualidade
 
 - `npm run lint` aprovado.
-- `npm run build` aprovado.
+- `npm run typecheck` aprovado quando houver alteração TypeScript.
+- Build aprovado pelo procedimento isolado aplicável (`build:hml` ou
+  `build:ci-isolated`), conforme `DEVELOPMENT-WORKFLOW.md`; não executar o
+  build padrão no checkout com arquivos locais de ambiente.
 - `npm run check` aprovado quando fizer parte do escopo.
 - Nenhum teste removido apenas para fazer a suíte passar.
+
+Para alterações apenas em Markdown, revisão de links e `git diff --check`
+substituem verificações de código não afetado. Oxfmt só cobre os formatos e
+caminhos definidos nos scripts; não alegar formatação global da documentação.
 
 ## Segurança
 

@@ -1,5 +1,11 @@
 # Status do projeto — Seus Brownies / Cacau v1
 
+> Registro histórico de 02/09/2026. Para o estado vigente, consulte
+> [PROJECT-STATUS.md](governance/PROJECT-STATUS.md) e o
+> [balanço de atualizações](governance/ATUALIZACOES-E-PENDENCIAS-2026-10-17.md).
+> As importações, ambientes e pendências descritos abaixo preservam a situação
+> daquela data; não comprovam o estado atual da original ou do Worker HML.
+
 > Atualizado em 2 de setembro de 2026. Este é o resumo operacional do projeto.
 > Os documentos de prévia e importação preservam o histórico e a auditoria de
 > cada etapa; não são substituídos por esta página.

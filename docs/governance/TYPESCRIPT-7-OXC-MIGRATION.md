@@ -1,5 +1,24 @@
 # TypeScript 7 e ferramentas Oxc
 
+## Checkpoint de integração — 17 de outubro de 2026
+
+A migração `23f9d85` está na branch atual `codex/worker-sql-connection-check`,
+junto com segurança `201a1ee` e contratos React/TypeScript `072cea1`.
+Após fetch, `origin/main` permanece em `32a9e11`, com TypeScript 6,
+ESLint e Prettier; esses três commits não são ancestrais da main.
+`npm ls` reconfirmou somente TypeScript 7.0.2 nesta branch e ausência de ESLint.
+Auditoria npm atual: zero vulnerabilidades. Última validação local de código:
+489 testes, tipos, lint, check e build HML isolado de `899f7ec` aprovados.
+
+A PR #45 introduz Knip/CodeQL e Oxc informativo sobre a main anterior. Seus
+checks e os três passos de tooling passaram, mas suas configs são menos
+restritas que as desta migração. Não substituir as regras atuais nem considerar
+integração concluída pelo sucesso isolado dessa PR. Reconciliar código,
+manifesto/lockfile e CI; homologação de sessão/navegação continua pendente.
+Veja [inventário e fila de procedimentos](ATUALIZACOES-E-PENDENCIAS-2026-10-17.md).
+
+O relato original de implantação local abaixo é preservado como histórico.
+
 ## Escopo
 
 Migração local autorizada em 16 de outubro de 2026, na branch

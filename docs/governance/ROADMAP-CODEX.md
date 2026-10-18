@@ -1,5 +1,23 @@
 # Roadmap executável para Codex — Cacau v1
 
+## Reconciliação de linguagens e procedimentos — 17 de outubro de 2026
+
+- [x] Documentar catálogo aplicado e correção de sessão ainda local; distinguir
+      evidência local, main e HML sem promover estados por inferência.
+- [x] Conferir fetch, versões instaladas, lockfile, configurações e auditoria
+      npm (zero vulnerabilidades); TS 7/Oxc não integrado em main `32a9e11`.
+- [x] Inspecionar PR #45/CI: passos Oxc/Knip e CodeQL passaram; identificar
+      divergências de regras, scripts e ausência de lockfile para as ferramentas.
+- [x] Atualizar README, status histórico, workflow e DoD para procedimentos atuais.
+- [ ] Reconciliar TS 7/segurança/contratos com main e a PR #45, preservando lint
+      tipado e escopo Oxfmt; fixar Knip no lockfile e revisar Code Scanning final.
+- [ ] Atualizar o prompt ativo Prettier do piloto e sua matriz; testar controlador.
+- [ ] Declarar/validar Python suportado na CI e confirmar extensão Oxc no editor.
+- [ ] Obter CI remota do código final e homologar sessão/navegação após publicação
+      HML especificamente autorizada. Não confundir checks da PR #45 com esta branch.
+
+Inventário: [ATUALIZACOES-E-PENDENCIAS-2026-10-17.md](ATUALIZACOES-E-PENDENCIAS-2026-10-17.md).
+
 ## Sessão ao abrir Estoque — 17 de outubro de 2026
 
 - [x] Correlacionar login `success` com 429 no minting do cookie de sessão;

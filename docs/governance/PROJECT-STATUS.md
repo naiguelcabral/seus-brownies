@@ -1,5 +1,23 @@
 # Estado canônico do projeto — Cacau v1
 
+## Balanço de linguagens e procedimentos — 17 de outubro de 2026
+
+Revisão documental após cadastro dos 17 produtos e preparação da correção de
+sessão. Fetch confirmou main em `32a9e11`, ainda em TypeScript 6/ESLint/Prettier;
+esta branch contém TS 7/Oxc, segurança e contratos React ainda não integrados.
+`npm ls` reconfirmou TS 7.0.2 único; auditoria npm atual sem vulnerabilidades.
+PR #45 aberta (`2fa511b`): CI, CodeQL e três passos informativos Oxc/Knip verdes,
+porém sua configuração reduzida precisa ser reconciliada com as regras locais.
+CI remota desta branch ainda refere `48b101d`, anterior à correção de sessão.
+
+README/status histórico agora distinguem development da original; workflow/DoD
+explicitam builds isolados. Pendem reconciliação do prompt Prettier no piloto,
+versão Python suportada/CI, integração/CI final, publicação autorizada da
+correção de sessão e homologação login → Estoque. Não houve atualização de
+pacote, merge, deploy, importação ou SQL nesta revisão.
+Detalhes e prioridades em
+[ATUALIZACOES-E-PENDENCIAS-2026-10-17.md](ATUALIZACOES-E-PENDENCIAS-2026-10-17.md).
+
 ## Sessão limitada pelo provedor — correção local preparada
 
 Relato de retorno ao login ao abrir Estoque em HML. Formulário público

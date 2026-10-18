@@ -43,9 +43,24 @@ Executar conforme aplicabilidade:
 npm test
 npm run lint
 npm run typecheck
-npm run build
 npm run check
 ```
+
+Quando a alteração exigir build, em HEAD versionado e árvore limpa use um dos
+procedimentos isolados, com chave Turnstile pública de teste explícita:
+
+```bash
+VITE_TURNSTILE_SITE_KEY=1x00000000000000000000AA npm run build:hml
+VITE_TURNSTILE_SITE_KEY=1x00000000000000000000AA npm run build:ci-isolated
+```
+
+Escolha HML para conferir o alvo HML e CI isolado para o build da main, conforme
+o workflow da CI. Ambos usam `git archive` do HEAD e ambiente limpo. O comando
+interno `npm run build` não deve substituir essa validação no checkout que
+contém arquivos locais de ambiente. Esses comandos não publicam; deploy exige
+autorização específica e chave pública real do alvo. Para revisão somente de
+Markdown, use conferência de links/diff; não repita build ou suíte sem mudança
+de código/contrato que justifique.
 
 O runtime local e de CI é Node 22 (mínimo `22.12.0`, menor que 23), fixado em
 `.nvmrc`. Instale dependências exclusivamente com `npm ci` nos ambientes de
@@ -66,6 +81,12 @@ verificações de integridade desses artefatos.
 
 Configurações em `.oxlintrc.json` e `.oxfmtrc.json`; critérios e diferenças de
 cobertura em [TYPESCRIPT-7-OXC-MIGRATION.md](TYPESCRIPT-7-OXC-MIGRATION.md).
+
+O [balanço de 17/10/2026](ATUALIZACOES-E-PENDENCIAS-2026-10-17.md) distingue
+esta branch da main ainda em TS 6 e da PR informativa de tooling. Não substituir
+as regras tipadas locais por configs informativas ao integrar Knip/CodeQL.
+O piloto ainda contém uma instrução ativa de Prettier; reconciliá-la e testar
+o controlador antes de usá-lo para executar a migração de procedimentos.
 
 O compilador exige `exactOptionalPropertyTypes` e `noUncheckedIndexedAccess`,
 inclusive nos testes/scripts. Declare ausência explicitamente; não acrescente
