@@ -34,24 +34,6 @@ const navigation = [
     permission: 'dashboard:read',
   },
   {
-    to: '/categorias',
-    label: 'Categorias',
-    icon: Tags,
-    permission: 'catalog:read',
-  },
-  {
-    to: '/produtos',
-    label: 'Produtos',
-    icon: Package,
-    permission: 'catalog:read',
-  },
-  {
-    to: '/locais',
-    label: 'Locais',
-    icon: MapPin,
-    permission: 'catalog:write',
-  },
-  {
     to: '/compras',
     label: 'Compras',
     icon: ReceiptText,
@@ -82,15 +64,15 @@ const navigation = [
     permission: 'expenses:read',
   },
   {
-    to: '/relatorios',
-    label: 'Relatórios',
-    icon: BarChart3,
-    permission: 'reports:financial:read',
-  },
-  {
     to: '/financeiro',
     label: 'Financeiro',
     icon: Landmark,
+    permission: 'reports:financial:read',
+  },
+  {
+    to: '/relatorios',
+    label: 'Relatórios',
+    icon: BarChart3,
     permission: 'reports:financial:read',
   },
   {
@@ -100,15 +82,33 @@ const navigation = [
     permission: 'scenarios:read',
   },
   {
-    to: '/parametros',
-    label: 'Parâmetros',
-    icon: Settings,
-    permission: 'access:manage',
-  },
-  {
     to: '/plano-de-acao',
     label: 'Plano de ação',
     icon: ClipboardList,
+    permission: 'access:manage',
+  },
+  {
+    to: '/categorias',
+    label: 'Categorias',
+    icon: Tags,
+    permission: 'catalog:read',
+  },
+  {
+    to: '/produtos',
+    label: 'Produtos',
+    icon: Package,
+    permission: 'catalog:read',
+  },
+  {
+    to: '/locais',
+    label: 'Locais',
+    icon: MapPin,
+    permission: 'catalog:write',
+  },
+  {
+    to: '/parametros',
+    label: 'Parâmetros',
+    icon: Settings,
     permission: 'access:manage',
   },
 ] as const
@@ -181,7 +181,7 @@ export function ManagementLayout({
           </div>
           <nav
             className="flex flex-wrap gap-2"
-            aria-label="Navegação do cadastro"
+            aria-label="Navegação principal"
           >
             {visibleNavigation.map(({ to, label, icon: Icon }) => (
               <Link
@@ -214,7 +214,7 @@ export function ManagementLayout({
 
         <section className="mt-8">
           <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#ad572b]">
-            Cadastro
+            Gestão
           </p>
           <h1 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">
             {title}

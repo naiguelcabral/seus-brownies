@@ -1,5 +1,15 @@
 # Estado canônico do projeto — Cacau v1
 
+## Ordem das guias do sistema — 18 de outubro de 2026
+
+Navegação local reorganizada em `ManagementLayout`: Visão geral; Compras;
+Estoque; Produção; Vendas; Despesas; Financeiro; Relatórios; Metas e cenários;
+Plano de ação; Categorias; Produtos; Locais; Parâmetros. Rótulo geral passa de
+Cadastro para Gestão; navegação acessível identificada como Navegação principal.
+Rotas, ícones, filtros de permissão e conteúdo das páginas preservados.
+Tipos, lint, formatação e revisão de diff aprovados. Sem alteração de banco,
+permissão ou deploy. Publicação HML e conferência visual permanecem pendentes.
+
 ## Insumos cadastrados e compra em kg — 18 de outubro de 2026
 
 Solicitação explícita do usuário autorizou a carga de `INS001–INS019` na original
