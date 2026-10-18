@@ -20,7 +20,7 @@
         "productId": 1,
         "originalWeight": "0.02",
         "plannedUnitPrice": "5.00",
-        "plannedUnitCost": "1.654"
+        "plannedUnitCost": "2.654"
       },
       {
         "productId": 2,
@@ -116,7 +116,7 @@
         "productId": 17,
         "originalWeight": "0.02",
         "plannedUnitPrice": "18.00",
-        "plannedUnitCost": "5.898"
+        "plannedUnitCost": "9.898"
       }
     ]
   },
@@ -130,10 +130,10 @@
       "mixBps": 10000
     },
     "budgetReference": {
-      "targetRevenue": "15551.00",
-      "projectedManagerialProfit": "10057.87",
-      "unitsPerMonth": "1437",
-      "unitsPerWeek": "365",
+      "targetRevenue": "15881.00",
+      "projectedManagerialProfit": "10058.27",
+      "unitsPerMonth": "1477",
+      "unitsPerWeek": "376",
       "belowMinimum": 4,
       "mixBps": 10000
     }
@@ -145,14 +145,14 @@
     "mixWasNormalized": true,
     "normalizedMixTotalBps": 10000,
     "marginNeededBeforeFixedCosts": "12200.00",
-    "targetRevenue": "15551.00",
-    "mixGeneratedProfit": "12257.87",
+    "targetRevenue": "15881.00",
+    "mixGeneratedProfit": "12258.27",
     "feeTaxReserve": "0.00",
-    "projectedManagerialProfit": "10057.87",
-    "gapToTarget": "57.87",
-    "unitsPerMonth": "1437",
-    "unitsPerWeek": "365",
-    "targetAverageTicket": "10.82",
+    "projectedManagerialProfit": "10058.27",
+    "gapToTarget": "58.27",
+    "unitsPerMonth": "1477",
+    "unitsPerWeek": "376",
+    "targetAverageTicket": "10.75",
     "targetAverageTicketBasis": "por unidade planejada",
     "productLines": [
       {
@@ -161,13 +161,13 @@
         "originalWeight": "0.020000",
         "normalizedWeightBps": 194,
         "plannedUnitPrice": "5.00",
-        "plannedUnitCost": "1.654",
-        "quantityPerMonth": "71",
-        "quantityPerWeek": "18",
-        "projectedRevenue": "355.00",
-        "projectedMargin": "237.57",
+        "plannedUnitCost": "2.654",
+        "quantityPerMonth": "101",
+        "quantityPerWeek": "26",
+        "projectedRevenue": "505.00",
+        "projectedMargin": "236.95",
         "projectedFeeTaxReserve": "0.00",
-        "projectedMarginBps": "6692",
+        "projectedMarginBps": "4692",
         "belowMinimumMargin": true
       },
       {
@@ -401,13 +401,13 @@
         "originalWeight": "0.020000",
         "normalizedWeightBps": 194,
         "plannedUnitPrice": "18.00",
-        "plannedUnitCost": "5.898",
-        "quantityPerMonth": "20",
-        "quantityPerWeek": "5",
-        "projectedRevenue": "360.00",
-        "projectedMargin": "242.04",
+        "plannedUnitCost": "9.898",
+        "quantityPerMonth": "30",
+        "quantityPerWeek": "8",
+        "projectedRevenue": "540.00",
+        "projectedMargin": "243.06",
         "projectedFeeTaxReserve": "0.00",
-        "projectedMarginBps": "6723",
+        "projectedMarginBps": "4501",
         "belowMinimumMargin": true
       }
     ],
@@ -416,10 +416,9 @@
     ]
   },
   "pending": [
-    "Bombom coverage and Kit assembly/packaging",
     "Bordinhas recovered-mass cost allocation and variable yield",
     "Fees/taxes; 0 retained only as inherited unapproved comparison",
-    "Current purchase prices and final productive capacity validation"
+    "Current purchase references if different from master and final productive capacity validation"
   ],
   "verification": {
     "contract": "passed",
@@ -428,111 +427,37 @@
     "normalizedMixBps": 10000,
     "noSharedWrites": true,
     "noSourceWorkbookChange": true,
-    "independentDecimalRevenueAndProfit": "passed; sum price*quantity minus per-line rounded variable costs minus full fixed budget 2200, reserve comparison zero",
-    "chocolateAndFillings": "user confirmed powder 50% Melken and bought ready-made fillings as master workbook; references unchanged, previous local comparison arithmetic unchanged"
-  },
-  "capacityDiagnostic": {
-    "scope": "14 brownie SKUs only; historical alternative yields treated as recipe equivalents, without whole-batch schedules",
-    "brownieEquivalentRecipesFraction": "469/8",
-    "brownieEquivalentRecipesApprox": 58.62,
-    "reportedMonthlyRecipeRange": [
-      56,
-      64
-    ],
-    "excludes": [
-      "Bordinhas variable recovered mass",
-      "Bombom and Kit until assembly is defined"
-    ],
-    "status": "partial lower demand subtotal only; does not prove all-product feasibility or plan capacity",
-    "details": [
-      {
-        "sku": "PROD016",
-        "units": "184",
-        "historicalYield": "24",
-        "equivalentRecipes": "23/3"
-      },
-      {
-        "sku": "PROD015",
-        "units": "232",
-        "historicalYield": "48",
-        "equivalentRecipes": "29/6"
-      },
-      {
-        "sku": "PROD014",
-        "units": "46",
-        "historicalYield": "12",
-        "equivalentRecipes": "23/6"
-      },
-      {
-        "sku": "PROD013",
-        "units": "20",
-        "historicalYield": "12",
-        "equivalentRecipes": "5/3"
-      },
-      {
-        "sku": "PROD012",
-        "units": "44",
-        "historicalYield": "12",
-        "equivalentRecipes": "11/3"
-      },
-      {
-        "sku": "PROD011",
-        "units": "46",
-        "historicalYield": "12",
-        "equivalentRecipes": "23/6"
-      },
-      {
-        "sku": "PROD010",
-        "units": "46",
-        "historicalYield": "12",
-        "equivalentRecipes": "23/6"
-      },
-      {
-        "sku": "PROD009",
-        "units": "48",
-        "historicalYield": "12",
-        "equivalentRecipes": "4"
-      },
-      {
-        "sku": "PROD008",
-        "units": "121",
-        "historicalYield": "24",
-        "equivalentRecipes": "121/24"
-      },
-      {
-        "sku": "PROD007",
-        "units": "64",
-        "historicalYield": "24",
-        "equivalentRecipes": "8/3"
-      },
-      {
-        "sku": "PROD006",
-        "units": "118",
-        "historicalYield": "24",
-        "equivalentRecipes": "59/12"
-      },
-      {
-        "sku": "PROD005",
-        "units": "121",
-        "historicalYield": "24",
-        "equivalentRecipes": "121/24"
-      },
-      {
-        "sku": "PROD004",
-        "units": "121",
-        "historicalYield": "24",
-        "equivalentRecipes": "121/24"
-      },
-      {
-        "sku": "PROD003",
-        "units": "62",
-        "historicalYield": "24",
-        "equivalentRecipes": "31/12"
-      }
-    ]
+    "independentDecimalRevenueAndProfit": "passed; price*quantity minus per-line rounded variable costs and fixed 2200; taxes comparison still zero"
   },
   "confirmedProfitGoal": {
     "userReply": "Não, R$ 10.000 de lucro após os custos",
     "includesAllProductsIncludingBordinhas": true
+  },
+  "confirmedPhysicalChanges": {
+    "powderChocolate": "Melken 50%; reference master unchanged",
+    "fillings": "purchased ready-made; original master reference and approved usage unchanged",
+    "bombomCoating": "approx 50g per bombom, 2.00 reference cost",
+    "kit": "four bomboms directly in kit package, 200g coverage at 8.00 reference cost",
+    "adhesives": "one per sold loose bombom or kit package",
+    "otherYieldAssumptions": "77 bomboms per recipe remains historical; Bordinhas recovered-mass yield still variable and cost allocation unconfirmed"
+  },
+  "capacityDiagnostic": {
+    "brownieOnlyEquivalentRecipesFraction": "469/8",
+    "brownieOnlyEquivalentRecipesApprox": 58.625,
+    "allExceptBordinhasEquivalentRecipesFraction": "37881/616",
+    "allExceptBordinhasEquivalentRecipesApprox": 61.495,
+    "reportedRange": [
+      56,
+      64
+    ],
+    "basis": "historical alternative yields, without whole-batch schedule or guaranteed recovery",
+    "status": "conditional capacity diagnostic only; Bordinhas variable recovered mass not an added independent recipe demand"
+  },
+  "previousBudgetStepBeforeCoverageUpdate": {
+    "targetRevenue": "15551.00",
+    "unitsPerMonth": "1437",
+    "unitsPerWeek": "365",
+    "projectedManagerialProfit": "10057.87",
+    "status": "superseded by confirmed 50g coverage and packaging"
   }
 }

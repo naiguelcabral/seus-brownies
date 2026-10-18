@@ -532,7 +532,7 @@
       "items": [
         {
           "sku": "PROD001",
-          "plannedVariableReferenceThreePlaces": "1.654"
+          "plannedVariableReferenceThreePlaces": "2.654"
         },
         {
           "sku": "PROD002",
@@ -596,7 +596,7 @@
         },
         {
           "sku": "PROD017",
-          "plannedVariableReferenceThreePlaces": "5.898"
+          "plannedVariableReferenceThreePlaces": "9.898"
         }
       ]
     }
@@ -869,5 +869,73 @@
     },
     "coverageChocolate": "INS019 remains separate from INS003 powder; grams and assembly not inferred",
     "applicationStatus": "confirmed operational specification and preparation; no DB mutation or history import"
+  },
+  "bombomCoverageEstimate": {
+    "userStatement": "Uns 50 gramas por chocolate de bombom",
+    "approximateGrams": "50",
+    "precision": "approximate user estimate, not measured exact consumption",
+    "interpretationStatus": "confirmed as approximate coating consumption per bombom; not total finished weight",
+    "coverageReferenceSku": "INS019; distinct from powder INS003",
+    "notAssumed": [
+      "precisely measured realized consumption"
+    ],
+    "databaseMutationPerformed": false,
+    "confirmation": "50 g só de chocolate de cobertura",
+    "plannedQuantityGrams": "50",
+    "referencePriceBRLPerKg": "40.00",
+    "referenceCoatingCostBRLPerBombom": "2",
+    "applicationStatus": "confirmed planning estimate; no DB write, simulation not yet recalculated"
+  },
+  "kitAssemblyDecision": {
+    "userReply": "Quatro bombons direto na embalagem do kit",
+    "bombomsPerKit": 4,
+    "individualPackagesInsideKit": 0,
+    "kitPackageQuantity": 1,
+    "estimatedCoatingGramsPerKit": "200",
+    "referenceCoatingCostBRLPerKit": "8.00",
+    "basis": "4 times approximate 50 g coverage per bombom at master 40/kg; not total kit cost",
+    "adhesives": "confirmed: one per sold kit package",
+    "costTreatment": "Do not count individual packaging inside kit or duplicate mass/coating by consuming both finished bomboms and base components. Existing source yield 19.25 is algebraically 77/4, not 19.25 whole sellable kits from a physical batch.",
+    "applied": false
+  },
+  "soldPackageAdhesiveDecision": {
+    "question": "Bombom avulso uma embalagem e um adesivo; Kit uma embalagem e um adesivo total?",
+    "answer": "Sim, um adesivo por embalagem vendida",
+    "bombom": {
+      "packageSku": "INS011",
+      "packageQuantity": "1",
+      "adhesiveSku": "INS006",
+      "adhesiveQuantity": "1"
+    },
+    "kit": {
+      "packageSku": "INS012",
+      "packageQuantity": "1",
+      "adhesiveSku": "INS006",
+      "adhesiveQuantity": "1",
+      "individualPackages": "0"
+    },
+    "scope": "one adhesive per sold presentation, not one adhesive for each unwrapped bombom inside a kit",
+    "applied": false
+  },
+  "bombomKitRebuiltVariableReferences": {
+    "basis": "Reference historical physical base / 77 for each bombom, 4 shares per kit; approximate 50g coverage at 40/kg per bombom; confirmed package and adhesive. Labor and energy already in fixed 2200. No duplicated old coverage or packaging. Yield 77 remains historical, not independently measured.",
+    "lines": {
+      "PROD001": {
+        "massShare": "0.3844877344877344896103896104",
+        "coverage": "2.00",
+        "package": "0.11",
+        "adhesive": "0.16",
+        "plannedVariableUnitCost": "2.654"
+      },
+      "PROD017": {
+        "massShare": "1.537950937950937958441558442",
+        "coverage": "8.00",
+        "package": "0.20",
+        "adhesive": "0.16",
+        "plannedVariableUnitCost": "9.898"
+      }
+    },
+    "actualCost": false,
+    "applicationStatus": "prepared only"
   }
 }

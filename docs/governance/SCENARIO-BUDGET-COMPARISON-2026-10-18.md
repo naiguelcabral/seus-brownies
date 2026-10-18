@@ -17,9 +17,11 @@ no catálogo/cenário ainda a R$ 5,00 e demais preços iguais à fonte anterior.
   R$ 0,27 preservado sem somar adesivo duas vezes. O rateio antigo da massa e
   o rendimento isolado 12 são mantidos **apenas para comparação numérica**:
   não foram validados para 100 g de aproveitamento variável.
-- Demais componentes físicos/custos ainda são históricos; não inventar
-  cobertura ou montagem de Bombom/Kit, recheios fabricados ou especificação
-  do chocolate. Referências não certificam preços atuais de aquisição.
+- Chocolate da massa confirmado como Melken 50% em pó; recheios comprados
+  prontos. Bombom com cerca de 50 g de cobertura; Kit quatro bombons direto
+  na embalagem. Um adesivo por apresentação vendida. Custos variáveis
+  reconstruídos: R$ 2,654/Bombom e R$ 9,898/Kit; referências de planejamento
+  com custos mestre e rendimento histórico, não medição realizada.
 - Meta R$ 10.000, 20 dias de venda, quatro semanas e alerta de margem 70%
   herdados para comparação. Taxas/impostos em 0% continuam **não aprovados**;
   essa comparação não confirma sua ausência nem homologa a meta líquida.
@@ -31,10 +33,10 @@ no catálogo/cenário ainda a R$ 5,00 e demais preços iguais à fonte anterior.
 
 | Indicador | Referência do rascunho | Comparação de orçamento |
 | --- | ---: | ---: |
-| Faturamento para a meta | R$ 15.868,00 | R$ 15.551,00 |
-| Unidades mensais | 1.492 | 1.437 |
-| Unidades semanais (soma arredondada por SKU) | 380 | 365 |
-| Lucro gerencial projetado | R$ 10.101,81 | R$ 10.057,87 |
+| Faturamento para a meta | R$ 15.868,00 | R$ 15.881,00 |
+| Unidades mensais | 1.492 | 1.477 |
+| Unidades semanais (soma arredondada por SKU) | 380 | 376 |
+| Lucro gerencial projetado | R$ 10.101,81 | R$ 10.058,27 |
 | Produtos abaixo do alerta de 70% | 4 | 4 |
 
 Não interpretar a diferença de lucro como perda de rentabilidade: o cálculo
@@ -56,7 +58,10 @@ A ponta de 14 receitas/dia já fica abaixo do subtotal só dos brownies. Na pont
 de 16, restam 5,375 receitas equivalentes antes de fechar Bombom/Kit, perdas e
 arredondamento de lotes. Bordinhas depende da massa recuperada, sem produção
 adicional garantida. Não declarar viabilidade de todas as vendas planejadas
-somente por estar dentro da faixa superior.
+somente por estar dentro da faixa superior. Incluindo Bombom/Kit pelos
+rendimentos históricos e sem contar Bordinhas como produção independente,
+o total condicional é **61,495 receitas equivalentes/mês**. Restam cerca de
+2,505 receitas na ponta de 64, sem agenda de lotes inteiros ou perdas medidas.
 
 ## Validação e continuação
 
@@ -70,15 +75,14 @@ Payload de simulação, comparação, projeção detalhada e diagnóstico de
 capacidade: [scenario-budget-comparison-2026-10-18.json](evidence/scenario-budget-comparison-2026-10-18.json).
 Este arquivo não é instrução de aplicar nem referência idempotente consumida.
 
-Recheios e chocolate esclarecidos: comprados prontos e Melken 50% em pó,
-respectivamente. Meta de R$ 10.000 de lucro após custos confirmada, incluindo
-Bordinhas na soma dos produtos. Referências mestre de custos não mudaram,
-portanto a comparação numérica anterior continua sendo a mesma simulação
-condicional, sem necessidade de repetir os cálculos por mera mudança de rótulo.
-A pergunta anterior sobre cobertura por bombom e montagem/embalagem do Kit
-continua sem resposta. Faltam também rateio físico de Bordinhas, taxas e
-referências atuais de aquisição. Após as definições, recalcular capacidade,
-preparar pacote aditivo rastreável e atualizar o cenário por ação autenticada.
+Meta confirmada em R$ 10.000 de lucro após custos, incluindo Bordinhas.
+Recheios comprados prontos e chocolate em pó definidos; cobertura e
+embalagens/adesivos de Bombom e Kit também esclarecidos, agora recalculados.
+A simulação anterior de R$ 15.551/1.437 unidades foi substituída após fechar
+50 g de cobertura por bombom, sem dupla contagem dos componentes.
+Faltam taxas/impostos e rateio da massa recuperada de Bordinhas. Perguntados
+percentuais/valores de taxas e peso assado da receita para custear 100 g.
+Após respostas, recalcular e preparar pacote aditivo e revisão autenticada.
 Nenhuma modificação do writer de produção, FIFO ou regra financeira implementada.
 
 A revisão da representação dos materiais confirmou que o enum atual de

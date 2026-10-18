@@ -18,6 +18,71 @@ ovos, requisitos de 1 kWh e duas horas, tarifas de R$ 0,85/kWh e R$ 12,50/h,
 vínculo de embalagem. Sem compras, lotes ou movimentos: ainda não há custo
 realizado ou preço atual de aquisição para substituir referências históricas.
 
+## Embalagens e adesivos de Bombom/Kit fechados
+
+Usuário confirmou “Sim, um adesivo por embalagem vendida”. Bombom avulso:
+uma embalagem INS011 e um adesivo INS006. Kit: uma embalagem INS012 e um
+adesivo INS006 no total; os quatro bombons internos não recebem embalagens
+ou adesivos individuais.
+
+Reconstrução variável de referência, sem MO/energia já nos fixos e sem
+somar novamente complementos antigos:
+
+| Apresentação | Massa de referência | Cobertura | Embalagem | Adesivo | Total variável exibido |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Bombom | R$ 0,38 | R$ 2,00 | R$ 0,11 | R$ 0,16 | R$ 2,65 |
+| Kit de quatro | R$ 1,54 | R$ 8,00 | R$ 0,20 | R$ 0,16 | R$ 9,90 |
+
+Massa calculada com R$ 29,605555… físicos/receita ÷ rendimento histórico de
+77 bombons, quatro parcelas para o Kit. Componentes mantidos sem arredondamento
+intermediário: campos planejados a três casas, **R$ 2,654** e **R$ 9,898**.
+Não confundir o total variável com custo produtivo completo ou realizado.
+A estimativa de 50 g e o rendimento histórico ainda não são medição de lote.
+Composição física esclarecida; representação executável/material no banco
+precisa do pacote aditivo e ensaio próprios, sem reutilizar importação anterior.
+
+Simulação revisada: R$ 15.881 de faturamento, 1.477 unidades/mês e
+R$ 10.058,27 de lucro, mantendo reserva 0% **somente para comparação**.
+Conta independente conferida, sem atualizar cenário. Perguntas enviadas sobre
+taxas/impostos e peso da massa assada para ratear Bordinhas de 100 g.
+
+## Kit — quatro bombons sem embalagem individual
+
+Usuário confirmou “Quatro bombons direto na embalagem do kit”. Montagem:
+**quatro bombons e uma embalagem de kit**, sem quatro embalagens individuais.
+Com cerca de 50 g de cobertura por bombom, estimativa de 200 g de cobertura
+por kit, **R$ 8,00** pela referência mestre de R$ 40/kg, antes de massa e
+embalagem. Não duplicar cobertura/massa consumindo ao mesmo tempo os bombons
+prontos e seus componentes para a mesma saída.
+
+A relação histórica de rendimento 77 bombons e 19,25 kits é compatível com
+77 ÷ 4, mas a produção física resulta em kits inteiros e sobra rastreável;
+não tratar 0,25 kit como um pacote completo vendável. Quantidade de adesivos
+no kit e embalagem/adesivo do bombom avulso perguntadas, ainda sem resposta.
+Sem aplicação de ficha, preço ou cenário nesta etapa.
+
+## Bombom — cobertura estimada confirmada
+
+Usuário informou “Uns 50 gramas por chocolate de bombom” e confirmou
+“50 g só de chocolate de cobertura”. Referência de planejamento: **cerca de
+50 g de cobertura por bombom**, distinta do peso total. Manter a natureza
+aproximada da informação, sem declarar consumo realizado exato.
+
+`03_Cadastro_Insumos!C23:F23` informa cobertura INS019 a R$ 40/1.000 g.
+50 g × R$ 40 ÷ 1.000 = **R$ 2,00 de cobertura por bombom**, sem massa ou
+embalagem. É preço de referência mestre, não compra atual ou custo total.
+INS019 permanece distinto do chocolate em pó INS003 da receita-base.
+
+A cobertura antiga inferida de 25 g/R$ 1 não deve ser conservada como consumo
+válido: a estimativa física agora é 50 g. Na reconstrução, substituir a parcela
+antiga, não acrescentar R$ 2 sobre um custo que já inclui cobertura. O resíduo
+histórico de R$ 1,27 ainda exige separar embalagem/adesivo de forma rastreável.
+
+Perguntado se os quatro bombons do Kit vão diretamente na embalagem do Kit
+ou recebem embalagens individuais. Quantidades de adesivos e confirmação da
+montagem continuam pendentes; a resposta de gramagem não as define.
+Sem alteração de banco, histórico ou projeção aplicada nesta etapa.
+
 ## Chocolate da massa e recheios comprados — definição recebida
 
 Usuário definiu chocolate “maleken 50% em pó” e recheios comprados conforme o
@@ -375,12 +440,17 @@ ao definir o vínculo físico, evitar somar R$ 0,16 novamente ao custo históric
 - Concluído: R$ 150/dia × quatro dias = R$ 600/mês de MO incluída nos fixos;
   14–16 receitas completas por dia e energia também incluída nos R$ 2.200.
 - Concluído: uma embalagem e um adesivo por brownie PROD003–PROD016.
-- Pendente: apresentação/rendimento e rateio de Bordinhas; cobertura,
-  montagem e embalagens de bombom/Kit; taxas/impostos e preços atuais de aquisição.
+- Concluído: Bordinhas 100 g a R$ 6 com saquinho e adesivo; cerca de 50 g
+  de cobertura por Bombom; quatro bombons sem embalagem individual no Kit;
+  uma embalagem própria e um adesivo por apresentação vendida.
+- Pendente: peso/rateio da massa aproveitada de Bordinhas e taxas/impostos.
+  Referências mestre do workbook são as solicitadas para o planejamento,
+  não preço de compra atual realizado.
 - Concluído: chocolate da massa Melken 50% em pó; recheios comprados prontos
   nas apresentações mestre, preservados os consumos aprovados de 20/40 g.
-- Premissas herdadas ainda a validar no fechamento: meta de lucro R$ 10.000,
-  20 dias de venda, quatro semanas e limiar de margem de 70%. O consumo de
+- Meta de R$ 10.000 de lucro após custos confirmada, incluindo todos os
+  produtos. Herdados para conferir no fechamento: 20 dias de venda, quatro
+  semanas e limiar de margem de 70%. O consumo de
   energia por ciclo/receita continua não medido, sem cobrança duplicada no
   planejamento que mantém a energia dentro do orçamento fixo integral.
 

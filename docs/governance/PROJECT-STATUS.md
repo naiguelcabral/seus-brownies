@@ -1,5 +1,18 @@
 # Estado canônico do projeto — Cacau v1
 
+## Bombom/Kit reconstruídos — 18/10/2026
+
+Confirmados cerca de 50 g de cobertura por bombom, Kit com quatro bombons
+sem embalagem individual e um adesivo por apresentação vendida. Referências
+variáveis reconstruídas em R$ 2,654/Bombom e R$ 9,898/Kit, com MO/energia
+nos fixos. Simulação atualizada: R$ 15.881, 1.477 unidades, R$ 10.058,27 de
+lucro, ainda com reserva 0% não aprovada e rateio de Bordinhas pendente.
+Conta independente aprovada; sem escrita de banco ou ativação. Capacidade
+condicional de 61,495 receitas mensais, sem Bordinhas como produção extra,
+frente a 56–64 informadas. Perguntados taxas/impostos e peso da massa assada.
+Detalhes: [SCENARIO-BUDGET-COMPARISON-2026-10-18.md](SCENARIO-BUDGET-COMPARISON-2026-10-18.md).
+
+
 ## Chocolate e recheios esclarecidos — 18/10/2026
 
 Usuário confirmou Melken 50% em pó na massa e recheios comprados prontos
@@ -7,7 +20,14 @@ conforme o workbook. Histórico confirma a descrição do chocolate; referência
 mestre preservada a R$ 60/kg, 300 g = R$ 18/receita. Sem sub-receitas de recheio;
 20/40 g aprovados mantidos. Não confundir pó INS003 com cobertura INS019 nem
 remapear fruta histórica para recheio pronto. Falta Bombom/Kit, rateio de
-Bordinhas e taxas antes de ativar. Especificações registradas, sem escrita na
+Bordinhas e taxas antes de ativar. Estimativa “uns 50 g” recebida para Bombom;
+confirmada como apenas cobertura por unidade. Referência de R$ 40/kg resulta
+em R$ 2,00 de cobertura por bombom, sem massa/embalagem. Pergunta sobre
+embalagem do Kit respondida: quatro bombons diretamente em uma embalagem,
+sem embalagem individual. Estimativa de cobertura 200 g/R$ 8 por kit.
+Quantidade de adesivos no kit e embalagem/adesivo do avulso em confirmação;
+nenhum custo aplicado ainda.
+Especificações registradas, sem escrita na
 base. Meta confirmada pelo usuário continua R$ 10.000 de lucro após custos,
 incluindo todos os produtos, inclusive Bordinhas.
 Detalhes: [SCENARIO-COST-RECONCILIATION-2026-10-18.md](SCENARIO-COST-RECONCILIATION-2026-10-18.md).

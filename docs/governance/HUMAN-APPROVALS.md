@@ -1,5 +1,19 @@
 # Ações que exigem aprovação humana — Cacau v1
 
+## Bombom — cobertura definida em 18/10/2026
+
+Usuário informou “Uns 50 gramas por chocolate de bombom” e confirmou que são
+50 g só de chocolate de cobertura. Usar como estimativa aproximada de
+planejamento por bombom, referência INS019/R$ 40 por kg do workbook.
+Não equivale a peso total, medição exata realizada ou definição automática
+da montagem/embalagem/adesivos de Kit. Depois confirmou quatro bombons
+colocados diretamente na embalagem do kit, sem embalagens individuais.
+Confirmou depois “Sim, um adesivo por embalagem vendida”: avulso com uma
+embalagem INS011 e um adesivo; Kit com uma embalagem INS012 e um adesivo no
+total, sem embalagens internas. Usar no recálculo substituindo complementos
+históricos, sem somá-los de novo. Sem aplicação compartilhada nesta etapa.
+
+
 ## Meta, chocolate e recheios — definições de 18/10/2026
 
 Usuário confirmou R$ 10.000 de lucro após custos somando todos os produtos,
