@@ -1,16 +1,43 @@
 # Cadastro técnico — pacote para autorização
 
-Estado: **preparado e ensaiado localmente; aplicação real pendente**.
+Estado: **autorizado, ensaiado externamente, aplicado e conferido na original**.
 Alvo exclusivo proposto: `steep-brook-51659857` /
 `br-lingering-wind-acwh5wap` / `neondb`.
 Branch Git: `feat/input-catalog-kg-purchases`.
+
+## Resultado da execução
+
+Autorização humana explícita recebida após a apresentação deste pacote.
+Workbook/receita/ficha reconferidos, incluindo oito ovos em unidades.
+Backup novo sem compute `br-solitary-unit-ac3lawit`, LSN `0/21275A0`, preservado.
+Criação da segunda branch recusada por quota; para o ensaio, reutilizada
+`br-aged-violet-ac5aap1s`, cópia privada anterior do backup de custos exatos,
+após igualdade de todos os digests das 38 tabelas e journal e das nove seções
+de definições do schema com a original atual. Não deriva do backup novo;
+a equivalência foi comprovada antes de qualquer inclusão. Nenhuma branch
+apagada/resetada, nenhum endpoint realocado e nenhum restore executado.
+
+Mesmo SQL abaixo aplicado na cópia e, após sucesso, na original revalidada,
+via 144 instruções por transação gerenciada pelo MCP, preservando o corpo do
+SQL e substituindo apenas BEGIN/COMMIT pelo envelope transacional da ferramenta.
+Leituras independentes confirmam todos os valores/vínculos, 43 auditorias,
+preservação integral dos registros anteriores e schema inalterado.
+Original confirmada às `2026-10-18T15:03:03.883098Z`; compute do ensaio idle.
+
+Recibo: [technical-catalog-execution-2026-10-18.json](../../evidence/technical-catalog-execution-2026-10-18.json).
+Readbacks: [original](../../evidence/technical-catalog-original-readback-2026-10-18.json)
+e [ensaio](../../evidence/technical-catalog-rehearsal-readback-2026-10-18.json).
+Ambos passam `node scripts/verify-technical-catalog-readback.mjs <arquivo>`.
+Nenhum fato operacional criado. Bombom/kit e QA autenticado continuam pendentes.
+Os procedimentos prospectivos abaixo são o plano histórico já executado com
+a adaptação de topologia explicitamente documentada acima.
 
 ## Pacote concreto
 
 SQL: [technical-catalog-apply-2026-10-18.sql](../../evidence/technical-catalog-apply-2026-10-18.sql).
 SHA-256: `01fdc56d23954ef5ba9a92de501cb65834cab2ef36cecb2ee5aeac1d5332a645`.
 Manifesto: [technical-catalog-package-2026-10-18.json](../../evidence/technical-catalog-package-2026-10-18.json).
-Referência proposta **não consumida na base real**: `TECH-CATALOG-2026-10-18-001`.
+Referência **consumida na base real; não repetir**: `TECH-CATALOG-2026-10-18-001`.
 
 | Cadastro | Inclusões |
 | --- | ---: |
@@ -97,7 +124,7 @@ falhou em subprocessos e foi interrompida; a repetição fora da restrição pas
 Build da aplicação não repetido: nenhuma fonte/runtime/configuração da aplicação
 mudou. CI/CodeQL remotos deste pacote ainda não executados.
 
-## Gate humano e execução proposta
+## Gate humano e execução proposta — histórico já autorizado
 
 Conforme [HUMAN-APPROVALS.md](HUMAN-APPROVALS.md), a preparação local não
 autoriza escrita na original. Solicitar aceite específico deste SQL e escopo,

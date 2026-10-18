@@ -13,12 +13,17 @@ checkpoints antigos abaixo não devem reabrir carga/deploy já comprovados.
       HML publicado em `2e649847-ec1b-4997-bf74-bcad310977f7`, a 100%.
       Conferência HTTP/bundle passou após um 500 inicial recuperado; falta
       homologação operacional autenticada em cenário autorizado. Sem backfill.
-- [~] O01–O04: SQL exclusivo de cadastro preparado e ensaiado; workbook
-      revalidado, 507 testes e 16 cenários PG17 aprovados. Preflight real
-      READ ONLY confirma 36 produtos e domínio técnico vazio. Falta autorização
-      específica para backup atual, cópia de ensaio e aplicação na original;
-      referência ainda não consumida. Excluídos os 17 PLAN antigos; bombom/kit
-      continuam fichas incompletas. Ver `TECHNICAL-CATALOG-EXECUTION-PLAN-2026-10-18.md`.
+- [x] O01/O02/O04 — cadastro autorizado na original: Ovos Grandes, receita
+      versionada de sete linhas/8 ovos, dois requisitos e duas tarifas.
+      Workbook revalidado; backup atual sem compute preservado. Ensaio e
+      aplicação do mesmo SQL passaram com leitura independente, 43 auditorias
+      e preservação das 38 tabelas/33 recibos. Referência consumida
+      `TECH-CATALOG-2026-10-18-001`; não repetir nem importar os 17 PLAN.
+- [~] O03 — cadastrados 17 perfis de referência, 14 embalagens e 12 recheios
+      aprovados; bombom/kit ainda precisam de regras completas de embalagem/
+      cobertura e homologação operacional. Cópia privada anterior reutilizada
+      após equivalência de dados/schema porque a quota recusou nova branch;
+      compute suspenso/idle. Ver `TECHNICAL-CATALOG-EXECUTION-PLAN-2026-10-18.md`.
 - [ ] Preparar estoque rastreável e cenário de QA; homologar acesso por papel,
       compra → produção → venda, lifecycle financeiro e interface.
 - [ ] Integrar main/PRs, finalizar cadeia genérica da issue #36, cobertura de

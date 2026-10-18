@@ -1,6 +1,42 @@
 # Handoff — preparação do cadastro técnico
 
-## Checkpoint atual — pacote SQL ensaiado
+## Checkpoint atual — cadastro aplicado e conferido
+
+Autorização humana explícita recebida para reconferir workbook, receita e ficha,
+incluir ovos, ensaiar e prosseguir somente após sucesso. Tudo confirmado na
+original em 18/10/2026 às `15:03:03.883098Z`. São 37 produtos, Ovos Grandes em
+unidades, receita de sete linhas/8 ovos, dois requisitos/tarifas, 17 perfis,
+14 embalagens e 12 recheios. Recibo e 43 auditorias conferidos. Referência
+**consumida** `TECH-CATALOG-2026-10-18-001`; nunca repetir a carga.
+
+Backup atual `br-solitary-unit-ac3lawit`, LSN `0/21275A0`, sem compute, preservado.
+Quota recusou segunda branch. Reutilizada cópia privada anterior
+`br-aged-violet-ac5aap1s` após igualdade completa dos 39 digests (38 tabelas e
+journal) e nove seções de schema; ensaio e readback independente passaram.
+Original revalidada antes das mesmas 144 instruções, corpo SQL SHA-256
+`01fdc56d23954ef5ba9a92de501cb65834cab2ef36cecb2ee5aeac1d5332a645` inalterado.
+Leitura independente original também passou. Compute do ensaio suspenso/idle;
+original conserva endpoint/default/primary e todos os backups anteriores.
+
+Evidências: `technical-catalog-execution-2026-10-18.json` e dois readbacks em
+`evidence/`; verificador offline versionado em
+`scripts/verify-technical-catalog-readback.mjs`. Status/roadmap/plano e
+HUMAN-APPROVALS atualizados. Pacote anterior: 507 testes e 16 casos PG17 verdes;
+verificador aprovou os dois readbacks reais e checks finais locais passaram.
+Nenhuma fonte/runtime da aplicação, migration, segredo ou deploy alterado.
+Não repetir suíte/build da aplicação apenas por essa documentação/evidência.
+
+Próximo passo: preparar estoque rastreável e cenário QA isolado antes da
+homologação autenticada compra → produção → venda. Original ainda tem zero
+compras/movimentos/lotes/vendas; não criar saldo fictício. Bombom/kit permanecem
+fichas incompletas quanto à embalagem/cobertura. Os ovos não têm conversão para
+kg. Custos históricos fracionários são somente metadados brutos.
+Não há gate de cadastro técnico deste pacote pendente. Operações reais e novas
+regras mantêm seus gates próprios. Não há retomada automática agendada.
+
+## Histórico anterior à autorização
+
+## Checkpoint anterior — pacote SQL ensaiado
 
 Retomada autorizada em 18/10/2026, após consulta oficial confirmar renovação:
 100% restantes na janela de cinco horas e 74% na semanal. LIGARTUDO em modo

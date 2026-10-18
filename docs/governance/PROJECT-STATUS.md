@@ -1,5 +1,39 @@
 # Estado canônico do projeto — Cacau v1
 
+## Ficha técnica cadastrada na original — 18/10/2026
+
+Usuário autorizou reconferir workbook/receita/ficha, incluir os ovos, ensaiar
+e prosseguir se tudo estivesse correto. Workbook disponível reaberto: mesmo
+SHA-256 e zero issues; receita, perfis e tarifas iguais ao pacote `1f23276`.
+Backup atual `br-solitary-unit-ac3lawit`, sem compute, LSN `0/21275A0`, preservado.
+Quota recusou segunda branch; cópia privada anterior `br-aged-violet-ac5aap1s`
+foi reutilizada após equivalência exata das 38 tabelas, journal completo e
+nove seções do schema com a original. Nenhum backup removido ou reset aplicado.
+
+Ensaio do SQL exato e leitura independente passaram; original revalidada e
+recebeu as mesmas 144 instruções em transação única. Leitura independente às
+`2026-10-18T15:03:03.883098Z` confirmou 37 produtos, incluindo Ovos Grandes em
+unidades, receita-base com sete linhas/8 ovos, dois requisitos e duas tarifas,
+17 perfis, 14 vínculos de embalagem e 12 recheios de 20/40 g. Um recibo novo e
+43 auditorias conferem com as entidades. Referência **consumida**
+`TECH-CATALOG-2026-10-18-001`; não repetir.
+
+Todos os registros anteriores das 38 tabelas e 33 recibos de schema preservados
+por SHA-256; definições do schema idênticas. Nenhum PLAN, compra, movimento,
+lote, venda, perda ou fato financeiro criado. Custos históricos continuam
+somente metadados brutos. Original conserva endpoint/default/primary; cópia
+de ensaio suspensa/idle, backup sem compute e demais backups preservados.
+Não houve deploy, mudança de segredo ou migration nesta aplicação.
+
+Recibo e leituras em `evidence/technical-catalog-{execution,original-readback,rehearsal-readback}-2026-10-18.json`.
+Verificador offline `scripts/verify-technical-catalog-readback.mjs` aprovou
+os dois readbacks. Pacote já passou 507 testes e 16 cenários PG17; checks
+locais finais também aprovados. Cadastro confirmado no banco; interface
+protegida e fluxo operacional não foram homologados por esta aplicação.
+Bombom/kit continuam com regras de embalagem/cobertura pendentes. Próxima
+etapa é preparar estoque rastreável e cenário de QA autorizado.
+O checkpoint seguinte é histórico, anterior à autorização/aplicação.
+
 ## Ficha técnica — SQL separado ensaiado — 18/10/2026
 
 Pacote O01–O04 pronto para revisão, sem aplicação real. Workbook reaberto,

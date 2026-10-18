@@ -1,5 +1,28 @@
 # Ações que exigem aprovação humana — Cacau v1
 
+## Cadastro técnico — autorização de 18 de outubro de 2026
+
+Após apresentação do pacote `1f23276`, usuário autorizou seguir, reconferir a
+ficha técnica, receita e workbook disponível, incluir os ovos, realizar ensaio
+e prosseguir se tudo estiver correto. Autoriza o plano
+`TECHNICAL-CATALOG-EXECUTION-PLAN-2026-10-18.md`: backup atual em branch sem
+compute, cópia privada de ensaio e aplicação na original
+`br-lingering-wind-acwh5wap` / `neondb` somente após sucesso.
+SQL aprovado SHA-256 `01fdc56d23954ef5ba9a92de501cb65834cab2ef36cecb2ee5aeac1d5332a645`.
+Inclui Ovos Grandes, receita de sete linhas, dois requisitos/tarifas,
+17 perfis de referência, 14 embalagens, 12 recheios, recibo e 43 auditorias.
+Não autoriza estoque/compra/lote/venda sintéticos, PLAN históricos, regra nova
+para bombom/kit, secrets, endpoints, promoção/restore da original ou deploy.
+Aplicação concluída após ensaio e leitura independente: 37 produtos incluindo
+Ovos Grandes, receita de sete linhas/8 ovos, dois requisitos/tarifas, 17 perfis,
+14 embalagens e 12 recheios, um recibo e 43 auditorias. Referência **consumida**
+`TECH-CATALOG-2026-10-18-001`; não repetir. Registros anteriores e schema
+preservados; sem fatos operacionais criados. Backup atual sem compute
+`br-solitary-unit-ac3lawit` preservado. Quota recusou nova cópia; cópia privada
+anterior `br-aged-violet-ac5aap1s` reutilizada somente após equivalência integral
+de dados/journal/schema, sem reset ou exclusão. Compute final idle.
+Recibo: `evidence/technical-catalog-execution-2026-10-18.json`.
+
 ## Aplicação e publicação dos custos exatos — 18 de outubro de 2026
 
 Após a entrega local e apresentação explícita do gate, usuário respondeu

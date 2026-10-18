@@ -1,5 +1,14 @@
 # Levantamento consolidado de pendências — Cacau v1
 
+Checkpoint posterior O01–O04: catálogo técnico autorizado, ensaiado e cadastrado
+na original em 18/10/2026, incluindo Ovos Grandes, receita de sete linhas/8
+ovos, dois requisitos/tarifas, 17 perfis, 14 embalagens e 12 recheios.
+Leitura independente confirmou 43 auditorias e preservação dos dados/schema;
+referência `TECH-CATALOG-2026-10-18-001` consumida. Backup atual preservado.
+Bombom/kit e homologação operacional continuam pendentes. Os estados da tabela
+abaixo são históricos; ver
+[plano/execução](TECHNICAL-CATALOG-EXECUTION-PLAN-2026-10-18.md).
+
 Checkpoint posterior: C01 recebeu custos exatos e compra em kg pelo total,
 com 505 testes, PostgreSQL 17 e CI/CodeQL aprovados. Após aprovação humana,
 schema aplicado e HML publicado em 18/10/2026. Falta homologação operacional
