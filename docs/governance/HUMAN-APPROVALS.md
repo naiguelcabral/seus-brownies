@@ -1,5 +1,15 @@
 # Ações que exigem aprovação humana — Cacau v1
 
+## Bordinhas — apresentação e preço definidos em 18/10/2026
+
+Usuário informou “100 gramas a cada 6 reais para as bordinhas”. Autoriza usar
+pacote de 100 g a R$ 6,00 na revisão de PROD002. Rendimento, embalagem,
+adesivo e rateio ainda pendentes. Não interpretar rendimento histórico 12 como
+12 pacotes de 100 g, nem converter unidade do SKU por inferência. Preço novo
+preparado para atualização rastreável de catálogo/cenário após a revisão;
+nenhuma escrita compartilhada nesta etapa.
+
+
 ## Embalagem e adesivo dos brownies — confirmação de 18/10/2026
 
 Usuário respondeu “Sim” a uma embalagem e um adesivo por brownie simples ou

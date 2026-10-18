@@ -738,5 +738,22 @@
       }
     ],
     "preserveExistingPackaging": true
+  },
+  "bordinhasDecision": {
+    "userStatement": "100 gramas a cada 6 reais para as bordinhas",
+    "productSku": "PROD002",
+    "salePresentation": "one package of 100 g",
+    "packageNetWeightGrams": "100",
+    "salePricePerPackageBRL": "6.00",
+    "historicalPriceBRL": "5.00",
+    "priceDeltaBRL": "1.00",
+    "physicalYieldFromHistorical12": "not confirmed; do not interpret as twelve 100 g packs",
+    "pending": [
+      "package identity and quantity",
+      "adhesive per package",
+      "packages of 100 g produced per recipe",
+      "coproduct cost allocation"
+    ],
+    "applicationStatus": "review reference only; no catalog, profile, scenario or historical data changed"
   }
 }

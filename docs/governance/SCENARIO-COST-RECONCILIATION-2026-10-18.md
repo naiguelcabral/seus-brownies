@@ -18,6 +18,22 @@ ovos, requisitos de 1 kWh e duas horas, tarifas de R$ 0,85/kWh e R$ 12,50/h,
 vínculo de embalagem. Sem compras, lotes ou movimentos: ainda não há custo
 realizado ou preço atual de aquisição para substituir referências históricas.
 
+## Bordinhas — apresentação e preço informados
+
+Usuário informou “100 gramas a cada 6 reais para as bordinhas”. Referência
+atual da revisão: **um pacote de 100 g vendido por R$ 6,00**, SKU PROD002,
+substituindo o preço histórico de R$ 5,00 na proposta em preparação.
+Não altera automaticamente o catálogo ou o cenário enquanto as premissas
+estão sendo reconciliadas; atualização de preço deve abranger ambos de forma
+rastreável no pacote final, preservando histórico.
+
+Peso líquido do pacote e unidade comercial são distintos: um pacote corresponde
+a 100 g. Não converter silenciosamente a unidade do SKU existente ou supor
+que o rendimento histórico 12 represente 12 pacotes de 100 g. Falta confirmar
+qual embalagem, adesivo por pacote, rendimento físico de pacotes por receita
+e rateio de custo de coproduto. Nenhuma margem atual é certificável sem isso.
+Pergunta enviada sobre embalagem, adesivo e rendimento de pacotes de 100 g.
+
 ## Embalagem e adesivo dos brownies — confirmação recebida
 
 Usuário respondeu “Sim” à pergunta se cada brownie simples ou recheado,
