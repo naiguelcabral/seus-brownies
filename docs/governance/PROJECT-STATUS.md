@@ -1,5 +1,15 @@
 # Estado canônico do projeto — Cacau v1
 
+## Revisão de ativação solicitada — 18/10/2026
+
+Usuário pediu tirar o cenário do rascunho. Conferência atual: ID 1/v1/rev1,
+17 produtos finais ativos, mix 100%, nenhum cenário ativo e 22 testes locais
+aprovados. Custos históricos e reserva 0% continuam com ressalvas; solicitada
+decisão entre reconciliar antes de ativar ou aceitar referência provisória.
+Sem escrita de banco nesta revisão. Detalhes:
+[SCENARIO-ACTIVATION-REVIEW-2026-10-18.md](SCENARIO-ACTIVATION-REVIEW-2026-10-18.md).
+
+
 ## Categorias e Locais — incremento de UX em 18/10/2026
 
 Listas em largura total e criação/edição em modal, com busca/situação em
