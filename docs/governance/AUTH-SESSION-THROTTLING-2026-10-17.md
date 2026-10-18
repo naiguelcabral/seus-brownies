@@ -40,8 +40,11 @@ pode ocorrer quando o provedor estiver limitado.
 
 Testes determinísticos cobrem consulta única, 429/500/503, falha de rede e
 recuperação, troca de identidade, acesso revogado, erro com dados e rejeição
-401. Sem operações sintéticas em HML. A suíte completa e o build isolado são
-registrados no checkpoint canônico ao final da validação.
+401. Sem operações sintéticas em HML. Suíte completa: 489 testes aprovados;
+tipos, lint e formatação aprovados. Build HML isolado de `899f7ec` aprovado
+com chave pública de teste, sem secrets. Primeira execução da suíte no sandbox
+falhou por `spawnSync git EPERM`; execução completa autorizada fora do sandbox
+passou. Nenhum teste foi removido ou enfraquecido.
 
 Publicação HML requer autorização específica, conforme comentário operacional
 em `scripts/build-hml-isolated.sh`: “Publicação continua sendo operação

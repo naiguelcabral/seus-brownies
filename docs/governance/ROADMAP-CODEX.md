@@ -6,7 +6,8 @@
       confirmar que o formulário HML continua disponível.
 - [x] Preparar leitura única de identidade/papel e distinguir erro temporário
       de sessão anônima; testar isolamento, revogação, 401 e falhas 429/5xx/rede.
-- [ ] Concluir suíte completa e build isolado; revisar/registrar a correção.
+- [x] Concluir suíte completa (489 testes), tipos, lint, formatação e build
+      HML isolado de `899f7ec` com chave pública de teste; revisão concluída.
 - [ ] Autorizar/publicar exclusivamente em HML e validar login → Estoque →
       recarga na sessão humana. Redução de chamadas não prova fim do limite 429.
 
