@@ -1,4 +1,12 @@
 import { requireDefined } from '../../lib/required-value'
+import {
+  addCosts,
+  costOrDecimal,
+  exactCost,
+  scaleCost,
+  subtractCosts,
+} from '../../lib/exact-cost'
+import type { ExactCost } from '../../lib/exact-cost'
 /**
  * Cálculos determinísticos de produção. Quantidades usam milésimos e valores
  * usam centavos nos totais e milésimos de real nos custos unitários para não
@@ -145,6 +153,45 @@ export type CostedMovement = {
   quantityDelta: string
   unitCost: string | null
   allocatedCost?: string | null
+  exactCost?: ExactCost | null
+}
+
+/** Reconstructs authoritative value without multiplying a rounded unit cost. */
+export function calculateExactInventoryState(movements: CostedMovement[]) {
+  let quantity = 0n
+  let value = exactCost(0n)
+  for (const movement of movements) {
+    const delta = quantityToThousandths(movement.quantityDelta)
+    if (delta === null) throw new Error('Movimentação com quantidade inválida.')
+    const legacyUnitCost =
+      movement.unitCost === null ? null : unitCostToMillis(movement.unitCost)
+    if (movement.unitCost !== null && legacyUnitCost === null)
+      throw new Error('Movimentação com custo unitário inválido.')
+    const recorded =
+      movement.exactCost != null || movement.allocatedCost != null
+        ? costOrDecimal(movement.exactCost, movement.allocatedCost ?? '0')
+        : legacyUnitCost !== null
+          ? exactCost(
+              calculateUnitCostCents(
+                legacyUnitCost,
+                delta < 0n ? -delta : delta,
+              ),
+              100n,
+            )
+          : delta < 0n && quantity > 0n
+            ? scaleCost(value, -delta, quantity)
+            : exactCost(0n)
+    if (BigInt(recorded.numerator) < 0n)
+      throw new Error('Custo de movimentação negativo ou inconsistente.')
+    value =
+      delta >= 0n ? addCosts(value, recorded) : subtractCosts(value, recorded)
+    quantity += delta
+    if (BigInt(value.numerator) < 0n)
+      throw new Error(
+        'Valor do estoque inconsistente; reconcilie os custos antes de produzir.',
+      )
+  }
+  return { quantity, value }
 }
 
 export type OutputCostAllocation = {

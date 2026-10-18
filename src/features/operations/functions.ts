@@ -1,3 +1,6 @@
+import type { getDb } from '#/db/index'
+import type { InventoryCostLayer } from '../inventory/fifo'
+import { exactCost } from '../../lib/exact-cost'
 import { requireDefined, requireFirst } from '../../lib/required-value'
 import { createServerFn } from '@tanstack/react-start'
 import {
@@ -50,7 +53,10 @@ import {
   resolveIdempotentReplay,
 } from '#/features/operations/idempotency'
 import { appendOperationalAudit } from '#/features/operations/audit'
-import { convertKilogramPurchase } from '#/features/operations/purchase-units'
+import {
+  convertKilogramPurchase,
+  convertKilogramTotalPurchase,
+} from '#/features/operations/purchase-units'
 import { calculateReorderStatus } from '#/features/inventory/reorder'
 import {
   calculateInventoryPage,
@@ -139,7 +145,8 @@ const purchaseValues = z
         z.object({
           productId: z.number().int().positive(),
           quantity: z.string().trim(),
-          unitCost: z.string().trim(),
+          unitCost: z.string().trim().max(32).optional(),
+          totalAmount: z.string().trim().max(32).optional(),
           purchaseUnit: z.literal('kg').optional(),
           supplierLot: z.string().trim().max(80).optional(),
           expiresOn: z.string().date().optional(),
@@ -212,50 +219,162 @@ export const listPurchases = createServerFn({ method: 'GET' })
     return { purchases: rows, total: Number(total), ...pagination }
   })
 
-export const createPurchase = createServerFn({ method: 'POST' })
-  .middleware([requireServerFunctionPermission('createPurchase')])
-  .validator(purchaseValues)
-  .handler(async ({ data, context }) => {
-    const normalizedItems = data.items.map((item) => ({
-      ...item,
-      quantity: decimal(item.quantity, quantityPattern, 3),
-      quantityThousandths: thousandths(item.quantity),
-      unitCost: unitCostMillis(item.unitCost),
-    }))
+export async function persistPurchase(
+  database: Pick<Awaited<ReturnType<typeof getDb>>, 'transaction'>,
+  data: z.infer<typeof purchaseValues>,
+  actorAuthUserId: string,
+) {
+  const normalizedItems = data.items.map((item) => ({
+    ...item,
+    hasUnitCost: item.unitCost !== undefined,
+    quantity: decimal(item.quantity, quantityPattern, 3),
+    quantityThousandths: thousandths(item.quantity),
+    totalCents: item.totalAmount === undefined ? null : cents(item.totalAmount),
+    unitCost: item.unitCost === undefined ? 0n : unitCostMillis(item.unitCost),
+  }))
+
+  if (
+    normalizedItems.some(
+      (item) =>
+        !item.quantity ||
+        !item.quantityThousandths ||
+        item.unitCost === null ||
+        (item.totalAmount !== undefined
+          ? item.totalCents === null ||
+            item.totalCents <= 0n ||
+            item.hasUnitCost
+          : item.unitCost <= 0n),
+    )
+  ) {
+    throw new Error('Informe quantidades e custos válidos para todos os itens.')
+  }
+
+  const totals = normalizedItems.map(
+    (item) =>
+      item.totalCents ??
+      calculateUnitCostMillisTotal(item.unitCost!, item.quantityThousandths!),
+  )
+  const total = totals.reduce((sum, item) => sum + item, 0n)
+  const idempotencyHash = await hashOperationPayload({
+    supplierName: data.supplierName,
+    purchasedAt: data.purchasedAt,
+    invoiceFileReference: data.invoiceFileReference?.trim() || null,
+    notes: data.notes?.trim() || null,
+    items: normalizedItems.map((item) => ({
+      productId: item.productId,
+      quantity: item.quantity,
+      ...(item.totalCents !== null
+        ? {
+            totalAmount: centsToMoney(item.totalCents),
+            costInput: 'invoice_total_v1',
+          }
+        : { unitCost: millisToUnitCost(item.unitCost!) }),
+      ...(item.purchaseUnit ? { purchaseUnit: item.purchaseUnit } : {}),
+      supplierLot: item.supplierLot?.trim() || null,
+      expiresOn: item.expiresOn || null,
+    })),
+  })
+
+  return database.transaction(async (tx) => {
+    const [existingPurchase] = await tx
+      .select({
+        id: purchases.id,
+        idempotencyHash: purchases.idempotencyHash,
+      })
+      .from(purchases)
+      .where(eq(purchases.idempotencyKey, data.idempotencyKey))
+      .limit(1)
+    const replay = resolveIdempotentReplay(existingPurchase, idempotencyHash)
+    if (replay) return replay
+
+    const productIds = [...new Set(data.items.map((item) => item.productId))]
+    const selectedProducts = await tx
+      .select({
+        id: products.id,
+        name: products.name,
+        type: products.type,
+        isActive: products.isActive,
+        unit: products.unit,
+      })
+      .from(products)
+      .where(inArray(products.id, productIds))
+    const productById = new Map(
+      selectedProducts.map((product) => [product.id, product]),
+    )
 
     if (
-      normalizedItems.some(
-        (item) =>
-          !item.quantity || !item.quantityThousandths || item.unitCost === null,
-      )
+      productById.size !== productIds.length ||
+      selectedProducts.some((product) => !product.isActive)
     ) {
-      throw new Error(
-        'Informe quantidades e custos válidos para todos os itens.',
-      )
+      throw new Error('Um dos produtos selecionados não está disponível.')
     }
 
-    const totals = normalizedItems.map((item) =>
-      calculateUnitCostMillisTotal(item.unitCost!, item.quantityThousandths!),
-    )
-    const total = totals.reduce((sum, item) => sum + item, 0n)
-    const idempotencyHash = await hashOperationPayload({
-      supplierName: data.supplierName,
-      purchasedAt: data.purchasedAt,
-      invoiceFileReference: data.invoiceFileReference?.trim() || null,
-      notes: data.notes?.trim() || null,
-      items: normalizedItems.map((item) => ({
-        productId: item.productId,
-        quantity: item.quantity,
-        unitCost: millisToUnitCost(item.unitCost!),
-        ...(item.purchaseUnit ? { purchaseUnit: item.purchaseUnit } : {}),
-        supplierLot: item.supplierLot?.trim() || null,
-        expiresOn: item.expiresOn || null,
-      })),
+    const stockItems = normalizedItems.map((item) => {
+      if (
+        item.quantity === null ||
+        item.quantityThousandths === null ||
+        item.unitCost === null
+      )
+        throw new Error('Quantidade ou custo inválido.')
+      const product = requireDefined(productById.get(item.productId))
+      if (
+        (product.unit === 'g' || product.unit === 'kg') &&
+        (item.purchaseUnit !== 'kg' || item.totalCents === null)
+      )
+        throw new Error('Informe a compra em kg e o valor total do item.')
+      if (item.totalCents !== null) {
+        const converted =
+          item.purchaseUnit === 'kg'
+            ? convertKilogramTotalPurchase(
+                product.unit,
+                requireDefined(item.quantityThousandths),
+                item.totalCents,
+              )
+            : {
+                quantity: requireDefined(item.quantity),
+                unitCostMillis:
+                  (item.totalCents * 10_000n +
+                    requireDefined(item.quantityThousandths) / 2n) /
+                  requireDefined(item.quantityThousandths),
+              }
+        return {
+          ...item,
+          quantity: converted.quantity,
+          unitCost: converted.unitCostMillis,
+        }
+      }
+      if (!item.purchaseUnit) return item
+      const converted = convertKilogramPurchase(
+        requireDefined(productById.get(item.productId)).unit,
+        item.quantityThousandths,
+        item.unitCost,
+      )
+      return {
+        ...item,
+        quantity: converted.quantity,
+        unitCost: converted.unitCostMillis,
+      }
     })
 
-    const { getDb } = await import('#/db/index')
-    return getDb().transaction(async (tx) => {
-      const [existingPurchase] = await tx
+    const purchase = (
+      await tx
+        .insert(purchases)
+        .values({
+          idempotencyKey: data.idempotencyKey,
+          idempotencyHash,
+          createdByAuthUserId: actorAuthUserId,
+          supplierName: data.supplierName,
+          purchasedAt: data.purchasedAt,
+          totalAmount: centsToMoney(total),
+          invoiceFileReference: data.invoiceFileReference?.trim() || null,
+          notes: data.notes?.trim() || null,
+        })
+        .onConflictDoNothing({ target: purchases.idempotencyKey })
+        .returning({ id: purchases.id })
+    ).at(0)
+
+    if (!purchase) {
+      const [concurrentPurchase] = await tx
         .select({
           id: purchases.id,
           idempotencyHash: purchases.idempotencyHash,
@@ -263,154 +382,102 @@ export const createPurchase = createServerFn({ method: 'POST' })
         .from(purchases)
         .where(eq(purchases.idempotencyKey, data.idempotencyKey))
         .limit(1)
-      const replay = resolveIdempotentReplay(existingPurchase, idempotencyHash)
-      if (replay) return replay
-
-      const productIds = [...new Set(data.items.map((item) => item.productId))]
-      const selectedProducts = await tx
-        .select({
-          id: products.id,
-          name: products.name,
-          type: products.type,
-          isActive: products.isActive,
-          unit: products.unit,
-        })
-        .from(products)
-        .where(inArray(products.id, productIds))
-      const productById = new Map(
-        selectedProducts.map((product) => [product.id, product]),
+      const concurrentReplay = resolveIdempotentReplay(
+        concurrentPurchase,
+        idempotencyHash,
       )
+      if (concurrentReplay) return concurrentReplay
+      throw new Error('Não foi possível reconciliar a operação repetida.')
+    }
 
-      if (
-        productById.size !== productIds.length ||
-        selectedProducts.some((product) => !product.isActive)
-      ) {
-        throw new Error('Um dos produtos selecionados não está disponível.')
+    const availableAt = new Date(`${data.purchasedAt}T12:00:00.000Z`)
+    for (const [index, item] of stockItems.entries()) {
+      const sourceItem = requireDefined(normalizedItems[index])
+      if (sourceItem.unitCost === null) throw new Error('Custo inválido.')
+      const itemValues: typeof purchaseItems.$inferInsert = {
+        purchaseId: purchase.id,
+        productId: item.productId,
+        itemName: productById.get(item.productId)!.name,
+        quantity: item.quantity!,
+        unitCost: millisToUnitCost(item.unitCost!),
+        totalAmount: centsToMoney(requireDefined(totals[index])),
+        ...(item.purchaseUnit
+          ? {
+              sourceQuantityBase:
+                productById.get(item.productId)?.unit === 'g'
+                  ? '1000.000'
+                  : '1.000',
+              sourceQuantityPurchased: sourceItem.quantity,
+              sourceUnitPrice:
+                sourceItem.totalCents === null
+                  ? centsToMoney(sourceItem.unitCost / 10n)
+                  : null,
+            }
+          : {}),
+        supplierLot: item.supplierLot?.trim() || null,
+        expiresOn: item.expiresOn || null,
       }
-
-      const stockItems = normalizedItems.map((item) => {
-        if (!item.purchaseUnit) return item
-        if (item.quantityThousandths === null || item.unitCost === null) {
-          throw new Error('Quantidade ou custo inválido.')
-        }
-        const converted = convertKilogramPurchase(
-          requireDefined(productById.get(item.productId)).unit,
-          item.quantityThousandths,
-          item.unitCost,
-        )
-        return {
-          ...item,
-          quantity: converted.quantity,
-          unitCost: converted.unitCostMillis,
-        }
-      })
-
-      const purchase = (
+      const purchaseItem = (
         await tx
-          .insert(purchases)
-          .values({
-            idempotencyKey: data.idempotencyKey,
-            idempotencyHash,
-            createdByAuthUserId: context.principal!.id,
-            supplierName: data.supplierName,
-            purchasedAt: data.purchasedAt,
-            totalAmount: centsToMoney(total),
-            invoiceFileReference: data.invoiceFileReference?.trim() || null,
-            notes: data.notes?.trim() || null,
-          })
-          .onConflictDoNothing({ target: purchases.idempotencyKey })
-          .returning({ id: purchases.id })
+          .insert(purchaseItems)
+          .values(itemValues)
+          .returning({ id: purchaseItems.id })
       ).at(0)
-
-      if (!purchase) {
-        const [concurrentPurchase] = await tx
-          .select({
-            id: purchases.id,
-            idempotencyHash: purchases.idempotencyHash,
-          })
-          .from(purchases)
-          .where(eq(purchases.idempotencyKey, data.idempotencyKey))
-          .limit(1)
-        const concurrentReplay = resolveIdempotentReplay(
-          concurrentPurchase,
-          idempotencyHash,
-        )
-        if (concurrentReplay) return concurrentReplay
-        throw new Error('Não foi possível reconciliar a operação repetida.')
+      if (!purchaseItem) {
+        throw new Error('Não foi possível registrar um item da compra.')
       }
-
-      const availableAt = new Date(`${data.purchasedAt}T12:00:00.000Z`)
-      for (const [index, item] of stockItems.entries()) {
-        const sourceItem = requireDefined(normalizedItems[index])
-        if (sourceItem.unitCost === null) throw new Error('Custo inválido.')
-        const purchaseItem = (
-          await tx
-            .insert(purchaseItems)
-            .values({
-              purchaseId: purchase.id,
-              productId: item.productId,
-              itemName: productById.get(item.productId)!.name,
-              quantity: item.quantity!,
-              unitCost: millisToUnitCost(item.unitCost!),
-              totalAmount: centsToMoney(requireDefined(totals[index])),
-              ...(item.purchaseUnit
-                ? {
-                    sourceQuantityBase: '1000.000',
-                    sourceQuantityPurchased: sourceItem.quantity,
-                    sourceUnitPrice: centsToMoney(sourceItem.unitCost / 10n),
-                  }
-                : {}),
-              supplierLot: item.supplierLot?.trim() || null,
-              expiresOn: item.expiresOn || null,
-            })
-            .returning({ id: purchaseItems.id })
-        ).at(0)
-        if (!purchaseItem) {
-          throw new Error('Não foi possível registrar um item da compra.')
-        }
-        const movement = (
-          await tx
-            .insert(stockMovements)
-            .values({
-              productId: item.productId,
-              type: 'purchase' as const,
-              quantityDelta: item.quantity!,
-              unitCost: millisToUnitCost(item.unitCost!),
-              ...(item.purchaseUnit
-                ? { allocatedCost: centsToMoney(requireDefined(totals[index])) }
-                : {}),
-              referenceType: 'purchase_item',
-              referenceId: purchaseItem.id,
-            })
-            .returning({ id: stockMovements.id })
-        ).at(0)
-        if (!movement) {
-          throw new Error('Não foi possível criar camada FIFO da compra.')
-        }
-        if (productById.get(item.productId)?.type === 'finished_product') {
-          await tx.insert(inventoryCostLayers).values({
+      const movement = (
+        await tx
+          .insert(stockMovements)
+          .values({
             productId: item.productId,
-            productionBatchOutputId: null,
-            sourceStockMovementId: movement.id,
-            origin: 'purchase' as const,
-            availableAt,
-            originalQuantity: item.quantity!,
-            originalCost: centsToMoney(requireDefined(totals[index])),
-            remainingQuantity: item.quantity!,
-            remainingCost: centsToMoney(requireDefined(totals[index])),
+            type: 'purchase' as const,
+            quantityDelta: item.quantity!,
+            unitCost: millisToUnitCost(item.unitCost!),
+            allocatedCost: centsToMoney(requireDefined(totals[index])),
+            exactCost: exactCost(requireDefined(totals[index]), 100n),
+            referenceType: 'purchase_item',
+            referenceId: purchaseItem.id,
           })
-        }
+          .returning({ id: stockMovements.id })
+      ).at(0)
+      if (!movement) {
+        throw new Error('Não foi possível criar camada FIFO da compra.')
       }
-      await appendOperationalAudit(tx, {
-        actorAuthUserId: context.principal!.id,
-        action: 'purchase.create',
-        entityType: 'purchase',
-        entityId: purchase.id,
-        operationReference: data.idempotencyKey,
-        reason: data.notes ?? null,
-      })
-      return { id: purchase.id, replayed: false as const }
+      if (productById.get(item.productId)?.type === 'finished_product') {
+        await tx.insert(inventoryCostLayers).values({
+          productId: item.productId,
+          productionBatchOutputId: null,
+          sourceStockMovementId: movement.id,
+          origin: 'purchase' as const,
+          availableAt,
+          originalQuantity: item.quantity!,
+          originalCost: centsToMoney(requireDefined(totals[index])),
+          exactOriginalCost: exactCost(requireDefined(totals[index]), 100n),
+          exactRemainingCost: exactCost(requireDefined(totals[index]), 100n),
+          remainingQuantity: item.quantity!,
+          remainingCost: centsToMoney(requireDefined(totals[index])),
+        })
+      }
+    }
+    await appendOperationalAudit(tx, {
+      actorAuthUserId,
+      action: 'purchase.create',
+      entityType: 'purchase',
+      entityId: purchase.id,
+      operationReference: data.idempotencyKey,
+      reason: data.notes ?? null,
     })
+    return { id: purchase.id, replayed: false as const }
+  })
+}
+
+export const createPurchase = createServerFn({ method: 'POST' })
+  .middleware([requireServerFunctionPermission('createPurchase')])
+  .validator(purchaseValues)
+  .handler(async ({ data, context }) => {
+    const { getDb } = await import('#/db/index')
+    return persistPurchase(getDb(), data, context.principal!.id)
   })
 
 const inventorySearchValues = z.object({
@@ -806,7 +873,7 @@ export const createSale = createServerFn({ method: 'POST' })
             asc(inventoryCostLayers.availableAt),
             asc(inventoryCostLayers.id),
           )
-        let layers = rows.map((layer) => ({
+        let layers: InventoryCostLayer[] = rows.map((layer) => ({
           id: layer.id,
           productId: layer.productId,
           productionBatchOutputId: layer.productionBatchOutputId,
@@ -815,6 +882,8 @@ export const createSale = createServerFn({ method: 'POST' })
           availableAt: layer.availableAt.toISOString(),
           originalQuantity: quantityToThousandths(layer.originalQuantity)!,
           originalCost: moneyToCents(layer.originalCost)!,
+          exactOriginalCost: layer.exactOriginalCost ?? null,
+          exactRemainingCost: layer.exactRemainingCost ?? null,
           remainingQuantity: quantityToThousandths(layer.remainingQuantity)!,
           remainingCost: moneyToCents(layer.remainingCost)!,
         }))
@@ -881,6 +950,7 @@ export const createSale = createServerFn({ method: 'POST' })
               String(allocation.quantity % 1_000n).padStart(3, '0'),
             ),
             allocatedCost: centsToMoney(allocation.allocatedCost),
+            exactCost: allocation.exactCost ?? null,
             unitCost: millisToUnitCost(
               (allocation.allocatedCost * 10_000n + allocation.quantity / 2n) /
                 allocation.quantity,
@@ -897,7 +967,10 @@ export const createSale = createServerFn({ method: 'POST' })
         for (const [index, plan] of fifoPlans.entries()) {
           await tx
             .update(stockMovements)
-            .set({ allocatedCost: centsToMoney(plan.allocatedCost) })
+            .set({
+              allocatedCost: centsToMoney(plan.allocatedCost),
+              exactCost: plan.exactCost ?? null,
+            })
             .where(
               eq(stockMovements.id, requireDefined(saleMovements[index]).id),
             )
@@ -918,6 +991,7 @@ export const createSale = createServerFn({ method: 'POST' })
                   String(layer.remainingQuantity % 1_000n).padStart(3, '0'),
                 ),
                 remainingCost: centsToMoney(layer.remainingCost),
+                exactRemainingCost: layer.exactRemainingCost ?? null,
                 updatedAt: new Date(),
               })
               .where(eq(inventoryCostLayers.id, layer.id)),

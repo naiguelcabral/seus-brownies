@@ -48,7 +48,7 @@ export const Route = createFileRoute('/compras')({
 type Item = {
   productId: string
   quantity: string
-  unitCost: string
+  totalAmount: string
   supplierLot: string
   expiresOn: string
   purchaseInKg: boolean
@@ -56,7 +56,7 @@ type Item = {
 const emptyItem = (): Item => ({
   productId: '',
   quantity: '',
-  unitCost: '',
+  totalAmount: '',
   supplierLot: '',
   expiresOn: '',
   purchaseInKg: false,
@@ -92,10 +92,12 @@ function PurchasesPage() {
     event.preventDefault()
     if (
       supplierName.trim().length < 2 ||
-      items.some((item) => !item.productId || !item.quantity || !item.unitCost)
+      items.some(
+        (item) => !item.productId || !item.quantity || !item.totalAmount,
+      )
     ) {
       setMessage(
-        'Informe fornecedor, produto, quantidade e custo em todos os itens.',
+        'Informe fornecedor, produto, quantidade e valor total em todos os itens.',
       )
       return
     }
@@ -112,7 +114,7 @@ function PurchasesPage() {
           items: items.map((item) => ({
             productId: Number(item.productId),
             quantity: item.quantity,
-            unitCost: item.unitCost,
+            totalAmount: item.totalAmount,
             ...(item.purchaseInKg ? { purchaseUnit: 'kg' as const } : {}),
             supplierLot: item.supplierLot,
             expiresOn: item.expiresOn || undefined,
@@ -139,7 +141,7 @@ function PurchasesPage() {
   return (
     <ManagementLayout
       title="Compras"
-      description="Registre compras de ingredientes, embalagens ou produtos. Cada item gera uma entrada correspondente no estoque."
+      description="Registre compras de ingredientes, embalagens ou produtos. Informe a quantidade e o valor total pago por item. Compras de insumos em massa são em kg."
     >
       <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_420px]">
         <section className="overflow-hidden rounded-2xl border border-[#ecdfd4] bg-white">
@@ -328,12 +330,16 @@ function PurchasesPage() {
                     updateItem(index, {
                       productId: event.target.value,
                       quantity: '',
-                      unitCost: '',
+                      totalAmount: '',
                       purchaseInKg:
                         products.find(
                           (product) =>
                             String(product.id) === event.target.value,
-                        )?.unit === 'g',
+                        )?.unit === 'g' ||
+                        products.find(
+                          (product) =>
+                            String(product.id) === event.target.value,
+                        )?.unit === 'kg',
                     })
                   }
                   className="field mt-1.5"
@@ -346,26 +352,6 @@ function PurchasesPage() {
                   ))}
                 </select>
               </label>
-              {products.find((product) => String(product.id) === item.productId)
-                ?.unit === 'g' ? (
-                <label className="mt-3 block text-sm font-bold text-[#573524]">
-                  Unidade da compra
-                  <select
-                    className="field mt-1.5"
-                    value={item.purchaseInKg ? 'kg' : 'g'}
-                    onChange={(event) =>
-                      updateItem(index, {
-                        purchaseInKg: event.target.value === 'kg',
-                        quantity: '',
-                        unitCost: '',
-                      })
-                    }
-                  >
-                    <option value="kg">kg (1 kg = 1.000 g no estoque)</option>
-                    <option value="g">g</option>
-                  </select>
-                </label>
-              ) : null}
               <div className="mt-3 grid grid-cols-2 gap-3">
                 <Input
                   label={item.purchaseInKg ? 'Quantidade (kg)' : 'Quantidade'}
@@ -375,11 +361,9 @@ function PurchasesPage() {
                   inputMode="decimal"
                 />
                 <Input
-                  label={
-                    item.purchaseInKg ? 'Preço por kg (R$)' : 'Custo unitário'
-                  }
-                  value={item.unitCost}
-                  onChange={(unitCost) => updateItem(index, { unitCost })}
+                  label="Valor total do item (R$)"
+                  value={item.totalAmount}
+                  onChange={(totalAmount) => updateItem(index, { totalAmount })}
                   placeholder="Ex.: 12,50"
                   inputMode="decimal"
                 />

@@ -1,3 +1,4 @@
+import type { CostedMovement } from '../../src/features/production/calculations'
 import { requireDefined } from '../../src/lib/required-value'
 import { getTableName } from 'drizzle-orm'
 import type { SQL, Table } from 'drizzle-orm'
@@ -11,6 +12,8 @@ type Write = {
 }
 export function createProductionDrizzleMock(
   options: {
+    recipeQuantity?: string
+    movements?: CostedMovement[]
     available?: string
     status?: string
     failAt?: string
@@ -61,7 +64,7 @@ export function createProductionDrizzleMock(
         recipeItemId: 1,
         id: 10,
         productId: 10,
-        quantity: '1.000',
+        quantity: options.recipeQuantity ?? '1.000',
         sku: 'ING001',
         name: 'Chocolate',
         unit: 'kg',
@@ -82,7 +85,10 @@ export function createProductionDrizzleMock(
       },
       { id: 2, type: 'labor', unitAmount: '2.00', effectiveFrom: '2026-10-01' },
     ],
-    stock_movements: [
+    stock_movements: options.movements?.map((movement) => ({
+      ...movement,
+      productId: 10,
+    })) ?? [
       {
         productId: 10,
         quantityDelta: options.available ?? '10.000',

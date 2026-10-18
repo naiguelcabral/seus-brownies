@@ -7,9 +7,12 @@ Inventário completo e ordem de execução em
 Ele distingue implementação, cadastro, homologação, integração e decisões;
 checkpoints antigos abaixo não devem reabrir carga/deploy já comprovados.
 
-- [ ] **P0/C01:** corrigir custo de consumo em g para conservar o valor total
-      de entrada; caso reproduzido: 1000 g/R$ 12,50 → R$ 13,00 ao consumir tudo.
-      Validar parciais, consumos sucessivos, total, múltiplas compras e rollback.
+- [~] **P0/C01:** implementação local de custo exato e compra em kg pelo total
+      preparada conforme ADR-0002; 505 testes e ensaio PostgreSQL 17 aprovados.
+      Pacote aditivo pendente fora da cadeia congelada; falta plano/autorização
+      de aplicação por alvo, publicação e homologação. HML ainda contém o defeito.
+      Caso original: 1000 g/R$ 12,50 → R$ 13,00 ao consumir tudo; correção
+      local conserva o total com consumos parciais, sucessivos e rollback.
 - [ ] Reconciliar Ovos Grandes e demais itens necessários; cadastrar receita,
       perfis, componentes e tarifas na original sob escopo autorizado.
 - [ ] Preparar estoque rastreável e cenário de QA; homologar acesso por papel,

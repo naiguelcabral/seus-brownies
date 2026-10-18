@@ -1,5 +1,11 @@
 import {
-  centsToMoney,
+  exactCost,
+  addCosts,
+  costOrDecimal,
+  displayCostMoney,
+} from '../../lib/exact-cost'
+import type { ExactCost } from '../../lib/exact-cost'
+import {
   moneyToCents,
   quantityToThousandths,
   thousandthsToQuantity,
@@ -40,6 +46,7 @@ export function summarizeCoProducts(
     productId: number
     productName: string
     actualQuantity: string | null
+    exactCost?: ExactCost | null
     allocatedCost: string | null
   }>,
 ) {
@@ -48,7 +55,7 @@ export function summarizeCoProducts(
     {
       productName: string
       quantity: bigint
-      cost: bigint
+      cost: ExactCost
       missingQuantityRows: number
       missingCostRows: number
     }
@@ -66,14 +73,18 @@ export function summarizeCoProducts(
     const current = totals.get(row.productId) ?? {
       productName: row.productName,
       quantity: 0n,
-      cost: 0n,
+      cost: exactCost(0n),
       missingQuantityRows: 0,
       missingCostRows: 0,
     }
     if (quantity === null) current.missingQuantityRows += 1
     else current.quantity += quantity
     if (cost === null) current.missingCostRows += 1
-    else current.cost += cost
+    else
+      current.cost = addCosts(
+        current.cost,
+        costOrDecimal(row.exactCost, row.allocatedCost ?? '0'),
+      )
     totals.set(row.productId, current)
   }
   return [...totals.entries()]
@@ -84,7 +95,8 @@ export function summarizeCoProducts(
         item.missingQuantityRows > 0
           ? null
           : thousandthsToQuantity(item.quantity),
-      allocatedCost: item.missingCostRows > 0 ? null : centsToMoney(item.cost),
+      allocatedCost:
+        item.missingCostRows > 0 ? null : displayCostMoney(item.cost),
       missingQuantityRows: item.missingQuantityRows,
       missingCostRows: item.missingCostRows,
     }))

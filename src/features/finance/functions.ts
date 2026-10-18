@@ -229,6 +229,7 @@ async function loadAccrualMargins(database: any, periodMonth: string) {
           productionBatchId: productionBatchOutputs.productionBatchId,
           quantity: inventoryCostAllocations.quantity,
           allocatedCost: inventoryCostAllocations.allocatedCost,
+          exactCost: inventoryCostAllocations.exactCost,
         })
         .from(inventoryCostAllocations)
         .innerJoin(

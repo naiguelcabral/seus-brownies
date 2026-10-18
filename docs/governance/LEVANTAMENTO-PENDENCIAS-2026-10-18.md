@@ -1,8 +1,50 @@
 # Levantamento consolidado de pendências — Cacau v1
 
+Checkpoint posterior: C01 recebeu implementação local de custos exatos e compra
+em kg pelo total, com 505 testes e ensaio PostgreSQL 17 aprovados. Falta plano
+e autorização de aplicação do pacote pendente, publicação e homologação.
+O levantamento abaixo preserva a evidência anterior à correção local; HML
+continua com o defeito. Ver [ADR-0002](../ADR-0002-CUSTOS-EXATOS-E-EXIBICAO-MONETARIA.md).
+
 Data: 18 de outubro de 2026. Base de código: `736953e`, branch
 `feat/input-catalog-kg-purchases`; árvore limpa no início da revisão.
 Levantamento solicitado pelo usuário; não autoriza executar os itens levantados.
+
+## Revalidação para definição da próxima etapa
+
+Nova varredura em 18 de outubro de 2026, com base em `266ed58`, confirmou
+o inventário abaixo por leitura de governança, roadmap, matriz de paridade,
+readiness, resiliência, código de custos/catálogo/finanças, workflows e GitHub.
+São 34 frentes atuais e sete evoluções condicionais; elas têm tamanhos
+diferentes e não representam percentual de conclusão.
+
+- Árvore limpa no início; branch atual e remota em `266ed58`, 58 commits à
+  frente da main `32a9e11`, sem commits exclusivos desta; diff de 212 arquivos.
+- PRs #44/#45 continuam abertas e draft; issue #36 continua aberta. Nenhuma
+  PR da branch atual apareceu na listagem de PRs abertas.
+- [CI 39114543300](https://github.com/naiguelcabral/seus-brownies/actions/runs/39114543300)
+  e [CodeQL 39114543290](https://github.com/naiguelcabral/seus-brownies/actions/runs/39114543290)
+  aprovados em `266ed58`. Nesta revalidação não foi repetida a consulta de
+  alertas de segurança, a auditoria npm ou a suíte completa.
+- C01 reproduzido novamente com as funções puras atuais, sem banco:
+  entrada R$ 12,50, média R$ 0,013/g, consumo de 250 g R$ 3,25 e consumo
+  de 1000 g R$ 13,00. `enrichCosts` ainda compõe essas funções.
+- F01 confirmado: `summarizeFinancialIndicators` é chamado somente em testes.
+  S01 confirmado no CRUD de catálogo inspecionado: não chama o writer de
+  auditoria operacional. T04 confirmado no prompt documental do piloto,
+  que ainda pede Prettier. A `0017` ativa mantém referências a `products.unit`.
+- As contagens do banco e a versão HML da tabela abaixo permanecem evidências
+  da consulta anterior, com seus instantes registrados; não foram consultadas
+  novamente. Não houve escrita compartilhada, deploy ou mudança de código.
+
+**Próximo pacote recomendado:** somente C01, com teste que reproduza o defeito,
+conservação do valor nos consumos parciais/sucessivos/integrais, múltiplas
+entradas e rollback transacional. O aceite exige que R$ 12,50 de entrada
+continuem R$ 12,50 ao consumir todo o saldo, sem alterar precisão ou regra de
+negócio silenciosamente. Depois, preparar O01–O04 e QA isolado I01/G02 para
+homologar H01–H05. T01/T02 e S01 devem estar resolvidos ou ter escopo de
+liberação explicitamente aceito antes da liberação definitiva I04; estar
+listados em P2 não significa que sejam dispensáveis para produção.
 
 ## Critério e alcance
 
@@ -45,6 +87,16 @@ referem-se à original atual, não às bases históricas de homologação.
 ## P0 — corrigir antes de homologar custo produtivo
 
 **C01 — custo de consumo em gramas perde o total exato por arredondamento.**
+
+Requisito humano reforçado em 18 de outubro de 2026: o valor lançado em
+centavos é exato e não pode ser arredondado ou substituído pela multiplicação
+de um custo unitário aproximado. Entrada, consumo acumulado e saldo devem
+conservar integralmente esse valor. Este esclarecimento não aprova aumento
+de precisão do schema nem uma regra de truncamento/distribuição de resíduos.
+Para consumo parcial com fração de centavo (250 g de 1000 g por R$ 12,50
+correspondem exatamente a R$ 3,125), definir explicitamente a representação
+antes de implementar: preservar a fração exata internamente ou autorizar uma
+regra de alocação em centavos. Não presumir essa escolha.
 
 A compra em kg mantém o valor total em `allocated_cost`, mas a produção
 obtém primeiro o custo médio por grama com três casas e o multiplica pelo

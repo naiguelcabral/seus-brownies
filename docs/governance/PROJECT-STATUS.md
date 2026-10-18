@@ -1,5 +1,30 @@
 # Estado canônico do projeto — Cacau v1
 
+## P0 — custos exatos preparados localmente — 18 de outubro de 2026
+
+Usuário definiu compra dos insumos de massa sempre em kg pelo valor total do
+item, precisão interna suficiente e apresentação monetária em duas casas.
+Implementação local passa a preservar frações inteiras exatas em JSONB, sem
+float ou escolha de escala que aproxime dízimas. R$ 12,50/1000 g → 250 g
+custa exatamente R$ 3,125; quatro consumos fecham R$ 12,50. Consumo, saldo,
+lote, energia/MO, saídas, FIFO/reversões e margens transportam o valor exato;
+projeções legadas em centavos não são a fonte dos novos custos.
+
+505 testes aprovados com ambiente limpo; tipos, lint, formatação e Knip
+aprovados (três referências contextuais, sem novos achados). PostgreSQL 17 local descartável
+confirmou migrations aditivas/preservação, compra pelo total, replay/conflito,
+quatro conclusões, custo/razão/FIFO e rollback tardio de compra e produção.
+Não houve escrita externa, backfill ou deploy. A versão HML abaixo ainda
+contém C01; não está homologada para esse custo novo.
+
+[ADR-0002](../ADR-0002-CUSTOS-EXATOS-E-EXIBICAO-MONETARIA.md) documenta decisão,
+precisão, apresentação e rollout. Nove colunas em oito tabelas estão no pacote
+`drizzle/pending-exact-costs/`, fora da cadeia ativa congelada da issue #36.
+Journal, SQLs, snapshots e manifestos históricos permanecem intactos. Aplicar
+em base compartilhada exige plano por alvo, backup/ensaio e autorização; só
+então publicar código compatível e homologar. Não rodar o migrador genérico
+nem publicar esse código sobre o schema antigo.
+
 ## Levantamento consolidado e bloqueio de custo — 18 de outubro de 2026
 
 Revisão de código, documentos, Git/GitHub, auditoria npm e contagens agregadas

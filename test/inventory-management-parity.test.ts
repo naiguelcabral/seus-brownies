@@ -38,11 +38,16 @@ test('compra inclui lote e validade no hash idempotente e na mesma transação',
     'utf8',
   )
   const writer = source.slice(
-    source.indexOf('export const createPurchase'),
+    source.indexOf('export async function persistPurchase'),
     source.indexOf('export const listInventory'),
   )
   assert.match(writer, /supplierLot: item\.supplierLot\?\.trim\(\) \|\| null/)
   assert.match(writer, /expiresOn: item\.expiresOn \|\| null/)
+  assert.match(writer, /requireServerFunctionPermission\('createPurchase'\)/)
+  assert.match(
+    writer,
+    /persistPurchase\(getDb\(\), data, context\.principal!\.id\)/,
+  )
   assert.match(writer, /onConflictDoNothing/)
   assert.match(writer, /appendOperationalAudit/)
   assert.match(source, /eq\(stockMovements\.referenceType, 'purchase_item'\)/)

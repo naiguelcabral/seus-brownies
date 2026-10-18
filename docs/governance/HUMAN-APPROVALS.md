@@ -364,3 +364,12 @@ recibo `CATALOG-SALES-2026-10-17-001` e 17 auditorias; categoria anterior
 preservada. Leitura independente confirmou persistência. Referência consumida,
 não repetir. Não autoriza carga de insumos/histórico, estoque, receitas,
 produção ou alteração de preços diferente dos valores apresentados.
+
+## Custos exatos — decisão de 18 de outubro de 2026
+
+Usuário determinou entrada dos insumos de massa em kg com o valor total do
+produto, tantas casas internas quanto necessárias e apresentação em centavos
+com duas casas. Autoriza preparar a alteração da representação de custos,
+testes e migration para revisão. ADR-0002 descreve frações exatas, inclusive
+dízimas, e projeções de apresentação; o valor lançado permanece a origem.
+Não autoriza migration compartilhada, backfill, mudança de fatos ou deploy.

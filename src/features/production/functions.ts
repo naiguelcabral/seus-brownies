@@ -1,3 +1,11 @@
+import {
+  exactCost,
+  scaleCost,
+  sumCosts,
+  displayCostCents,
+  displayCostMoney,
+  decimalCost,
+} from '../../lib/exact-cost'
 import { requireFirst } from '../../lib/required-value'
 import { createServerFn } from '@tanstack/react-start'
 import {
@@ -39,12 +47,12 @@ import {
   calculateMoneyCents,
   calculateRecipeCapacity,
   calculateWeightedAverageCost,
+  calculateExactInventoryState,
   assertCompletableBatchStatus,
   assertLossReasons,
   assertSufficientStock,
   allocateOutputCosts,
   centsToMoney,
-  calculateUnitCostCents,
   millisToUnitCost,
   moneyToCents,
   multiplyQuantities,
@@ -407,6 +415,7 @@ async function loadPlan(tx: Transaction, input: BatchInput) {
       rate,
       quantity,
       amountCents: calculateMoneyCents(rateCents, quantity),
+      exactCost: scaleCost(decimalCost(rate.unitAmount), quantity, 1_000n),
     }
   })
   if (
@@ -479,6 +488,7 @@ async function enrichCosts(
           quantityDelta: stockMovements.quantityDelta,
           unitCost: stockMovements.unitCost,
           allocatedCost: stockMovements.allocatedCost,
+          exactCost: stockMovements.exactCost,
         })
         .from(stockMovements)
         .where(inArray(stockMovements.productId, ids))
@@ -494,15 +504,23 @@ async function enrichCosts(
     const unitCost = calculateWeightedAverageCost(
       movementsByProduct.get(consumption.id) ?? [],
     )
+    const state = calculateExactInventoryState(
+      movementsByProduct.get(consumption.id) ?? [],
+    )
+    const consumedCost =
+      state.quantity > 0n
+        ? scaleCost(state.value, consumption.quantity, state.quantity)
+        : exactCost(0n)
     return {
       ...consumption,
+      exactCost: consumedCost,
       available: (movementsByProduct.get(consumption.id) ?? []).reduce(
         (sum, movement) =>
           sum + (quantityToThousandths(movement.quantityDelta) ?? 0n),
         0n,
       ),
       unitCost,
-      totalCost: calculateUnitCostCents(unitCost, consumption.quantity),
+      totalCost: displayCostCents(consumedCost),
     }
   })
   const operationalTotal = plan.operational.reduce(
@@ -510,7 +528,11 @@ async function enrichCosts(
     0n,
   )
   const ingredientTotal = costs.reduce((sum, item) => sum + item.totalCost, 0n)
-  const totalCost = ingredientTotal + operationalTotal
+  const exactTotal = sumCosts([
+    ...costs.map((item) => item.exactCost),
+    ...plan.operational.map((item) => item.exactCost),
+  ])
+  const totalCost = displayCostCents(exactTotal)
   const grossQuantity =
     plan.sellableOutputs.reduce((sum, output) => sum + output.quantity, 0n) +
     [...plan.lossByProductId.values()].reduce(
@@ -524,6 +546,7 @@ async function enrichCosts(
   return {
     costs,
     ingredientTotal,
+    exactTotal,
     operationalTotal,
     totalCost,
     grossQuantity,
@@ -546,8 +569,11 @@ function previewFromPlan(
       quantity: thousandthsToQuantity(item.quantity),
       available: thousandthsToQuantity(item.available),
       unit: item.unit,
-      unitCost: millisToUnitCost(item.unitCost),
-      totalCost: centsToMoney(item.totalCost),
+      unitCost:
+        item.quantity > 0n
+          ? displayCostMoney(scaleCost(item.exactCost, 1_000n, item.quantity))
+          : '0.00',
+      totalCost: displayCostMoney(item.exactCost),
       sufficient: item.available >= item.quantity,
       source: item.source,
     })),
@@ -557,7 +583,7 @@ function previewFromPlan(
       unit: item.requirement.unit,
       rate: item.rate.unitAmount,
       effectiveFrom: item.rate.effectiveFrom,
-      amount: centsToMoney(item.amountCents),
+      amount: displayCostMoney(item.exactCost),
     })),
     outputs: plan.sellableOutputs.map((output) => ({
       productId: output.product.id,
@@ -567,7 +593,9 @@ function previewFromPlan(
       role: output.role,
     })),
     totalCost: centsToMoney(costs.totalCost),
-    unitCost: millisToUnitCost(costs.outputUnitCost),
+    unitCost: displayCostMoney(
+      scaleCost(costs.exactTotal, 1_000n, costs.grossQuantity),
+    ),
   }
 }
 
@@ -738,6 +766,7 @@ export const getProductionBatch = createServerFn({ method: 'GET' })
           plannedFor: productionBatches.plannedFor,
           recipeMultiplier: productionBatches.recipeMultiplier,
           totalCost: productionBatches.totalCost,
+          exactCost: productionBatches.exactCost,
           unitCost: productionBatches.unitCost,
           completedAt: productionBatches.completedAt,
           notes: productionBatches.notes,
@@ -766,6 +795,7 @@ export const getProductionBatch = createServerFn({ method: 'GET' })
           actualQuantity: productionBatchOutputs.actualQuantity,
           unitCost: productionBatchOutputs.unitCost,
           allocatedCost: productionBatchOutputs.allocatedCost,
+          exactCost: productionBatchOutputs.exactCost,
         })
         .from(productionBatchOutputs)
         .innerJoin(products, eq(productionBatchOutputs.productId, products.id))
@@ -777,6 +807,7 @@ export const getProductionBatch = createServerFn({ method: 'GET' })
           quantity: productionBatchConsumptions.quantity,
           unitCost: productionBatchConsumptions.unitCost,
           totalCost: productionBatchConsumptions.totalCost,
+          exactCost: productionBatchConsumptions.exactCost,
         })
         .from(productionBatchConsumptions)
         .innerJoin(
@@ -800,6 +831,7 @@ export const getProductionBatch = createServerFn({ method: 'GET' })
           unit: operationalCosts.unit,
           unitAmount: operationalCosts.unitAmount,
           amount: operationalCosts.amount,
+          exactCost: operationalCosts.exactCost,
         })
         .from(operationalCosts)
         .where(eq(operationalCosts.productionBatchId, batch.id)),
@@ -842,13 +874,31 @@ export const getProductionBatch = createServerFn({ method: 'GET' })
     }
     const { sourcePayload: _sourcePayload, ...serializableBatch } = batch
     return {
-      batch: serializableBatch,
-      outputs,
-      consumptions,
+      batch: {
+        ...serializableBatch,
+        totalCost: batch.exactCost
+          ? displayCostMoney(batch.exactCost)
+          : batch.totalCost,
+      },
+      outputs: outputs.map((output) => ({
+        ...output,
+        allocatedCost: output.exactCost
+          ? displayCostMoney(output.exactCost)
+          : output.allocatedCost,
+      })),
+      consumptions: consumptions.map((item) => ({
+        ...item,
+        totalCost: item.exactCost
+          ? displayCostMoney(item.exactCost)
+          : item.totalCost,
+      })),
       losses,
       plannedLosses: plannedLosses.success ? plannedLosses.data : [],
       costReconciliation,
-      costs,
+      costs: costs.map((item) => ({
+        ...item,
+        amount: item.exactCost ? displayCostMoney(item.exactCost) : item.amount,
+      })),
     }
   })
 
@@ -965,6 +1015,7 @@ export async function persistProductionBatchCompletion(
         quantity: thousandthsToQuantity(cost.quantity),
         unitCost: millisToUnitCost(cost.unitCost),
         totalCost: centsToMoney(cost.totalCost),
+        exactCost: cost.exactCost,
         sourcePayload: {
           origin: 'manual_production_completion',
           components: cost.source,
@@ -977,6 +1028,8 @@ export async function persistProductionBatchCompletion(
         type: 'production' as const,
         quantityDelta: `-${thousandthsToQuantity(cost.quantity)}`,
         unitCost: millisToUnitCost(cost.unitCost),
+        allocatedCost: centsToMoney(cost.totalCost),
+        exactCost: cost.exactCost,
         referenceType: 'production_consumption',
         referenceId: batch.id,
         sourceKey: `manual:production-batch:${batch.id}:stock-consumption:${cost.id}`,
@@ -994,7 +1047,8 @@ export async function persistProductionBatchCompletion(
         quantity: thousandthsToQuantity(item.quantity),
         unit: item.requirement.unit,
         unitAmount: item.rate.unitAmount,
-        amount: centsToMoney(item.amountCents),
+        amount: displayCostMoney(item.exactCost),
+        exactCost: item.exactCost,
         occurredAt: productionDate,
         notes: 'Tarifa vigente efetivamente aplicada ao lote.',
       })),
@@ -1006,9 +1060,16 @@ export async function persistProductionBatchCompletion(
           productId: output.product.id,
           type: 'production' as const,
           quantityDelta: thousandthsToQuantity(output.quantity),
-          unitCost: millisToUnitCost(costs.outputUnitCost),
+          unitCost: displayCostMoney(
+            scaleCost(costs.exactTotal, 1_000n, costs.grossQuantity),
+          ),
           allocatedCost: centsToMoney(
             outputCostByProductId.get(output.product.id) ?? 0n,
+          ),
+          exactCost: scaleCost(
+            costs.exactTotal,
+            output.quantity,
+            plan.sellableOutputs.reduce((sum, item) => sum + item.quantity, 0n),
           ),
           referenceType: 'production_output',
           referenceId: batch.id,
@@ -1027,8 +1088,18 @@ export async function persistProductionBatchCompletion(
         tx
           .update(productionBatchOutputs)
           .set({
+            exactCost: scaleCost(
+              costs.exactTotal,
+              output.quantity,
+              plan.sellableOutputs.reduce(
+                (sum, item) => sum + item.quantity,
+                0n,
+              ),
+            ),
             actualQuantity: thousandthsToQuantity(output.quantity),
-            unitCost: millisToUnitCost(costs.outputUnitCost),
+            unitCost: displayCostMoney(
+              scaleCost(costs.exactTotal, 1_000n, costs.grossQuantity),
+            ),
             allocatedCost: centsToMoney(
               outputCostByProductId.get(output.product.id) ?? 0n,
             ),
@@ -1068,6 +1139,16 @@ export async function persistProductionBatchCompletion(
           availableAt: new Date(),
           originalQuantity: thousandthsToQuantity(output.quantity),
           originalCost: centsToMoney(allocatedCost),
+          exactOriginalCost: scaleCost(
+            costs.exactTotal,
+            output.quantity,
+            plan.sellableOutputs.reduce((sum, item) => sum + item.quantity, 0n),
+          ),
+          exactRemainingCost: scaleCost(
+            costs.exactTotal,
+            output.quantity,
+            plan.sellableOutputs.reduce((sum, item) => sum + item.quantity, 0n),
+          ),
           remainingQuantity: thousandthsToQuantity(output.quantity),
           remainingCost: centsToMoney(allocatedCost),
         }
@@ -1090,9 +1171,12 @@ export async function persistProductionBatchCompletion(
       .update(productionBatches)
       .set({
         status: 'completed',
+        exactCost: costs.exactTotal,
         actualQuantity: thousandthsToQuantity(costs.grossQuantity),
         totalCost: centsToMoney(costs.totalCost),
-        unitCost: millisToUnitCost(costs.outputUnitCost),
+        unitCost: displayCostMoney(
+          scaleCost(costs.exactTotal, 1_000n, costs.grossQuantity),
+        ),
         completedAt: new Date(),
         completionPayload: {
           costMethod: 'perpetual_weighted_average',

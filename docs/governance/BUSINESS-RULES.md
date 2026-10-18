@@ -17,6 +17,11 @@
 
 ## Compras
 
+- Decisão de 18/10/2026: insumos de massa são comprados em kg pelo valor total
+  pago pelo item, sem multiplicar esse total pela quantidade. A implementação
+  nova está local e depende do pacote de schema exato e rollout aprovado.
+  Outras unidades físicas não são convertidas para kg por inferência.
+
 - Para os dez ingredientes do workbook com estoque em g, a compra pode ser
   informada em kg: 1 kg corresponde a 1000 g. Quantidade e preço originais devem
   permanecer rastreáveis; o valor total em centavos não pode ser recalculado
@@ -56,6 +61,13 @@
 - Custos alocados devem fechar exatamente com o custo realizado do lote.
 
 ## Custos, FIFO e CMV
+
+- Exceção de precisão aprovada em 18/10/2026 (ADR-0002): custos derivados
+  preservam frações exatas internamente, inclusive frações de centavo e
+  dízimas. O total lançado não é arredondado. Consumos acumulados mais saldo
+  devem igualar exatamente as entradas; saídas e FIFO preservam o custo exato.
+  A exibição tem duas casas e arredonda apenas na apresentação, depois da
+  soma. Projeções legadas não substituem o custo exato quando ele existe.
 
 - Manter precisão monetária e quantitativa já definida no schema.
 - Camadas FIFO são fatos auditáveis; não podem ser reescritas silenciosamente.

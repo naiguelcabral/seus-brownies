@@ -1,6 +1,16 @@
+import {
+  exactCost,
+  addCosts,
+  subtractCosts,
+  costOrDecimal,
+  displayCostMoney,
+  scaleCost,
+} from '../../lib/exact-cost'
+import type { ExactCost } from '../../lib/exact-cost'
 import { requireDefined } from '../../lib/required-value'
 import {
   calculateInventoryState,
+  calculateExactInventoryState,
   calculateWeightedAverageCost,
   centsToMoney,
   millisToUnitCost,
@@ -152,16 +162,20 @@ export type FifoMarginRow = {
   productionBatchId: number | null
   quantity: string
   allocatedCost: string
+  exactCost?: ExactCost | null
+  exactReversedCost?: ExactCost | null
   reversedCost?: string | null
   saleItemRevenue: string
 }
 
 function netAllocatedCost(row: FifoMarginRow) {
-  const allocatedCost = moneyToCents(row.allocatedCost) ?? 0n
-  const reversedCost = moneyToCents(row.reversedCost ?? null) ?? 0n
-  if (reversedCost > allocatedCost)
+  const cost = subtractCosts(
+    costOrDecimal(row.exactCost, row.allocatedCost),
+    costOrDecimal(row.exactReversedCost, row.reversedCost ?? '0'),
+  )
+  if (BigInt(cost.numerator) < 0n)
     throw new Error('Reversão FIFO excede o custo da alocação original.')
-  return allocatedCost - reversedCost
+  return cost
 }
 
 function allocateRevenueAcrossLayers(rows: FifoMarginRow[]) {
@@ -218,39 +232,43 @@ export function summarizeFifoMargins(rows: FifoMarginRow[]) {
   const totals = rows.reduce(
     (sum, row) => {
       sum.revenue += revenueByAllocation.get(row.allocationId) ?? 0n
-      sum.cogs += netAllocatedCost(row)
+      sum.cogs = addCosts(sum.cogs, netAllocatedCost(row))
       return sum
     },
-    { revenue: 0n, cogs: 0n },
+    { revenue: 0n, cogs: exactCost(0n) },
   )
   const group = <T extends string | number>(
     keyFor: (row: FifoMarginRow) => T | null,
   ) => {
-    const byKey = new Map<T, { revenue: bigint; cogs: bigint }>()
+    const byKey = new Map<T, { revenue: bigint; cogs: ExactCost }>()
     for (const row of rows) {
       const key = keyFor(row)
       if (key === null) continue
-      const current = byKey.get(key) ?? { revenue: 0n, cogs: 0n }
+      const current = byKey.get(key) ?? { revenue: 0n, cogs: exactCost(0n) }
       current.revenue += revenueByAllocation.get(row.allocationId) ?? 0n
-      current.cogs += netAllocatedCost(row)
+      current.cogs = addCosts(current.cogs, netAllocatedCost(row))
       byKey.set(key, current)
     }
     return byKey
   }
   const asMargin = <T extends string | number>(
-    groups: Map<T, { revenue: bigint; cogs: bigint }>,
+    groups: Map<T, { revenue: bigint; cogs: ExactCost }>,
   ) =>
     [...groups.entries()].map(([key, total]) => ({
       key,
       revenue: centsToMoney(total.revenue),
-      cogs: centsToMoney(total.cogs),
-      grossMargin: centsToMoney(total.revenue - total.cogs),
+      cogs: displayCostMoney(total.cogs),
+      grossMargin: displayCostMoney(
+        subtractCosts(exactCost(total.revenue, 100n), total.cogs),
+      ),
     }))
 
   return {
     netRevenue: centsToMoney(totals.revenue),
-    cogs: centsToMoney(totals.cogs),
-    grossMargin: centsToMoney(totals.revenue - totals.cogs),
+    cogs: displayCostMoney(totals.cogs),
+    grossMargin: displayCostMoney(
+      subtractCosts(exactCost(totals.revenue, 100n), totals.cogs),
+    ),
     byProduct: asMargin(group((row) => row.productName)).map(
       ({ key, ...item }) => ({
         productName: key,
@@ -272,22 +290,26 @@ export function valueFifoLayers(
     productName: string
     unit: string
     remainingQuantity: string
+    exactRemainingCost?: ExactCost | null
     remainingCost: string
   }>,
 ) {
   const totals = new Map<
     number,
-    { productName: string; unit: string; quantity: bigint; value: bigint }
+    { productName: string; unit: string; quantity: bigint; value: ExactCost }
   >()
   for (const row of rows) {
     const current = totals.get(row.productId) ?? {
       productName: row.productName,
       unit: row.unit,
       quantity: 0n,
-      value: 0n,
+      value: exactCost(0n),
     }
     current.quantity += quantityToThousandths(row.remainingQuantity) ?? 0n
-    current.value += moneyToCents(row.remainingCost) ?? 0n
+    current.value = addCosts(
+      current.value,
+      costOrDecimal(row.exactRemainingCost, row.remainingCost),
+    )
     totals.set(row.productId, current)
   }
   return [...totals.entries()]
@@ -296,7 +318,7 @@ export function valueFifoLayers(
       productName: item.productName,
       unit: item.unit,
       balance: thousandthsToQuantity(item.quantity),
-      value: centsToMoney(item.value),
+      value: displayCostMoney(item.value),
     }))
     .filter((item) => (quantityToThousandths(item.balance) ?? 0n) > 0n)
     .sort(
@@ -341,6 +363,7 @@ export function valueInventory(
     quantityDelta: string
     unitCost: string | null
     allocatedCost?: string | null
+    exactCost?: ExactCost | null
   }>,
 ) {
   const byProduct = new Map<number, typeof rows>()
@@ -355,14 +378,25 @@ export function valueInventory(
       const state = calculateInventoryState(movements)
       const balance = state.quantity
       const unitCost = calculateWeightedAverageCost(movements)
+      const exactState = movements.some(
+        (movement) => movement.exactCost != null,
+      )
+        ? calculateExactInventoryState(movements)
+        : null
       const valueCents = state.valueCents
       return {
         productId: first.productId,
         productName: first.productName,
         unit: first.unit,
         balance: thousandthsToQuantity(balance),
-        unitCost: millisToUnitCost(unitCost),
-        value: centsToMoney(valueCents),
+        unitCost:
+          exactState && balance > 0n
+            ? displayCostMoney(scaleCost(exactState.value, 1_000n, balance))
+            : millisToUnitCost(unitCost),
+        ...(exactState ? { exactValue: exactState.value } : {}),
+        value: exactState
+          ? displayCostMoney(exactState.value)
+          : centsToMoney(valueCents),
       }
     })
     .filter((item) => (quantityToThousandths(item.balance) ?? 0n) > 0n)
