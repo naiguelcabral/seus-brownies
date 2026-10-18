@@ -1,6 +1,6 @@
 # Estado canônico do projeto — Cacau v1
 
-## Custos exatos — schema aplicado sob aprovação — 18 de outubro de 2026
+## Custos exatos — schema aplicado e HML publicado — 18 de outubro de 2026
 
 Usuário aprovou aplicar o pacote e publicar em HML. Snapshot novo recusado
 pela quota; backup sem compute `br-bold-union-acju2qrp`, LSN `0/2072808`,
@@ -11,8 +11,18 @@ adicionadas sem backfill; 33 recibos finais, incluindo as duas pontes antigas.
 Leitura independente e 38 consultas de schema LIMIT 0 aprovadas. Nenhum fato
 operacional foi criado ou alterado; nenhuma cadeia histórica foi reescrita.
 CI 39121760695 e CodeQL 39121760660 aprovados em `e599a86`, zero alertas
-abertos conferidos. Publicação HML autorizada é o próximo passo. Plano e
-recibo em `evidence/exact-costs-rollout*-2026-10-18.json`.
+abertos conferidos. Publicado `b80a81f` (código idêntico a `e599a86`) pelo
+build isolado, preservando a chave pública real: versão
+`2e649847-ec1b-4997-bf74-bcad310977f7` confirmada a 100%. Cinco secrets,
+limiter e duas vars preservados; sem flags diagnósticos. Bundle servido
+`compras-CHINRhX7.js` confirma quantidade em kg e valor total do item.
+Login renderizado/HTTP 200; seis rotas protegidas redirecionam ao login.
+Primeira checagem de `/` com redirecionamento teve um 500; causa não estabelecida,
+consultas diretas seguintes e repetição completa passaram. Não declarar que
+houve zero falhas. Conferência autenticada e homologação operacional seguem
+pendentes, sem compra, lote ou venda de teste na original. Backup permanece;
+compute da cópia de ensaio suspenso/idle. Plano e recibo em
+`evidence/exact-costs-rollout*-2026-10-18.json`.
 
 ## P0 — custos exatos preparados localmente — 18 de outubro de 2026
 

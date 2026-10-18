@@ -12,7 +12,8 @@
     "branch": "br-aged-violet-ac5aap1s",
     "receipts": 33,
     "exactColumns": 9,
-    "preservationChecks": "all 38 public tables unchanged within transaction"
+    "preservationChecks": "all 38 public tables unchanged within transaction",
+    "compute": "suspended/idle"
   },
   "application": {
     "branch": "br-lingering-wind-acwh5wap",
@@ -216,5 +217,72 @@
   "ci": 39121760695,
   "codeql": 39121760660,
   "openSecurityAlerts": 0,
-  "deployment": "not yet executed"
+  "deployment": {
+    "worker": "cacau-v1-hml",
+    "codeCommit": "e599a86",
+    "publishedCommit": "b80a81f",
+    "version": "2e649847-ec1b-4997-bf74-bcad310977f7",
+    "deploymentId": "5cc08b4e-0d07-4b8f-a1c3-0c1606f6d709",
+    "percentage": 100,
+    "previousVersion": "b60a9d12-12b1-4458-81b4-53edaf674730",
+    "secretsUnchanged": true
+  },
+  "verification": {
+    "verifiedAt": "2026-10-18T11:34:56.763062+00:00",
+    "loginForm": true,
+    "publicKeyPreserved": true,
+    "purchases": [
+      {
+        "asset": "/assets/compras-BJ4KuYZ1.js",
+        "totalInput": false,
+        "kgInput": false,
+        "oldPriceInput": false
+      },
+      {
+        "asset": "/assets/compras-CHINRhX7.js",
+        "totalInput": true,
+        "kgInput": true,
+        "oldPriceInput": false
+      }
+    ],
+    "protectedRoutes": [
+      {
+        "path": "/",
+        "status": 200,
+        "redirectedToLogin": true
+      },
+      {
+        "path": "/compras",
+        "status": 200,
+        "redirectedToLogin": true
+      },
+      {
+        "path": "/estoque",
+        "status": 200,
+        "redirectedToLogin": true
+      },
+      {
+        "path": "/producao",
+        "status": 200,
+        "redirectedToLogin": true
+      },
+      {
+        "path": "/financeiro",
+        "status": 200,
+        "redirectedToLogin": true
+      },
+      {
+        "path": "/relatorios",
+        "status": 200,
+        "redirectedToLogin": true
+      }
+    ],
+    "initialAttempt": {
+      "status": 500,
+      "path": "/",
+      "recovered": true,
+      "cause": "not established; subsequent complete HTTP verification passed"
+    }
+  },
+  "operationalHomologation": "not executed; no business test writes in shared database"
 }

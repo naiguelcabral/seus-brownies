@@ -1,10 +1,9 @@
 # Levantamento consolidado de pendências — Cacau v1
 
-Checkpoint posterior: C01 recebeu implementação local de custos exatos e compra
-em kg pelo total, com 505 testes e ensaio PostgreSQL 17 aprovados. Falta plano
-e autorização de aplicação do pacote pendente, publicação e homologação.
-O levantamento abaixo preserva a evidência anterior à correção local; HML
-continua com o defeito. Ver [ADR-0002](../ADR-0002-CUSTOS-EXATOS-E-EXIBICAO-MONETARIA.md).
+Checkpoint posterior: C01 recebeu custos exatos e compra em kg pelo total,
+com 505 testes, PostgreSQL 17 e CI/CodeQL aprovados. Após aprovação humana,
+schema aplicado e HML publicado em 18/10/2026. Falta homologação operacional
+autenticada. O levantamento abaixo preserva a evidência anterior à correção. Ver [ADR-0002](../ADR-0002-CUSTOS-EXATOS-E-EXIBICAO-MONETARIA.md).
 
 Data: 18 de outubro de 2026. Base de código: `736953e`, branch
 `feat/input-catalog-kg-purchases`; árvore limpa no início da revisão.

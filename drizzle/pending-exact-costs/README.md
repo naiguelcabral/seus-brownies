@@ -1,6 +1,7 @@
 # Pacote pendente — custos exatos
 
-Gerado por Drizzle; **não aplicado**. Ver
+Gerado por Drizzle; aplicado sob aprovação em 18/10/2026 na original, após
+backup e ensaio, com 33 recibos finais. Não reaplicar. Ver
 [ADR-0002](../../docs/ADR-0002-CUSTOS-EXATOS-E-EXIBICAO-MONETARIA.md).
 
 - `0029_exact_costs.sql`: oito colunas JSONB em sete tabelas.

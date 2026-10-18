@@ -1,7 +1,11 @@
 # ADR-0002 — Custos exatos e apresentação em centavos
 
 Data: 18 de outubro de 2026.
-Estado: requisito humano aprovado; implementação local, aplicação externa pendente.
+Estado: requisito e rollout aprovados; schema aplicado e HML publicado em 18/10/2026.
+
+O usuário aprovou posteriormente a aplicação do pacote e sua publicação HML.
+Recibo final: `evidence/exact-costs-rollout-2026-10-18.json`. As limitações
+de autorização no histórico da decisão abaixo referem-se ao aceite inicial.
 
 ## Decisão humana
 

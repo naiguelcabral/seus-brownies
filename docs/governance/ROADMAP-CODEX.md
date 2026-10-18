@@ -7,12 +7,12 @@ Inventário completo e ordem de execução em
 Ele distingue implementação, cadastro, homologação, integração e decisões;
 checkpoints antigos abaixo não devem reabrir carga/deploy já comprovados.
 
-- [~] **P0/C01:** implementação local de custo exato e compra em kg pelo total
-      preparada conforme ADR-0002; 505 testes e ensaio PostgreSQL 17 aprovados.
-      Pacote aditivo pendente fora da cadeia congelada; falta plano/autorização
-      de aplicação por alvo, publicação e homologação. HML ainda contém o defeito.
-      Caso original: 1000 g/R$ 12,50 → R$ 13,00 ao consumir tudo; correção
-      local conserva o total com consumos parciais, sucessivos e rollback.
+- [~] **P0/C01:** custo exato e compra em kg pelo total implementados; 505
+      testes, PostgreSQL 17, CI/CodeQL e build aprovados. Sob aprovação humana,
+      nove colunas aplicadas na original, 33 recibos e preservação conferidos;
+      HML publicado em `2e649847-ec1b-4997-bf74-bcad310977f7`, a 100%.
+      Conferência HTTP/bundle passou após um 500 inicial recuperado; falta
+      homologação operacional autenticada em cenário autorizado. Sem backfill.
 - [ ] Reconciliar Ovos Grandes e demais itens necessários; cadastrar receita,
       perfis, componentes e tarifas na original sob escopo autorizado.
 - [ ] Preparar estoque rastreável e cenário de QA; homologar acesso por papel,
