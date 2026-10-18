@@ -18,6 +18,11 @@ Login público HTTP 200 e renderizado no navegador. GETs anônimos de `/`,
 Conferência autenticada depende da entrada humana solicitada na aba HML;
 não foi criada compra ou movimentação de teste no banco compartilhado.
 Evidência: `evidence/hml-navigation-publish-2026-10-18.json`.
+Código e evidências salvos na branch remota `feat/input-catalog-kg-purchases`.
+[CI 39113836930](https://github.com/naiguelcabral/seus-brownies/actions/runs/39113836930)
+e [CodeQL 39113836915](https://github.com/naiguelcabral/seus-brownies/actions/runs/39113836915)
+aprovados em `922b026` (código publicado idêntico, com documentação adicional).
+API de code scanning confirmou três análises sem erro e zero resultados.
 Este checkpoint substitui as pendências de publicação abaixo; homologação
 operacional autenticada continua distinta da conferência do código publicado.
 

@@ -1,5 +1,14 @@
 {
   "worker": "cacau-v1-hml",
+  "remoteValidation": {
+    "commit": "922b026b31b183b02a0b54bf0893929773cc6a8b",
+    "ciRun": 39113836930,
+    "ciConclusion": "success",
+    "codeqlRun": 39113836915,
+    "codeqlConclusion": "success",
+    "codeScanningAnalyses": 3,
+    "codeScanningResults": 0
+  },
   "gitHead": "d8369bd",
   "version": "36960752-1cc0-4fee-8db7-76093d96a348",
   "deploymentId": "1b302c9f-5982-4f47-91af-b875539cf165",
