@@ -34,16 +34,28 @@ const navigation = [
     permission: 'dashboard:read',
   },
   {
-    to: '/compras',
-    label: 'Compras',
-    icon: ReceiptText,
-    permission: 'purchases:write',
-  },
-  {
     to: '/estoque',
     label: 'Estoque',
     icon: Boxes,
     permission: 'inventory:read',
+  },
+  {
+    to: '/cenarios',
+    label: 'Metas e cenários',
+    icon: Target,
+    permission: 'scenarios:read',
+  },
+  {
+    to: '/relatorios',
+    label: 'Relatórios',
+    icon: BarChart3,
+    permission: 'reports:financial:read',
+  },
+  {
+    to: '/compras',
+    label: 'Compras',
+    icon: ReceiptText,
+    permission: 'purchases:write',
   },
   {
     to: '/producao',
@@ -68,18 +80,6 @@ const navigation = [
     label: 'Financeiro',
     icon: Landmark,
     permission: 'reports:financial:read',
-  },
-  {
-    to: '/relatorios',
-    label: 'Relatórios',
-    icon: BarChart3,
-    permission: 'reports:financial:read',
-  },
-  {
-    to: '/cenarios',
-    label: 'Metas e cenários',
-    icon: Target,
-    permission: 'scenarios:read',
   },
   {
     to: '/plano-de-acao',

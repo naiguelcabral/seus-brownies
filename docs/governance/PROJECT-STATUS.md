@@ -2,13 +2,15 @@
 
 ## Ordem das guias do sistema — 18 de outubro de 2026
 
-Navegação local reorganizada em `ManagementLayout`: Visão geral; Compras;
-Estoque; Produção; Vendas; Despesas; Financeiro; Relatórios; Metas e cenários;
+Navegação local reorganizada em `ManagementLayout`, com prioridade explícita
+do usuário: Visão geral; Estoque; Metas e cenários; Relatórios; Compras;
+Produção; Vendas; Despesas; Financeiro;
 Plano de ação; Categorias; Produtos; Locais; Parâmetros. Rótulo geral passa de
 Cadastro para Gestão; navegação acessível identificada como Navegação principal.
 Rotas, ícones, filtros de permissão e conteúdo das páginas preservados.
-Tipos, lint, formatação, revisão de diff e build HML isolado de `25484b7`
-(chave pública de teste) aprovados. Sem alteração de banco,
+Tipos, lint, formatação e revisão de diff aprovados também para a ordem final;
+build HML isolado de `25484b7` aprovado antes da preferência final de ordem.
+Essa preferência altera somente a posição dos links. Sem alteração de banco,
 permissão ou deploy. Publicação HML e conferência visual permanecem pendentes.
 
 ## Insumos cadastrados e compra em kg — 18 de outubro de 2026

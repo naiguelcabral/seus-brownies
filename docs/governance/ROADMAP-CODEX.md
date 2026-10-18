@@ -2,8 +2,9 @@
 
 ## Organização das guias — 18 de outubro de 2026
 
-- [x] Reordenar navegação: visão geral, operação, finanças/análise/planejamento,
-      cadastros e parâmetros; preservar destinos e permissões existentes.
+- [x] Reordenar navegação pela preferência final do usuário: Visão geral,
+      Estoque, Metas e cenários, Relatórios; depois operação, finanças, plano
+      de ação, cadastros e parâmetros; preservar destinos e permissões.
 - [x] Conferir tipos, lint, formatação e diff da mudança de apresentação.
 - [ ] Publicação HML autorizada e conferência visual da navegação por perfil.
 
