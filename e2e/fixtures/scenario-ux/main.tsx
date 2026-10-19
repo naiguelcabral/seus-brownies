@@ -154,4 +154,6 @@ function Preview() {
     </main>
   )
 }
-createRoot(requireDefined(document.getElementById('root'))).render(<Preview />)
+const root = document.getElementById('root')
+if (!root) throw new Error('Raiz do ensaio indisponível.')
+createRoot(root).render(<Preview />)
