@@ -21,6 +21,9 @@ export function createProductionDrizzleMock(
     components?: Record<string, unknown>[]
     componentMovements?: Record<string, unknown>[]
     profilePackagingId?: number
+    recipePayload?: Record<string, unknown>
+    recoveredWeight?: string
+    coProductQuantity?: string
   } = {},
 ) {
   const batch = {
@@ -29,17 +32,30 @@ export function createProductionDrizzleMock(
     recipeVersionId: 1,
     plannedFor: '2026-10-08',
     recipeMultiplier: '1.000',
-    sourcePayload: {},
+    sourcePayload: { bordinhasWeightGrams: options.recoveredWeight },
     notes: null,
   }
   const rows: Record<string, Record<string, unknown>[]> = {
     production_batches: options.missingBatch ? [] : [batch],
     production_batch_outputs: [
       { id: 11, productId: 3, plannedQuantity: '12.000', role: 'primary' },
-      { id: 12, productId: 2, plannedQuantity: '6.000', role: 'co_product' },
+      {
+        id: 12,
+        productId: 2,
+        plannedQuantity: options.coProductQuantity ?? '6.000',
+        role: 'co_product',
+      },
     ],
     production_batch_losses: [],
-    recipe_versions: [{ id: 1, name: 'Base', status: 'active', version: 1 }],
+    recipe_versions: [
+      {
+        id: 1,
+        name: 'Base',
+        status: 'active',
+        version: 1,
+        sourcePayload: options.recipePayload ?? {},
+      },
+    ],
     production_profiles: [
       {
         id: 1,

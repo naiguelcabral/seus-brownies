@@ -1,6 +1,7 @@
 import { createServerFn } from '@tanstack/react-start'
 import { and, eq } from 'drizzle-orm'
 import { z } from 'zod'
+import { readPaymentFeeSchedule } from '#/features/finance/payment-fees'
 
 import { managementSettings } from '#/db/schema'
 import { requireServerFunctionPermission } from '#/features/auth/server-function-middleware'
@@ -27,7 +28,7 @@ export const getManagementSettings = createServerFn({ method: 'GET' })
       throw new Error(
         'Parâmetros gerenciais indisponíveis. Revise a migration pendente.',
       )
-    return row
+    return { ...row, paymentFees: readPaymentFeeSchedule(row.paymentFees) }
   })
 
 export const updateManagementSettings = createServerFn({ method: 'POST' })
@@ -46,6 +47,9 @@ export const updateManagementSettings = createServerFn({ method: 'POST' })
           .update(managementSettings)
           .set({
             ...normalized,
+            ...(data.paymentFees !== undefined
+              ? { paymentFees: data.paymentFees }
+              : {}),
             version: data.expectedVersion + 1,
             updatedByAuthUserId: context.principal!.id,
             updatedAt: new Date(),

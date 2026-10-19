@@ -1,5 +1,6 @@
 import { requireDefined } from '../../lib/required-value'
 import { z } from 'zod'
+import { paymentFeeSchedule } from '#/features/finance/payment-fees'
 
 const decimalText = z.string().trim().min(1).max(32)
 
@@ -13,6 +14,7 @@ export const managementSettingsValues = z
     criticalRevenueTolerance: decimalText,
     minimumProductMargin: decimalText,
     feeTaxReserveRate: decimalText,
+    paymentFees: paymentFeeSchedule.nullable().optional(),
   })
   .superRefine((value, context) => {
     const moneyFields = [

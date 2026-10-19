@@ -16,8 +16,8 @@
 - [~] Base física esclarecida: 850 g frios por receita de oito ovos;
       rendimentos confirmados por corte. Implementar recuperação variável
       apontada por lote e rateio sem duplicação; não pedir sobra fixa.
-      Publicação HML autorizada; aguardando renovação da capacidade para
-      executar o trabalho. Ver `HANDOFF-PROFILE-MATERIALS-2026-10-18.md`.
+      Capacidade renovada e fluxo implementado/testado; publicação/aplicação
+      HML em execução. Ver `HANDOFF-PROFILE-MATERIALS-2026-10-18.md`.
 
 Lista completa e evidência:
 `ATTACHED-WORKBOOK-COMPLETE-REVIEW-2026-10-18.md`.

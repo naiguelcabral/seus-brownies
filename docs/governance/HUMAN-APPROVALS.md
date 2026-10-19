@@ -1,5 +1,17 @@
 # Ações que exigem aprovação humana — Cacau v1
 
+## Publicação de custos e rendimento — autorização atual de18/10/2026
+
+“Pode fazer tudo e publicar”, seguido de “Vamos continuar”, autoriza concluir,
+ensaiar, atualizar o banco HML e publicar no cacau-v1-hml. Peso850 g frio por
+receita de oito ovos e rendimentos48/24 no5×5 e24/12 no7×7 confirmados.
+“as vendas são de todos os brownies” corrige a interpretação de cota obrigatória
+de Bordinhas: meta conjunta; aproveitamento real soma resultado, sem mínimo
+fixo presumido. Cenário anterior preservado e nova versão orientativa.
+Sem autorização de produção, secrets, limpeza ou reimportação histórica.
+Plano: COST-RECOVERY-FEES-HML-2026-10-18.md.
+
+
 ## MEI e taxas — definições de 18/10/2026
 
 Usuário definiu MEI R$ 88/mês e confirmou adicional aos R$ 2.200: orçamento

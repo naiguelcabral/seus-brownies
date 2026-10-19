@@ -4,6 +4,10 @@ import { createFileRoute, useNavigate, useRouter } from '@tanstack/react-router'
 import { useServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
 
+import type { calculatePaymentTargets } from '#/features/scenarios/payment-targets'
+import { ScenarioPixTarget } from '#/components/ScenarioPixTarget'
+import type { PaymentFeeSchedule } from '#/features/finance/payment-fees'
+import { PaymentFeeCalculator } from '#/components/PaymentFeeCalculator'
 import { ManagementLayout } from '#/components/ManagementLayout'
 import { formatBrlMoney } from '#/lib/format-money'
 import { compareProjectionWithRealized } from '#/features/scenarios/calculations'
@@ -244,6 +248,7 @@ function ScenarioPage() {
       title="Metas e cenários"
       description="Premissas versionadas e projeções estimadas. Resultado realizado usa competência e CMV FIFO e nunca é substituído pela meta."
     >
+      <PaymentFeeCalculator schedule={result.paymentFees} />
       {message ? (
         <p
           className="mb-5 rounded-lg bg-[#fff5e7] p-3 text-sm text-[#75411f]"
@@ -256,6 +261,7 @@ function ScenarioPage() {
       <ActiveScenario
         scenario={result.activeScenario}
         realized={result.realized}
+        paymentFees={result.paymentFees}
       />
 
       <div className="mt-6 grid gap-6 xl:grid-cols-[minmax(0,1fr)_430px]">
@@ -521,7 +527,9 @@ function ScenarioPage() {
 function ActiveScenario({
   scenario,
   realized,
+  paymentFees,
 }: {
+  paymentFees: PaymentFeeSchedule | null
   scenario: ReturnType<typeof Route.useLoaderData>['activeScenario']
   realized: ScenarioRealizedComparison | null
 }) {
@@ -573,7 +581,11 @@ function ActiveScenario({
               value={formatBrlMoney(projection.mixGeneratedProfit)}
             />
             <Metric
-              label="Lucro gerencial projetado"
+              label={
+                scenario.feeTaxReserveBps === 0
+                  ? 'Lucro antes das taxas de pagamento'
+                  : 'Lucro gerencial projetado'
+              }
               value={formatBrlMoney(projection.projectedManagerialProfit)}
             />
             <Metric
@@ -603,14 +615,98 @@ function ActiveScenario({
             determinístico. Reserva projetada:{' '}
             {formatBrlMoney(projection.feeTaxReserve)}.
           </p>
+          {scenario.paymentComparisonMessage ? (
+            <p className="mt-3 text-sm" role="status">
+              Comparação por meio indisponível:{' '}
+              {scenario.paymentComparisonMessage}
+            </p>
+          ) : null}
+          {scenario.paymentComparisons.length > 0 ? (
+            <div className="mt-4 rounded-xl border border-[#ecdfd4] p-4">
+              <h3 className="font-bold">
+                Meta após taxas: comparar meios separadamente
+              </h3>
+              <p className="mt-2 text-xs text-[#846859]">
+                Cada linha calcula o faturamento necessário se todas as vendas
+                usassem aquele meio. Não presume combinação real por local. Pix
+                depende do número de transações, disponível no simulador.
+              </p>
+              <table className="mt-3 w-full text-left text-sm">
+                <thead>
+                  <tr>
+                    <th>Meio</th>
+                    <th>Faturamento necessário</th>
+                    <th>Taxas e reserva</th>
+                    <th>Lucro após custos</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {scenario.paymentComparisons.map(
+                    (
+                      row: ReturnType<typeof calculatePaymentTargets>[number],
+                    ) => (
+                      <tr key={row.method}>
+                        <td className="py-2">{row.method}</td>
+                        <td>{formatBrlMoney(row.targetRevenue)}</td>
+                        <td>{formatBrlMoney(row.fee)}</td>
+                        <td>{formatBrlMoney(row.profit)}</td>
+                      </tr>
+                    ),
+                  )}
+                </tbody>
+              </table>
+            </div>
+          ) : null}
+          {paymentFees ? (
+            <ScenarioPixTarget
+              fees={paymentFees}
+              draft={{
+                name: scenario.name,
+                description: scenario.description ?? undefined,
+                effectiveOn: scenario.effectiveOn,
+                monthlyProfitGoal: scenario.monthlyProfitGoal,
+                fixedMonthlyCosts: scenario.fixedMonthlyCosts,
+                salesDaysPerMonth: scenario.salesDaysPerMonth,
+                weeksPerMonth: scenario.weeksPerMonth,
+                minimumMarginRate: scenario.minimumMarginRate,
+                feeTaxReserveRate: scenario.feeTaxReserveRate,
+                mix: scenario.mix.map(
+                  (row: {
+                    productId: number
+                    originalWeight: string
+                    plannedUnitPrice: string
+                    plannedUnitCost: string
+                  }) => ({
+                    productId: row.productId,
+                    originalWeight: row.originalWeight,
+                    plannedUnitPrice: row.plannedUnitPrice,
+                    plannedUnitCost: row.plannedUnitCost,
+                  }),
+                ),
+              }}
+              products={scenario.mix.map(
+                (row: {
+                  productId: number
+                  productName: string
+                  productType: string
+                  productIsActive: boolean
+                }) => ({
+                  id: row.productId,
+                  name: row.productName,
+                  type: row.productType,
+                  isActive: row.productIsActive,
+                }),
+              )}
+            />
+          ) : null}
           <div className="mt-5 overflow-x-auto">
             <table className="w-full min-w-[860px] text-left text-sm">
               <thead className="bg-[#4a2114] text-white">
                 <tr>
                   <th className="px-3 py-2">Produto</th>
-                  <th className="px-3 py-2">Mix planejado</th>
-                  <th className="px-3 py-2">Qtd. mês</th>
-                  <th className="px-3 py-2">Qtd. semana</th>
+                  <th className="px-3 py-2">Mix orientativo</th>
+                  <th className="px-3 py-2">Estimativa mês</th>
+                  <th className="px-3 py-2">Estimativa semana</th>
                   <th className="px-3 py-2">Faturamento projetado</th>
                   <th className="px-3 py-2">Margem projetada</th>
                 </tr>

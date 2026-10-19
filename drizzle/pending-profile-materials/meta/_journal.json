@@ -225,6 +225,13 @@
       "when": 1792360374441,
       "tag": "0031_brave_thor",
       "breakpoints": true
+    },
+    {
+      "idx": 32,
+      "version": "7",
+      "when": 1792370227640,
+      "tag": "0032_long_slapstick",
+      "breakpoints": true
     }
   ]
 }

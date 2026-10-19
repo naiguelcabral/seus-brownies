@@ -2,6 +2,7 @@ import {
   exactCost,
   scaleCost,
   sumCosts,
+  subtractCosts,
   displayCostCents,
   displayCostMoney,
   decimalCost,
@@ -68,8 +69,15 @@ import {
   calculateProductionHistoryPage,
   productionHistoryPageSize,
 } from '#/features/production/history'
+import {
+  readRecoveryConfig,
+  calculateRecovery,
+  allocateRecoveryCosts,
+} from './recovery'
 import { reconcileProductionCosts } from '#/features/production/cost-reconciliation'
 import { isMissingOptionalSchemaError } from '#/features/reports/optional-schema'
+
+const inputRecoveryWeight = (value: string | undefined) => value ?? null
 
 const quantityInput = z
   .string()
@@ -96,6 +104,10 @@ const batchInput = z.object({
   recipeMultiplier: quantityInput,
   outputs: z.array(outputInput).min(1, 'Inclua ao menos um produto final.'),
   bordinhasQuantity: z.string().trim().optional(),
+  bordinhasWeightGrams: z.string().trim().optional(),
+  operationalAmounts: z
+    .object({ energy: z.string().trim(), labor: z.string().trim() })
+    .optional(),
   losses: z.array(lossInput).default([]),
   notes: z.string().trim().max(1_000).optional(),
 })
@@ -172,6 +184,7 @@ async function loadPlan(tx: Transaction, input: BatchInput) {
         id: recipeVersions.id,
         name: recipeVersions.name,
         status: recipeVersions.status,
+        sourcePayload: recipeVersions.sourcePayload,
         version: recipeVersions.version,
       })
       .from(recipeVersions)
@@ -206,8 +219,7 @@ async function loadPlan(tx: Transaction, input: BatchInput) {
     .where(eq(productionProfiles.recipeVersionId, recipe.id))
 
   const bordinhasProfile = profileRows.find(
-    (profile) =>
-      profile.productSku === 'PROD002' && profile.productName === 'Bordinhas',
+    (profile) => profile.productSku === 'PROD002',
   )
   if (!bordinhasProfile)
     throw new Error('O perfil de Bordinhas da receita-base não foi encontrado.')
@@ -255,29 +267,51 @@ async function loadPlan(tx: Transaction, input: BatchInput) {
       expectedYield: profile.expectedYield,
     }
   })
+  const recoveryConfig = readRecoveryConfig(recipe.sourcePayload)
   const capacity = calculateRecipeCapacity(
     input.recipeMultiplier,
     capacityOutputs,
-    bordinhasProfile.expectedYield,
+    recoveryConfig ? '1' : bordinhasProfile.expectedYield,
   )
   if (capacity.overCapacity)
     throw new Error(
       `Os produtos ocupam ${capacity.occupied} receitas, acima do multiplicador de ${capacity.multiplier}.`,
     )
 
-  const suggestedBordinhas = nonnegativeQuantity(
-    capacity.suggestedBordinhas,
-    'Capacidade de Bordinhas',
+  const recovery = recoveryConfig
+    ? calculateRecovery(
+        recoveryConfig,
+        requireQuantity(input.recipeMultiplier, 'Multiplicador'),
+        input.bordinhasWeightGrams,
+      )
+    : null
+  if (
+    recovery &&
+    input.outputs.some(
+      (output) => requireQuantity(output.quantity, 'Saída') % 1000n !== 0n,
+    )
   )
-  const bordinhasQuantity = input.bordinhasQuantity
-    ? nonnegativeQuantity(input.bordinhasQuantity, 'Quantidade de Bordinhas')
-    : suggestedBordinhas
+    throw new Error('Informe unidades inteiras de produtos e kits prontos.')
+  const suggestedBordinhas = recovery
+    ? recovery.packages
+    : nonnegativeQuantity(
+        capacity.suggestedBordinhas,
+        'Capacidade de Bordinhas',
+      )
+  const bordinhasQuantity = recovery
+    ? recovery.packages
+    : input.bordinhasQuantity
+      ? nonnegativeQuantity(input.bordinhasQuantity, 'Quantidade de Bordinhas')
+      : suggestedBordinhas
   const bordinhasLoss = lossByProductId.get(bordinhasProfile.productId) ?? 0n
-  if (bordinhasQuantity + bordinhasLoss !== suggestedBordinhas) {
+  if (recovery && bordinhasLoss > 0n)
+    throw new Error(
+      'Informe somente bordas aproveitáveis no peso recuperado; registre perdas na saída principal.',
+    )
+  if (!recovery && bordinhasQuantity + bordinhasLoss !== suggestedBordinhas)
     throw new Error(
       'Bordinhas deve corresponder ao saldo calculado. Se houver diferença, registre-a como perda manual com motivo.',
     )
-  }
 
   const baseRows = await tx
     .select({
@@ -312,14 +346,30 @@ async function loadPlan(tx: Transaction, input: BatchInput) {
     .from(productionProfileComponents)
     .innerJoin(products, eq(productionProfileComponents.productId, products.id))
     .where(
-      inArray(
-        productionProfileComponents.productionProfileId,
-        selectedProfiles.map(({ profile }) => profile.id),
-      ),
+      inArray(productionProfileComponents.productionProfileId, [
+        ...selectedProfiles.map(({ profile }) => profile.id),
+        ...(recovery && bordinhasQuantity > 0n ? [bordinhasProfile.id] : []),
+      ]),
     )
 
   const multiplier = requireQuantity(input.recipeMultiplier, 'Multiplicador')
   const consumptions = new Map<number, Consumption>()
+  const directQuantities = new Map<number, Map<number, bigint>>()
+  const addDirect = (
+    product: ProductWithUnit,
+    amount: bigint,
+    source: string,
+    outputProductId: number,
+  ) => {
+    addConsumption(consumptions, product, amount, source)
+    const allocations =
+      directQuantities.get(product.id) ?? new Map<number, bigint>()
+    allocations.set(
+      outputProductId,
+      (allocations.get(outputProductId) ?? 0n) + amount,
+    )
+    directQuantities.set(product.id, allocations)
+  }
   for (const item of baseRows) {
     if (item.type === 'finished_product')
       throw new Error(`Item de receita inválido: ${item.name}.`)
@@ -339,7 +389,21 @@ async function loadPlan(tx: Transaction, input: BatchInput) {
     group.push(component)
     componentsByProfile.set(component.profileId, group)
   }
-  for (const { output, profile } of selectedProfiles) {
+  const materialProfiles = [
+    ...selectedProfiles,
+    ...(recovery && bordinhasQuantity > 0n
+      ? [
+          {
+            output: {
+              productId: bordinhasProfile.productId,
+              quantity: thousandthsToQuantity(bordinhasQuantity),
+            },
+            profile: bordinhasProfile,
+          },
+        ]
+      : []),
+  ]
+  for (const { output, profile } of materialProfiles) {
     const grossQuantity =
       requireQuantity(output.quantity, 'Quantidade de saída') +
       (lossByProductId.get(output.productId) ?? 0n)
@@ -348,8 +412,7 @@ async function loadPlan(tx: Transaction, input: BatchInput) {
         throw new Error(
           'A embalagem individual está duplicada nos componentes.',
         )
-      addConsumption(
-        consumptions,
+      addDirect(
         profileComponentToConsumption(component),
         multiplyQuantities(
           requireQuantity(component.quantity, 'Quantidade de componente'),
@@ -360,6 +423,7 @@ async function loadPlan(tx: Transaction, input: BatchInput) {
           : component.role === 'coating'
             ? 'cobertura'
             : 'material de embalagem',
+        output.productId,
       )
     }
     if (profile.packagingId && profile.packagingQuantity) {
@@ -372,8 +436,7 @@ async function loadPlan(tx: Transaction, input: BatchInput) {
         throw new Error(
           'A embalagem do perfil está incompatível com o catálogo.',
         )
-      addConsumption(
-        consumptions,
+      addDirect(
         {
           id: profile.packagingId,
           sku: profile.packagingSku,
@@ -386,6 +449,7 @@ async function loadPlan(tx: Transaction, input: BatchInput) {
           grossQuantity,
         ),
         'embalagem individual',
+        output.productId,
       )
     }
   }
@@ -406,6 +470,28 @@ async function loadPlan(tx: Transaction, input: BatchInput) {
   for (const rate of rateRows)
     if (!rateByType.has(rate.type)) rateByType.set(rate.type, rate)
   const operational = requirements.map((requirement) => {
+    if (recoveryConfig?.operationalInput === 'batch_totals') {
+      const amount = input.operationalAmounts?.[requirement.type]
+      const parsed = amount === undefined ? null : moneyToCents(amount)
+      if (parsed === null)
+        throw new Error(
+          'Informe os valores totais reais de energia e mão de obra deste lote, inclusive zero quando aplicável.',
+        )
+      return {
+        requirement: { ...requirement, unit: 'batch' },
+        rate: {
+          id: null,
+          type: requirement.type,
+          unitAmount: centsToMoney(parsed),
+          effectiveFrom: input.productionDate,
+        },
+        quantity: 1000n,
+        amountCents: parsed,
+        exactCost: decimalCost(centsToMoney(parsed)),
+        explicit: true,
+      }
+    }
+
     const rate = rateByType.get(requirement.type)
     if (!rate)
       throw new Error(
@@ -421,6 +507,7 @@ async function loadPlan(tx: Transaction, input: BatchInput) {
     return {
       requirement,
       rate,
+      explicit: false,
       quantity,
       amountCents: calculateMoneyCents(rateCents, quantity),
       exactCost: scaleCost(decimalCost(rate.unitAmount), quantity, 1_000n),
@@ -470,10 +557,14 @@ async function loadPlan(tx: Transaction, input: BatchInput) {
   return {
     recipe,
     capacity,
+    recovery,
+    directQuantities,
     bordinhas: {
       productId: bordinhasProfile.productId,
       suggested: thousandthsToQuantity(suggestedBordinhas),
       selected: thousandthsToQuantity(bordinhasQuantity),
+      measuredGrams: recovery?.measuredGrams ?? null,
+      unpackagedGrams: recovery?.unpackagedGrams ?? null,
     },
     selectedProfiles,
     baseRows,
@@ -482,6 +573,15 @@ async function loadPlan(tx: Transaction, input: BatchInput) {
     sellableOutputs,
     lossByProductId,
   }
+}
+
+function requireOutputCost(
+  costs: Map<number, ReturnType<typeof exactCost>>,
+  productId: number,
+) {
+  const cost = costs.get(productId)
+  if (!cost) throw new Error('Saída sem custo exato alocado.')
+  return cost
 }
 
 async function enrichCosts(
@@ -549,6 +649,43 @@ async function enrichCosts(
     )
   if (grossQuantity <= 0n)
     throw new Error('O lote não possui saídas para calcular o custo.')
+  let outputExactCosts = new Map(
+    plan.sellableOutputs.map((output) => [
+      output.product.id,
+      scaleCost(
+        exactTotal,
+        output.quantity,
+        plan.sellableOutputs.reduce((sum, item) => sum + item.quantity, 0n),
+      ),
+    ]),
+  )
+  if (plan.recovery) {
+    const directCosts = new Map<number, ReturnType<typeof exactCost>>()
+    const allDirect = []
+    for (const cost of costs) {
+      for (const [productId, amount] of plan.directQuantities.get(cost.id) ??
+        []) {
+        const direct = scaleCost(cost.exactCost, amount, cost.quantity)
+        directCosts.set(
+          productId,
+          sumCosts([directCosts.get(productId) ?? exactCost(0n), direct]),
+        )
+        allDirect.push(direct)
+      }
+    }
+    outputExactCosts = allocateRecoveryCosts({
+      sharedCost: subtractCosts(exactTotal, sumCosts(allDirect)),
+      directCosts,
+      primary: plan.selectedProfiles.map(({ output, profile }) => ({
+        productId: output.productId,
+        quantity: requireQuantity(output.quantity, 'Saída'),
+        expectedYield: requireQuantity(profile.expectedYield, 'Rendimento'),
+      })),
+      coProductId: plan.bordinhas.productId,
+      totalMass: plan.recovery.totalMass,
+      packagedMass: plan.recovery.packagedMass,
+    })
+  }
   const outputUnitCost =
     (totalCost * 10_000n + grossQuantity / 2n) / grossQuantity
   return {
@@ -559,6 +696,7 @@ async function enrichCosts(
     totalCost,
     grossQuantity,
     outputUnitCost,
+    outputExactCosts,
   }
 }
 
@@ -567,7 +705,12 @@ function previewFromPlan(
   costs: Awaited<ReturnType<typeof enrichCosts>>,
 ) {
   return {
-    recipe: plan.recipe,
+    recipe: {
+      id: plan.recipe.id,
+      name: plan.recipe.name,
+      status: plan.recipe.status,
+      version: plan.recipe.version,
+    },
     capacity: plan.capacity,
     bordinhas: plan.bordinhas,
     consumptions: costs.costs.map((item) => ({
@@ -640,6 +783,7 @@ export const getProductionWorkspace = createServerFn({ method: 'GET' })
           id: recipeVersions.id,
           name: recipeVersions.name,
           version: recipeVersions.version,
+          sourcePayload: recipeVersions.sourcePayload,
         })
         .from(recipeVersions)
         .where(eq(recipeVersions.status, 'active'))
@@ -690,7 +834,12 @@ export const getProductionWorkspace = createServerFn({ method: 'GET' })
       .limit(productionHistoryPageSize)
       .offset(pagination.offset)
     return {
-      recipes,
+      recipes: recipes.map((recipe) => ({
+        id: recipe.id,
+        name: recipe.name,
+        version: recipe.version,
+        measuredRecovery: readRecoveryConfig(recipe.sourcePayload) !== null,
+      })),
       profiles: profileRows,
       batches,
       total: Number(total),
@@ -735,6 +884,10 @@ export const createProductionBatch = createServerFn({ method: 'POST' })
               origin: 'manual_production_draft',
               plannedAt: new Date().toISOString(),
               capacity: plan.capacity,
+              bordinhasWeightGrams: inputRecoveryWeight(
+                data.bordinhasWeightGrams,
+              ),
+              operationalAmounts: data.operationalAmounts ?? null,
               losses: losses.map((loss) => ({
                 productId: loss.productId,
                 quantity: thousandthsToQuantity(loss.quantity),
@@ -954,6 +1107,8 @@ export async function persistProductionBatchCompletion(
     if (!outputs.length) throw new Error('O rascunho não possui saídas.')
     const payload = (batch.sourcePayload ?? {}) as {
       losses?: Array<{ productId: number; quantity: string; reason: string }>
+      bordinhasWeightGrams?: string | null
+      operationalAmounts?: { energy: string; labor: string } | null
     }
     const draftLosses = z.array(lossInput).safeParse(payload.losses ?? [])
     if (!draftLosses.success)
@@ -972,6 +1127,8 @@ export async function persistProductionBatchCompletion(
           productId: output.productId,
           quantity: output.plannedQuantity ?? '0',
         })),
+      bordinhasWeightGrams: payload.bordinhasWeightGrams ?? undefined,
+      operationalAmounts: payload.operationalAmounts ?? undefined,
       bordinhasQuantity:
         outputs.find((output) => output.role === 'co_product')
           ?.plannedQuantity ?? '0',
@@ -1000,13 +1157,27 @@ export async function persistProductionBatchCompletion(
         required: cost.quantity,
       })),
     )
+    const completedAt = new Date()
+    const commonDenominator = [...costs.outputExactCosts.values()].reduce(
+      (product, cost) => product * BigInt(cost.denominator),
+      1n,
+    )
     const outputCosts = allocateOutputCosts(
       costs.totalCost,
-      plan.sellableOutputs.map((output) => ({
-        productId: output.product.id,
-        quantity: output.quantity,
-      })),
+      plan.sellableOutputs.map((output) => {
+        const cost =
+          costs.outputExactCosts.get(output.product.id) ?? exactCost(0n)
+        return {
+          productId: output.product.id,
+          quantity:
+            costs.totalCost === 0n
+              ? output.quantity
+              : BigInt(cost.numerator) *
+                (commonDenominator / BigInt(cost.denominator)),
+        }
+      }),
     )
+
     const outputCostByProductId = new Map(
       outputCosts.map((output) => [output.productId, output.allocatedCost]),
     )
@@ -1042,7 +1213,7 @@ export async function persistProductionBatchCompletion(
         referenceId: batch.id,
         sourceKey: `manual:production-batch:${batch.id}:stock-consumption:${cost.id}`,
         sourceHash: `completed-${batch.id}-stock-consumption-${cost.id}`,
-        occurredAt: new Date(`${batch.plannedFor}T12:00:00.000Z`),
+        occurredAt: completedAt,
       })),
     )
     await tx.insert(operationalCosts).values(
@@ -1058,7 +1229,9 @@ export async function persistProductionBatchCompletion(
         amount: displayCostMoney(item.exactCost),
         exactCost: item.exactCost,
         occurredAt: productionDate,
-        notes: 'Tarifa vigente efetivamente aplicada ao lote.',
+        notes: item.explicit
+          ? 'Valor total real informado para este lote, sem conversão em horas ou kWh.'
+          : 'Tarifa vigente efetivamente aplicada ao lote.',
       })),
     )
     const outputMovements = await tx
@@ -1069,21 +1242,24 @@ export async function persistProductionBatchCompletion(
           type: 'production' as const,
           quantityDelta: thousandthsToQuantity(output.quantity),
           unitCost: displayCostMoney(
-            scaleCost(costs.exactTotal, 1_000n, costs.grossQuantity),
+            scaleCost(
+              requireOutputCost(costs.outputExactCosts, output.product.id),
+              1_000n,
+              output.quantity,
+            ),
           ),
           allocatedCost: centsToMoney(
             outputCostByProductId.get(output.product.id) ?? 0n,
           ),
-          exactCost: scaleCost(
-            costs.exactTotal,
-            output.quantity,
-            plan.sellableOutputs.reduce((sum, item) => sum + item.quantity, 0n),
+          exactCost: requireOutputCost(
+            costs.outputExactCosts,
+            output.product.id,
           ),
           referenceType: 'production_output',
           referenceId: batch.id,
           sourceKey: `manual:production-batch:${batch.id}:stock-output:${output.product.id}`,
           sourceHash: `completed-${batch.id}-stock-output-${output.product.id}`,
-          occurredAt: new Date(`${batch.plannedFor}T12:00:00.000Z`),
+          occurredAt: completedAt,
         })),
       )
       .returning({
@@ -1096,17 +1272,17 @@ export async function persistProductionBatchCompletion(
         tx
           .update(productionBatchOutputs)
           .set({
-            exactCost: scaleCost(
-              costs.exactTotal,
-              output.quantity,
-              plan.sellableOutputs.reduce(
-                (sum, item) => sum + item.quantity,
-                0n,
-              ),
+            exactCost: requireOutputCost(
+              costs.outputExactCosts,
+              output.product.id,
             ),
             actualQuantity: thousandthsToQuantity(output.quantity),
             unitCost: displayCostMoney(
-              scaleCost(costs.exactTotal, 1_000n, costs.grossQuantity),
+              scaleCost(
+                requireOutputCost(costs.outputExactCosts, output.product.id),
+                1_000n,
+                output.quantity,
+              ),
             ),
             allocatedCost: centsToMoney(
               outputCostByProductId.get(output.product.id) ?? 0n,
@@ -1144,18 +1320,16 @@ export async function persistProductionBatchCompletion(
           productionBatchOutputId: completedOutput.id,
           sourceStockMovementId: movement.id,
           // FIFO follows completion order, not the planned production date.
-          availableAt: new Date(),
+          availableAt: completedAt,
           originalQuantity: thousandthsToQuantity(output.quantity),
           originalCost: centsToMoney(allocatedCost),
-          exactOriginalCost: scaleCost(
-            costs.exactTotal,
-            output.quantity,
-            plan.sellableOutputs.reduce((sum, item) => sum + item.quantity, 0n),
+          exactOriginalCost: requireOutputCost(
+            costs.outputExactCosts,
+            output.product.id,
           ),
-          exactRemainingCost: scaleCost(
-            costs.exactTotal,
-            output.quantity,
-            plan.sellableOutputs.reduce((sum, item) => sum + item.quantity, 0n),
+          exactRemainingCost: requireOutputCost(
+            costs.outputExactCosts,
+            output.product.id,
           ),
           remainingQuantity: thousandthsToQuantity(output.quantity),
           remainingCost: centsToMoney(allocatedCost),
@@ -1185,11 +1359,15 @@ export async function persistProductionBatchCompletion(
         unitCost: displayCostMoney(
           scaleCost(costs.exactTotal, 1_000n, costs.grossQuantity),
         ),
-        completedAt: new Date(),
+        completedAt,
         completionPayload: {
           costMethod: 'perpetual_weighted_average',
-          completedAt: new Date().toISOString(),
+          completedAt: completedAt.toISOString(),
           capacity: plan.capacity,
+          recovery: plan.bordinhas,
+          allocationMethod: plan.recovery
+            ? 'measured_mass_with_direct_finishing'
+            : 'legacy_quantity',
           operationalRates: plan.operational.map((item) => ({
             type: item.requirement.type,
             rateId: item.rate.id,

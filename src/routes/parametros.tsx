@@ -2,6 +2,8 @@ import { useState } from 'react'
 import { createFileRoute, useRouter } from '@tanstack/react-router'
 import { useServerFn } from '@tanstack/react-start'
 
+import { parseFeePercent, parseFixedFee } from '#/features/finance/payment-fees'
+import { PaymentFeeCalculator } from '#/components/PaymentFeeCalculator'
 import { ManagementLayout } from '#/components/ManagementLayout'
 import {
   getManagementSettings,
@@ -30,6 +32,20 @@ function ManagementSettingsPage() {
     minimumProductMargin: settings.minimumProductMargin,
     feeTaxReserveRate: settings.feeTaxReserveRate,
   }))
+  const [fees, setFees] = useState(() => ({
+    debit: settings.paymentFees
+      ? String(settings.paymentFees.debitBps / 100)
+      : '',
+    credit: settings.paymentFees
+      ? String(settings.paymentFees.creditBps / 100)
+      : '',
+    pix: settings.paymentFees
+      ? String(settings.paymentFees.pixFixedCents / 100)
+      : '',
+    effectiveOn:
+      settings.paymentFees?.effectiveOn ??
+      new Date().toISOString().slice(0, 10),
+  }))
   const [saving, setSaving] = useState(false)
   const [message, setMessage] = useState<string | null>(null)
 
@@ -47,6 +63,15 @@ function ManagementSettingsPage() {
           ...values,
           salesDaysPerMonth: Number(values.salesDaysPerMonth),
           expectedVersion: settings.version,
+          paymentFees:
+            fees.debit || fees.credit || fees.pix
+              ? {
+                  debitBps: parseFeePercent(fees.debit),
+                  creditBps: parseFeePercent(fees.credit),
+                  pixFixedCents: parseFixedFee(fees.pix),
+                  effectiveOn: fees.effectiveOn,
+                }
+              : null,
         },
       })
       setMessage('Parâmetros salvos e auditados.')
@@ -82,7 +107,7 @@ function ManagementSettingsPage() {
             label="Custos fixos mensais"
             value={values.fixedMonthlyCosts}
             onChange={(value) => update('fixedMonthlyCosts', value)}
-            hint="R$; a competência financeira permanece sujeita à decisão G2."
+            hint="R$; inclui mão de obra, energia e MEI. Não lança despesa paga."
           />
           <Field
             label="Dias de venda por mês"
@@ -111,15 +136,59 @@ function ManagementSettingsPage() {
             label="Margem mínima de produto"
             value={values.minimumProductMargin}
             onChange={(value) => update('minimumProductMargin', value)}
-            hint="Salva para uso futuro; não define margem antes da decisão G2."
+            hint="Use 0,70 para 70%. Alerta gerencial de margem."
           />
           <Field
             label="Reserva para taxas e impostos"
             value={values.feeTaxReserveRate}
             onChange={(value) => update('feeTaxReserveRate', value)}
-            hint="Salva sem ser aplicada até aprovação financeira."
+            hint="Reserva percentual de planejamento. Não substitui as tarifas por pagamento."
           />
         </div>
+        <fieldset className="mt-5 rounded-xl border border-[#ecdfd4] p-4">
+          <legend className="font-bold">Taxas por meio de pagamento</legend>
+          <div className="grid gap-4 md:grid-cols-2">
+            <Field
+              label="Débito (%)"
+              value={fees.debit}
+              onChange={(value) =>
+                setFees((current) => ({ ...current, debit: value }))
+              }
+            />
+            <Field
+              label="Crédito (%)"
+              value={fees.credit}
+              onChange={(value) =>
+                setFees((current) => ({ ...current, credit: value }))
+              }
+            />
+            <Field
+              label="Pix (R$ por transação)"
+              value={fees.pix}
+              onChange={(value) =>
+                setFees((current) => ({ ...current, pix: value }))
+              }
+            />
+            <label className="text-sm font-bold">
+              Vigência
+              <input
+                type="date"
+                className="field mt-1"
+                value={fees.effectiveOn}
+                onChange={(event) =>
+                  setFees((current) => ({
+                    ...current,
+                    effectiveOn: event.target.value,
+                  }))
+                }
+              />
+            </label>
+          </div>
+          <p className="mt-2 text-xs">
+            A combinação de pagamentos varia por local. As taxas ficam
+            separadas; o Pix não é percentual.
+          </p>
+        </fieldset>
         {message ? (
           <p
             className="mt-4 rounded-lg bg-[#fff5e7] p-3 text-sm text-[#75411f]"
@@ -135,6 +204,7 @@ function ManagementSettingsPage() {
           {saving ? 'Salvando…' : 'Salvar parâmetros'}
         </button>
       </form>
+      <PaymentFeeCalculator schedule={settings.paymentFees} />
     </ManagementLayout>
   )
 }

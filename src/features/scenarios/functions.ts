@@ -14,11 +14,15 @@ import {
 } from 'drizzle-orm'
 
 import {
+  managementSettings,
   managementScenarioHistory,
   managementScenarioMix,
   managementScenarios,
   products,
 } from '#/db/schema'
+import { calculatePaymentTargets } from './payment-targets'
+import type { PaymentFeeSchedule } from '#/features/finance/payment-fees'
+import { readPaymentFeeSchedule } from '#/features/finance/payment-fees'
 import { hasPermission } from '#/features/auth/authorization'
 import { requireServerFunctionPermission } from '#/features/auth/server-function-middleware'
 import { appendOperationalAudit } from '#/features/operations/audit'
@@ -327,6 +331,7 @@ async function replaceMix(
 function publicScenario(
   row: typeof managementScenarios.$inferSelect,
   mix: Awaited<ReturnType<typeof loadMix>>,
+  paymentFees: PaymentFeeSchedule | null = null,
 ) {
   const draft = draftFromStored(row, mix)
   const productStates = mix.map((item) => ({
@@ -348,6 +353,22 @@ function publicScenario(
     projectionMessage =
       error instanceof Error ? error.message : 'Projeção indisponível.'
   }
+  let paymentComparisons: ReturnType<typeof calculatePaymentTargets> = []
+  let paymentComparisonMessage: string | null = null
+  if (projection && paymentFees) {
+    try {
+      paymentComparisons = calculatePaymentTargets(
+        draft,
+        productStates,
+        paymentFees,
+      )
+    } catch (error) {
+      paymentComparisonMessage =
+        error instanceof Error
+          ? error.message
+          : 'Revise as taxas para comparar os meios.'
+    }
+  }
   return {
     ...row,
     minimumMarginRate: rateFromBps(row.minimumMarginBps),
@@ -356,6 +377,8 @@ function publicScenario(
     projection,
     projectionStatus,
     projectionMessage,
+    paymentComparisons,
+    paymentComparisonMessage,
   }
 }
 
@@ -413,18 +436,31 @@ export const listScenarios = createServerFn({ method: 'GET' })
           )
           .orderBy(asc(products.name), asc(products.id)),
       ])
+      const feeSettings = (
+        await database
+          .select({ paymentFees: managementSettings.paymentFees })
+          .from(managementSettings)
+          .where(eq(managementSettings.id, 1))
+          .limit(1)
+      ).at(0)
+      const paymentFees = readPaymentFeeSchedule(feeSettings?.paymentFees)
       const scenarioIds = [
         ...new Set([...rows, ...activeRows].map((row) => row.id)),
       ]
       const mixes = groupMix(await loadMix(database, scenarioIds))
       return {
         scenarios: rows.map((row) =>
-          publicScenario(row, mixes.get(row.id) ?? []),
+          publicScenario(row, mixes.get(row.id) ?? [], paymentFees),
         ),
         activeScenario: activeRows[0]
-          ? publicScenario(activeRows[0], mixes.get(activeRows[0].id) ?? [])
+          ? publicScenario(
+              activeRows[0],
+              mixes.get(activeRows[0].id) ?? [],
+              paymentFees,
+            )
           : null,
         activeProducts,
+        paymentFees,
         canWrite: hasPermission(context.principal!.role, 'scenarios:write'),
         total: Number(total),
         ...pagination,

@@ -80,6 +80,8 @@ function ProductionPage() {
   const [recipeMultiplier, setRecipeMultiplier] = useState('1')
   const [outputs, setOutputs] = useState<Output[]>([emptyOutput()])
   const [bordinhasQuantity, setBordinhasQuantity] = useState('')
+  const [energyAmount, setEnergyAmount] = useState('')
+  const [laborAmount, setLaborAmount] = useState('')
   const [losses, setLosses] = useState<Loss[]>([])
   const [notes, setNotes] = useState('')
   const [preview, setPreview] = useState<Awaited<
@@ -98,9 +100,10 @@ function ProductionPage() {
       ),
     [selectedRecipeId, workspace.profiles],
   )
-  const bordinhas = profiles.find(
-    (profile) => profile.sku === 'PROD002' && profile.name === 'Bordinhas',
-  )
+  const measuredRecovery =
+    workspace.recipes.find((recipe) => recipe.id === selectedRecipeId)
+      ?.measuredRecovery ?? false
+  const bordinhas = profiles.find((profile) => profile.sku === 'PROD002')
   const selectableProfiles = profiles.filter(
     (profile) => profile.productId !== bordinhas?.productId,
   )
@@ -126,7 +129,15 @@ function ProductionPage() {
         productId: Number(output.productId),
         quantity: output.quantity,
       })),
-      bordinhasQuantity: bordinhasQuantity || undefined,
+      bordinhasQuantity: measuredRecovery
+        ? undefined
+        : bordinhasQuantity || undefined,
+      bordinhasWeightGrams: measuredRecovery
+        ? bordinhasQuantity || '0'
+        : undefined,
+      operationalAmounts: measuredRecovery
+        ? { energy: energyAmount, labor: laborAmount }
+        : undefined,
       losses: losses.map((loss) => ({
         productId: Number(loss.productId),
         quantity: loss.quantity,
@@ -179,7 +190,9 @@ function ProductionPage() {
     try {
       const nextPreview = await previewBatch({ data: payload() })
       setPreview(nextPreview)
-      setBordinhasQuantity((value) => value || nextPreview.bordinhas.suggested)
+      setBordinhasQuantity((value) =>
+        measuredRecovery ? value : value || nextPreview.bordinhas.suggested,
+      )
     } catch (error) {
       setPreview(null)
       setMessage(
@@ -573,7 +586,9 @@ function ProductionPage() {
             </div>
             <div className="rounded-xl bg-[#fff7ec] p-3">
               <label className="block text-sm font-bold text-[#573524]">
-                Bordinhas (coproduto)
+                {measuredRecovery
+                  ? 'Bordinhas aproveitáveis (gramas)'
+                  : 'Bordinhas (coproduto)'}
                 <input
                   className="field mt-1.5"
                   value={bordinhasQuantity}
@@ -582,15 +597,60 @@ function ProductionPage() {
                     setPreview(null)
                   }}
                   inputMode="decimal"
-                  placeholder="Calcular pela capacidade restante"
+                  placeholder={
+                    measuredRecovery
+                      ? '0 se não houver sobra'
+                      : 'Calcular pela capacidade restante'
+                  }
                 />
               </label>
               <p className="mt-2 text-xs leading-5 text-[#846859]">
-                O valor sugerido é calculado pela capacidade livre. Se informar
-                menos, registre a diferença como perda manual de Bordinhas com
-                motivo.
+                {measuredRecovery
+                  ? 'Informe o peso real após o corte. Cada 100 g forma um pacote; a sobra inferior a 100 g fica informada e não entra no estoque de pacotes.'
+                  : 'O valor sugerido é calculado pela capacidade livre. Se informar menos, registre a diferença como perda manual de Bordinhas com motivo.'}
               </p>
             </div>
+            {measuredRecovery ? (
+              <fieldset className="rounded-xl border border-[#ecdfd4] p-3">
+                <legend className="text-sm font-bold">
+                  Custos reais deste lote
+                </legend>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <label className="text-sm">
+                    Mão de obra total (R$)
+                    <input
+                      className="field mt-1"
+                      inputMode="decimal"
+                      value={laborAmount}
+                      onChange={(event) => {
+                        setLaborAmount(event.target.value)
+                        setPreview(null)
+                      }}
+                      placeholder="Total alocado a este lote"
+                    />
+                  </label>
+                  <label className="text-sm">
+                    Energia total (R$)
+                    <input
+                      className="field mt-1"
+                      inputMode="decimal"
+                      value={energyAmount}
+                      onChange={(event) => {
+                        setEnergyAmount(event.target.value)
+                        setPreview(null)
+                      }}
+                      placeholder="Total alocado a este lote"
+                    />
+                  </label>
+                </div>
+                <p className="mt-2 text-xs text-[#846859]">
+                  A diária informada é R$ 150. Divida o custo entre os lotes do
+                  mesmo dia, sem repeti-lo. Informe zero somente quando não
+                  houver custo alocado. O orçamento mensal já inclui mão de obra
+                  e energia.
+                </p>
+              </fieldset>
+            ) : null}
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <strong className="text-sm">Perdas manuais (exceção)</strong>
@@ -776,8 +836,11 @@ function Preview({
             restante: {formatQuantity(preview.capacity.remaining, 'receitas')}
           </p>
           <p className="mt-1 text-sm text-[#846859]">
-            Bordinhas sugeridas:{' '}
-            {formatQuantity(preview.bordinhas.suggested, 'un.')}
+            Bordinhas em pacotes:{' '}
+            {formatQuantity(preview.bordinhas.selected, 'un.')}
+            {preview.bordinhas.measuredGrams !== null
+              ? ` · Aproveitado: ${preview.bordinhas.measuredGrams} g · Não embalado: ${preview.bordinhas.unpackagedGrams} g`
+              : ''}
           </p>
           <ul className="mt-3 divide-y divide-[#f0e5dc]">
             {preview.outputs.map((output) => (
@@ -834,9 +897,15 @@ function Preview({
                 {item.type === 'energy' ? 'Energia' : 'Mão de obra'}
               </strong>
               <p className="mt-1 text-sm text-[#846859]">
-                {formatQuantity(item.quantity, item.unit)} ×{' '}
-                {currency.format(Number(item.rate))} (vigente desde{' '}
-                {formatDate(item.effectiveFrom)})
+                {item.unit === 'batch' ? (
+                  'Total real informado para este lote'
+                ) : (
+                  <>
+                    {formatQuantity(item.quantity, item.unit)} ×{' '}
+                    {currency.format(Number(item.rate))} (vigente desde{' '}
+                    {formatDate(item.effectiveFrom)})
+                  </>
+                )}
               </p>
               <strong className="mt-2 block">
                 {currency.format(Number(item.amount))}

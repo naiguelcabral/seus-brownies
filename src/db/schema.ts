@@ -334,6 +334,7 @@ export const managementSettings = pgTable('management_settings', {
     precision: 6,
     scale: 4,
   }).notNull(),
+  paymentFees: jsonb('payment_fees'),
   updatedByAuthUserId: varchar('updated_by_auth_user_id', { length: 191 }),
   updatedAt: timestamp('updated_at', { withTimezone: true })
     .notNull()

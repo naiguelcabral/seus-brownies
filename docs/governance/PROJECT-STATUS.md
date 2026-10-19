@@ -1,5 +1,18 @@
 # Estado canônico do projeto — Cacau v1
 
+## Retomada e pacote final de custos —18/10/2026
+
+Franquia renovada100% e retomada oficial executada; branch limpa sincronizada.
+Implementados recuperação variável por peso, custos diretos por produto,
+MO/energia reais por lote, correção temporal dos movimentos, parâmetros de
+pagamento e comparação da meta por meio. Meta conjunta de todos os brownies;
+Bordinhas realizadas somam resultado sem cota mínima de aproveitamento.
+Nova versão de receita e cenário preparada com histórico anterior preservado.
+Pacote final002 ensaiado em réplica lógica local PostgreSQL17; 524 testes e
+2 ensaios de navegador passaram. HML ainda aguardando publicação/aplicação.
+Registro: COST-RECOVERY-FEES-HML-2026-10-18.md.
+
+
 ## Rendimento esclarecido e publicação autorizada — 18/10/2026
 
 Usuário confirmou 32 ovos para quatro formas 44 × 31,3 × 3 cm, cada uma com

@@ -50,6 +50,16 @@
 
 ## Produção
 
+- Decisões de18/10/2026: receita nova com oito ovos/850 g frios por forma;
+  5×5:48 simples ou24 recheados;7×7:24 simples ou12 recheados. Bordinhas
+  são recuperação variável pesada por lote, sem quantidade automática pela
+  capacidade restante. Pacote vendável100 g; saldo não embalado fica separado.
+- Na versão de recuperação medida, custo comum é distribuído por massa;
+  acabamento direto fica no produto consumidor. MO/energia reais são totais
+  informados por lote; referências horárias antigas não os substituem.
+- Movimentos e disponibilidade FIFO de lotes concluídos usam o momento da
+  conclusão. Data informada de produção permanece metadado separado.
+
 - Lote nasce em rascunho e só movimenta estoque na conclusão explícita.
 - Conclusão deve ocorrer em transação única.
 - Antes de concluir, revalidar estoque, receita, perfil e rendimento.
@@ -89,6 +99,13 @@
 - Somente Dono pode registrar correção em período fechado.
 
 ## Metas e cenários
+
+- Meta é lucro conjunto de todas as vendas, inclusive Bordinhas realizadas.
+  Mix é orientativo; não impor cota de aproveitamento. O plano-base revisado
+  usa16 produtos e normalização100%, com Bordinhas como recuperação adicional.
+- Fixos2288 incluem MO600, energia e MEI88. Custos de referência do plano
+  não somam novamente MO/energia. Taxas são separadas por meio; Pix0,49 por
+  transação exige quantidade de pagamentos, não quantidade de produtos.
 
 - O mix informado deve somar exatamente 100% para ser ativado.
 - O mix histórico de 103% é normalizado proporcionalmente para 100%,
