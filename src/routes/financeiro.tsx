@@ -1,3 +1,4 @@
+import { ProfitSummary } from '#/components/ProfitSummary'
 import { useState } from 'react'
 import {
   createFileRoute,
@@ -237,7 +238,7 @@ function FinancialPage() {
           value={formatBrlMoney(overview.accrualMargins.grossMargin)}
         />
         <Metric
-          label="Fluxo de caixa"
+          label="Recebimentos líquidos de taxas e reembolsos"
           value={formatBrlMoney(overview.currentSnapshot.cashFlow)}
         />
         <Metric
@@ -246,6 +247,7 @@ function FinancialPage() {
         />
       </div>
 
+      <ProfitSummary data={overview.managerial} />
       <section className="mt-6 rounded-2xl border border-[#ecdfd4] bg-white p-5">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>

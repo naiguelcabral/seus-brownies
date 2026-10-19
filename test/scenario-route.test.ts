@@ -19,8 +19,11 @@ test('interface separa projeção, realizado, ausências e decisões pendentes',
   assert.match(routeSource, /Meta · premissas · projeção/)
   assert.match(routeSource, /Resultado realizado/)
   assert.match(routeSource, /Dado ausente para o período de vigência/)
-  assert.match(routeSource, /decisão financeira ainda não homologada/)
-  assert.match(routeSource, /Fluxo de caixa não é usado como\s+substituto/)
+  assert.match(routeSource, /lucro registrado em Financeiro ou na Visão geral/)
+  assert.match(
+    routeSource.replace(/\s+/g, ' '),
+    /Este quadro compara receita e CMV pelas datas do cenário/,
+  )
   assert.match(routeSource, /planejado versus realizado por produto/)
 })
 

@@ -1,5 +1,18 @@
 # Estado canônico do projeto — Cacau v1
 
+## Incremento de recebimentos e lucro — em publicação, 18/10/2026
+
+Implementados recebimentos integrais com tarifa preservada, valores bruto/
+taxa/líquido e idempotência; classificação de despesas; lucro conjunto no
+dashboard e Financeiro, sem dedução duplicada de custos produtivos. Modais de
+Compras, Produção, Vendas e Despesas mantêm históricos em largura total.
+Migration0033 aditiva ensaiada na cópia privada: rollback tardio, preservação,
+aplicação e repetição rejeitada. Ensaio completo PostgreSQL17 com concorrência
+passou; quatro testes locais de navegador passaram. Original segue intacta
+com35 recibos e zero fatos operacionais até a aplicação controlada.
+Detalhes: PAYMENT-SETTLEMENT-PROFIT-HML-2026-10-18.md.
+
+
 ## Custos publicados e cenário ativo —18/10/2026
 
 Entrega73ead0a no cacau-v1-hml, versãoe206d319-feb7-4cc9-b86e-f61d83049b56

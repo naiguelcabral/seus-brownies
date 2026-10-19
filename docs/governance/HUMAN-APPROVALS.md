@@ -1,5 +1,18 @@
 # Ações que exigem aprovação humana — Cacau v1
 
+## Recebimentos, lucro e usabilidade — 18/10/2026
+
+Após proposta explícita de taxas nos recebimentos, despesas sem dupla contagem,
+meta conjunta no dashboard, modais de Compras/Produção/Vendas e ensaio isolado,
+usuário respondeu: “Pode realizar com base nas informações eu enviei”.
+Autoriza implementar e concluir esse incremento no HML já autorizado nesta
+conversa, sem compras ou fornadas reais e sem fatos fictícios na base compartilhada.
+Débito 1,43%, crédito 3,36%, Pix R$ 0,49 por pagamento e dinheiro sem taxa.
+Mão de obra/energia já apropriadas nos lotes não são deduzidas novamente por
+despesa; R$ 2.288 é orçamento planejado e não despesa efetivamente incorrida.
+Não autoriza produção principal, dados bancários, secrets, limpeza ou backfill.
+
+
 ## Publicação de custos e rendimento — autorização atual de18/10/2026
 
 “Pode fazer tudo e publicar”, seguido de “Vamos continuar”, autoriza concluir,

@@ -289,6 +289,7 @@ export function summarizeAccrualMargins(input: {
   return {
     netRevenue: centsToMoney(netRevenue),
     cogs: displayCostMoney(cogs),
+    exactCogs: cogs,
     grossMargin: displayCostMoney(
       subtractCosts(exactCost(netRevenue, 100n), cogs),
     ),

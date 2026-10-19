@@ -1,8 +1,18 @@
 import { requireDefined } from '../../lib/required-value'
+import { z } from 'zod'
+import {
+  calculateSettlement,
+  readSettlement,
+  paymentMethod,
+} from './settlement'
+import { readPaymentFeeSchedule } from './payment-fees'
+import { calculateManagerialProfit } from './managerial-profit'
 import { createServerFn } from '@tanstack/react-start'
 import { and, desc, eq, gte, inArray, lt, sql } from 'drizzle-orm'
 
 import {
+  expenses,
+  managementSettings,
   financialEvents,
   financialPeriods,
   inventoryCostAllocations,
@@ -127,7 +137,7 @@ async function lockFinancialPeriod(tx: any, competenceDate: string) {
   return period
 }
 
-async function assertOpenPeriod(tx: any, competenceDate: string) {
+export async function assertOpenPeriod(tx: any, competenceDate: string) {
   await lockFinancialPeriod(tx, competenceDate)
   const [period] = await tx
     .select({ status: financialPeriods.status })
@@ -337,6 +347,9 @@ type PaidSaleCashInput = {
   status: string
   totalAmount: string
   soldAt: Date
+  paymentDetails?: unknown
+  paymentReference?: string
+  paymentHash?: string
 }
 
 export async function appendPaidSaleCashReceipt(
@@ -352,13 +365,25 @@ export async function appendPaidSaleCashReceipt(
     const amount = moneyToCents(sale.totalAmount)
     if (amount === null || amount <= 0n)
       throw new Error('Venda paga não possui valor financeiro válido.')
-    const cashDate = dateOnly(sale.soldAt)
-    const key = `finance:sale-delivery:${sale.id}:cash`
-    const hash = await hashOperationPayload({
-      saleId: sale.id,
-      amount: centsToMoney(amount),
-      occurredOn: cashDate,
-    })
+    const settlement = readSettlement(sale.paymentDetails)
+    if (settlement && settlement.gross !== centsToMoney(amount))
+      throw new Error('Pagamento não corresponde ao total da venda.')
+    const cashDate = settlement?.occurredOn ?? dateOnly(sale.soldAt)
+    const reference = settlement?.reference
+    const key =
+      sale.paymentReference ??
+      (reference
+        ? `finance:sale-payment:${reference}`
+        : `finance:sale-delivery:${sale.id}:cash`)
+    const hash =
+      sale.paymentHash ??
+      settlement?.commandHash ??
+      (await hashOperationPayload({
+        saleId: sale.id,
+        amount: centsToMoney(amount),
+        occurredOn: cashDate,
+        ...(settlement ? { settlement } : {}),
+      }))
     const [existing] = await tx
       .select({
         id: financialEvents.id,
@@ -380,10 +405,13 @@ export async function appendPaidSaleCashReceipt(
         saleId: sale.id,
         amount: centsToMoney(amount),
         revenueEffect: '0.00',
-        cashEffect: centsToMoney(amount),
+        cashEffect: settlement?.net ?? centsToMoney(amount),
+        paymentFee: settlement?.fee ?? null,
         competenceDate: cashDate,
-        occurredAt: sale.soldAt,
-        reason: 'Recebimento da venda paga',
+        occurredAt: settlement ? occurredAt(cashDate) : sale.soldAt,
+        reason: settlement
+          ? `Recebimento ${settlement.method}: bruto ${settlement.gross}; taxa ${settlement.fee}; líquido ${settlement.net}. Tarifa preservada no pagamento.`
+          : 'Recebimento da venda paga; meio/taxa não informados',
         createdByAuthUserId: actorAuthUserId,
       })
       .returning({ id: financialEvents.id })
@@ -1022,6 +1050,11 @@ export const getFinancialOverview = createServerFn({ method: 'GET' })
         ])
       const selectedPeriod = period.at(0)
       return {
+        managerial: await loadManagerialOverview(
+          database,
+          data.periodMonth,
+          accrualMargins,
+        ),
         periodMonth: data.periodMonth,
         period: selectedPeriod
           ? {
@@ -1040,4 +1073,164 @@ export const getFinancialOverview = createServerFn({ method: 'GET' })
     } catch (error) {
       assertFinancialSchema(error)
     }
+  })
+
+export async function loadManagerialOverview(
+  database: any,
+  periodMonth: string,
+  knownMargins?: Awaited<ReturnType<typeof loadAccrualMargins>>,
+) {
+  const [margins, expenseRows, receipts, settings] = await Promise.all([
+    knownMargins ?? loadAccrualMargins(database, periodMonth),
+    database
+      .select({
+        amount: expenses.amount,
+        classification: expenses.classification,
+      })
+      .from(expenses)
+      .where(
+        and(
+          gte(expenses.occurredAt, periodMonth),
+          lt(expenses.occurredAt, nextMonth(periodMonth)),
+        ),
+      ),
+    database
+      .select({ paymentFee: financialEvents.paymentFee })
+      .from(financialEvents)
+      .where(
+        and(
+          eq(financialEvents.type, 'cash_receipt'),
+          gte(financialEvents.competenceDate, periodMonth),
+          lt(financialEvents.competenceDate, nextMonth(periodMonth)),
+        ),
+      ),
+    database
+      .select({
+        monthlyProfitGoal: managementSettings.monthlyProfitGoal,
+        fixedMonthlyCosts: managementSettings.fixedMonthlyCosts,
+      })
+      .from(managementSettings)
+      .where(eq(managementSettings.id, 1))
+      .limit(1),
+  ])
+  const result = calculateManagerialProfit({
+    netRevenue: margins.netRevenue,
+    exactCogs: margins.exactCogs,
+    reconciled:
+      margins.reconciled &&
+      margins.fifoCoverage.complete &&
+      margins.unattributedRevenue === '0.00',
+    expenses: expenseRows,
+    receipts,
+    goal: settings[0]?.monthlyProfitGoal ?? '10000.00',
+  })
+  return {
+    ...result,
+    netRevenue: margins.netRevenue,
+    cogs: margins.cogs,
+    fixedBudget: settings[0]?.fixedMonthlyCosts ?? null,
+  }
+}
+
+export const getSalePaymentOptions = createServerFn({ method: 'GET' })
+  .middleware([requireServerFunctionPermission('getSalePaymentOptions')])
+  .handler(async () => {
+    const { getDb } = await import('#/db/index')
+    const [settings] = await getDb()
+      .select({ paymentFees: managementSettings.paymentFees })
+      .from(managementSettings)
+      .where(eq(managementSettings.id, 1))
+      .limit(1)
+    return readPaymentFeeSchedule(settings?.paymentFees)
+  })
+
+const receiveSaleValues = z.object({
+  saleId: z.number().int().positive(),
+  method: paymentMethod,
+  occurredOn: z.string().date(),
+  reference: z.string().uuid(),
+})
+export async function persistSalePayment(
+  database: FinanceDatabase,
+  data: z.infer<typeof receiveSaleValues>,
+  actorAuthUserId: string,
+) {
+  return database.transaction(async (tx) => {
+    await tx.execute(
+      sql`select id from ${sales} where ${sales.id} = ${data.saleId} for update`,
+    )
+    const [sale] = await tx
+      .select()
+      .from(sales)
+      .where(eq(sales.id, data.saleId))
+      .limit(1)
+    if (!sale) throw new Error('Venda não encontrada.')
+    const key = `finance:sale-payment:${data.reference}`
+    const hash = await hashOperationPayload(data)
+    const [prior] = await tx
+      .select({
+        id: financialEvents.id,
+        idempotencyHash: financialEvents.idempotencyHash,
+      })
+      .from(financialEvents)
+      .where(eq(financialEvents.idempotencyKey, key))
+      .limit(1)
+    const replay = resolveIdempotentReplay(prior, hash)
+    if (replay) return replay
+    if (sale.status !== 'confirmed')
+      throw new Error(
+        'Somente uma venda confirmada e ainda não paga pode receber pagamento.',
+      )
+    if (data.occurredOn < dateOnly(sale.soldAt))
+      throw new Error('Pagamento não pode anteceder o registro da venda.')
+    const [settings] = await tx
+      .select({ paymentFees: managementSettings.paymentFees })
+      .from(managementSettings)
+      .where(eq(managementSettings.id, 1))
+      .limit(1)
+    const paymentDetails = {
+      ...calculateSettlement(
+        data.method,
+        sale.totalAmount,
+        data.occurredOn,
+        readPaymentFeeSchedule(settings?.paymentFees),
+      ),
+      reference: data.reference,
+      commandHash: hash,
+    }
+    await assertOpenPeriod(tx, data.occurredOn)
+    const receipt = await appendPaidSaleCashReceipt(
+      tx,
+      {
+        ...sale,
+        status: 'paid',
+        paymentDetails,
+        paymentReference: key,
+        paymentHash: hash,
+      },
+      actorAuthUserId,
+    )
+    if (!receipt || receipt.replayed)
+      throw new Error('Recebimento anterior conflitante; revise a venda.')
+    await tx
+      .update(sales)
+      .set({ status: 'paid', paymentDetails, updatedAt: new Date() })
+      .where(eq(sales.id, sale.id))
+    await appendOperationalAudit(tx, {
+      actorAuthUserId,
+      action: 'sale.receive',
+      entityType: 'sale',
+      entityId: sale.id,
+      operationReference: key,
+      reason: `Pagamento ${data.method}: bruto ${paymentDetails.gross}, taxa ${paymentDetails.fee}, líquido ${paymentDetails.net}.`,
+    })
+    return { id: receipt.id, replayed: false }
+  })
+}
+export const receiveSalePayment = createServerFn({ method: 'POST' })
+  .middleware([requireServerFunctionPermission('receiveSalePayment')])
+  .validator(receiveSaleValues)
+  .handler(async ({ data, context }) => {
+    const { getDb } = await import('#/db/index')
+    return persistSalePayment(getDb(), data, context.principal!.id)
   })

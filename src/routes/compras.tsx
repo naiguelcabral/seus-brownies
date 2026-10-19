@@ -1,3 +1,4 @@
+import { OperationDialog } from '#/components/OperationDialog'
 import { useState } from 'react'
 import { Plus, Trash2 } from 'lucide-react'
 import { createFileRoute, useNavigate, useRouter } from '@tanstack/react-router'
@@ -68,6 +69,7 @@ function PurchasesPage() {
   const router = useRouter()
   const navigate = useNavigate({ from: Route.fullPath })
   const save = useServerFn(createPurchase)
+  const [editorOpen, setEditorOpen] = useState(false)
   const [idempotencyKey, setIdempotencyKey] = useState(() =>
     crypto.randomUUID(),
   )
@@ -121,6 +123,7 @@ function PurchasesPage() {
           })),
         },
       })
+      setEditorOpen(false)
       setSupplierName('')
       setInvoiceFileReference('')
       setNotes('')
@@ -143,7 +146,19 @@ function PurchasesPage() {
       title="Compras"
       description="Registre compras de ingredientes, embalagens ou produtos. Informe a quantidade e o valor total pago por item. Compras de insumos em massa são em kg."
     >
-      <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_420px]">
+      <button
+        type="button"
+        onClick={() => setEditorOpen(true)}
+        className="mb-4 rounded-lg bg-[#4a2114] px-4 py-2.5 font-bold text-white"
+      >
+        Registrar compra
+      </button>
+      {!editorOpen && message ? (
+        <p role="status" className="mb-4 rounded-lg bg-[#fff5e7] p-3 text-sm">
+          {message}
+        </p>
+      ) : null}
+      <div className="space-y-6">
         <section className="overflow-hidden rounded-2xl border border-[#ecdfd4] bg-white">
           <div className="border-b border-[#f0e5dc] px-5 py-4">
             <h2 className="font-bold">Compras recentes</h2>
@@ -281,138 +296,155 @@ function PurchasesPage() {
             </>
           )}
         </section>
-        <form
-          className="rounded-2xl border border-[#ecdfd4] bg-white p-5 space-y-4"
-          onSubmit={submit}
-        >
-          <h2 className="font-bold">Nova compra</h2>
-          <Input
-            label="Fornecedor *"
-            value={supplierName}
-            onChange={setSupplierName}
-          />
-          <Input
-            label="Data da compra *"
-            value={purchasedAt}
-            onChange={setPurchasedAt}
-            type="date"
-          />
-          <Input
-            label="Referência futura da nota fiscal"
-            value={invoiceFileReference}
-            onChange={setInvoiceFileReference}
-            placeholder="Nome do arquivo ou link futuro"
-          />
-          {items.map((item, index) => (
-            <div key={index} className="rounded-xl border border-[#ead9ca] p-3">
-              <div className="mb-2 flex justify-between">
-                <strong className="text-sm">Item {index + 1}</strong>
-                {items.length > 1 ? (
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setItems(
-                        items.filter((_, itemIndex) => itemIndex !== index),
-                      )
-                    }
-                    className="text-[#a64f23]"
-                    aria-label="Remover item"
-                  >
-                    <Trash2 size={16} />
-                  </button>
-                ) : null}
-              </div>
-              <label className="block text-sm font-bold text-[#573524]">
-                Produto
-                <select
-                  value={item.productId}
-                  onChange={(event) =>
-                    updateItem(index, {
-                      productId: event.target.value,
-                      quantity: '',
-                      totalAmount: '',
-                      purchaseInKg:
-                        products.find(
-                          (product) =>
-                            String(product.id) === event.target.value,
-                        )?.unit === 'g' ||
-                        products.find(
-                          (product) =>
-                            String(product.id) === event.target.value,
-                        )?.unit === 'kg',
-                    })
-                  }
-                  className="field mt-1.5"
+        {editorOpen ? (
+          <OperationDialog
+            title="Registrar compra"
+            pending={saving}
+            onClose={() => setEditorOpen(false)}
+          >
+            <form
+              className="rounded-2xl border border-[#ecdfd4] bg-white p-5 space-y-4"
+              onSubmit={submit}
+            >
+              <h2 className="font-bold">Nova compra</h2>
+              <Input
+                label="Fornecedor *"
+                value={supplierName}
+                onChange={setSupplierName}
+              />
+              <Input
+                label="Data da compra *"
+                value={purchasedAt}
+                onChange={setPurchasedAt}
+                type="date"
+              />
+              <Input
+                label="Referência futura da nota fiscal"
+                value={invoiceFileReference}
+                onChange={setInvoiceFileReference}
+                placeholder="Nome do arquivo ou link futuro"
+              />
+              {items.map((item, index) => (
+                <div
+                  key={index}
+                  className="rounded-xl border border-[#ead9ca] p-3"
                 >
-                  <option value="">Selecione</option>
-                  {products.map((product) => (
-                    <option value={product.id} key={product.id}>
-                      {product.name} ({product.unit})
-                    </option>
-                  ))}
-                </select>
+                  <div className="mb-2 flex justify-between">
+                    <strong className="text-sm">Item {index + 1}</strong>
+                    {items.length > 1 ? (
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setItems(
+                            items.filter((_, itemIndex) => itemIndex !== index),
+                          )
+                        }
+                        className="text-[#a64f23]"
+                        aria-label="Remover item"
+                      >
+                        <Trash2 size={16} />
+                      </button>
+                    ) : null}
+                  </div>
+                  <label className="block text-sm font-bold text-[#573524]">
+                    Produto
+                    <select
+                      value={item.productId}
+                      onChange={(event) =>
+                        updateItem(index, {
+                          productId: event.target.value,
+                          quantity: '',
+                          totalAmount: '',
+                          purchaseInKg:
+                            products.find(
+                              (product) =>
+                                String(product.id) === event.target.value,
+                            )?.unit === 'g' ||
+                            products.find(
+                              (product) =>
+                                String(product.id) === event.target.value,
+                            )?.unit === 'kg',
+                        })
+                      }
+                      className="field mt-1.5"
+                    >
+                      <option value="">Selecione</option>
+                      {products.map((product) => (
+                        <option value={product.id} key={product.id}>
+                          {product.name} ({product.unit})
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                  <div className="mt-3 grid grid-cols-2 gap-3">
+                    <Input
+                      label={
+                        item.purchaseInKg ? 'Quantidade (kg)' : 'Quantidade'
+                      }
+                      value={item.quantity}
+                      onChange={(quantity) => updateItem(index, { quantity })}
+                      placeholder="Ex.: 1,500"
+                      inputMode="decimal"
+                    />
+                    <Input
+                      label="Valor total do item (R$)"
+                      value={item.totalAmount}
+                      onChange={(totalAmount) =>
+                        updateItem(index, { totalAmount })
+                      }
+                      placeholder="Ex.: 12,50"
+                      inputMode="decimal"
+                    />
+                  </div>
+                  <div className="mt-3 grid grid-cols-2 gap-3">
+                    <Input
+                      label="Lote do fornecedor"
+                      value={item.supplierLot}
+                      onChange={(supplierLot) =>
+                        updateItem(index, { supplierLot })
+                      }
+                      maxLength={80}
+                    />
+                    <Input
+                      label="Validade"
+                      type="date"
+                      min={purchasedAt}
+                      value={item.expiresOn}
+                      onChange={(expiresOn) => updateItem(index, { expiresOn })}
+                    />
+                  </div>
+                </div>
+              ))}
+              <button
+                type="button"
+                onClick={() => setItems([...items, emptyItem()])}
+                className="inline-flex items-center gap-1 text-sm font-bold text-[#a64f23]"
+              >
+                <Plus size={16} />
+                Adicionar item
+              </button>
+              <label className="block text-sm font-bold text-[#573524]">
+                Observações
+                <textarea
+                  value={notes}
+                  onChange={(event) => setNotes(event.target.value)}
+                  className="field mt-1.5 min-h-20"
+                />
               </label>
-              <div className="mt-3 grid grid-cols-2 gap-3">
-                <Input
-                  label={item.purchaseInKg ? 'Quantidade (kg)' : 'Quantidade'}
-                  value={item.quantity}
-                  onChange={(quantity) => updateItem(index, { quantity })}
-                  placeholder="Ex.: 1,500"
-                  inputMode="decimal"
-                />
-                <Input
-                  label="Valor total do item (R$)"
-                  value={item.totalAmount}
-                  onChange={(totalAmount) => updateItem(index, { totalAmount })}
-                  placeholder="Ex.: 12,50"
-                  inputMode="decimal"
-                />
-              </div>
-              <div className="mt-3 grid grid-cols-2 gap-3">
-                <Input
-                  label="Lote do fornecedor"
-                  value={item.supplierLot}
-                  onChange={(supplierLot) => updateItem(index, { supplierLot })}
-                  maxLength={80}
-                />
-                <Input
-                  label="Validade"
-                  type="date"
-                  min={purchasedAt}
-                  value={item.expiresOn}
-                  onChange={(expiresOn) => updateItem(index, { expiresOn })}
-                />
-              </div>
-            </div>
-          ))}
-          <button
-            type="button"
-            onClick={() => setItems([...items, emptyItem()])}
-            className="inline-flex items-center gap-1 text-sm font-bold text-[#a64f23]"
-          >
-            <Plus size={16} />
-            Adicionar item
-          </button>
-          <label className="block text-sm font-bold text-[#573524]">
-            Observações
-            <textarea
-              value={notes}
-              onChange={(event) => setNotes(event.target.value)}
-              className="field mt-1.5 min-h-20"
-            />
-          </label>
-          {message ? (
-            <p className="rounded-lg bg-[#fff5e7] p-3 text-sm text-[#75411f]">
-              {message}
-            </p>
-          ) : null}
-          <button
-            disabled={saving}
-            className="rounded-lg bg-[#4a2114] px-4 py-2.5 text-sm font-bold text-white disabled:opacity-60"
-          >
-            {saving ? 'Registrando...' : 'Registrar compra'}
-          </button>
-        </form>
+              {message ? (
+                <p className="rounded-lg bg-[#fff5e7] p-3 text-sm text-[#75411f]">
+                  {message}
+                </p>
+              ) : null}
+              <button
+                disabled={saving}
+                className="rounded-lg bg-[#4a2114] px-4 py-2.5 text-sm font-bold text-white disabled:opacity-60"
+              >
+                {saving ? 'Registrando...' : 'Registrar compra'}
+              </button>
+            </form>
+          </OperationDialog>
+        ) : null}
       </div>
     </ManagementLayout>
   )

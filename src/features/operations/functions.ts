@@ -34,7 +34,18 @@ import {
   stockMovements,
 } from '#/db/schema'
 import { requireServerFunctionPermission } from '#/features/auth/server-function-middleware'
-import { appendPaidSaleCashReceipt } from '#/features/finance/functions'
+import {
+  appendPaidSaleCashReceipt,
+  assertOpenPeriod,
+  loadManagerialOverview,
+} from '#/features/finance/functions'
+import {
+  calculateSettlement,
+  paymentMethod,
+  readSettlement,
+} from '#/features/finance/settlement'
+import { readPaymentFeeSchedule } from '#/features/finance/payment-fees'
+import { expenseClassification } from '#/features/finance/managerial-profit'
 import {
   calculatePriceCentsTotal,
   calculateUnitCostMillisTotal,
@@ -640,6 +651,7 @@ const saleValues = z
     customerName: z.string().trim().max(120).optional(),
     customerPhone: z.string().trim().max(32).optional(),
     status: z.enum(saleStatuses),
+    paymentMethod: paymentMethod.optional(),
     reportedAmount: z.string().trim().max(32),
     adjustmentKind: z.enum([
       'none',
@@ -660,6 +672,12 @@ const saleValues = z
       .min(1),
   })
   .superRefine((value, context) => {
+    if (value.status === 'paid' && !value.paymentMethod)
+      context.addIssue({
+        code: 'custom',
+        path: ['paymentMethod'],
+        message: 'Selecione o meio do pagamento recebido.',
+      })
     if (value.adjustmentKind !== 'none' && !value.adjustmentReason?.trim()) {
       context.addIssue({
         code: 'custom',
@@ -691,325 +709,344 @@ export const createSale = createServerFn({ method: 'POST' })
   .middleware([requireServerFunctionPermission('createSale')])
   .validator(saleValues)
   .handler(async ({ data, context }) => {
-    const soldAt = new Date()
-    const reportedCents = nonnegativeCents(data.reportedAmount)
-    if (reportedCents === null)
-      throw new Error('Informe um faturamento recebido válido.')
-    const normalizedItems = data.items.map((item) => ({
-      ...item,
-      quantity: decimal(item.quantity, quantityPattern, 3),
-    }))
-    if (normalizedItems.some((item) => !item.quantity))
-      throw new Error('Informe quantidades válidas para todos os itens.')
-    const idempotencyHash = await hashOperationPayload({
-      customerName: data.customerName?.trim() || null,
-      customerPhone: data.customerPhone?.trim() || null,
-      locationId: data.locationId,
-      status: data.status,
-      reportedAmount: centsToMoney(reportedCents),
-      adjustmentKind: data.adjustmentKind,
-      adjustmentReason: data.adjustmentReason?.trim() || null,
-      notes: data.notes?.trim() || null,
-      items: normalizedItems.map((item) => ({
-        productId: item.productId,
-        quantity: item.quantity,
-      })),
-    })
     const { getDb } = await import('#/db/index')
-    return getDb().transaction(async (tx) => {
-      const [existingSale] = await tx
+    return persistSale(getDb(), data, context.principal!.id)
+  })
+
+export async function persistSale(
+  database: ReturnType<typeof getDb>,
+  data: z.infer<typeof saleValues>,
+  actorAuthUserId: string,
+) {
+  const soldAt = new Date()
+  const reportedCents = nonnegativeCents(data.reportedAmount)
+  if (reportedCents === null)
+    throw new Error('Informe um faturamento recebido válido.')
+  const normalizedItems = data.items.map((item) => ({
+    ...item,
+    quantity: decimal(item.quantity, quantityPattern, 3),
+  }))
+  if (normalizedItems.some((item) => !item.quantity))
+    throw new Error('Informe quantidades válidas para todos os itens.')
+  const idempotencyHash = await hashOperationPayload({
+    customerName: data.customerName?.trim() || null,
+    customerPhone: data.customerPhone?.trim() || null,
+    locationId: data.locationId,
+    status: data.status,
+    ...(data.paymentMethod ? { paymentMethod: data.paymentMethod } : {}),
+    reportedAmount: centsToMoney(reportedCents),
+    adjustmentKind: data.adjustmentKind,
+    adjustmentReason: data.adjustmentReason?.trim() || null,
+    notes: data.notes?.trim() || null,
+    items: normalizedItems.map((item) => ({
+      productId: item.productId,
+      quantity: item.quantity,
+    })),
+  })
+  return database.transaction(async (tx) => {
+    const [existingSale] = await tx
+      .select({
+        id: sales.id,
+        idempotencyHash: sales.idempotencyHash,
+      })
+      .from(sales)
+      .where(eq(sales.idempotencyKey, data.idempotencyKey))
+      .limit(1)
+    const replay = resolveIdempotentReplay(existingSale, idempotencyHash)
+    if (replay) return replay
+
+    const ids = [...new Set(data.items.map((item) => item.productId))]
+    const [selected, location, settings] = await Promise.all([
+      tx
         .select({
-          id: sales.id,
-          idempotencyHash: sales.idempotencyHash,
+          id: products.id,
+          name: products.name,
+          salePrice: products.salePrice,
+          type: products.type,
+          isActive: products.isActive,
         })
+        .from(products)
+        .where(inArray(products.id, ids)),
+      tx
+        .select({ id: salesLocations.id })
+        .from(salesLocations)
+        .where(
+          and(
+            eq(salesLocations.id, data.locationId),
+            eq(salesLocations.isActive, true),
+          ),
+        )
+        .limit(1),
+      tx
+        .select({
+          paymentFees: managementSettings.paymentFees,
+          normalRevenueTolerance: managementSettings.normalRevenueTolerance,
+          criticalRevenueTolerance: managementSettings.criticalRevenueTolerance,
+        })
+        .from(managementSettings)
+        .where(eq(managementSettings.id, 1))
+        .limit(1),
+    ])
+    const byId = new Map(selected.map((product) => [product.id, product]))
+    if (
+      byId.size !== ids.length ||
+      selected.some(
+        (product) =>
+          !product.isActive ||
+          product.type !== 'finished_product' ||
+          !product.salePrice,
+      )
+    )
+      throw new Error('Há produto sem preço de venda disponível.')
+    if (!location.length) throw new Error('Selecione um local ou canal ativo.')
+    const auditSettings = settings.at(0)
+    const normalTolerance = auditSettings
+      ? rateToTenThousandths(auditSettings.normalRevenueTolerance)
+      : null
+    const criticalTolerance = auditSettings
+      ? rateToTenThousandths(auditSettings.criticalRevenueTolerance)
+      : null
+    if (normalTolerance === null || criticalTolerance === null)
+      throw new Error('Parâmetros de auditoria de receita indisponíveis.')
+    const totals = normalizedItems.map((item) =>
+      calculatePriceCentsTotal(
+        cents(byId.get(item.productId)!.salePrice!)!,
+        thousandths(item.quantity!)!,
+      ),
+    )
+    const subtotal = totals.reduce((sum, item) => sum + item, 0n)
+    if (reportedCents !== subtotal && data.adjustmentKind === 'none') {
+      throw new Error(
+        'Classifique e justifique a diferença entre o faturamento recebido e o calculado.',
+      )
+    }
+    const revenueAudit = classifyRevenueDifference({
+      reportedCents,
+      calculatedCents: subtotal,
+      normalTolerance,
+      criticalTolerance,
+    })
+    const paymentDetails =
+      data.status === 'paid'
+        ? calculateSettlement(
+            paymentMethod.parse(data.paymentMethod),
+            centsToMoney(reportedCents),
+            new Intl.DateTimeFormat('en-CA', {
+              timeZone: 'America/Sao_Paulo',
+              year: 'numeric',
+              month: '2-digit',
+              day: '2-digit',
+            }).format(soldAt),
+            readPaymentFeeSchedule(auditSettings?.paymentFees),
+          )
+        : null
+    const reportedByItem = allocateReportedRevenue(totals, reportedCents)
+    const allocatesCost = createsSaleCostAllocation(data.status)
+    const sale = (
+      await tx
+        .insert(sales)
+        .values({
+          idempotencyKey: data.idempotencyKey,
+          idempotencyHash,
+          createdByAuthUserId: actorAuthUserId,
+          locationId: data.locationId,
+          customerName: data.customerName?.trim() || null,
+          customerPhone: data.customerPhone?.trim() || null,
+          status: data.status,
+          paymentDetails,
+          subtotalAmount: centsToMoney(subtotal),
+          discountAmount: centsToMoney(
+            subtotal > reportedCents ? subtotal - reportedCents : 0n,
+          ),
+          totalAmount: centsToMoney(reportedCents),
+          reportedAmount: centsToMoney(reportedCents),
+          calculatedAmount: centsToMoney(subtotal),
+          auditStatus: revenueAudit.status,
+          auditNotes: data.adjustmentReason?.trim() || null,
+          adjustmentKind: data.adjustmentKind,
+          adjustmentReason: data.adjustmentReason?.trim() || null,
+          notes: data.notes?.trim() || null,
+          soldAt,
+        })
+        .onConflictDoNothing({ target: sales.idempotencyKey })
+        .returning({ id: sales.id })
+    ).at(0)
+
+    if (!sale) {
+      const [concurrentSale] = await tx
+        .select({ id: sales.id, idempotencyHash: sales.idempotencyHash })
         .from(sales)
         .where(eq(sales.idempotencyKey, data.idempotencyKey))
         .limit(1)
-      const replay = resolveIdempotentReplay(existingSale, idempotencyHash)
-      if (replay) return replay
-
-      const ids = [...new Set(data.items.map((item) => item.productId))]
-      const [selected, location, settings] = await Promise.all([
-        tx
-          .select({
-            id: products.id,
-            name: products.name,
-            salePrice: products.salePrice,
-            type: products.type,
-            isActive: products.isActive,
-          })
-          .from(products)
-          .where(inArray(products.id, ids)),
-        tx
-          .select({ id: salesLocations.id })
-          .from(salesLocations)
-          .where(
-            and(
-              eq(salesLocations.id, data.locationId),
-              eq(salesLocations.isActive, true),
-            ),
-          )
-          .limit(1),
-        tx
-          .select({
-            normalRevenueTolerance: managementSettings.normalRevenueTolerance,
-            criticalRevenueTolerance:
-              managementSettings.criticalRevenueTolerance,
-          })
-          .from(managementSettings)
-          .where(eq(managementSettings.id, 1))
-          .limit(1),
-      ])
-      const byId = new Map(selected.map((product) => [product.id, product]))
-      if (
-        byId.size !== ids.length ||
-        selected.some(
-          (product) =>
-            !product.isActive ||
-            product.type !== 'finished_product' ||
-            !product.salePrice,
-        )
+      const concurrentReplay = resolveIdempotentReplay(
+        concurrentSale,
+        idempotencyHash,
       )
-        throw new Error('Há produto sem preço de venda disponível.')
-      if (!location.length)
-        throw new Error('Selecione um local ou canal ativo.')
-      const auditSettings = settings.at(0)
-      const normalTolerance = auditSettings
-        ? rateToTenThousandths(auditSettings.normalRevenueTolerance)
-        : null
-      const criticalTolerance = auditSettings
-        ? rateToTenThousandths(auditSettings.criticalRevenueTolerance)
-        : null
-      if (normalTolerance === null || criticalTolerance === null)
-        throw new Error('Parâmetros de auditoria de receita indisponíveis.')
-      const totals = normalizedItems.map((item) =>
-        calculatePriceCentsTotal(
-          cents(byId.get(item.productId)!.salePrice!)!,
+      if (concurrentReplay) return concurrentReplay
+      throw new Error('Não foi possível reconciliar a operação repetida.')
+    }
+
+    await appendPaidSaleCashReceipt(
+      tx,
+      {
+        id: sale.id,
+        status: data.status,
+        totalAmount: centsToMoney(reportedCents),
+        paymentDetails,
+        soldAt,
+      },
+      actorAuthUserId,
+    )
+
+    let fifoPlans: ReturnType<typeof allocateFifoCost>[] = []
+    if (allocatesCost) {
+      // Product and layer locks serialize concurrent confirmed/paid sales.
+      await tx.execute(
+        sql`select id from ${products} where ${products.id} in ${ids} order by ${products.id} for update`,
+      )
+      await tx.execute(
+        sql`select id from ${inventoryCostLayers} where ${inventoryCostLayers.productId} in ${ids} order by ${inventoryCostLayers.productId}, ${inventoryCostLayers.availableAt}, ${inventoryCostLayers.id} for update`,
+      )
+      const rows = await tx
+        .select()
+        .from(inventoryCostLayers)
+        .where(inArray(inventoryCostLayers.productId, ids))
+        .orderBy(
+          asc(inventoryCostLayers.productId),
+          asc(inventoryCostLayers.availableAt),
+          asc(inventoryCostLayers.id),
+        )
+      let layers: InventoryCostLayer[] = rows.map((layer) => ({
+        id: layer.id,
+        productId: layer.productId,
+        productionBatchOutputId: layer.productionBatchOutputId,
+        sourceStockMovementId: layer.sourceStockMovementId,
+        origin: layer.origin,
+        availableAt: layer.availableAt.toISOString(),
+        originalQuantity: quantityToThousandths(layer.originalQuantity)!,
+        originalCost: moneyToCents(layer.originalCost)!,
+        exactOriginalCost: layer.exactOriginalCost ?? null,
+        exactRemainingCost: layer.exactRemainingCost ?? null,
+        remainingQuantity: quantityToThousandths(layer.remainingQuantity)!,
+        remainingCost: moneyToCents(layer.remainingCost)!,
+      }))
+      fifoPlans = normalizedItems.map((item) => {
+        const plan = allocateFifoCost(
+          layers,
+          item.productId,
           thousandths(item.quantity!)!,
+        )
+        layers = plan.layers
+        return plan
+      })
+    }
+    const insertedItems: Array<{ id: number }> = []
+    for (const [index, item] of normalizedItems.entries()) {
+      const insertedItem = (
+        await tx
+          .insert(saleItems)
+          .values({
+            saleId: sale.id,
+            productId: item.productId,
+            productName: byId.get(item.productId)!.name,
+            quantity: item.quantity!,
+            unitPrice: byId.get(item.productId)!.salePrice!,
+            totalAmount: centsToMoney(requireDefined(totals[index])),
+            reportedAmount: centsToMoney(requireDefined(reportedByItem[index])),
+          })
+          .returning({ id: saleItems.id })
+      ).at(0)
+      if (!insertedItem)
+        throw new Error('Não foi possível registrar um item da venda.')
+      insertedItems.push(insertedItem)
+    }
+    if (allocatesCost) {
+      const saleMovements: Array<{ id: number }> = []
+      for (const item of normalizedItems) {
+        const movement = (
+          await tx
+            .insert(stockMovements)
+            .values({
+              productId: item.productId,
+              type: 'sale' as const,
+              quantityDelta: `-${item.quantity!}`,
+              referenceType: 'sale',
+              referenceId: sale.id,
+            })
+            .returning({ id: stockMovements.id })
+        ).at(0)
+        if (!movement)
+          throw new Error('Não foi possível registrar a baixa da venda.')
+        saleMovements.push(movement)
+      }
+      const allocationRows = fifoPlans.flatMap((plan, itemIndex) =>
+        plan.allocations.map((allocation) => ({
+          inventoryCostLayerId: allocation.layerId,
+          outgoingStockMovementId: requireDefined(saleMovements[itemIndex]).id,
+          saleItemId: requireDefined(insertedItems[itemIndex]).id,
+          productId: allocation.productId,
+          quantity: String(allocation.quantity / 1_000n).concat(
+            '.',
+            String(allocation.quantity % 1_000n).padStart(3, '0'),
+          ),
+          allocatedCost: centsToMoney(allocation.allocatedCost),
+          exactCost: allocation.exactCost ?? null,
+          unitCost: millisToUnitCost(
+            (allocation.allocatedCost * 10_000n + allocation.quantity / 2n) /
+              allocation.quantity,
+          ),
+        })),
+      )
+      assertNoDuplicateLayerAllocations(
+        allocationRows.map((allocation) => ({
+          layerId: allocation.inventoryCostLayerId,
+          outgoingStockMovementId: allocation.outgoingStockMovementId,
+        })),
+      )
+      await tx.insert(inventoryCostAllocations).values(allocationRows)
+      for (const [index, plan] of fifoPlans.entries()) {
+        await tx
+          .update(stockMovements)
+          .set({
+            allocatedCost: centsToMoney(plan.allocatedCost),
+            exactCost: plan.exactCost ?? null,
+          })
+          .where(eq(stockMovements.id, requireDefined(saleMovements[index]).id))
+      }
+      const updatedLayers =
+        fifoPlans.length > 0
+          ? requireDefined(fifoPlans[fifoPlans.length - 1]).layers
+          : []
+      await Promise.all(
+        updatedLayers.map((layer) =>
+          tx
+            .update(inventoryCostLayers)
+            .set({
+              remainingQuantity: String(
+                layer.remainingQuantity / 1_000n,
+              ).concat(
+                '.',
+                String(layer.remainingQuantity % 1_000n).padStart(3, '0'),
+              ),
+              remainingCost: centsToMoney(layer.remainingCost),
+              exactRemainingCost: layer.exactRemainingCost ?? null,
+              updatedAt: new Date(),
+            })
+            .where(eq(inventoryCostLayers.id, layer.id)),
         ),
       )
-      const subtotal = totals.reduce((sum, item) => sum + item, 0n)
-      if (reportedCents !== subtotal && data.adjustmentKind === 'none') {
-        throw new Error(
-          'Classifique e justifique a diferença entre o faturamento recebido e o calculado.',
-        )
-      }
-      const revenueAudit = classifyRevenueDifference({
-        reportedCents,
-        calculatedCents: subtotal,
-        normalTolerance,
-        criticalTolerance,
-      })
-      const reportedByItem = allocateReportedRevenue(totals, reportedCents)
-      const allocatesCost = createsSaleCostAllocation(data.status)
-      const sale = (
-        await tx
-          .insert(sales)
-          .values({
-            idempotencyKey: data.idempotencyKey,
-            idempotencyHash,
-            createdByAuthUserId: context.principal!.id,
-            locationId: data.locationId,
-            customerName: data.customerName?.trim() || null,
-            customerPhone: data.customerPhone?.trim() || null,
-            status: data.status,
-            subtotalAmount: centsToMoney(subtotal),
-            discountAmount: centsToMoney(
-              subtotal > reportedCents ? subtotal - reportedCents : 0n,
-            ),
-            totalAmount: centsToMoney(reportedCents),
-            reportedAmount: centsToMoney(reportedCents),
-            calculatedAmount: centsToMoney(subtotal),
-            auditStatus: revenueAudit.status,
-            auditNotes: data.adjustmentReason?.trim() || null,
-            adjustmentKind: data.adjustmentKind,
-            adjustmentReason: data.adjustmentReason?.trim() || null,
-            notes: data.notes?.trim() || null,
-            soldAt,
-          })
-          .onConflictDoNothing({ target: sales.idempotencyKey })
-          .returning({ id: sales.id })
-      ).at(0)
-
-      if (!sale) {
-        const [concurrentSale] = await tx
-          .select({ id: sales.id, idempotencyHash: sales.idempotencyHash })
-          .from(sales)
-          .where(eq(sales.idempotencyKey, data.idempotencyKey))
-          .limit(1)
-        const concurrentReplay = resolveIdempotentReplay(
-          concurrentSale,
-          idempotencyHash,
-        )
-        if (concurrentReplay) return concurrentReplay
-        throw new Error('Não foi possível reconciliar a operação repetida.')
-      }
-
-      await appendPaidSaleCashReceipt(
-        tx,
-        {
-          id: sale.id,
-          status: data.status,
-          totalAmount: centsToMoney(reportedCents),
-          soldAt,
-        },
-        context.principal!.id,
-      )
-
-      let fifoPlans: ReturnType<typeof allocateFifoCost>[] = []
-      if (allocatesCost) {
-        // Product and layer locks serialize concurrent confirmed/paid sales.
-        await tx.execute(
-          sql`select id from ${products} where ${products.id} in ${ids} order by ${products.id} for update`,
-        )
-        await tx.execute(
-          sql`select id from ${inventoryCostLayers} where ${inventoryCostLayers.productId} in ${ids} order by ${inventoryCostLayers.productId}, ${inventoryCostLayers.availableAt}, ${inventoryCostLayers.id} for update`,
-        )
-        const rows = await tx
-          .select()
-          .from(inventoryCostLayers)
-          .where(inArray(inventoryCostLayers.productId, ids))
-          .orderBy(
-            asc(inventoryCostLayers.productId),
-            asc(inventoryCostLayers.availableAt),
-            asc(inventoryCostLayers.id),
-          )
-        let layers: InventoryCostLayer[] = rows.map((layer) => ({
-          id: layer.id,
-          productId: layer.productId,
-          productionBatchOutputId: layer.productionBatchOutputId,
-          sourceStockMovementId: layer.sourceStockMovementId,
-          origin: layer.origin,
-          availableAt: layer.availableAt.toISOString(),
-          originalQuantity: quantityToThousandths(layer.originalQuantity)!,
-          originalCost: moneyToCents(layer.originalCost)!,
-          exactOriginalCost: layer.exactOriginalCost ?? null,
-          exactRemainingCost: layer.exactRemainingCost ?? null,
-          remainingQuantity: quantityToThousandths(layer.remainingQuantity)!,
-          remainingCost: moneyToCents(layer.remainingCost)!,
-        }))
-        fifoPlans = normalizedItems.map((item) => {
-          const plan = allocateFifoCost(
-            layers,
-            item.productId,
-            thousandths(item.quantity!)!,
-          )
-          layers = plan.layers
-          return plan
-        })
-      }
-      const insertedItems: Array<{ id: number }> = []
-      for (const [index, item] of normalizedItems.entries()) {
-        const insertedItem = (
-          await tx
-            .insert(saleItems)
-            .values({
-              saleId: sale.id,
-              productId: item.productId,
-              productName: byId.get(item.productId)!.name,
-              quantity: item.quantity!,
-              unitPrice: byId.get(item.productId)!.salePrice!,
-              totalAmount: centsToMoney(requireDefined(totals[index])),
-              reportedAmount: centsToMoney(
-                requireDefined(reportedByItem[index]),
-              ),
-            })
-            .returning({ id: saleItems.id })
-        ).at(0)
-        if (!insertedItem)
-          throw new Error('Não foi possível registrar um item da venda.')
-        insertedItems.push(insertedItem)
-      }
-      if (allocatesCost) {
-        const saleMovements: Array<{ id: number }> = []
-        for (const item of normalizedItems) {
-          const movement = (
-            await tx
-              .insert(stockMovements)
-              .values({
-                productId: item.productId,
-                type: 'sale' as const,
-                quantityDelta: `-${item.quantity!}`,
-                referenceType: 'sale',
-                referenceId: sale.id,
-              })
-              .returning({ id: stockMovements.id })
-          ).at(0)
-          if (!movement)
-            throw new Error('Não foi possível registrar a baixa da venda.')
-          saleMovements.push(movement)
-        }
-        const allocationRows = fifoPlans.flatMap((plan, itemIndex) =>
-          plan.allocations.map((allocation) => ({
-            inventoryCostLayerId: allocation.layerId,
-            outgoingStockMovementId: requireDefined(saleMovements[itemIndex])
-              .id,
-            saleItemId: requireDefined(insertedItems[itemIndex]).id,
-            productId: allocation.productId,
-            quantity: String(allocation.quantity / 1_000n).concat(
-              '.',
-              String(allocation.quantity % 1_000n).padStart(3, '0'),
-            ),
-            allocatedCost: centsToMoney(allocation.allocatedCost),
-            exactCost: allocation.exactCost ?? null,
-            unitCost: millisToUnitCost(
-              (allocation.allocatedCost * 10_000n + allocation.quantity / 2n) /
-                allocation.quantity,
-            ),
-          })),
-        )
-        assertNoDuplicateLayerAllocations(
-          allocationRows.map((allocation) => ({
-            layerId: allocation.inventoryCostLayerId,
-            outgoingStockMovementId: allocation.outgoingStockMovementId,
-          })),
-        )
-        await tx.insert(inventoryCostAllocations).values(allocationRows)
-        for (const [index, plan] of fifoPlans.entries()) {
-          await tx
-            .update(stockMovements)
-            .set({
-              allocatedCost: centsToMoney(plan.allocatedCost),
-              exactCost: plan.exactCost ?? null,
-            })
-            .where(
-              eq(stockMovements.id, requireDefined(saleMovements[index]).id),
-            )
-        }
-        const updatedLayers =
-          fifoPlans.length > 0
-            ? requireDefined(fifoPlans[fifoPlans.length - 1]).layers
-            : []
-        await Promise.all(
-          updatedLayers.map((layer) =>
-            tx
-              .update(inventoryCostLayers)
-              .set({
-                remainingQuantity: String(
-                  layer.remainingQuantity / 1_000n,
-                ).concat(
-                  '.',
-                  String(layer.remainingQuantity % 1_000n).padStart(3, '0'),
-                ),
-                remainingCost: centsToMoney(layer.remainingCost),
-                exactRemainingCost: layer.exactRemainingCost ?? null,
-                updatedAt: new Date(),
-              })
-              .where(eq(inventoryCostLayers.id, layer.id)),
-          ),
-        )
-      }
-      await appendOperationalAudit(tx, {
-        actorAuthUserId: context.principal!.id,
-        action: 'sale.create',
-        entityType: 'sale',
-        entityId: sale.id,
-        operationReference: data.idempotencyKey,
-        reason: data.adjustmentReason || data.notes || null,
-      })
-      return { id: sale.id, replayed: false as const }
+    }
+    await appendOperationalAudit(tx, {
+      actorAuthUserId: actorAuthUserId,
+      action: 'sale.create',
+      entityType: 'sale',
+      entityId: sale.id,
+      operationReference: data.idempotencyKey,
+      reason: data.adjustmentReason || data.notes || null,
     })
+    return { id: sale.id, replayed: false as const }
   })
+}
 
 const saleHistoryValues = z.object({
   query: z.string().trim().max(100).optional(),
@@ -1083,6 +1120,7 @@ const expenseValues = z.object({
   idempotencyKey: z.string().uuid(),
   description: z.string().trim().min(2).max(180),
   category: z.string().trim().min(2).max(80),
+  classification: expenseClassification,
   amount: z.string().trim(),
   occurredAt: z.string().date(),
   notes: z.string().trim().max(1000).optional(),
@@ -1097,6 +1135,7 @@ export const createExpense = createServerFn({ method: 'POST' })
     const idempotencyHash = await hashOperationPayload({
       description: data.description,
       category: data.category,
+      classification: data.classification,
       amount: normalizedAmount,
       occurredAt: data.occurredAt,
       notes: data.notes?.trim() || null,
@@ -1114,6 +1153,7 @@ export const createExpense = createServerFn({ method: 'POST' })
       const replay = resolveIdempotentReplay(existingExpense, idempotencyHash)
       if (replay) return replay
 
+      await assertOpenPeriod(tx, data.occurredAt)
       const expense = (
         await tx
           .insert(expenses)
@@ -1123,6 +1163,7 @@ export const createExpense = createServerFn({ method: 'POST' })
             createdByAuthUserId: context.principal!.id,
             description: data.description,
             category: data.category,
+            classification: data.classification,
             amount: normalizedAmount,
             occurredAt: data.occurredAt,
             notes: data.notes?.trim() || null,
@@ -1200,7 +1241,7 @@ export const listExpenses = createServerFn({ method: 'GET' })
 
 export const getDashboard = createServerFn({ method: 'GET' })
   .middleware([requireServerFunctionPermission('getDashboard')])
-  .handler(async () => {
+  .handler(async ({ context }) => {
     const { getDb } = await import('#/db/index')
     const database = getDb()
     const generatedAt = new Date()
@@ -1264,7 +1305,16 @@ export const getDashboard = createServerFn({ method: 'GET' })
         (item) => calculateReorderStatus(item.balance, '0.000') === 'ok',
       ).length,
       recentPurchases,
-      recentSales,
+      recentSales: recentSales.map((sale) => ({
+        ...sale,
+        paymentDetails: readSettlement(sale.paymentDetails),
+      })),
+      financial: ['owner', 'manager'].includes(context.principal!.role)
+        ? await loadManagerialOverview(
+            database,
+            `${period.start.slice(0, 7)}-01`,
+          )
+        : null,
       monthExpenses: monthExpenses[0]?.total ?? '0',
     }
   })

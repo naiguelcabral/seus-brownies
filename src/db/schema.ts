@@ -641,6 +641,7 @@ export const sales = pgTable('sales', {
   }),
   customerName: varchar('customer_name', { length: 120 }),
   customerPhone: varchar('customer_phone', { length: 32 }),
+  paymentDetails: jsonb('payment_details'),
   status: saleStatus().notNull().default('draft'),
   subtotalAmount: money('subtotal_amount').notNull(),
   discountAmount: money('discount_amount').notNull().default('0'),
@@ -708,6 +709,7 @@ export const financialEvents = pgTable(
     /** Signed effects keep accrual and cash views independently additive. */
     revenueEffect: money('revenue_effect').notNull().default('0'),
     cashEffect: money('cash_effect').notNull().default('0'),
+    paymentFee: money('payment_fee'),
     competenceDate: date('competence_date').notNull(),
     occurredAt: timestamp('occurred_at', { withTimezone: true })
       .notNull()
@@ -770,6 +772,7 @@ export const expenses = pgTable('expenses', {
   sourceHash: varchar('source_hash', { length: 64 }),
   description: varchar({ length: 180 }).notNull(),
   category: varchar({ length: 80 }).notNull(),
+  classification: varchar({ length: 24 }),
   amount: money('amount').notNull(),
   occurredAt: date('occurred_at').notNull(),
   notes: text(),

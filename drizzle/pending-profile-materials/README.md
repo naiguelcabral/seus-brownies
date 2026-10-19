@@ -20,3 +20,9 @@ Recuperação: manter os valores aditivos e reverter o código se necessário;
 não remover/recriar o enum nem apagar dados. A retirada de componentes futuros
 exige correção auditável. Recuperação variável é configuração versionada de receita; taxas de pagamento
 são parâmetros, sem lançamentos financeiros automáticos.
+
+
+`0033_payment_settlement.sql` acrescenta somente três campos nullable de
+pagamento/classificação. Execução auditável independente, sem reaplicar0031/
+0032: `evidence/payment-settlement-schema-2026-10-18.json`. Preservação, ensaio
+e recibo em `docs/governance/PAYMENT-SETTLEMENT-PROFIT-HML-2026-10-18.md`.

@@ -1,5 +1,17 @@
 # Roadmap executável para Codex — Cacau v1
 
+## Próxima entrega autorizada — recebimentos e lucro, 18/10/2026
+
+- [x] Implementar recebimento integral por meio com taxa preservada e replay seguro.
+- [x] Classificar despesas sem duplicar custos já apropriados nos lotes.
+- [x] Mostrar lucro conjunto de todos os produtos e progresso da meta no painel.
+- [x] Aplicar modais a Compras, Produção, Vendas e Despesas.
+- [x] Ensaiar fluxo completo com dados sintéticos em PostgreSQL17 isolado;
+      ensaiar migration aditiva na cópia privada e navegador local/celular.
+- [~] Concluir gates, publicar e conferir HML sem fatos sintéticos.
+
+
+
 ## Anexo integral relido — 18/10/2026
 
 - [x] Ler as 15 abas e reconciliar fonte anexada, estrutura e números.

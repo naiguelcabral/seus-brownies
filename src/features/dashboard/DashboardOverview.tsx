@@ -1,3 +1,5 @@
+import { ProfitSummary } from '#/components/ProfitSummary'
+import type { loadManagerialOverview } from '#/features/finance/functions'
 import {
   ArrowRight,
   Boxes,
@@ -20,6 +22,7 @@ import { formatBrlMoney } from '../../lib/format-money'
 import { formatDateOnly, formatDateTime } from '../../lib/format'
 
 export type DashboardSnapshot = {
+  financial?: Awaited<ReturnType<typeof loadManagerialOverview>> | null
   generatedAt: string
   period: { start: string; end: string }
   activeProducts: number
@@ -149,6 +152,7 @@ export function DashboardOverview({
           {refreshError}
         </p>
       ) : null}
+      {data.financial ? <ProfitSummary data={data.financial} /> : null}
       <section
         aria-label="Indicadores principais"
         className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4"

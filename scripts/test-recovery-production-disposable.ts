@@ -6,7 +6,15 @@ import pg from 'pg'
 import { drizzle } from 'drizzle-orm/node-postgres'
 import { eq } from 'drizzle-orm'
 import * as schema from '../src/db/schema'
-import { persistPurchase } from '../src/features/operations/functions'
+import {
+  persistSalePayment,
+  persistSaleDelivery,
+  loadManagerialOverview,
+} from '../src/features/finance/functions'
+import {
+  persistSale,
+  persistPurchase,
+} from '../src/features/operations/functions'
 import { persistProductionBatchCompletion } from '../src/features/production/functions'
 import {
   decimalCost,
@@ -23,7 +31,7 @@ const pool = new pg.Pool({
   user: 'recovery_fixture',
   password: 'synthetic-recovery-only',
   database: 'cacau_recovery',
-  max: 1,
+  max: 4,
 })
 const db = drizzle(pool, { schema })
 try {
@@ -319,6 +327,208 @@ try {
     'draft',
   )
   assert.equal((await db.select().from(schema.operationalCosts)).length, 2)
+  // Full synthetic financial flow: no shared/HML data is used.
+  await db.insert(schema.managementSettings).values({
+    id: 1,
+    salesDaysPerMonth: 20,
+    weeksPerMonth: '4.00',
+    normalRevenueTolerance: '0.0300',
+    criticalRevenueTolerance: '0.0800',
+    minimumProductMargin: '0.7000',
+    feeTaxReserveRate: '0.0000',
+    paymentFees: {
+      debitBps: 143,
+      creditBps: 336,
+      pixFixedCents: 49,
+      effectiveOn: '2026-10-18',
+    },
+    fixedMonthlyCosts: '2288.00',
+    monthlyProfitGoal: '10000.00',
+  })
+  const location = requireFirst(
+    await db
+      .insert(schema.salesLocations)
+      .values({ name: 'Synthetic counter', isActive: true })
+      .returning(),
+  )
+  const sale = await persistSale(
+    db,
+    {
+      idempotencyKey: randomUUID(),
+      locationId: location.id,
+      status: 'confirmed',
+      reportedAmount: '12.00',
+      adjustmentKind: 'none',
+      items: [{ productId: main.id, quantity: '2.000' }],
+    },
+    'synthetic-test-actor',
+  )
+  const paymentDate = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'America/Sao_Paulo',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).format(new Date())
+  const beforePaymentStock = await db.select().from(schema.stockMovements)
+  const payment = {
+    saleId: sale.id,
+    method: 'pix' as const,
+    occurredOn: paymentDate,
+    reference: randomUUID(),
+  }
+  const [firstReceipt, replayedReceipt] = await Promise.all([
+    persistSalePayment(db, payment, 'synthetic-test-actor'),
+    persistSalePayment(db, payment, 'synthetic-test-actor'),
+  ])
+  assert.equal(firstReceipt.replayed, false)
+  assert.equal(replayedReceipt.replayed, true)
+  await assert.rejects(
+    persistSalePayment(
+      db,
+      { ...payment, method: 'credit' },
+      'synthetic-test-actor',
+    ),
+    /referência|diferente|conflito|payload/i,
+  )
+  await assert.rejects(
+    persistSalePayment(
+      db,
+      { ...payment, reference: randomUUID() },
+      'synthetic-test-actor',
+    ),
+    /ainda não paga/,
+  )
+  await persistSaleDelivery(
+    db,
+    { saleId: sale.id, deliveredOn: paymentDate },
+    'synthetic-test-actor',
+  )
+  const receipts = (await db.select().from(schema.financialEvents)).filter(
+    (row) => row.type === 'cash_receipt',
+  )
+  assert.equal(receipts.length, 1)
+  const receipt = requireFirst(receipts)
+  assert.equal(receipt.amount, '12.00')
+  assert.equal(receipt.cashEffect, '11.51')
+  assert.equal(receipt.paymentFee, '0.49')
+  assert.equal(
+    (await db.select().from(schema.stockMovements)).length,
+    beforePaymentStock.length,
+    'receipt/delivery cannot issue another stock movement',
+  )
+  // New tariffs must not rewrite a settled payment, even when delivery is retried.
+  await db
+    .update(schema.managementSettings)
+    .set({
+      paymentFees: {
+        debitBps: 999,
+        creditBps: 999,
+        pixFixedCents: 999,
+        effectiveOn: '2026-10-18',
+      },
+    })
+    .where(eq(schema.managementSettings.id, 1))
+  assert.equal(
+    (await persistSalePayment(db, payment, 'synthetic-test-actor')).replayed,
+    true,
+  )
+  await db.insert(schema.expenses).values([
+    {
+      description: 'Synthetic production day',
+      category: 'Labor',
+      classification: 'production',
+      amount: '150.00',
+      occurredAt: paymentDate,
+    },
+    {
+      description: 'Synthetic MEI',
+      category: 'MEI',
+      classification: 'fixed',
+      amount: '88.00',
+      occurredAt: paymentDate,
+    },
+  ])
+  const overview = await loadManagerialOverview(
+    db,
+    `${paymentDate.slice(0, 7)}-01`,
+  )
+  assert.equal(overview.available, true)
+  assert.equal(overview.paymentFees, '0.49')
+  assert.equal(overview.productionPayments, '150.00')
+  assert.equal(overview.fixedExpenses, '88.00')
+  assert.deepEqual(
+    overview.exactProfit,
+    addCosts(
+      decimalCost('12.00'),
+      scaleCost(
+        addCosts(
+          decimalCost('88.49'),
+          scaleCost(
+            produced.find((row) => row.productId === main.id)
+              ?.exactOriginalCost ?? decimalCost('0'),
+            2n,
+            48n,
+          ),
+        ),
+        -1n,
+      ),
+    ),
+  )
+  const directPaid = await persistSale(
+    db,
+    {
+      idempotencyKey: randomUUID(),
+      locationId: location.id,
+      status: 'paid',
+      paymentMethod: 'cash',
+      reportedAmount: '6.00',
+      adjustmentKind: 'none',
+      items: [{ productId: main.id, quantity: '1.000' }],
+    },
+    'synthetic-test-actor',
+  )
+  assert.ok(directPaid.id)
+  await db
+    .insert(schema.financialPeriods)
+    .values({ periodMonth: `${paymentDate.slice(0, 7)}-01`, status: 'closed' })
+  const unpaid = requireFirst(
+    await db
+      .insert(schema.sales)
+      .values({
+        status: 'confirmed',
+        subtotalAmount: '6.00',
+        totalAmount: '6.00',
+      })
+      .returning(),
+  )
+  const factsBeforeRejected = (await db.select().from(schema.financialEvents))
+    .length
+  await assert.rejects(
+    persistSalePayment(
+      db,
+      {
+        saleId: unpaid.id,
+        method: 'cash',
+        occurredOn: paymentDate,
+        reference: randomUUID(),
+      },
+      'synthetic-test-actor',
+    ),
+    /fechado/,
+  )
+  assert.equal(
+    (await db.select().from(schema.financialEvents)).length,
+    factsBeforeRejected,
+  )
+  assert.equal(
+    (
+      await db.select().from(schema.sales).where(eq(schema.sales.id, unpaid.id))
+    )[0]?.status,
+    'confirmed',
+  )
+  console.log(
+    'PASS: full purchase-production-sale-delivery-payment FIFO flow, concurrent payment replay, immutable tariff snapshot, one Pix fee for multiple products, no duplicate stock or double production expense, closed-period rollback.',
+  )
   console.log(
     'PASS: PostgreSQL 17 production consumes physical materials, retains exact per-output FIFO costs, uses actual batch totals, rejects replay and rolls back insufficient stock.',
   )

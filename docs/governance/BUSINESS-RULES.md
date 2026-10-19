@@ -118,6 +118,25 @@
 - Hashes, aliases e IDs externos preservam rastreabilidade.
 - Não repetir carga inicial sobre base já importada sem plano específico de migração/backfill.
 
+## Recebimentos e lucro registrado — decisão de 18/10/2026
+
+- Venda paga exige meio explícito; venda confirmada pode receber quitação
+  integral pelo fluxo de recebimento. Um recebimento reúne todos os itens.
+- Débito 1,43%, crédito 3,36%, Pix R$ 0,49 por transação, dinheiro sem taxa;
+  preservar tarifa e valor bruto/taxa/líquido no pagamento. Mudança posterior
+  de parâmetro não altera pagamentos anteriores. Sem combinação presumida.
+- Recebimento não cria nova receita de entrega nem outra baixa de estoque.
+  Estorno devolve valor bruto ao cliente, sem presumir restituição da tarifa
+  pela operadora; a tarifa continua custo até evidência compensatória própria.
+- Lucro conjunto registrado = receita por competência − CMV exato − taxas
+  efetivamente registradas − despesas fixas/variáveis classificadas. Somar
+  todos os produtos. Orçamento mensal de R$ 2.288 não é dedução automática.
+- Despesas de produção já apropriadas aos lotes são identificadas e não
+  descontadas outra vez; custos produtivos chegam ao resultado pelo CMV.
+- Despesa antiga não classificada, recebimento sem taxa conhecida ou cobertura
+  FIFO incompleta deixam lucro indisponível, sem assumir zero ou backfill.
+- Novo gasto exige classificação; período fechado bloqueia despesa/recebimento.
+
 ## Despesas
 
 - Despesa financeira não movimenta estoque.

@@ -755,8 +755,8 @@ function ActiveScenario({
           <div className="mt-2 rounded-lg border border-dashed border-[#c7b8aa] p-4 text-sm text-[#735d50]">
             <p>Dado ausente para o período de vigência.</p>
             <p className="mt-1">
-              Lucro gerencial realizado: decisão financeira ainda não homologada
-              para classificar despesas variáveis e fixas.
+              Consulte o lucro registrado em Financeiro ou na Visão geral, com
+              taxas e despesas classificadas.
             </p>
           </div>
         ) : (
@@ -776,9 +776,9 @@ function ActiveScenario({
               />
             </dl>
             <p className="mt-3 text-xs text-[#846859]">
-              Lucro gerencial realizado permanece indisponível até homologar a
-              classificação das despesas. Fluxo de caixa não é usado como
-              substituto.
+              O lucro conjunto, após taxas e despesas classificadas, está
+              disponível em Financeiro e na Visão geral. Este quadro compara
+              receita e CMV pelas datas do cenário.
             </p>
             <div className="mt-4 overflow-x-auto">
               <table className="w-full min-w-[760px] text-left text-sm">

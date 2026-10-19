@@ -37,6 +37,8 @@ export const serverFunctionPolicies = {
   completeProductionBatch: 'production:write',
   getOperationalReports: 'reports:financial:read',
   deliverSale: 'sales:write',
+  getSalePaymentOptions: 'catalog:read',
+  receiveSalePayment: 'sales:write',
   compensateDeliveredSale: 'financial:compensation:write',
   redeemStoreCredit: 'financial:compensation:write',
   closeFinancialPeriod: 'financial:period:close',
