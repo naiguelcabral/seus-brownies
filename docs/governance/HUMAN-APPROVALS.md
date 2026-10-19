@@ -11,6 +11,9 @@ Débito 1,43%, crédito 3,36%, Pix R$ 0,49 por pagamento e dinheiro sem taxa.
 Mão de obra/energia já apropriadas nos lotes não são deduzidas novamente por
 despesa; R$ 2.288 é orçamento planejado e não despesa efetivamente incorrida.
 Não autoriza produção principal, dados bancários, secrets, limpeza ou backfill.
+Concluído: migration0033 e publicação41820ba em12776985 (100%).
+Referência PAYMENT-SETTLEMENT-2026-10-18-001 consumida, não repetir.
+Zero fatos operacionais na original após conferência autenticada.
 
 
 ## Publicação de custos e rendimento — autorização atual de18/10/2026

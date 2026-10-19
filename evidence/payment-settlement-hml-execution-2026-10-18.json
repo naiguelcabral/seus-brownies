@@ -1,0 +1,65 @@
+{
+  "reference": "PAYMENT-SETTLEMENT-2026-10-18-001",
+  "featureCommit": "60dbe088bf7d51627634991d576dfedf869b8ef4",
+  "publishedCommit": "41820baee33193842f829e1cc4bac3dd29d8629f",
+  "worker": "cacau-v1-hml",
+  "version": "12776985-3674-4474-8ecb-737cc7c35a53",
+  "trafficPercent": 100,
+  "migration": {
+    "tag": "0033_payment_settlement",
+    "sha256": "8c08508225c60a88834addd31622b55bb59daaa791b7bbea779c0030f8fcde1b",
+    "when": 1792372949079
+  },
+  "readback": [
+    {
+      "checked_at": "2026-10-19T01:39:12.032Z",
+      "receipts": "36",
+      "sales": "0",
+      "purchases": "0",
+      "batches": "0",
+      "expenses": "0",
+      "financial_events": "0",
+      "stock_movements": "0",
+      "scenario": {
+        "id": 2,
+        "status": "active",
+        "version": 2,
+        "revision": 2
+      },
+      "release_audits": "1"
+    }
+  ],
+  "tests": {
+    "node": 529,
+    "nodePassed": 529,
+    "browser": 4,
+    "postgres": "passed: full synthetic flow, two-connection replay, immutable rates, one Pix fee per payment, exact FIFO, no duplicate production expenses, closed-period rollback",
+    "schema": "private copy: late rollback verified, applied with old row preservation, replay rejected",
+    "ci": "https://github.com/naiguelcabral/seus-brownies/actions/runs/39186219166",
+    "codeql": "https://github.com/naiguelcabral/seus-brownies/actions/runs/39186219135",
+    "codeqlAnalyses": [
+      1977653538,
+      1977652059,
+      1977651610
+    ],
+    "codeqlResults": 0,
+    "openAlerts": 0
+  },
+  "ui": {
+    "dashboard": "Owner session: all-product result, 10000 goal, zero actuals; refresh verified",
+    "finance": "same all-product profit and expenses panel verified",
+    "sales": "native modal; 30.00 gross Pix preview 0.49 fee/29.51 net; no save",
+    "purchases": "native modal opened/closed; no save",
+    "production": "native modal recipe v2 opened/closed; no save",
+    "expenses": "classification choices verified; default 2026-10-18 in Brasilia at 22h38, no save",
+    "transient": "One SPA dashboard load failed after publication; full reload recovered, then native Refresh succeeded."
+  },
+  "scope": {
+    "realOperationalFactsCreated": 0,
+    "fullSettlementOnly": true,
+    "historicalBackfill": false,
+    "budgetAutomaticallyExpensed": false,
+    "mainWorkerChanged": false
+  },
+  "cleanup": "Task PostgreSQL container stopped; pre-existing Neon backups kept."
+}

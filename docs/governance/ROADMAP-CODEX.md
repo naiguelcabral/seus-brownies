@@ -8,7 +8,9 @@
 - [x] Aplicar modais a Compras, Produção, Vendas e Despesas.
 - [x] Ensaiar fluxo completo com dados sintéticos em PostgreSQL17 isolado;
       ensaiar migration aditiva na cópia privada e navegador local/celular.
-- [~] Concluir gates, publicar e conferir HML sem fatos sintéticos.
+- [x] Concluir gates, publicar e conferir HML sem fatos sintéticos.
+      Versão12776985,36 recibos,529 testes/CI/CodeQL aprovados; sessão
+      autenticada e data de Brasília conferidas. Recibo de execução versionado.
 
 
 

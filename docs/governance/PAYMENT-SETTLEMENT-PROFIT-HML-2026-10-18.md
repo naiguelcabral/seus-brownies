@@ -62,5 +62,28 @@ conexões/replay, tarifa alterada posteriormente, quitação em dinheiro,
 despesa produtiva sem duplicação e período fechado com rollback passaram.
 Quatro testes de navegador local passaram, incluindo preservação do modal,
 taxa por pagamento e celular. Lint/tipos/formatação passaram; Knip sem achados
-novos. Suíte integral com528 testes passou. Builds e publicação em fechamento; atualizar recibo
-após leitura independente e conferência autenticada do HML.
+novos. Suíte final na CI com529 testes passou; builds isolados aprovados.
+Publicação e conferência autenticada concluídas, conforme recibo abaixo.
+
+
+## Publicação e verificação final
+
+Incremento60dbe08 publicado; conferência visual identificou datas em UTC
+sugerindo dia seguinte à noite. Correção41820ba usa data de Brasília em
+Compras, Produção e Despesas, com teste na virada UTC de dia/mês.
+Versão final `12776985-3674-4474-8ecb-737cc7c35a53`,100% de tráfego no HML;
+Worker principal não alterado. Banco original com36 recibos/três colunas novas,
+um evento de auditoria do schema e todos os fatos operacionais ainda zerados.
+Cenário2/v2/rev2 permanece ativo. Referência consumida: não repetir.
+
+Sessão Dono verificou dashboard e Financeiro, abertura/fechamento dos quatro
+modais, Pix30,00 → taxa0,49/líquido29,51 sem salvar, classificação e data
+18/10/2026 no formulário às22h38 de Brasília. Um carregamento SPA do painel
+falhou após deploy; reload recuperou e atualização nativa posterior passou.
+Não foi reproduzido erro persistente. Banco relido independentemente sem fatos
+sintéticos. PostgreSQL local da tarefa encerrado; backups Neon preservados.
+
+CI39186219166 aprovou529 testes e os gates/build. CodeQL39186219135 aprovou
+as três linguagens; análises1977653538/1977652059/1977651610 confirmaram zero
+resultados e ausência de erros, API de alertas confirmou zero abertos.
+Recibo: `evidence/payment-settlement-hml-execution-2026-10-18.json`.

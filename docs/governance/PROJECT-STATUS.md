@@ -1,16 +1,22 @@
 # Estado canônico do projeto — Cacau v1
 
-## Incremento de recebimentos e lucro — em publicação, 18/10/2026
+## Recebimentos, lucro e modais publicados — 18/10/2026
 
-Implementados recebimentos integrais com tarifa preservada, valores bruto/
-taxa/líquido e idempotência; classificação de despesas; lucro conjunto no
-dashboard e Financeiro, sem dedução duplicada de custos produtivos. Modais de
-Compras, Produção, Vendas e Despesas mantêm históricos em largura total.
-Migration0033 aditiva ensaiada na cópia privada: rollback tardio, preservação,
-aplicação e repetição rejeitada. Ensaio completo PostgreSQL17 com concorrência
-passou; quatro testes locais de navegador passaram. Original segue intacta
-com35 recibos e zero fatos operacionais até a aplicação controlada.
-Detalhes: PAYMENT-SETTLEMENT-PROFIT-HML-2026-10-18.md.
+Incremento60dbe08 e correção de data41820ba publicados no cacau-v1-hml,
+versão `12776985-3674-4474-8ecb-737cc7c35a53`,100% de tráfego.
+Migration0033 aplicada com preservação,36 recibos. Recebimentos integrais
+registram bruto/taxa/líquido e preservam tarifa; despesas classificadas e
+lucro conjunto no dashboard/Financeiro evitam dedução duplicada de produção.
+Compras, Produção, Vendas e Despesas usam modais; data padrão em Brasília.
+529 testes Node na CI, quatro de navegador, ensaio completo PostgreSQL17,
+rollback/replay de schema, lint/tipos/formatação/Knip/build aprovados.
+CI39186219166 e CodeQL39186219135 passaram; zero resultados/alertas abertos.
+Sessão autenticada conferida; original continua com zero compras, lotes,
+vendas, despesas, fatos financeiros e movimentos de estoque. Cenário2 segue
+ativo. Um carregamento SPA do painel falhou após deploy; reload recuperou e
+o botão Atualizar painel depois funcionou. Sem operações fictícias no HML.
+Recibo: evidence/payment-settlement-hml-execution-2026-10-18.json.
+Detalhes/limites: PAYMENT-SETTLEMENT-PROFIT-HML-2026-10-18.md.
 
 
 ## Custos publicados e cenário ativo —18/10/2026
