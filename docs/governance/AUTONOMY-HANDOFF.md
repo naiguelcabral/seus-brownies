@@ -1,5 +1,37 @@
 # Handoff de autonomia — Cacau v1
 
+## Reserva de capacidade após S01 — 19 de outubro de 2026
+
+- Tarefa concluída: S01, inventário e fechamento das lacunas de autoria e
+  auditoria operacional em todas as mutações.
+- Branch: `feat/input-catalog-kg-purchases`; entrega `d5cc034` já sincronizada
+  no remoto. Catálogo (seis mutações) e produção (criação/conclusão) agora
+  gravam ator e evento na mesma transação. Demais domínios foram inventariados
+  e já possuíam auditoria operacional ou histórico versionado.
+- Arquivos principais: `src/features/catalog/functions.ts`,
+  `src/features/production/functions.ts`, testes de produção,
+  `test/operational-mutation-audit-contract.test.ts`, roadmap e estado
+  canônico. Scripts de ensaio descartável receberam o ator explícito exigido.
+- Verificações concluídas: 536 testes, lint, typecheck, formato, Knip, build
+  principal e build HML isolado. Rollback por falha da auditoria foi ensaiado.
+- HML: commit `d5cc034`, versão
+  `f0c2e0e2-8798-4132-9abc-50c87bf7a973`, 100% do tráfego. Após falha
+  transitória da primeira leitura de sessão, catálogo autenticado carregou 38
+  produtos e o Worker registrou as requisições como `Ok`. Nenhuma mutação ou
+  dado sintético foi criado; nenhuma migration foi necessária.
+- Verificações pendentes desta entrega: nenhuma. A CI remota do commit pode ser
+  consultada na retomada, sem repetir deploy ou teste compartilhado.
+- Próximo passo exato: retomar somente após renovar a franquia, executar
+  `./LIGARTUDO`, confirmar branch/árvore/remote e então iniciar T02/#36 pela
+  revalidação dos documentos e experimentos da cadeia genérica de migrations.
+  Não aplicar migrations, usar `db:push`, ler secrets ou consultar/escrever
+  banco compartilhado sem os gates e aprovações específicos já documentados.
+- Riscos/gates: T02 continua condicionado à estratégia genérica, instalação
+  nova, preservação, evidência externa não gravável e decisões humanas da
+  cadeia. Produção principal segue fora do escopo.
+- Uso Codex: 5% semanal restante; reserva do projeto atingida. Reset exibido:
+  24/10/2026 às 20:43:53, horário de Brasília. Estado: pausado por reserva.
+
 ## M44 — preparação segura da auditoria read-only — 16 de outubro de 2026 UTC
 
 - Branch: `codex/m44-readonly-audit-readiness`, iniciada de `origin/main`

@@ -17,8 +17,13 @@ anexam o evento em `operational_audit_events` dentro da mesma transação da
 escrita; falha ou ausência da entidade reverte o conjunto. A conclusão do lote
 também preserva referência operacional única. Nenhuma migration, alteração de
 regra financeira/estoque ou escrita compartilhada foi necessária. Contrato de
-regressão e ensaio de rollback da auditoria foram adicionados; publicação HML
-será registrada após os gates finais.
+regressão e ensaio de rollback da auditoria foram adicionados. Commit
+`d5cc034` publicado somente no `cacau-v1-hml`, versão
+`f0c2e0e2-8798-4132-9abc-50c87bf7a973`, com 100% do tráfego. Os 536 testes,
+lint, tipos, formato, Knip e builds principal/HML passaram. Após uma falha
+transitória na primeira leitura de sessão, o reload autenticado carregou os 38
+produtos e o Worker registrou login, painel e catálogo como `Ok`; nenhuma ação
+mutável foi executada e nenhum fato sintético foi criado no HML.
 
 ## Compras e Produção publicados — 19/10/2026
 
