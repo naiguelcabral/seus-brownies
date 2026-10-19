@@ -1,3 +1,4 @@
+import { businessDate } from '#/lib/business-date'
 import { OperationDialog } from '#/components/OperationDialog'
 import { useMemo, useState } from 'react'
 import { CheckCircle2, Eye, Plus, Trash2 } from 'lucide-react'
@@ -75,9 +76,7 @@ function ProductionPage() {
   const [recipeVersionId, setRecipeVersionId] = useState(
     String(workspace.recipes[0]?.id ?? ''),
   )
-  const [productionDate, setProductionDate] = useState(() =>
-    new Date().toISOString().slice(0, 10),
-  )
+  const [productionDate, setProductionDate] = useState(() => businessDate())
   const [recipeMultiplier, setRecipeMultiplier] = useState('1')
   const [outputs, setOutputs] = useState<Output[]>([emptyOutput()])
   const [bordinhasQuantity, setBordinhasQuantity] = useState('')

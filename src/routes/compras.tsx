@@ -1,3 +1,4 @@
+import { businessDate } from '#/lib/business-date'
 import { OperationDialog } from '#/components/OperationDialog'
 import { useState } from 'react'
 import { Plus, Trash2 } from 'lucide-react'
@@ -74,9 +75,7 @@ function PurchasesPage() {
     crypto.randomUUID(),
   )
   const [supplierName, setSupplierName] = useState('')
-  const [purchasedAt, setPurchasedAt] = useState(() =>
-    new Date().toISOString().slice(0, 10),
-  )
+  const [purchasedAt, setPurchasedAt] = useState(() => businessDate())
   const [invoiceFileReference, setInvoiceFileReference] = useState('')
   const [notes, setNotes] = useState('')
   const [items, setItems] = useState<Item[]>([emptyItem()])

@@ -1,3 +1,4 @@
+import { businessDate } from '#/lib/business-date'
 import {
   expenseClassificationLabels,
   expenseClassification,
@@ -48,9 +49,7 @@ function ExpensesPage() {
   >('fixed')
   const [category, setCategory] = useState('')
   const [amount, setAmount] = useState('')
-  const [occurredAt, setOccurredAt] = useState(() =>
-    new Date().toISOString().slice(0, 10),
-  )
+  const [occurredAt, setOccurredAt] = useState(() => businessDate())
   const [notes, setNotes] = useState('')
   const [message, setMessage] = useState<string | null>(null)
   const [saving, setSaving] = useState(false)
