@@ -1,3 +1,4 @@
+import { PurchaseSummary } from '#/components/PurchaseSummary'
 import { businessDate } from '#/lib/business-date'
 import { OperationDialog } from '#/components/OperationDialog'
 import { useState } from 'react'
@@ -18,7 +19,7 @@ const purchaseSearch = z.object({
   query: z.string().trim().max(100).optional().catch(undefined),
   start: z.string().date().optional().catch(undefined),
   end: z.string().date().optional().catch(undefined),
-  page: z.number().int().min(1).max(10_000).catch(1),
+  page: z.coerce.number().int().min(1).max(10_000).catch(1),
 })
 
 export const Route = createFileRoute('/compras')({
@@ -129,7 +130,13 @@ function PurchasesPage() {
       setItems([emptyItem()])
       setIdempotencyKey(crypto.randomUUID())
       setMessage('Compra registrada e estoque atualizado.')
-      await router.invalidate()
+      try {
+        await router.invalidate()
+      } catch {
+        setMessage(
+          'Compra registrada e estoque atualizado. Recarregue a página para atualizar o histórico.',
+        )
+      }
     } catch (error) {
       setMessage(
         error instanceof Error
@@ -147,7 +154,11 @@ function PurchasesPage() {
     >
       <button
         type="button"
-        onClick={() => setEditorOpen(true)}
+        disabled={saving}
+        onClick={() => {
+          setMessage(null)
+          setEditorOpen(true)
+        }}
         className="mb-4 rounded-lg bg-[#4a2114] px-4 py-2.5 font-bold text-white"
       >
         Registrar compra
@@ -252,7 +263,7 @@ function PurchasesPage() {
                 <Empty text="Nenhuma compra encontrada para esses filtros." />
               )}
               <nav
-                className="flex items-center justify-between gap-3 border-t border-[#f0e5dc] px-5 py-4 text-sm"
+                className="flex flex-wrap items-center justify-between gap-3 border-t border-[#f0e5dc] px-5 py-4 text-sm"
                 aria-label="Paginação das compras"
               >
                 <span aria-live="polite">
@@ -305,7 +316,10 @@ function PurchasesPage() {
               className="rounded-2xl border border-[#ecdfd4] bg-white p-5 space-y-4"
               onSubmit={submit}
             >
-              <h2 className="font-bold">Nova compra</h2>
+              <p className="text-sm text-[#846859]">
+                Informe a compra real. Revise o total antes de registrar a
+                entrada no estoque.
+              </p>
               <Input
                 label="Fornecedor *"
                 value={supplierName}
@@ -316,12 +330,6 @@ function PurchasesPage() {
                 value={purchasedAt}
                 onChange={setPurchasedAt}
                 type="date"
-              />
-              <Input
-                label="Referência futura da nota fiscal"
-                value={invoiceFileReference}
-                onChange={setInvoiceFileReference}
-                placeholder="Nome do arquivo ou link futuro"
               />
               {items.map((item, index) => (
                 <div
@@ -348,6 +356,7 @@ function PurchasesPage() {
                   <label className="block text-sm font-bold text-[#573524]">
                     Produto
                     <select
+                      aria-label="Produto"
                       value={item.productId}
                       onChange={(event) =>
                         updateItem(index, {
@@ -370,7 +379,11 @@ function PurchasesPage() {
                       <option value="">Selecione</option>
                       {products.map((product) => (
                         <option value={product.id} key={product.id}>
-                          {product.name} ({product.unit})
+                          {product.name} (
+                          {product.unit === 'g' || product.unit === 'kg'
+                            ? 'kg na compra'
+                            : displayUnit(product.unit)}
+                          )
                         </option>
                       ))}
                     </select>
@@ -378,7 +391,9 @@ function PurchasesPage() {
                   <div className="mt-3 grid grid-cols-2 gap-3">
                     <Input
                       label={
-                        item.purchaseInKg ? 'Quantidade (kg)' : 'Quantidade'
+                        item.purchaseInKg
+                          ? 'Quantidade (kg)'
+                          : `Quantidade (${displayUnit(products.find((product) => String(product.id) === item.productId)?.unit)})`
                       }
                       value={item.quantity}
                       onChange={(quantity) => updateItem(index, { quantity })}
@@ -395,23 +410,38 @@ function PurchasesPage() {
                       inputMode="decimal"
                     />
                   </div>
-                  <div className="mt-3 grid grid-cols-2 gap-3">
-                    <Input
-                      label="Lote do fornecedor"
-                      value={item.supplierLot}
-                      onChange={(supplierLot) =>
-                        updateItem(index, { supplierLot })
-                      }
-                      maxLength={80}
-                    />
-                    <Input
-                      label="Validade"
-                      type="date"
-                      min={purchasedAt}
-                      value={item.expiresOn}
-                      onChange={(expiresOn) => updateItem(index, { expiresOn })}
-                    />
-                  </div>
+                  <p className="mt-2 text-xs text-[#846859]">
+                    {item.purchaseInKg
+                      ? 'Compra em kg; o sistema converte para a unidade de estoque do produto.'
+                      : 'Use a unidade indicada no produto selecionado.'}
+                  </p>
+                  <details
+                    className="mt-3"
+                    open={Boolean(item.supplierLot || item.expiresOn)}
+                  >
+                    <summary className="cursor-pointer text-sm font-bold">
+                      Lote e validade (opcionais)
+                    </summary>
+                    <div className="mt-3 grid grid-cols-2 gap-3">
+                      <Input
+                        label="Lote do fornecedor"
+                        value={item.supplierLot}
+                        onChange={(supplierLot) =>
+                          updateItem(index, { supplierLot })
+                        }
+                        maxLength={80}
+                      />
+                      <Input
+                        label="Validade"
+                        type="date"
+                        min={purchasedAt}
+                        value={item.expiresOn}
+                        onChange={(expiresOn) =>
+                          updateItem(index, { expiresOn })
+                        }
+                      />
+                    </div>
+                  </details>
                 </div>
               ))}
               <button
@@ -422,25 +452,57 @@ function PurchasesPage() {
                 <Plus size={16} />
                 Adicionar item
               </button>
-              <label className="block text-sm font-bold text-[#573524]">
-                Observações
-                <textarea
-                  value={notes}
-                  onChange={(event) => setNotes(event.target.value)}
-                  className="field mt-1.5 min-h-20"
-                />
-              </label>
+              <details open={Boolean(invoiceFileReference || notes)}>
+                <summary className="cursor-pointer text-sm font-bold">
+                  Nota e observações (opcionais)
+                </summary>
+                <div className="mt-3 space-y-3">
+                  <Input
+                    label="Referência futura da nota fiscal"
+                    value={invoiceFileReference}
+                    onChange={setInvoiceFileReference}
+                    placeholder="Nome do arquivo ou link futuro"
+                  />
+                  <label className="block text-sm font-bold text-[#573524]">
+                    Observações
+                    <textarea
+                      value={notes}
+                      onChange={(event) => setNotes(event.target.value)}
+                      className="field mt-1.5 min-h-20"
+                    />
+                  </label>
+                </div>
+              </details>
               {message ? (
-                <p className="rounded-lg bg-[#fff5e7] p-3 text-sm text-[#75411f]">
+                <p
+                  role="alert"
+                  className="rounded-lg bg-[#fff5e7] p-3 text-sm text-[#75411f]"
+                >
                   {message}
                 </p>
               ) : null}
-              <button
-                disabled={saving}
-                className="rounded-lg bg-[#4a2114] px-4 py-2.5 text-sm font-bold text-white disabled:opacity-60"
-              >
-                {saving ? 'Registrando...' : 'Registrar compra'}
-              </button>
+              <div className="sticky bottom-0 space-y-3 border-t border-[#ecdfd4] bg-white py-3">
+                <PurchaseSummary
+                  amounts={items.map((item) => item.totalAmount)}
+                />
+                <div className="flex flex-wrap gap-3">
+                  <button
+                    disabled={saving}
+                    className="rounded-lg bg-[#4a2114] px-4 py-2.5 text-sm font-bold text-white disabled:opacity-60"
+                  >
+                    {saving
+                      ? 'Registrando...'
+                      : 'Registrar compra e atualizar estoque'}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setEditorOpen(false)}
+                    className="text-sm font-bold"
+                  >
+                    Fechar sem registrar
+                  </button>
+                </div>
+              </div>
             </form>
           </OperationDialog>
         ) : null}
@@ -517,3 +579,7 @@ const currency = new Intl.NumberFormat('pt-BR', {
   style: 'currency',
   currency: 'BRL',
 })
+
+function displayUnit(unit: string | undefined) {
+  return unit === 'unit' ? 'un.' : (unit ?? 'unidade do produto')
+}

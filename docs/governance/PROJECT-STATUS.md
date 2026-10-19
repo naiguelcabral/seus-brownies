@@ -1,5 +1,19 @@
 # Estado canônico do projeto — Cacau v1
 
+## Compras e Produção — UX preparada em 19/10/2026
+
+Revisão autorizada após Cenários: total de compra em centavos exatos, unidades
+legíveis, campos opcionais agrupados e efeito no estoque explícito. Produção
+limpa custos do formulário após salvar, invalida prévia ao alterar data/saídas/
+perdas, leva o foco visual até a prévia e abre auditoria do lote em modal.
+Gravação concluída mantém mensagem de sucesso se a atualização visual falhar.
+529 testes Node e15 ensaios de navegador aprovados (seis novos das páginas
+reais com callbacks sintéticos, nove de regressão do servidor de previews).
+Sem mudança de backend/schema/RBAC nem escrita de dados compartilhados.
+Build, CI/CodeQL, publicação e conferência HML pendentes neste checkpoint.
+Detalhes: [PURCHASE-PRODUCTION-UX-HML-2026-10-19.md](PURCHASE-PRODUCTION-UX-HML-2026-10-19.md).
+
+
 ## Metas e cenários publicados — 19/10/2026
 
 Execução única do heartbeat das 02:33 Brasília concluída. Incremento364a1c1,

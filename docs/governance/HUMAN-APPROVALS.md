@@ -1,5 +1,16 @@
 # Ações que exigem aprovação humana — Cacau v1
 
+## Continuação de Compras e Produção — 19/10/2026
+
+Após a entrega de Cenários e a indicação da revisão de Compras/Produção como
+próxima tarefa, usuário pediu “Vamos continuar se onde parou”. Prosseguir com
+essa revisão de UX dentro da autorização vigente para melhorar praticidade,
+ensaiar e publicar no HML. Somente frontend, sem alterar regras de domínio,
+permissões ou contratos de escrita. A autorização não inclui operações
+fictícias no HML, produção principal, secrets, migrations ou reimportações.
+Compras e lotes reais continuam sem previsão; usar dados sintéticos isolados.
+
+
 ## Execução única de usabilidade — 19/10/2026, 02:33 Brasília
 
 Heartbeat `retomar-cacau-s-02h33`, solicitado pelo usuário, autoriza uma única

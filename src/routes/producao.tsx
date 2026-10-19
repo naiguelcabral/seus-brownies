@@ -1,6 +1,6 @@
 import { businessDate } from '#/lib/business-date'
 import { OperationDialog } from '#/components/OperationDialog'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { CheckCircle2, Eye, Plus, Trash2 } from 'lucide-react'
 import { createFileRoute, useNavigate, useRouter } from '@tanstack/react-router'
 import { useServerFn } from '@tanstack/react-start'
@@ -32,7 +32,7 @@ const productionSearch = z.object({
   productId: z.coerce.number().int().positive().optional().catch(undefined),
   start: z.string().date().optional().catch(undefined),
   end: z.string().date().optional().catch(undefined),
-  page: z.number().int().min(1).max(10_000).catch(1),
+  page: z.coerce.number().int().min(1).max(10_000).catch(1),
 })
 
 export const Route = createFileRoute('/producao')({
@@ -93,6 +93,11 @@ function ProductionPage() {
   const [details, setDetails] = useState<Awaited<
     ReturnType<typeof getProductionBatch>
   > | null>(null)
+  const previewRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    if (preview)
+      previewRef.current?.scrollIntoView({ block: 'start', behavior: 'smooth' })
+  }, [preview])
   const selectedRecipeId = Number(recipeVersionId)
   const profiles = useMemo(
     () =>
@@ -220,7 +225,15 @@ function ProductionPage() {
       setBordinhasQuantity('')
       setLosses([])
       setNotes('')
-      await router.invalidate()
+      setEnergyAmount('')
+      setLaborAmount('')
+      try {
+        await router.invalidate()
+      } catch {
+        setMessage(
+          `Lote #${created.id} salvo como rascunho. Recarregue a página para atualizar o histórico.`,
+        )
+      }
     } catch (error) {
       setMessage(
         error instanceof Error
@@ -258,8 +271,15 @@ function ProductionPage() {
       setMessage(
         `Lote #${completed.id} concluído. Custo total: ${currency.format(Number(completed.totalCost))}.`,
       )
-      setDetails(await readBatch({ data: { id: details.batch.id } }))
-      await router.invalidate()
+      try {
+        setDetails(await readBatch({ data: { id: details.batch.id } }))
+        await router.invalidate()
+      } catch {
+        setDetails(null)
+        setMessage(
+          `Lote #${completed.id} concluído e estoque atualizado. Recarregue a página para consultar os detalhes.`,
+        )
+      }
     } catch (error) {
       setMessage(
         error instanceof Error
@@ -278,12 +298,20 @@ function ProductionPage() {
     >
       <button
         type="button"
-        onClick={() => setEditorOpen(true)}
+        disabled={saving || !workspace.recipes.length}
+        onClick={() => {
+          setMessage(null)
+          setEditorOpen(true)
+        }}
         className="mb-4 rounded-lg bg-[#4a2114] px-4 py-2.5 font-bold text-white"
       >
         Adicionar lote
       </button>
-      {!editorOpen && message ? (
+      <p className="mb-4 text-sm text-[#846859]">
+        1. Salve o rascunho sem movimentar estoque. 2. Abra o lote, revise os
+        dados e conclua somente após a produção real.
+      </p>
+      {!editorOpen && !details && message ? (
         <p role="status" className="mb-4 rounded-lg bg-[#fff5e7] p-3 text-sm">
           {message}
         </p>
@@ -421,6 +449,8 @@ function ProductionPage() {
                     ) : null}
                     <button
                       type="button"
+                      disabled={saving}
+                      aria-label={`Ver lote #${batch.id}`}
                       onClick={() => openDetails(batch.id)}
                       className="inline-flex items-center gap-1 rounded-lg border border-[#d9c3b4] px-3 py-2 text-sm font-bold text-[#6c3e28]"
                     >
@@ -434,7 +464,7 @@ function ProductionPage() {
             <Empty text="Nenhum lote real encontrado para esses filtros." />
           )}
           <nav
-            className="flex items-center justify-between gap-3 border-t border-[#f0e5dc] px-5 py-4 text-sm"
+            className="flex flex-wrap items-center justify-between gap-3 border-t border-[#f0e5dc] px-5 py-4 text-sm"
             aria-label="Paginação dos lotes de produção"
           >
             <span aria-live="polite">
@@ -502,6 +532,7 @@ function ProductionPage() {
                   onChange={(event) => {
                     setRecipeVersionId(event.target.value)
                     setOutputs([emptyOutput()])
+                    setLosses([])
                     setBordinhasQuantity('')
                     setPreview(null)
                   }}
@@ -517,11 +548,14 @@ function ProductionPage() {
                 <Input
                   label="Data do lote"
                   value={productionDate}
-                  onChange={setProductionDate}
+                  onChange={(value) => {
+                    setProductionDate(value)
+                    setPreview(null)
+                  }}
                   type="date"
                 />
                 <Input
-                  label="Multiplicador"
+                  label="Quantidade de receitas"
                   value={recipeMultiplier}
                   onChange={(value) => {
                     setRecipeMultiplier(value)
@@ -566,6 +600,7 @@ function ProductionPage() {
                     <label className="block text-sm font-bold text-[#573524]">
                       Produto final
                       <select
+                        aria-label="Produto final"
                         className="field mt-1.5"
                         value={output.productId}
                         onChange={(event) =>
@@ -597,13 +632,22 @@ function ProductionPage() {
                 ))}
                 <button
                   type="button"
-                  onClick={() => setOutputs([...outputs, emptyOutput()])}
+                  onClick={() => {
+                    setOutputs([...outputs, emptyOutput()])
+                    setPreview(null)
+                  }}
                   className="inline-flex items-center gap-1 text-sm font-bold text-[#a64f23]"
                 >
                   <Plus size={16} /> Adicionar produto
                 </button>
               </div>
-              <div className="rounded-xl bg-[#fff7ec] p-3">
+              <details
+                className="rounded-xl bg-[#fff7ec] p-3"
+                open={Boolean(bordinhasQuantity)}
+              >
+                <summary className="mb-2 cursor-pointer text-sm font-bold">
+                  Aproveitamento de Bordinhas (opcional)
+                </summary>
                 <label className="block text-sm font-bold text-[#573524]">
                   {measuredRecovery
                     ? 'Bordinhas aproveitáveis (gramas)'
@@ -628,7 +672,7 @@ function ProductionPage() {
                     ? 'Informe o peso real após o corte. Cada 100 g forma um pacote; a sobra inferior a 100 g fica informada e não entra no estoque de pacotes.'
                     : 'O valor sugerido é calculado pela capacidade livre. Se informar menos, registre a diferença como perda manual de Bordinhas com motivo.'}
                 </p>
-              </div>
+              </details>
               {measuredRecovery ? (
                 <fieldset className="rounded-xl border border-[#ecdfd4] p-3">
                   <legend className="text-sm font-bold">
@@ -670,13 +714,19 @@ function ProductionPage() {
                   </p>
                 </fieldset>
               ) : null}
-              <div className="space-y-3">
+              <details className="space-y-3" open={losses.length > 0}>
+                <summary className="cursor-pointer text-sm font-bold">
+                  Perdas manuais (somente quando houver)
+                </summary>
                 <div className="flex items-center justify-between">
                   <strong className="text-sm">Perdas manuais (exceção)</strong>
                   {losses.length ? null : (
                     <button
                       type="button"
-                      onClick={() => setLosses([emptyLoss()])}
+                      onClick={() => {
+                        setLosses([emptyLoss()])
+                        setPreview(null)
+                      }}
                       className="text-sm font-bold text-[#a64f23]"
                     >
                       Adicionar
@@ -692,13 +742,14 @@ function ProductionPage() {
                       <strong className="text-sm">Perda {index + 1}</strong>
                       <button
                         type="button"
-                        onClick={() =>
+                        onClick={() => {
                           setLosses(
                             losses.filter(
                               (_, itemIndex) => itemIndex !== index,
                             ),
                           )
-                        }
+                          setPreview(null)
+                        }}
                         className="text-[#a64f23]"
                         aria-label="Remover perda"
                       >
@@ -708,6 +759,7 @@ function ProductionPage() {
                     <label className="block text-sm font-bold text-[#573524]">
                       Produto
                       <select
+                        aria-label="Produto da perda"
                         className="field mt-1.5"
                         value={loss.productId}
                         onChange={(event) =>
@@ -750,13 +802,16 @@ function ProductionPage() {
                 {losses.length ? (
                   <button
                     type="button"
-                    onClick={() => setLosses([...losses, emptyLoss()])}
+                    onClick={() => {
+                      setLosses([...losses, emptyLoss()])
+                      setPreview(null)
+                    }}
                     className="text-sm font-bold text-[#a64f23]"
                   >
                     Adicionar outra perda
                   </button>
                 ) : null}
-              </div>
+              </details>
               <label className="block text-sm font-bold text-[#573524]">
                 Observações
                 <textarea
@@ -766,11 +821,19 @@ function ProductionPage() {
                 />
               </label>
               {message ? (
-                <p className="rounded-lg bg-[#fff5e7] p-3 text-sm text-[#75411f]">
+                <p
+                  role="alert"
+                  className="rounded-lg bg-[#fff5e7] p-3 text-sm text-[#75411f]"
+                >
                   {message}
                 </p>
               ) : null}
-              <div className="flex flex-wrap gap-3">
+              {preview ? (
+                <div ref={previewRef} tabIndex={-1}>
+                  <Preview preview={preview} />
+                </div>
+              ) : null}
+              <div className="sticky bottom-0 flex flex-wrap gap-3 border-t border-[#ecdfd4] bg-white py-3">
                 <button
                   type="button"
                   disabled={saving}
@@ -787,7 +850,6 @@ function ProductionPage() {
                 </button>
               </div>
             </form>
-            {preview ? <Preview preview={preview} /> : null}
           </OperationDialog>
         ) : !workspace.recipes.length ? (
           <aside className="rounded-2xl border border-[#ecdfd4] bg-white p-5">
@@ -797,12 +859,25 @@ function ProductionPage() {
         ) : null}
       </div>
       {details ? (
-        <Details
-          details={details}
-          saving={saving}
+        <OperationDialog
+          title={`Lote #${details.batch.id}`}
+          pending={saving}
           onClose={() => setDetails(null)}
-          onComplete={() => void conclude()}
-        />
+        >
+          {message ? (
+            <p
+              role="status"
+              className="m-5 rounded-lg bg-[#fff5e7] p-3 text-sm"
+            >
+              {message}
+            </p>
+          ) : null}
+          <Details
+            details={details}
+            saving={saving}
+            onComplete={() => void conclude()}
+          />
+        </OperationDialog>
       ) : null}
     </ManagementLayout>
   )
@@ -945,12 +1020,10 @@ function Preview({
 function Details({
   details,
   saving,
-  onClose,
   onComplete,
 }: {
   details: Awaited<ReturnType<typeof getProductionBatch>>
   saving: boolean
-  onClose: () => void
   onComplete: () => void
 }) {
   const { batch } = details
@@ -983,13 +1056,6 @@ function Details({
             {batch.plannedFor ? formatDate(batch.plannedFor) : 'sem data'}
           </p>
         </div>
-        <button
-          type="button"
-          onClick={onClose}
-          className="text-sm font-bold text-[#6c3e28]"
-        >
-          Fechar
-        </button>
       </div>
       <div className="mt-5 grid gap-5 lg:grid-cols-2">
         <AuditList

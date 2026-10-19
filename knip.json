@@ -14,7 +14,12 @@
     "scripts/**/*.{ts,js,mjs}",
     "*.config.{ts,js,mjs}",
     "playwright.*.config.ts",
-    "e2e/fixtures/scenario-ux/main.tsx"
+    "e2e/fixtures/scenario-ux/main.tsx",
+    "e2e/fixtures/operations-ux/main.tsx",
+    "e2e/fixtures/operations-ux/router.ts",
+    "e2e/fixtures/operations-ux/start.ts",
+    "e2e/fixtures/operations-ux/Layout.tsx",
+    "e2e/fixtures/operations-ux/state.ts"
   ],
   "project": [
     "src/**/*.{ts,tsx,js,mjs}",

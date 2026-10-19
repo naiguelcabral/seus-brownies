@@ -6,7 +6,10 @@ import { mkdtemp, readFile, rm } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { resolve, extname } from 'node:path'
 
-export async function startPreview(root: string) {
+export async function startPreview(
+  root: string,
+  aliases: Record<string, string> = {},
+) {
   const server = createServer()
   const temporaryDirectory = await mkdtemp(
     resolve(tmpdir(), 'cacau-product-editor-'),
@@ -17,6 +20,7 @@ export async function startPreview(root: string) {
     root: resolve(root),
     envDir: temporaryDirectory,
     plugins: [react(), tailwindcss()],
+    resolve: { alias: aliases },
     logLevel: 'error',
     build: { outDir: resolve(temporaryDirectory, 'dist'), emptyOutDir: true },
   })
