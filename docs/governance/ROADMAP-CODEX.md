@@ -67,10 +67,12 @@ Lista completa e evidência:
       97ffb52e a100%; CI/CodeQL aprovados, zero alertas. Sessão autenticada
       conferida; contagens e digests do banco preservados. Recibo:
       `evidence/scenario-ux-hml-2026-10-19.json`.
-- [ ] Publicar/conferir revisão de Compras/Produção autorizada em19/10:
+- [x] Publicar/conferir revisão de Compras/Produção autorizada em19/10:
       resumo e unidades da compra, opcionais agrupados, prévia invalidada,
-      reset de custos no novo lote e auditoria em modal. Código preparado;
-      529 testes e15 ensaios locais aprovados, sem mudança de domínio/schema.
+      reset de custos no novo lote e auditoria em modal. Código a76c37c,
+      Worker6bc5bd55 a100%; 529 testes e15 ensaios locais aprovados, CI/CodeQL
+      sem achados novos. Sessão autenticada e21 digests do banco conferidos;
+      sem mudança de domínio/schema nem operações fictícias compartilhadas.
       Ver `PURCHASE-PRODUCTION-UX-HML-2026-10-19.md`.
 
 Escopo e validação: `PRODUCT-CATALOG-UX-2026-10-18.md`.

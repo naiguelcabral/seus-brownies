@@ -4,7 +4,12 @@ Continuação solicitada pelo usuário após a simplificação de Cenários.
 Base `bf71274`, branch `feat/input-catalog-kg-purchases`. Publicação somente
 no `cacau-v1-hml`, dentro da autorização de usabilidade vigente.
 
-## Comportamento preparado
+## Comportamento publicado
+
+Commit `a76c37c31842ca588e9fa0c5d2ff64c5c846ba24`, versão HML
+`6bc5bd55-2bca-4adb-a8b1-36b6b42bf1a6` a100%, publicada às03:01 Brasília.
+Recibo: `evidence/purchase-production-ux-hml-2026-10-19.json`.
+
 
 Compras mostra quantidade de itens e total somado em centavos exatos. O total
 pago por item não é multiplicado pela quantidade. Valores incompletos ou
@@ -57,7 +62,26 @@ uma homologação de gravações em banco.
 Antes da publicação, consulta independente confirmou21 tabelas relevantes,
 incluindo compras/lotes/consumos/perdas/FIFO, cenários, catálogo, receitas,
 perfis e auditoria operacional. Nenhum fato operacional criado no HML.
-Build isolado, CI/CodeQL, publicação e conferência autenticada ainda pendentes.
+Build HML isolado aprovado. CI39207328944 e CodeQL39207328870 concluídos
+com sucesso; análises1978472319 (JS/TS),1978471403 (Actions) e1978471244
+(Python) sem resultados ou erros; zero alertas abertos no commit publicado.
+
+Conferência autenticada HML: Compras mostra resumo pendente em vez de total
+fictício, kg/unidades legíveis, opcionais recolhidos e ação explícita de
+atualizar estoque. Produção exibe receita-base2/850 g frios, data19/10/2026,
+quantidade de receitas e custos reais em branco; opcionais recolhidos.
+Modais foram abertos e fechados sem preencher/salvar compras ou lotes.
+Não havia lote real para abrir auditoria/concluir no HML; esses caminhos
+foram exercitados somente nos testes locais, conforme limite registrado.
+
+Leitura independente após a conferência confirmou21 tabelas com as mesmas
+contagens e digests. Nenhum fato novo e nenhuma alteração de auditoria,
+catálogo, receita, perfil ou cenário nas tabelas acompanhadas. Metadados de
+autenticação não integram esse comparativo. Capturas locais:
+`/tmp/cacau-compras-ux-hml.png` e `/tmp/cacau-producao-ux-hml.png`.
+Produção principal e secrets preservados; nenhuma pendência humana desta
+entrega. Sem compras/produção reais previstas, não lançar operações por
+conveniência de demonstração.
 
 Rollback: republicar o código HML anterior `dc0a37b` sem restaurar banco ou
 reverter migrations. Não executar novamente importações ou referências antigas.

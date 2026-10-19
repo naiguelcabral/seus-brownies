@@ -1,17 +1,23 @@
 # Estado canônico do projeto — Cacau v1
 
-## Compras e Produção — UX preparada em 19/10/2026
+## Compras e Produção publicados — 19/10/2026
 
-Revisão autorizada após Cenários: total de compra em centavos exatos, unidades
-legíveis, campos opcionais agrupados e efeito no estoque explícito. Produção
-limpa custos do formulário após salvar, invalida prévia ao alterar data/saídas/
-perdas, leva o foco visual até a prévia e abre auditoria do lote em modal.
-Gravação concluída mantém mensagem de sucesso se a atualização visual falhar.
-529 testes Node e15 ensaios de navegador aprovados (seis novos das páginas
-reais com callbacks sintéticos, nove de regressão do servidor de previews).
-Sem mudança de backend/schema/RBAC nem escrita de dados compartilhados.
-Build, CI/CodeQL, publicação e conferência HML pendentes neste checkpoint.
+Revisão de UX a76c37c publicada às03:01 Brasília no `cacau-v1-hml`, versão
+`6bc5bd55-2bca-4adb-a8b1-36b6b42bf1a6`, 100% de tráfego. Compras mostra total
+em centavos exatos, unidades legíveis, opcionais agrupados e efeito no estoque.
+Produção limpa custos após salvar, invalida prévia ao alterar data/saídas/
+perdas, aproxima a prévia das ações e abre auditoria do lote em modal.
+Gravação concluída mantém sucesso se a atualização visual falhar.
+529 testes Node e15 ensaios de navegador aprovados (seis novos, nove de
+regressão), lint/tipos/formatação/Knip/build isolado aprovados.
+CI39207328944 e CodeQL39207328870 aprovados; três análises sem resultados e
+zero alertas abertos. Formulários autenticados abertos/fechados sem salvar;
+campos reais de custos em branco e data19/10/2026 conferidos.
+21 tabelas consultadas antes/depois com contagens/digests idênticos, incluindo
+compras, produção, custos/FIFO, cenários, catálogo, receitas/perfis e auditoria.
+Sem mudança de schema/backend/RBAC e sem fatos fictícios compartilhados.
 Detalhes: [PURCHASE-PRODUCTION-UX-HML-2026-10-19.md](PURCHASE-PRODUCTION-UX-HML-2026-10-19.md).
+Recibo: `evidence/purchase-production-ux-hml-2026-10-19.json`.
 
 
 ## Metas e cenários publicados — 19/10/2026

@@ -8,7 +8,10 @@ essa revisão de UX dentro da autorização vigente para melhorar praticidade,
 ensaiar e publicar no HML. Somente frontend, sem alterar regras de domínio,
 permissões ou contratos de escrita. A autorização não inclui operações
 fictícias no HML, produção principal, secrets, migrations ou reimportações.
-Compras e lotes reais continuam sem previsão; usar dados sintéticos isolados.
+Compras e lotes reais continuam sem previsão; dados sintéticos somente
+isolados. Concluído em a76c37c, Worker HML6bc5bd55 a100%; formulários
+conferidos sem salvar e21 digests preservados. Sem escrita compartilhada.
+Recibo `evidence/purchase-production-ux-hml-2026-10-19.json`.
 
 
 ## Execução única de usabilidade — 19/10/2026, 02:33 Brasília

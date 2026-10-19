@@ -1,0 +1,292 @@
+{
+  "task": "Compras e Produção: revisão de usabilidade",
+  "date": "2026-10-19",
+  "timezone": "America/Sao_Paulo",
+  "branch": "feat/input-catalog-kg-purchases",
+  "baseCommit": "bf712747de3c4088222e4105e9ecb41f0e0366ca",
+  "publishedCommit": "a76c37c31842ca588e9fa0c5d2ff64c5c846ba24",
+  "target": "cacau-v1-hml",
+  "versionId": "6bc5bd55-2bca-4adb-a8b1-36b6b42bf1a6",
+  "deploymentId": "fdc6f6b4-8477-42ec-bb57-7c97a6423e77",
+  "deployedAt": "2026-10-19T06:01:15.006822Z",
+  "trafficPercent": 100,
+  "checks": {
+    "node": 529,
+    "browser": {
+      "operations": 6,
+      "scenarios": 5,
+      "paymentFeesAndFinance": 4,
+      "total": 15,
+      "environment": "isolated local fixtures; real route components with synthetic server callbacks; external requests aborted"
+    },
+    "lint": "passed",
+    "typecheck": "passed",
+    "format": "passed",
+    "knip": {
+      "new": 0,
+      "existingBaseline": 3
+    },
+    "isolatedBuild": "passed",
+    "ci": {
+      "id": 39207328944,
+      "conclusion": "success"
+    },
+    "codeql": {
+      "id": 39207328870,
+      "conclusion": "success",
+      "results": 0,
+      "openAlerts": 0,
+      "analyses": [
+        1978472319,
+        1978471403,
+        1978471244
+      ]
+    }
+  },
+  "hmlVerification": {
+    "authenticated": true,
+    "purchaseModalOpenedBlankAndClosedWithoutSaving": true,
+    "productionModalOpenedBlankAndClosedWithoutSaving": true,
+    "productionDate": "2026-10-19",
+    "recipeVersion": 2,
+    "productionOperationalCostsBlank": true,
+    "sharedDataWrites": false,
+    "schemaChanges": false,
+    "syntheticFactsCreated": false,
+    "productionWorkerChanged": false,
+    "tableCount": 21,
+    "dbBefore": [
+      {
+        "name": "purchases",
+        "count": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "name": "purchase_items",
+        "count": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "name": "production_batches",
+        "count": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "name": "production_batch_outputs",
+        "count": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "name": "production_batch_consumptions",
+        "count": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "name": "production_batch_losses",
+        "count": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "name": "operational_costs",
+        "count": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "name": "stock_movements",
+        "count": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "name": "inventory_cost_layers",
+        "count": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "name": "inventory_cost_allocations",
+        "count": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "name": "inventory_cost_reversals",
+        "count": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "name": "sales",
+        "count": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "name": "expenses",
+        "count": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "name": "financial_events",
+        "count": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "name": "management_scenarios",
+        "count": 2,
+        "digest": "5665846c6dfac030fe0150fea6673e18"
+      },
+      {
+        "name": "management_scenario_mix",
+        "count": 33,
+        "digest": "cd84f31fab7930f3b0850cea70d73867"
+      },
+      {
+        "name": "management_scenario_history",
+        "count": 4,
+        "digest": "a1b1c720f74717729599856d591b7f58"
+      },
+      {
+        "name": "products",
+        "count": 38,
+        "digest": "36852ad5351b8dc07e9f6f1038ea104b"
+      },
+      {
+        "name": "recipe_versions",
+        "count": 2,
+        "digest": "26a7858ca80f3a9865ab9ff21fb9b538"
+      },
+      {
+        "name": "production_profiles",
+        "count": 34,
+        "digest": "17d9221c8256ee312298a6f795dd3125"
+      },
+      {
+        "name": "operational_audit_events",
+        "count": 178,
+        "digest": "fc4f89ebda9e5cd98480f05e170cf9d1"
+      }
+    ],
+    "dbAfter": [
+      {
+        "name": "purchases",
+        "count": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "name": "purchase_items",
+        "count": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "name": "production_batches",
+        "count": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "name": "production_batch_outputs",
+        "count": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "name": "production_batch_consumptions",
+        "count": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "name": "production_batch_losses",
+        "count": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "name": "operational_costs",
+        "count": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "name": "stock_movements",
+        "count": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "name": "inventory_cost_layers",
+        "count": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "name": "inventory_cost_allocations",
+        "count": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "name": "inventory_cost_reversals",
+        "count": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "name": "sales",
+        "count": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "name": "expenses",
+        "count": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "name": "financial_events",
+        "count": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "name": "management_scenarios",
+        "count": 2,
+        "digest": "5665846c6dfac030fe0150fea6673e18"
+      },
+      {
+        "name": "management_scenario_mix",
+        "count": 33,
+        "digest": "cd84f31fab7930f3b0850cea70d73867"
+      },
+      {
+        "name": "management_scenario_history",
+        "count": 4,
+        "digest": "a1b1c720f74717729599856d591b7f58"
+      },
+      {
+        "name": "products",
+        "count": 38,
+        "digest": "36852ad5351b8dc07e9f6f1038ea104b"
+      },
+      {
+        "name": "recipe_versions",
+        "count": 2,
+        "digest": "26a7858ca80f3a9865ab9ff21fb9b538"
+      },
+      {
+        "name": "production_profiles",
+        "count": 34,
+        "digest": "17d9221c8256ee312298a6f795dd3125"
+      },
+      {
+        "name": "operational_audit_events",
+        "count": 178,
+        "digest": "fc4f89ebda9e5cd98480f05e170cf9d1"
+      }
+    ],
+    "dbUnchanged": true
+  },
+  "screenshots": [
+    "/tmp/cacau-compras-ux-hml.png",
+    "/tmp/cacau-producao-ux-hml.png"
+  ],
+  "limits": [
+    "HML has no operational purchases or batches. Creation, failure recovery, preview invalidation and completion were tested only with isolated synthetic callbacks.",
+    "Server financial, inventory, lifecycle and authorization implementations were unchanged; existing Node contracts passed.",
+    "Read-only verification covers the 21 named tables; auth session metadata is outside the fingerprints."
+  ],
+  "capacityCheckpoint": {
+    "primaryRemainingPercent": 57,
+    "weeklyRemainingPercent": 20,
+    "reservePercent": 5
+  },
+  "screenshotSha256": {
+    "/tmp/cacau-compras-ux-hml.png": "3dfa0187a0ded7f7a9297010770a5623208f23750fffac8d9a1baf5fea4d736d",
+    "/tmp/cacau-producao-ux-hml.png": "9d53c997246a2d1d7d234f659e08dad9368af8c8247ed9b924abf9ee7850c88c"
+  }
+}
