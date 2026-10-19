@@ -5,6 +5,21 @@ atual de tarefas, prioridades e critérios de conclusão. Os checkpoints de
 publicação abaixo preservam o estado comprovado de cada entrega; suas
 próximas etapas históricas não substituem o roadmap atualizado.
 
+## Autoria e auditoria operacional completas — 19/10/2026
+
+O inventário S01 cobriu todas as Server Functions mutáveis de catálogo,
+locais, parâmetros gerenciais, planos de ação, cenários, operações, produção,
+finanças e lifecycle de estoque. Autenticação permanece na trilha de auditoria
+própria; o diagnóstico SQL e a prévia de produção usam POST, mas não alteram
+estado. As lacunas reais eram as seis mutações de categorias/produtos e a
+criação/conclusão de lotes. Todas agora obtêm o ator do principal autorizado e
+anexam o evento em `operational_audit_events` dentro da mesma transação da
+escrita; falha ou ausência da entidade reverte o conjunto. A conclusão do lote
+também preserva referência operacional única. Nenhuma migration, alteração de
+regra financeira/estoque ou escrita compartilhada foi necessária. Contrato de
+regressão e ensaio de rollback da auditoria foram adicionados; publicação HML
+será registrada após os gates finais.
+
 ## Compras e Produção publicados — 19/10/2026
 
 Revisão de UX a76c37c publicada às03:01 Brasília no `cacau-v1-hml`, versão

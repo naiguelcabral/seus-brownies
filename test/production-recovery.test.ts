@@ -58,7 +58,11 @@ for (const measured of ['0', '300']) {
       recoveredWeight: measured,
       coProductQuantity: measured === '0' ? '0.000' : '3.000',
     })
-    await persistProductionBatchCompletion(mock.db, { id: 1 })
+    await persistProductionBatchCompletion(
+      mock.db,
+      { id: 1 },
+      'auth-test-production',
+    )
     const layers = mock.committed
       .filter((write) => write.table === 'inventory_cost_layers')
       .flatMap((write) => write.values)
@@ -73,7 +77,11 @@ for (const measured of ['0', '300']) {
 test('recuperação sem peso confirmado aborta antes da persistência', async () => {
   const mock = createProductionDrizzleMock({ recipePayload: payload })
   await assert.rejects(
-    persistProductionBatchCompletion(mock.db, { id: 1 }),
+    persistProductionBatchCompletion(
+      mock.db,
+      { id: 1 },
+      'auth-test-production',
+    ),
     /Informe o peso/,
   )
   assert.deepEqual(mock.committed, [])

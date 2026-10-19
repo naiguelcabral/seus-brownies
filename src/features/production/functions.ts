@@ -44,6 +44,7 @@ import {
   stockMovements,
 } from '#/db/schema'
 import { requireServerFunctionPermission } from '#/features/auth/server-function-middleware'
+import { appendOperationalAudit } from '#/features/operations/audit'
 import {
   calculateMoneyCents,
   calculateRecipeCapacity,
@@ -862,7 +863,7 @@ export const previewProductionBatch = createServerFn({ method: 'POST' })
 export const createProductionBatch = createServerFn({ method: 'POST' })
   .middleware([requireServerFunctionPermission('createProductionBatch')])
   .validator(batchInput)
-  .handler(async ({ data }) => {
+  .handler(async ({ data, context }) => {
     const { getDb } = await import('#/db/index')
     return getDb().transaction(async (tx) => {
       const plan = await loadPlan(tx, data)
@@ -909,6 +910,12 @@ export const createProductionBatch = createServerFn({ method: 'POST' })
           plannedQuantity: thousandthsToQuantity(output.quantity),
         })),
       )
+      await appendOperationalAudit(tx, {
+        actorAuthUserId: context.principal!.id,
+        action: 'production_batch.create',
+        entityType: 'production_batch',
+        entityId: batch.id,
+      })
       return { id: batch.id }
     })
   })
@@ -1068,6 +1075,7 @@ export const getProductionBatch = createServerFn({ method: 'GET' })
 export async function persistProductionBatchCompletion(
   database: Pick<Database, 'transaction'>,
   data: { id: number },
+  actorAuthUserId: string,
 ) {
   return database.transaction(async (tx) => {
     // Garante que uma segunda conclusão espere a primeira e então enxergue
@@ -1351,40 +1359,52 @@ export async function persistProductionBatchCompletion(
         })),
       )
     }
-    await tx
-      .update(productionBatches)
-      .set({
-        status: 'completed',
-        exactCost: costs.exactTotal,
-        actualQuantity: thousandthsToQuantity(costs.grossQuantity),
-        totalCost: centsToMoney(costs.totalCost),
-        unitCost: displayCostMoney(
-          scaleCost(costs.exactTotal, 1_000n, costs.grossQuantity),
-        ),
-        completedAt,
-        completionPayload: {
-          costMethod: 'perpetual_weighted_average',
-          completedAt: completedAt.toISOString(),
-          capacity: plan.capacity,
-          recovery: plan.bordinhas,
-          allocationMethod: plan.recovery
-            ? 'measured_mass_with_direct_finishing'
-            : 'legacy_quantity',
-          operationalRates: plan.operational.map((item) => ({
-            type: item.requirement.type,
-            rateId: item.rate.id,
-            unitAmount: item.rate.unitAmount,
-            effectiveFrom: item.rate.effectiveFrom,
-          })),
-        },
-        updatedAt: new Date(),
-      })
-      .where(
-        and(
-          eq(productionBatches.id, batch.id),
-          eq(productionBatches.status, 'draft'),
-        ),
-      )
+    const completed = (
+      await tx
+        .update(productionBatches)
+        .set({
+          status: 'completed',
+          exactCost: costs.exactTotal,
+          actualQuantity: thousandthsToQuantity(costs.grossQuantity),
+          totalCost: centsToMoney(costs.totalCost),
+          unitCost: displayCostMoney(
+            scaleCost(costs.exactTotal, 1_000n, costs.grossQuantity),
+          ),
+          completedAt,
+          completionPayload: {
+            costMethod: 'perpetual_weighted_average',
+            completedAt: completedAt.toISOString(),
+            capacity: plan.capacity,
+            recovery: plan.bordinhas,
+            allocationMethod: plan.recovery
+              ? 'measured_mass_with_direct_finishing'
+              : 'legacy_quantity',
+            operationalRates: plan.operational.map((item) => ({
+              type: item.requirement.type,
+              rateId: item.rate.id,
+              unitAmount: item.rate.unitAmount,
+              effectiveFrom: item.rate.effectiveFrom,
+            })),
+          },
+          updatedAt: new Date(),
+        })
+        .where(
+          and(
+            eq(productionBatches.id, batch.id),
+            eq(productionBatches.status, 'draft'),
+          ),
+        )
+        .returning({ id: productionBatches.id })
+    ).at(0)
+    if (!completed)
+      throw new Error('O lote mudou durante a conclusão. Recarregue.')
+    await appendOperationalAudit(tx, {
+      actorAuthUserId,
+      action: 'production_batch.complete',
+      entityType: 'production_batch',
+      entityId: completed.id,
+      operationReference: `production-batch:${completed.id}:completion`,
+    })
     return { id: batch.id, totalCost: centsToMoney(costs.totalCost) }
   })
 }
@@ -1392,7 +1412,11 @@ export async function persistProductionBatchCompletion(
 export const completeProductionBatch = createServerFn({ method: 'POST' })
   .middleware([requireServerFunctionPermission('completeProductionBatch')])
   .validator(z.object({ id: z.number().int().positive() }))
-  .handler(async ({ data }) => {
+  .handler(async ({ data, context }) => {
     const { getDb } = await import('#/db/index')
-    return persistProductionBatchCompletion(getDb(), data)
+    return persistProductionBatchCompletion(
+      getDb(),
+      data,
+      context.principal!.id,
+    )
   })

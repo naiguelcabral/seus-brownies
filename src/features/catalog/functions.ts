@@ -16,6 +16,7 @@ import {
 import { requireServerFunctionPermission } from '#/features/auth/server-function-middleware'
 import { assertProductStructureChangeAllowed } from '#/features/catalog/product-structure'
 import { normalizeReorderPoint } from '#/features/inventory/reorder'
+import { appendOperationalAudit } from '#/features/operations/audit'
 import {
   calculateProductHistoryPage,
   productHistoryPageSize,
@@ -120,16 +121,29 @@ export const listCategories = createServerFn({ method: 'GET' })
 export const createCategory = createServerFn({ method: 'POST' })
   .middleware([requireServerFunctionPermission('createCategory')])
   .validator(categoryValues)
-  .handler(async ({ data }) => {
+  .handler(async ({ data, context }) => {
     const { getDb } = await import('#/db/index')
 
     try {
-      await getDb()
-        .insert(categories)
-        .values({
-          name: data.name,
-          description: optionalText(data.description),
+      return await getDb().transaction(async (tx) => {
+        const created = (
+          await tx
+            .insert(categories)
+            .values({
+              name: data.name,
+              description: optionalText(data.description),
+            })
+            .returning({ id: categories.id })
+        ).at(0)
+        if (!created) throw new Error('Não foi possível criar a categoria.')
+        await appendOperationalAudit(tx, {
+          actorAuthUserId: context.principal!.id,
+          action: 'category.create',
+          entityType: 'category',
+          entityId: created.id,
         })
+        return created
+      })
     } catch (error) {
       readableDatabaseError(error, 'uma categoria')
     }
@@ -138,18 +152,31 @@ export const createCategory = createServerFn({ method: 'POST' })
 export const updateCategory = createServerFn({ method: 'POST' })
   .middleware([requireServerFunctionPermission('updateCategory')])
   .validator(categoryValues.extend({ id: z.number().int().positive() }))
-  .handler(async ({ data }) => {
+  .handler(async ({ data, context }) => {
     const { getDb } = await import('#/db/index')
 
     try {
-      await getDb()
-        .update(categories)
-        .set({
-          name: data.name,
-          description: optionalText(data.description),
-          updatedAt: new Date(),
+      return await getDb().transaction(async (tx) => {
+        const updated = (
+          await tx
+            .update(categories)
+            .set({
+              name: data.name,
+              description: optionalText(data.description),
+              updatedAt: new Date(),
+            })
+            .where(eq(categories.id, data.id))
+            .returning({ id: categories.id })
+        ).at(0)
+        if (!updated) throw new Error('Categoria não encontrada.')
+        await appendOperationalAudit(tx, {
+          actorAuthUserId: context.principal!.id,
+          action: 'category.update',
+          entityType: 'category',
+          entityId: updated.id,
         })
-        .where(eq(categories.id, data.id))
+        return updated
+      })
     } catch (error) {
       readableDatabaseError(error, 'uma categoria')
     }
@@ -158,12 +185,25 @@ export const updateCategory = createServerFn({ method: 'POST' })
 export const setCategoryActive = createServerFn({ method: 'POST' })
   .middleware([requireServerFunctionPermission('setCategoryActive')])
   .validator(categoryId.extend({ isActive: z.boolean() }))
-  .handler(async ({ data }) => {
+  .handler(async ({ data, context }) => {
     const { getDb } = await import('#/db/index')
-    await getDb()
-      .update(categories)
-      .set({ isActive: data.isActive, updatedAt: new Date() })
-      .where(eq(categories.id, data.id))
+    return getDb().transaction(async (tx) => {
+      const updated = (
+        await tx
+          .update(categories)
+          .set({ isActive: data.isActive, updatedAt: new Date() })
+          .where(eq(categories.id, data.id))
+          .returning({ id: categories.id })
+      ).at(0)
+      if (!updated) throw new Error('Categoria não encontrada.')
+      await appendOperationalAudit(tx, {
+        actorAuthUserId: context.principal!.id,
+        action: data.isActive ? 'category.activate' : 'category.deactivate',
+        entityType: 'category',
+        entityId: updated.id,
+      })
+      return updated
+    })
   })
 
 const productHistoryValues = z.object({
@@ -222,23 +262,38 @@ export const listProducts = createServerFn({ method: 'GET' })
 export const createProduct = createServerFn({ method: 'POST' })
   .middleware([requireServerFunctionPermission('createProduct')])
   .validator(productValues)
-  .handler(async ({ data }) => {
+  .handler(async ({ data, context }) => {
     const { getDb } = await import('#/db/index')
 
     try {
-      await getDb()
-        .insert(products)
-        .values({
-          name: data.name,
-          sku: data.sku.toUpperCase(),
-          type: data.type,
-          unit: data.unit,
-          categoryId: data.categoryId,
-          description: optionalText(data.description),
-          salePrice: data.salePrice ? toDatabaseMoney(data.salePrice) : null,
-          reorderPoint: normalizeReorderPoint(data.reorderPoint),
-          preferredSupplierName: optionalText(data.preferredSupplierName),
+      return await getDb().transaction(async (tx) => {
+        const created = (
+          await tx
+            .insert(products)
+            .values({
+              name: data.name,
+              sku: data.sku.toUpperCase(),
+              type: data.type,
+              unit: data.unit,
+              categoryId: data.categoryId,
+              description: optionalText(data.description),
+              salePrice: data.salePrice
+                ? toDatabaseMoney(data.salePrice)
+                : null,
+              reorderPoint: normalizeReorderPoint(data.reorderPoint),
+              preferredSupplierName: optionalText(data.preferredSupplierName),
+            })
+            .returning({ id: products.id })
+        ).at(0)
+        if (!created) throw new Error('Não foi possível criar o produto.')
+        await appendOperationalAudit(tx, {
+          actorAuthUserId: context.principal!.id,
+          action: 'product.create',
+          entityType: 'product',
+          entityId: created.id,
         })
+        return created
+      })
     } catch (error) {
       readableDatabaseError(error, 'um produto ou SKU')
     }
@@ -247,80 +302,95 @@ export const createProduct = createServerFn({ method: 'POST' })
 export const updateProduct = createServerFn({ method: 'POST' })
   .middleware([requireServerFunctionPermission('updateProduct')])
   .validator(productValuesWithId)
-  .handler(async ({ data }) => {
+  .handler(async ({ data, context }) => {
     const { getDb } = await import('#/db/index')
     const database = getDb()
 
-    const current = (
-      await database
-        .select({ type: products.type, unit: products.unit })
-        .from(products)
-        .where(eq(products.id, data.id))
-        .limit(1)
-    ).at(0)
-    if (!current) throw new Error('Produto não encontrado.')
-
-    if (current.type !== data.type || current.unit !== data.unit) {
-      const usages = await Promise.all([
-        database
-          .select({ id: stockMovements.id })
-          .from(stockMovements)
-          .where(eq(stockMovements.productId, data.id))
-          .limit(1),
-        database
-          .select({ id: recipeItems.id })
-          .from(recipeItems)
-          .where(eq(recipeItems.productId, data.id))
-          .limit(1),
-        database
-          .select({ id: productImportAliases.id })
-          .from(productImportAliases)
-          .where(eq(productImportAliases.productId, data.id))
-          .limit(1),
-        database
-          .select({ id: productionProfiles.id })
-          .from(productionProfiles)
-          .where(eq(productionProfiles.productId, data.id))
-          .limit(1),
-        database
-          .select({ id: productionProfiles.id })
-          .from(productionProfiles)
-          .where(eq(productionProfiles.packagingProductId, data.id))
-          .limit(1),
-        database
-          .select({ id: productionProfileComponents.id })
-          .from(productionProfileComponents)
-          .where(eq(productionProfileComponents.productId, data.id))
-          .limit(1),
-        database
-          .select({ id: productionBatchOutputs.id })
-          .from(productionBatchOutputs)
-          .where(eq(productionBatchOutputs.productId, data.id))
-          .limit(1),
-      ])
-      assertProductStructureChangeAllowed(
-        current,
-        { type: data.type, unit: data.unit },
-        usages.some((usage) => usage.length > 0),
-      )
-    }
-
     try {
-      await database
-        .update(products)
-        .set({
-          name: data.name,
-          sku: data.sku.toUpperCase(),
-          type: data.type,
-          unit: data.unit,
-          categoryId: data.categoryId,
-          description: optionalText(data.description),
-          salePrice: data.salePrice ? toDatabaseMoney(data.salePrice) : null,
-          reorderPoint: normalizeReorderPoint(data.reorderPoint),
-          preferredSupplierName: optionalText(data.preferredSupplierName),
-          updatedAt: new Date(),
+      return await database.transaction(async (tx) => {
+        const current = (
+          await tx
+            .select({ type: products.type, unit: products.unit })
+            .from(products)
+            .where(eq(products.id, data.id))
+            .limit(1)
+        ).at(0)
+        if (!current) throw new Error('Produto não encontrado.')
+
+        if (current.type !== data.type || current.unit !== data.unit) {
+          const usages = await Promise.all([
+            tx
+              .select({ id: stockMovements.id })
+              .from(stockMovements)
+              .where(eq(stockMovements.productId, data.id))
+              .limit(1),
+            tx
+              .select({ id: recipeItems.id })
+              .from(recipeItems)
+              .where(eq(recipeItems.productId, data.id))
+              .limit(1),
+            tx
+              .select({ id: productImportAliases.id })
+              .from(productImportAliases)
+              .where(eq(productImportAliases.productId, data.id))
+              .limit(1),
+            tx
+              .select({ id: productionProfiles.id })
+              .from(productionProfiles)
+              .where(eq(productionProfiles.productId, data.id))
+              .limit(1),
+            tx
+              .select({ id: productionProfiles.id })
+              .from(productionProfiles)
+              .where(eq(productionProfiles.packagingProductId, data.id))
+              .limit(1),
+            tx
+              .select({ id: productionProfileComponents.id })
+              .from(productionProfileComponents)
+              .where(eq(productionProfileComponents.productId, data.id))
+              .limit(1),
+            tx
+              .select({ id: productionBatchOutputs.id })
+              .from(productionBatchOutputs)
+              .where(eq(productionBatchOutputs.productId, data.id))
+              .limit(1),
+          ])
+          assertProductStructureChangeAllowed(
+            current,
+            { type: data.type, unit: data.unit },
+            usages.some((usage) => usage.length > 0),
+          )
+        }
+
+        const updated = (
+          await tx
+            .update(products)
+            .set({
+              name: data.name,
+              sku: data.sku.toUpperCase(),
+              type: data.type,
+              unit: data.unit,
+              categoryId: data.categoryId,
+              description: optionalText(data.description),
+              salePrice: data.salePrice
+                ? toDatabaseMoney(data.salePrice)
+                : null,
+              reorderPoint: normalizeReorderPoint(data.reorderPoint),
+              preferredSupplierName: optionalText(data.preferredSupplierName),
+              updatedAt: new Date(),
+            })
+            .where(eq(products.id, data.id))
+            .returning({ id: products.id })
+        ).at(0)
+        if (!updated) throw new Error('Produto não encontrado.')
+        await appendOperationalAudit(tx, {
+          actorAuthUserId: context.principal!.id,
+          action: 'product.update',
+          entityType: 'product',
+          entityId: updated.id,
         })
-        .where(eq(products.id, data.id))
+        return updated
+      })
     } catch (error) {
       readableDatabaseError(error, 'um produto ou SKU')
     }
@@ -329,10 +399,23 @@ export const updateProduct = createServerFn({ method: 'POST' })
 export const setProductActive = createServerFn({ method: 'POST' })
   .middleware([requireServerFunctionPermission('setProductActive')])
   .validator(categoryId.extend({ isActive: z.boolean() }))
-  .handler(async ({ data }) => {
+  .handler(async ({ data, context }) => {
     const { getDb } = await import('#/db/index')
-    await getDb()
-      .update(products)
-      .set({ isActive: data.isActive, updatedAt: new Date() })
-      .where(eq(products.id, data.id))
+    return getDb().transaction(async (tx) => {
+      const updated = (
+        await tx
+          .update(products)
+          .set({ isActive: data.isActive, updatedAt: new Date() })
+          .where(eq(products.id, data.id))
+          .returning({ id: products.id })
+      ).at(0)
+      if (!updated) throw new Error('Produto não encontrado.')
+      await appendOperationalAudit(tx, {
+        actorAuthUserId: context.principal!.id,
+        action: data.isActive ? 'product.activate' : 'product.deactivate',
+        entityType: 'product',
+        entityId: updated.id,
+      })
+      return updated
+    })
   })

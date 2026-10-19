@@ -109,7 +109,7 @@ sintético foi gravado no HML.
 
 | ID | Estado | Resultado que falta |
 | --- | --- | --- |
-| S01 | Pendente | Mapear autoria/auditoria de todas as mutações, especialmente CRUD de catálogo; completar lacunas transacionalmente. Auditoria de login não substitui auditoria operacional. |
+| S01 | Concluído | Inventário cobriu catálogo, locais, parâmetros gerenciais, planos, cenários, operações, produção, finanças e lifecycle de estoque. As seis mutações de catálogo e criação/conclusão de lote, lacunas encontradas, agora gravam ator e evento operacional na mesma transação; falha da auditoria reverte a escrita. Autenticação mantém trilha própria; diagnóstico e prévia de produção são POST somente leitura. Contrato automatizado impede regressão. |
 | T02 / #36 | Pendente | Finalizar a estratégia da cadeia **genérica** de migrations e instalação nova; provar caminhos suportados e preservação. A aplicação específica no HML não encerra essa frente. Manter preflight bloqueante e não usar `db:push` como atalho. |
 | T03 | Parcial | Incorporar os ensaios relevantes PostgreSQL 17 e de navegador aos gates automáticos conforme ambiente/escopo; os ensaios locais já passaram. |
 | H04 / H05 | Parcial | Ensaiar o fluxo completo pela interface, com backend/banco e identidade de teste isolados: compra em kg → consumo em g → produção → venda → recebimento/entrega → lucro; cancelamento, devolução, crédito/resgate, fechamento, concorrência e falhas. Não gravar fatos sintéticos na base compartilhada. |
@@ -185,7 +185,7 @@ As fontes abaixo comprovam entregas e limites, sem constituir roadmaps paralelos
 - [Cadeia genérica de migrations](MIGRATION-CHAIN-REPAIR-0016.md).
 - [Gates humanos](HUMAN-APPROVALS.md) e [Definition of Done](DEFINITION-OF-DONE.md).
 
-Ordem recomendada: **lacunas S01/T02 e ensaios integrados → homologação por
+Ordem recomendada: **T02 e ensaios integrados → homologação por
 perfil → integração e sustentação → aceite de produção**. Trabalhos
 independentes podem avançar dentro da autorização vigente. Não há tarefa de
 compra/produção real a executar antes de existirem fatos e previsão reais.

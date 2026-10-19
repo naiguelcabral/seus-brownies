@@ -241,8 +241,14 @@ try {
   }
   for (let index = 0; index < 4; index++) {
     const batch = await draft()
-    await persistProductionBatchCompletion(db, { id: batch.id })
-    await assert.rejects(persistProductionBatchCompletion(db, { id: batch.id }))
+    await persistProductionBatchCompletion(
+      db,
+      { id: batch.id },
+      'disposable-test',
+    )
+    await assert.rejects(
+      persistProductionBatchCompletion(db, { id: batch.id }, 'disposable-test'),
+    )
   }
   const consumptions = await db
     .select()
@@ -299,7 +305,9 @@ try {
   await pool.query(
     'ALTER TABLE inventory_cost_layers ADD CONSTRAINT fixture_late_failure CHECK (false) NOT VALID',
   )
-  await assert.rejects(persistProductionBatchCompletion(db, { id: batch.id }))
+  await assert.rejects(
+    persistProductionBatchCompletion(db, { id: batch.id }, 'disposable-test'),
+  )
   assert.equal(
     (await db.select().from(schema.productionBatchConsumptions)).length,
     4,

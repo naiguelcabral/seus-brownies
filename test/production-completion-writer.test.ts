@@ -7,6 +7,8 @@ import { moneyToCents } from '../src/features/production/calculations'
 import { decimalCost, sumCosts, readExactCost } from '../src/lib/exact-cost'
 import type { ExactCost } from '../src/lib/exact-cost'
 
+const actorAuthUserId = 'auth-test-production'
+
 function recordedCost(value: unknown): ExactCost {
   assert.ok(
     value &&
@@ -41,12 +43,14 @@ for (const failAt of [
       ...(failAt ? { failAt } : {}),
     })
     if (failAt) {
-      await assert.rejects(persistProductionBatchCompletion(mock.db, { id: 1 }))
+      await assert.rejects(
+        persistProductionBatchCompletion(mock.db, { id: 1 }, actorAuthUserId),
+      )
       assert.deepEqual(mock.committed, [])
       assert.equal(mock.batch.status, 'draft')
       return
     }
-    await persistProductionBatchCompletion(mock.db, { id: 1 })
+    await persistProductionBatchCompletion(mock.db, { id: 1 }, actorAuthUserId)
     const consumption = requireDefined(
       mock.committed.find(
         (write) => write.table === 'production_batch_consumptions',
@@ -82,7 +86,7 @@ for (const failAt of [
 test('lote ausente aborta a transação antes de persistir consumo ou custos', async () => {
   const mock = createProductionDrizzleMock({ missingBatch: true })
   await assert.rejects(
-    persistProductionBatchCompletion(mock.db, { id: 1 }),
+    persistProductionBatchCompletion(mock.db, { id: 1 }, actorAuthUserId),
     /Resultado obrigatório ausente/,
   )
   assert.deepEqual(mock.committed, [])
@@ -97,10 +101,13 @@ test('lote ausente aborta a transação antes de persistir consumo ou custos', a
 
 test('conclusão persiste consumo, custos, saídas e FIFO em uma única transação', async () => {
   const mock = createProductionDrizzleMock()
-  assert.deepEqual(await persistProductionBatchCompletion(mock.db, { id: 1 }), {
-    id: 1,
-    totalCost: '5.00',
-  })
+  assert.deepEqual(
+    await persistProductionBatchCompletion(mock.db, { id: 1 }, actorAuthUserId),
+    {
+      id: 1,
+      totalCost: '5.00',
+    },
+  )
   assert.equal(mock.journal.filter((entry) => entry.kind === 'begin').length, 1)
   assert.equal(
     mock.journal.filter((entry) => entry.kind === 'commit').length,
@@ -140,15 +147,26 @@ test('conclusão persiste consumo, custos, saídas e FIFO em uma única transaç
     mock.committed.some((entry) => entry.table === 'production_batch_losses'),
     false,
   )
-  assert.equal(mock.committed.at(-1)?.table, 'production_batches')
+  const audit = mock.committed.at(-1)
+  assert.equal(audit.table, 'operational_audit_events')
+  assert.deepEqual(audit.values, [
+    {
+      actorAuthUserId,
+      action: 'production_batch.complete',
+      entityType: 'production_batch',
+      entityId: '1',
+      operationReference: 'production-batch:1:completion',
+      reason: null,
+    },
+  ])
 })
 
 test('segunda conclusão do mesmo lote não cria efeitos adicionais', async () => {
   const mock = createProductionDrizzleMock()
-  await persistProductionBatchCompletion(mock.db, { id: 1 })
+  await persistProductionBatchCompletion(mock.db, { id: 1 }, actorAuthUserId)
   const before = structuredClone(mock.committed)
   await assert.rejects(
-    persistProductionBatchCompletion(mock.db, { id: 1 }),
+    persistProductionBatchCompletion(mock.db, { id: 1 }, actorAuthUserId),
     /rascunho/,
   )
   assert.deepEqual(mock.committed, before)
@@ -158,7 +176,7 @@ test('segunda conclusão do mesmo lote não cria efeitos adicionais', async () =
 test('insumo insuficiente aborta antes de qualquer escrita do lote', async () => {
   const mock = createProductionDrizzleMock({ available: '0.999' })
   await assert.rejects(
-    persistProductionBatchCompletion(mock.db, { id: 1 }),
+    persistProductionBatchCompletion(mock.db, { id: 1 }, actorAuthUserId),
     /Estoque insuficiente/,
   )
   assert.equal(mock.committed.length, 0)
@@ -176,10 +194,13 @@ for (const failAt of [
   'insert:inventory_cost_layers',
   'update:production_batches',
   'returning:production_batch_outputs',
+  'insert:operational_audit_events',
 ]) {
   test(`falha posterior ${failAt} reverte todos os efeitos anteriores`, async () => {
     const mock = createProductionDrizzleMock({ failAt })
-    await assert.rejects(persistProductionBatchCompletion(mock.db, { id: 1 }))
+    await assert.rejects(
+      persistProductionBatchCompletion(mock.db, { id: 1 }, actorAuthUserId),
+    )
     assert.equal(
       mock.journal.some((entry) => entry.kind === 'insert'),
       true,
@@ -238,7 +259,7 @@ for (const available of ['12.000', '11.999']) {
     })
     if (available === '11.999') {
       await assert.rejects(
-        persistProductionBatchCompletion(mock.db, { id: 1 }),
+        persistProductionBatchCompletion(mock.db, { id: 1 }, actorAuthUserId),
         /Estoque insuficiente/,
       )
       assert.deepEqual(mock.committed, [])
@@ -246,7 +267,7 @@ for (const available of ['12.000', '11.999']) {
       assert.equal(mock.journal.at(-1)?.kind, 'rollback')
       return
     }
-    await persistProductionBatchCompletion(mock.db, { id: 1 })
+    await persistProductionBatchCompletion(mock.db, { id: 1 }, actorAuthUserId)
     const consumed = mock.committed
       .filter((write) => write.table === 'production_batch_consumptions')
       .flatMap((write) => write.values)
@@ -283,7 +304,7 @@ for (const available of ['12.000', '11.999']) {
     )
     const before = structuredClone(mock.committed)
     await assert.rejects(
-      persistProductionBatchCompletion(mock.db, { id: 1 }),
+      persistProductionBatchCompletion(mock.db, { id: 1 }, actorAuthUserId),
       /rascunho/,
     )
     assert.deepEqual(mock.committed, before)
@@ -310,7 +331,7 @@ for (const invalid of ['type', 'basis', 'duplicate'] as const) {
       ],
     })
     await assert.rejects(
-      persistProductionBatchCompletion(mock.db, { id: 1 }),
+      persistProductionBatchCompletion(mock.db, { id: 1 }, actorAuthUserId),
       /Componente de perfil inválido|por unidade pronta|duplicada/,
     )
     assert.deepEqual(mock.committed, [])

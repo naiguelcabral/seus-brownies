@@ -273,7 +273,11 @@ try {
     return batch
   }
   const batch = await draft()
-  const completed = await persistProductionBatchCompletion(db, { id: batch.id })
+  const completed = await persistProductionBatchCompletion(
+    db,
+    { id: batch.id },
+    'disposable-test',
+  )
   assert.equal(completed.totalCost, '268.58')
   const layers = await db.select().from(schema.inventoryCostLayers)
   const produced = layers.filter((row) => row.productionBatchOutputId !== null)
@@ -303,12 +307,16 @@ try {
     (await pool.query('select count(*) from stock_movements')).rows[0].count,
   )
   await assert.rejects(
-    persistProductionBatchCompletion(db, { id: batch.id }),
+    persistProductionBatchCompletion(db, { id: batch.id }, 'disposable-test'),
     /rascunho/,
   )
   const insufficient = await draft()
   await assert.rejects(
-    persistProductionBatchCompletion(db, { id: insufficient.id }),
+    persistProductionBatchCompletion(
+      db,
+      { id: insufficient.id },
+      'disposable-test',
+    ),
     /Estoque insuficiente/,
   )
   assert.equal(
