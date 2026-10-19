@@ -62,7 +62,7 @@ Sequência: validar/commitar fontes, build isolado, aplicar apenas schema com
 nova auditoria/35 recibos; publicar Worker compatível; aplicar dados em outra
 transação, ler independentemente, verificar UI e ativar versão nova pelo fluxo
 autenticado autorizado. DDL de enum commita antes de usar os novos valores.
-Não executar db:push nem db:migrate genérico. Ainda aguardando aplicação HML.
+Não executar db:push nem db:migrate genérico. Aplicação HML concluída em18/10/2026, cerca de22h03 Brasília.
 
 As pré-condições fixam33 recibos originais e fingerprints semânticos dos nove
 cadastros relevantes. Timestamps de criação/atualização são excluídos apenas
@@ -91,8 +91,41 @@ possam ter sido criados após a entrega.
 ## Validações até o checkpoint de publicação
 
 524 testes Node passaram, dois ensaios locais de navegador passaram (Pix por
-transação e celular). Lint/tipos e Knip sem novos achados; formatação final e
-builds em conferência. PostgreSQL17 com compras/lotes sintéticos passou:
+transação e celular). Lint/tipos/formatação e Knip sem novos achados; builds isolados CI/HML aprovados. PostgreSQL17 com compras/lotes sintéticos passou:
 consumo, custo exato268,58, alocação específica por produto, totais reais de MO,
 FIFO, segunda conclusão rejeitada e falta de estoque sem efeitos parciais.
-Nenhuma operação sintética foi enviada ao HML. CI/CodeQL remoto ainda pendente.
+Nenhuma operação sintética foi enviada ao HML. CI39183477371 e CodeQL39183477521 aprovados no commit73ead0a; API confirmou
+zero resultados nas três linguagens e zero alertas abertos na branch.
+
+
+## Entrega confirmada
+
+Commit73ead0a publicado no cacau-v1-hml: versão
+`e206d319-feb7-4cc9-b86e-f61d83049b56`,100% de tráfego. Schema e dados002
+aplicados em transações separadas, na sequência documentada;35 recibos.
+Conferência independente:38 produtos, receita2/v2 ativa com7 consumos,
+17 perfis/31 componentes ativos (12 recheios,17 adesivos,2 coberturas),
+85 eventos auditáveis da entrega. Receita anterior, seus perfis/componentes
+e17 itens do cenário anterior preservados. Referência002 consumida: não repetir.
+
+Cenário2/v2/revisão2 ativado pelo fluxo autenticado do Dono com motivo;
+16 itens orientativos somam10.000 pontos-base. Meta conjunta10mil, fixos2288.
+Página confirma base antes das taxas15897; comparações de débito16186 e
+crédito16642 de faturamento para ultrapassar10mil após custos/taxas. Pix
+exige quantidade de pagamentos explícita. São estimativas pelas referências
+de custo, não garantia de lucro ou de capacidade mensal. No limite de64
+receitas mensais, taxas e arredondamentos podem exigir produção adicional.
+Bombom, kit e Ninho7×7 continuam com alerta de margem mínima, sem aumentar
+preços automaticamente.
+
+Banco compartilhado continua com zero lotes e zero movimentos de estoque.
+Não houve compra/venda/despesa sintética nem alteração de produção principal,
+auth ou secrets. Sessão HML conferiu cenário ativo, parâmetros e prévia de48 simples5×5:
+8 ovos,300 g de chocolate em pó,500 g de açúcar,240 g de farinha,215 ml de óleo,
+0,8 m de papel,48 embalagens e48 adesivos. Estoque insuficiente corretamente
+sinalizado; nenhum rascunho salvo. Homologação
+operacional real e classificação de despesas para lucro realizado permanecem
+tarefas separadas; esta entrega não afirma encerrá-las. Taxas são premissas e
+simulações, sem lançamento financeiro automático.
+
+Recibo: `evidence/cost-recovery-fees-hml-execution-2026-10-18.json`.

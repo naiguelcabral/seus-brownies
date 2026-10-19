@@ -9,7 +9,9 @@ receita de oito ovos e rendimentos48/24 no5×5 e24/12 no7×7 confirmados.
 de Bordinhas: meta conjunta; aproveitamento real soma resultado, sem mínimo
 fixo presumido. Cenário anterior preservado e nova versão orientativa.
 Sem autorização de produção, secrets, limpeza ou reimportação histórica.
-Plano: COST-RECOVERY-FEES-HML-2026-10-18.md.
+Concluído: schema/dados002, deploy73ead0a no HML e cenário2/v2/rev2 ativo.
+Referência002 consumida, não repetir. Produção principal não alterada.
+Plano/recibo: COST-RECOVERY-FEES-HML-2026-10-18.md.
 
 
 ## MEI e taxas — definições de 18/10/2026

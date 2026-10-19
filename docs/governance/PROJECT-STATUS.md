@@ -1,5 +1,21 @@
 # Estado canônico do projeto — Cacau v1
 
+## Custos publicados e cenário ativo —18/10/2026
+
+Entrega73ead0a no cacau-v1-hml, versãoe206d319-feb7-4cc9-b86e-f61d83049b56
+com100% de tráfego. Migrations0031/0032 e pacote002 aplicados com preservação
+de histórico;35 recibos, receita2 ativa/17 perfis completos,31 componentes.
+Cenário2/v2/rev2 ativo,16 itens orientativos/100%; meta conjunta10mil, fixos2288,
+taxas separadas sem média ou cota de Bordinhas. Cenário1/17 itens arquivado
+e preservado. Nenhum lote/movimento fictício na base compartilhada.
+524 testes, dois testes de navegador, dois ensaios PostgreSQL17, lint/tipos/
+formatação/Knip/builds passaram. CI39183477371 e CodeQL39183477521 aprovados;
+zero resultados e zero alertas abertos. Operação real e classificação de
+despesas continuam tarefas próprias. Detalhes e limites:
+COST-RECOVERY-FEES-HML-2026-10-18.md e recibo de execução em evidence.
+
+Checkpoints abaixo descrevem estados anteriores à entrega.
+
 ## Retomada e pacote final de custos —18/10/2026
 
 Franquia renovada100% e retomada oficial executada; branch limpa sincronizada.

@@ -6,18 +6,18 @@
       Quatro locais no anexo; removida apenas PATRÍCIA em relação ao anterior.
 - [x] Consolidar definições já aprovadas, evitando perguntar preços/receita
       que constam da fonte ou decisões respondidas na conversa.
-- [~] Executar pacote técnico aditivo de materiais, Bordinhas variável,
+- [x] Executar pacote técnico aditivo de materiais, Bordinhas variável,
       revisão de cenário e ensaio antes da atualização HML autorizada.
-      Papéis/validação/consumo de materiais implementados localmente;
-      migration, vínculos e publicação ainda não aplicados.
+      Migrations0031/0032, vínculos e publicação HML concluídos no73ead0a;
+      cenário2/v2/rev2 ativo. Histórico e auditoria preservados.
 - [x] Taxas informadas fora da fonte: MEI R$ 88 adicional (fixos R$ 2.288),
       débito 1,43%, crédito 3,36%, Pix R$ 0,49/transação; combinação varia
       por local. Preparar representação por meio, sem média universal.
-- [~] Base física esclarecida: 850 g frios por receita de oito ovos;
+- [x] Base física esclarecida: 850 g frios por receita de oito ovos;
       rendimentos confirmados por corte. Implementar recuperação variável
       apontada por lote e rateio sem duplicação; não pedir sobra fixa.
-      Capacidade renovada e fluxo implementado/testado; publicação/aplicação
-      HML em execução. Ver `HANDOFF-PROFILE-MATERIALS-2026-10-18.md`.
+      Fluxo implementado/testado/publicado; ensaios locais sem fatos sintéticos
+      no HML. Ver `COST-RECOVERY-FEES-HML-2026-10-18.md`.
 
 Lista completa e evidência:
 `ATTACHED-WORKBOOK-COMPLETE-REVIEW-2026-10-18.md`.

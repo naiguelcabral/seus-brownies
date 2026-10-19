@@ -1,0 +1,105 @@
+{
+  "reference": "PROFILE-RECOVERY-FEES-2026-10-18-002",
+  "payloadHash": "eb56e89a332661747b055d24e085c06b0191be6a4b8ab45336506fb8c2d4020e",
+  "sourceCommit": "73ead0a61cc4d54163f15fe16809c64a6f35811b",
+  "target": "cacau-v1-hml",
+  "workerVersion": "e206d319-feb7-4cc9-b86e-f61d83049b56",
+  "workerTrafficPercent": 100,
+  "readback": [
+    {
+      "result": {
+        "batches": 0,
+        "products": 38,
+        "scenarios": [
+          {
+            "id": 1,
+            "status": "archived",
+            "mix_bps": 10000,
+            "version": 1,
+            "revision": 2,
+            "mix_items": 17
+          },
+          {
+            "id": 2,
+            "status": "active",
+            "mix_bps": 10000,
+            "version": 2,
+            "revision": 2,
+            "mix_items": 16
+          }
+        ],
+        "checked_at": "2026-10-19T01:05:44.770072+00:00",
+        "management": {
+          "payment_fees": {
+            "debitBps": 143,
+            "creditBps": 336,
+            "effectiveOn": "2026-10-18",
+            "pixFixedCents": 49
+          },
+          "fixed_monthly_costs": 2288,
+          "monthly_profit_goal": 10000
+        },
+        "release_audits": 85,
+        "active_profiles": 17,
+        "component_roles": {
+          "coating": 2,
+          "filling": 12,
+          "packaging": 17
+        },
+        "recipe_versions": [
+          {
+            "id": 2,
+            "status": "active",
+            "version": 2,
+            "source_id": "RECIPE-BASE-002"
+          },
+          {
+            "id": 1,
+            "status": "archived",
+            "version": 1,
+            "source_id": "RECIPE-BASE-001"
+          }
+        ],
+        "release_receipt": {
+          "source_key": "PROFILE-RECOVERY-FEES-2026-10-18-002",
+          "source_hash": "eb56e89a332661747b055d24e085c06b0191be6a4b8ab45336506fb8c2d4020e"
+        },
+        "stock_movements": 0,
+        "migration_receipts": 35,
+        "active_recipe_items": 7
+      }
+    }
+  ],
+  "validation": {
+    "nodeTests": 524,
+    "browserTests": 2,
+    "realPostgresProduction": "passed: physical inputs, exact output costs, FIFO, actual batch costs, replay rejection, insufficient stock rollback",
+    "logicalReplicaRelease": "passed: exact 002 schema/data, rollback, preserved rows, replay rejection",
+    "ci": "https://github.com/naiguelcabral/seus-brownies/actions/runs/39183477371",
+    "codeql": "https://github.com/naiguelcabral/seus-brownies/actions/runs/39183477521",
+    "codeqlAnalyses": [
+      1977547920,
+      1977546626,
+      1977545881
+    ],
+    "codeqlResults": 0,
+    "openAlerts": 0
+  },
+  "backup": {
+    "newSnapshot": "provider quota refused",
+    "newBranch": "provider quota refused",
+    "existingBackups": "preserved",
+    "currentLogicalMetadataBackup": "local /tmp; tested on PostgreSQL 17 replica"
+  },
+  "activation": "native authenticated Owner UI, scenario 2/version 2/revision 2, motive recorded",
+  "limitations": [
+    "Reference costs from workbook, not new real purchases.",
+    "Payment tariffs are premises and simulations; no automatic expense/payment events.",
+    "Real managerial profit classification and operational HML lifecycle homologations remain separate."
+  ],
+  "authenticatedUi": {
+    "scenario": "active v2, success message and separate debit/credit projections verified",
+    "parameters": "10000 goal, 2288 fixed costs, 1.43% debit, 3.36% credit, Pix 0.49/transaction",
+    "productionPreview": "48 plain 5x5: 8 eggs, 300 g powder, 500 g sugar, 240 g flour, 215 ml oil, 0.8 m paper, 48 outer packages and 48 adhesives; no batch saved. Insufficient stock correctly displayed."
+  }
+}
