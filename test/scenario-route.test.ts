@@ -7,6 +7,15 @@ const routeSource = await readFile(
   'utf8',
 )
 
+const summarySource = await readFile(
+  new URL('../src/features/scenarios/ScenarioSummary.tsx', import.meta.url),
+  'utf8',
+)
+const editorSource = await readFile(
+  new URL('../src/features/scenarios/ScenarioEditor.tsx', import.meta.url),
+  'utf8',
+)
+
 test('rota consulta cenários por dependências estreitas e paginação', () => {
   assert.match(routeSource, /loaderDeps: \(\{ search \}\) =>/)
   assert.match(routeSource, /listScenarios\(\{ data: deps \}\)/)
@@ -16,15 +25,18 @@ test('rota consulta cenários por dependências estreitas e paginação', () => 
 })
 
 test('interface separa projeção, realizado, ausências e decisões pendentes', () => {
-  assert.match(routeSource, /Meta · premissas · projeção/)
-  assert.match(routeSource, /Resultado realizado/)
-  assert.match(routeSource, /Dado ausente para o período de vigência/)
-  assert.match(routeSource, /lucro registrado em Financeiro ou na Visão geral/)
+  assert.match(summarySource, /Meta · premissas · projeção/)
+  assert.match(summarySource, /Resultado realizado/)
+  assert.match(summarySource, /Dado ausente para o período de vigência/)
   assert.match(
-    routeSource.replace(/\s+/g, ' '),
+    summarySource,
+    /lucro registrado em Financeiro ou na Visão geral/,
+  )
+  assert.match(
+    summarySource.replace(/\s+/g, ' '),
     /Este quadro compara receita e CMV pelas datas do cenário/,
   )
-  assert.match(routeSource, /planejado versus realizado por produto/)
+  assert.match(summarySource, /planejado versus realizado por produto/)
 })
 
 test('mutações e editor ficam condicionados à permissão de escrita', () => {
@@ -43,7 +55,10 @@ test('rota apresenta estados de carregamento, vazio e erro sem exportação', ()
 })
 
 test('formulário não semeia valores financeiros ou mix do workbook', () => {
-  assert.match(routeSource, /Nenhum valor do workbook é criado automaticamente/)
+  assert.match(
+    editorSource,
+    /Nenhum valor do workbook é criado automaticamente/,
+  )
   assert.match(routeSource, /monthlyProfitGoal: ''/)
   assert.match(routeSource, /fixedMonthlyCosts: ''/)
   assert.match(routeSource, /mix: \[\]/)

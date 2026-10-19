@@ -13,7 +13,8 @@
     "e2e/fixtures/operation-finance/main.tsx",
     "scripts/**/*.{ts,js,mjs}",
     "*.config.{ts,js,mjs}",
-    "playwright.*.config.ts"
+    "playwright.*.config.ts",
+    "e2e/fixtures/scenario-ux/main.tsx"
   ],
   "project": [
     "src/**/*.{ts,tsx,js,mjs}",
@@ -23,7 +24,13 @@
     "*.{ts,js,mjs}"
   ],
   "ignore": ["src/routeTree.gen.ts", "**/*.d.ts"],
-  "drizzle": { "config": [] },
-  "vite": { "config": [] },
-  "playwright": { "config": [] }
+  "drizzle": {
+    "config": []
+  },
+  "vite": {
+    "config": []
+  },
+  "playwright": {
+    "config": []
+  }
 }

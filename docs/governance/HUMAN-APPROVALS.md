@@ -1,5 +1,18 @@
 # Ações que exigem aprovação humana — Cacau v1
 
+## Execução única de usabilidade — 19/10/2026, 02:33 Brasília
+
+Heartbeat `retomar-cacau-s-02h33`, solicitado pelo usuário, autoriza uma única
+próxima tarefa: simplificar Metas e cenários, testar em isolamento e publicar
+somente no `cacau-v1-hml`, conferindo o resultado. Preservar a meta conjunta
+de R$ 10.000 após custos, normalização em 100%, premissas já confirmadas,
+permissões, versões e auditoria. Não refazer incrementos já publicados.
+Não há compras ou produção previstas; testes sintéticos somente locais.
+Sem autorização para produção principal, secrets, fatos fictícios no HML,
+limpeza, alterações de regra financeira ou reuso de referências consumidas.
+A tarefa não exige migration nem gravação em dados compartilhados.
+
+
 ## Recebimentos, lucro e usabilidade — 18/10/2026
 
 Após proposta explícita de taxas nos recebimentos, despesas sem dupla contagem,

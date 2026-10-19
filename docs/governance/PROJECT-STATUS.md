@@ -1,5 +1,16 @@
 # Estado canônico do projeto — Cacau v1
 
+## Metas e cenários simplificados — preparação em 19/10/2026
+
+Execução única do heartbeat das 02:33 Brasília. Resumo do cenário ativo com
+meta conjunta, custos e projeção; detalhes expansíveis, histórico em largura
+integral, cadastro/edição em modal com prévia normalizada e confirmações
+motivadas de lifecycle. Backend, regras e dados preservados; sem migration.
+529 testes Node e cinco ensaios locais de navegador aprovados. Publicação e
+conferência HML ainda pendentes neste checkpoint. Detalhes:
+[SCENARIO-UX-HML-2026-10-19.md](SCENARIO-UX-HML-2026-10-19.md).
+
+
 ## Recebimentos, lucro e modais publicados — 18/10/2026
 
 Incremento60dbe08 e correção de data41820ba publicados no cacau-v1-hml,
