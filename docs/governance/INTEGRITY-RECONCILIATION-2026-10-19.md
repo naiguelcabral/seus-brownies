@@ -47,3 +47,17 @@ zero fatos conferidos e não cria dados para preencher a tela.
 
 Nenhum dado de compra, produção, venda, estoque, financeiro ou auditoria foi
 criado ou alterado no HML para estes ensaios.
+
+## Publicação e conferência HML
+
+- Commit publicado: `a3ec96b`.
+- Worker: `cacau-v1-hml`.
+- Versão Cloudflare: `0f95738a-356b-4662-ad76-f03220c5f066`.
+- Data da conferência: 19/10/2026, horário de Brasília.
+- Saúde pública: `/login` respondeu HTTP 200 após a publicação.
+- Conferência autenticada: `/relatorios` exibiu a seção integrada, as cinco
+  contagens zeradas coerentes com a base sem operações reais e a meta conjunta
+  de lucro de R$ 10.000.
+- Navegador: nenhum erro de console foi observado na página conferida.
+- Dados: nenhum fato sintético, compra, produção, venda, movimento ou ajuste
+  automático foi criado no HML.

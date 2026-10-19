@@ -84,9 +84,9 @@ liberação definitiva de produção.
 
 ## F02 — conferência de integridade consolidada
 
-**Estado: concluído no código; validação HML pendente de publicação.** A
-conferência única cobre estoque, produção e CMV por competência, preservando
-as três famílias de diagnóstico existentes e acrescentando a visão integrada.
+**Estado: concluído e validado no HML em 19/10/2026.** A conferência única
+cobre estoque, produção e CMV por competência, preservando as três famílias de
+diagnóstico existentes e acrescentando a visão integrada.
 
 - [x] Cobertura inventariada entre estoque de insumos, custos produtivos,
   saídas/camadas/reversões FIFO e CMV por competência.
@@ -98,8 +98,12 @@ as três famílias de diagnóstico existentes e acrescentando a visão integrada
   custo zero ou saldo fictício no HML.
 
 **Aceite técnico:** divergências identificáveis e explicáveis; nenhuma
-alteração financeira, de estoque ou de histórico pela rotina. A publicação e a
-conferência autenticada no HML são o passo de liberação deste incremento.
+alteração financeira, de estoque ou de histórico pela rotina. O commit
+`a3ec96b` foi publicado somente no `cacau-v1-hml`, versão
+`0f95738a-356b-4662-ad76-f03220c5f066`. A conferência autenticada confirmou a
+seção integrada, as contagens zeradas coerentes com a ausência de fatos reais,
+a meta conjunta de R$ 10.000 e a ausência de erros no navegador. Nenhum fato
+sintético foi gravado no HML.
 
 ## Pendências para fechar a validação técnica
 
@@ -175,8 +179,8 @@ As fontes abaixo comprovam entregas e limites, sem constituir roadmaps paralelos
 - [Recebimentos e lucro publicados](PAYMENT-SETTLEMENT-PROFIT-HML-2026-10-18.md).
 - [Cenários publicados](SCENARIO-UX-HML-2026-10-19.md).
 - [Compras e Produção publicados](PURCHASE-PRODUCTION-UX-HML-2026-10-19.md).
-- [Conferência integrada de integridade](INTEGRITY-RECONCILIATION-2026-10-19.md).
-- [Recibo da última publicação](../../evidence/purchase-production-ux-hml-2026-10-19.json).
+- [Conferência integrada de integridade e recibo HML](INTEGRITY-RECONCILIATION-2026-10-19.md).
+- [Recibo histórico da publicação de Compras e Produção](../../evidence/purchase-production-ux-hml-2026-10-19.json).
 - [Runbooks e matriz de ambientes](ENVIRONMENT-MATRIX.md).
 - [Cadeia genérica de migrations](MIGRATION-CHAIN-REPAIR-0016.md).
 - [Gates humanos](HUMAN-APPROVALS.md) e [Definition of Done](DEFINITION-OF-DONE.md).
