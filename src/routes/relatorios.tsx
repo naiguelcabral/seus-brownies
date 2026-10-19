@@ -403,6 +403,34 @@ function ReportsPage() {
           )}
         </section>
       ) : null}
+      {report.integrity ? (
+        <section className="mt-6 rounded-2xl border border-[#ecdfd4] bg-white p-5">
+          <div className="flex items-center gap-2">
+            <Box size={18} className="text-[#a64f23]" />
+            <h2 className="font-bold">Conferência integrada de integridade</h2>
+          </div>
+          <p className="mt-2 text-sm text-[#846859]">
+            Estoque, custos de produção e CMV por competência são conferidos
+            apenas por leitura. Nenhum registro é ajustado por esta tela.
+          </p>
+          <p className="mt-2 text-sm text-[#846859]">
+            {report.integrity.checked.layers} camadas,{' '}
+            {report.integrity.checked.productionBatches} lotes,{' '}
+            {report.integrity.checked.productionOutputs} saídas,{' '}
+            {report.integrity.checked.deliveries} entregas e{' '}
+            {report.integrity.checked.deliveryItems} itens de entrega
+            conferidos.
+          </p>
+          {report.integrity.complete ? (
+            <p className="mt-4 rounded-lg bg-[#eef8ed] p-3 text-sm text-[#315a31]">
+              Nenhuma divergência encontrada nas relações disponíveis para o
+              período.
+            </p>
+          ) : (
+            <IntegrityDivergences divergences={report.integrity.divergences} />
+          )}
+        </section>
+      ) : null}
       <section className="mt-6 rounded-2xl border border-[#ecdfd4] bg-white p-5">
         <div className="flex items-center gap-2">
           <BarChart3 size={18} className="text-[#a64f23]" />
@@ -469,6 +497,52 @@ function ReportsPage() {
         )}
       </section>
     </ManagementLayout>
+  )
+}
+
+function IntegrityDivergences({
+  divergences,
+}: {
+  divergences: Array<{
+    area: string
+    code: string
+    entityType: string
+    entityId: number | null
+    relatedIds: number[]
+    message: string
+    expected?: string
+    actual?: string
+  }>
+}) {
+  const byArea = divergences.reduce<Record<string, number>>((counts, item) => {
+    counts[item.area] = (counts[item.area] ?? 0) + 1
+    return counts
+  }, {})
+  return (
+    <>
+      <p className="mt-4 text-sm text-[#846859]">
+        {Object.entries(byArea)
+          .map(([area, count]) => `${area}: ${count}`)
+          .join(' · ')}
+      </p>
+      <ul className="mt-4 space-y-2">
+        {divergences.map((item) => (
+          <li
+            key={`${item.area}-${item.code}-${item.entityType}-${item.entityId}`}
+            className="rounded-lg border border-[#e7c9b8] bg-[#fff5ed] p-3 text-sm"
+          >
+            <strong>{item.area}</strong> · {item.message} · {item.entityType}
+            {item.entityId === null ? '' : ` #${item.entityId}`}
+            {item.relatedIds.length
+              ? ` · relacionados ${item.relatedIds.join(', ')}`
+              : ''}
+            {item.expected !== undefined && item.actual !== undefined
+              ? ` · esperado ${item.expected}, encontrado ${item.actual}`
+              : ''}
+          </li>
+        ))}
+      </ul>
+    </>
   )
 }
 

@@ -79,6 +79,7 @@ test('exporta valores financeiros e quantidades sem conversão de precisão', ()
     },
     fifo: null,
     production: null,
+    integrity: null,
   })
 
   assert.match(document, /12345678901234567890\.12/)

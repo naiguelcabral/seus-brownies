@@ -19,7 +19,13 @@
     "e2e/fixtures/operations-ux/router.ts",
     "e2e/fixtures/operations-ux/start.ts",
     "e2e/fixtures/operations-ux/Layout.tsx",
-    "e2e/fixtures/operations-ux/state.ts"
+    "e2e/fixtures/operations-ux/state.ts",
+    "e2e/fixtures/integrity-report/main.tsx",
+    "e2e/fixtures/integrity-report/router.ts",
+    "e2e/fixtures/integrity-report/components.tsx",
+    "e2e/fixtures/integrity-report/reports.ts",
+    "e2e/fixtures/integrity-report/csv.ts",
+    "e2e/fixtures/integrity-report/money.ts"
   ],
   "project": [
     "src/**/*.{ts,tsx,js,mjs}",

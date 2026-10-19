@@ -72,33 +72,34 @@ liberação definitiva de produção.
   quantidade novamente, unidades legíveis, opcionais agrupados, prévia
   invalidada após alterações, custos limpos após salvar, auditoria em modal
   e sucesso de gravação separado de falhas de atualização visual.
-- [x] **Relatórios e diagnósticos existentes:** receita/volume/ticket,
-  ranking por unidades, margens e CSV seguro; razão/FIFO/reversões,
-  cobertura entrega/FIFO e reconciliação de saídas produtivas implementados.
-  Completar lacunas e homologar o conjunto é F02/F03, não reescrever do zero.
+- [x] **Relatórios e diagnósticos:** receita/volume/ticket, ranking por
+  unidades, margens e CSV seguro; razão/FIFO/reversões, cobertura de entrega e
+  conferência integrada de estoque, produção e CMV. Os diagnósticos só leem os
+  fatos e preservam ausências como ausências. Indicadores/alertas adicionais
+  permanecem em F03.
 - [x] **Ensaios locais:** custos, produção/FIFO e recebimentos/lucro em
   PostgreSQL 17 descartável; rollback/replay dos pacotes específicos;
   ensaios de navegador e conferências autenticadas sem fatos fictícios no HML.
   Esses ensaios não substituem o aceite integrado por todos os perfis.
 
-## Próxima tarefa — F02: consolidar a conferência de integridade
+## F02 — conferência de integridade consolidada
 
-**Estado: parcial. Próximo trabalho técnico recomendado.** Já existem três
-famílias de diagnóstico; falta fechar a cobertura de ponta a ponta.
+**Estado: concluído no código; validação HML pendente de publicação.** A
+conferência única cobre estoque, produção e CMV por competência, preservando
+as três famílias de diagnóstico existentes e acrescentando a visão integrada.
 
-- [ ] Inventariar a cobertura existente em Relatórios, Financeiro e Produção
-  e identificar lacunas entre estoque de insumos, custos produtivos,
+- [x] Cobertura inventariada entre estoque de insumos, custos produtivos,
   saídas/camadas/reversões FIFO e CMV por competência.
-- [ ] Consolidar o resultado e o relatório de divergências, com origem e
-  referência rastreáveis, sem corrigir dados automaticamente.
-- [ ] Ensaiar casos coerentes, divergências deliberadas, ausência de custo,
-  consumo parcial, cancelamento/reversão e conciliação exata em isolamento.
-- [ ] Registrar critérios e evidências; apresentar ausência como ausência,
-  sem transformá-la em custo zero ou exigir saldo fictício no HML.
+- [x] Resultado unificado com origem e referência rastreáveis, sem correção
+  automática.
+- [x] Ensaios isolados de coerência, custo ausente, cobertura parcial,
+  reversão excessiva, referência de venda ausente e custo racional exato.
+- [x] Critérios e evidências registrados; ausência permanece explícita, sem
+  custo zero ou saldo fictício no HML.
 
-**Aceite:** divergências identificáveis e explicáveis; nenhuma alteração
-financeira, de estoque ou de histórico pela rotina de conferência. Não depende
-de compras reais nem de repetir as definições já confirmadas pelo usuário.
+**Aceite técnico:** divergências identificáveis e explicáveis; nenhuma
+alteração financeira, de estoque ou de histórico pela rotina. A publicação e a
+conferência autenticada no HML são o passo de liberação deste incremento.
 
 ## Pendências para fechar a validação técnica
 
@@ -174,12 +175,13 @@ As fontes abaixo comprovam entregas e limites, sem constituir roadmaps paralelos
 - [Recebimentos e lucro publicados](PAYMENT-SETTLEMENT-PROFIT-HML-2026-10-18.md).
 - [Cenários publicados](SCENARIO-UX-HML-2026-10-19.md).
 - [Compras e Produção publicados](PURCHASE-PRODUCTION-UX-HML-2026-10-19.md).
+- [Conferência integrada de integridade](INTEGRITY-RECONCILIATION-2026-10-19.md).
 - [Recibo da última publicação](../../evidence/purchase-production-ux-hml-2026-10-19.json).
 - [Runbooks e matriz de ambientes](ENVIRONMENT-MATRIX.md).
 - [Cadeia genérica de migrations](MIGRATION-CHAIN-REPAIR-0016.md).
 - [Gates humanos](HUMAN-APPROVALS.md) e [Definition of Done](DEFINITION-OF-DONE.md).
 
-Ordem recomendada: **F02 → lacunas S01/T02 e ensaios integrados → homologação
-por perfil → integração e sustentação → aceite de produção**. Trabalhos
+Ordem recomendada: **lacunas S01/T02 e ensaios integrados → homologação por
+perfil → integração e sustentação → aceite de produção**. Trabalhos
 independentes podem avançar dentro da autorização vigente. Não há tarefa de
 compra/produção real a executar antes de existirem fatos e previsão reais.

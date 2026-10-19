@@ -476,6 +476,7 @@ function FinancialPage() {
                           missing_allocation: 'alocação FIFO ausente',
                           quantity_mismatch: 'quantidade FIFO divergente',
                           invalid_quantity: 'quantidade inválida',
+                          missing_sale_reference: 'venda de origem ausente',
                         }[row.code]
                       }
                     </li>

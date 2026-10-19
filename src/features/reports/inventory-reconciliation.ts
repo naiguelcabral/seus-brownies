@@ -1,5 +1,13 @@
 import { requireDefined } from '../../lib/required-value'
 import {
+  addCosts,
+  displayCostMoney,
+  exactCost,
+  readExactCost,
+  subtractCosts,
+} from '../../lib/exact-cost'
+import type { ExactCost } from '../../lib/exact-cost'
+import {
   moneyToCents,
   quantityToThousandths,
 } from '#/features/production/calculations'
@@ -33,6 +41,8 @@ export type ReconciliationInput = {
     originalCost: string
     remainingQuantity: string
     remainingCost: string
+    exactOriginalCost?: ExactCost | null
+    exactRemainingCost?: ExactCost | null
   }>
   allocations: Array<{
     id: number
@@ -41,9 +51,11 @@ export type ReconciliationInput = {
     productId: number
     quantity: string
     allocatedCost: string
+    exactCost?: ExactCost | null
     movementProductId: number
     movementQuantity: string
     movementCost: string | null
+    movementExactCost?: ExactCost | null
   }>
   reversals: Array<{
     id: number
@@ -51,21 +63,48 @@ export type ReconciliationInput = {
     incomingMovementId: number
     quantity: string
     restoredCost: string
+    exactCost?: ExactCost | null
     movementProductId: number
     movementQuantity: string
     movementCost: string | null
+    movementExactCost?: ExactCost | null
   }>
 }
 
 const asQuantity = (value: string) => quantityToThousandths(value) ?? 0n
-const asMoney = (value: string | null) => moneyToCents(value) ?? 0n
+function asCost(
+  exact: ExactCost | null | undefined,
+  legacy: string | null,
+): ExactCost | null {
+  try {
+    if (exact !== null && exact !== undefined) return readExactCost(exact)
+    const cents = moneyToCents(legacy)
+    return cents === null ? null : exactCost(cents, 100n)
+  } catch {
+    return null
+  }
+}
+function requireCostValue(
+  exact: ExactCost | null | undefined,
+  legacy: string | null,
+) {
+  const value = asCost(exact, legacy)
+  if (value === null) throw new Error('Custo ausente após a validação.')
+  return value
+}
+const costEquals = (left: ExactCost, right: ExactCost) =>
+  BigInt(left.numerator) * BigInt(right.denominator) ===
+  BigInt(right.numerator) * BigInt(left.denominator)
+const costGreaterThan = (left: ExactCost, right: ExactCost) =>
+  BigInt(left.numerator) * BigInt(right.denominator) >
+  BigInt(right.numerator) * BigInt(left.denominator)
+const costLabel = (value: ExactCost) => displayCostMoney(value)
 const decimal = (value: bigint, scale: bigint, places: number) => {
   const sign = value < 0n ? '-' : ''
   const absolute = value < 0n ? -value : value
   return `${sign}${absolute / scale}.${String(absolute % scale).padStart(places, '0')}`
 }
 const quantity = (value: bigint) => decimal(value, 1_000n, 3)
-const money = (value: bigint) => decimal(value, 100n, 2)
 
 /** Produces diagnostic facts only. It never writes or proposes data repair. */
 export function reconcileInventoryLedger(input: ReconciliationInput) {
@@ -95,19 +134,20 @@ export function reconcileInventoryLedger(input: ReconciliationInput) {
       actual: 'valor inválido',
     })
   }
-  const requireMoney = (
+  const requireCost = (
     entityType: ReconciliationDivergence['entityType'],
     entityId: number,
     field: string,
-    value: string | null,
+    exact: ExactCost | null | undefined,
+    legacy: string | null,
   ) => {
-    if (value === null || moneyToCents(value) !== null) return
+    if (asCost(exact, legacy) !== null) return
     divergences.push({
       code: 'invalid_decimal',
       entityType,
       entityId,
       relatedIds: [entityId],
-      expected: `${field}: decimal de até 2 casas`,
+      expected: `${field}: custo exato válido ou decimal de até 2 casas`,
       actual: 'valor inválido',
     })
   }
@@ -124,8 +164,20 @@ export function reconcileInventoryLedger(input: ReconciliationInput) {
       'remainingQuantity',
       layer.remainingQuantity,
     )
-    requireMoney('layer', layer.id, 'originalCost', layer.originalCost)
-    requireMoney('layer', layer.id, 'remainingCost', layer.remainingCost)
+    requireCost(
+      'layer',
+      layer.id,
+      'originalCost',
+      layer.exactOriginalCost,
+      layer.originalCost,
+    )
+    requireCost(
+      'layer',
+      layer.id,
+      'remainingCost',
+      layer.exactRemainingCost,
+      layer.remainingCost,
+    )
   }
   for (const allocation of input.allocations) {
     requireQuantity(
@@ -134,10 +186,11 @@ export function reconcileInventoryLedger(input: ReconciliationInput) {
       'quantity',
       allocation.quantity,
     )
-    requireMoney(
+    requireCost(
       'allocation',
       allocation.id,
       'allocatedCost',
+      allocation.exactCost,
       allocation.allocatedCost,
     )
     requireQuantity(
@@ -146,26 +199,34 @@ export function reconcileInventoryLedger(input: ReconciliationInput) {
       'quantityDelta',
       allocation.movementQuantity,
     )
-    requireMoney(
+    requireCost(
       'stock_movement',
       allocation.outgoingMovementId,
       'allocatedCost',
+      allocation.movementExactCost,
       allocation.movementCost,
     )
   }
   for (const reversal of input.reversals) {
     requireQuantity('reversal', reversal.id, 'quantity', reversal.quantity)
-    requireMoney('reversal', reversal.id, 'restoredCost', reversal.restoredCost)
+    requireCost(
+      'reversal',
+      reversal.id,
+      'restoredCost',
+      reversal.exactCost,
+      reversal.restoredCost,
+    )
     requireQuantity(
       'stock_movement',
       reversal.incomingMovementId,
       'quantityDelta',
       reversal.movementQuantity,
     )
-    requireMoney(
+    requireCost(
       'stock_movement',
       reversal.incomingMovementId,
       'allocatedCost',
+      reversal.movementExactCost,
       reversal.movementCost,
     )
   }
@@ -208,8 +269,9 @@ export function reconcileInventoryLedger(input: ReconciliationInput) {
       0n,
     )
     const reversedCost = reversals.reduce(
-      (sum, row) => sum + asMoney(row.restoredCost),
-      0n,
+      (sum, row) =>
+        addCosts(sum, requireCostValue(row.exactCost, row.restoredCost)),
+      exactCost(0n),
     )
     if (reversedQuantity > asQuantity(allocation.quantity)) {
       divergences.push({
@@ -221,14 +283,19 @@ export function reconcileInventoryLedger(input: ReconciliationInput) {
         actual: quantity(reversedQuantity),
       })
     }
-    if (reversedCost > asMoney(allocation.allocatedCost)) {
+    if (
+      costGreaterThan(
+        reversedCost,
+        requireCostValue(allocation.exactCost, allocation.allocatedCost),
+      )
+    ) {
       divergences.push({
         code: 'reversal_cost_exceeds_allocation',
         entityType: 'allocation',
         entityId: allocation.id,
         relatedIds: reversals.map((row) => row.id),
         expected: `até ${allocation.allocatedCost}`,
-        actual: money(reversedCost),
+        actual: costLabel(reversedCost),
       })
     }
   }
@@ -259,21 +326,34 @@ export function reconcileInventoryLedger(input: ReconciliationInput) {
     )
     const reversedCost = allocations.reduce(
       (sum, row) =>
-        sum +
-        (reversalsByAllocation.get(row.id) ?? []).reduce(
-          (subtotal, reversal) => subtotal + asMoney(reversal.restoredCost),
-          0n,
+        addCosts(
+          sum,
+          (reversalsByAllocation.get(row.id) ?? []).reduce(
+            (subtotal, reversal) =>
+              addCosts(
+                subtotal,
+                requireCostValue(reversal.exactCost, reversal.restoredCost),
+              ),
+            exactCost(0n),
+          ),
         ),
-      0n,
+      exactCost(0n),
     )
     const expectedQuantity =
       asQuantity(layer.originalQuantity) -
       allocations.reduce((sum, row) => sum + asQuantity(row.quantity), 0n) +
       reversedQuantity
-    const expectedCost =
-      asMoney(layer.originalCost) -
-      allocations.reduce((sum, row) => sum + asMoney(row.allocatedCost), 0n) +
-      reversedCost
+    const expectedCost = addCosts(
+      subtractCosts(
+        requireCostValue(layer.exactOriginalCost, layer.originalCost),
+        allocations.reduce(
+          (sum, row) =>
+            addCosts(sum, requireCostValue(row.exactCost, row.allocatedCost)),
+          exactCost(0n),
+        ),
+      ),
+      reversedCost,
+    )
 
     if (expectedQuantity !== asQuantity(layer.remainingQuantity)) {
       divergences.push({
@@ -285,14 +365,21 @@ export function reconcileInventoryLedger(input: ReconciliationInput) {
         actual: layer.remainingQuantity,
       })
     }
-    if (expectedCost !== asMoney(layer.remainingCost)) {
+    if (
+      !costEquals(
+        expectedCost,
+        requireCostValue(layer.exactRemainingCost, layer.remainingCost),
+      )
+    ) {
       divergences.push({
         code: 'layer_cost_mismatch',
         entityType: 'layer',
         entityId: layer.id,
         relatedIds: allocations.map((row) => row.id),
-        expected: money(expectedCost),
-        actual: layer.remainingCost,
+        expected: costLabel(expectedCost),
+        actual: costLabel(
+          requireCostValue(layer.exactRemainingCost, layer.remainingCost),
+        ),
       })
     }
   }
@@ -310,8 +397,9 @@ export function reconcileInventoryLedger(input: ReconciliationInput) {
       0n,
     )
     const expectedCost = allocations.reduce(
-      (sum, row) => sum + asMoney(row.allocatedCost),
-      0n,
+      (sum, row) =>
+        addCosts(sum, requireCostValue(row.exactCost, row.allocatedCost)),
+      exactCost(0n),
     )
     if (-asQuantity(movement.movementQuantity) !== expectedQuantity) {
       divergences.push({
@@ -324,16 +412,20 @@ export function reconcileInventoryLedger(input: ReconciliationInput) {
       })
     }
     if (
-      movement.movementCost === null ||
-      asMoney(movement.movementCost) !== expectedCost
+      !costEquals(
+        requireCostValue(movement.movementExactCost, movement.movementCost),
+        expectedCost,
+      )
     ) {
       divergences.push({
         code: 'outgoing_movement_cost_mismatch',
         entityType: 'stock_movement',
         entityId: movementId,
         relatedIds: allocations.map((row) => row.id),
-        expected: money(expectedCost),
-        actual: movement.movementCost ?? 'null',
+        expected: costLabel(expectedCost),
+        actual: costLabel(
+          requireCostValue(movement.movementExactCost, movement.movementCost),
+        ),
       })
     }
     const mismatched = allocations.filter(
@@ -366,16 +458,22 @@ export function reconcileInventoryLedger(input: ReconciliationInput) {
       })
     }
     if (
-      reversal.movementCost === null ||
-      asMoney(reversal.movementCost) !== asMoney(reversal.restoredCost)
+      !costEquals(
+        requireCostValue(reversal.movementExactCost, reversal.movementCost),
+        requireCostValue(reversal.exactCost, reversal.restoredCost),
+      )
     ) {
       divergences.push({
         code: 'reversal_movement_cost_mismatch',
         entityType: 'reversal',
         entityId: reversal.id,
         relatedIds: [reversal.allocationId, reversal.incomingMovementId],
-        expected: reversal.restoredCost,
-        actual: reversal.movementCost ?? 'null',
+        expected: costLabel(
+          requireCostValue(reversal.exactCost, reversal.restoredCost),
+        ),
+        actual: costLabel(
+          requireCostValue(reversal.movementExactCost, reversal.movementCost),
+        ),
       })
     }
     if (allocation && allocation.productId !== reversal.movementProductId) {

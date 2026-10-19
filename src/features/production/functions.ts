@@ -1016,6 +1016,7 @@ export const getProductionBatch = createServerFn({ method: 'GET' })
                   productId: inventoryCostLayers.productId,
                   originalQuantity: inventoryCostLayers.originalQuantity,
                   originalCost: inventoryCostLayers.originalCost,
+                  exactOriginalCost: inventoryCostLayers.exactOriginalCost,
                 })
                 .from(inventoryCostLayers)
                 .where(
@@ -1028,6 +1029,7 @@ export const getProductionBatch = createServerFn({ method: 'GET' })
           batch.totalCost,
           outputs,
           layers,
+          batch.exactCost,
         )
       } catch (error) {
         if (!isMissingOptionalSchemaError(error)) throw error
