@@ -10,7 +10,9 @@ permissões, versões e auditoria. Não refazer incrementos já publicados.
 Não há compras ou produção previstas; testes sintéticos somente locais.
 Sem autorização para produção principal, secrets, fatos fictícios no HML,
 limpeza, alterações de regra financeira ou reuso de referências consumidas.
-A tarefa não exige migration nem gravação em dados compartilhados.
+Concluído no código dc0a37b, Worker HML97ffb52e a100%. A tarefa não exigiu
+migration nem gravação em dados compartilhados; tela autenticada e hashes
+antes/depois conferidos. Recibo `evidence/scenario-ux-hml-2026-10-19.json`.
 
 
 ## Recebimentos, lucro e usabilidade — 18/10/2026

@@ -60,10 +60,13 @@ Lista completa e evidência:
       `29df3f6d-48be-4a80-b11c-a3c2b992cd69`, 100%; filtros e modais
       autenticados conferidos, contagens/digests do banco preservados.
 - [ ] Conferir CI/CodeQL remoto de `e890e3d` na integração GitHub.
-- [ ] Publicar e conferir simplificação de Cenários: resumo conjunto,
+- [x] Publicar e conferir simplificação de Cenários: resumo conjunto,
       detalhes expansíveis, editor modal com prévia, confirmação motivada de
       lifecycle. 529 testes e cinco ensaios locais aprovados; sem migration.
-      Execução única autorizada pelo heartbeat de 19/10 às 02:33 Brasília.
+      Execução única de 19/10 às02:33 concluída. Código dc0a37b, Worker
+      97ffb52e a100%; CI/CodeQL aprovados, zero alertas. Sessão autenticada
+      conferida; contagens e digests do banco preservados. Recibo:
+      `evidence/scenario-ux-hml-2026-10-19.json`.
 - [ ] Depois, revisar Compras/Produção sem mudar regras de domínio.
 
 Escopo e validação: `PRODUCT-CATALOG-UX-2026-10-18.md`.

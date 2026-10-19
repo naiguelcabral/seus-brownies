@@ -1,14 +1,24 @@
 # Estado canônico do projeto — Cacau v1
 
-## Metas e cenários simplificados — preparação em 19/10/2026
+## Metas e cenários publicados — 19/10/2026
 
-Execução única do heartbeat das 02:33 Brasília. Resumo do cenário ativo com
-meta conjunta, custos e projeção; detalhes expansíveis, histórico em largura
-integral, cadastro/edição em modal com prévia normalizada e confirmações
-motivadas de lifecycle. Backend, regras e dados preservados; sem migration.
-529 testes Node e cinco ensaios locais de navegador aprovados. Publicação e
-conferência HML ainda pendentes neste checkpoint. Detalhes:
-[SCENARIO-UX-HML-2026-10-19.md](SCENARIO-UX-HML-2026-10-19.md).
+Execução única do heartbeat das 02:33 Brasília concluída. Incremento364a1c1,
+com fixture corrigida emdc0a37b, publicado no `cacau-v1-hml`: versão
+`97ffb52e-9ea5-4dff-a1a9-01738724e26c`, 100% de tráfego, às02:47 Brasília.
+Resumo da meta conjunta, detalhes expansíveis, histórico em largura integral,
+editor modal com prévia normalizada e confirmação motivada de lifecycle.
+529 testes Node, cinco ensaios de navegador, lint/tipos/formatação/Knip e build
+isolado aprovados; CI39206192382 e CodeQL39206192124 aprovados, zero resultados
+nas três análises e zero alertas abertos. Tela autenticada conferida: cadastro
+vazio e confirmação abertos/cancelados sem gravação; mix101% usado em100%.
+Contagens e digests de cenários, mix, histórico, auditoria operacional e fatos
+operacionais idênticos antes/depois. Dois cenários,33 itens de mix, quatro
+históricos,178 eventos de auditoria e zero fatos de compra/produção/venda/
+despesa/financeiro/estoque. Sem migration ou escrita em dados compartilhados.
+Detalhes: [SCENARIO-UX-HML-2026-10-19.md](SCENARIO-UX-HML-2026-10-19.md).
+Recibo: `evidence/scenario-ux-hml-2026-10-19.json`.
+A próxima revisão de Compras/Produção é uma tarefa separada; esta retomada
+programada executou somente a simplificação de Cenários.
 
 
 ## Recebimentos, lucro e modais publicados — 18/10/2026

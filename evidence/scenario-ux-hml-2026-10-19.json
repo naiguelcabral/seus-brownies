@@ -1,0 +1,191 @@
+{
+  "task": "Simplificar Metas e cenários",
+  "automationId": "retomar-cacau-s-02h33",
+  "oneOff": true,
+  "date": "2026-10-19",
+  "timezone": "America/Sao_Paulo",
+  "branch": "feat/input-catalog-kg-purchases",
+  "implementationCommit": "364a1c1d32209f771135ceb464697e5bc109ac44",
+  "publishedCommit": "dc0a37b01d9fa5bac54013e2316484cbc9e00b6f",
+  "target": "cacau-v1-hml",
+  "url": "https://cacau-v1-hml.naiguelcabral.workers.dev/cenarios?page=1",
+  "deployment": {
+    "id": "04486dee-ad77-4f2a-ad6d-cd4e81da130c",
+    "created_on": "2026-10-19T05:47:57.68287Z",
+    "versions": [
+      {
+        "version_id": "97ffb52e-9ea5-4dff-a1a9-01738724e26c",
+        "percentage": 100
+      }
+    ]
+  },
+  "checks": {
+    "node": {
+      "passed": 529
+    },
+    "browser": {
+      "passed": 5,
+      "config": "playwright.scenario-ux.config.ts",
+      "environment": "local isolated synthetic fixture; no app configuration or database"
+    },
+    "lint": "passed",
+    "typecheck": "passed",
+    "format": "passed",
+    "knip": {
+      "new": 0,
+      "existingBaseline": 3
+    },
+    "isolatedBuild": "passed",
+    "ci": {
+      "id": 39206192382,
+      "conclusion": "success"
+    },
+    "codeql": {
+      "id": 39206192124,
+      "conclusion": "success",
+      "results": 0,
+      "openAlerts": 0,
+      "analyses": [
+        1978425415,
+        1978424483,
+        1978424464
+      ]
+    }
+  },
+  "hmlVerification": {
+    "authenticated": true,
+    "newEditorOpenedBlankAndClosedWithoutSaving": true,
+    "versionConfirmationOpenedAndCancelled": true,
+    "originalMixTotal": "101.00%",
+    "normalizedMixTotal": "100.00%",
+    "monthlyProfitGoal": "10000.00",
+    "fixedMonthlyCosts": "2288.00",
+    "syntheticFactsCreated": false,
+    "schemaChanges": false,
+    "sharedDataWrites": false,
+    "productionChanged": false,
+    "dbBefore": [
+      {
+        "name": "scenarios",
+        "count": 2,
+        "digest": "5665846c6dfac030fe0150fea6673e18"
+      },
+      {
+        "name": "mix",
+        "count": 33,
+        "digest": "cd84f31fab7930f3b0850cea70d73867"
+      },
+      {
+        "name": "history",
+        "count": 4,
+        "digest": "a1b1c720f74717729599856d591b7f58"
+      },
+      {
+        "name": "purchases",
+        "count": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "name": "sales",
+        "count": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "name": "production_batches",
+        "count": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "name": "expenses",
+        "count": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "name": "financial_events",
+        "count": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "name": "stock_movements",
+        "count": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "name": "operational_audit",
+        "count": 178,
+        "digest": "fc4f89ebda9e5cd98480f05e170cf9d1"
+      }
+    ],
+    "dbAfter": [
+      {
+        "name": "scenarios",
+        "count": 2,
+        "digest": "5665846c6dfac030fe0150fea6673e18"
+      },
+      {
+        "name": "mix",
+        "count": 33,
+        "digest": "cd84f31fab7930f3b0850cea70d73867"
+      },
+      {
+        "name": "history",
+        "count": 4,
+        "digest": "a1b1c720f74717729599856d591b7f58"
+      },
+      {
+        "name": "purchases",
+        "count": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "name": "sales",
+        "count": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "name": "production_batches",
+        "count": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "name": "expenses",
+        "count": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "name": "financial_events",
+        "count": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "name": "stock_movements",
+        "count": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "name": "operational_audit",
+        "count": 178,
+        "digest": "fc4f89ebda9e5cd98480f05e170cf9d1"
+      }
+    ],
+    "dbUnchanged": true
+  },
+  "screenshots": [
+    "/tmp/cacau-scenarios-ux-hml.png",
+    "/tmp/cacau-scenario-modal-hml.png"
+  ],
+  "limits": [
+    "No shared scenario was saved, cloned, activated or archived during QA; mutations were exercised locally with synthetic callbacks.",
+    "Browser fixture covers presentation and interaction; existing Node suite covers financial/lifecycle/server authorization contracts.",
+    "CI first identified a nullable root in the fixture; corrected in the published commit and gates rerun successfully."
+  ],
+  "capacityCheckpoint": {
+    "primaryRemainingPercent": 77,
+    "weeklyRemainingPercent": 23,
+    "reservePercent": 5
+  },
+  "screenshotSha256": {
+    "/tmp/cacau-scenarios-ux-hml.png": "ffd5bcf64d0691da74fd3a57f1888757158f0d13e864ceed4ded497d6725c716",
+    "/tmp/cacau-scenario-modal-hml.png": "bdea1320b04008d482c20baf09429527d62275ac4f826633a4481ba2889f16a4"
+  }
+}

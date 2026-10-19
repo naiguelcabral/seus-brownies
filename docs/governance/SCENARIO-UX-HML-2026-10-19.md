@@ -3,7 +3,13 @@
 Execução única autorizada pelo heartbeat `retomar-cacau-s-02h33`, às 02:33
 Brasília. Branch `feat/input-catalog-kg-purchases`, base `96642c0`.
 
-## Entrega preparada
+## Entrega publicada
+
+Código `dc0a37b01d9fa5bac54013e2316484cbc9e00b6f` (incremento `364a1c1`),
+publicado às02:47 Brasília no `cacau-v1-hml`, versão
+`97ffb52e-9ea5-4dff-a1a9-01738724e26c` com100% de tráfego. Produção principal
+não alterada. Recibo: `evidence/scenario-ux-hml-2026-10-19.json`.
+
 
 - Cenário ativo primeiro, com meta conjunta após custos, orçamento fixo,
   faturamento-alvo e lucro projetado. Quando a reserva é zero, os títulos
@@ -48,8 +54,24 @@ Não há cota obrigatória para Bordinhas ou qualquer produto.
 - Antes da publicação, leitura independente do HML confirmou dois cenários,
   33 linhas de mix, quatro eventos de histórico, 178 eventos operacionais e
   zero compras/vendas/lotes/despesas/fatos financeiros/movimentos.
-- Build isolado, CI/CodeQL, publicação e conferência autenticada pendentes
-  neste checkpoint. Evidência final será acrescentada após execução.
+- Build HML isolado do HEAD corrigido aprovado. CI39206192382 e
+  CodeQL39206192124 aprovados; análises1978425415 (JS/TS),1978424483 (Actions)
+  e1978424464 (Python) sem resultados, sem erros e zero alertas abertos.
+  A primeira CI identificou raiz DOM nullable na fixture; corrigida com
+  guarda explícita no commit publicado e gates repetidos com sucesso.
+- Sessão autenticada HML: novo editor vazio e confirmação de nova versão
+  abertos e cancelados, sem salvar nem preencher fatos sintéticos. Resumo
+  e disclosure conferidos; mix informado101% normalizado em100% preservado.
+- Leitura independente depois da conferência confirmou contagens e digests
+  idênticos em cenários/mix/histórico/auditoria operacional e nas seis tabelas
+  operacionais. Os dois cenários e quatro históricos permaneceram intactos.
+- Capturas locais: `/tmp/cacau-scenarios-ux-hml.png` e
+  `/tmp/cacau-scenario-modal-hml.png`. Mutações e falhas foram ensaiadas somente
+  com callbacks sintéticos na fixture e pela suíte de contratos existente,
+  sem criar operações fictícias no HML.
+
+Não há pendência humana desta entrega. A revisão posterior de Compras/Produção
+permanece no roadmap como tarefa separada, fora desta execução única.
 
 Rollback de interface: republicar o código HML anterior `41820ba` no alvo
 HML, sem restaurar banco nem aplicar/reverter migrations.
