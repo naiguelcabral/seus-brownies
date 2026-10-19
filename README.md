@@ -9,9 +9,9 @@ histórico auditável.
 
 ## Atualizações e estado atual
 
-O [balanço de atualizações e pendências](docs/governance/ATUALIZACOES-E-PENDENCIAS-2026-10-17.md)
-registra TypeScript 7/Oxc nesta branch, a main ainda na ferramenta anterior,
-a reconciliação da PR de Knip/CodeQL e as validações necessárias.
+O [roadmap único](docs/governance/ROADMAP-CODEX.md) reúne as entregas
+concluídas, as pendências atuais e a ordem recomendada. Levantamentos datados
+permanecem como evidência histórica, sem funcionar como filas paralelas.
 Use Node 22.23.2 (`.nvmrc`) e `npm ci`. Os comandos atuais são `npm run lint`,
 `npm run typecheck` e `npm run check`; lint e formatação usam Oxlint/Oxfmt.
 Para builds de validação, siga o
@@ -22,13 +22,11 @@ completo e `npm run knip:check` aplica o gate da baseline revisável na CI.
 CodeQL analisa JS/TS, Python e GitHub Actions. Veja
 [cobertura, achados e procedimentos](docs/governance/KNIP-CODEQL.md).
 
-Na original `production` / `neondb`, foram cadastrados em 17/10/2026 apenas
-os 17 produtos de venda `PROD001–PROD017`, com recibo
-`CATALOG-SALES-2026-10-17-001` consumido. Insumos, receita, perfis, histórico e
-estoque não foram carregados nessa operação. Os relatos abaixo de cargas e
-homologações em development são históricos e não descrevem essa base atual.
-A correção local da perda aparente de sessão por erro 429 aguarda autorização
-específica de publicação HML e validação humana.
+O HML já possui catálogo, insumos, receita-base versionada, perfis e cenário
+ativo. Custos exatos, recebimentos/lucro e as revisões de usabilidade foram
+publicados; não há compras ou lotes reais previstos nem fatos fictícios
+registrados para demonstração. A integração à main, a homologação completa
+por perfil e a liberação definitiva são etapas separadas no roadmap.
 
 ## Executar localmente
 

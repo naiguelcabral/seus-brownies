@@ -1,5 +1,10 @@
 # Estado canônico do projeto — Cacau v1
 
+O [roadmap único](ROADMAP-CODEX.md) foi consolidado em 19/10/2026 e é a fonte
+atual de tarefas, prioridades e critérios de conclusão. Os checkpoints de
+publicação abaixo preservam o estado comprovado de cada entrega; suas
+próximas etapas históricas não substituem o roadmap atualizado.
+
 ## Compras e Produção publicados — 19/10/2026
 
 Revisão de UX a76c37c publicada às03:01 Brasília no `cacau-v1-hml`, versão

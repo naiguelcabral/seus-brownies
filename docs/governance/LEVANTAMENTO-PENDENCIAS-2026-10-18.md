@@ -1,5 +1,9 @@
 # Levantamento consolidado de pendências — Cacau v1
 
+> **Registro histórico, não é uma fila ativa.** Consolidado em 19/10/2026 no
+> [roadmap único](ROADMAP-CODEX.md). As pendências e contagens abaixo retratam
+> a data da análise; não reabrem entregas comprovadas posteriormente.
+
 Checkpoint posterior O01–O04: catálogo técnico autorizado, ensaiado e cadastrado
 na original em 18/10/2026, incluindo Ovos Grandes, receita de sete linhas/8
 ovos, dois requisitos/tarifas, 17 perfis, 14 embalagens e 12 recheios.

@@ -1,5 +1,9 @@
 # Atualizações de linguagens, ferramentas e procedimentos
 
+> **Registro histórico, não é uma fila ativa.** Consolidado em 19/10/2026 no
+> [roadmap único](ROADMAP-CODEX.md). As pendências e contagens abaixo retratam
+> a data da análise; não reabrem entregas comprovadas posteriormente.
+
 Registro histórico do diagnóstico anterior à integração Knip/CodeQL.
 A implantação das ferramentas e a revisão das 48 ocorrências estão em
 [KNIP-CODEQL.md](KNIP-CODEQL.md); consulte o

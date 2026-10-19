@@ -1,759 +1,185 @@
-# Roadmap executável para Codex — Cacau v1
-
-## Próxima entrega autorizada — recebimentos e lucro, 18/10/2026
-
-- [x] Implementar recebimento integral por meio com taxa preservada e replay seguro.
-- [x] Classificar despesas sem duplicar custos já apropriados nos lotes.
-- [x] Mostrar lucro conjunto de todos os produtos e progresso da meta no painel.
-- [x] Aplicar modais a Compras, Produção, Vendas e Despesas.
-- [x] Ensaiar fluxo completo com dados sintéticos em PostgreSQL17 isolado;
-      ensaiar migration aditiva na cópia privada e navegador local/celular.
-- [x] Concluir gates, publicar e conferir HML sem fatos sintéticos.
-      Versão12776985,36 recibos,529 testes/CI/CodeQL aprovados; sessão
-      autenticada e data de Brasília conferidas. Recibo de execução versionado.
-
-
-
-## Anexo integral relido — 18/10/2026
-
-- [x] Ler as 15 abas e reconciliar fonte anexada, estrutura e números.
-      Quatro locais no anexo; removida apenas PATRÍCIA em relação ao anterior.
-- [x] Consolidar definições já aprovadas, evitando perguntar preços/receita
-      que constam da fonte ou decisões respondidas na conversa.
-- [x] Executar pacote técnico aditivo de materiais, Bordinhas variável,
-      revisão de cenário e ensaio antes da atualização HML autorizada.
-      Migrations0031/0032, vínculos e publicação HML concluídos no73ead0a;
-      cenário2/v2/rev2 ativo. Histórico e auditoria preservados.
-- [x] Taxas informadas fora da fonte: MEI R$ 88 adicional (fixos R$ 2.288),
-      débito 1,43%, crédito 3,36%, Pix R$ 0,49/transação; combinação varia
-      por local. Preparar representação por meio, sem média universal.
-- [x] Base física esclarecida: 850 g frios por receita de oito ovos;
-      rendimentos confirmados por corte. Implementar recuperação variável
-      apontada por lote e rateio sem duplicação; não pedir sobra fixa.
-      Fluxo implementado/testado/publicado; ensaios locais sem fatos sintéticos
-      no HML. Ver `COST-RECOVERY-FEES-HML-2026-10-18.md`.
-
-Lista completa e evidência:
-`ATTACHED-WORKBOOK-COMPLETE-REVIEW-2026-10-18.md`.
-
-
-## Usabilidade priorizada antes das tarifas — 18/10/2026
-
-- [x] Estruturar Visão geral com indicadores navegáveis, reposição, atalhos,
-      datas/situação dos registros e estados vazio/carregamento/erro.
-      Mês das despesas em Brasília com dois limites; 509 testes e quatro
-      cenários locais de dashboard aprovados. Sem escrita compartilhada.
-- [x] Validar build isolado do dashboard (`bae3fa1`).
-- [x] Publicar dashboard e modal no HML sob autorização explícita: versão
-      `3790b237-6f04-4c9a-aa5b-6c8425d20270`, confirmada a 100%; conferir
-      dashboard autenticado e abrir/cancelar o modal sem criar registros.
-- [x] Produtos: botão Adicionar produto, editor modal acessível para cadastro
-      e edição, lista em largura total, campos opcionais agrupados, preservação
-      em erro e confirmação de descarte. 507 testes e cinco ensaios locais
-      de navegador passaram; sem dados reais modificados.
-- [x] Validar build isolado de CI do incremento (`8b39b67`).
-- [x] Receber autorização e publicar o incremento no HML; nenhuma publicação
-      de produção. Banco conferido antes/depois em READ ONLY; sem migration.
-- [x] Categorias/Locais: lista em largura total, modal de cadastro/edição,
-      filtros e limpeza; 13 ensaios de navegador, incluindo Produtos.
-- [x] Publicar e conferir Categorias/Locais no HML autorizado: versão
-      `29df3f6d-48be-4a80-b11c-a3c2b992cd69`, 100%; filtros e modais
-      autenticados conferidos, contagens/digests do banco preservados.
-- [ ] Conferir CI/CodeQL remoto de `e890e3d` na integração GitHub.
-- [x] Publicar e conferir simplificação de Cenários: resumo conjunto,
-      detalhes expansíveis, editor modal com prévia, confirmação motivada de
-      lifecycle. 529 testes e cinco ensaios locais aprovados; sem migration.
-      Execução única de 19/10 às02:33 concluída. Código dc0a37b, Worker
-      97ffb52e a100%; CI/CodeQL aprovados, zero alertas. Sessão autenticada
-      conferida; contagens e digests do banco preservados. Recibo:
-      `evidence/scenario-ux-hml-2026-10-19.json`.
-- [x] Publicar/conferir revisão de Compras/Produção autorizada em19/10:
-      resumo e unidades da compra, opcionais agrupados, prévia invalidada,
-      reset de custos no novo lote e auditoria em modal. Código a76c37c,
-      Worker6bc5bd55 a100%; 529 testes e15 ensaios locais aprovados, CI/CodeQL
-      sem achados novos. Sessão autenticada e21 digests do banco conferidos;
-      sem mudança de domínio/schema nem operações fictícias compartilhadas.
-      Ver `PURCHASE-PRODUCTION-UX-HML-2026-10-19.md`.
-
-Escopo e validação: `PRODUCT-CATALOG-UX-2026-10-18.md`.
-
-## Completude da fonte e ficha — revisão de 18/10/2026
-
-- [x] Auditar as 15 abas do workbook e confrontar cadastros/parametrização
-      com a original atual em READ ONLY; registrar evidência e células.
-- [~] W01–W05: adesivo confirmado para os 14 brownies; diária/energia
-      incluídas nos R$ 2.200; Bordinhas 100 g/R$ 6 com saquinho e adesivo;
-      Melken 50% em pó e recheios comprados prontos definidos. Bombom com cerca
-      de 50 g de cobertura e Kit quatro unidades sem embalagem individual,
-      um adesivo por apresentação. Falta rateio de Bordinhas e aplicação aditiva
-      ensaiada das definições físicas; não declarar fichas/custos homologados.
-      O cadastro aprovado anterior continua aplicado e seu recibo consumido.
-      Alias histórico de fruta/recheio continua ressalvado.
-- [ ] Após decisões, preparar pacote aditivo separado com ensaio e nova
-      referência; não repetir a carga técnica nem inventar consumo por custo.
-- [x] Mix 103%: cenário ID 1/v1/rev1 criado como rascunho pela sessão do Dono;
-      17 produtos associados aos IDs reais, normalização exata 100%, payload
-      e projeção validados; readback independente, histórico e auditoria
-      conferidos. Workbook preservado e nenhuma ativação.
-      Ver `SCENARIO-MIX-DRAFT-2026-10-18.md`.
-- [~] Reconciliar markup/margem, custos, parâmetros operacionais ausentes
-      e decisão de corte/histórico antes do QA e homologação de cenário.
-
-Revisão de custos escolhida pelo usuário, antes de ativar: comparação dos
-17 SKUs preparada sem aplicação. MO e energia confirmadas nos R$ 2.200 fixos;
-comparação sem duplicidade preparada, com capacidade parcial de 58,625 receitas
-só em brownies; com Bombom/Kit, 61,495. Sensibilidade de taxas e procedimento
-de pesagem preparados. Faltam rateio de Bordinhas e taxas reais.
-Ver `SCENARIO-READINESS-2026-10-18.md`.
-Ver `SCENARIO-BUDGET-COMPARISON-2026-10-18.md` e
-`SCENARIO-COST-RECONCILIATION-2026-10-18.md`.
-
-Detalhes e prioridades: `WORKBOOK-COMPLETENESS-REVIEW-2026-10-18.md`.
-
-## Pendências reconciliadas — 18 de outubro de 2026
-
-Inventário completo e ordem de execução em
-[LEVANTAMENTO-PENDENCIAS-2026-10-18.md](LEVANTAMENTO-PENDENCIAS-2026-10-18.md).
-Ele distingue implementação, cadastro, homologação, integração e decisões;
-checkpoints antigos abaixo não devem reabrir carga/deploy já comprovados.
-
-- [~] **P0/C01:** custo exato e compra em kg pelo total implementados; 505
-      testes, PostgreSQL 17, CI/CodeQL e build aprovados. Sob aprovação humana,
-      nove colunas aplicadas na original, 33 recibos e preservação conferidos;
-      HML publicado em `2e649847-ec1b-4997-bf74-bcad310977f7`, a 100%.
-      Conferência HTTP/bundle passou após um 500 inicial recuperado; falta
-      homologação operacional autenticada em cenário autorizado. Sem backfill.
-- [x] O01/O02/O04 — cadastro autorizado na original: Ovos Grandes, receita
-      versionada de sete linhas/8 ovos, dois requisitos e duas tarifas.
-      Workbook revalidado; backup atual sem compute preservado. Ensaio e
-      aplicação do mesmo SQL passaram com leitura independente, 43 auditorias
-      e preservação das 38 tabelas/33 recibos. Referência consumida
-      `TECH-CATALOG-2026-10-18-001`; não repetir nem importar os 17 PLAN.
-- [~] O03 — cadastrados 17 perfis de referência, 14 embalagens e 12 recheios
-      aprovados; revisão posterior apontou adesivo sem consumo nos brownies e
-      acabamento indefinido de Bordinhas, além de bombom/kit. Fichas/custos
-      ainda precisam de decisões e homologação operacional. Cópia privada anterior reutilizada
-      após equivalência de dados/schema porque a quota recusou nova branch;
-      compute suspenso/idle. Ver `TECHNICAL-CATALOG-EXECUTION-PLAN-2026-10-18.md`.
-- [ ] Preparar estoque rastreável e cenário de QA; homologar acesso por papel,
-      compra → produção → venda, lifecycle financeiro e interface.
-- [ ] Integrar main/PRs, finalizar cadeia genérica da issue #36, cobertura de
-      auditoria, indicadores restantes, documentação e resiliência operacional.
-
-## Organização das guias — 18 de outubro de 2026
-
-- [x] Reordenar navegação pela preferência final do usuário: Visão geral,
-      Relatórios, Estoque, Metas e cenários; depois operação, finanças, plano
-      de ação, cadastros e parâmetros; preservar destinos e permissões.
-- [x] Conferir tipos, lint, formatação e diff da mudança de apresentação.
-- [x] Publicar em HML sob autorização de conclusão integral; versão
-      atualizada para `b60a9d12-12b1-4458-81b4-53edaf674730` a 100%, com
-      Relatórios em segundo conforme pedido posterior; conferir ordem dos links
-      no bundle servido, formulário público e redirecionamentos protegidos.
-- [ ] Conferência visual autenticada da navegação por perfil após login humano.
-
-## Insumos e compra em kg — 18 de outubro de 2026
-
-- [x] Conferir os 19 insumos físicos do workbook e receber autorização de carga
-      e conversão de compra em kg para estoque/consumo em g.
-- [x] Cadastrar `INS001–INS019`, dez aliases kg→g, recibo e 29 auditorias na
-      original; conferir em leitura independente. Referência consumida
-      `CATALOG-INPUTS-2026-10-18-001`; sem saldo ou histórico importado.
-- [x] Preparar seleção kg/g em Compras e conversão validada no servidor,
-      preservando valor total, origem e idempotência; 495 testes aprovados.
-- [x] Ensaiar SQL em PostgreSQL 17 descartável: sucesso, preservação,
-      repetição rejeitada e rollback por falha tardia.
-- [x] Publicar em HML e conferir os campos kg e conversão no bundle servido.
-- [ ] Homologação autenticada de compra em kg, estoque em g e consumo produtivo
-      em cenário autorizado. Nenhuma compra real foi criada por esta tarefa.
-
-## Knip e CodeQL em todo o projeto
-
-- [x] Reconciliar a proposta #45 sem substituir as regras atuais TypeScript/Oxc.
-- [x] Fixar Knip 6.41.0 em manifesto/lockfile e validar instalação limpa.
-- [x] Cobrir aplicação, testes, E2E, scripts e configs estaticamente; provar
-      que configs perigosas não são executadas durante o diagnóstico.
-- [x] Registrar 48 ocorrências e instalar gate contra novos achados/retornos;
-      preservar o relatório integral e rejeitar falha/JSON inválido da ferramenta.
-- [x] Configurar CodeQL JS/TS, Python e Actions, consultas ampliadas e token mínimo.
-- [x] Concluir 492 testes, tipos/lint/check, build isolado e gate Knip; publicar
-      branch e conferir CI `39088191790`/CodeQL `39088191746` em `a96a0f9`.
-- [x] Corrigir os oito alertas iniciais sem supressões; confirmar zero alertas
-      abertos/resultados nas três linguagens e PostgreSQL descartável aprovado.
-- [x] Triar as 48 ocorrências Knip: 45 resolvidas (10 arquivos, sete dependências,
-      21 exports internos e sete declarações sem uso); três referências mantidas
-      com justificativa individual, sem ampliar ignores ou remover testes.
-- [x] Conferir revisão `00ae5be`: 492 testes, tipos/lint/check, instalação limpa,
-      build isolado, CI `39089405535`, CodeQL `39089405457`; API confirmou
-      zero resultados por linguagem e zero alertas abertos na branch.
-- [ ] Integrar main/PR #45 após revisão humana.
-
-Procedimento e limites: [KNIP-CODEQL.md](KNIP-CODEQL.md).
-
-## Reconciliação de linguagens e procedimentos — 17 de outubro de 2026
-
-- [x] Documentar catálogo aplicado e correção de sessão ainda local; distinguir
-      evidência local, main e HML sem promover estados por inferência.
-- [x] Conferir fetch, versões instaladas, lockfile, configurações e auditoria
-      npm (zero vulnerabilidades); TS 7/Oxc não integrado em main `32a9e11`.
-- [x] Inspecionar PR #45/CI: passos Oxc/Knip e CodeQL passaram; identificar
-      divergências de regras, scripts e ausência de lockfile para as ferramentas.
-- [x] Atualizar README, status histórico, workflow e DoD para procedimentos atuais.
-- [x] Fixar Knip no lockfile, incorporar CodeQL e triar os resultados na branch;
-      configuração tipada Oxc preservada. Evidências no checkpoint acima.
-- [ ] Reconciliar TS 7/segurança/contratos com main e a PR #45 após revisão humana.
-- [ ] Atualizar o prompt ativo Prettier do piloto e sua matriz; testar controlador.
-- [ ] Declarar/validar Python suportado na CI e confirmar extensão Oxc no editor.
-- [x] Obter CI remota própria da branch, inclusive código da correção de sessão.
-- [ ] Homologar sessão/navegação após publicação HML especificamente autorizada.
-      CI/build local não comprovam login humano no ambiente publicado.
-
-Inventário: [ATUALIZACOES-E-PENDENCIAS-2026-10-17.md](ATUALIZACOES-E-PENDENCIAS-2026-10-17.md).
-
-## Sessão ao abrir Estoque — 17 de outubro de 2026
-
-- [x] Correlacionar login `success` com 429 no minting do cookie de sessão;
-      confirmar que o formulário HML continua disponível.
-- [x] Preparar leitura única de identidade/papel e distinguir erro temporário
-      de sessão anônima; testar isolamento, revogação, 401 e falhas 429/5xx/rede.
-- [x] Concluir suíte completa (489 testes), tipos, lint, formatação e build
-      HML isolado de `899f7ec` com chave pública de teste; revisão concluída.
-- [ ] Autorizar/publicar exclusivamente em HML e validar login → Estoque →
-      recarga na sessão humana. Redução de chamadas não prova fim do limite 429.
-
-## Catálogo de venda — 17 de outubro de 2026
-
-- [x] Analisar workbook disponível, regras e manifestos; identificar os 17
-      produtos finais e separar insumos/histórico do escopo de venda.
-- [x] Receber solicitação explícita de cadastro na base atual; reconfirmar
-      original, catálogo vazio e ausência de recibos.
-- [x] Cadastrar `PROD001–PROD017` e quatro categorias da fonte atomicamente,
-      preservando a categoria `Bombons`; gravar recibo único e 17 auditorias.
-- [x] Conferir após commit os 17 SKUs/nomes/preços/categorias/atividade.
-      Referência consumida `CATALOG-SALES-2026-10-17-001`; recibos em `evidence/`.
-- [ ] Confirmar visualização na sessão autenticada. Insumos, receitas, perfis,
-      estoque e histórico continuam fora desta carga; nenhuma produção real criada.
-
-## Correção do schema do painel — 17 de outubro de 2026
-
-- [x] Aprovar valores/plano; Neon recusou snapshot novo pelo limite do projeto.
-- [x] Preservar snapshot antigo e preparar backup atual em branch sem compute.
-- [x] Migrar cópia derivada e validar 31 recibos, 38 consultas, preservação dos
-      dados e catálogo idêntico ao laboratório. Original permanece em `0016`.
-- [x] Receber aceite específico do backup em branch no lugar do snapshot novo.
-- [x] Aplicar na original após aceite; conferir 31 recibos, catálogo e 38
-      consultas, preservando os dados, Dono/Gerente, endpoints e auditoria.
-
-- [x] Preparar atualização delimitada `0016–0028`, preservando hashes originais
-      e acessos recém-concedidos, sem tocar na cadeia ativa.
-- [x] Validar 481 testes, 26 cenários anteriores e cinco novos PostgreSQL 17;
-      todas as 38 tabelas ORM consultáveis, catálogo equivalente e rollback.
-- [x] Preparar payload de 102 instruções e plano de cópia/restore isolado.
-- [x] Aprovar valores iniciais `0019`, mix novo vazio `0028` e plano condicional;
-      a troca do método de backup está pendente conforme checkpoint acima.
-- [x] Executar ensaio externo e atualizar original sob a aprovação condicional.
-- [ ] Confirmar painel e acesso por papel; homologações comerciais continuam
-      tarefas próprias, sem operações sintéticas no banco compartilhado.
-
-## Liberação de Gerente — 17 de outubro de 2026
-
-- [x] Publicar diagnóstico autorizado e atestar Auth em G1, diferente da
-      original; localizar as duas identidades verificadas e vínculos de origem.
-- [x] Correlacionar reset real com auditoria SQL na original, sem vínculos
-      das contas; causa da negação de acesso comprovada.
-- [x] Desativar diagnóstico; final `1ea59a90`, 100%, zero vars temporárias.
-- [x] Preparar SQL transacional e validar quatro cenários descartáveis.
-- [x] Autorizar e executar concessão Dono/Gerente na original, após revalidar
-      origem/alvo: dois vínculos ativos e dois eventos auditáveis confirmados.
-- [x] Executar plano aprovado atomicamente e conferir em transação READ ONLY.
-- [ ] Validar novo login/acesso de cada papel na interface; painel tem
-      dependência comprovada de `sales.delivered_at`, ausente até `0016`.
-      Schema atualizado até `0028`; compatibilidade ORM passou. Confirmação
-      do painel protegido na sessão humana permanece pendente.
-
-- [x] Recebimento do e-mail e troca da senha confirmados pelo usuário.
-- [x] Registrar solicitação explícita de papel Gerente, sem ampliar para Dono.
-- [x] Consultar somente a identidade indicada no alvo original sob READ ONLY:
-      nenhuma correspondência; zero vínculos de acesso na aplicação.
-- [x] Confirmar os dois e-mails e papéis com o usuário; buscas direcionadas
-      na original/cópia sem correspondências, ausência não explicada por RLS.
-- [x] Confirmar URL HML e preparar diagnóstico booleano temporário, sem
-      endpoint novo e sem exposição de bindings; validações locais aprovadas.
-- [x] Autorizar publicação/ativação delimitada HML e atestar destino efetivo.
-- [x] Conciliar destino efetivo e confirmar as duas identidades verificadas;
-      concessão no banco original permanece gate separado.
-- [ ] Confirmar acesso pela interface após eventual concessão. Diagnóstico
-      SQL continua restrito a `access:manage`, que Gerente não possui.
-
-## Recuperação do restore — 17 de outubro de 2026
-
-- [x] Recuperar endpoints/nomes/default após consentimento corretivo explícito;
-      Auth original/JWKS e isolamento da cópia reconfirmados.
-- [x] Snapshot, ensaio na cópia e aplicação autorizada de `0000–0016` na
-      original: 17 recibos conferidos, catálogo gerenciado preservado.
-- [x] Confirmar lifecycle da solicitação real: provedor aceitou e auditoria
-      concluiu às `18:31:53.931Z`.
-- [ ] Confirmar recebimento/troca pelo usuário; nenhum vínculo de usuário ou
-      `0017+` criado/aplicado nesse pacote.
-
-## Recuperação de acesso HML — 17 de outubro de 2026
-
-- [x] Identificar novo bloqueio: três falhas na auditoria inicial, sem chamada
-      ao provedor após correção de callback/origem.
-- [x] Validar/publicar diagnóstico sanitizado do código do driver, mediante
-      autorização: `f168418a`, 100% HML, 476 testes e build aprovados.
-- [x] Renovar franquia e correlacionar nova tentativa: `42P01` na auditoria.
-- [x] Executar catálogo mínimo READ ONLY após aprovação da exceção M45:
-      três tabelas auth e journal ausentes, sem correspondência em outro schema.
-- [x] Executar inventário ampliado autorizado: nenhuma relação de aplicação
-      nos tipos consultados e enums auth ausentes; preparar baseline canônica.
-- [x] Validar localmente `0000–0016`: journal, reset auditado, reaplicação,
-      rollback e preservação de schema gerenciado em PostgreSQL 17 descartável.
-- [ ] Aprovar snapshot, restauração em cópia privada e inicialização canônica
-      do alvo original somente se o ensaio passar, conforme plano dedicado.
-      `0017–0028` e vínculo do primeiro Dono continuam fora desse pacote.
-
-- [x] Confirmar relato de reset e inspecionar configuração sem credenciais/SQL.
-- [x] Corrigir localmente origem de callback HML e cobrir configuração real.
-- [x] Autorizar/publicar a correção HML (`9ec9856d`, 100%) e incluir origem
-      HTTPS exata no Neon Auth da branch declarada `production`, preservando
-      os demais bindings, origens e controles.
-- [ ] Receber mensagem exata do erro de login; validar entrega e recuperação
-      pelo usuário, preservando auditoria e sem compartilhar tokens/senha.
-      Detalhes em [HML-PASSWORD-RESET-2026-10-17.md](HML-PASSWORD-RESET-2026-10-17.md).
-
-## Diagnóstico SQL do Worker — 17 de outubro de 2026
-
-- [x] Concluir consentimento humano delimitado a `workers_scripts:write` e
-      publicar a fonte `ee5acec` em HML; versão `6b737c00`, 100% do tráfego,
-      secrets e observabilidade preservados. Flag ainda ausente.
-- [ ] Confirmar acesso autenticado à página, habilitar temporariamente,
-      executar o probe e desativar; navegador do agente está anônimo.
-
-Histórico:
-
-- [x] Obter autorização específica de publicação/teste temporário; revisar
-      fonte `0abf78b`, 474 testes e build HML isolado com chave pública real.
-- [x] Confirmar login OAuth e corrigir acesso ao chaveiro no deploy isolado.
-- [x] Preservar configuração remota de observabilidade de HML no deploy.
-- [!] API recusou publicação por falta de permissão OAuth de scripts.
-      Ampliação proposta com rotas foi rejeitada pela revisão automática;
-      obter consentimento delimitado e repetir publicação já autorizada.
-      Versão remota preservada, sem ativação do flag ou execução do probe.
-
-- [x] Preparar diagnóstico manual protegido, sem dados de negócio, com
-      SELECT 1 em READ ONLY, rollback e fechamento do cliente.
-- [ ] Publicar, ativar temporariamente e executar no Worker conforme
-      autorização já registrada. Correlacionar versão ativa e atestação privada;
-      não inferir destino/schema ou liberação das migrations pelo SELECT 1.
-      Runbook: [SQL-CONNECTION-DIAGNOSTIC.md](SQL-CONNECTION-DIAGNOSTIC.md).
-
-## Alvo informado — 17 de outubro de 2026
-
-- [x] Registrar declaração do usuário: Worker → `steep-brook-51659857` /
-      `br-lingering-wind-acwh5wap`; confirmar branch principal `production`
-      e associação do JWKS/Neon Auth ao banco `neondb` por metadados MCP.
-- [!] Propor auditoria somente leitura delimitada para esse alvo; falta prova
-      de ACLs, schema/journal, recuperação e abrangência. Não aplicar reparo,
-      presumir HML ou contornar coletores que recusam produção. Identificação
-      fornecida não é aprovação de mudança no banco.
-
-## Reparo isolado da 0017 — 17 de outubro de 2026
-
-- [x] Isolar candidatas até `0017`, sem aplicar SQLs `0018–0028`; validar
-      preservação, replay, idempotência e cada referência de produto usado.
-      Os 26 casos locais PostgreSQL 17 passaram, incluindo oito novos.
-      Suíte de 464 testes, tipos, lint, check e build CI isolado de `2e56e59`
-      aprovados; CI remota e integração permanecem pendentes.
-- [!] Cadeia ativa preservada; falta atestação Worker → banco, abrangência,
-      auditoria read-only do histórico e backup/restore. Metadados atuais
-      retornam cinco branches `archived`, apenas owner e zero snapshots.
-      Estado não comprova ausência de `0017+`. Próximo passo externo e proposta
-      em [MIGRATION-0017-ISOLATED-REPAIR.md](MIGRATION-0017-ISOLATED-REPAIR.md).
-
-## Segurança e melhorias — 16 de outubro de 2026
-
-- [x] Preparar pacote local de dependências corrigidas, com auditoria sem avisos,
-      compatibilidade TanStack, testes de regressão e build isolado aprovados.
-      Revisão/integração e homologação real continuam pendentes.
-- [x] Contratos opcionais exatos, acessos seguros a índices e regras adicionais
-      React implementados. Tipos/lint/check e regressões direcionadas aprovados;
-      463 testes, build HML isolado e smoke público com Chromium aprovados
-      em `072cea1`. Revisão/integração e homologação real continuam pendentes. Integridade e evidências preservadas.
-
-## Atualização TypeScript — 16 de outubro de 2026
-
-- [x] Concluir localmente a migração integral para TypeScript 7.0.2, removendo a API 6,
-      substituindo ESLint/Prettier por Oxlint/Oxfmt e verificando a resolução
-      única do compilador. Regras tipadas, Hooks, acessibilidade e testes de
-      contrato em `codex/typescript-7-upgrade`; instalação limpa, tipos, lint,
-      check Oxfmt, 456 testes e build isolado aprovados. Revisão/integração e
-      CI remota permanecem pendentes.
-
-## Reconciliação da PR #39 — 14 de outubro de 2026 UTC
-
-A PR #38 foi integrada em `b7a8dcf9` após CI `38492599540` e PostgreSQL
-`38492599488` aprovados no HEAD `50a0b4a7`. A #40 já integra a main.
-As PRs #4/#5 foram encerradas como redundantes: os HEADs são ancestrais da main.
-A #13 foi atualizada sem conflitos, mas mantém o risco documentado de herança
-do PAT por subprocessos. A #39 preserva as evidências de #38 e os formulários
-externos; seu merge depende da CI desta reconciliação. Nenhum gate de aplicação
-de migration, alteração financeira/histórica ou deploy foi encerrado.
-Os relatos anteriores abaixo são históricos e não substituem este checkpoint.
-
-## Reconciliação de merges — 14 de outubro de 2026 UTC
-
-A PR #40 já foi integrada em `3372cf64`. A PR #38 foi reconciliada com essa
-main preservando as duas séries de registros abaixo como histórico. Os conflitos
-eram apenas inserções documentais. Esta revisão autoriza integração do pacote
-de ferramentas e provas; a issue #36 e os gates externos continuam abertos.
-A cadeia ativa `drizzle/` permanece idêntica à main. Nenhuma migration persistente,
-backfill, mudança de credencial ou deploy foi executado.
-
-## Missão G3 — integração supervisionada, 13 de outubro de 2026
-
-- [x] Implementar clientes/adaptação MCP, IDs/fingerprints, read-only e dry-run.
-- [x] Implementar apply técnico com digest, conflitos, readback e checkpoint.
-- [x] Verificar criação real, repetição sem duplicação e dashboard de registros.
-- [x] Criar 33 testes de contratos com fixtures, sem serviço externo.
-- [x] Publicar branch/PR #40 em draft e confirmar testes, lint, tipos e build:
-      CI `38393316644` aprovada no checkpoint `2ffa130`; sem merge na main.
-- [!] Operação recorrente, adoção de registros manuais, HML/produção e migrations
-  não autorizadas por esta missão. Uso descrito em `PROJECT-SYNC.md`.
-
-## Revalidação #36 — 9 de outubro de 2026
-
-- `main` `1e5bd557` e PR #38 draft `eaf00fd` revalidadas; CI main e
-  quatro CIs da PR verdes. A cadeia ativa e as evidências anteriores foram preservadas.
-- API Neon reconfirmou dois projetos, cinco bases `neondb`, apenas
-  `neondb_owner`, endpoints `read_write`, sem snapshots registrados. CLI
-  autenticada permite selecionar role, mas falta acesso de auditoria aprovado.
-- MCP Cloudflare autenticado confirmou deployment `8268b409` e versão
-  `e241b715` ativa a 100%; `DATABASE_URL` é secreto e seu destino não foi lido.
-- Estado: `blocked` por acesso não gravável, abrangência externa e vínculo
-  Worker→database não comprovados. Nenhum SQL externo, migration ou deploy.
-- Evidência e itens mínimos para retomada:
-  [MIGRATION-CHAIN-SHARED-EVIDENCE.md](MIGRATION-CHAIN-SHARED-EVIDENCE.md).
-
-## Continuidade #36 — acesso externo ainda bloqueado
-
-Inventário de metadados ampliado: os cinco branches retornam somente
-`neondb_owner`; seus endpoints são `read_write`. O conector SQL não permite
-selecionar papel não gravável. Nenhuma consulta SQL externa foi realizada.
-A PR #38 inclui diagnóstico conservador de ACLs, provas apenas descartáveis
-e o roteiro [MIGRATION-CHAIN-SHARED-EVIDENCE.md](MIGRATION-CHAIN-SHARED-EVIDENCE.md).
-Acesso aprovado e vínculo Worker→database continuam requisitos para finalizar
-#36; não criar papéis/grants ou substituir a cadeia implicitamente.
-
-## Execução da tarefa #36 — candidatas e provas separadas
-
-[PR #38](https://github.com/naiguelcabral/seus-brownies/pull/38) aberta em draft.
-As três candidatas passaram em PostgreSQL 17 descartável, de `0016` e instalação
-vazia, no commit `32c0f4e5c78f324fc3be2bd8dcfe084ae2acd0ba`:
-[run 37961680179](https://github.com/naiguelcabral/seus-brownies/actions/runs/37961680179),
-16 casos aprovados, incluindo rollback, hashes/timestamps, catálogo real,
-reaplicação e invariantes. Comparação e limites em
-[MIGRATION-CHAIN-EXPERIMENTS-0016.md](MIGRATION-CHAIN-EXPERIMENTS-0016.md).
-A CI do SHA final da PR deve estar verde antes de sua revisão; não há merge automático.
-
-O inventário de metadados encontrou dois projetos Neon e cinco branches, mas
-históricos `0017+`, catálogos, papel estritamente não gravável e vínculo Worker→DB
-continuam não comprovados. Nenhum SQL externo foi executado. A substituição ativa
-permanece bloqueada; `drizzle/` continua intacto. Próxima dependência: completar
-essas evidências externas para avaliar a candidata de substituição preferida.
-Gates `0019` (finanças) e `0028` (cenários) permanecem decisões separadas.
-**HML, migrations, backfill e deploy seguem sem autorização.**
-
-## Gates de evidência — 9 de outubro de 2026
-
-Pacote separado em `codex/hml-migration-evidence-gates`: acesso mínimo,
-verificador sem conexão, atestação Worker e formulários 0019/0028 preparados.
-Histórico global, abrangência, backup/restore e vínculo publicado continuam
-pendentes. Não conclui a issue #36 nem substitui a PR #38. Detalhes em
-[HML-MIGRATION-EVIDENCE-GATES.md](HML-MIGRATION-EVIDENCE-GATES.md).
-
-## Prioridade de migrations — 9 de outubro de 2026
-
-- [x] Pacote preparatório #35 revisado/corrigido e integrado em `a542ec7`;
-      CI de PR/push verde em `10e62c26` e CI pós-merge `37944260848` verde no
-      merge SHA. Migrations, snapshots e journal preservados.
-- [x] Comparar/provar candidatas na tarefa separada #36 e abrir PR #38; conforme
-      `MIGRATION-CHAIN-REPAIR-0016.md`, e criar PR corretiva própria.
-- [!] Substituição da cadeia pendente: aguarda comprovação de ausência de
-  `0017+` em todas as bases compartilhadas relevantes; Git não prova isso.
-- [!] Aplicação HML continua proibida nesta tarefa. `0019` e `0028` mantêm
-  decisões de dados separadas, além dos gates de recuperação e autorização.
-
-## Evidência local pendente de revisão — A25, 8 de outubro de 2026
-
-- G6: a conclusão de produção usa o mesmo writer transacional nos testes
-  locais com adaptador Drizzle fake. Cobertura: locks, uma conclusão por lote,
-  insuficiência de insumo antes de escrita e rollback após falhas em custos,
-  camada FIFO, saída ou status. O corpo transacional e o guard foram preservados.
-- O fake verifica composição e propagação de falhas; não comprova isolamento,
-  concorrência ou rollback do PostgreSQL real. Homologação compartilhada permanece
-  sujeita ao gate humano. Nenhum writer foi executado em HML.
-
-Legenda:
-
-- `[x]` concluído/entregue.
-- `[ ]` não iniciado ou ainda pendente.
-- `[~]` em andamento.
-- `[!]` bloqueado por decisão, autorização ou dependência.
-
-## Fase G0 — Governança do repositório
-
-- [x] Criar status canônico do projeto.
-- [x] Criar arquitetura canônica.
-- [x] Criar regras de negócio canônicas.
-- [x] Criar política de segurança.
-- [x] Criar Definition of Done.
-- [x] Criar gates de aprovação humana.
-- [x] Criar roadmap executável.
-- [x] Atualizar `AGENTS.md` com governança do Cacau preservando TanStack Intent.
-- [x] Padronizar workflow Git e mensagens de commit.
-- [x] Criar índice documental canônico.
-
-### Saída da fase
-
-O Codex consegue identificar estado, regras, limites e próxima tarefa sem depender de memória externa.
-
-## Fase G1 — Segurança, autenticação e acesso
-
-- [x] Definir ADR da solução de autenticação definitiva (`ADR-0001` aceito).
-- [x] Mapear permissões e aplicar guards estruturais nas 30 Server Functions,
-      com CSRF explícito e falha fechada sem principal válido.
-- [~] Configurar integração externa Neon Auth em HML (secrets, callbacks,
-  e-mail, Turnstile e rate limiting), sujeita a gate humano. E-mail/senha,
-  provedor compartilhado e origens confiáveis foram confirmados em leitura;
-  Turnstile foi publicado com widget restrito e site key no bundle HML; limite
-  distribuído, desafio real, validação integrada e replay seguem pendentes.
-- [x] Publicar Worker Cloudflare HML separado em `workers.dev`, sem DNS, rota
-      customizada ou alteração no Worker principal. Em 6 de setembro, o Worker
-      recebeu o código atual e o smoke público confirmou `/login` com `200` e `/`
-      sem sessão redirecionando para `/login`; a leitura pública sanitizada de
-      A06 reconfirmou os mesmos resultados em 7 de setembro.
-- [x] Aplicar a migration de infraestrutura de acesso `0014` somente no branch
-      Neon de homologação autorizado, sem bootstrap de usuário.
-- [~] Implementar identidade de usuário (cadastro e verificação OTP por
-  e-mail disponíveis; a transição para Dono e um vínculo de Gerente foram
-  auditados em HML e ambos os e-mails foram verificados; o Dono concluiu
-  recuperação de senha, OTP, login e acesso operacional completo em HML;
-  homologação integrada dos demais papéis e controles ainda está pendente).
-- [~] Implementar login/logout por e-mail/senha via proxy server-side Neon Auth;
-  validação operacional depende de identidade autorizada em HML.
-- [~] Implementar sessão segura para SSR via cookies Neon Auth e adaptador
-  request-scoped; validação operacional depende de identidade autorizada em HML.
-- [~] Implementar recuperação de senha sem enumeração: fluxo por link/token,
-  rota pública, token removido do histórico, auditoria sanitizada obrigatória
-  em duas etapas e contratos/testes locais preparados; falta validação
-  integrada controlada do Neon Auth e dos controles antiabuso.
-- [~] Implementar limite de tentativas de login (máximo 5 antes de controle adicional):
-  cooldown durável e limite local por identidade HMAC preparados; falta
-  homologação com banco e limite distribuído.
-- [~] Implementar rate limiting de autenticação: limite local para login,
-  cadastro, OTP e reset preparado; binding distribuído HML permanece pendente.
-- [~] Definir e implementar CAPTCHA/desafio adicional em fluxos suspeitos:
-  verificador server-side e bloqueio fail-closed quando o desafio é exigido;
-  Turnstile foi publicado, mas validação integrada e replay permanecem
-  pendentes. A07 recebeu autorização humana em 7 de setembro, porém foi
-  bloqueada antes de rede por ausência de navegador; não houve CAPTCHA, token
-  ou replay. A correção local agora propaga o desafio do cooldown durável para
-  a UI; ainda requer revisão/publicação e homologação HML.
-- [~] Reestruturar RBAC inicial em Dono, Gerente e Funcionário: política,
-  testes e migrations de transição aplicados em HML; o Dono e um Gerente
-  possuem vínculos auditados. A verificação de e-mail e a liberação das demais
-  identidades permanecem pendentes.
-- [x] Proteger Server Functions por permissão no código versionado, por mapa
-      central e middleware compartilhado; validar em HML após o deploy atual.
-- [x] Proteger rotas de UI com redirecionamento SSR para a rota pública de login.
-- [~] Criar auditoria de autenticação e mudança de privilégio: reset por senha,
-  transição de papel e liberações manuais possuem eventos sanitizados; falta
-  validação integrada e cobertura dos demais eventos.
-- [~] Testes unitários/integrados de auth: testes unitários locais existem;
-  testes integrados e E2E permanecem pendentes.
-- [~] Testes E2E de acesso: spec de rotas públicas criada; execução integrada
-  de login, logout, OTP, reset, sessão e negações ainda depende de ambiente e
-  identidades de teste autorizados.
-  A27 prepara runner público local isolado de HEAD, sem secrets, sem rede
-  externa e sem mutações; sua prova é separada da homologação G1/HML.
-
-### Gate
-
-A estratégia Neon Auth baseada em Better Auth está aprovada. Provisionamento,
-secrets, configuração de e-mail, revisão/aplicação de migrations e autorização
-final por Server Function continuam sujeitos aos gates de `HUMAN-APPROVALS.md`.
-
-## Fase G2 — Consolidação financeira, FIFO/CMV e margem
-
-- [x] Estrutura FIFO criada.
-- [x] Homologação FIFO G6–G9 documentada.
-- [x] Lifecycle e testes principais existentes.
-- [x] Definir regra canônica de CMV realizado por venda.
-- [x] Decidir vínculo entre venda e camada/lote quando necessário para margem realizada.
-- [x] Implementar margem por produto de forma auditável.
-- [x] Implementar margem por período/canal; parceiro aguarda fonte de dados.
-- [ ] Criar reconciliação automatizada de estoque x FIFO x CMV.
-- [ ] Criar relatório de divergências sem correção automática.
-- [~] A28 acrescenta diagnóstico local de cobertura entrega × item × quantidade
-  FIFO em `/financeiro`, separado da reconciliação das dimensões de margem.
-  Ausência de alocação não comprova custo zero; nenhum total/fato foi alterado.
-  Conferência real, schema e correções históricas seguem gates separados.
-- [x] Documentar estratégia de reversão/cancelamento de venda no FIFO.
-
-### Gate
-
-A política G2 foi aprovada pelo Dono em 11 de setembro de 2026. A aplicação das
-migrations, o backfill do histórico e a homologação financeira continuam gates
-separados; nenhuma dessas ações externas foi autorizada nesta missão.
-
-## Fase G3 — Dashboard e gestão
-
-A matriz detalhada workbook × sistema está em
-[`WORKBOOK-SYSTEM-PARITY.md`](./WORKBOOK-SYSTEM-PARITY.md).
-
-- [x] Dashboard operacional inicial.
-- [x] Relatórios básicos por período.
-- [~] Faturamento confirmado, volume e ticket médio com comparação temporal
-  local pelo `soldAt` e período anterior de mesma duração; homologação da
-  interface permanece pendente. Receita por competência segue em `/financeiro`.
-- [~] Ticket médio, preço médio, unidades e divergência de receita
-  implementados localmente; aguardam migrations/homologação.
-- [~] Top 10 produtos por unidades implementado localmente com vínculo de
-  catálogo e legado explícito; aguarda homologação de interface. Ranking por
-  sabor depende de uma fonte/taxonomia canônica ainda ausente no schema.
-- [~] CMV e margem por competência implementados localmente sobre fatos G2 e
-  FIFO; aguardam migrations e homologação integrada.
-- [~] Estoque crítico por ponto de reposição implementado localmente com
-  comparação exata no estoque e dashboard, filtros e razão paginada; cobertura
-  estimada continua aguardando histórico confiável.
-- [~] Histórico de produção real por receita, status, produto e período
-  implementado localmente com paginação; rendimento realizado já é rastreado
-  nos lotes concluídos e aguarda homologação gerencial.
-- [~] Perdas declaradas e coprodutos realizados agregados localmente por
-  produto a partir de lotes concluídos, sem perda automática e com custo
-  alocado separado; aguardam aplicação de migrations e homologação visual.
-- [~] Parceiros/canais com receita, eventos, unidades, ticket e divergência
-  implementados localmente; margem e comparação temporal continuam pendentes.
-- [~] Parâmetros gerenciais centralizados e plano de ação humano implementados
-  localmente; migrations `0019`/`0020` não aplicadas.
-- [~] Metas e cenários versionados com mix exato, lifecycle auditado,
-  projeções e comparação separada do realizado implementados localmente;
-  migrations `0027`/`0028` não aplicadas e homologação pendente.
-- [~] Lote de fornecedor e validade por item de compra, com rastreabilidade na
-  movimentação, implementados localmente; migration `0021` não aplicada.
-- [~] Fornecedor padrão informativo por produto/insumo implementado localmente;
-  migration `0022` não aplicada e nenhuma compra é preenchida automaticamente.
-- [~] Exportação CSV segura dos relatórios operacionais concluída localmente;
-  XLSX segue fora do escopo atual e não foi apresentado como integração.
-- [~] Exibição monetária dos relatórios preserva a representação decimal exata
-  sem conversão para `Number`; aguarda homologação visual.
-- [~] Busca, filtros, paginação e estados explícitos implementados para os
-  históricos de despesas, compras, vendas, produção real e razão de estoque, e
-  para catálogo/saldos; produção e estoque passaram nos checkpoints locais
-  WP-E1/WP-F2 e aguardam homologação de interface.
-
-## Fase G4 — WhatsApp e mensageria
-
-- [ ] Definir ADR da integração WhatsApp Cloud API.
-- [ ] Criar endpoint de webhook com validação de origem.
-- [ ] Persistir evento recebido antes do processamento.
-- [ ] Implementar idempotência por evento/mensagem.
-- [ ] Criar parser determinístico para comandos estruturados simples.
-- [ ] Adicionar camada de IA somente para interpretação, sem bypass das regras.
-- [ ] Criar fluxo de prévia/confirmação para operações mutáveis.
-- [ ] Criar estados `received`, `processing`, `processed`, `failed`, `ignored`.
-- [ ] Criar retry seguro.
-- [ ] Auditoria de cada mensagem e operação derivada.
-- [ ] Testes de duplicidade/replay.
-
-## Fase G5 — OCR e documentos
-
-- [ ] Definir armazenamento de arquivos/documentos.
-- [ ] Upload seguro de nota/cupom.
-- [ ] OCR como extração candidata.
-- [ ] Validação e categorização.
-- [ ] Prévia humana antes de compra/estoque.
-- [ ] Hash e deduplicação de documento.
-- [ ] Vínculo documento ↔ compra.
-- [ ] Política de retenção e privacidade.
-
-## Fase G6 — Produção e operação definitiva
-
-- [x] Receita-base e perfis.
-- [x] Produção real em rascunho/conclusão.
-- [x] Custos operacionais e coproduto.
-- [x] Testes/homologações principais.
-- [ ] Revisar UX de produção para operação diária.
-- [~] Auditoria local por lote apresenta planejado, realizado, diferença
-  física e custo alocado por saída; perdas declaradas e custo total já são
-  exibidos. A prévia também sinaliza o déficit exato por insumo/unidade;
-  planejamento entre lotes e homologação diária permanecem pendentes.
-- [ ] Revisar consistência entre custo médio físico e FIFO de produto final.
-- [~] Checklist preparado em `PRODUCTION-READINESS.md`; schema, recuperação,
-  acesso, integridade e homologação operacional permanecem humanos.
-
-## Fase G7 — Deploy e observabilidade
-
-- [x] Configuração Cloudflare versionada.
-- [x] Build/deploy command disponível.
-- [~] Worker HML isolado publicado e acessível publicamente: em 6 de setembro
-  `/login` respondeu `200` e `/` sem sessão redirecionou para `/login`.
-  Turnstile publicado, widget restrito, site key no bundle HML e diagnóstico
-  histórico do `403` preservado; desafio real, replay, homologação integrada,
-  rate limit distribuído e demais gates de G1 seguem pendentes.
-- [~] Matriz/evidência somente leitura em `ENVIRONMENT-MATRIX.md`: local, CI,
-  HML autorizado e histórico separados; associação Worker × database, staging
-  e definição operacional definitiva dependem de decisão humana.
-- [ ] Configurar secrets por ambiente.
-- [~] Runbook de backup Neon e cópia independente preparado; janela, storage,
-  RPO e responsáveis dependem de decisão humana.
-- [~] Runbook de restauração e ensaio descartável preparado; RTO, corte e
-  validação em branch continuam dependentes de infraestrutura autorizada.
-- [~] Logs locais de auditoria auth e recuperação de senha em JSON com
-  evento, nível, correlação UUID e allowlist runtime. Logs dos demais domínios
-  e homologação de observability permanecem pendentes.
-- [ ] Monitoramento de falhas.
-- [ ] Alertas de erro e disponibilidade.
-- [!] Revisar atualização de dependências auditadas: `npm audit` confirmou 13
-  vulnerabilidades; a correção automática de Drizzle/Wrangler exige versões
-  incompatíveis e depende de estratégia aprovada e validação completa.
-- [ ] Deploy definitivo somente após aprovação humana.
-
-## Fase G8 — Autonomia progressiva do Codex
-
-- [~] Rodada manual local autorizada: checkpoint humano de A07-R2 confirmado
-  em `c28c267`, com seis testes novos, suíte de 37 arquivos e lint verdes.
-  Falha anterior de escrita em `.git` preservada no log. A07-R3 em avaliação
-  local, sem promover autonomia permanente. Contrato no handoff.
-
-- [x] Testes e documentação suficientes para iniciar governança agent-friendly.
-- [x] Etapas 1–2 preparadas: fila, handoff, log, runbook, controlador local
-      seguro e `LIGARTUDO --prepare-only`, todos cobertos por testes locais.
-- [x] Launcher e setup do GitHub MCP preparados para GNOME Keyring, com
-      preflight `LIGARTUDO --codex` e checks sem exibição de credencial. O
-      Secret Service e a entrada foram confirmados pelo operador no host; o
-      lookup desta execução pode exigir repetição fora do sandbox.
-- [~] Nível 1: Codex implementa tarefa explícita e apresenta diff/checks.
-- [ ] Nível 2: após revisão humana do piloto A01–A03, Codex conclui pacote
-      pequeno, cria commit local e prepara PR.
-- [ ] Nível 3: após três pacotes consecutivos verdes e sem correção humana ou
-      gate violado, Codex escolhe próximo item exatamente `ready` em fase autorizada.
-- [~] Inicialização concorrente de memória local usa criação idempotente
-  e preserva rejeição de symlink; teste aguarda todos os subprocessos antes
-  de limpar fixtures. Evidência local, sem promoção de autonomia permanente.
-- [ ] Automação de revisão de CI/dependências, quando útil.
-- [ ] Multiagente somente após estabilidade do workflow e proteção adequada da `main`.
-
-## Prioridade imediata
-
-0. Aprovar o modelo de membership e o mapeamento histórico de tenancy descritos
-   em `MULTITENANCY-ADOPTION.md` antes de gerar/aplicar migration multitenant.
-   Não atribuir `tenant-test-001` a fatos HML/produção nem alterar unicidades
-   globais sem a decisão.
-1. Decidir se haverá segundo Gerente e, se aprovado, informar a identidade a
-   verificar antes de criar o vínculo auditado.
-2. Executar a homologação integrada/E2E de G1, inclusive reset, login, sessão,
-   negações por papel, cooldown e auditoria.
-3. Depois consolidar G2 (CMV/margem) antes de ampliar os relatórios gerenciais.
-4. Preservar todos os dados HML e evidências FIFO existentes.
+# Roadmap único — Cacau v1
+
+Atualizado em **19/10/2026**, após a entrega de Compras e Produção.
+Este é o **único arquivo de planejamento e acompanhamento de pendências**.
+Relatórios datados, recibos, matrizes e runbooks preservam evidências e
+procedimentos; suas listas antigas não são filas adicionais de execução.
+
+A consolidação substitui os checkpoints repetidos deste arquivo. Seu histórico
+completo permanece no Git. Não autoriza executar itens pendentes, mudar regras,
+conceder acessos, aplicar migrations ou publicar em produção.
+
+## Estado confirmado
+
+| Área | Situação atual |
+| --- | --- |
+| HML | Código `a76c37c`, Worker `6bc5bd55-2bca-4adb-a8b1-36b6b42bf1a6`, 100% do tráfego; publicado em 19/10/2026 às 03:01 Brasília |
+| Trabalho versionado | Branch `feat/input-catalog-kg-purchases`; publicação HML não equivale a integração na `main` |
+| Banco HML | Atualizações específicas aplicadas, 36 recibos; migrador genérico continua sendo tarefa separada |
+| Catálogo e produção | 38 produtos; duas versões de receita e 34 perfis contando os históricos; receita 2 ativa com 17 perfis completos e 31 componentes |
+| Cenários | Cenário 2/v2/rev2 ativo, 16 produtos orientativos em 100%; cenário 1 e seu histórico preservados |
+| Meta | R$ 10.000 de lucro mensal após os custos de **todas as vendas**, inclusive Bordinhas realizadas; sem cotas obrigatórias por produto |
+| Operação real | Sem compras ou produção previstas; nenhum fato fictício criado no HML para testar as entregas |
+| Última validação de código | 529 testes Node e 15 ensaios locais de navegador; lint, tipos, formatação, Knip e build isolado aprovados |
+| Segurança da última publicação | CI `39207328944` e CodeQL `39207328870` aprovados no código publicado; três análises sem resultados e zero alertas abertos na conferência |
+| Preservação | 21 tabelas acompanhadas com contagens e digests idênticos antes/depois da última entrega |
+
+Legenda: **concluído** significa que o resultado descrito foi comprovado;
+**parcial** distingue implementação de homologação; **pendente** exige trabalho;
+**condicional** depende de necessidade ou decisão. Nenhum estado implica
+liberação definitiva de produção.
+
+## Entregas concluídas
+
+- [x] **Governança e ferramentas:** arquitetura/regras/segurança/DoD, workflow
+  Git, TypeScript 7/Oxlint/Oxfmt, Knip e CodeQL na branch de trabalho. A
+  integração à `main` permanece separada em T01.
+- [x] **Acesso HML implementado:** Neon Auth, sessão SSR, guards e RBAC no
+  servidor, recuperação auditada, Turnstile e limiter distribuído publicados.
+  Vínculos Dono/Gerente auditados; recuperação e sessão do Dono confirmadas.
+  A matriz completa e os casos antiabuso ainda exigem homologação H01–H03.
+- [x] **Recuperação e schema do HML:** destino Worker/banco atestado, restore
+  e atualizações específicas ensaiados/aplicados com preservação de dados e
+  recibos. Diagnósticos temporários desativados. Não repetir esses reparos.
+- [x] **Workbook e cadastros:** leitura das 15 abas, produtos/insumos, ovos,
+  receita versionada, perfis, recheios, embalagens, adesivos e cobertura
+  reconciliados e aplicados sob referências auditáveis.
+- [x] **C01 — custos exatos e compras em kg:** valor total pago preservado,
+  conversão kg → g e custos derivados fracionários, com conservação nas
+  entradas/consumos/saldos e ensaios em PostgreSQL 17. Não está pendente
+  decidir novamente a precisão ou refazer a importação.
+- [x] **Produção:** rascunho/conclusão, consumo físico, custos reais por lote,
+  rateio exato, camadas FIFO, recuperação variável de Bordinhas, perdas com
+  motivo, preservação de versões e proteção contra conclusão duplicada.
+- [x] **Custos e premissas confirmados:** oito ovos/850 g frios por receita;
+  rendimentos 48 simples/24 recheados no 5×5 ou 24/12 no 7×7; Bordinhas de
+  100 g/R$ 6 com saquinho de R$ 0,11 e adesivo; bombom com cerca de 50 g de
+  cobertura; kit de quatro sem embalagens internas e com um adesivo externo.
+- [x] **Orçamento e taxas:** fixos de R$ 2.288, incluindo MEI de R$ 88,
+  energia e R$ 600 de mão de obra (quatro diárias de R$ 150). Débito 1,43%,
+  crédito 3,36%, Pix R$ 0,49 por pagamento; sem média presumida por local.
+- [x] **Recebimentos e lucro conjunto:** bruto/taxa/líquido preservados,
+  despesas classificadas, lucro após CMV/taxas/despesas e progresso da meta
+  em Financeiro/Visão geral, sem descontar orçamento ou custos produtivos
+  novamente. Ausências relevantes deixam o resultado indisponível.
+- [x] **Metas e cenários:** versões auditadas, mix normalizado em 100%,
+  ativação do cenário revisado e preservação do anterior; resumo conjunto,
+  detalhes expansíveis, editor modal com prévia e confirmações com motivo.
+- [x] **Dashboard e usabilidade:** painel estruturado, atalhos, reposição,
+  navegação reorganizada e modais de Produtos, Categorias, Locais, Compras,
+  Produção, Vendas e Despesas; filtros, paginação e estados explícitos.
+- [x] **Revisão de Compras/Produção:** total da compra sem multiplicar a
+  quantidade novamente, unidades legíveis, opcionais agrupados, prévia
+  invalidada após alterações, custos limpos após salvar, auditoria em modal
+  e sucesso de gravação separado de falhas de atualização visual.
+- [x] **Relatórios e diagnósticos existentes:** receita/volume/ticket,
+  ranking por unidades, margens e CSV seguro; razão/FIFO/reversões,
+  cobertura entrega/FIFO e reconciliação de saídas produtivas implementados.
+  Completar lacunas e homologar o conjunto é F02/F03, não reescrever do zero.
+- [x] **Ensaios locais:** custos, produção/FIFO e recebimentos/lucro em
+  PostgreSQL 17 descartável; rollback/replay dos pacotes específicos;
+  ensaios de navegador e conferências autenticadas sem fatos fictícios no HML.
+  Esses ensaios não substituem o aceite integrado por todos os perfis.
+
+## Próxima tarefa — F02: consolidar a conferência de integridade
+
+**Estado: parcial. Próximo trabalho técnico recomendado.** Já existem três
+famílias de diagnóstico; falta fechar a cobertura de ponta a ponta.
+
+- [ ] Inventariar a cobertura existente em Relatórios, Financeiro e Produção
+  e identificar lacunas entre estoque de insumos, custos produtivos,
+  saídas/camadas/reversões FIFO e CMV por competência.
+- [ ] Consolidar o resultado e o relatório de divergências, com origem e
+  referência rastreáveis, sem corrigir dados automaticamente.
+- [ ] Ensaiar casos coerentes, divergências deliberadas, ausência de custo,
+  consumo parcial, cancelamento/reversão e conciliação exata em isolamento.
+- [ ] Registrar critérios e evidências; apresentar ausência como ausência,
+  sem transformá-la em custo zero ou exigir saldo fictício no HML.
+
+**Aceite:** divergências identificáveis e explicáveis; nenhuma alteração
+financeira, de estoque ou de histórico pela rotina de conferência. Não depende
+de compras reais nem de repetir as definições já confirmadas pelo usuário.
+
+## Pendências para fechar a validação técnica
+
+| ID | Estado | Resultado que falta |
+| --- | --- | --- |
+| S01 | Pendente | Mapear autoria/auditoria de todas as mutações, especialmente CRUD de catálogo; completar lacunas transacionalmente. Auditoria de login não substitui auditoria operacional. |
+| T02 / #36 | Pendente | Finalizar a estratégia da cadeia **genérica** de migrations e instalação nova; provar caminhos suportados e preservação. A aplicação específica no HML não encerra essa frente. Manter preflight bloqueante e não usar `db:push` como atalho. |
+| T03 | Parcial | Incorporar os ensaios relevantes PostgreSQL 17 e de navegador aos gates automáticos conforme ambiente/escopo; os ensaios locais já passaram. |
+| H04 / H05 | Parcial | Ensaiar o fluxo completo pela interface, com backend/banco e identidade de teste isolados: compra em kg → consumo em g → produção → venda → recebimento/entrega → lucro; cancelamento, devolução, crédito/resgate, fechamento, concorrência e falhas. Não gravar fatos sintéticos na base compartilhada. |
+| H01 / H02 | Parcial | Completar a homologação integrada de login/logout, expiração/revogação, OTP/reset, cooldown, limiter distribuído e Turnstile válido/inválido/replay, preservando controles e auditoria. Sessão e recuperação do Dono já foram comprovadas. |
+| H03 | Parcial | Validar Dono, Gerente, Produção e Funcionário, incluindo chamadas diretas e negações por permissão. Usar identidades autorizadas; não conceder papéis apenas para contornar um teste. |
+| H06 | Parcial | Concluir o aceite por perfil das telas e relatórios ainda não cobertos, celular, acessibilidade, CSV, filtros/paginação e desempenho percebido. As revisões de UX publicadas não voltam à condição de “não implementadas”. |
+| T04 | Pendente | Alinhar prompt/runbook do piloto ainda em Prettier ao Oxfmt; testar controlador; declarar/validar Python na CI e conferir extensão Oxc no editor. Revisar avisos de runtime das Actions sem atualização incompatível automática. |
+
+## Preparação e liberação da operação
+
+| ID | Estado | Resultado que falta |
+| --- | --- | --- |
+| G01 | Parcial | Este roadmap já foi consolidado. Reconciliar os demais retratos de paridade, ambientes e fila do controlador quando suas frentes forem revisadas; preservar as evidências datadas. |
+| G02 / I01 | Pendente | Formalizar plano de QA e topologia de ambientes, identidades, dados permitidos, responsáveis e referências inéditas. O nome `production` da branch Neon original não autoriza testes destrutivos nem equivale a liberação do Worker principal. |
+| T01 | Pendente | Revisar e integrar o código da branch de trabalho à `main`, reconciliando as PRs #44/#45 e os gates da #36; conferir CI/CodeQL do resultado integrado. Merge depende da aprovação aplicável. |
+| I02 | Parcial | Transformar os backups e ensaios específicos já realizados em rotina: retenção, cópia independente, responsáveis, RPO/RTO e restauração periódica. Não apagar backups existentes para abrir quota. |
+| I03 | Parcial | Completar logs dos domínios, correlação, monitoramento, alertas de erro/disponibilidade e resposta a incidentes. Logs Cloudflare/auth e auditorias existentes não equivalem a monitoramento completo. |
+| I04 | Pendente / gate humano | Liberação definitiva somente após revisão/integridade/QA, integração, plano de recuperação, configuração revisada dos ambientes e aceite humano. Configurações HML existentes não precisam ser refeitas; secrets/DNS/produção exigem autorização específica. |
+
+Conferência GitHub nesta consolidação: PRs #44 e #45 abertas em draft e issue
+#36 aberta. Esta tarefa documental não alterou nem encerrou esses registros.
+
+## Ajustes operacionais e evoluções de produto
+
+| ID | Estado | Escopo restante e dependência |
+| --- | --- | --- |
+| O05 | Quando houver operação real | Registrar compras ou saldo inicial documentado e autorizado; depois iniciar produção real. A ausência atual de operações não é defeito nem motivo para criar demonstrações no HML. |
+| O06 / O09 | Configuração a conferir | Pontos de reposição, fornecedores e locais/canais efetivamente usados, com fonte válida. Cadastro vazio não justifica valores inventados; alertas de cobertura dependem de histórico. |
+| O10 | Condicional | Importar histórico somente se solicitado, após conferir fonte, aliases, custos, duplicidade, corte e referências inéditas. Os recibos de catálogo não autorizam essa importação. |
+| O11 | Condicional | Definir manutenção diária versionada de receitas/perfis/tarifas: procedimento controlado existente ou gestão pela interface, com auditoria. Não alterar versões usadas silenciosamente. |
+| F01 / F03 | Parcial | Lucro conjunto e recebimentos já estão entregues. Revisar somente indicadores/alertas adicionais ainda necessários, como contribuição, margem mínima realizada e comparação específica por canal. Ranking por sabor exige taxonomia; distinguir competência de caixa e não prometer conciliação bancária completa. |
+| F04 | Depende de histórico | Cobertura em dias e sugestão de reposição exigem consumo confiável, janela e regra aprovadas. Estoque vazio não é recomendação automática de compra. |
+| S02 | Condicional | Definir gestão de concessão/revogação/troca de papel pela interface, preservando permissões e autoria. Dupla aprovação não é controle já entregue. |
+| R01 | Evolução futura | WhatsApp: ADR, webhook validado, evento persistido, idempotência/retry, interpretação sem bypass das regras, confirmação e auditoria. |
+| R02 | Evolução futura | Notas/OCR: armazenamento/upload seguro, extração candidata, validação, deduplicação, vínculo com compra e política de retenção. |
+| R03 | Evolução futura | Pagamentos parciais/mistos/parcelados, integrações de operadora, conciliação e logística ampliada conforme necessidade aprovada. Recebimento integral por meio já foi entregue. |
+| R04 | Condicional | Multitenancy/SaaS somente após decisão sobre memberships, tenant ativo e mapeamento histórico. Não atribuir tenant fictício aos fatos; não é pré-requisito para uma única operação interna. |
+| R05 / R06 | Evolução futura | Planejamento entre lotes, gestão avançada e XLSX conforme necessidade. A UX diária revisada e o CSV existente já estão entregues. |
+| R07 | Condicional | Avançar automação/autonomia somente após avaliação do piloto e estabilidade; multiagente requer autorização. A retomada pontual das 02:33 foi concluída e não cria recorrência. |
+
+## Pendências antigas encerradas ou substituídas
+
+- Não refazer cadastro de ovos/insumos/receitas/perfis, definir novamente
+  recheios/embalagens ou pedir novamente taxas, diária, energia, rendimento e
+  meta. Os pacotes e as decisões já foram aplicados.
+- Não reabrir restore, bootstrap de acesso, publicação do limiter ou aplicação
+  específica de migrations como tarefas inéditas. O que resta está delimitado
+  em H01–H03, T02 e I02.
+- Não ativar de novo o primeiro rascunho do mix: o cenário revisado já está
+  ativo e o original está arquivado com histórico preservado.
+- Não repetir publicações antigas de UX ou a conferência de CI de `e890e3d`
+  como gate atual: o código que as sucede foi publicado com CI/CodeQL próprios.
+- A anotação antiga de 13 vulnerabilidades não descreve a última auditoria
+  documentada, que registrou zero. Nesta consolidação não foi executado novo
+  `npm audit`; revalidar dependências no gate apropriado, sem inventar estado.
+- A segunda identidade de Gerente, novos papéis, multitenancy e importação
+  histórica permanecem condicionais; não são bloqueios genéricos para continuar
+  a validação técnica autorizada.
+
+## Evidências de referência
+
+As fontes abaixo comprovam entregas e limites, sem constituir roadmaps paralelos:
+
+- [Estado canônico e publicações](PROJECT-STATUS.md).
+- [Revisão integral do workbook](ATTACHED-WORKBOOK-COMPLETE-REVIEW-2026-10-18.md).
+- [Custos, recuperação e taxas aplicados](COST-RECOVERY-FEES-HML-2026-10-18.md).
+- [Recebimentos e lucro publicados](PAYMENT-SETTLEMENT-PROFIT-HML-2026-10-18.md).
+- [Cenários publicados](SCENARIO-UX-HML-2026-10-19.md).
+- [Compras e Produção publicados](PURCHASE-PRODUCTION-UX-HML-2026-10-19.md).
+- [Recibo da última publicação](../../evidence/purchase-production-ux-hml-2026-10-19.json).
+- [Runbooks e matriz de ambientes](ENVIRONMENT-MATRIX.md).
+- [Cadeia genérica de migrations](MIGRATION-CHAIN-REPAIR-0016.md).
+- [Gates humanos](HUMAN-APPROVALS.md) e [Definition of Done](DEFINITION-OF-DONE.md).
+
+Ordem recomendada: **F02 → lacunas S01/T02 e ensaios integrados → homologação
+por perfil → integração e sustentação → aceite de produção**. Trabalhos
+independentes podem avançar dentro da autorização vigente. Não há tarefa de
+compra/produção real a executar antes de existirem fatos e previsão reais.
