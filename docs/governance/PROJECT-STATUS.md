@@ -5,6 +5,14 @@ atual de tarefas, prioridades e critérios de conclusão. Os checkpoints de
 publicação abaixo preservam o estado comprovado de cada entrega; suas
 próximas etapas históricas não substituem o roadmap atualizado.
 
+## Aceite parcial de acesso — 20/10/2026
+
+O usuário confirmou que o acesso da conta de Funcionário funcionou. Esse
+relato comprova o aceite humano da entrada, sem concluir a matriz de telas,
+chamadas diretas e negações por permissão de H03. Também confirmou que a
+Gerente recebeu o e-mail de recuperação e vai redefinir a senha. A conclusão
+da redefinição e o novo login da Gerente ainda aguardam confirmação.
+
 ## Login da nova Gerente — recuperação solicitada — 20/10/2026
 
 Após a concessão, o usuário relatou a mensagem de credenciais inválidas.
@@ -18,8 +26,8 @@ sido aplicada; isso é hipótese, sem inspeção de senha ou hash.
 O fluxo público “Esqueci minha senha” foi usado uma única vez para essa conta.
 A auditoria registrou `password_reset_requested/success` às
 `2026-10-20T18:42:15.668Z`, após o marcador `provider_outcome_pending`.
-Aceite do provedor não comprova recebimento. A titular deve concluir a
-redefinição pessoalmente e repetir o login; o aceite conectado H03 segue aberto.
+O recebimento foi posteriormente confirmado pelo usuário. A titular deve
+concluir a redefinição pessoalmente e repetir o login; H03 segue aberto.
 Nenhuma credencial ou regra de autorização foi alterada pelo agente.
 
 ## Acesso de Gerente concedido — 20/10/2026
