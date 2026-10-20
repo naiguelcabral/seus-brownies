@@ -18,19 +18,16 @@ CodeQL aprovados; oito GETs acompanhados sem erro. O500 já existia antes do
 último incremento; causa upstream histórica segue inconclusiva, conforme
 `HML-SESSION-INCIDENT-2026-10-20.md`.
 
-Próximos passos: fazer o aceite conectado dos perfis. As identidades criadas
-no Neon Auth em 20/10/2026 foram verificadas e receberam os papéis `employee`
-e `manager`, com auditoria na mesma transação e releitura independente de
-cada concessão. O usuário confirmou entrada bem-sucedida com a conta de
-Funcionário; a matriz completa de permissões continua pendente.
-O login da nova Gerente retornou mensagem de credenciais inválidas. Identidade
-verificada e vínculo ativo foram reconfirmados; recuperação pela interface
-aceita pelo provedor às 18:42:15 UTC e recebimento confirmado pelo usuário.
-Aguardam-se redefinição pessoal e novo login, sem presumir aceite H03.
-Também foi solicitada recuperação da conta gerencial anterior indicada pelo
-usuário: e-mail verificado e vínculo `manager` ativo reconfirmados; provedor
-aceitou o pedido às 19:18:37 UTC. O usuário confirmou posteriormente que o
-acesso dessa conta funcionou; matriz de permissões ainda pendente.
+O usuário confirmou entrada de Funcionário, Gerente nova e conta gerencial
+anterior. As concessões `employee`/`manager` estão auditadas. A matriz completa
+de permissões ainda depende de aceite conectado H03.
+
+Correção de primeiro acesso pronta em `b0680dd`: recadastro de identidade
+existente não troca senha, e a tela agora orienta recuperação e retorna ao
+login após OTP. Passaram 556 testes Node, 39 casos de navegador, smoke público
+local, build isolado e checks remotos. Falta concluir a triagem detalhada dos
+resultados/alertas CodeQL e publicar no HML. A consulta foi interrompida;
+HML permanece em `3f0ba59`. Detalhes em `AUTH-FIRST-ACCESS-2026-10-20.md`.
 Também faltam alertas automáticos ao Dono e rotina independente de backups.
 Cópia local privada já criada e restaurada; sem periodicidade ou armazenamento
 externo.
@@ -47,7 +44,7 @@ PRs47/48 em rascunho; revisão humana da integração à main permanece separada
 | Cenários | Cenário 2/v2/rev2 ativo, 16 produtos orientativos em 100%; cenário 1 e seu histórico preservados |
 | Meta | R$ 10.000 de lucro mensal após os custos de **todas as vendas**, inclusive Bordinhas realizadas; sem cotas obrigatórias por produto |
 | Operação real | Sem compras ou produção previstas; nenhum fato fictício criado no HML para testar as entregas |
-| Última validação de código | 556 testes Node, 35 casos browser de fixtures na CI e smoke público local; 16 casos no runtime workerd isolado. Dois runners negócio e48 casos migrations remotos; CI e CodeQL aprovados em3f0ba59. |
+| Última validação de código | `b0680dd`: 556 testes Node, 39 casos browser de fixtures, smoke público local e build isolado aprovados; checks remotos verdes. Triagem detalhada CodeQL pendente. O checkpoint runtime de `3f0ba59` permanece histórico. |
 | Segurança | Três análises CodeQL do código3f0ba59 sem resultados e zero alertas abertos; conferência própria exigida para cada incremento. |
 | Preservação | 21 tabelas acompanhadas com contagens e digests idênticos antes/depois da última entrega |
 
@@ -141,7 +138,7 @@ sintético foi gravado no HML.
 | T03 | Concluído no escopo isolado | Workflow validado: dois runners PostgreSQL 17 e 35 casos em oito specs UI com rede restrita. Jobs remotos passaram em3f0ba59. Aceite conectado H04/H05 continua separado; incremento publicado no HML após correção de sessão. O diagnóstico upstream histórico permanece inconclusivo. |
 | H04 / H05 | Parcial | Ensaiar o fluxo completo pela interface, com backend/banco e identidade de teste isolados: compra em kg → consumo em g → produção → venda → recebimento/entrega → lucro; cancelamento, devolução, crédito/resgate, fechamento, concorrência e falhas. Não gravar fatos sintéticos na base compartilhada. |
 | H01 / H02 | Parcial | Completar a homologação integrada de login/logout, expiração/revogação, OTP/reset, cooldown, limiter distribuído e Turnstile válido/inválido/replay, preservando controles e auditoria. Sessão e recuperação do Dono já foram comprovadas. |
-| H03 | Parcial | As identidades de Gerente e Funcionário criadas em `g1-auth-hml` em 20/10/2026 estão verificadas e receberam vínculos ativos `manager` e `employee` na base operacional. Cada concessão teve evento `role_changed` na mesma transação e releitura independente de um vínculo/um evento. Usuário confirmou entrada da conta de Funcionário; isso não conclui a matriz de permissões. Gerente teve credenciais inválidas; recuperação aceita pelo provedor e recebimento confirmado, pendentes redefinição pessoal e novo login. Falta validar Dono, Gerente, Produção e Funcionário pela interface e por chamadas diretas, incluindo negações por permissão. Não conceder papéis apenas para contornar um teste. |
+| H03 | Parcial | As novas identidades de Gerente e Funcionário estão verificadas e possuem vínculos ativos `manager`/`employee`, com concessões auditadas e relidas. Usuário confirmou entrada de ambas e da conta gerencial anterior. Falta validar a matriz de Dono, Gerente, Produção e Funcionário pela interface e por chamadas diretas, incluindo negações por permissão. Não conceder papéis apenas para contornar um teste. |
 | H06 | Parcial | Concluir o aceite por perfil das telas e relatórios ainda não cobertos, celular, acessibilidade, CSV, filtros/paginação e desempenho percebido. As revisões de UX publicadas não voltam à condição de “não implementadas”. |
 | T04 | Concluído | Oxfmt alinhado; 21 testes do controlador simulado, Oxc1.64.1 conferida e Python3.12 validada. ActionsNode24 revisadas, Ubuntu24.04 fixado; CI sem avisos de runtime. |
 

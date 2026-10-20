@@ -5,6 +5,22 @@ atual de tarefas, prioridades e critérios de conclusão. Os checkpoints de
 publicação abaixo preservam o estado comprovado de cada entrega; suas
 próximas etapas históricas não substituem o roadmap atualizado.
 
+## Primeiro acesso corrigido localmente — 20/10/2026
+
+O usuário confirmou que Funcionário, Gerente nova e conta gerencial anterior
+conseguem entrar. H03 continua parcial: falta a matriz de telas, chamadas
+diretas e negações por permissão.
+
+A investigação reproduziu em memória que recadastrar um e-mail existente
+preserva a senha anterior, mesmo após OTP. Cadastro realmente novo entra com
+a senha inicial. A interface foi corrigida em `b0680dd` para orientar primeiro
+acesso/recuperação e retornar ao login após verificação, limpando senha/código.
+556 testes Node, lint, tipos, formato, Knip, build HML isolado, 39 casos de
+navegador e smoke público local passaram. Checks remotos passaram; consulta
+detalhada aos resultados/alertas CodeQL foi interrompida. Triagem e publicação
+HML pendentes; HML segue `3f0ba59`. Não houve alteração de credenciais ou dados
+compartilhados. Detalhes em [primeiro acesso](AUTH-FIRST-ACCESS-2026-10-20.md).
+
 ## Recuperação da conta gerencial anterior — 20/10/2026
 
 O usuário relatou credenciais inválidas em sua conta anterior. Consulta exata
