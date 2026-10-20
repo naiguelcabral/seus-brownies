@@ -19,7 +19,7 @@ trecho pendente. Mesmo sem bloqueios, o resultado é apenas
 `READY_FOR_OPERATOR_REVIEW`, com autorização e execução sempre falsas.
 
 A branch original conhecida como produção é rejeitada mesmo se rotulada como
-HML. Arquivos externos a `evidence/`, links simbólicos finais, caminhos ocultos,
+HML. Arquivos externos a `evidence/`, links simbólicos, caminhos ocultos,
 URLs e entradas sensíveis são recusados. Os 13 ensaios PostgreSQL passaram
 novamente, incluindo as oito referências de catálogo e rejeição de drift na
 revisão offline. A suíte CLI cobre sucesso sem execução e recusas de entrada.
@@ -30,6 +30,11 @@ Sem deploy, merge, SQL externo ou escrita no HML nesta continuação.
 546 testes Node aprovados (oito novos), lint, tipos, formato e Knip sem novas
 ocorrências. Container sintético encerrado. Recibo:
 [revisão offline](../../evidence/migration-chain-readiness-2026-10-20.json).
+Build HML isolado aprovado no código `45799a8`. A triagem do CodeQL desse
+commit encontrou `js/file-system-race` na leitura de evidência; corrigido para
+validar tipo/tamanho e ler pelo mesmo descritor, com abertura sem seguir
+symlink e sem bloquear em FIFO. Casos CLI também recusam diretório e arquivo
+acima de 1 MB.
 
 ### Evidência anterior da candidata
 

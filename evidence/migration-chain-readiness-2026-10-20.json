@@ -17,6 +17,9 @@
   "canonical_final_catalog_sha256": "eaf0bdbe68314126ae27af14c1b01f5a7ecd5fd77859290a9b5e90d6fdcc17ec",
   "local_checks_passed": ["lint", "typecheck", "format", "knip-baseline"],
   "knip_new_findings": 0,
+  "isolated_hml_build_passed": true,
+  "isolated_hml_build_commit": "45799a8a070dd8643487935f8e51d7bfd4bd1b92",
+  "codeql_remediation": "js/file-system-race: validate and read the same descriptor; no path reopen",
   "synthetic_container_stopped": true,
   "remaining_gates": [
     "independent_classification_and_catalog_of_relevant_targets",

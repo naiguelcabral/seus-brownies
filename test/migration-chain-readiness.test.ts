@@ -1,6 +1,12 @@
 import assert from 'node:assert/strict'
 import { spawnSync } from 'node:child_process'
-import { mkdtempSync, rmSync, symlinkSync, writeFileSync } from 'node:fs'
+import {
+  mkdirSync,
+  mkdtempSync,
+  rmSync,
+  symlinkSync,
+  writeFileSync,
+} from 'node:fs'
 import { join } from 'node:path'
 import { tmpdir } from 'node:os'
 import test from 'node:test'
@@ -268,7 +274,7 @@ test('official preparation returns a review bundle and rejects missing review in
   }
 })
 
-test('review CLI rejects external files, symlinks and URLs without reflecting content', () => {
+test('review CLI rejects external files, symlinks, directories, oversized files and URLs', () => {
   const outside = mkdtempSync(join(tmpdir(), 'cacau-offline-private-'))
   const inside = mkdtempSync(join(process.cwd(), 'evidence', 'readiness-test-'))
   try {
@@ -276,9 +282,15 @@ test('review CLI rejects external files, symlinks and URLs without reflecting co
     writeFileSync(privateFile, '{"password":"synthetic-private"}')
     const link = join(inside, 'link.json')
     symlinkSync(privateFile, link)
+    const directory = join(inside, 'directory.json')
+    mkdirSync(directory)
+    const oversized = join(inside, 'oversized.json')
+    writeFileSync(oversized, ' '.repeat(1_000_001))
     for (const path of [
       privateFile,
       link,
+      directory,
+      oversized,
       'postgres://synthetic:private@invalid/db',
     ]) {
       const result = spawnSync(

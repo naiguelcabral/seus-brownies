@@ -1,6 +1,14 @@
 #!/usr/bin/env node
 // Official offline preparation/review entrypoint. Never applies migrations.
-import { lstatSync, readFileSync, realpathSync, rmSync } from 'node:fs'
+import {
+  closeSync,
+  constants,
+  fstatSync,
+  openSync,
+  readFileSync,
+  realpathSync,
+  rmSync,
+} from 'node:fs'
 import { extname, resolve, sep } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { buildForwardCandidate } from './migration-chain-forward-candidate.mjs'
@@ -22,12 +30,24 @@ function readEvidence(path) {
       .slice(evidenceRoot.length)
       .split(sep)
       .some((part) => part.startsWith('.')) ||
-    lstatSync(path).isSymbolicLink() ||
-    !lstatSync(resolved).isFile() ||
-    lstatSync(resolved).size > 1_000_000
+    resolved !== resolve(path)
   )
     throw new Error('INVALID_EVIDENCE')
-  return JSON.parse(readFileSync(resolved, 'utf8'))
+  // Validate and read the same open file; never reopen a path after stat.
+  // NOFOLLOW rejects a final symlink swapped in after realpath; NONBLOCK
+  // lets the file-type check reject a FIFO without waiting for a writer.
+  const descriptor = openSync(
+    resolved,
+    constants.O_RDONLY | constants.O_NOFOLLOW | constants.O_NONBLOCK,
+  )
+  try {
+    const stat = fstatSync(descriptor)
+    if (!stat.isFile() || stat.size > 1_000_000)
+      throw new Error('INVALID_EVIDENCE')
+    return JSON.parse(readFileSync(descriptor, 'utf8'))
+  } finally {
+    closeSync(descriptor)
+  }
 }
 export function runPreparation(argv) {
   if (argv[0] === '--review') {

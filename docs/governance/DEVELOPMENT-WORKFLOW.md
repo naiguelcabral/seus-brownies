@@ -119,7 +119,8 @@ npm run db:review -- --evidence evidence/<metadados-sanitizados>.json
 O primeiro comando cria um diretório temporário com pacote e manifesto para
 inspeção; sua remoção posterior cabe ao operador. O segundo aceita apenas JSON
 regular de até 1 MB dentro de `evidence/`, sem caminho oculto, URL ou link
-simbólico final. Não incluir dados pessoais, credenciais, strings de conexão
+simbólico. Tamanho e tipo são validados pelo mesmo descritor usado na leitura,
+sem reabrir o caminho após a checagem. Não incluir dados pessoais, credenciais, strings de conexão
 ou conteúdos operacionais. Não converter os exemplos sintéticos dos testes
 em evidência de um alvo real.
 
