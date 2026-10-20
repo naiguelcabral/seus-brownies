@@ -16,7 +16,7 @@ def sensitive(path: str) -> bool:
     name = parts[-1].lower()
     return (
         any(
-            part.lower() in {".codex", ".codex-local", ".neon", ".wrangler", ".ssh"}
+            part.lower() in {".codex", ".codex-local", ".neon", ".wrangler", ".ssh", "backups-local"}
             for part in parts
         )
         or name.startswith((".env", ".dev.vars"))

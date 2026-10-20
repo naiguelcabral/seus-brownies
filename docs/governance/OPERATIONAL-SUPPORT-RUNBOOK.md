@@ -33,6 +33,21 @@ reconciliação da matriz; auditoria no banco não substitui alerta de indisponi
 
 ## Backup e recuperação
 
+Decisão do usuário em 20/10: cópia local na raiz do projeto; alertas internos
+destinados ao perfil Dono; duas novas contas de teste/Gerente serão criadas por
+ele. O destino técnico é `backups-local/`, ignorado pelo Git e recusado pelo
+guard mesmo em staging forçado, com diretório 0700 e arquivos 0600. Trata-se
+de cópia na mesma máquina, não de armazenamento independente externo.
+
+O utilitário `create-local-backup.mjs` está preparado para `public` e `drizzle`,
+com autenticação da CLI nativa em memória, endpoint direto fixo, TLS verificado
+e `default_transaction_read_only=on`. Não inclui o serviço gerenciado de Auth.
+O alvo conhecido é a original chamada `production`; o reconhecimento da CLI
+também usa esse nome. A revisão automática bloqueou a primeira execução por
+falta de autorização explícita desse alvo e do payload potencialmente sensível.
+Nenhum dump foi gerado. Uma pergunta de autorização específica foi enviada;
+até a resposta, somente testes sintéticos e preparação são permitidos.
+
 Antes de qualquer nova aplicação compartilhada, identificar projeto/branch,
 database e vínculo com o Worker; marcar o ponto de recuperação; conferir
 conteúdo coberto, acesso, retenção e destino independente; e testar restauração

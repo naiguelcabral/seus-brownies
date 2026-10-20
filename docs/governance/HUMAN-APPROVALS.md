@@ -2,6 +2,14 @@
 
 ## Continuidade integral da validação técnica — 20/10/2026
 
+Definição operacional posterior: usuário criará mais duas contas (teste e
+Gerente), escolheu cópia local na raiz do projeto e perfil Dono para alertas.
+Pasta privada/ignorada `backups-local/` e utilitário foram preparados. A
+exportação da original `production/br-lingering-wind-acwh5wap` foi rejeitada
+pela revisão automática por falta de autorização específica do alvo/payload;
+nenhuma cópia foi gerada. Pergunta explícita enviada; não repetir ou contornar
+a exportação antes da resposta. Não confundir cópia local com backup externo.
+
 Após a lista de pendências de banco, QA integrado, acesso, usabilidade,
 automação, integração e sustentação, o usuário respondeu “Pode seguir com
 tudo que precisa ser feito”. Autoriza avançar essas frentes dentro das
