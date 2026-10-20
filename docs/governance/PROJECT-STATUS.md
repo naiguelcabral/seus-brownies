@@ -5,6 +5,23 @@ atual de tarefas, prioridades e critérios de conclusão. Os checkpoints de
 publicação abaixo preservam o estado comprovado de cada entrega; suas
 próximas etapas históricas não substituem o roadmap atualizado.
 
+## Login da nova Gerente — recuperação solicitada — 20/10/2026
+
+Após a concessão, o usuário relatou a mensagem de credenciais inválidas.
+Consultas confirmaram identidade única com e-mail verificado e vínculo
+`manager` ativo. Dois eventos recentes de login registraram `provider_rejected`;
+esses eventos não armazenam identidade e não são atribuídos individualmente.
+A credencial da identidade ainda tinha criação/atualização coincidentes com a
+criação administrativa. A senha informada no cadastro posterior pode não ter
+sido aplicada; isso é hipótese, sem inspeção de senha ou hash.
+
+O fluxo público “Esqueci minha senha” foi usado uma única vez para essa conta.
+A auditoria registrou `password_reset_requested/success` às
+`2026-10-20T18:42:15.668Z`, após o marcador `provider_outcome_pending`.
+Aceite do provedor não comprova recebimento. A titular deve concluir a
+redefinição pessoalmente e repetir o login; o aceite conectado H03 segue aberto.
+Nenhuma credencial ou regra de autorização foi alterada pelo agente.
+
 ## Acesso de Gerente concedido — 20/10/2026
 
 A identidade de Gerente em `g1-auth-hml` foi relida com e-mail verificado.

@@ -22,6 +22,10 @@ Próximos passos: fazer o aceite conectado dos perfis. As identidades criadas
 no Neon Auth em 20/10/2026 foram verificadas e receberam os papéis `employee`
 e `manager`, com auditoria na mesma transação e releitura independente de
 cada concessão.
+O login da nova Gerente retornou mensagem de credenciais inválidas. Identidade
+verificada e vínculo ativo foram reconfirmados; recuperação pela interface
+aceita pelo provedor às 18:42:15 UTC. Aguardam-se redefinição pessoal e novo
+login, sem presumir entrega do e-mail ou aceite H03.
 Também faltam alertas automáticos ao Dono e rotina independente de backups.
 Cópia local privada já criada e restaurada; sem periodicidade ou armazenamento
 externo.
@@ -132,7 +136,7 @@ sintético foi gravado no HML.
 | T03 | Concluído no escopo isolado | Workflow validado: dois runners PostgreSQL 17 e 35 casos em oito specs UI com rede restrita. Jobs remotos passaram em3f0ba59. Aceite conectado H04/H05 continua separado; incremento publicado no HML após correção de sessão. O diagnóstico upstream histórico permanece inconclusivo. |
 | H04 / H05 | Parcial | Ensaiar o fluxo completo pela interface, com backend/banco e identidade de teste isolados: compra em kg → consumo em g → produção → venda → recebimento/entrega → lucro; cancelamento, devolução, crédito/resgate, fechamento, concorrência e falhas. Não gravar fatos sintéticos na base compartilhada. |
 | H01 / H02 | Parcial | Completar a homologação integrada de login/logout, expiração/revogação, OTP/reset, cooldown, limiter distribuído e Turnstile válido/inválido/replay, preservando controles e auditoria. Sessão e recuperação do Dono já foram comprovadas. |
-| H03 | Parcial | As identidades de Gerente e Funcionário criadas em `g1-auth-hml` em 20/10/2026 estão verificadas e receberam vínculos ativos `manager` e `employee` na base operacional. Cada concessão teve evento `role_changed` na mesma transação e releitura independente de um vínculo/um evento. Falta validar Dono, Gerente, Produção e Funcionário pela interface e por chamadas diretas, incluindo negações por permissão. Não conceder papéis apenas para contornar um teste. |
+| H03 | Parcial | As identidades de Gerente e Funcionário criadas em `g1-auth-hml` em 20/10/2026 estão verificadas e receberam vínculos ativos `manager` e `employee` na base operacional. Cada concessão teve evento `role_changed` na mesma transação e releitura independente de um vínculo/um evento. O login da nova Gerente retornou credenciais inválidas; vínculo reconfirmado e recuperação pela interface aceita pelo provedor, pendentes recebimento/redefinição pessoal e novo login. Falta validar Dono, Gerente, Produção e Funcionário pela interface e por chamadas diretas, incluindo negações por permissão. Não conceder papéis apenas para contornar um teste. |
 | H06 | Parcial | Concluir o aceite por perfil das telas e relatórios ainda não cobertos, celular, acessibilidade, CSV, filtros/paginação e desempenho percebido. As revisões de UX publicadas não voltam à condição de “não implementadas”. |
 | T04 | Concluído | Oxfmt alinhado; 21 testes do controlador simulado, Oxc1.64.1 conferida e Python3.12 validada. ActionsNode24 revisadas, Ubuntu24.04 fixado; CI sem avisos de runtime. |
 
