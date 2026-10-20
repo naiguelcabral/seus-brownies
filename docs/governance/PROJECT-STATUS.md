@@ -26,6 +26,11 @@ o novo teste cobre o ORM completo até 0033. Corrigida também uma asserção de
 S01 com `requireDefined`, para explicitar que o último evento deve existir.
 Workflow ampliado para executar e guardar os ensaios sintéticos novos.
 Suíte Node: 538 testes aprovados; lint, tipos, formato e Knip aprovados.
+Build HML isolado local aprovado. Código `c6d0bf8` sincronizado na
+[PR #46 em rascunho](https://github.com/naiguelcabral/seus-brownies/pull/46);
+CI `39412305542`, PostgreSQL `39412305442` e CodeQL `39412305514` passaram.
+Três análises CodeQL sem resultados; zero alertas abertos. Container sintético
+encerrado após os ensaios. Nenhum arquivo em `src/` ou SQL histórico alterado.
 T02 permanece parcial: faltam adoção oficial e revisão dos metadados já
 ensaiados e classificação independente dos alvos relevantes. `db:migrate`
 continua offline e bloqueante. Nenhum deploy, acesso SQL compartilhado,

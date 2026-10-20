@@ -1,5 +1,26 @@
 # Handoff de autonomia — Cacau v1
 
+## T02 retomado e comprovado em laboratório — 20 de outubro de 2026
+
+- Capacidade oficial renovada: 100% nas duas janelas na retomada; a reserva
+  anterior está encerrada. `LIGARTUDO --codex` validou dependências/MCPs/keyring;
+  somente a abertura de outra TUI parou por falta de terminal interativo.
+- Branch `codex/generic-migration-path`, código `c6d0bf8`, PR #46 em rascunho,
+  base na branch publicada `feat/input-catalog-kg-purchases` para limitar o diff.
+- Candidata offline conserva SQLs/hashes/timestamps e pontes, inclui até 0033,
+  classifica prefixos exatos e valida geração futura. Nenhuma cadeia ativa
+  alterada, nenhum deploy, SQL externo ou operação fictícia compartilhada.
+- Passaram 538 testes Node, 48 casos PostgreSQL 17 (13 novos), lint, tipos,
+  formato, Knip e build HML isolado. CI39412305542, PG39412305442 e
+  CodeQL39412305514 verdes em c6d0bf8; três análises sem resultados e nenhum
+  alerta aberto. Container de teste encerrado.
+- Próximo passo exato: revisar a adoção da linha e seus metadados conforme a
+  revisão de20/10 do `MIGRATION-CHAIN-REMEDIATION-ADR.md`; T02 permanece parcial.
+  A candidata não é autorização de aplicação. Manter `db:migrate` bloqueante,
+  não modificar SQLs/recibos antigos nem reaplicar cargas/referências do HML.
+  Aplicação compartilhada continua exigindo classificação independente do
+  alvo, recuperação e autorização específica. Sem merge automático.
+
 ## Reserva de capacidade após S01 — 19 de outubro de 2026
 
 - Tarefa concluída: S01, inventário e fechamento das lacunas de autoria e

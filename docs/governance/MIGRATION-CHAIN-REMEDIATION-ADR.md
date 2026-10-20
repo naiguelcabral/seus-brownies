@@ -51,6 +51,14 @@ node --import tsx scripts/test-migration-chain-forward-disposable.mjs --ack-disp
 
 O workflow executa esses casos e publica evidências exclusivamente sintéticas.
 Resumo versionado: [recibo local](../../evidence/migration-chain-forward-2026-10-20.json).
+O bootstrap estrutural preserva os defaults históricos da 0019; ele não
+importa o catálogo, receitas, cenários ou a configuração operacional atual do
+HML. Provisionamento de outra operação continua separado e rastreável.
+
+Commit de código `c6d0bf8`, [PR #46 em rascunho](https://github.com/naiguelcabral/seus-brownies/pull/46).
+CI `39412305542`, PostgreSQL `39412305442` e CodeQL `39412305514` aprovados.
+As três análises de segurança retornaram zero resultados; zero alertas abertos
+na consulta final. O build HML isolado local também passou, sem publicação.
 
 ### Adoção que ainda falta
 
