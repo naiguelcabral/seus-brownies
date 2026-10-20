@@ -1,6 +1,10 @@
 {
   "$schema": "https://unpkg.com/knip@6/schema.json",
   "entry": [
+    "e2e/fixtures/auth-onboarding/main.tsx",
+    "e2e/fixtures/auth-onboarding/router.ts",
+    "e2e/fixtures/auth-onboarding/start.ts",
+    "e2e/fixtures/auth-onboarding/state.ts",
     "src/router.tsx",
     "src/start.ts",
     "src/routes/**/*.{ts,tsx}",

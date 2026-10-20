@@ -8,6 +8,7 @@ if (process.env.CACAU_FIXTURE_E2E_ISOLATED !== '1') {
 export default defineConfig({
   testDir: './e2e',
   testMatch: [
+    'auth-onboarding.spec.ts',
     'product-editor.spec.ts',
     'catalog-editors.spec.ts',
     'dashboard-overview.spec.ts',

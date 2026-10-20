@@ -18,6 +18,7 @@ import {
 import {
   accessDeniedLoginMessage,
   emailVerificationRequiredMessage,
+  otpSentMessage,
 } from '#/features/auth/login-actions'
 import { getSessionStatus } from '#/features/auth/session-status.functions'
 import { TurnstileChallenge } from '#/features/auth/turnstile-challenge'
@@ -99,6 +100,8 @@ function LoginPage() {
   ) {
     setMode(nextMode)
     setMessage(null)
+    setPassword('')
+    setOtp('')
     setRequiresChallenge(false)
     setTurnstileToken(null)
   }
@@ -150,12 +153,8 @@ function LoginPage() {
       captureChallenge(result)
       if (mode === 'sign-up') {
         setMode('verify-email')
-        setMessage(
-          readMessage(
-            result,
-            'Conta criada. Verifique seu e-mail para continuar.',
-          ),
-        )
+        setPassword('')
+        setMessage(readMessage(result, otpSentMessage))
         return
       }
       const session = await getSession()
@@ -191,11 +190,14 @@ function LoginPage() {
         data: { email, otp, turnstileToken: turnstileToken ?? undefined },
       })
       captureChallenge(result)
-      setMessage(
-        result.ok
-          ? 'E-mail verificado. Sua conta não terá acesso operacional até receber uma permissão do Cacau.'
-          : readMessage(result, 'Não foi possível verificar o código.'),
-      )
+      if (result.ok) {
+        changeMode('sign-in')
+        setMessage(
+          'E-mail confirmado. Entre com sua senha. Se a conta já existia ou foi preparada pela equipe, use “Primeiro acesso ou esqueci minha senha” para definir outra.',
+        )
+        return
+      }
+      setMessage(readMessage(result, 'Não foi possível verificar o código.'))
     } catch {
       setMessage('Não foi possível verificar o código. Tente novamente.')
     } finally {
@@ -259,7 +261,7 @@ function LoginPage() {
           {mode === 'verify-email'
             ? 'Verifique seu e-mail'
             : mode === 'request-password-reset'
-              ? 'Recuperar senha'
+              ? 'Definir ou recuperar senha'
               : mode === 'sign-up'
                 ? 'Criar conta no Cacau'
                 : 'Entrar no Cacau'}
@@ -268,6 +270,10 @@ function LoginPage() {
           <form className="mt-6 space-y-4" onSubmit={submitOtp}>
             <p className="text-sm text-[#75411f]">
               Informe o código enviado para {email}.
+            </p>
+            <p className="text-sm text-[#75411f]">
+              O código confirma seu e-mail. Ele não altera a senha de uma conta
+              que já existia.
             </p>
             <label className="block text-sm font-bold text-[#4a2114]">
               Código de verificação
@@ -302,6 +308,22 @@ function LoginPage() {
             >
               Reenviar código
             </button>
+            <button
+              className="w-full text-sm font-bold text-[#4a2114] underline"
+              type="button"
+              onClick={() => changeMode('request-password-reset')}
+              disabled={pending}
+            >
+              Primeiro acesso ou esqueci minha senha
+            </button>
+            <button
+              className="w-full text-sm font-bold text-[#4a2114] underline"
+              type="button"
+              onClick={() => changeMode('sign-in')}
+              disabled={pending}
+            >
+              Voltar para entrar
+            </button>
           </form>
         ) : mode === 'request-password-reset' ? (
           <form
@@ -309,7 +331,8 @@ function LoginPage() {
             onSubmit={submitPasswordResetRequest}
           >
             <p className="text-sm text-[#75411f]">
-              Informe seu e-mail para receber as instruções de recuperação.
+              Se a equipe já criou sua conta ou você esqueceu a senha, informe
+              seu e-mail para receber um link e definir sua senha.
             </p>
             <label className="block text-sm font-bold text-[#4a2114]">
               E-mail
@@ -348,6 +371,13 @@ function LoginPage() {
           </form>
         ) : (
           <form className="mt-6 space-y-4" onSubmit={submitCredentials}>
+            {mode === 'sign-up' ? (
+              <p className="text-sm text-[#75411f]">
+                Se a equipe já preparou sua conta, use “Primeiro acesso ou
+                esqueci minha senha”. Cadastrar novamente não altera a senha
+                existente.
+              </p>
+            ) : null}
             {mode === 'sign-up' ? (
               <label className="block text-sm font-bold text-[#4a2114]">
                 Nome
@@ -414,18 +444,14 @@ function LoginPage() {
             >
               {mode === 'sign-up' ? 'Já tenho uma conta' : 'Criar uma conta'}
             </button>
-            {mode === 'sign-in' ? (
-              <button
-                className="w-full text-sm font-bold text-[#4a2114] underline"
-                type="button"
-                onClick={() => {
-                  changeMode('request-password-reset')
-                }}
-                disabled={pending}
-              >
-                Esqueci minha senha
-              </button>
-            ) : null}
+            <button
+              className="w-full text-sm font-bold text-[#4a2114] underline"
+              type="button"
+              onClick={() => changeMode('request-password-reset')}
+              disabled={pending}
+            >
+              Primeiro acesso ou esqueci minha senha
+            </button>
           </form>
         )}
       </section>

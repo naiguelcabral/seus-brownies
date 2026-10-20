@@ -135,6 +135,8 @@ export async function signUpWithEmailPassword(
   try {
     // Always attempt the same OTP delivery step. An existing unverified
     // identity can continue here, while the visible response stays identical.
+    // Re-registration never replaces an existing password: its owner must
+    // use the password-reset flow, independently of email verification.
     await auth.signUp.email(input)
     await auth.emailOtp.sendVerificationOtp({
       email: input.email,
