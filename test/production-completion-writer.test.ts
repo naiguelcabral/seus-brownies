@@ -147,7 +147,7 @@ test('conclusão persiste consumo, custos, saídas e FIFO em uma única transaç
     mock.committed.some((entry) => entry.table === 'production_batch_losses'),
     false,
   )
-  const audit = mock.committed.at(-1)
+  const audit = requireDefined(mock.committed.at(-1))
   assert.equal(audit.table, 'operational_audit_events')
   assert.deepEqual(audit.values, [
     {

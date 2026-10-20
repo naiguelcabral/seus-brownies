@@ -1,5 +1,77 @@
 # ADR — remediação da cadeia de migrations 0017–0028
 
+## Revisão T02 — 20 de outubro de 2026
+
+**Proposta para revisão; nenhuma cadeia ativa foi substituída.** A atualização
+delimitada de 17/10 já aplicou os recibos antigos e duas pontes no alvo
+autorizado; as extensões até `0033` também já foram aplicadas. Portanto, a
+preferência histórica por substituir SQLs ainda não aplicados não pode ser
+usada nesse alvo. Os estados antigos abaixo são evidência da investigação,
+não descrição atual do HML.
+
+`scripts/migration-chain-forward-candidate.mjs` compõe uma candidata temporária
+com os 29 SQLs originais, as duas pontes de compatibilidade já ensaiadas e as
+cinco extensões `0029–0033`, conservando hashes e timestamps. SQLs, journal e
+snapshots de origem permanecem intactos. O classificador compara todos os
+recibos, não apenas o maior timestamp (o migrador Drizzle sozinho não comprova
+os hashes antigos). Aceita apenas os checkpoints completos da tabela abaixo.
+Ele não conecta, não executa SQL e sempre retorna `application_authorized:false`.
+Compatibilidade dos recibos exige ainda catálogo independente; journal vazio
+ou ausente não prova banco vazio, nem ausência de aplicação manual/parcial.
+
+| Origem da candidata | Recibos | Prova local até 0033 |
+| --- | --- | --- |
+| instalação vazia | 0 | instalação e reaplicação sem efeito |
+| baseline exata 0016 | 17 | upgrade, preservação de dados e recibos |
+| compatibilidade completa até 0028 | 31 | cinco extensões sem repetir a ponte |
+| compatibilidade + 0029/0030/0031/0032 | 32/33/34/35 | continuação do prefixo exato |
+| compatibilidade + 0033 | 36 | nenhuma migration nova |
+
+Treze ensaios PostgreSQL 17 aprovados: oito origens, catálogo equivalente a
+uma referência corrigida independente, hash divergente, aplicação manual
+sem recibo, falha tardia com rollback integral de schema/journal/dados e
+geração futura. A CLI Drizzle executou sem diff com o schema atual e gerou
+uma migration aditiva sintética no índice 36, aplicada e reaplicada sem alterar
+os 36 recibos anteriores ou os dados. A prova confere saída positiva e journal;
+o exit code sozinho não basta para comprovar geração sem erro.
+Todas as origens convergem para SHA-256 de catálogo
+`b04d3ce50a8e8e2161522c7a5d3e77cbe508c8601bb266ceda7cdafe38268980`.
+As 38 tabelas do ORM atual foram consultadas com LIMIT 0; proteções estruturais
+de produtos e idempotência foram exercitadas. Os 26 ensaios anteriores da
+cadeia, quatro de baseline auth e cinco de upgrade delimitado também passaram.
+O ensaio delimitado passa agora a conferir todas as colunas do snapshot `0028`;
+a compatibilidade com o ORM atual é exigida no ensaio novo até `0033`.
+
+Com o serviço sintético de `.github/workflows/migration-chain-disposable.yml`
+em loopback na porta 5433, reproduzir sem credenciais externas:
+
+```sh
+node --import tsx scripts/test-migration-chain-forward-disposable.mjs --ack-disposable-postgres17
+```
+
+O workflow executa esses casos e publica evidências exclusivamente sintéticas.
+Resumo versionado: [recibo local](../../evidence/migration-chain-forward-2026-10-20.json).
+
+### Adoção que ainda falta
+
+Recomenda-se revisar a linha com pontes como caminho de evolução compatível
+com os recibos já consumidos. Essa recomendação não altera o status proposto
+do ADR. A candidata completa até 0033 inclui os snapshots originais até 0033,
+mantém as lacunas históricas e comprova a continuidade de `drizzle-kit generate`
+sem fabricar snapshots para as pontes. Hash do journal candidato e todos os
+snapshots copiados são conferidos. A adoção ainda exige revisão desses
+metadados e seleção explícita da linha, sem falsificar recibos existentes.
+Históricos sem pontes, checkpoints intermediários da ponte, hashes divergentes
+ou objetos manuais exigem plano próprio por estado observado.
+
+Antes de ativar o caminho oficial: revisar a estratégia, os manifestos e os
+metadados comprovados; manter o preflight bloqueante; completar o inventário e catálogo
+independente dos alvos relevantes; definir recuperação e obter autorização
+específica para qualquer aplicação compartilhada. Aprovações de valores e de
+mix vazio já usadas no alvo original não se estendem automaticamente a outra
+base. Não reaplicar referências ou lotes históricos. Esta revisão não exige
+deploy, mudança de aplicação, escrita no HML ou acesso ao Neon.
+
 Data: 14 de outubro de 2026 UTC. Estado: `proposed`, bloqueada para qualquer
 ambiente compartilhado. Este ADR registra provas locais e não autoriza SQL,
 DDL, DML, backfill, migration, deploy ou alteração de infraestrutura externa.

@@ -5,6 +5,33 @@ atual de tarefas, prioridades e critérios de conclusão. Os checkpoints de
 publicação abaixo preservam o estado comprovado de cada entrega; suas
 próximas etapas históricas não substituem o roadmap atualizado.
 
+## T02 — caminho genérico ensaiado até 0033 — 20/10/2026
+
+Retomada com capacidade oficial renovada em 100% nas duas janelas, checkpoint
+`55950fa` limpo e sincronizado. Branch dedicada `codex/generic-migration-path`.
+Candidata offline temporária reúne SQLs originais, duas pontes e cinco
+extensões sem alterar arquivos históricos. Classificação por todos os hashes
+e timestamps rejeita drift, ausência de ponte e checkpoints parciais. Treze
+ensaios PostgreSQL 17 locais passaram: instalação nova e sete checkpoints
+até 0033, equivalência independente, dados/recibos preservados, replay e
+rollback tardio. Catálogo final com 36 recibos, SHA-256
+`b04d3ce50a8e8e2161522c7a5d3e77cbe508c8601bb266ceda7cdafe38268980`;
+as 38 tabelas atuais do ORM foram consultadas com LIMIT 0. Regressão: 26 casos
+da cadeia, quatro de baseline e cinco de upgrade delimitado aprovados.
+A geração Drizzle não produziu diff com o schema atual e produziu/aplicou uma
+migration aditiva sintética no próximo índice, preservando os recibos e dados.
+
+O teste histórico até 0028 agora confere todas as suas colunas versionadas;
+o novo teste cobre o ORM completo até 0033. Corrigida também uma asserção de
+S01 com `requireDefined`, para explicitar que o último evento deve existir.
+Workflow ampliado para executar e guardar os ensaios sintéticos novos.
+Suíte Node: 538 testes aprovados; lint, tipos, formato e Knip aprovados.
+T02 permanece parcial: faltam adoção oficial e revisão dos metadados já
+ensaiados e classificação independente dos alvos relevantes. `db:migrate`
+continua offline e bloqueante. Nenhum deploy, acesso SQL compartilhado,
+importação, alteração de referência consumida ou escrita no HML nesta etapa.
+Detalhes e limites: [ADR da cadeia](MIGRATION-CHAIN-REMEDIATION-ADR.md).
+
 ## Autoria e auditoria operacional completas — 19/10/2026
 
 O inventário S01 cobriu todas as Server Functions mutáveis de catálogo,

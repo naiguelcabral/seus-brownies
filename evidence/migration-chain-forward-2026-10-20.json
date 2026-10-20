@@ -1,0 +1,38 @@
+{
+  "date": "2026-10-20",
+  "scope": "synthetic-disposable-postgres17",
+  "application_authorized": false,
+  "active_chain_replaced": false,
+  "historical_sources_unchanged": true,
+  "external_sql_attempted": false,
+  "deployment_attempted": false,
+  "final_receipts": 36,
+  "orm_tables_checked": 38,
+  "catalog_sha256": "b04d3ce50a8e8e2161522c7a5d3e77cbe508c8601bb266ceda7cdafe38268980",
+  "cases_passed": [
+    "empty-to-0033",
+    "checkpoint-16-to-0033",
+    "checkpoint-28-to-0033",
+    "checkpoint-29-to-0033",
+    "checkpoint-30-to-0033",
+    "checkpoint-31-to-0033",
+    "checkpoint-32-to-0033",
+    "checkpoint-33-to-0033",
+    "same-catalog-as-independent-corrected-reference",
+    "future-generation-no-diff-and-additive-replay",
+    "hash-drift",
+    "unreceipted-column",
+    "late-failure"
+  ],
+  "regression_cases_passed": {
+    "existing_chain": 26,
+    "auth_baseline": 4,
+    "scoped_upgrade": 5
+  },
+  "remaining_gates": [
+    "review_and_adopt_official_line",
+    "review_generation_metadata",
+    "independent_target_classification",
+    "specific_authorization_before_shared_application"
+  ]
+}
