@@ -145,7 +145,11 @@ test('produção invalida prévia ao mudar data e adicionar ou remover saídas/p
     ).toBeVisible()
   }
   await calculate()
-  await dialog.getByLabel('Data do lote', { exact: true }).fill('2026-10-20')
+  const dateField = dialog.getByLabel('Data do lote', { exact: true })
+  const originalDate = await dateField.inputValue()
+  await dateField.fill(
+    originalDate === '2026-10-20' ? '2026-10-21' : '2026-10-20',
+  )
   await expect(
     dialog.getByRole('heading', { name: 'Prévia antes do rascunho' }),
   ).toHaveCount(0)

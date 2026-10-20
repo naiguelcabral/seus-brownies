@@ -31,8 +31,8 @@ test('fixture bloqueia conexões externas sem consultar serviços compartilhados
     }
   })
   expect(outcome).toBe('blocked')
-  expect((await failure).failure()?.errorText).toBe(
-    'net::ERR_BLOCKED_BY_CLIENT',
+  expect((await failure).failure()?.errorText).toMatch(
+    /^net::ERR_BLOCKED_BY_CLIENT(?:\.Inspector)?$/,
   )
 })
 
