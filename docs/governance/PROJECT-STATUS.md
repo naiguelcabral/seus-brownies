@@ -5,6 +5,15 @@ atual de tarefas, prioridades e critérios de conclusão. Os checkpoints de
 publicação abaixo preservam o estado comprovado de cada entrega; suas
 próximas etapas históricas não substituem o roadmap atualizado.
 
+## Acesso de Gerente concedido — 20/10/2026
+
+A identidade de Gerente em `g1-auth-hml` foi relida com e-mail verificado.
+A consulta prévia na base operacional original não encontrou vínculo para
+essa identidade. Uma transação concedeu `manager` e gravou `role_changed`
+com motivo e referência inédita. Releitura independente confirmou exatamente
+um vínculo ativo e um evento de sucesso correspondente. Funcionário e Gerente
+estão concedidos; o aceite conectado H03 permanece pendente.
+
 ## Acesso de Funcionário concedido — 20/10/2026
 
 A identidade de Funcionário criada em `g1-auth-hml` foi relida com e-mail
@@ -12,7 +21,7 @@ verificado. Na base operacional original, a preflight encontrou zero vínculos
 e zero eventos de acesso para essa identidade. Uma transação concedeu o papel
 `employee` e gravou o evento `role_changed` de sucesso com motivo e referência
 inédita. Releitura independente confirmou um vínculo ativo e um evento
-correspondente. A conta de Gerente segue sem e-mail verificado e sem vínculo;
+correspondente. Naquele checkpoint, Gerente ainda não tinha e-mail verificado;
 o aceite conectado H03 ainda está pendente. Nenhuma credencial, sessão, regra
 de autorização ou dado de negócio foi alterado.
 

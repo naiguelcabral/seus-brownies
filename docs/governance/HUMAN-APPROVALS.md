@@ -15,12 +15,14 @@ operacional original, em transação única com evento `role_changed` de sucesso
 motivo e referência inédita
 `access-grant:20261020:487652cd-5769-4757-89cf-e3f5a461cfee`. Leitura
 independente confirmou exatamente um vínculo ativo e um evento correspondente.
-A identidade de Gerente ainda depende de verificação de e-mail e não possui
-vínculo. A solicitação anterior autoriza `manager` após a verificação; a
-concessão deve ter referência inédita, motivo e evento de auditoria na mesma
-transação, seguida de leitura independente. Não reutilizar o SQL ou a
-referência da conciliação de 17/10. Senha, token, OTP e URL privada não entram
-no Git.
+A identidade de Gerente foi posteriormente relida com `emailVerified=true`.
+Conforme a autorização anterior, recebeu vínculo ativo `manager` e evento
+`role_changed` na mesma transação, com motivo e referência inédita
+`access-grant:20261020:27aa6e84-cf48-4fc1-91be-131f86b445e8`. A consulta
+independente confirmou exatamente um vínculo ativo e um evento correspondente.
+As duas concessões estão aplicadas; o aceite conectado dos perfis permanece
+pendente. Não reutilizar referências consumidas. Senha, token, OTP e URL
+privada não entram no Git.
 
 ## Continuidade integral da validação técnica — 20/10/2026
 
