@@ -29,6 +29,8 @@
     "deploy:hml": "HML_DEPLOY=1 bash scripts/build-hml-isolated.sh",
     "secret:hml": "wrangler secret put --env hml",
     "db:generate": "drizzle-kit generate",
+    "db:prepare": "node scripts/migration-chain-prepare.mjs",
+    "db:review": "node scripts/migration-chain-prepare.mjs --review",
     "db:migrate": "node scripts/migration-chain-preflight.mjs",
     "db:migrate:preflight": "node scripts/migration-chain-preflight.mjs",
     "db:push": "drizzle-kit push",

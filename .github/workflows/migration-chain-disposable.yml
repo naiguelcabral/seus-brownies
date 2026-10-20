@@ -8,6 +8,8 @@ on:
       - 'scripts/test-migration-chain-disposable.mjs'
       - 'scripts/test-migration-chain-forward-disposable.mjs'
       - 'test/migration-chain-forward-candidate.test.ts'
+      - 'test/migration-chain-readiness.test.ts'
+      - 'test/fixtures/migration-chain-forward-catalogs.json'
       - 'scripts/test-auth-baseline-disposable.mjs'
       - 'scripts/auth-baseline-payload.mjs'
       - 'scripts/test-scoped-upgrade-disposable.mjs'

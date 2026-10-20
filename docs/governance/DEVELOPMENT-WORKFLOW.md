@@ -108,6 +108,50 @@ imutabilidade, refs e atualizações síncronas de estado em efeitos React.
 
 ## Migrations
 
+A linha `forward-compatibility-v1` está adotada para **preparação e revisão
+offline**, preservando todos os SQLs, snapshots, hashes e timestamps publicados:
+
+```bash
+npm run db:prepare
+npm run db:review -- --evidence evidence/<metadados-sanitizados>.json
+```
+
+O primeiro comando cria um diretório temporário com pacote e manifesto para
+inspeção; sua remoção posterior cabe ao operador. O segundo aceita apenas JSON
+regular de até 1 MB dentro de `evidence/`, sem caminho oculto, URL ou link
+simbólico final. Não incluir dados pessoais, credenciais, strings de conexão
+ou conteúdos operacionais. Não converter os exemplos sintéticos dos testes
+em evidência de um alvo real.
+
+Contrato de entrada (`test/migration-chain-readiness.test.ts` demonstra somente
+fixtures): `line`, `candidate_journal_sha256`, `environment`; `target` com
+`project_id`, `branch_id`, `database_name`, `classification` e
+`worker_binding_verified`; `collection` com `source:'independent-catalog'`,
+`independent:true`, `read_only:true` e `collected_at`; `receipts` com os hashes
+e timestamps realmente coletados; `catalog` com todas as nove seções de
+`migration-chain-catalog.mjs`. Recuperação atestada em `backup.verified` e
+`backup.restore_tested` só é exigida se houver recibos pendentes. Decisões
+`decisions.migration_0019`/`migration_0028:'approved'` só são exigidas quando a
+respectiva migration estiver pendente; a 0028 também exige confirmação
+`scenario_mix_preexisting:false`.
+
+A coleta deve ser independente, somente de leitura e ter até 30 minutos na
+avaliação. O alvo deve estar confirmado como HML e vinculado ao Worker; o
+identificador original conhecido como produção é recusado mesmo com outro
+rótulo. O digest canônico do catálogo completo deve coincidir com o checkpoint
+reproduzido em `test/fixtures/migration-chain-forward-catalogs.json`. A ordem
+de chaves JSON não interfere; a ordem das linhas segue o coletor ordenado.
+Atestações no arquivo são material de revisão, não autenticação nem prova
+autossuficiente de autorização. Cabe confrontá-las com a coleta e os registros
+do alvo real, sem copiar credenciais para o arquivo.
+
+`READY_FOR_OPERATOR_REVIEW` **não autoriza aplicação**: todos os resultados
+mantêm `application_authorized:false` e `execution_enabled:false`. Nenhum dos
+comandos conecta ou aplica SQL; `db:migrate` conserva o preflight bloqueante
+anterior. Qualquer aplicação compartilhada exige plano próprio, classificação
+independente, recuperação e autorização específica. Detalhes no
+[ADR da cadeia](MIGRATION-CHAIN-REMEDIATION-ADR.md).
+
 - Alterar `src/db/schema.ts`.
 - Gerar migration versionada.
 - Ler o SQL gerado.

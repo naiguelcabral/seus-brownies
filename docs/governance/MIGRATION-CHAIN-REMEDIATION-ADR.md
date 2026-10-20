@@ -2,7 +2,8 @@
 
 ## Revisão T02 — 20 de outubro de 2026
 
-**Proposta para revisão; nenhuma cadeia ativa foi substituída.** A atualização
+**Linha adotada para preparação/revisão offline; aplicação compartilhada
+continua bloqueada. Nenhuma cadeia ativa foi substituída.** A atualização
 delimitada de 17/10 já aplicou os recibos antigos e duas pontes no alvo
 autorizado; as extensões até `0033` também já foram aplicadas. Portanto, a
 preferência histórica por substituir SQLs ainda não aplicados não pode ser
@@ -60,28 +61,43 @@ CI `39412305542`, PostgreSQL `39412305442` e CodeQL `39412305514` aprovados.
 As três análises de segurança retornaram zero resultados; zero alertas abertos
 na consulta final. O build HML isolado local também passou, sem publicação.
 
-### Adoção que ainda falta
+### Adoção local e gates de aplicação compartilhada
 
-Recomenda-se revisar a linha com pontes como caminho de evolução compatível
-com os recibos já consumidos. Essa recomendação não altera o status proposto
-do ADR. A candidata completa até 0033 inclui os snapshots originais até 0033,
+Após “Pode continuar”, a linha com pontes foi adotada para preparação e revisão
+offline pelo operador. `npm run db:prepare` monta o pacote temporário;
+`npm run db:review -- --evidence evidence/<arquivo>.json` revisa metadados sem
+abrir conexão. A candidata completa até 0033 inclui os snapshots originais até 0033,
 mantém as lacunas históricas e comprova a continuidade de `drizzle-kit generate`
 sem fabricar snapshots para as pontes. Hash do journal candidato e todos os
-snapshots copiados são conferidos. A adoção ainda exige revisão desses
-metadados e seleção explícita da linha, sem falsificar recibos existentes.
+snapshots copiados são conferidos. A revisão exige seleção explícita da linha
+e manifesto exato, sem falsificar recibos existentes.
 Históricos sem pontes, checkpoints intermediários da ponte, hashes divergentes
 ou objetos manuais exigem plano próprio por estado observado.
 
-Antes de ativar o caminho oficial: revisar a estratégia, os manifestos e os
-metadados comprovados; manter o preflight bloqueante; completar o inventário e catálogo
-independente dos alvos relevantes; definir recuperação e obter autorização
+As oito referências versionadas em `migration-chain-forward-catalogs.json`
+foram reproduzidas com o coletor independente no PostgreSQL 17 local. O digest
+canônico ordena chaves JSON e conserva a ordem das linhas do coletor; portanto
+é distinto do digest serializado registrado na evidência histórica acima.
+No checkpoint 0033, o canônico é
+`eaf0bdbe68314126ae27af14c1b01f5a7ecd5fd77859290a9b5e90d6fdcc17ec`.
+A revisão exige catálogo completo, recibos exatos, alvo confirmado como HML e
+vínculo do Worker atestado, coleta independente somente de leitura com até
+30 minutos e recuperação/decisões apenas para as migrations pendentes. O alvo
+original conhecido como produção é bloqueado mesmo se rotulado como HML.
+Atestações JSON não comprovam por si a autorização: devem ser confrontadas
+com os registros independentes do alvo. Resultados nunca habilitam execução.
+
+Antes de qualquer aplicação compartilhada: manter o preflight bloqueante;
+completar o inventário e catálogo independente dos alvos relevantes; definir
+recuperação e obter autorização
 específica para qualquer aplicação compartilhada. Aprovações de valores e de
 mix vazio já usadas no alvo original não se estendem automaticamente a outra
 base. Não reaplicar referências ou lotes históricos. Esta revisão não exige
 deploy, mudança de aplicação, escrita no HML ou acesso ao Neon.
 
-Data: 14 de outubro de 2026 UTC. Estado: `proposed`, bloqueada para qualquer
-ambiente compartilhado. Este ADR registra provas locais e não autoriza SQL,
+Data inicial: 14 de outubro de 2026 UTC. Revisão: 20/10/2026. Estado:
+`accepted-offline-review-only`, bloqueada para qualquer aplicação em ambiente
+compartilhado. Este ADR registra provas locais e não autoriza SQL,
 DDL, DML, backfill, migration, deploy ou alteração de infraestrutura externa.
 
 ## Fato reproduzido

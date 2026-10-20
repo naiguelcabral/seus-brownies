@@ -27,6 +27,10 @@ import {
 } from './migration-chain-forward-candidate.mjs'
 import { captureCatalog } from './migration-chain-catalog.mjs'
 import {
+  catalogDigest,
+  evaluateForwardReadiness,
+} from './migration-chain-readiness.mjs'
+import {
   verify0017ProductGuards,
   verify0017Idempotency,
 } from './migration-chain-0017-checks.mjs'
@@ -46,6 +50,16 @@ const cases = []
 let expectedCatalog
 let ormTablesChecked = 0
 const receipts = candidate.manifest.candidate_migrations
+const checkpointCatalogs = {}
+const catalogReferences = JSON.parse(
+  readFileSync(
+    new URL(
+      '../test/fixtures/migration-chain-forward-catalogs.json',
+      import.meta.url,
+    ),
+    'utf8',
+  ),
+)
 const history = async (client) => {
   if (
     !(
@@ -153,6 +167,52 @@ try {
         }
         const before = last === null ? null : await data(client)
         const beforeHistory = await history(client)
+        const checkpoint = classifyForwardHistory(
+          beforeHistory,
+          receipts,
+        ).checkpoint
+        const beforeCatalog = await captureCatalog(client)
+        checkpointCatalogs[checkpoint] = catalogDigest(beforeCatalog)
+        assert.equal(
+          checkpointCatalogs[checkpoint],
+          catalogReferences.catalogs[checkpoint],
+        )
+        const reviewEvidence = {
+          line: 'forward-compatibility-v1',
+          candidate_journal_sha256: candidate.manifest.candidate_journal_sha256,
+          environment: 'hml',
+          target: {
+            project_id: 'synthetic-project',
+            branch_id: 'synthetic-branch',
+            database_name: 'fixture',
+            classification: 'confirmed-hml',
+            worker_binding_verified: true,
+          },
+          collection: {
+            source: 'independent-catalog',
+            independent: true,
+            read_only: true,
+            collected_at: new Date().toISOString(),
+          },
+          receipts: beforeHistory,
+          catalog: beforeCatalog,
+          backup: { verified: true, restore_tested: true },
+          decisions: { migration_0019: 'approved', migration_0028: 'approved' },
+          scenario_mix_preexisting: false,
+        }
+        const reviewed = evaluateForwardReadiness(
+          reviewEvidence,
+          candidate.manifest,
+        )
+        assert.equal(reviewed.status, 'READY_FOR_OPERATOR_REVIEW')
+        assert.equal(reviewed.application_authorized, false)
+        const drift = structuredClone(reviewEvidence)
+        drift.catalog.tables.push({ name: 'synthetic-unreceipted-table' })
+        assert.ok(
+          evaluateForwardReadiness(drift, candidate.manifest).blockers.includes(
+            'CATALOG_MISMATCH_OR_INCOMPLETE',
+          ),
+        )
         await apply(client)
         const rows = await history(client)
         assert.deepEqual(
@@ -325,6 +385,11 @@ try {
     })
   }
   assert.deepEqual(sourceManifest(), sourcesBefore)
+  assert.deepEqual(checkpointCatalogs, catalogReferences.catalogs)
+  assert.equal(
+    candidate.manifest.candidate_journal_sha256,
+    catalogReferences.candidate_journal_sha256,
+  )
   const folder = mkdtempSync(join(tmpdir(), 'cacau-forward-evidence-'))
   writeFileSync(
     join(folder, 'result.json'),
@@ -339,6 +404,7 @@ try {
         final_receipts: receipts.length,
         catalog_sha256: hash(JSON.stringify(expectedCatalog)),
         manifest: candidate.manifest,
+        checkpoint_catalogs: checkpointCatalogs,
       },
       null,
       2,

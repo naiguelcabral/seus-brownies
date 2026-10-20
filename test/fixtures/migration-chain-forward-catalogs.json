@@ -1,0 +1,15 @@
+{
+  "scope": "synthetic-disposable-postgres17",
+  "application_authorized": false,
+  "candidate_journal_sha256": "4921abc53076fcba8db06e53befa586e00af11ce71d091fca88386099e8ac86f",
+  "catalogs": {
+    "empty": "f66ad2d416a9b8fafb9c6398478f644b1cc3aa9617faef16ae2101c8a9fcd722",
+    "0016": "b1a254668f65b8861eb5033c0ac035cc911f9cd74ddf11e5899f5fd278b4363f",
+    "bridged-0028": "c1edadd5aa1c314caef60a4ddb68ce95f9d3043edffc784df3df42c0ba5da3cc",
+    "bridged-0029": "04b61700a98cc8e08c39644f765c284bdfbeb21e0797a35f9d9ab063d52524dc",
+    "bridged-0030": "3dcbf0eb88f41141cb66cd0d4f65040386a0cd4701ca2bf62a79cebfea1be8b7",
+    "bridged-0031": "ecd502c5a7836c0eca198b59e7d68b1e9770e608c7e2f8b7d312af08d4bc1220",
+    "bridged-0032": "48db8a14ef2d3b362fd2968362b4eac027012e6fae2d85fbd8a8e2e29d4b10e4",
+    "bridged-0033": "eaf0bdbe68314126ae27af14c1b01f5a7ecd5fd77859290a9b5e90d6fdcc17ec"
+  }
+}

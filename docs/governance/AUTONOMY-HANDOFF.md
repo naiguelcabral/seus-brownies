@@ -1,5 +1,24 @@
 # Handoff de autonomia — Cacau v1
 
+## T02 — revisão offline oficial — 20 de outubro de 2026
+
+- Continuação “Pode continuar”: preparação e revisão local adotadas, sem
+  aplicação compartilhada, merge ou publicação. Branch e PR #46 mantidas.
+- `db:prepare` gera pacote temporário; `db:review` valida metadados sanitizados
+  com catálogo completo, recibos exatos, coleta independente recente e gates
+  aplicáveis. Execução e autorização sempre falsas; `db:migrate` inalterado.
+- Oito referências de catálogo reproduzidas e rejeição de drift ensaiadas no
+  PostgreSQL 17 isolado. Treze casos forward passaram novamente.
+- 546 testes Node, lint, tipos, formato e Knip aprovados; zero novas
+  ocorrências. Container sintético encerrado. Recibo:
+  `evidence/migration-chain-readiness-2026-10-20.json`.
+- Próximo passo: completar a classificação independente dos alvos relevantes,
+  confrontar catálogo/journal real com a linha ensaiada e registrar plano e
+  autorização específicos antes de qualquer SQL compartilhado. Não presumir
+  que a branch original seja HML ou reutilizar decisões de outro alvo.
+- Nenhuma alteração em `src/`, migrations ou referências consumidas. Nenhum
+  fato fictício, SQL externo ou deploy nesta etapa. T02 permanece parcial.
+
 ## T02 retomado e comprovado em laboratório — 20 de outubro de 2026
 
 - Capacidade oficial renovada: 100% nas duas janelas na retomada; a reserva
