@@ -20,6 +20,13 @@
   "isolated_hml_build_passed": true,
   "isolated_hml_build_commit": "45799a8a070dd8643487935f8e51d7bfd4bd1b92",
   "codeql_remediation": "js/file-system-race: validate and read the same descriptor; no path reopen",
+  "code_commit": "4d3821a6f650debe4de1174ef35565959303924e",
+  "ci_passed": 39418068183,
+  "postgres_ci_passed": 39418068187,
+  "codeql_passed": 39418061713,
+  "codeql_analysis_results": 0,
+  "codeql_alert_10_state": "fixed",
+  "branch_open_security_alerts": 0,
   "synthetic_container_stopped": true,
   "remaining_gates": [
     "independent_classification_and_catalog_of_relevant_targets",

@@ -12,6 +12,11 @@
 - 546 testes Node, lint, tipos, formato e Knip aprovados; zero novas
   ocorrências. Container sintético encerrado. Recibo:
   `evidence/migration-chain-readiness-2026-10-20.json`.
+- Código final `4d3821a` sincronizado. CI39418068183, PG39418068187 e
+  CodeQL39418061713 aprovados; 48 casos PostgreSQL remotos, três análises com
+  zero resultados e alerta #10 corrigido. Build HML isolado aprovado em
+  45799a8; a correção posterior toca apenas leitura da CLI offline e também
+  passou o build da CI. Árvore limpa após o checkpoint documental.
 - Próximo passo: completar a classificação independente dos alvos relevantes,
   confrontar catálogo/journal real com a linha ensaiada e registrar plano e
   autorização específicos antes de qualquer SQL compartilhado. Não presumir

@@ -35,6 +35,13 @@ commit encontrou `js/file-system-race` na leitura de evidência; corrigido para
 validar tipo/tamanho e ler pelo mesmo descritor, com abertura sem seguir
 symlink e sem bloquear em FIFO. Casos CLI também recusam diretório e arquivo
 acima de 1 MB.
+Código final `4d3821a` sincronizado na
+[PR #46 em rascunho](https://github.com/naiguelcabral/seus-brownies/pull/46).
+CI `39418068183`, PostgreSQL `39418068187` e CodeQL `39418061713` aprovados.
+Três análises com zero resultados; alerta #10 confirmado como `fixed` e zero
+alertas abertos na branch. Os checks remotos repetiram a suíte e os 48 casos
+PostgreSQL isolados. Definition of Done aplicada ao incremento offline;
+nenhuma alteração de runtime do HML requer publicação.
 
 ### Evidência anterior da candidata
 
