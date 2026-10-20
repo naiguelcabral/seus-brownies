@@ -5,7 +5,23 @@ atual de tarefas, prioridades e critérios de conclusão. Os checkpoints de
 publicação abaixo preservam o estado comprovado de cada entrega; suas
 próximas etapas históricas não substituem o roadmap atualizado.
 
-## Checkpoint de encerramento — 20/10/2026
+## Investigação retomada — 20/10/2026
+
+Capacidade renovada confirmada em100%, retomada local executada e branch
+`codex/integrated-validation-gates` limpa/sincronizada antes da alteração.
+Logs confirmam500 anterior ao deploy em seis eventos, incluindo dois na raiz.
+O runtime isolado reproduziu500 quando uma consulta desnecessária de sessão
+anônima recebeu429/503. A causa upstream histórica não foi registrada e não
+é presumida. Correção local elimina consulta sem token e acrescenta telemetria
+sanitizada; tokens presentes continuam no SDK e nos controles Cacau.
+
+Passaram556 testes Node, cinco novos de autenticação,16 casos no runtime local,
+lint/tipos/formato e Knip sem novas ocorrências. Quatro eventos sanitizados de
+erro HTTP foram comprovados no laboratório. HML anterior segue disponível;
+CI/build versionado e publicação da correção ainda serão conferidos.
+Detalhes em [investigação](HML-SESSION-INCIDENT-2026-10-20.md).
+
+## Checkpoint anterior de encerramento — 20/10/2026
 
 Código `6acb11a`: 551 testes Node, 35 casos de navegador isolado, dois runners
 PostgreSQL e CI/CodeQL aprovados no SHA exato. CI39435180771,

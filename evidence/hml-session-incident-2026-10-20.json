@@ -1,0 +1,102 @@
+{
+  "date": "2026-10-20",
+  "worker": "cacau-v1-hml",
+  "source_baseline_sha": "7952dfa",
+  "preexisting_500_events": 6,
+  "preexisting_root_500_events": 2,
+  "preexisting_utc_interval": [
+    "2026-10-20T00:01:11.151Z",
+    "2026-10-20T00:02:56.671Z"
+  ],
+  "incident_window_utc": [
+    "2026-10-20T14:00:00Z",
+    "2026-10-20T14:10:00Z"
+  ],
+  "incident_events": {
+    "new_version": {
+      "total": 7,
+      "http_500": 4,
+      "normal": 3
+    },
+    "previous_version": {
+      "total": 5,
+      "http_500": 2,
+      "normal": 3
+    },
+    "all_worker_outcomes_ok": true,
+    "upstream_error_detail_recorded": false
+  },
+  "historical_upstream_cause_confirmed": false,
+  "prechange_local_runtime": {
+    "anonymous_get_cases": 8,
+    "provider_200_results": [
+      307,
+      200
+    ],
+    "provider_429_results": [
+      500,
+      500
+    ],
+    "provider_503_results": [
+      500,
+      500
+    ],
+    "provider_200_recovery_results": [
+      307,
+      200
+    ],
+    "upstream_calls_per_request": 1,
+    "provider_error_body_exposed": false
+  },
+  "current_hml_readonly_tail": {
+    "get_requests": 8,
+    "normal_responses": 8,
+    "exceptions": 0,
+    "application_logs": 0
+  },
+  "synthetic_provider_loopback_only": true,
+  "real_auth_used_for_testing": false,
+  "shared_operations_created": false,
+  "secrets_read_or_changed": false,
+  "production_worker_changed": false,
+  "fix_published": false,
+  "postchange_local_runtime": {
+    "get_cases": 16,
+    "all_expectations_passed": true,
+    "anonymous_upstream_calls": 0,
+    "token_upstream_validation_preserved": true,
+    "http_error_events": [
+      {
+        "event": "auth.session.provider",
+        "stage": "http_error",
+        "status": 429,
+        "code": null
+      },
+      {
+        "event": "auth.session.provider",
+        "stage": "http_error",
+        "status": 429,
+        "code": null
+      },
+      {
+        "event": "auth.session.provider",
+        "stage": "http_error",
+        "status": 503,
+        "code": null
+      },
+      {
+        "event": "auth.session.provider",
+        "stage": "http_error",
+        "status": 503,
+        "code": null
+      }
+    ],
+    "provider_error_body_exposed": false
+  },
+  "node_tests_passed": 556,
+  "new_auth_tests_passed": 5,
+  "lint_passed": true,
+  "typecheck_passed": true,
+  "format_check_passed": true,
+  "knip_new_unreviewed_findings": 0
+}

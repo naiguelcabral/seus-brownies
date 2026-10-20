@@ -6,6 +6,7 @@ import { appUserAccess } from '#/db/schema'
 import { createNeonSessionResolver } from './neon-adapter'
 import { createConfiguredNeonAuthServer } from './configured-neon-auth.server'
 import type { PrincipalResolver } from './guard'
+import { readTanStackNeonSession } from './neon-tanstack-adapter.server'
 
 async function readCacauAccess(authUserId: string) {
   const [access] = await getDb()
@@ -36,7 +37,7 @@ export function createConfiguredSessionResolver(
   return createNeonSessionResolver(
     {
       getSession: async () => {
-        const result = await auth.getSession()
+        const result = await readTanStackNeonSession(auth)
         const user = result.data?.user
         if (!user) return { data: null, error: result.error }
         return {

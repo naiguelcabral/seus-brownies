@@ -12,7 +12,10 @@ conceder acessos, aplicar migrations ou publicar em produção.
 ## Prioridade de retomada
 
 Publicação de `6acb11a` revertida após erro500; HML restaurado para `d5cc034`,
-raiz307/login200 após propagação. Investigar a causa antes de publicar novamente.
+raiz307/login200. Investigação comprovou500 preexistente e reproduziu falha de
+consulta remota sem sessão. Correção local e instrumentação sanitizada passaram
+556 testes e16 casos runtime; CI e publicação ainda serão conferidas. Causa
+upstream histórica inconclusiva; ver `HML-SESSION-INCIDENT-2026-10-20.md`.
 Backup local privado criado/restaurado com autorização explícita; sem cópia
 externa, periodicidade ou alertas automáticos ao Dono. PRs47/48 em rascunho.
 

@@ -31,6 +31,14 @@ escala de resposta e destinatários devem ser escolhidos antes de ligar alertas.
 Logs HML estão explicitamente habilitados em `observability.logs`, conforme
 reconciliação da matriz; auditoria no banco não substitui alerta de indisponibilidade.
 
+Investigação de20/10 em `HML-SESSION-INCIDENT-2026-10-20.md`: HTTP500 pode
+coexistir com Worker outcome `ok`; conferir os dois campos. Para falha de sessão,
+a instrumentação preparada emite `auth.session.provider`, stage, status HTTP
+permitido e código `NETWORK_*` permitido. Correlacionar à invocação sem copiar
+request headers, cookies, body ou metadados brutos do SDK. Não inferir queda do
+provedor apenas pelo500. A entrada sem token dispensa consulta upstream; sessão
+com token permanece fechada se o provedor não puder validá-la.
+
 ## Backup e recuperação
 
 Decisão do usuário em 20/10: cópia local na raiz do projeto; alertas internos
