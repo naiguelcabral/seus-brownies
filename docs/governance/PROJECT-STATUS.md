@@ -5,6 +5,20 @@ atual de tarefas, prioridades e critérios de conclusão. Os checkpoints de
 publicação abaixo preservam o estado comprovado de cada entrega; suas
 próximas etapas históricas não substituem o roadmap atualizado.
 
+## Recuperação da conta gerencial anterior — 20/10/2026
+
+O usuário relatou credenciais inválidas em sua conta anterior. Consulta exata
+confirmou identidade única com e-mail verificado, credencial existente e
+vínculo `manager` ativo na base operacional. Os eventos recentes de login
+incluíam `provider_rejected`; não contêm identificação da conta e não foram
+atribuídos individualmente. Nenhum papel foi alterado.
+
+Foi feita uma solicitação de recuperação pelo formulário público do Cacau.
+A auditoria registrou `password_reset_requested/success` às
+`2026-10-20T19:18:37.074Z`, após o marcador de operação pendente. Recebimento,
+redefinição pessoal e novo login ainda aguardam confirmação. A senha e o
+token de recuperação não foram acessados pelo agente.
+
 ## Aceite parcial de acesso — 20/10/2026
 
 O usuário confirmou que o acesso da conta de Funcionário funcionou. Esse
