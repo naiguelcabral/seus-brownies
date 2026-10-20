@@ -9,6 +9,13 @@ A consolidação substitui os checkpoints repetidos deste arquivo. Seu históric
 completo permanece no Git. Não autoriza executar itens pendentes, mudar regras,
 conceder acessos, aplicar migrations ou publicar em produção.
 
+## Prioridade de retomada
+
+Publicação de `6acb11a` revertida após erro500; HML restaurado para `d5cc034`,
+raiz307/login200 após propagação. Investigar a causa antes de publicar novamente.
+Backup local privado criado/restaurado com autorização explícita; sem cópia
+externa, periodicidade ou alertas automáticos ao Dono. PRs47/48 em rascunho.
+
 ## Estado confirmado
 
 | Área | Situação atual |
@@ -20,7 +27,7 @@ conceder acessos, aplicar migrations ou publicar em produção.
 | Cenários | Cenário 2/v2/rev2 ativo, 16 produtos orientativos em 100%; cenário 1 e seu histórico preservados |
 | Meta | R$ 10.000 de lucro mensal após os custos de **todas as vendas**, inclusive Bordinhas realizadas; sem cotas obrigatórias por produto |
 | Operação real | Sem compras ou produção previstas; nenhum fato fictício criado no HML para testar as entregas |
-| Última validação de código | 546 testes Node; 48 casos da cadeia PostgreSQL na PR #46; dois ensaios de negócio repetidos com depreciações bloqueantes; suíte consolidada de navegador em validação |
+| Última validação de código | 551 testes Node, 35 casos browser, dois runners negócio, 48 casos migrations; CI e CodeQL aprovados em6acb11a. Publicação HML revertida; diagnóstico pendente. |
 | Segurança | PR #46 com CI/PostgreSQL/CodeQL aprovados, três análises sem resultados e alerta #10 corrigido; conferência própria exigida para cada incremento |
 | Preservação | 21 tabelas acompanhadas com contagens e digests idênticos antes/depois da última entrega |
 
@@ -111,12 +118,12 @@ sintético foi gravado no HML.
 | --- | --- | --- |
 | S01 | Concluído | Inventário cobriu catálogo, locais, parâmetros gerenciais, planos, cenários, operações, produção, finanças e lifecycle de estoque. As seis mutações de catálogo e criação/conclusão de lote, lacunas encontradas, agora gravam ator e evento operacional na mesma transação; falha da auditoria reverte a escrita. Autenticação mantém trilha própria; diagnóstico e prévia de produção são POST somente leitura. Contrato automatizado impede regressão. |
 | T02 / #36 | Parcial | Preparação/revisão offline adotadas via `db:prepare` e `db:review`, com oito referências de catálogo PostgreSQL 17, manifesto/recibos exatos, coleta independente recente, alvo HML e gates aplicáveis. Treze ensaios provam instalação, upgrades, preservação, replay, drift, rollback e geração futura; 38 tabelas atuais conferidas. Falta classificar independentemente os alvos relevantes e definir plano/autorização específicos para aplicação compartilhada. Detalhes em `MIGRATION-CHAIN-REMEDIATION-ADR.md`. Nenhum comando novo executa SQL; `db:migrate` permanece bloqueante e `db:push` não é atalho. |
-| T03 | Parcial — em validação | Workflow adiciona custos exatos, produção/FIFO/venda/recebimento/lucro em PostgreSQL 17 descartável e oito specs UI isoladas com rede limitada ao loopback. Ensaios locais de banco passaram; falta confirmar navegador e jobs remotos do incremento. O aceite conectado H04/H05 continua separado. |
+| T03 | Concluído no escopo isolado | Workflow validado: dois runners PostgreSQL 17 e 35 casos em oito specs UI com rede restrita. Jobs remotos passaram em6acb11a. Aceite conectado H04/H05 continua separado; publicação estável pendente do diagnóstico HML. |
 | H04 / H05 | Parcial | Ensaiar o fluxo completo pela interface, com backend/banco e identidade de teste isolados: compra em kg → consumo em g → produção → venda → recebimento/entrega → lucro; cancelamento, devolução, crédito/resgate, fechamento, concorrência e falhas. Não gravar fatos sintéticos na base compartilhada. |
 | H01 / H02 | Parcial | Completar a homologação integrada de login/logout, expiração/revogação, OTP/reset, cooldown, limiter distribuído e Turnstile válido/inválido/replay, preservando controles e auditoria. Sessão e recuperação do Dono já foram comprovadas. |
 | H03 | Parcial | Validar Dono, Gerente, Produção e Funcionário, incluindo chamadas diretas e negações por permissão. Usar identidades autorizadas; não conceder papéis apenas para contornar um teste. |
 | H06 | Parcial | Concluir o aceite por perfil das telas e relatórios ainda não cobertos, celular, acessibilidade, CSV, filtros/paginação e desempenho percebido. As revisões de UX publicadas não voltam à condição de “não implementadas”. |
-| T04 | Parcial — em validação | Prompt/runbook alinhados ao Oxfmt, 21 testes do controlador simulados aprovados, Oxc 1.64.1 instalada/conferida e Python 3.12 declarada/verificada na CI. Falta confirmar os jobs e registrar a revisão dos avisos de runtime das Actions; sem atualização incompatível automática. |
+| T04 | Concluído | Oxfmt alinhado; 21 testes do controlador simulado, Oxc1.64.1 conferida e Python3.12 validada. ActionsNode24 revisadas, Ubuntu24.04 fixado; CI sem avisos de runtime. |
 
 ## Preparação e liberação da operação
 

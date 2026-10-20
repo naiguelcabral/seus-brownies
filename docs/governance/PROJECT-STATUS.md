@@ -5,7 +5,33 @@ atual de tarefas, prioridades e critérios de conclusão. Os checkpoints de
 publicação abaixo preservam o estado comprovado de cada entrega; suas
 próximas etapas históricas não substituem o roadmap atualizado.
 
-## Validação integrada em andamento — 20/10/2026
+## Checkpoint de encerramento — 20/10/2026
+
+Código `6acb11a`: 551 testes Node, 35 casos de navegador isolado, dois runners
+PostgreSQL e CI/CodeQL aprovados no SHA exato. CI39435180771,
+negócio/browser39435180794, migrations39435180012, evidência39435179660 e
+CodeQL39435179809; zero alertas abertos e zero avisos de runtime na CI.
+
+Backup explicitamente autorizado da original `production`, somente leitura
+(public/drizzle), salvo privado em `backups-local/` fora do Git. Restore local
+conferiu 38 tabelas, 36 recibos e catálogo exato. Auth gerenciado excluído;
+sem cópia externa ou periodicidade. Todos os containers desta tarefa encerrados.
+
+A publicação HML do incremento retornou 500 nas rotas públicas. Foi revertida
+para `f0c2e0e2-8798-4132-9abc-50c87bf7a973` (código `d5cc034`), 100% do tráfego,
+deployment `0698a29c-6021-4f98-a627-2a68025a7185`, às 14:06:44 UTC. A primeira
+checagem após rollback ainda falhou; após propagação, GETs completos conferiram
+raiz307 e login200. A causa permanece sem diagnóstico; não considerar o
+incremento publicado estável nem repetir deploy sem investigação. Produção
+principal, secrets, migrations e dados históricos não foram alterados.
+
+Próxima prioridade: investigar logs sanitizados do erro no HML e validar runtime
+antes de nova publicação. Depois, contas teste/Gerente que o usuário criará,
+aceite conectado e alertas automáticos no perfil Dono (ainda não implementados).
+PRs47/48 em rascunho; nenhuma integrada à main. Recibo:
+`evidence/integrated-validation-2026-10-20.json`.
+
+## Histórico da validação integrada — 20/10/2026
 
 Navegador: 35 casos passaram. Suíte final ampliada: 551 testes. Os novos jobs
 de negócio/browser, cadeia e evidência passaram na CI com Actions Node24 e

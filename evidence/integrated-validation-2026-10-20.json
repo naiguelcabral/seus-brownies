@@ -14,7 +14,11 @@
   "runner_platform": "ubuntu-24.04",
   "knip_contextual_findings": 4,
   "knip_new_unreviewed_findings": 0,
-  "hml_public_probe": {"root": 307, "login": 200, "status": "AVAILABLE"},
+  "hml_public_probe": {
+    "root": 307,
+    "login": 200,
+    "status": "AVAILABLE"
+  },
   "backup": {
     "explicit_source_authorization_received": true,
     "source_branch_id": "br-lingering-wind-acwh5wap",
@@ -41,5 +45,22 @@
   "main_merged": false,
   "production_worker_deployed": false,
   "all_task_containers_stopped": true,
-  "pull_requests": [47, 48]
+  "pull_requests": [47, 48],
+  "remote_exact_code_sha": "6acb11ae04f4667b4b425f69a89478907e44329a",
+  "remote_checks_passed": true,
+  "hml_release": {
+    "attempted_version": "cf14fc9a-ffdb-4b6f-8b89-1da6635dfa46",
+    "attempted_deployment": "1735451c-f93e-4198-9fb2-c7455e6ac1bc",
+    "postdeploy_public_status": 500,
+    "rollback_confirmed": true,
+    "active_version": "f0c2e0e2-8798-4132-9abc-50c87bf7a973",
+    "rollback_deployment": "0698a29c-6021-4f98-a627-2a68025a7185",
+    "rollback_utc": "2026-10-20T14:06:44.178623Z",
+    "after_propagation_full_response_check": {
+      "root": 307,
+      "login": 200
+    },
+    "cause_diagnosed": false,
+    "increment_stable_publication_completed": false
+  }
 }
