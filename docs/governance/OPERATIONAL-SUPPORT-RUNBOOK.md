@@ -45,8 +45,26 @@ e `default_transaction_read_only=on`. Não inclui o serviço gerenciado de Auth.
 O alvo conhecido é a original chamada `production`; o reconhecimento da CLI
 também usa esse nome. A revisão automática bloqueou a primeira execução por
 falta de autorização explícita desse alvo e do payload potencialmente sensível.
-Nenhum dump foi gerado. Uma pergunta de autorização específica foi enviada;
-até a resposta, somente testes sintéticos e preparação são permitidos.
+Naquela tentativa nenhum dump foi gerado. Após a pergunta específica, o usuário
+autorizou “Autorizar essa cópia somente leitura”. A exportação e restauração
+local isolada foram realizadas em 20/10/2026: 222.994 bytes, checksum registrado
+no recibo privado, 38 tabelas e 36 recibos exatos. O catálogo canônico coincide
+com o checkpoint 0033. O schema `public` vazio do laboratório foi preservado
+por renomeação antes do restore; nada foi removido na origem. Diretório e
+arquivos estão em 0700/0600. A cópia não inclui Auth gerenciado e não constitui
+recuperação completa desse serviço ou cópia externa independente.
+
+Para outra cópia manual, somente sob autorização específica do mesmo alvo:
+
+```sh
+node scripts/create-local-backup.mjs --ack-production-branch-local-backup
+```
+
+O comando exige a CLI Neon nativa instalada/autenticada e Docker com
+PostgreSQL17; nunca registra o DSN. Não aplica retenção automática nem sobrescreve
+cópias anteriores. Cada arquivo novo precisa de prova de restore própria; a
+inspeção do cabeçalho, sozinha, não comprova recuperação. Não abrir dumps/logs
+privados na revisão de código ou incluí-los em artefatos da CI.
 
 Antes de qualquer nova aplicação compartilhada, identificar projeto/branch,
 database e vínculo com o Worker; marcar o ponto de recuperação; conferir

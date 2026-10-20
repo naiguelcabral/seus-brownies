@@ -1,5 +1,16 @@
 # Knip e CodeQL no Cacau
 
+## Referência operacional adicional — 20/10/2026
+
+A cópia local autorizada usa a CLI Neon nativa já instalada/autenticada pelo
+operador. Knip sinalizou `binaries/neon` em `create-local-backup.mjs`; a chamada
+foi revisada: projeto/branch/database fixos, saída da CLI mantida em memória,
+DSN fora de argumentos/logs, TLS verificado e exportação somente leitura.
+Foi adicionada uma quarta referência contextual explícita à baseline, com
+justificativa, preservando o achado no relatório `CURRENT`. Não houve ignore
+genérico ou regeneração automática da baseline. A CLI é pré-requisito da
+ferramenta operacional manual, não dependência npm do aplicativo.
+
 ## Escopo e comandos
 
 Knip 6.41.0 é dependência de desenvolvimento fixada em `package.json` e

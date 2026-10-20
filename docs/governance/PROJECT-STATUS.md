@@ -7,6 +7,23 @@ próximas etapas históricas não substituem o roadmap atualizado.
 
 ## Validação integrada em andamento — 20/10/2026
 
+Navegador: 35 casos passaram. Suíte final ampliada: 551 testes. Os novos jobs
+de negócio/browser, cadeia e evidência passaram na CI com Actions Node24 e
+Ubuntu24.04; os checks do HEAD final serão conferidos antes da publicação.
+
+Após autorização específica do usuário para o alvo `production`, cópia local
+somente leitura de `public`/`drizzle` foi criada em `backups-local/`, privada e
+fora do Git. Restore em container local vazio passou: catálogo canônico igual
+ao checkpoint0033, 38 tabelas e 36 recibos exatos; modos0700/0600 conferidos.
+Não inclui Auth gerenciado nem cópia externa independente. Quarta referência
+contextual Knip (`neon` nativo) revisada, justificada e mantida visível.
+Usuário criará duas contas (teste/Gerente) e escolheu perfil Dono para alertas;
+entrega automática de alertas ainda não implementada. PR #47 é incremental;
+#48 prepara a integração acumulada na main, sem merge. Containers de ensaio
+encerrados. Recibo `evidence/integrated-validation-2026-10-20.json`.
+
+### Checkpoint anterior da continuação
+
 Continuidade integral autorizada após a lista do roadmap. Branch
 `codex/integrated-validation-gates` parte do checkpoint `b3e595b`; PR #46
 permanece separada. Criados protocolo de QA e gates automáticos dos ensaios

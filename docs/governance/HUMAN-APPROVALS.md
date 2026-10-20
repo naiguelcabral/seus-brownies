@@ -10,6 +10,14 @@ pela revisão automática por falta de autorização específica do alvo/payload
 nenhuma cópia foi gerada. Pergunta explícita enviada; não repetir ou contornar
 a exportação antes da resposta. Não confundir cópia local com backup externo.
 
+Na pergunta específica, foram apresentados o ID da original `production`, os
+schemas `public`/`drizzle`, o conteúdo potencialmente sensível, a pasta privada
+fora do Git e a exclusão do serviço gerenciado de Auth. Usuário respondeu
+“Autorizar essa cópia somente leitura”. A nova autorização foi aceita e a cópia
+foi executada, sem alteração da origem. Restore local isolado passou, catálogo
+independente igual ao checkpoint 0033, 38 tabelas e 36 recibos exatos. Permissões
+0700/0600 conferidas. Não autoriza escrita em produção nem inclusão de Auth.
+
 Após a lista de pendências de banco, QA integrado, acesso, usabilidade,
 automação, integração e sustentação, o usuário respondeu “Pode seguir com
 tudo que precisa ser feito”. Autoriza avançar essas frentes dentro das
