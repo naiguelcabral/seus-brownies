@@ -14,10 +14,10 @@ permissions:
 
 jobs:
   verify:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - uses: actions/setup-python@v6
         with:
@@ -25,7 +25,7 @@ jobs:
       - name: Validate Python used by repository guards
         run: python3 -c "import fcntl, json, pathlib, sys; assert sys.version_info[:2] == (3, 12)"
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version-file: .nvmrc
           cache: npm

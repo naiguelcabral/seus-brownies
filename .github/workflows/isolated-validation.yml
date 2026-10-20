@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   business-postgres:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     services:
       exact-costs:
@@ -35,8 +35,8 @@ jobs:
           --health-cmd "pg_isready -U recovery_fixture -d cacau_recovery"
           --health-interval 5s --health-timeout 5s --health-retries 12
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         with:
           node-version-file: .nvmrc
           cache: npm
@@ -47,13 +47,13 @@ jobs:
         run: env -i PATH="$PATH" node --throw-deprecation --import tsx scripts/test-recovery-production-disposable.ts --ack-disposable-postgres17
 
   browser-fixtures:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     env:
       PLAYWRIGHT_BROWSERS_PATH: /tmp/cacau-playwright-browsers
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         with:
           node-version-file: .nvmrc
           cache: npm

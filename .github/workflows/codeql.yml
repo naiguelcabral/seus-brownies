@@ -19,7 +19,7 @@ concurrency:
 jobs:
   analyze:
     name: Analyze (${{ matrix.language }})
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 30
     permissions:
       contents: read
@@ -29,11 +29,12 @@ jobs:
       matrix:
         language: [javascript-typescript, python, actions]
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         if: matrix.language == 'javascript-typescript'
         with:
           node-version-file: .nvmrc
+          package-manager-cache: false
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v4
         with:
