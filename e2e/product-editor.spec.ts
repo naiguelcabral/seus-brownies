@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test'
+import { test, expect } from './isolated-test'
 import { startPreview } from './preview-server'
 
 let preview: Awaited<ReturnType<typeof startPreview>>
@@ -13,6 +13,27 @@ test.afterAll(async () => {
 
 test.beforeEach(async ({ page }) => {
   await page.goto(baseURL)
+})
+
+test('fixture bloqueia conexões externas sem consultar serviços compartilhados', async ({
+  page,
+}) => {
+  const failure = page.waitForEvent('requestfailed', {
+    predicate: (request) =>
+      request.url().startsWith('https://external-fixture.invalid/'),
+  })
+  const outcome = await page.evaluate(async () => {
+    try {
+      await fetch('https://external-fixture.invalid/no-shared-backend')
+      return 'unexpected-success'
+    } catch {
+      return 'blocked'
+    }
+  })
+  expect(outcome).toBe('blocked')
+  expect((await failure).failure()?.errorText).toBe(
+    'net::ERR_BLOCKED_BY_CLIENT',
+  )
 })
 
 test('abre, contém o foco, fecha com Escape e devolve foco ao botão', async ({

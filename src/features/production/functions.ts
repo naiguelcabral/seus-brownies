@@ -1096,24 +1096,23 @@ export async function persistProductionBatchCompletion(
       )
     const productionDate = batch.plannedFor
 
-    const [outputs, completedLosses] = await Promise.all([
-      tx
-        .select({
-          productId: productionBatchOutputs.productId,
-          plannedQuantity: productionBatchOutputs.plannedQuantity,
-          role: productionBatchOutputs.role,
-        })
-        .from(productionBatchOutputs)
-        .where(eq(productionBatchOutputs.productionBatchId, batch.id)),
-      tx
-        .select({
-          productId: productionBatchLosses.productId,
-          quantity: productionBatchLosses.quantity,
-          reason: productionBatchLosses.reason,
-        })
-        .from(productionBatchLosses)
-        .where(eq(productionBatchLosses.productionBatchId, batch.id)),
-    ])
+    // Keep queries sequential on the connection reserved by this transaction.
+    const outputs = await tx
+      .select({
+        productId: productionBatchOutputs.productId,
+        plannedQuantity: productionBatchOutputs.plannedQuantity,
+        role: productionBatchOutputs.role,
+      })
+      .from(productionBatchOutputs)
+      .where(eq(productionBatchOutputs.productionBatchId, batch.id))
+    const completedLosses = await tx
+      .select({
+        productId: productionBatchLosses.productId,
+        quantity: productionBatchLosses.quantity,
+        reason: productionBatchLosses.reason,
+      })
+      .from(productionBatchLosses)
+      .where(eq(productionBatchLosses.productionBatchId, batch.id))
     if (!outputs.length) throw new Error('O rascunho não possui saídas.')
     const payload = (batch.sourcePayload ?? {}) as {
       losses?: Array<{ productId: number; quantity: string; reason: string }>
@@ -1277,41 +1276,41 @@ export async function persistProductionBatchCompletion(
         productId: stockMovements.productId,
         occurredAt: stockMovements.occurredAt,
       })
-    const completedOutputs = await Promise.all(
-      plan.sellableOutputs.map((output) =>
-        tx
-          .update(productionBatchOutputs)
-          .set({
-            exactCost: requireOutputCost(
-              costs.outputExactCosts,
-              output.product.id,
+    const completedOutputs: Array<{ id: number; productId: number }> = []
+    for (const output of plan.sellableOutputs) {
+      const rows = await tx
+        .update(productionBatchOutputs)
+        .set({
+          exactCost: requireOutputCost(
+            costs.outputExactCosts,
+            output.product.id,
+          ),
+          actualQuantity: thousandthsToQuantity(output.quantity),
+          unitCost: displayCostMoney(
+            scaleCost(
+              requireOutputCost(costs.outputExactCosts, output.product.id),
+              1_000n,
+              output.quantity,
             ),
-            actualQuantity: thousandthsToQuantity(output.quantity),
-            unitCost: displayCostMoney(
-              scaleCost(
-                requireOutputCost(costs.outputExactCosts, output.product.id),
-                1_000n,
-                output.quantity,
-              ),
-            ),
-            allocatedCost: centsToMoney(
-              outputCostByProductId.get(output.product.id) ?? 0n,
-            ),
-          })
-          .where(
-            and(
-              eq(productionBatchOutputs.productionBatchId, batch.id),
-              eq(productionBatchOutputs.productId, output.product.id),
-            ),
-          )
-          .returning({
-            id: productionBatchOutputs.id,
-            productId: productionBatchOutputs.productId,
-          }),
-      ),
-    )
+          ),
+          allocatedCost: centsToMoney(
+            outputCostByProductId.get(output.product.id) ?? 0n,
+          ),
+        })
+        .where(
+          and(
+            eq(productionBatchOutputs.productionBatchId, batch.id),
+            eq(productionBatchOutputs.productId, output.product.id),
+          ),
+        )
+        .returning({
+          id: productionBatchOutputs.id,
+          productId: productionBatchOutputs.productId,
+        })
+      completedOutputs.push(...rows)
+    }
     const outputByProductId = new Map(
-      completedOutputs.flat().map((output) => [output.productId, output]),
+      completedOutputs.map((output) => [output.productId, output]),
     )
     const movementByProductId = new Map(
       outputMovements.map((movement) => [movement.productId, movement]),

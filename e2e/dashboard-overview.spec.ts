@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test'
+import { test, expect } from './isolated-test'
 import { startPreview } from './preview-server'
 
 let preview: Awaited<ReturnType<typeof startPreview>>

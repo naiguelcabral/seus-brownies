@@ -1,6 +1,6 @@
 # Roadmap único — Cacau v1
 
-Atualizado em **19/10/2026**, após a entrega de Compras e Produção.
+Atualizado em **20/10/2026**, durante a validação integrada autorizada.
 Este é o **único arquivo de planejamento e acompanhamento de pendências**.
 Relatórios datados, recibos, matrizes e runbooks preservam evidências e
 procedimentos; suas listas antigas não são filas adicionais de execução.
@@ -13,15 +13,15 @@ conceder acessos, aplicar migrations ou publicar em produção.
 
 | Área | Situação atual |
 | --- | --- |
-| HML | Código `a76c37c`, Worker `6bc5bd55-2bca-4adb-a8b1-36b6b42bf1a6`, 100% do tráfego; publicado em 19/10/2026 às 03:01 Brasília |
-| Trabalho versionado | Branch `feat/input-catalog-kg-purchases`; publicação HML não equivale a integração na `main` |
+| HML | Código `d5cc034`, Worker `f0c2e0e2-8798-4132-9abc-50c87bf7a973`, 100% do tráfego; metadados reconferidos em 20/10/2026 |
+| Trabalho versionado | Última publicação em `feat/input-catalog-kg-purchases`; PR #46 contém preparação/revisão offline. Continuação em `codex/integrated-validation-gates`; publicação HML não equivale a integração na `main` |
 | Banco HML | Atualizações específicas aplicadas, 36 recibos; migrador genérico continua sendo tarefa separada |
 | Catálogo e produção | 38 produtos; duas versões de receita e 34 perfis contando os históricos; receita 2 ativa com 17 perfis completos e 31 componentes |
 | Cenários | Cenário 2/v2/rev2 ativo, 16 produtos orientativos em 100%; cenário 1 e seu histórico preservados |
 | Meta | R$ 10.000 de lucro mensal após os custos de **todas as vendas**, inclusive Bordinhas realizadas; sem cotas obrigatórias por produto |
 | Operação real | Sem compras ou produção previstas; nenhum fato fictício criado no HML para testar as entregas |
-| Última validação de código | 529 testes Node e 15 ensaios locais de navegador; lint, tipos, formatação, Knip e build isolado aprovados |
-| Segurança da última publicação | CI `39207328944` e CodeQL `39207328870` aprovados no código publicado; três análises sem resultados e zero alertas abertos na conferência |
+| Última validação de código | 546 testes Node; 48 casos da cadeia PostgreSQL na PR #46; dois ensaios de negócio repetidos com depreciações bloqueantes; suíte consolidada de navegador em validação |
+| Segurança | PR #46 com CI/PostgreSQL/CodeQL aprovados, três análises sem resultados e alerta #10 corrigido; conferência própria exigida para cada incremento |
 | Preservação | 21 tabelas acompanhadas com contagens e digests idênticos antes/depois da última entrega |
 
 Legenda: **concluído** significa que o resultado descrito foi comprovado;
@@ -111,19 +111,19 @@ sintético foi gravado no HML.
 | --- | --- | --- |
 | S01 | Concluído | Inventário cobriu catálogo, locais, parâmetros gerenciais, planos, cenários, operações, produção, finanças e lifecycle de estoque. As seis mutações de catálogo e criação/conclusão de lote, lacunas encontradas, agora gravam ator e evento operacional na mesma transação; falha da auditoria reverte a escrita. Autenticação mantém trilha própria; diagnóstico e prévia de produção são POST somente leitura. Contrato automatizado impede regressão. |
 | T02 / #36 | Parcial | Preparação/revisão offline adotadas via `db:prepare` e `db:review`, com oito referências de catálogo PostgreSQL 17, manifesto/recibos exatos, coleta independente recente, alvo HML e gates aplicáveis. Treze ensaios provam instalação, upgrades, preservação, replay, drift, rollback e geração futura; 38 tabelas atuais conferidas. Falta classificar independentemente os alvos relevantes e definir plano/autorização específicos para aplicação compartilhada. Detalhes em `MIGRATION-CHAIN-REMEDIATION-ADR.md`. Nenhum comando novo executa SQL; `db:migrate` permanece bloqueante e `db:push` não é atalho. |
-| T03 | Parcial | Incorporar os ensaios relevantes PostgreSQL 17 e de navegador aos gates automáticos conforme ambiente/escopo; os ensaios locais já passaram. |
+| T03 | Parcial — em validação | Workflow adiciona custos exatos, produção/FIFO/venda/recebimento/lucro em PostgreSQL 17 descartável e oito specs UI isoladas com rede limitada ao loopback. Ensaios locais de banco passaram; falta confirmar navegador e jobs remotos do incremento. O aceite conectado H04/H05 continua separado. |
 | H04 / H05 | Parcial | Ensaiar o fluxo completo pela interface, com backend/banco e identidade de teste isolados: compra em kg → consumo em g → produção → venda → recebimento/entrega → lucro; cancelamento, devolução, crédito/resgate, fechamento, concorrência e falhas. Não gravar fatos sintéticos na base compartilhada. |
 | H01 / H02 | Parcial | Completar a homologação integrada de login/logout, expiração/revogação, OTP/reset, cooldown, limiter distribuído e Turnstile válido/inválido/replay, preservando controles e auditoria. Sessão e recuperação do Dono já foram comprovadas. |
 | H03 | Parcial | Validar Dono, Gerente, Produção e Funcionário, incluindo chamadas diretas e negações por permissão. Usar identidades autorizadas; não conceder papéis apenas para contornar um teste. |
 | H06 | Parcial | Concluir o aceite por perfil das telas e relatórios ainda não cobertos, celular, acessibilidade, CSV, filtros/paginação e desempenho percebido. As revisões de UX publicadas não voltam à condição de “não implementadas”. |
-| T04 | Pendente | Alinhar prompt/runbook do piloto ainda em Prettier ao Oxfmt; testar controlador; declarar/validar Python na CI e conferir extensão Oxc no editor. Revisar avisos de runtime das Actions sem atualização incompatível automática. |
+| T04 | Parcial — em validação | Prompt/runbook alinhados ao Oxfmt, 21 testes do controlador simulados aprovados, Oxc 1.64.1 instalada/conferida e Python 3.12 declarada/verificada na CI. Falta confirmar os jobs e registrar a revisão dos avisos de runtime das Actions; sem atualização incompatível automática. |
 
 ## Preparação e liberação da operação
 
 | ID | Estado | Resultado que falta |
 | --- | --- | --- |
 | G01 | Parcial | Este roadmap já foi consolidado. Reconciliar os demais retratos de paridade, ambientes e fila do controlador quando suas frentes forem revisadas; preservar as evidências datadas. |
-| G02 / I01 | Pendente | Formalizar plano de QA e topologia de ambientes, identidades, dados permitidos, responsáveis e referências inéditas. O nome `production` da branch Neon original não autoriza testes destrutivos nem equivale a liberação do Worker principal. |
+| G02 / I01 | Plano técnico formalizado; execução parcial | `QA-VALIDATION-PROTOCOL.md` define topologia isolada, identidades/dados permitidos, responsabilidades, referências inéditas e critérios por camada. `ENVIRONMENT-MATRIX.md` reconciliada com metadados atuais. O aceite conectado ainda exige ambiente/identidades próprios; não presumir a original `production` como laboratório. |
 | T01 | Pendente | Revisar e integrar o código da branch de trabalho à `main`, reconciliando as PRs #44/#45 e os gates da #36; conferir CI/CodeQL do resultado integrado. Merge depende da aprovação aplicável. |
 | I02 | Parcial | Transformar os backups e ensaios específicos já realizados em rotina: retenção, cópia independente, responsáveis, RPO/RTO e restauração periódica. Não apagar backups existentes para abrir quota. |
 | I03 | Parcial | Completar logs dos domínios, correlação, monitoramento, alertas de erro/disponibilidade e resposta a incidentes. Logs Cloudflare/auth e auditorias existentes não equivalem a monitoramento completo. |

@@ -1,0 +1,66 @@
+name: Isolated business and browser validation
+
+on:
+  pull_request:
+  push:
+    branches: [main, 'codex/**', 'feat/**', 'fix/**']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  business-postgres:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      exact-costs:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: exact_cost_fixture
+          POSTGRES_PASSWORD: synthetic-exact-cost-fixture
+          POSTGRES_DB: cacau_exact_costs
+        ports: ['127.0.0.1:5437:5432']
+        options: >-
+          --health-cmd "pg_isready -U exact_cost_fixture -d cacau_exact_costs"
+          --health-interval 5s --health-timeout 5s --health-retries 12
+      recovery:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: recovery_fixture
+          POSTGRES_PASSWORD: synthetic-recovery-only
+          POSTGRES_DB: cacau_recovery
+        ports: ['127.0.0.1:5439:5432']
+        options: >-
+          --health-cmd "pg_isready -U recovery_fixture -d cacau_recovery"
+          --health-interval 5s --health-timeout 5s --health-retries 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - name: Exact costs and atomic rollback
+        run: env -i PATH="$PATH" node --throw-deprecation --import tsx scripts/test-exact-costs-disposable.ts --ack-disposable-postgres17
+      - name: Purchase, production, sale, delivery, payment and profit
+        run: env -i PATH="$PATH" node --throw-deprecation --import tsx scripts/test-recovery-production-disposable.ts --ack-disposable-postgres17
+
+  browser-fixtures:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      PLAYWRIGHT_BROWSERS_PATH: /tmp/cacau-playwright-browsers
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Isolated UI fixtures without shared backend
+        run: npm run test:e2e:isolated

@@ -5,6 +5,31 @@ atual de tarefas, prioridades e critérios de conclusão. Os checkpoints de
 publicação abaixo preservam o estado comprovado de cada entrega; suas
 próximas etapas históricas não substituem o roadmap atualizado.
 
+## Validação integrada em andamento — 20/10/2026
+
+Continuidade integral autorizada após a lista do roadmap. Branch
+`codex/integrated-validation-gates` parte do checkpoint `b3e595b`; PR #46
+permanece separada. Criados protocolo de QA e gates automáticos dos ensaios
+de custos/negócio PostgreSQL 17 e oito specs de navegador isolado. A configuração
+exclui specs compartilhadas antigas, usa archive de HEAD e ambiente limpo,
+restringe HTTP a loopback e bloqueia WebSockets. Backend e UI com fakes são
+evidências distintas; H04/H05 e H01–H03 não são declarados concluídos por isso.
+
+Ensaio revelou consultas simultâneas na conexão de uma transação. Leituras de
+venda/lote e atualizações de camadas/saídas agora são aguardadas em sequência;
+concorrência entre transações continua exercitada. Os dois runners passaram
+com `--throw-deprecation`, preservando dinheiro, estoque, replay, rollback e
+conservação dos custos. Suíte Node: 546 testes aprovados. Prompt/runbook do
+piloto alinhados ao Oxfmt; 21 testes do controlador com Codex simulado passaram.
+Oxc 1.64.1 instalada e confirmada no VS Code; Python 3.12 declarada e verificada
+na CI. Revisão de runtime das Actions permanece explícita, sem troca cega de majors.
+
+Metadados atuais do HML/Neon reconciliados em `ENVIRONMENT-MATRIX.md`, sem SQL
+externo, credenciais ou inferência Worker→banco. A original continua
+`production` e bloqueada para o migrador genérico. Protocolo de aceite em
+`QA-VALIDATION-PROTOCOL.md`. Navegador/CI/build/publicação do incremento ainda
+serão conferidos antes de concluir esta entrega.
+
 ## T02 — preparação e revisão offline adotadas — 20/10/2026
 
 A continuidade autorizada pelo usuário foi aplicada à preparação e revisão

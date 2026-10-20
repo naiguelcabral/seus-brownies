@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test'
+import { expect, test } from './isolated-test'
 import type { Page } from '@playwright/test'
 import { resolve } from 'node:path'
 import { startPreview } from './preview-server'

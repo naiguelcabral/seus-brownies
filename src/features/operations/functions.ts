@@ -756,37 +756,36 @@ export async function persistSale(
     if (replay) return replay
 
     const ids = [...new Set(data.items.map((item) => item.productId))]
-    const [selected, location, settings] = await Promise.all([
-      tx
-        .select({
-          id: products.id,
-          name: products.name,
-          salePrice: products.salePrice,
-          type: products.type,
-          isActive: products.isActive,
-        })
-        .from(products)
-        .where(inArray(products.id, ids)),
-      tx
-        .select({ id: salesLocations.id })
-        .from(salesLocations)
-        .where(
-          and(
-            eq(salesLocations.id, data.locationId),
-            eq(salesLocations.isActive, true),
-          ),
-        )
-        .limit(1),
-      tx
-        .select({
-          paymentFees: managementSettings.paymentFees,
-          normalRevenueTolerance: managementSettings.normalRevenueTolerance,
-          criticalRevenueTolerance: managementSettings.criticalRevenueTolerance,
-        })
-        .from(managementSettings)
-        .where(eq(managementSettings.id, 1))
-        .limit(1),
-    ])
+    // A transaction owns one PostgreSQL connection; await its queries in order.
+    const selected = await tx
+      .select({
+        id: products.id,
+        name: products.name,
+        salePrice: products.salePrice,
+        type: products.type,
+        isActive: products.isActive,
+      })
+      .from(products)
+      .where(inArray(products.id, ids))
+    const location = await tx
+      .select({ id: salesLocations.id })
+      .from(salesLocations)
+      .where(
+        and(
+          eq(salesLocations.id, data.locationId),
+          eq(salesLocations.isActive, true),
+        ),
+      )
+      .limit(1)
+    const settings = await tx
+      .select({
+        paymentFees: managementSettings.paymentFees,
+        normalRevenueTolerance: managementSettings.normalRevenueTolerance,
+        criticalRevenueTolerance: managementSettings.criticalRevenueTolerance,
+      })
+      .from(managementSettings)
+      .where(eq(managementSettings.id, 1))
+      .limit(1)
     const byId = new Map(selected.map((product) => [product.id, product]))
     if (
       byId.size !== ids.length ||
@@ -1017,24 +1016,20 @@ export async function persistSale(
         fifoPlans.length > 0
           ? requireDefined(fifoPlans[fifoPlans.length - 1]).layers
           : []
-      await Promise.all(
-        updatedLayers.map((layer) =>
-          tx
-            .update(inventoryCostLayers)
-            .set({
-              remainingQuantity: String(
-                layer.remainingQuantity / 1_000n,
-              ).concat(
-                '.',
-                String(layer.remainingQuantity % 1_000n).padStart(3, '0'),
-              ),
-              remainingCost: centsToMoney(layer.remainingCost),
-              exactRemainingCost: layer.exactRemainingCost ?? null,
-              updatedAt: new Date(),
-            })
-            .where(eq(inventoryCostLayers.id, layer.id)),
-        ),
-      )
+      for (const layer of updatedLayers) {
+        await tx
+          .update(inventoryCostLayers)
+          .set({
+            remainingQuantity: String(layer.remainingQuantity / 1_000n).concat(
+              '.',
+              String(layer.remainingQuantity % 1_000n).padStart(3, '0'),
+            ),
+            remainingCost: centsToMoney(layer.remainingCost),
+            exactRemainingCost: layer.exactRemainingCost ?? null,
+            updatedAt: new Date(),
+          })
+          .where(eq(inventoryCostLayers.id, layer.id))
+      }
     }
     await appendOperationalAudit(tx, {
       actorAuthUserId: actorAuthUserId,

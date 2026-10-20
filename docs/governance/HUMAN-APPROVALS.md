@@ -1,5 +1,18 @@
 # Ações que exigem aprovação humana — Cacau v1
 
+## Continuidade integral da validação técnica — 20/10/2026
+
+Após a lista de pendências de banco, QA integrado, acesso, usabilidade,
+automação, integração e sustentação, o usuário respondeu “Pode seguir com
+tudo que precisa ser feito”. Autoriza avançar essas frentes dentro das
+restrições existentes: inspeção sanitizada de metadados, implementação e
+ensaios isolados, configuração das ferramentas, documentação e PRs de revisão.
+A autorização HML anterior permanece para incrementos testados e revisados.
+Não autoriza liberação definitiva de produção, fatos fictícios no HML ou
+alteração de secrets, nem dispensa plano específico de migration ou classificação
+independente do destino. Integração exige revisão concreta do diff e dos
+checks; a resposta não exige mesclar PRs informativas/sobrepostas sem análise.
+
 ## Continuação T02 — preparação e revisão local — 20/10/2026
 
 Após a entrega da candidata genérica e indicação da adoção/revisão como

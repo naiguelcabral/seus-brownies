@@ -19,6 +19,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Validate Python used by repository guards
+        run: python3 -c "import fcntl, json, pathlib, sys; assert sys.version_info[:2] == (3, 12)"
+
       - uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc

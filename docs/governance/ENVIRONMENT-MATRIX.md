@@ -1,5 +1,43 @@
 # Ambientes e evidência somente leitura — Cacau v1
 
+## Reconciliação atual — 20/10/2026
+
+Esta seção prevalece sobre o retrato histórico de 08/10 abaixo. Inspeção atual
+limitada a metadados Neon e configurações/deployment do `cacau-v1-hml`; nenhum
+SQL, string de conexão, secret, identidade pessoal ou conteúdo operacional
+compartilhado foi consultado nesta reconciliação.
+
+- HML publicado: versão `f0c2e0e2-8798-4132-9abc-50c87bf7a973`, 100% de tráfego,
+  deployment `6ebd3f92-0c07-4c60-b317-b6593cb55fd8`, de 19/10/2026 13:43:51 UTC.
+- Settings confirmam `AUTH_RATE_LIMITER` e os nomes de bindings de autenticação,
+  banco e recuperação. Valores não foram exibidos. `observability.logs.enabled`,
+  `persist` e `invocation_logs` estão verdadeiros; o campo pai `enabled:false`
+  não deve ser confundido com ausência de logs quando existe a configuração
+  explícita `logs.enabled:true`. Traces/issues estão desabilitados; alertas e
+  resposta a incidentes seguem como trabalho próprio em I03.
+- Projeto `steep-brook-51659857`: a original `br-lingering-wind-acwh5wap` está
+  `production`, primary/default, endpoint `ep-late-water-acahd1z1`. O histórico
+  de reparo/HML usou essa original sob autorizações específicas; isso não
+  muda sua classificação nem autoriza testes sintéticos ou migrador genérico.
+- `Development` agora corresponde a `br-bitter-dew-ac31uci9`; `g1-auth-hml` a
+  `br-patient-lake-ac2t0cvq`. Nomes/IDs de antes do incidente de restauração
+  não devem ser reutilizados como prova de destino. Branches de backup e
+  validação existentes foram preservadas, sem promoção, reset ou remoção.
+- Projeto `cool-base-25902164`: `production/br-empty-frog-acy6xycn` e
+  `development/br-lively-term-ac9i0mvr` estão arquivadas. Não foram reativadas.
+- A identidade atual Worker → banco não é comprovada por um binding secreto
+  chamado `DATABASE_URL`. A revisão genérica continua bloqueando a original
+  conhecida como produção; falta evidência independente do destino para
+  qualquer aplicação futura. Não renomear/reclassificar por inferência.
+
+Topologia de QA autorizada: Node/fakes e arquivos temporários; PostgreSQL 17
+local/CI com dados sintéticos; navegador com rede limitada ao loopback. Nenhum
+novo projeto, branch ou compute compartilhado foi criado. Contrato em
+[QA-VALIDATION-PROTOCOL.md](QA-VALIDATION-PROTOCOL.md). O acompanhamento único
+continua no roadmap; as restrições históricas abaixo descrevem aquela missão.
+
+## Evidência histórica — 08/10/2026
+
 Preparado em 8 de outubro de 2026. Esta matriz documenta o estado observado
 e os limites desta missão; não cria ambiente, secret, compute ou autorização
 de publicação. [HUMAN-APPROVALS.md](HUMAN-APPROVALS.md) e
