@@ -1,5 +1,27 @@
 # Ações que exigem aprovação humana — Cacau v1
 
+## Novas identidades de Gerente e Funcionário — 20/10/2026
+
+O usuário solicitou criar uma conta de Gerente e uma de Funcionário para os
+endereços informados na conversa. A consulta exata prévia não encontrou as
+identidades no Neon Auth de `g1-auth-hml`. As duas foram criadas nesse provedor
+e a releitura confirmou uma identidade por endereço, ambas com
+`emailVerified=false` e papel padrão `user` do provedor. Os endereços e IDs
+pessoais não são reproduzidos neste registro.
+
+Posteriormente, a releitura no Neon Auth confirmou `emailVerified=true` para
+a identidade de Funcionário. O papel `employee` foi concedido na base
+operacional original, em transação única com evento `role_changed` de sucesso,
+motivo e referência inédita
+`access-grant:20261020:487652cd-5769-4757-89cf-e3f5a461cfee`. Leitura
+independente confirmou exatamente um vínculo ativo e um evento correspondente.
+A identidade de Gerente ainda depende de verificação de e-mail e não possui
+vínculo. A solicitação anterior autoriza `manager` após a verificação; a
+concessão deve ter referência inédita, motivo e evento de auditoria na mesma
+transação, seguida de leitura independente. Não reutilizar o SQL ou a
+referência da conciliação de 17/10. Senha, token, OTP e URL privada não entram
+no Git.
+
 ## Continuidade integral da validação técnica — 20/10/2026
 
 Definição operacional posterior: usuário criará mais duas contas (teste e
