@@ -7,8 +7,11 @@ limitada a metadados Neon e configurações/deployment do `cacau-v1-hml`; nenhum
 SQL, string de conexão, secret, identidade pessoal ou conteúdo operacional
 compartilhado foi consultado nesta reconciliação.
 
-- HML publicado: versão `f0c2e0e2-8798-4132-9abc-50c87bf7a973`, 100% de tráfego,
-  deployment `6ebd3f92-0c07-4c60-b317-b6593cb55fd8`, de 19/10/2026 13:43:51 UTC.
+- HML publicado: código `3f0ba59`, versão `e2aba61f-ca72-4459-a0d7-95867cdb2e67`,
+  100% de tráfego, deployment `846b959a-1c69-4508-83bd-c823a6d8ce3a`,
+  de20/10/2026 16:34:55 UTC. Correção de sessão após investigação do500
+  preexistente; oito GETs/tail normais e readback de14 eventos sem500.
+  Não comprova sessão autenticada ou causa upstream histórica.
 - Settings confirmam `AUTH_RATE_LIMITER` e os nomes de bindings de autenticação,
   banco e recuperação. Valores não foram exibidos. `observability.logs.enabled`,
   `persist` e `invocation_logs` estão verdadeiros; o campo pai `enabled:false`

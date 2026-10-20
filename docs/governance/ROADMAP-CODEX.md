@@ -11,27 +11,31 @@ conceder acessos, aplicar migrations ou publicar em produção.
 
 ## Prioridade de retomada
 
-Publicação de `6acb11a` revertida após erro500; HML restaurado para `d5cc034`,
-raiz307/login200. Investigação comprovou500 preexistente e reproduziu falha de
-consulta remota sem sessão. Correção local e instrumentação sanitizada passaram
-556 testes e16 casos runtime; CI e publicação ainda serão conferidas. Causa
-upstream histórica inconclusiva; ver `HML-SESSION-INCIDENT-2026-10-20.md`.
-Backup local privado criado/restaurado com autorização explícita; sem cópia
-externa, periodicidade ou alertas automáticos ao Dono. PRs47/48 em rascunho.
+Correção de sessão publicada no HML em `3f0ba59`: entrada sem token deixa
+de depender do provedor; falhas com token continuam fechadas e ganham logs
+sanitizados. 556 testes, 16 casos runtime, smoke público de navegador e CI/
+CodeQL aprovados; oito GETs acompanhados sem erro. O500 já existia antes do
+último incremento; causa upstream histórica segue inconclusiva, conforme
+`HML-SESSION-INCIDENT-2026-10-20.md`.
+
+Próximos passos: aceite conectado dos perfis com as contas que o usuário criará,
+alertas automáticos ao Dono e rotina independente de backups. Cópia local
+privada já criada e restaurada; sem periodicidade ou armazenamento externo.
+PRs47/48 em rascunho; revisão humana da integração à main permanece separada.
 
 ## Estado confirmado
 
 | Área | Situação atual |
 | --- | --- |
-| HML | Código `d5cc034`, Worker `f0c2e0e2-8798-4132-9abc-50c87bf7a973`, 100% do tráfego; metadados reconferidos em 20/10/2026 |
-| Trabalho versionado | Última publicação em `feat/input-catalog-kg-purchases`; PR #46 contém preparação/revisão offline. Continuação em `codex/integrated-validation-gates`; publicação HML não equivale a integração na `main` |
+| HML | Código `3f0ba59`, versão `e2aba61f-ca72-4459-a0d7-95867cdb2e67`, 100% do tráfego; publicação e GETs públicos conferidos em20/10/2026 |
+| Trabalho versionado | Branch `codex/integrated-validation-gates`, PRs47/48 em rascunho; PR46 mantém preparação/revisão offline. Publicação HML não equivale a integração na `main`. |
 | Banco HML | Atualizações específicas aplicadas, 36 recibos; migrador genérico continua sendo tarefa separada |
 | Catálogo e produção | 38 produtos; duas versões de receita e 34 perfis contando os históricos; receita 2 ativa com 17 perfis completos e 31 componentes |
 | Cenários | Cenário 2/v2/rev2 ativo, 16 produtos orientativos em 100%; cenário 1 e seu histórico preservados |
 | Meta | R$ 10.000 de lucro mensal após os custos de **todas as vendas**, inclusive Bordinhas realizadas; sem cotas obrigatórias por produto |
 | Operação real | Sem compras ou produção previstas; nenhum fato fictício criado no HML para testar as entregas |
-| Última validação de código | 551 testes Node, 35 casos browser, dois runners negócio, 48 casos migrations; CI e CodeQL aprovados em6acb11a. Publicação HML revertida; diagnóstico pendente. |
-| Segurança | PR #46 com CI/PostgreSQL/CodeQL aprovados, três análises sem resultados e alerta #10 corrigido; conferência própria exigida para cada incremento |
+| Última validação de código | 556 testes Node, 35 casos browser de fixtures na CI e smoke público local; 16 casos no runtime workerd isolado. Dois runners negócio e48 casos migrations remotos; CI e CodeQL aprovados em3f0ba59. |
+| Segurança | Três análises CodeQL do código3f0ba59 sem resultados e zero alertas abertos; conferência própria exigida para cada incremento. |
 | Preservação | 21 tabelas acompanhadas com contagens e digests idênticos antes/depois da última entrega |
 
 Legenda: **concluído** significa que o resultado descrito foi comprovado;
@@ -121,7 +125,7 @@ sintético foi gravado no HML.
 | --- | --- | --- |
 | S01 | Concluído | Inventário cobriu catálogo, locais, parâmetros gerenciais, planos, cenários, operações, produção, finanças e lifecycle de estoque. As seis mutações de catálogo e criação/conclusão de lote, lacunas encontradas, agora gravam ator e evento operacional na mesma transação; falha da auditoria reverte a escrita. Autenticação mantém trilha própria; diagnóstico e prévia de produção são POST somente leitura. Contrato automatizado impede regressão. |
 | T02 / #36 | Parcial | Preparação/revisão offline adotadas via `db:prepare` e `db:review`, com oito referências de catálogo PostgreSQL 17, manifesto/recibos exatos, coleta independente recente, alvo HML e gates aplicáveis. Treze ensaios provam instalação, upgrades, preservação, replay, drift, rollback e geração futura; 38 tabelas atuais conferidas. Falta classificar independentemente os alvos relevantes e definir plano/autorização específicos para aplicação compartilhada. Detalhes em `MIGRATION-CHAIN-REMEDIATION-ADR.md`. Nenhum comando novo executa SQL; `db:migrate` permanece bloqueante e `db:push` não é atalho. |
-| T03 | Concluído no escopo isolado | Workflow validado: dois runners PostgreSQL 17 e 35 casos em oito specs UI com rede restrita. Jobs remotos passaram em6acb11a. Aceite conectado H04/H05 continua separado; publicação estável pendente do diagnóstico HML. |
+| T03 | Concluído no escopo isolado | Workflow validado: dois runners PostgreSQL 17 e 35 casos em oito specs UI com rede restrita. Jobs remotos passaram em3f0ba59. Aceite conectado H04/H05 continua separado; incremento publicado no HML após correção de sessão. O diagnóstico upstream histórico permanece inconclusivo. |
 | H04 / H05 | Parcial | Ensaiar o fluxo completo pela interface, com backend/banco e identidade de teste isolados: compra em kg → consumo em g → produção → venda → recebimento/entrega → lucro; cancelamento, devolução, crédito/resgate, fechamento, concorrência e falhas. Não gravar fatos sintéticos na base compartilhada. |
 | H01 / H02 | Parcial | Completar a homologação integrada de login/logout, expiração/revogação, OTP/reset, cooldown, limiter distribuído e Turnstile válido/inválido/replay, preservando controles e auditoria. Sessão e recuperação do Dono já foram comprovadas. |
 | H03 | Parcial | Validar Dono, Gerente, Produção e Funcionário, incluindo chamadas diretas e negações por permissão. Usar identidades autorizadas; não conceder papéis apenas para contornar um teste. |

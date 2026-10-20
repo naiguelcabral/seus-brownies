@@ -5,20 +5,29 @@ atual de tarefas, prioridades e critérios de conclusão. Os checkpoints de
 publicação abaixo preservam o estado comprovado de cada entrega; suas
 próximas etapas históricas não substituem o roadmap atualizado.
 
-## Investigação retomada — 20/10/2026
+## Investigação e correção publicadas — 20/10/2026
 
 Capacidade renovada confirmada em100%, retomada local executada e branch
 `codex/integrated-validation-gates` limpa/sincronizada antes da alteração.
 Logs confirmam500 anterior ao deploy em seis eventos, incluindo dois na raiz.
 O runtime isolado reproduziu500 quando uma consulta desnecessária de sessão
 anônima recebeu429/503. A causa upstream histórica não foi registrada e não
-é presumida. Correção local elimina consulta sem token e acrescenta telemetria
+é presumida. Correção publicada elimina consulta sem token e acrescenta telemetria
 sanitizada; tokens presentes continuam no SDK e nos controles Cacau.
 
 Passaram556 testes Node, cinco novos de autenticação,16 casos no runtime local,
 lint/tipos/formato e Knip sem novas ocorrências. Quatro eventos sanitizados de
-erro HTTP foram comprovados no laboratório. HML anterior segue disponível;
-CI/build versionado e publicação da correção ainda serão conferidos.
+erro HTTP foram comprovados no laboratório. Smoke público de navegador, build
+isolado e todos os checks remotos do código `3f0ba59` aprovados; três análises
+CodeQL sem resultados e zero alertas.
+
+HML publicado às 16:34:55 UTC: versão `e2aba61f-ca72-4459-a0d7-95867cdb2e67`,
+deployment `846b959a-1c69-4508-83bd-c823a6d8ce3a`, 100% do tráfego. Probe
+público raiz307/login200; oito GETs acompanhados por tail passaram sem
+exceções/logs de aplicação. Readback de14 eventos da versão nova sem500.
+Sem produção principal, secrets, migrations ou operações fictícias no HML.
+Servidores locais encerrados. Aceite autenticado e alertas ao Dono continuam
+pendentes, sem inferir autenticação a partir dos GETs públicos.
 Detalhes em [investigação](HML-SESSION-INCIDENT-2026-10-20.md).
 
 ## Checkpoint anterior de encerramento — 20/10/2026

@@ -1,5 +1,33 @@
 # Handoff de autonomia — Cacau v1
 
+## Investigação encerrada e correção publicada — 20/10/2026
+
+- Retomada com capacidade oficial renovada em 100%; `LIGARTUDO --prepare-only`
+  e fast-forward da branch limpa concluídos. Código `3f0ba59` sincronizado na
+  branch `codex/integrated-validation-gates`, PRs #47/#48 em rascunho, sem merge.
+- 500 preexistente confirmado na versão antiga; consulta anônima desnecessária
+  reproduziu o mesmo HTTP com 429/503 em workerd local. Causa upstream dos
+  eventos históricos não confirmada; não atribuir ao Neon ou à última alteração.
+- Alterados adaptador TanStack Neon, resolver, logger de sessão e cinco testes;
+  governança/recibo em `HML-SESSION-INCIDENT-2026-10-20.md` e
+  `evidence/hml-session-incident-2026-10-20.json`.
+- 556 testes Node, 16 casos runtime, smoke de navegador, lint/tipos/formato/Knip
+  e build HML isolado passaram. CI 39458289653, negócio/browser 39458289627,
+  migrations 39458297440, evidência 39458297385 e CodeQL 39458289645 passaram;
+  três análises sem resultados e zero alertas. Servidores locais encerrados.
+- HML: versão `e2aba61f-ca72-4459-a0d7-95867cdb2e67`, deployment
+  `846b959a-1c69-4508-83bd-c823a6d8ce3a`, 100%, às 16:34:55 UTC. Probe 307/200,
+  oito GETs/tail normais e readback de 14 eventos da versão nova sem 500.
+- Sem escrita de fatos, migrations, secrets ou Worker principal. Não repetir
+  backup, importações ou rollback anterior. Não há monitoramento recorrente.
+- Próximo passo no roadmap: aceite conectado com contas teste/Gerente que o
+  usuário criará e implementação dos alertas ao Dono. Sessão autenticada não
+  foi comprovada por esse smoke. Integração à main exige revisão humana própria.
+- Capacidade oficial consultada durante a tarefa: 82% restante na janela de
+  cinco horas, 82% semanal; reset exibido: 20/10/2026 18:19:38 America/Sao_Paulo. Tarefa encerrada normalmente,
+  sem gatilho de reserva e sem execução automática de `DESLIGARTUDO`.
+
+
 ## Checkpoint de encerramento — 20/10/2026
 
 Código `6acb11a`: 551 testes Node, 35 casos de navegador isolado, dois runners
