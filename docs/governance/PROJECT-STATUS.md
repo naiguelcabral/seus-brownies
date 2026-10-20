@@ -15,9 +15,10 @@ atribuídos individualmente. Nenhum papel foi alterado.
 
 Foi feita uma solicitação de recuperação pelo formulário público do Cacau.
 A auditoria registrou `password_reset_requested/success` às
-`2026-10-20T19:18:37.074Z`, após o marcador de operação pendente. Recebimento,
-redefinição pessoal e novo login ainda aguardam confirmação. A senha e o
-token de recuperação não foram acessados pelo agente.
+`2026-10-20T19:18:37.074Z`, após o marcador de operação pendente. Posteriormente,
+o usuário confirmou que o acesso dessa conta funcionou. Esse aceite de entrada
+não conclui a matriz de permissões H03. A senha e o token de recuperação não
+foram acessados pelo agente.
 
 ## Aceite parcial de acesso — 20/10/2026
 

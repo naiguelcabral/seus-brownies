@@ -29,7 +29,8 @@ aceita pelo provedor às 18:42:15 UTC e recebimento confirmado pelo usuário.
 Aguardam-se redefinição pessoal e novo login, sem presumir aceite H03.
 Também foi solicitada recuperação da conta gerencial anterior indicada pelo
 usuário: e-mail verificado e vínculo `manager` ativo reconfirmados; provedor
-aceitou o pedido às 19:18:37 UTC. Recebimento, redefinição e novo login pendentes.
+aceitou o pedido às 19:18:37 UTC. O usuário confirmou posteriormente que o
+acesso dessa conta funcionou; matriz de permissões ainda pendente.
 Também faltam alertas automáticos ao Dono e rotina independente de backups.
 Cópia local privada já criada e restaurada; sem periodicidade ou armazenamento
 externo.
