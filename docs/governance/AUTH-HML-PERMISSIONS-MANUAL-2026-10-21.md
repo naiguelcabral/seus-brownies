@@ -53,8 +53,10 @@ Usuário escolheu testar no próprio dispositivo. Relatou que Visão geral,
 Relatórios, Estoque, Financeiro e Cenários abriram corretamente, com Cenários
 sem possibilidade de edição. Em seguida confirmou que `/parametros` e
 `/fifo-migration-audit` bloquearam e retornaram à Visão geral. Nenhuma operação
-foi salva por esse roteiro. Estes são relatos humanos de interface; a
-releitura do papel canônico e as chamadas GET diretas seguem em coleta.
+foi salva por esse roteiro. Estes são relatos humanos de interface. Na rodada seguinte, o usuário
+confirmou `manager` no endpoint de sessão, `result` no GET direto de Dashboard
+e negação de permissão no GET direto de Parâmetros. Evidência das chamadas é
+relato humano do resultado RPC, sem coleta do payload.
 
 O agente não tem navegador/sessão conectada nesta execução. Os sete arquivos
 de testes Node de autenticação/permissões conferidos pela frente paralela
@@ -85,6 +87,7 @@ conversa; relatar somente papel, aprovado/negado e eventual mensagem de erro.
 O endpoint de Dashboard sem sessão foi consultado pelo agente e retornou
 `Autenticação obrigatória para esta operação.`, em erro RPC serializado com
 HTTP 200. É evidência nova de negação anônima dessa leitura, não de RBAC dos
-três perfis. Chamadas autenticadas foram entregues ao usuário e aguardam
-relato. Os três links não representam cobertura de todas as 55 políticas;
+três perfis. Gerente confirmou os três resultados esperados em sessão própria.
+Funcionário e Dono seguem em coleta. A consulta anônima de sessão também
+confirmou flags falsas/papel nulo; Parâmetros anônimo negou autenticação. Os três links não representam cobertura de todas as 55 políticas;
 mutações válidas no HML continuam fora deste roteiro sem fatos reais.
