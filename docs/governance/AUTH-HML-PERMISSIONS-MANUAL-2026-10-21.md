@@ -88,7 +88,9 @@ O endpoint de Dashboard sem sessão foi consultado pelo agente e retornou
 `Autenticação obrigatória para esta operação.`, em erro RPC serializado com
 HTTP 200. É evidência nova de negação anônima dessa leitura, não de RBAC dos
 três perfis. Gerente confirmou os três resultados esperados em sessão própria.
-Funcionário confirmou depois os três resultados esperados; Dono segue em coleta. A consulta anônima de sessão também
+Funcionário confirmou depois os três resultados esperados. Dono confirmou
+`owner` após a recuperação e resultado nas duas consultas GET. Interface do
+Dono posteriormente confirmada no fechamento abaixo. A consulta anônima de sessão também
 confirmou flags falsas/papel nulo; Parâmetros anônimo negou autenticação. Os três links não representam cobertura de todas as 55 políticas;
 mutações válidas no HML continuam fora deste roteiro sem fatos reais.
 
@@ -107,11 +109,30 @@ de interface, papel canônico e duas consultas diretas, sem salvar operações.
 ## Dono — falha de sessão, aceite pendente
 
 Usuário relatou inicialmente autenticação obrigatória no GET e depois falha
-na verificação da sessão ao colar o endereço no HML já autenticado. Não há
-confirmação de `owner` ou dos GETs permitidos. Logs agregados recentes revelam
+na verificação da sessão ao colar o endereço no HML já autenticado. A primeira
+rodada ainda não tinha confirmado `owner` ou os GETs permitidos. Logs agregados recentes revelam
 duas falhas HTTP 429 no caminho de sessão, sem identificação da conta ou
 correlação individual. [Investigação e limites](AUTH-HML-SESSION-LIMIT-2026-10-21.md).
 Orientada uma consulta após intervalo sem repetição; usuário confirmou
 “Agora apareceu owner”. Sessão recuperada nessa leitura e papel confirmado
-por relato do endpoint. Dashboard/Parâmetros e controles da interface do Dono
-seguem em coleta; a causa/solução permanente do limite não foi demonstrada.
+por relato do endpoint. Na rodada seguinte, relatou que ambas as consultas
+(Dashboard/Parâmetros) iniciaram com resultado e linhas serializadas. GETs
+permitidos confirmados por relato, sem coleta dos dados. Apenas os controles
+e telas da interface do Dono seguem em coleta; a causa/solução permanente do
+limite não foi demonstrada.
+
+
+## Fechamento da rodada guiada de perfis ativos
+
+Usuário confirmou telas Visão geral, Relatórios, Estoque, Financeiro, Cenários
+e Parâmetros do Dono, com controles de Cenários disponíveis, sem salvar.
+Assim, a rodada assistida dos perfis ativos está aprovada: papéis employee,
+manager e owner relatados pelo endpoint; Dashboard negado ao Funcionário e
+permitido aos demais; Parâmetros negado a Funcionário/Gerente e permitido ao
+Dono; interface conforme os roteiros acima. GETs não executam alterações.
+
+Este aceite é delimitado às rotas e leituras testadas, com resultados humanos.
+Não prova todas as 55 políticas no HML, mutações reais, expiração/revogação,
+antiabuso ou estabilidade permanente. O episódio 429 permanece acompanhado
+em H01/H02. Autoriza seguir a revisão/integração e publicação conjunta HML
+já solicitadas, preservando os gates separados de produção e dados.

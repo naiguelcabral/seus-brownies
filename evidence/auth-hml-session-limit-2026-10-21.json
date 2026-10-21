@@ -41,7 +41,8 @@
     "source": "human report of direct session endpoint",
     "role": "owner",
     "session_read_recovered": true,
-    "dashboard_and_settings_acceptance": "pending",
-    "permanent_resolution_verified": false
+    "dashboard_and_settings_acceptance": "human reported successful results from both direct GETs",
+    "permanent_resolution_verified": false,
+    "owner_interface_acceptance": "human confirmed screens and scenario controls without saving"
   }
 }

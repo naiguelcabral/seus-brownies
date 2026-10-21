@@ -19,7 +19,7 @@ e agregações, sem recuperar eventos brutos, cookies, cabeçalhos ou identidade
 
 A agregação é compatível com a falha relatada, mas não identifica a conta nem
 comprova correlação individual. O motivo do limite, seu escopo (sessão, conta,
-origem ou serviço), horário de liberação e recuperação permanecem desconhecidos.
+origem ou serviço), horário de liberação e mecanismo de recuperação permanecem desconhecidos.
 Não atribuir a causa à quantidade de cliques do usuário ou à tipagem candidata.
 O código S04 não foi publicado no HML.
 
@@ -38,15 +38,17 @@ Orientado intervalo sem tentativas repetidas e uma única consulta de Sessão
 na aba autenticada, para distinguir recuperação de persistência da falha.
 Nenhuma janela exata de reset foi observada. O usuário confirmou depois
 “Agora apareceu owner”. A recuperação dessa leitura foi relatada; não é
-prova de solução permanente ou de sucesso das demais consultas.
+prova de solução permanente. Depois o usuário confirmou resultado nas duas
+consultas GET de Dashboard/Parâmetros, sem compartilhar o payload.
 Não encerrar/revogar sessão, redefinir senha, conceder papel, mudar rate limit,
-secrets ou configuração para concluir o teste. Uma leitura posterior com
-`owner` ainda deve ser seguida dos GETs de Dashboard/Parâmetros e da interface.
+secrets ou configuração para concluir o teste. A leitura posterior com
+`owner` foi seguida dos GETs de Dashboard/Parâmetros; a interface também foi confirmada pelo usuário.
 
 ## Gate atual
 
-Papel `owner` confirmado por relato do endpoint de sessão. Restam as duas
-consultas GET e a interface do Dono para encerrar esta rodada H03. Revisão/integração e
+Papel `owner` e as duas consultas GET confirmados por relato do usuário.
+Interface do Dono também confirmada pelo usuário; rodada guiada dos perfis
+ativos concluída, com limites registrados no aceite manual. Revisão/integração e
 publicação conjunta seguem a ordem solicitada, após resolução e repetição do
 caso. Nenhuma alteração de código, banco, RBAC, secrets ou deploy nesta análise.
 Os aceites já relatados de Funcionário/Gerente ficam preservados com seus limites.

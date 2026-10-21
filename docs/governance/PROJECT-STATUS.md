@@ -5,6 +5,17 @@ atual de tarefas, prioridades e critérios de conclusão. Os checkpoints de
 publicação abaixo preservam o estado comprovado de cada entrega; suas
 próximas etapas históricas não substituem o roadmap atualizado.
 
+## Rodada de permissões dos perfis ativos aprovada — 21/10/2026
+
+Usuário confirmou interface de Funcionário/Gerente/Dono, papéis canônicos no
+endpoint de sessão e GETs diretos de Dashboard/Parâmetros conforme a matriz.
+Dono confirmou as telas e os controles de Cenários, sem salvar. Aceite humano
+delimitado às rotas e leituras testadas; não encerra antiabuso, expiração,
+revogação, estabilidade ou todas as 55 políticas no ambiente publicado.
+O HTTP 429 observado permanece em H01/H02, com recuperação relatada.
+Seguimos a revisão/integração das PRs #50–#53 e a publicação conjunta HML
+solicitadas, sem SQL compartilhado ou produção.
+
 ## Aceite do Dono — falha de sessão em investigação — 21/10/2026
 
 Funcionário e Gerente confirmaram papel e GETs diretos do roteiro. Dono relatou
@@ -12,8 +23,9 @@ falha ao verificar sessão mesmo na aba autenticada. Agregação de logs HML
 16:30–16:44 UTC confirmou dois eventos sanitizados de sessão com HTTP 429 na
 versão `22733c04`; sem correlação individual ou causa do limite comprovadas.
 Após intervalo, usuário confirmou `owner` no endpoint de sessão. Recuperação
-dessa leitura relatada; consultas Dashboard/Parâmetros e interface do Dono
-seguem em coleta, sem prova de solução permanente do limite. Não é
+dessa leitura relatada e consultas Dashboard/Parâmetros confirmadas com
+resultado. Interface do Dono segue em coleta, sem prova de solução permanente
+do limite. Não é
 aceite concluído nem prova de erro de RBAC. Integração/publicação conjunta
 permanecem após a homologação. [Registro](AUTH-HML-SESSION-LIMIT-2026-10-21.md).
 Nenhuma mudança de código, dados, secrets ou deploy nesta investigação.
@@ -43,7 +55,8 @@ de Parâmetros negou permissão, conforme relato do usuário. Não há sessão r
 isolada não substitui chamadas diretas autenticadas no ambiente publicado.
 Funcionário também confirmou o roteiro direto: `employee` na sessão e negação
 por permissão em Dashboard/Parâmetros. Dono ainda em coleta, com conferência
-de áreas/controles e chamadas GET, sem salvar operações.
+de áreas/controles, sem salvar operações; `owner` e GETs de Dashboard/Parâmetros
+posteriormente confirmados por relato.
 Revisão, integração das PRs #50–#52 e desta candidata, seguidas da publicação
 conjunta no HML, dependem da conclusão dessa evidência, na ordem solicitada.
 
