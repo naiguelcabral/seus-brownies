@@ -523,3 +523,242 @@ test('cancel, return, credit, partial redemption, refund, closure and correction
   })
   expect(corrected.ok, corrected.message).toBe(true)
 })
+
+const scenarioDraft = {
+  name: 'Cenário QA isolado',
+  description: 'Premissas sintéticas',
+  effectiveOn: '2026-10-01',
+  monthlyProfitGoal: '10000.00',
+  fixedMonthlyCosts: '2288.00',
+  salesDaysPerMonth: 20,
+  weeksPerMonth: '4.00',
+  minimumMarginRate: '0.7000',
+  feeTaxReserveRate: '0.0000',
+  mix: [
+    {
+      productId: 2,
+      originalWeight: '0.33',
+      plannedUnitPrice: '10.00',
+      plannedUnitCost: '2.517',
+    },
+    {
+      productId: 3,
+      originalWeight: '0.70',
+      plannedUnitPrice: '6.00',
+      plannedUnitCost: '0.923',
+    },
+  ],
+}
+async function scenarioState() {
+  return (
+    await pool.query(`select
+    (select coalesce(jsonb_agg(to_jsonb(s) order by id),'[]') from management_scenarios s) scenarios,
+    (select coalesce(jsonb_agg(to_jsonb(m) order by id),'[]') from management_scenario_mix m) mix,
+    (select coalesce(jsonb_agg(to_jsonb(h) order by id),'[]') from management_scenario_history h) history,
+    (select coalesce(jsonb_agg(to_jsonb(a) order by id),'[]') from operational_audit_events a) audit`)
+  ).rows[0]
+}
+
+test('scenario HTTP lifecycle preserves exact mix, versions, revisions, activation and actors in PostgreSQL', async ({
+  page,
+}) => {
+  await identity(page, 'owner')
+  const created = await rpc(page, 'createScenario', scenarioDraft)
+  expect(created.ok, created.message).toBe(true)
+  expect(created.value).toMatchObject({ version: 1, revision: 1 })
+  const id = created.value.id
+  let listed = await rpc(page, 'listScenarios', { page: 1 })
+  expect(listed.ok, listed.message).toBe(true)
+  let stored = listed.value.scenarios.find((row) => row.id === id)
+  expect(stored.status).toBe('draft')
+  expect(stored.projectionStatus).toBe('available')
+  expect(stored.projection.marginNeededBeforeFixedCosts).toBe('12288.00')
+  expect(
+    stored.mix.map((row) => [row.originalWeight, row.normalizedWeightBps]),
+  ).toEqual([
+    ['0.330000', 3204],
+    ['0.700000', 6796],
+  ])
+  expect(stored.mix[0].plannedUnitCost).toBe('2.517')
+  const projection = stored.projection
+  const update = await rpc(page, 'updateScenarioDraft', {
+    ...scenarioDraft,
+    id,
+    expectedRevision: 1,
+    name: 'Cenário QA revisado',
+  })
+  expect(update.value).toEqual({ id, version: 1, revision: 2 })
+  let before = await scenarioState()
+  expect(
+    (
+      await rpc(page, 'updateScenarioDraft', {
+        ...scenarioDraft,
+        id,
+        expectedRevision: 1,
+      })
+    ).ok,
+  ).toBe(false)
+  expect(
+    (
+      await rpc(page, 'createScenarioVersion', {
+        sourceScenarioId: id,
+        reason: 'Rascunho ainda aberto',
+      })
+    ).ok,
+  ).toBe(false)
+  expect(await scenarioState()).toEqual(before)
+  expect(
+    (await rpc(page, 'activateScenario', { id, expectedRevision: 2 })).value,
+  ).toEqual({ id, version: 1, revision: 3 })
+  const original = (await scenarioState()).scenarios.find(
+    (row) => row.id === id,
+  )
+  before = await scenarioState()
+  expect(
+    (
+      await rpc(page, 'updateScenarioDraft', {
+        ...scenarioDraft,
+        id,
+        expectedRevision: 3,
+      })
+    ).ok,
+  ).toBe(false)
+  expect(await scenarioState()).toEqual(before)
+  const next = await rpc(page, 'createScenarioVersion', {
+    sourceScenarioId: id,
+    reason: 'Revisão das premissas QA',
+  })
+  expect(next.ok, next.message).toBe(true)
+  expect(next.value).toMatchObject({ version: 2, revision: 1 })
+  const nextId = next.value.id
+  expect(
+    (await scenarioState()).scenarios.find((row) => row.id === id),
+  ).toEqual(original)
+  before = await scenarioState()
+  expect(
+    (await rpc(page, 'activateScenario', { id: nextId, expectedRevision: 1 }))
+      .ok,
+  ).toBe(false)
+  expect(await scenarioState()).toEqual(before)
+  expect(
+    (
+      await rpc(page, 'activateScenario', {
+        id: nextId,
+        expectedRevision: 1,
+        reason: 'Substituição QA',
+      })
+    ).value,
+  ).toEqual({ id: nextId, version: 2, revision: 2 })
+  listed = await rpc(page, 'listScenarios', { page: 1 })
+  expect(listed.value.activeScenario.id).toBe(nextId)
+  expect(listed.value.activeScenario.projection).toEqual(projection)
+  stored = listed.value.scenarios.find((row) => row.id === id)
+  expect(stored).toMatchObject({
+    status: 'archived',
+    revision: 4,
+    archiveReason: 'Substituição QA',
+  })
+  expect(
+    (
+      await rpc(page, 'archiveScenario', {
+        id: nextId,
+        expectedRevision: 2,
+        reason: 'Encerramento QA',
+      })
+    ).value,
+  ).toEqual({ id: nextId, version: 2, revision: 3 })
+  before = await scenarioState()
+  expect(
+    (
+      await rpc(page, 'archiveScenario', {
+        id: nextId,
+        expectedRevision: 3,
+        reason: 'Repetição QA',
+      })
+    ).ok,
+  ).toBe(false)
+  expect(await scenarioState()).toEqual(before)
+  expect(before.history.map((row) => row.event)).toEqual([
+    'created',
+    'updated',
+    'activated',
+    'version_created',
+    'replaced',
+    'activated',
+    'archived',
+  ])
+  expect(
+    before.history.every((row) => row.actor_auth_user_id === 'qa-owner'),
+  ).toBe(true)
+  expect(
+    before.history
+      .find((row) => row.event === 'version_created')
+      .snapshot.mix.map((row) => row.normalizedWeightBps),
+  ).toEqual([3204, 6796])
+  expect(
+    before.audit.filter((row) => row.entity_type === 'management_scenario'),
+  ).toHaveLength(7)
+})
+
+test('all five scenario writers roll back scenario, mix, history and audit when either audit sink fails', async ({
+  page,
+}) => {
+  await identity(page, 'owner')
+  const active = await rpc(page, 'createScenario', scenarioDraft)
+  expect(active.ok, active.message).toBe(true)
+  const activeId = active.value.id
+  expect(
+    (await rpc(page, 'activateScenario', { id: activeId, expectedRevision: 1 }))
+      .ok,
+  ).toBe(true)
+  const candidate = await rpc(page, 'createScenario', scenarioDraft)
+  expect(candidate.ok, candidate.message).toBe(true)
+  const candidateId = candidate.value.id
+  await pool.query(`create function qa_reject_scenario_audit() returns trigger language plpgsql as $$
+    begin raise exception 'Synthetic scenario audit sink unavailable'; end $$`)
+  for (const table of [
+    'management_scenario_history',
+    'operational_audit_events',
+  ]) {
+    await pool.query(`create trigger qa_scenario_audit_failure before insert on ${table}
+      for each row execute function qa_reject_scenario_audit()`)
+    try {
+      for (const [name, input] of [
+        ['createScenario', scenarioDraft],
+        [
+          'updateScenarioDraft',
+          {
+            ...scenarioDraft,
+            id: candidateId,
+            expectedRevision: 1,
+            mix: [scenarioDraft.mix[0]],
+          },
+        ],
+        [
+          'createScenarioVersion',
+          { sourceScenarioId: activeId, reason: 'Versão QA' },
+        ],
+        [
+          'activateScenario',
+          { id: candidateId, expectedRevision: 1, reason: 'Substituição QA' },
+        ],
+        [
+          'archiveScenario',
+          { id: activeId, expectedRevision: 2, reason: 'Arquivo QA' },
+        ],
+      ]) {
+        const before = await scenarioState()
+        const result = await rpc(page, name, input)
+        expect(result.ok, `${table}: ${name}`).toBe(false)
+        expect(
+          await scenarioState(),
+          `${table}: ${name} must roll back`,
+        ).toEqual(before)
+      }
+    } finally {
+      await pool.query(
+        `alter table ${table} disable trigger qa_scenario_audit_failure`,
+      )
+    }
+  }
+})

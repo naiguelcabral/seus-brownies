@@ -1,5 +1,7 @@
 import { requireDefined, requireFirst } from '../../lib/required-value'
 import { createServerFn } from '@tanstack/react-start'
+import type { getDb } from '#/db/index'
+import type { DatabaseReader, DatabaseTransaction } from '#/db/contracts'
 import {
   and,
   asc,
@@ -52,25 +54,24 @@ import {
 } from '#/features/scenarios/pagination'
 import { centsToMoney, moneyToCents } from '#/features/production/calculations'
 
-type CatalogProduct = {
-  id: number
-  name: string
-  type: string
-  isActive: boolean
-  salePrice: string | null
+// Only scenario draft mix replacement needs deletion; other writers retain the
+// narrower shared transaction contract.
+type ScenarioTransaction = DatabaseTransaction &
+  Pick<ReturnType<typeof getDb>, 'delete'>
+type ScenarioDatabase = {
+  transaction: <T>(work: (tx: ScenarioTransaction) => Promise<T>) => Promise<T>
 }
-type StoredMixRow = {
-  scenarioId: number
-  productId: number
-  productName: string
-  originalWeight: string
-  normalizedWeightBps: number
-  plannedUnitPrice: string
-  plannedUnitCost: string
-  currentProductName: string
-  productType: string
-  productIsActive: boolean
-}
+type ScenarioMixSnapshot = Array<
+  Pick<
+    typeof managementScenarioMix.$inferSelect,
+    | 'productId'
+    | 'productName'
+    | 'originalWeight'
+    | 'normalizedWeightBps'
+    | 'plannedUnitPrice'
+    | 'plannedUnitCost'
+  >
+>
 
 export class ScenarioSchemaUnavailableError extends Error {
   constructor() {
@@ -134,10 +135,7 @@ function normalizeDraft(data: ScenarioDraftInput) {
   }
 }
 
-async function loadProducts(
-  database: any,
-  productIds: number[],
-): Promise<CatalogProduct[]> {
+async function loadProducts(database: DatabaseReader, productIds: number[]) {
   if (!productIds.length) return []
   return database
     .select({
@@ -149,13 +147,10 @@ async function loadProducts(
     })
     .from(products)
     .where(inArray(products.id, productIds))
-    .orderBy(asc(products.name), asc(products.id)) as Promise<CatalogProduct[]>
+    .orderBy(asc(products.name), asc(products.id))
 }
 
-async function loadMix(
-  database: any,
-  scenarioIds: number[],
-): Promise<StoredMixRow[]> {
+async function loadMix(database: DatabaseReader, scenarioIds: number[]) {
   if (!scenarioIds.length) return []
   return database
     .select({
@@ -173,7 +168,7 @@ async function loadMix(
     .from(managementScenarioMix)
     .innerJoin(products, eq(managementScenarioMix.productId, products.id))
     .where(inArray(managementScenarioMix.scenarioId, scenarioIds))
-    .orderBy(asc(managementScenarioMix.productId)) as Promise<StoredMixRow[]>
+    .orderBy(asc(managementScenarioMix.productId))
 }
 
 function groupMix(rows: Awaited<ReturnType<typeof loadMix>>) {
@@ -211,14 +206,7 @@ function draftFromStored(
 
 function snapshot(
   row: typeof managementScenarios.$inferSelect,
-  mix: Array<{
-    productId: number
-    productName: string
-    originalWeight: string
-    normalizedWeightBps: number
-    plannedUnitPrice: string
-    plannedUnitCost: string
-  }>,
+  mix: ScenarioMixSnapshot,
 ) {
   return {
     scenarioKey: row.scenarioKey,
@@ -242,16 +230,9 @@ function snapshot(
 }
 
 async function appendScenarioHistory(
-  tx: any,
+  tx: ScenarioTransaction,
   row: typeof managementScenarios.$inferSelect,
-  mix: Array<{
-    productId: number
-    productName: string
-    originalWeight: string
-    normalizedWeightBps: number
-    plannedUnitPrice: string
-    plannedUnitCost: string
-  }>,
+  mix: ScenarioMixSnapshot,
   event: string,
   actorAuthUserId: string,
   reason?: string | null,
@@ -268,7 +249,7 @@ async function appendScenarioHistory(
 }
 
 async function appendScenarioAudit(
-  tx: any,
+  tx: ScenarioTransaction,
   row: typeof managementScenarios.$inferSelect,
   action: string,
   actorAuthUserId: string,
@@ -285,7 +266,7 @@ async function appendScenarioAudit(
 }
 
 async function prepareMix(
-  tx: any,
+  tx: ScenarioTransaction,
   data: ScenarioDraftInput,
   requireActivation = false,
 ) {
@@ -306,13 +287,13 @@ async function prepareMix(
     ...normalized,
     mix: normalized.mix.map((item) => ({
       ...item,
-      productName: names.get(item.productId)!,
+      productName: requireDefined(names.get(item.productId)),
     })),
   }
 }
 
 async function replaceMix(
-  tx: any,
+  tx: ScenarioTransaction,
   scenarioId: number,
   mix: Awaited<ReturnType<typeof prepareMix>>['mix'],
 ) {
@@ -471,11 +452,11 @@ export const listScenarios = createServerFn({ method: 'GET' })
   })
 
 export async function persistScenarioCreate(
-  database: any,
+  database: ScenarioDatabase,
   data: ScenarioDraftInput,
   actorAuthUserId: string,
 ) {
-  return database.transaction(async (tx: any) => {
+  return database.transaction(async (tx) => {
     try {
       const prepared = await prepareMix(tx, data)
       const [created] = await tx
@@ -523,11 +504,11 @@ export const createScenario = createServerFn({ method: 'POST' })
   })
 
 export async function persistScenarioDraftUpdate(
-  database: any,
+  database: ScenarioDatabase,
   data: UpdateScenarioDraftInput,
   actorAuthUserId: string,
 ) {
-  return database.transaction(async (tx: any) => {
+  return database.transaction(async (tx) => {
     try {
       const prepared = await prepareMix(tx, data)
       const [updated] = await tx
@@ -585,7 +566,7 @@ export const updateScenarioDraft = createServerFn({ method: 'POST' })
     return persistScenarioDraftUpdate(getDb(), data, context.principal!.id)
   })
 
-async function scenarioWithMix(tx: any, id: number) {
+async function scenarioWithMix(tx: ScenarioTransaction, id: number) {
   const [row] = await tx
     .select()
     .from(managementScenarios)
@@ -596,11 +577,11 @@ async function scenarioWithMix(tx: any, id: number) {
 }
 
 export async function persistScenarioVersionCreate(
-  database: any,
+  database: ScenarioDatabase,
   data: CreateScenarioVersionInput,
   actorAuthUserId: string,
 ) {
-  return database.transaction(async (tx: any) => {
+  return database.transaction(async (tx) => {
     try {
       await tx.execute(
         sql`select pg_advisory_xact_lock(hashtextextended(${`cacau:management-scenario-version:${data.sourceScenarioId}`}, 0))`,
@@ -608,10 +589,12 @@ export async function persistScenarioVersionCreate(
       const source = await scenarioWithMix(tx, data.sourceScenarioId)
       if (source.row.status === 'draft')
         throw new Error('Edite o rascunho atual em vez de criar outra versão.')
-      const [{ maximumVersion }] = await tx
-        .select({ maximumVersion: max(managementScenarios.version) })
-        .from(managementScenarios)
-        .where(eq(managementScenarios.scenarioKey, source.row.scenarioKey))
+      const { maximumVersion } = requireFirst(
+        await tx
+          .select({ maximumVersion: max(managementScenarios.version) })
+          .from(managementScenarios)
+          .where(eq(managementScenarios.scenarioKey, source.row.scenarioKey)),
+      )
       const version = (maximumVersion ?? source.row.version) + 1
       const [created] = await tx
         .insert(managementScenarios)
@@ -677,18 +660,18 @@ export const createScenarioVersion = createServerFn({ method: 'POST' })
     return persistScenarioVersionCreate(getDb(), data, context.principal!.id)
   })
 
-async function lockScenarioLifecycle(tx: any) {
+async function lockScenarioLifecycle(tx: ScenarioTransaction) {
   await tx.execute(
     sql`select pg_advisory_xact_lock(hashtextextended('cacau:management-scenario-active', 0))`,
   )
 }
 
 export async function persistScenarioActivation(
-  database: any,
+  database: ScenarioDatabase,
   data: ActivateScenarioInput,
   actorAuthUserId: string,
 ) {
-  return database.transaction(async (tx: any) => {
+  return database.transaction(async (tx) => {
     try {
       await lockScenarioLifecycle(tx)
       const candidate = await scenarioWithMix(tx, data.id)
@@ -715,7 +698,7 @@ export async function persistScenarioActivation(
           .set({
             status: 'archived',
             revision: currentActive.revision + 1,
-            archiveReason: data.reason,
+            archiveReason: data.reason ?? null,
             archivedByAuthUserId: actorAuthUserId,
             archivedAt: new Date(),
             updatedByAuthUserId: actorAuthUserId,
@@ -819,11 +802,11 @@ export const activateScenario = createServerFn({ method: 'POST' })
   })
 
 export async function persistScenarioArchive(
-  database: any,
+  database: ScenarioDatabase,
   data: ArchiveScenarioInput,
   actorAuthUserId: string,
 ) {
-  return database.transaction(async (tx: any) => {
+  return database.transaction(async (tx) => {
     try {
       await lockScenarioLifecycle(tx)
       const current = await scenarioWithMix(tx, data.id)

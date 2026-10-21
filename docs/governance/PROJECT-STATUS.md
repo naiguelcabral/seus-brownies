@@ -5,6 +5,28 @@ atual de tarefas, prioridades e critérios de conclusão. Os checkpoints de
 publicação abaixo preservam o estado comprovado de cada entrega; suas
 próximas etapas históricas não substituem o roadmap atualizado.
 
+## S04 — Cenários tipados — candidata de 21/10/2026
+
+Continuidade sobre a PR #52: consultas inferidas do Drizzle, snapshots derivados
+no schema e callback transacional genérico nos cinco writers de Cenários,
+sem `any` explícito no módulo. A capacidade de substituir o mix fica local a
+Cenários; o contrato compartilhado de finanças/lifecycle não foi ampliado.
+Cálculos, precisão, versões, locks, ativação, permissões e autoria preservados.
+
+Fixture de compilação ampliada e três regressões de resultados/erros ausentes;
+569 testes Node, tipos, lint, formato e Knip sem novos achados aprovados.
+Ensaios conectados novos verificam lifecycle e rollback dos cinco writers
+contra histórico/auditoria indisponíveis; execução/build/CI serão registrados
+no [registro deste incremento](TYPED-SCENARIOS-2026-10-21.md).
+S04 permanece parcial para as extrações maiores. Nenhuma migration, operação
+compartilhada, integração ou publicação por este incremento.
+
+Homologação H03 segue assistida no dispositivo do usuário, conforme preferência
+expressa nesta execução. Não há sessão real acessível ao agente; validação
+isolada não substitui chamadas diretas autenticadas no ambiente publicado.
+Revisão, integração das PRs #50–#52 e desta candidata, seguidas da publicação
+conjunta no HML, dependem da conclusão dessa evidência, na ordem solicitada.
+
 ## S04 — contratos de transação — candidata de 21/10/2026
 
 Finanças e lifecycle de estoque preparados com contratos derivados do
