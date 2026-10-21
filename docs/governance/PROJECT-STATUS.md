@@ -5,6 +5,15 @@ atual de tarefas, prioridades e critérios de conclusão. Os checkpoints de
 publicação abaixo preservam o estado comprovado de cada entrega; suas
 próximas etapas históricas não substituem o roadmap atualizado.
 
+## Integração e repetição automática aprovadas — 21/10/2026
+
+PRs #50–#53 incorporadas à main `91658ed`; CI, negócio/browser e CodeQL
+pós-merge aprovados. Rodada manual dos três perfis concluída no tablet.
+Repetição HTTP/PostgreSQL 17 isolada: 12 testes aprovados, incluindo Gerente
+com Dashboard permitido/Parâmetros negado e Funcionário com ambos negados.
+Não equivale a execução automática com contas reais. Publicação conjunta HML
+continua pendente. [Handoff e próximo passo](HANDOFF-HML-JOINT-2026-10-21.md).
+
 ## Rodada de permissões dos perfis ativos aprovada — 21/10/2026
 
 Usuário confirmou interface de Funcionário/Gerente/Dono, papéis canônicos no
