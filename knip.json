@@ -15,6 +15,7 @@
     "src/start.ts",
     "src/routes/**/*.{ts,tsx}",
     "test/**/*.test.ts",
+    "test/**/*.typecheck.ts",
     "e2e/**/*.spec.ts",
     "e2e/fixtures/product-editor/main.tsx",
     "e2e/fixtures/dashboard/main.tsx",
