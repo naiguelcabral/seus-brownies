@@ -9,6 +9,11 @@ import { readPaymentFeeSchedule } from './payment-fees'
 import { calculateManagerialProfit } from './managerial-profit'
 import { createServerFn } from '@tanstack/react-start'
 import { and, desc, eq, gte, inArray, lt, sql } from 'drizzle-orm'
+import type {
+  DatabaseReader,
+  DatabaseTransaction,
+  TransactionalDatabase,
+} from '#/db/contracts'
 
 import {
   expenses,
@@ -45,12 +50,6 @@ import {
 } from '#/features/finance/policy'
 import { summarizeAccrualMargins } from '#/features/finance/accrual-margins'
 import { diagnoseDeliveryFifoCoverage } from '#/features/finance/delivery-fifo-coverage'
-import type {
-  AccrualMarginAllocation,
-  AccrualMarginEvent,
-  AccrualMarginSale,
-  AccrualMarginSaleItem,
-} from '#/features/finance/accrual-margins'
 import type { AppRole } from '#/features/auth/authorization'
 import {
   calculateStoreCreditBalance,
@@ -82,8 +81,8 @@ function assertFinancialSchema(error: unknown): never {
   throw error
 }
 
-async function requireFinancialSchema(tx: any) {
-  const result = await tx.execute(
+async function requireFinancialSchema(tx: DatabaseTransaction) {
+  const result = await tx.execute<{ financial_events: string | null }>(
     sql`select to_regclass('public.financial_events') as financial_events`,
   )
   if (!result.rows[0]?.financial_events)
@@ -129,7 +128,10 @@ function nextMonth(value: string) {
   return next.toISOString().slice(0, 10)
 }
 
-async function lockFinancialPeriod(tx: any, competenceDate: string) {
+async function lockFinancialPeriod(
+  tx: DatabaseTransaction,
+  competenceDate: string,
+) {
   const period = monthStart(competenceDate)
   await tx.execute(
     sql`select pg_advisory_xact_lock(hashtextextended(${`cacau:financial-period:${period}`}, 0))`,
@@ -137,7 +139,10 @@ async function lockFinancialPeriod(tx: any, competenceDate: string) {
   return period
 }
 
-export async function assertOpenPeriod(tx: any, competenceDate: string) {
+export async function assertOpenPeriod(
+  tx: DatabaseTransaction,
+  competenceDate: string,
+) {
   await lockFinancialPeriod(tx, competenceDate)
   const [period] = await tx
     .select({ status: financialPeriods.status })
@@ -150,8 +155,8 @@ export async function assertOpenPeriod(tx: any, competenceDate: string) {
     )
 }
 
-async function loadPeriodSnapshot(tx: any, periodMonth: string) {
-  const rows = (await tx
+async function loadPeriodSnapshot(tx: DatabaseReader, periodMonth: string) {
+  const rows = await tx
     .select({
       revenueEffect: financialEvents.revenueEffect,
       cashEffect: financialEvents.cashEffect,
@@ -162,12 +167,15 @@ async function loadPeriodSnapshot(tx: any, periodMonth: string) {
         gte(financialEvents.competenceDate, periodMonth),
         lt(financialEvents.competenceDate, nextMonth(periodMonth)),
       ),
-    )) as Array<{ revenueEffect: string; cashEffect: string }>
+    )
   return summarizeFinancialEventEffects(rows)
 }
 
-async function loadAccrualMargins(database: any, periodMonth: string) {
-  const events = (await database
+async function loadAccrualMargins(
+  database: DatabaseReader,
+  periodMonth: string,
+) {
+  const events = await database
     .select({
       id: financialEvents.id,
       type: financialEvents.type,
@@ -181,7 +189,7 @@ async function loadAccrualMargins(database: any, periodMonth: string) {
         gte(financialEvents.competenceDate, periodMonth),
         lt(financialEvents.competenceDate, nextMonth(periodMonth)),
       ),
-    )) as AccrualMarginEvent[]
+    )
   const saleIds = [
     ...new Set(
       events.flatMap((event) => (event.saleId === null ? [] : [event.saleId])),
@@ -202,7 +210,7 @@ async function loadAccrualMargins(database: any, periodMonth: string) {
       }),
     }
 
-  const [saleRows, itemRows] = (await Promise.all([
+  const [saleRows, itemRows] = await Promise.all([
     database
       .select({
         id: sales.id,
@@ -226,13 +234,10 @@ async function loadAccrualMargins(database: any, periodMonth: string) {
       })
       .from(saleItems)
       .where(inArray(saleItems.saleId, saleIds)),
-  ])) as [
-    AccrualMarginSale[],
-    Array<AccrualMarginSaleItem & { quantity: string }>,
-  ]
+  ])
   const itemIds = itemRows.map((item) => item.id)
   const allocationRows = itemIds.length
-    ? ((await database
+    ? await database
         .select({
           id: inventoryCostAllocations.id,
           saleItemId: inventoryCostAllocations.saleItemId,
@@ -256,11 +261,7 @@ async function loadAccrualMargins(database: any, periodMonth: string) {
             productionBatchOutputs.id,
           ),
         )
-        .where(inArray(inventoryCostAllocations.saleItemId, itemIds))) as Array<
-        Omit<AccrualMarginAllocation, 'saleItemId'> & {
-          saleItemId: number | null
-        }
-      >)
+        .where(inArray(inventoryCostAllocations.saleItemId, itemIds))
     : []
   const allocations = allocationRows.map((allocation) => {
     if (allocation.saleItemId === null)
@@ -282,7 +283,10 @@ async function loadAccrualMargins(database: any, periodMonth: string) {
   }
 }
 
-async function loadFinancialPosition(database: any, periodMonth: string) {
+async function loadFinancialPosition(
+  database: DatabaseReader,
+  periodMonth: string,
+) {
   const eventEffects = await loadPeriodSnapshot(database, periodMonth)
   const accrualMargins = await loadAccrualMargins(database, periodMonth)
   return {
@@ -294,7 +298,7 @@ async function loadFinancialPosition(database: any, periodMonth: string) {
   }
 }
 
-async function loadStoreCredits(database: any) {
+async function loadStoreCredits(database: DatabaseReader) {
   const events = (await database
     .select({
       id: financialEvents.id,
@@ -338,9 +342,7 @@ function occurredAt(value: string) {
   return new Date(`${value}T12:00:00.000Z`)
 }
 
-export type FinanceDatabase = {
-  transaction: (work: (tx: any) => Promise<any>) => Promise<any>
-}
+export type FinanceDatabase = TransactionalDatabase
 
 type PaidSaleCashInput = {
   id: number
@@ -353,7 +355,7 @@ type PaidSaleCashInput = {
 }
 
 export async function appendPaidSaleCashReceipt(
-  tx: any,
+  tx: DatabaseTransaction,
   sale: PaidSaleCashInput,
   actorAuthUserId: string,
 ) {
@@ -423,7 +425,7 @@ export async function appendPaidSaleCashReceipt(
 }
 
 export async function appendPaidSaleCancellationCashRefund(
-  tx: any,
+  tx: DatabaseTransaction,
   sale: PaidSaleCashInput,
   input: { occurredOn: string; reason: string },
   actorAuthUserId: string,
@@ -602,7 +604,7 @@ export async function persistDeliveredSaleCompensation(
         throw new Error('Compensação exige venda previamente entregue.')
       await assertOpenPeriod(tx, data.occurredOn)
 
-      const prior = (await tx
+      const prior = await tx
         .select({
           saleItemId: financialEvents.saleItemId,
           quantity: financialEvents.quantity,
@@ -617,11 +619,7 @@ export async function persistDeliveredSaleCompensation(
               'store_credit_issued',
             ]),
           ),
-        )) as Array<{
-        saleItemId: number | null
-        quantity: string | null
-        amount: string
-      }>
+        )
       const priorQuantity = prior.reduce(
         (sum, row) =>
           sum + (row.quantity ? quantityToThousandths(row.quantity)! : 0n),
@@ -722,7 +720,7 @@ export async function persistStoreCreditRedemption(
         .where(eq(financialEvents.idempotencyKey, key))
         .limit(1)
       const replay = resolveIdempotentReplay(existing, hash)
-      const prior = (await tx
+      const prior = await tx
         .select({ amount: financialEvents.amount })
         .from(financialEvents)
         .where(
@@ -730,7 +728,7 @@ export async function persistStoreCreditRedemption(
             eq(financialEvents.type, 'store_credit_redeemed'),
             eq(financialEvents.settlesEventId, issuance.id),
           ),
-        )) as Array<{ amount: string }>
+        )
       if (replay) {
         const currentBalance = calculateStoreCreditBalance({
           issuedAmount: issuance.amount,
@@ -1076,7 +1074,7 @@ export const getFinancialOverview = createServerFn({ method: 'GET' })
   })
 
 export async function loadManagerialOverview(
-  database: any,
+  database: DatabaseReader,
   periodMonth: string,
   knownMargins?: Awaited<ReturnType<typeof loadAccrualMargins>>,
 ) {

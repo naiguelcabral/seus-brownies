@@ -518,6 +518,47 @@ for (const scenario of rollbackCases) {
   }
 }
 
+for (const scenario of rollbackCases) {
+  if (scenario.name === 'devolução') continue
+  test(`${scenario.name}: movimento não retornado aborta a transação`, async () => {
+    const mock = base()
+    mock.fail('returning:movements')
+    await assert.rejects(scenario.write(mock), /Resultado obrigatório ausente/)
+    assertRolledBack(mock)
+  })
+}
+
+test('ajuste positivo: camada não retornada desfaz movimento e auditoria', async () => {
+  const mock = base()
+  mock.fail('returning:layers')
+  await assert.rejects(
+    persistPositiveInventoryAdjustment(database(mock), {
+      productId: 3,
+      quantity: '1.000',
+      totalCost: '0.05',
+      reason: 'Ajuste testado',
+      reference: 'POS-layer-missing',
+      originReference: 'NF-layer-missing',
+    }),
+    /Resultado obrigatório ausente/,
+  )
+  assertRolledBack(mock)
+})
+
+test('cancelamento: venda ausente falha antes de escrever', async () => {
+  const mock = base({ sales: [[]] })
+  await assert.rejects(
+    persistSaleCancellation(database(mock), {
+      saleId: 999,
+      occurredOn: '2026-09-14',
+      reason: 'Cancelamento testado',
+    }),
+    /Resultado obrigatório ausente/,
+  )
+  assert.equal(mutations(mock).length, 0)
+  assertRolledBack(mock)
+})
+
 test('cancelamento repetido falha sem criar novo fato', async () => {
   const mock = base()
   requireDefined(mock.rows.movements).push({ id: 91 })

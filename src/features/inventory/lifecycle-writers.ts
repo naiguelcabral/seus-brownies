@@ -1,7 +1,9 @@
 import { exactCost, addCosts } from '../../lib/exact-cost'
 import type { ExactCost } from '../../lib/exact-cost'
+import { requireFirst } from '../../lib/required-value'
 import { createServerFn } from '@tanstack/react-start'
 import { asc, eq, inArray, sql } from 'drizzle-orm'
+import type { DatabaseTransaction, TransactionalDatabase } from '#/db/contracts'
 
 import {
   inventoryCostAllocations,
@@ -83,12 +85,8 @@ const sourceKey = (event: string, id: number, ref: string) =>
   `fifo-lifecycle:${event}:${id}:${ref}`
 
 /** First statement in each transaction. It is read-only and fails closed. */
-async function requireLifecycleSchema(tx: {
-  execute: (
-    query: unknown,
-  ) => Promise<{ rows: Array<{ lifecycle_table: string | null }> }>
-}) {
-  const result = await tx.execute(
+async function requireLifecycleSchema(tx: DatabaseTransaction) {
+  const result = await tx.execute<{ lifecycle_table: string | null }>(
     sql`select to_regclass('public.inventory_cost_reversals') as lifecycle_table`,
   )
   if (!result.rows[0]?.lifecycle_table)
@@ -100,12 +98,10 @@ export function lifecycleLockOrder(productIds: number[]) {
 }
 
 /** Structural boundary used by the local transaction mock and the real Drizzle db. */
-export type LifecycleDatabase = {
-  transaction: (work: (tx: any) => Promise<any>) => Promise<any>
-}
+export type LifecycleDatabase = TransactionalDatabase
 
 async function lockProductAndLayers(
-  tx: { execute: (query: unknown) => Promise<unknown> },
+  tx: DatabaseTransaction,
   productIds: number[],
 ) {
   const ids = lifecycleLockOrder(productIds)
@@ -117,9 +113,7 @@ async function lockProductAndLayers(
   )
 }
 
-// Drizzle's transaction type is adapter-private; this boundary is deliberately
-// kept structural so the writers can also be exercised with a transaction mock.
-async function loadLayers(tx: any, productIds: number[]) {
+async function loadLayers(tx: DatabaseTransaction, productIds: number[]) {
   const rows = await tx
     .select()
     .from(inventoryCostLayers)
@@ -129,7 +123,7 @@ async function loadLayers(tx: any, productIds: number[]) {
       asc(inventoryCostLayers.availableAt),
       asc(inventoryCostLayers.id),
     )
-  return rows.map((row: typeof inventoryCostLayers.$inferSelect) => ({
+  return rows.map((row) => ({
     ...row,
     availableAt: row.availableAt.toISOString(),
     originalQuantity: quantityToThousandths(row.originalQuantity)!,
@@ -140,7 +134,7 @@ async function loadLayers(tx: any, productIds: number[]) {
 }
 
 async function updateBalances(
-  tx: any,
+  tx: DatabaseTransaction,
   layers: Array<{
     id: number
     remainingQuantity: bigint
@@ -160,7 +154,7 @@ async function updateBalances(
       .where(eq(inventoryCostLayers.id, layer.id))
 }
 
-async function assertUnused(tx: any, key: string) {
+async function assertUnused(tx: DatabaseTransaction, key: string) {
   const rows = await tx
     .select({ id: stockMovements.id })
     .from(stockMovements)
@@ -170,7 +164,7 @@ async function assertUnused(tx: any, key: string) {
 }
 
 async function applyReversal(
-  tx: any,
+  tx: DatabaseTransaction,
   input: {
     allocations: Array<typeof inventoryCostAllocations.$inferSelect>
     layers: Awaited<ReturnType<typeof loadLayers>>
@@ -232,20 +226,22 @@ async function applyReversal(
   for (const reversal of plan.reversals) {
     const movementKey = `${input.key}:allocation:${reversal.originalAllocationId}`
     await assertUnused(tx, movementKey)
-    const [movement] = await tx
-      .insert(stockMovements)
-      .values({
-        productId: reversal.productId,
-        type: 'return',
-        quantityDelta: quantity(reversal.quantity),
-        allocatedCost: money(reversal.allocatedCost),
-        exactCost: reversal.exactCost ?? null,
-        referenceType: input.event,
-        referenceId: input.referenceId,
-        sourceKey: movementKey,
-        notes: input.reason,
-      })
-      .returning({ id: stockMovements.id })
+    const movement = requireFirst(
+      await tx
+        .insert(stockMovements)
+        .values({
+          productId: reversal.productId,
+          type: 'return',
+          quantityDelta: quantity(reversal.quantity),
+          allocatedCost: money(reversal.allocatedCost),
+          exactCost: reversal.exactCost ?? null,
+          referenceType: input.event,
+          referenceId: input.referenceId,
+          sourceKey: movementKey,
+          notes: input.reason,
+        })
+        .returning({ id: stockMovements.id }),
+    )
     await tx.insert(inventoryCostReversals).values({
       originalAllocationId: reversal.originalAllocationId,
       incomingStockMovementId: movement.id,
@@ -272,10 +268,9 @@ export async function persistSaleCancellation(
       await tx.execute(
         sql`select id from ${sales} where ${sales.id} = ${data.saleId} for update`,
       )
-      const [sale] = await tx
-        .select()
-        .from(sales)
-        .where(eq(sales.id, data.saleId))
+      const sale = requireFirst(
+        await tx.select().from(sales).where(eq(sales.id, data.saleId)),
+      )
       if (!['confirmed', 'paid'].includes(sale.status))
         throw new Error('Apenas venda confirmada ou paga pode ser cancelada.')
       inventoryEffectForSaleLifecycle({
@@ -294,33 +289,26 @@ export async function persistSaleCancellation(
         .select()
         .from(saleItems)
         .where(eq(saleItems.saleId, sale.id))
-      const allocations = (await tx
+      const allocations = await tx
         .select()
         .from(inventoryCostAllocations)
         .where(
           inArray(
             inventoryCostAllocations.saleItemId,
-            items.map((item: typeof saleItems.$inferSelect) => item.id),
+            items.map((item) => item.id),
           ),
-        )) as Array<typeof inventoryCostAllocations.$inferSelect>
+        )
       if (!allocations.length)
         throw new Error('Venda não possui alocações FIFO para estornar.')
       await lockProductAndLayers(
         tx,
-        allocations.map(
-          (row: typeof inventoryCostAllocations.$inferSelect) => row.productId,
-        ),
+        allocations.map((row) => row.productId),
       )
       await tx.execute(
-        sql`select id from ${inventoryCostAllocations} where ${inventoryCostAllocations.id} in ${allocations.map((row: typeof inventoryCostAllocations.$inferSelect) => row.id)} order by ${inventoryCostAllocations.id} for update`,
+        sql`select id from ${inventoryCostAllocations} where ${inventoryCostAllocations.id} in ${allocations.map((row) => row.id)} order by ${inventoryCostAllocations.id} for update`,
       )
       const layers = await loadLayers(tx, [
-        ...new Set(
-          allocations.map(
-            (row: typeof inventoryCostAllocations.$inferSelect) =>
-              row.productId,
-          ),
-        ),
+        ...new Set(allocations.map((row) => row.productId)),
       ])
       await applyReversal(tx, {
         allocations,
@@ -398,30 +386,35 @@ export async function persistNegativeInventoryEvent(
         productId: data.productId,
         quantity: parseQuantity(data.quantity),
       })
-      const [movement] = await tx
-        .insert(stockMovements)
-        .values({
-          productId: data.productId,
-          type: event === 'loss' ? 'loss' : 'adjustment',
-          quantityDelta: `-${quantity(parseQuantity(data.quantity))}`,
-          allocatedCost: money(plan.allocatedCost),
-          exactCost: plan.exactCost ?? null,
-          referenceType: event,
-          sourceKey: key,
-          notes: data.reason,
-        })
-        .returning({ id: stockMovements.id })
+      const movement = requireFirst(
+        await tx
+          .insert(stockMovements)
+          .values({
+            productId: data.productId,
+            type: event === 'loss' ? 'loss' : 'adjustment',
+            quantityDelta: `-${quantity(parseQuantity(data.quantity))}`,
+            allocatedCost: money(plan.allocatedCost),
+            exactCost: plan.exactCost ?? null,
+            referenceType: event,
+            sourceKey: key,
+            notes: data.reason,
+          })
+          .returning({ id: stockMovements.id }),
+      )
       await tx.insert(inventoryCostAllocations).values(
-        plan.allocations.map((row) => ({
-          inventoryCostLayerId: row.layerId,
-          outgoingStockMovementId: movement.id,
-          productId: row.productId,
-          eventType: event === 'loss' ? 'loss' : 'adjustment_negative',
-          eventReferenceType: event,
-          quantity: quantity(row.quantity),
-          allocatedCost: money(row.allocatedCost),
-          exactCost: row.exactCost ?? null,
-        })),
+        plan.allocations.map(
+          (row) =>
+            ({
+              inventoryCostLayerId: row.layerId,
+              outgoingStockMovementId: movement.id,
+              productId: row.productId,
+              eventType: event === 'loss' ? 'loss' : 'adjustment_negative',
+              eventReferenceType: event,
+              quantity: quantity(row.quantity),
+              allocatedCost: money(row.allocatedCost),
+              exactCost: row.exactCost ?? null,
+            }) satisfies typeof inventoryCostAllocations.$inferInsert,
+        ),
       )
       await updateBalances(tx, plan.layers)
       await appendOperationalAudit(tx, {
@@ -493,34 +486,38 @@ export async function persistPositiveInventoryAdjustment(
         data.reference,
       )
       await assertUnused(tx, key)
-      const [movement] = await tx
-        .insert(stockMovements)
-        .values({
-          productId: data.productId,
-          type: 'adjustment',
-          quantityDelta: quantity(amount),
-          allocatedCost: money(cost),
-          exactCost: exactCost(cost, 100n),
-          referenceType: 'adjustment_positive',
-          sourceKey: key,
-          notes: `${data.reason} | origem: ${data.originReference}`,
-        })
-        .returning({ id: stockMovements.id })
-      const [layer] = await tx
-        .insert(inventoryCostLayers)
-        .values({
-          productId: data.productId,
-          sourceStockMovementId: movement.id,
-          origin: 'adjustment',
-          availableAt: new Date(),
-          originalQuantity: quantity(amount),
-          originalCost: money(cost),
-          exactOriginalCost: exactCost(cost, 100n),
-          exactRemainingCost: exactCost(cost, 100n),
-          remainingQuantity: quantity(amount),
-          remainingCost: money(cost),
-        })
-        .returning({ id: inventoryCostLayers.id })
+      const movement = requireFirst(
+        await tx
+          .insert(stockMovements)
+          .values({
+            productId: data.productId,
+            type: 'adjustment',
+            quantityDelta: quantity(amount),
+            allocatedCost: money(cost),
+            exactCost: exactCost(cost, 100n),
+            referenceType: 'adjustment_positive',
+            sourceKey: key,
+            notes: `${data.reason} | origem: ${data.originReference}`,
+          })
+          .returning({ id: stockMovements.id }),
+      )
+      const layer = requireFirst(
+        await tx
+          .insert(inventoryCostLayers)
+          .values({
+            productId: data.productId,
+            sourceStockMovementId: movement.id,
+            origin: 'adjustment',
+            availableAt: new Date(),
+            originalQuantity: quantity(amount),
+            originalCost: money(cost),
+            exactOriginalCost: exactCost(cost, 100n),
+            exactRemainingCost: exactCost(cost, 100n),
+            remainingQuantity: quantity(amount),
+            remainingCost: money(cost),
+          })
+          .returning({ id: inventoryCostLayers.id }),
+      )
       await appendOperationalAudit(tx, {
         actorAuthUserId: actorAuthUserId ?? null,
         action: 'inventory.adjustment_positive',

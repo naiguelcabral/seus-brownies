@@ -1,3 +1,4 @@
+import type { DatabaseTransaction } from '../../src/db/contracts'
 import {
   financialEvents,
   financialPeriods,
@@ -93,7 +94,10 @@ export function createLifecycleDrizzleMock(
           if (failAt === `insert:${name(table)}` || failAt === name(table))
             throw new Error(`forced insert:${name(table)} failure`)
           pending.push({ kind: 'insert', table: name(table), values })
-          return { returning: async () => [{ id: nextId++ }] }
+          return {
+            returning: async () =>
+              failAt === `returning:${name(table)}` ? [] : [{ id: nextId++ }],
+          }
         },
       }
     },
@@ -115,10 +119,15 @@ export function createLifecycleDrizzleMock(
     },
   }
   const db = {
-    async transaction(work: (transaction: typeof tx) => Promise<unknown>) {
+    async transaction<T>(
+      work: (transaction: DatabaseTransaction) => Promise<T>,
+    ) {
       journal.push({ kind: 'begin' })
       try {
-        const result = await work(tx)
+        // Test-only adapter: this journal simulates only the chains exercised
+        // here, not Drizzle's whole generic query builder. Real driver behavior
+        // is verified separately against disposable PostgreSQL.
+        const result = await work(tx as unknown as DatabaseTransaction)
         committed.push(...pending)
         pending = []
         journal.push({ kind: 'commit' })

@@ -5,6 +5,20 @@ atual de tarefas, prioridades e critérios de conclusão. Os checkpoints de
 publicação abaixo preservam o estado comprovado de cada entrega; suas
 próximas etapas históricas não substituem o roadmap atualizado.
 
+## S04 — contratos de transação — candidata de 21/10/2026
+
+Finanças e lifecycle de estoque preparados com contratos derivados do
+driver/schema, callback genérico e resultados inferidos, sem `any` explícito
+nesses dois módulos. Resultados obrigatórios ausentes falham dentro da
+transação; seis regressões conferem rollback. Fixture de compilação verifica
+payloads/seleções inválidas e preservação dos retornos. 60 testes focados,
+566 testes Node, tipos/lint/formato e Knip sem novos achados aprovados;
+build e PostgreSQL conectado seguem registrados na PR.
+Detalhes no [registro S04](TYPED-TRANSACTIONS-2026-10-21.md).
+
+S04 continua parcial para extrações e Cenários. Branch própria a partir da
+candidata da PR #51; sem merge, migration, SQL compartilhado ou deploy.
+
 ## Funcionário — relato manual e ordem do menu — 21/10/2026
 
 Usuário testou no próprio tablet: menu apenas de Compras/Vendas/Categorias/

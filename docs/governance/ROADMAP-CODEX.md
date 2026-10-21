@@ -220,7 +220,7 @@ não alterou configurações, encerrou registros nem habilitou o migrador.
 | R04 | Condicional | Multitenancy/SaaS somente após decisão sobre memberships, tenant ativo e mapeamento histórico. Não atribuir tenant fictício aos fatos; não é pré-requisito para uma única operação interna. |
 | R05 / R06 | Evolução futura | Planejamento entre lotes, gestão avançada e XLSX conforme necessidade. A UX diária revisada e o CSV existente já estão entregues. |
 | R07 | Condicional | Avançar automação/autonomia somente após avaliação do piloto e estabilidade; multiagente requer autorização. A retomada pontual das 02:33 foi concluída e não cria recorrência. |
-| S04 | Manutenção gradual | Avaliar extração de responsabilidades nos módulos extensos de operações, produção e financeiro e substituir `any` transacional com contratos tipados. Refactors pequenos, preservando testes e regras; tamanho do arquivo não comprova falha funcional nem bloqueia sozinho o piloto. |
+| S04 | Parcial; incremento tipado candidato | Finanças e lifecycle sem `any` explícito, com contratos derivados do driver/schema, retorno transacional genérico, seleções inferidas e falha controlada para resultados obrigatórios ausentes. 60 testes focados, seis regressões novas e fixture de compilação aprovados; verificações completas registradas na PR. [Evidência](TYPED-TRANSACTIONS-2026-10-21.md). Restam contratos de Cenários e avaliação gradual de extrações em operações/produção/financeiro. Sem mudança de regras, migration ou deploy; revisão/integração separadas. |
 
 ## Pendências antigas encerradas ou substituídas
 

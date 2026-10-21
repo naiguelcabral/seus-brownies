@@ -129,6 +129,8 @@ test('correção do Dono preserva competência original e atualiza período fech
     },
     { id: 'owner-1', role: 'owner' },
   )
+  assert.equal(result.replayed, false)
+  assert.ok(!result.replayed)
   assert.equal(result.competenceDate, '2026-08-15')
   assert.deepEqual(writes(mock), [
     'insert:financialEvents',
