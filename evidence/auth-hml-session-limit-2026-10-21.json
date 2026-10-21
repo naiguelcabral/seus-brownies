@@ -44,5 +44,20 @@
     "dashboard_and_settings_acceptance": "human reported successful results from both direct GETs",
     "permanent_resolution_verified": false,
     "owner_interface_acceptance": "human confirmed screens and scenario controls without saving"
+  },
+  "post_deployment_follow_up": {
+    "source": "cloudflare-workers-observability",
+    "read_only": true,
+    "window": {
+      "from": "2026-10-21T18:17:06Z",
+      "to": "2026-10-21T18:25:00Z"
+    },
+    "event": "auth.session.provider",
+    "stage": "http_error",
+    "status": 429,
+    "script_version_id": "de9a88e6-a2e0-4224-8c9c-e6f3da8ccb6c",
+    "count": 1,
+    "per_account_correlation_verified": false,
+    "permanent_resolution_verified": false
   }
 }

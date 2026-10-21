@@ -1,5 +1,16 @@
 # Ações que exigem aprovação humana — Cacau v1
 
+## Publicação conjunta executada — 21/10/2026
+
+Aplicada a autorização de continuidade abaixo após o aceite guiado dos três
+perfis: PRs #50–#53 integradas, código `91658ed` publicado somente no HML
+às 15:17:06 Brasília, versão `de9a88e6-a2e0-4224-8c9c-e6f3da8ccb6c`, 100%.
+Usuário confirmou Cenários/Financeiro como Dono após atualizar no tablet.
+Sem novas concessões, fatos fictícios, SQL/migrations compartilhados, secrets,
+DNS ou produção. H01/H02 continuam parciais, com um HTTP 429 agregado na nova
+versão; não há aceite de estabilidade permanente ou dispensa dos demais gates.
+[Recibo](JOINT-HML-PUBLICATION-2026-10-21.md).
+
 ## Continuidade S04 e homologação assistida — 21/10/2026
 
 Usuário solicitou executar o reforço de tipagem de Cenários e, em paralelo,

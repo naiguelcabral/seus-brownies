@@ -1,5 +1,9 @@
 # S04 — contratos tipados de Cenários — 21/10/2026
 
+Seguimento: incremento integrado pelas PRs #52/#53 e publicado no HML em
+21/10/2026. O texto abaixo preserva o checkpoint de preparação/validação.
+[Publicação e limites](JOINT-HML-PUBLICATION-2026-10-21.md).
+
 Candidata sobre `b83812c` da PR #52, em branch própria
 `codex/typed-scenarios-20261021`. Revisão compara somente este incremento;
 #51 → #52 → esta candidata formam a sequência empilhada. A PR #50 trata a

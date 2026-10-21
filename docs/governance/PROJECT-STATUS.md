@@ -5,6 +5,25 @@ atual de tarefas, prioridades e critérios de conclusão. Os checkpoints de
 publicação abaixo preservam o estado comprovado de cada entrega; suas
 próximas etapas históricas não substituem o roadmap atualizado.
 
+## Publicação conjunta concluída — 21/10/2026
+
+PRs #50–#53 integradas; código `91658ed73a27c61ef3e4f779381584adf8b0834c`
+publicado às 15:17:06 Brasília, versão HML
+`de9a88e6-a2e0-4224-8c9c-e6f3da8ccb6c`, 100% do tráfego confirmado.
+570 testes Node, 12 casos conectados isolados e CI/negócio/CodeQL da main
+aprovados. Tipagem de Cenários, finanças e lifecycle integrada e publicada;
+S04 permanece parcial para extrações maiores. Regras e versões preservadas.
+
+Rodada manual dos perfis ativos aceita nas rotas/GETs testados. Após deploy,
+usuário confirmou Cenários e Financeiro como Dono no tablet, sem salvar.
+Smoke público aprovado. Houve um novo HTTP 429 de sessão na nova versão
+entre 18:17:06 e 18:25 UTC; causa/correlação não comprovadas, H01/H02 seguem
+parciais. Nenhuma migration, SQL compartilhado, secrets ou produção nesta
+entrega. [Recibo e limites](JOINT-HML-PUBLICATION-2026-10-21.md).
+
+Os checkpoints abaixo são históricos; suas etapas então pendentes de Dono,
+revisão, integração e publicação foram superadas pelo registro acima.
+
 ## Rodada de permissões dos perfis ativos aprovada — 21/10/2026
 
 Usuário confirmou interface de Funcionário/Gerente/Dono, papéis canônicos no
