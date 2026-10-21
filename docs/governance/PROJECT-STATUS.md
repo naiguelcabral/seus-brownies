@@ -15,9 +15,10 @@ Cálculos, precisão, versões, locks, ativação, permissões e autoria preserv
 
 Fixture de compilação ampliada e três regressões de resultados/erros ausentes;
 569 testes Node, tipos, lint, formato e Knip sem novos achados aprovados.
-Ensaios conectados novos verificam lifecycle e rollback dos cinco writers
-contra histórico/auditoria indisponíveis; execução/build/CI serão registrados
-no [registro deste incremento](TYPED-SCENARIOS-2026-10-21.md).
+Doze casos HTTP/PostgreSQL 17 isolados aprovados, incluindo lifecycle de
+Cenários e dez falhas de histórico/auditoria nos cinco writers. Build HML
+isolado aprovado. Detalhes no [registro deste incremento](TYPED-SCENARIOS-2026-10-21.md);
+CI/CodeQL seguem na PR.
 S04 permanece parcial para as extrações maiores. Nenhuma migration, operação
 compartilhada, integração ou publicação por este incremento.
 

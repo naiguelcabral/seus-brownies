@@ -37,13 +37,17 @@ alteração de comportamento ou layout.
 - 569 testes Node completos, tipos, lint, Oxfmt e Knip aprovados; quatro
   achados contextuais conhecidos, zero novos. A sandbox impediu subprocessos
   de fixtures Git na primeira tentativa; suíte completa repetida no host.
-- Dois casos novos conectados HTTP/PostgreSQL 17 preparados: ciclo completo
+- Dois casos novos conectados HTTP/PostgreSQL 17 aprovados: ciclo completo
   de criação/edição/ativação/versão/substituição/arquivo, projeção constante,
   pesos 103% normalizados em 100%, custos com três casas, revisão obsoleta,
   imutabilidade e autoria; e dez falhas transacionais (cinco writers × dois
   destinos de auditoria), exigindo igualdade de cenários/mix/histórico/auditoria
   antes/depois. Somente banco sintético vazio do runner isolado.
-- Build isolado e execução conectada/CI serão registrados após sua execução.
+- Build HML isolado de `0fea71f` aprovado com chave pública de teste.
+  Doze casos conectados aprovados (dez anteriores + dois novos), incluindo
+  dez injeções de falha transacional. Conexão local bloqueada por EPERM na
+  sandbox; runner repetido no host, sem configuração ou dados compartilhados.
+  CI/CodeQL serão registrados na PR após publicação.
 
 ## Limites
 
