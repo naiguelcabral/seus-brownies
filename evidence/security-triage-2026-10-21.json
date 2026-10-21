@@ -1,0 +1,59 @@
+{
+  "scope": "read-only-security-review",
+  "checked_at": "2026-10-21T11:59:54.624Z",
+  "main_sha": "b82e04401f54d3043c9999c1d285d3a6ef22510b",
+  "patch_code_sha": "2bcb597",
+  "audit_before": {
+    "vulnerable_packages": 1,
+    "high": 1,
+    "package": "launch-editor",
+    "version": "2.14.1"
+  },
+  "audit_after": {
+    "vulnerable_packages": 0,
+    "high": 0,
+    "version": "2.14.2"
+  },
+  "changed_lockfile_nodes": 1,
+  "main_analyses": [
+    {
+      "id": 1993629049,
+      "language": "javascript-typescript",
+      "rules": 103,
+      "results": 0
+    },
+    {
+      "id": 1993627128,
+      "language": "python",
+      "rules": 50,
+      "results": 0
+    },
+    {
+      "id": 1993626413,
+      "language": "actions",
+      "rules": 23,
+      "results": 0
+    }
+  ],
+  "legacy_alerts": {
+    "numbers": [
+      1,
+      6,
+      7,
+      8,
+      11
+    ],
+    "state": "open",
+    "last_instance_sha": "82011f4d3021ad19d67c554457afebbc797550d7",
+    "category": ".github/workflows/codeql.yml:analyze",
+    "disposition": "corrections-present-in-current-source; administrative-category-review-pending",
+    "manually_dismissed": false
+  },
+  "source_files_verified": [
+    "scripts/test-migration-chain-disposable.mjs",
+    "test/conversation-memory.test.ts",
+    "test/auth-hml-e2e-contract.test.ts"
+  ],
+  "candidate_codeql_review": "pending-remote-checks",
+  "production_deployed": false
+}

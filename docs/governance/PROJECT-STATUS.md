@@ -5,6 +5,84 @@ atual de tarefas, prioridades e critérios de conclusão. Os checkpoints de
 publicação abaixo preservam o estado comprovado de cada entrega; suas
 próximas etapas históricas não substituem o roadmap atualizado.
 
+## Funcionário — relato manual e ordem do menu — 21/10/2026
+
+Usuário testou no próprio tablet: menu apenas de Compras/Vendas/Categorias/
+Produtos e bloqueio por navegação direta de Estoque, Relatórios, Financeiro,
+Produção, Cenários, Parâmetros, Despesas, Locais e Plano de ação, com retorno
+a Compras. Evidência é relato humano, sem acesso do agente à sessão do tablet,
+sem releitura de papel canônico/versão ativa e sem chamadas diretas ao servidor.
+H03 continua parcial; detalhes em
+[aceite manual](AUTH-HML-PERMISSIONS-MANUAL-2026-10-21.md).
+
+Solicitada ordem Vendas → Produtos → Compras → Categorias somente para o
+Funcionário. Candidata altera apresentação, mantém filtro por permissão e
+ordem dos demais perfis. Teste conectado verifica menu real por perfil, sem
+alterar permissões, guards ou página inicial (/compras). Publicação HML
+permanece para o pacote conjunto após homologação; nenhuma nesta etapa.
+
+## Execução automática autorizada — 21/10/2026
+
+Candidata `2bcb597`: override/lockfile launch-editor 2.14.2 e regressão de
+segurança; somente esse nó transitivo alterado. npm ci/audit zero, 560 testes
+Node, lint/tipos/formato/Knip e build isolado aprovados; 40 casos browser,
+incluindo teclado/320px/redução de movimento. Sem alteração do código de
+negócio. Cinco alertas legados CodeQL triados contra correções presentes;
+análises atuais da main sem resultados, sem dispensa manual de alertas.
+
+Dump e manifesto efetivamente baixados do Drive privado; SHA-256/tamanho
+conferidos. Restore em PostgreSQL 17 local sem rede passou 38 tabelas,
+36 recibos exatos, catálogo independente de 0033 e constraints. Evidência
+sanitizada em `evidence/offsite-restore-2026-10-21.json`; bytes privados fora
+do Git. Auth excluído; políticas de recuperação permanecem humanas.
+
+Inventário de metadados, procedimento T02 e proposta G03 prontos. Documentos
+ativos reconciliados e fila antiga substituída por espelho do roadmap.
+Main/HML preservados, sem aplicação compartilhada, secrets ou deploy.
+PR #51 aberta em rascunho. CI/negócio/browser/CodeQL de `bf1c25c` aprovados;
+análises da candidata sem resultados/erros/avisos. Merge e aceites reais não
+autorizados nesta rodada. Detalhes em [validação automática](AUTOMATIC-READINESS-2026-10-21.md).
+
+## Reconciliação documental após análise do Work — 21/10/2026
+
+README e roadmap atualizados após a conversa “Análise do repositório” e
+conferência somente leitura no GitHub: `main` em `b82e044`, PRs #44–#49
+mescladas, issue #36 encerrada e nenhuma PR ou issue aberta na consulta.
+CI `39538349886`, negócio/browser `39538349936` e CodeQL `39538349907`
+concluídos com sucesso no mesmo SHA. Checkpoint: 560 testes Node, 39 casos
+de fixtures UI, dez conectados, runners PostgreSQL e build isolado aprovados.
+Não houve repetição de suítes ou nova auditoria de dependências nesta revisão.
+CodeQL aprovado não encerra a triagem dos alertas legados descritos abaixo.
+
+A API da `main` retornou `protected:false` e a consulta de rulesets veio vazia;
+proteção obrigatória de integração agora tem acompanhamento G03. O laboratório
+conectado está entregue com identidade sintética; permanecem aceites reais de
+autenticação/perfis/celular, restore dos bytes externos, retenção/RPO/RTO,
+ambientes/migrations e piloto autorizado. Estimativas do Work (85% interno,
+65% com WhatsApp/OCR; 60–100 h ou 180–300 h totais) foram registradas no roadmap
+como planejamento, sem equivaler a aceite ou cobertura de testes.
+
+Esta seção prevalece sobre estados intermediários de integração abaixo. O
+último HML registrado continua `bb76764`/`22733c04`; recibos e dados históricos
+preservados. Sem alteração de código, banco, configuração remota ou deploy.
+
+## PR #48 integrada à main — 21/10/2026
+
+Após a resolução dos conflitos, o usuário autorizou explicitamente o merge.
+PR48 integrada em `83178a50c03821c783be0a7f4110b7de5724d468`, às
+03:13:45 UTC, preservando o histórico. A árvore integrada é idêntica à
+candidata revisada `97195ac`. CI pós-merge `39537417305`, incluindo build
+isolado da main, e validação de negócio/browser `39537417397` aprovadas.
+CodeQL `39537417438` aprovado: três análises do SHA integrado com zero
+resultados/erros/avisos. A API ainda lista cinco alertas da categoria antiga,
+última instância em `82011f4`, não do novo SHA; não foram dispensados nem
+fechados manualmente. Triagem dessa configuração continua explícita.
+
+Merge não executou deploy, migrations, alterações de secrets ou dados.
+HML permanece no último checkpoint publicado; aceite de produção, restauração
+dos bytes externos e demais gates humanos continuam separados. Registro
+sanitizado: `evidence/pr48-main-merge-2026-10-21.json`.
+
 ## Conflitos da PR #48 — 21/10/2026
 
 A main avançou para `b71b359` pela integração da PR #45. Usuário solicitou

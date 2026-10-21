@@ -19,6 +19,7 @@ test('the lockfile excludes the vulnerable dependency versions identified in the
     sharp: '0.35.5',
     'source-map-js': '1.2.2',
     'fast-uri': '3.1.8',
+    'launch-editor': '2.14.2',
   }
   const lock = JSON.parse(
     readFileSync(new URL('../package-lock.json', import.meta.url), 'utf8'),

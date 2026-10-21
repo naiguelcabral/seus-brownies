@@ -129,6 +129,28 @@ for (const role of Object.keys(allowed)) {
     const readable = await rpc(page, 'listPurchasableProducts')
     expect(readable.ok).toBe(true)
     await page.goto('/compras')
+    const menuLinks = page
+      .getByRole('navigation', { name: 'Navegação principal' })
+      .getByRole('link')
+    if (role === 'employee') {
+      await expect(menuLinks).toHaveText([
+        'Vendas',
+        'Produtos',
+        'Compras',
+        'Categorias',
+      ])
+    } else if (role === 'owner' || role === 'manager') {
+      await expect(menuLinks.nth(0)).toHaveText('Visão geral')
+      await expect(menuLinks.nth(1)).toHaveText('Relatórios')
+      await expect(menuLinks.nth(2)).toHaveText('Estoque')
+    } else if (role === 'production') {
+      await expect(menuLinks).toHaveText([
+        'Estoque',
+        'Produção',
+        'Categorias',
+        'Produtos',
+      ])
+    }
     if (role === 'production')
       await expect(page).toHaveURL(/\/produtos(?:\?|$)/)
     else

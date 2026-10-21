@@ -1,239 +1,40 @@
-# Fila executável de autonomia — Cacau v1
+# Espelho de execução do roadmap — Cacau v1
 
-## Reconciliação da PR #39 — 14 de outubro de 2026 UTC
-
-A PR #38 foi integrada em `b7a8dcf9` após CI `38492599540` e PostgreSQL
-`38492599488` aprovados no HEAD `50a0b4a7`. A #40 já integra a main.
-As PRs #4/#5 foram encerradas como redundantes: os HEADs são ancestrais da main.
-A #13 foi atualizada sem conflitos, mas mantém o risco documentado de herança
-do PAT por subprocessos. A #39 preserva as evidências de #38 e os formulários
-externos; seu merge depende da CI desta reconciliação. Nenhum gate de aplicação
-de migration, alteração financeira/histórica ou deploy foi encerrado.
-Os relatos anteriores abaixo são históricos e não substituem este checkpoint.
-
-## Revalidação #36 — 9 de outubro de 2026
-
-- `main` `1e5bd557` e PR #38 draft `eaf00fd` revalidadas; CI main e
-  quatro CIs da PR verdes. A cadeia ativa e as evidências anteriores foram preservadas.
-- API Neon reconfirmou dois projetos, cinco bases `neondb`, apenas
-  `neondb_owner`, endpoints `read_write`, sem snapshots registrados. CLI
-  autenticada permite selecionar role, mas falta acesso de auditoria aprovado.
-- MCP Cloudflare autenticado confirmou deployment `8268b409` e versão
-  `e241b715` ativa a 100%; `DATABASE_URL` é secreto e seu destino não foi lido.
-- Estado: `blocked` por acesso não gravável, abrangência externa e vínculo
-  Worker→database não comprovados. Nenhum SQL externo, migration ou deploy.
-- Evidência e itens mínimos para retomada:
-  [MIGRATION-CHAIN-SHARED-EVIDENCE.md](MIGRATION-CHAIN-SHARED-EVIDENCE.md).
-
-## Continuidade #36 — acesso externo ainda bloqueado
-
-Inventário de metadados ampliado: os cinco branches retornam somente
-`neondb_owner`; seus endpoints são `read_write`. O conector SQL não permite
-selecionar papel não gravável. Nenhuma consulta SQL externa foi realizada.
-A PR #38 inclui diagnóstico conservador de ACLs, provas apenas descartáveis
-e o roteiro [MIGRATION-CHAIN-SHARED-EVIDENCE.md](MIGRATION-CHAIN-SHARED-EVIDENCE.md).
-Acesso aprovado e vínculo Worker→database continuam requisitos para finalizar
-#36; não criar papéis/grants ou substituir a cadeia implicitamente.
-
-## Execução da tarefa #36 — candidatas e provas separadas
-
-[PR #38](https://github.com/naiguelcabral/seus-brownies/pull/38) aberta em draft.
-As três candidatas passaram em PostgreSQL 17 descartável, de `0016` e instalação
-vazia, no commit `32c0f4e5c78f324fc3be2bd8dcfe084ae2acd0ba`:
-[run 37961680179](https://github.com/naiguelcabral/seus-brownies/actions/runs/37961680179),
-16 casos aprovados, incluindo rollback, hashes/timestamps, catálogo real,
-reaplicação e invariantes. Comparação e limites em
-[MIGRATION-CHAIN-EXPERIMENTS-0016.md](MIGRATION-CHAIN-EXPERIMENTS-0016.md).
-A CI do SHA final da PR deve estar verde antes de sua revisão; não há merge automático.
-
-O inventário de metadados encontrou dois projetos Neon e cinco branches, mas
-históricos `0017+`, catálogos, papel estritamente não gravável e vínculo Worker→DB
-continuam não comprovados. Nenhum SQL externo foi executado. A substituição ativa
-permanece bloqueada; `drizzle/` continua intacto. Próxima dependência: completar
-essas evidências externas para avaliar a candidata de substituição preferida.
-Gates `0019` (finanças) e `0028` (cenários) permanecem decisões separadas.
-**HML, migrations, backfill e deploy seguem sem autorização.**
-
-## Pacote de gates de evidência — 9 de outubro de 2026
-
-- PR #35 integrada e CI pós-merge verde; base atual `1e5bd557` com CI
-  `37944960379` verde. Branch `codex/hml-migration-evidence-gates`.
-- Preparados matriz sanitizada, proposta de acesso mínimo, verificador sem
-  conexão/credenciais, sanitizador local do destino e formulários 0019/0028.
-- Metadados Neon e deployment/versão do Worker reconfirmados; histórico,
-  schema, backup/restore e vínculo efetivo continuam `unverified`.
-- Acesso externo `blocked`; declaração e decisões `pending-human`.
-  Cadeia ativa preservada, nenhum SQL externo, migration, backfill ou deploy.
-- Referência: [HML-MIGRATION-EVIDENCE-GATES.md](HML-MIGRATION-EVIDENCE-GATES.md).
-- Próximo passo exato: operador preenche
-  [HML-DATABASE-OPERATOR-ATTESTATION.md](HML-DATABASE-OPERATOR-ATTESTATION.md),
-  fornece acesso privado já aprovado e referência independente de catálogo;
-  Dono preenche os dois formulários de decisão. Não inferir fechamento de gate.
-
-## Próxima sequência aprovada — 9 de outubro de 2026
-
-1. **Concluído:** preparação #35 integrada em `a542ec7`; CI pós-merge
-   `37944260848` verde no mesmo SHA. Não reaplicar esse pacote.
-2. Executar a tarefa separada [#36](https://github.com/naiguelcabral/seus-brownies/issues/36)
-   conforme `MIGRATION-CHAIN-REPAIR-0016.md`: inventário das bases compartilhadas,
-   três estratégias, provas descartáveis e PR corretiva própria.
-3. Manter aplicação HML `BLOCKED`. Substituição depende da ausência comprovada
-   de `0017+`; gates `0019`/`0028` e autorização específica não são dispensados.
-
-## Gate de migration HML — 9 de outubro de 2026
-
-| ID                | Pacote                       | Estado  | Saída / gate                                                                                                                                                                                                           |
-| ----------------- | ---------------------------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| HML-MIG-0017-0028 | Readiness da cadeia pendente | blocked | `0017` falha em PostgreSQL 17 por `products.unit` inexistente; resolver por caminho auditável aprovado. SQL HML não consultado sem conexão comprovadamente read-only. Plano em `HML-MIGRATION-READINESS-0017-0028.md`. |
-
-A indicação histórica abaixo de aplicar apenas `0027`/`0028` não é
-executável enquanto a cadeia `0017`–`0026` e o alvo efetivo permanecerem
-sem validação.
-
-## Reconciliação de integração — 8 de outubro de 2026
-
-| ID     | Pacote                                                    | Estado      | Saída / gate                                        |
-| ------ | --------------------------------------------------------- | ----------- | --------------------------------------------------- |
-| INT-R  | Relatórios e financeiro (#15, #16, #17, #18, #30)         | done        | PR #31 integrada em `main`; CI `37804204150` verde. |
-| INT-P  | Produção e readiness (#19, #20, #24, #26, #27)            | done        | PR #32 integrada em `main`; CI `37813883831` verde. |
-| INT-G  | Plataforma/governança (#14, #21, #22, #23, #25, #28, #29) | done        | PR #33 integrada em `main`; CI `37834057113` verde. |
-| INT-13 | Credencial persistente GitHub MCP (#13)                   | needs-human | `CHANGES-REQUIRED`; fora de qualquer lote.          |
-
-Matriz: `INTEGRATION-RECONCILIATION-2026-10-08.md`.
-
-Atualizada em 8 de setembro de 2026. Esta fila é a fonte de verdade para a
-seleção de pacotes pelo controlador. Ela não substitui os gates de
-`AGENTS.md`, `SECURITY.md` ou `HUMAN-APPROVALS.md`.
-
-## Reconciliação de integração — 8 de outubro de 2026
-
-| ID     | Pacote                                                    | Estado            | Saída / gate                                                                                                             |
-| ------ | --------------------------------------------------------- | ----------------- | ------------------------------------------------------------------------------------------------------------------------ |
-| INT-R  | Relatórios e financeiro (#15, #16, #17, #18, #30)         | review-ready      | Branch `codex/integration-reports-finance`; testes, lint, tipos e builds isolados consolidados passaram; criar PR draft. |
-| INT-P  | Produção (#19, #20, #24, #26, #27)                        | ready-after-INT-R | Criar lote separado; preservar guards de writer, precisão e rota protegida.                                              |
-| INT-G  | Plataforma/governança (#14, #21, #22, #23, #25, #28, #29) | ready-after-INT-R | Criar lote separado; sem browser HML, infraestrutura ou alteração de configuração.                                       |
-| INT-13 | Credencial persistente GitHub MCP (#13)                   | needs-human       | `CHANGES-REQUIRED`: decidir escopo de credencial no processo persistente/subprocessos.                                   |
-
-Matriz completa, SHAs, CI, sobreposições e decisões:
-`INTEGRATION-RECONCILIATION-2026-10-08.md`.
-
-## Estados
-
-- `ready`: único estado que o controlador pode selecionar.
-- `running`: pacote já congelado; requer leitura do handoff antes de retomar.
-- `blocked`: há impedimento técnico a registrar, sem contorná-lo.
-- `needs-human`: depende de decisão, identidade ou autorização humana.
-- `ready-after-<ID>`: depende de pacote anterior concluído; ainda não é
-  selecionável pelo controlador.
-- `done`: saída aceita e documentada.
+Atualizado em 21/10/2026. O [ROADMAP-CODEX.md](ROADMAP-CODEX.md) é a única
+fonte de tarefas e prioridades. Este arquivo apenas adapta seus estados ao
+controlador conservador; não cria autorização, dependência ou fila paralela.
+As tabelas antigas foram substituídas; seu histórico completo permanece no Git.
 
 ## Pacotes
 
-| ID     | Pacote                                              | Tipo                     | Estado      | Escopo e saída esperada                                                                                                               |
-| ------ | --------------------------------------------------- | ------------------------ | ----------- | ------------------------------------------------------------------------------------------------------------------------------------- |
-| A01    | Reconciliar evidências HML mais recentes            | documental               | done        | Reconciliação concluída: estado atual, pendências e diagnóstico histórico do 403 preservados.                                         |
-| A02    | Classificar dívida de `npm run check`               | documental               | done        | Classificação reproduzível em `FORMATTING-DEBT.md`, sem formatação em massa.                                                          |
-| A03    | Auditar eventos locais de auth e negações por papel | auditoria-leitura        | done        | Matriz reproduzível em `AUTH-COVERAGE-AUDIT.md`, sem tocar HML.                                                                       |
-| A04    | Implementar testes locais prioritários de auth      | codigo                   | done        | Eventos prioritários emitidos ao writer tipado e negações preservadas, sem alterar RBAC.                                              |
-| A05    | Preparar E2E G1 não destrutivo                      | codigo                   | done        | Spec e runbook opt-in/fail-closed prontos; execução real requer gates humanos.                                                        |
-| A06    | Validar HML por leituras públicas seguras           | auditoria-leitura        | done        | GETs anônimos confirmaram `/` → `/login` e `/login` 200, sem alteração externa.                                                       |
-| A07    | Homologar Turnstile real e replay                   | auditoria-leitura        | blocked     | Reparo A07-R1 concluído localmente; aguarda revisão/publicação, identidade exclusiva, navegador/CAPTCHA e replay em memória aprovado. |
-| A07-R1 | Propagar desafio durável do A07                     | codigo                   | done        | Quinta falha, cooldown ativo e cooldown expirado usam contrato tipado; fakes cobrem token válido e replay sem HML.                    |
-| A08    | Configurar rate limit distribuído HML               | codigo-build-obrigatorio | needs-human | Requer namespace e política Cloudflare aprovados.                                                                                     |
-| A09    | Definir segundo Gerente                             | auditoria-leitura        | needs-human | Requer decisão e identidade do Dono.                                                                                                  |
-| A10    | Fechar CMV realizado e vínculo venda–lote           | documental               | needs-human | Requer decisão de negócio/contabilidade antes de G2.                                                                                  |
+| ID | Pacote | Tipo | Estado | Resultado e dependência canônica |
+| --- | --- | --- | --- | --- |
+| A50 | Segurança e dependências | codigo | review-ready | S03: patch launch-editor 2.14.2, triagem de cinco alertas legados e testes; aguarda revisão/CI da candidata, sem dispensar alertas manualmente. |
+| A51 | Recuperação externa | auditoria-leitura | done | I02: dump efetivamente baixado do Drive, SHA-256/manifesto conferidos, restore PostgreSQL 17 sem rede, 38 tabelas/36 recibos exatos e catálogo independente. Retenção/RPO/RTO/responsáveis e Auth continuam separados. |
+| A52 | Aplicação futura de migrations | auditoria-leitura | needs-human | T02: preparo/revisão offline entregues; original continua production. Exige alvo/role read-only/vínculo Worker, coleta atual e plano/autorização específicos. Não reaplicar 36 recibos. |
+| A53 | Autenticação e perfis reais | auditoria-leitura | needs-human | H01–H03: laboratório sintético aprovado; faltam Neon Auth/Turnstile reais e matriz por identidade autorizada. |
+| A54 | Teclado e tela móvel | codigo | review-ready | H06: caso adicional de 320px/Shift+Tab/redução de movimento; aceite no celular físico e uso diário continuam humanos. |
+| A55 | Proteção de integração | documental | needs-human | G03: payload e proposta prontos; decidir revisores/exceções e autorizar configuração administrativa. |
+| A56 | Sustentação, piloto e liberação | documental | needs-human | I02–I05: política de recuperação, disponibilidade da automação local, fatos reais e aceite definitivo; sem deploy automático. |
 
-## Regra de seleção
+Nenhum pacote está exatamente `ready`. O controlador não deve promover
+`review-ready`, `needs-human` ou `done` automaticamente. A execução atual foi
+conduzida diretamente após autorização do usuário; este espelho não inicia
+Codex, delegação, cron ou recorrência.
 
-### Extensão autorizada para a rodada manual local
+## Seleção e validação
 
-| ID          | Pacote                                              | Tipo                     | Estado      | Escopo e saída esperada                                                                                                                                                                                      |
-| ----------- | --------------------------------------------------- | ------------------------ | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| A07-R2      | Revisar limites e falhas dos componentes Turnstile  | codigo                   | done        | Checkpoint humano c28c267 confirmado no Git com os sete arquivos; falha anterior de escrita preservada no log.                                                                                               |
-| A07-R3      | Validar composição de login e falha de gravação     | codigo                   | needs-human | Testes locais concluídos; falha posterior pode ocorrer após `Set-Cookie`. Política de concorrência/rollback de sessão aguarda decisão.                                                                       |
-| A11         | Comprovar viabilidade de build local sem segredos   | documental               | done        | Archive isolado, inputs explícitos e build cliente/SSR com chave pública sintética comprovados.                                                                                                              |
-| AR-E1       | Tornar checks reproduzíveis no CI                   | codigo                   | done        | `typecheck`, Node 22 e workflow de suíte/lint/tipos/build isolado aprovados local e remotamente em `34268997522`.                                                                                            |
-| AR-D1       | Exportar relatórios CSV seguros                     | codigo                   | done        | CSV local de agregados autorizados, precisão decimal e proteção de fórmula aprovados na CI `34268997522`; XLSX segue fora do escopo.                                                                         |
-| AR-E2       | Corrigir preflight da CI e lint CSV                 | codigo                   | done        | `--dry-run` sem Codex CLI e regex sem controles literais aprovados na CI `34268997522`; falhas anteriores preservadas no log.                                                                                |
-| AR-D2       | Filtrar e paginar histórico de despesas             | codigo                   | done        | Busca textual, período, 20 itens e estados de carregamento/erro aprovados na CI `34270184144`; preserva `expenses:read`.                                                                                     |
-| AR-E3       | Preparar resiliência operacional                    | documental               | done        | Runbook de backup, restauração descartável, RPO/RTO, rollback, observabilidade e retenção preparado; decisões e ensaio humano pendentes.                                                                     |
-| AR-E4       | Revisar vulnerabilidades de dependências            | qualidade                | needs-human | Em 2026-10-05, `npm audit` confirmou 16 vulnerabilidades (10 com `--omit=dev`); o dry-run sem `--force` parou em conflito de peers do Better Auth. Drizzle, Neon Auth e Wrangler exigem estratégia aprovada. |
-| AR-D3       | Filtrar e paginar histórico de compras              | codigo                   | done        | Busca de fornecedor, período, paginação e estados explícitos aprovados na CI `34295688527`; homologação de interface permanece pendente.                                                                     |
-| AR-D4       | Filtrar e paginar histórico de vendas               | codigo                   | done        | Cliente, status, período, paginação e estados explícitos aprovados na CI `34296133493`; homologação de interface permanece pendente.                                                                         |
-| AR-D5       | Filtrar e paginar catálogo de produtos              | codigo                   | done        | Nome/SKU, tipo, situação, paginação e estados explícitos aprovados na CI `34296485813`; homologação de interface permanece pendente.                                                                         |
-| AR-D6       | Preservar precisão na ordenação dos relatórios      | codigo                   | done        | Comparações exatas para agregados e inventário aprovadas nas CIs `34299895120` e `34299897403`; não altera fatos financeiros.                                                                                |
-| AR-E5       | Permitir build CI em checkout detached              | codigo                   | done        | Fallback restrito e negativa de deploy aprovados nas CIs `34299895120` e `34299897403`; build PR deixou de confundir detached com `main`.                                                                    |
-| AR-G1-L2    | Cobrir binding distribuído e Turnstile              | codigo                   | done        | Cinco escopos e falhas HTTP/JSON do provedor cobertos localmente; CI confirmada. HML/replay real seguem como gate separado.                                                                                  |
-| AR-G1-L3    | Sinalizar falha local de auditoria de auth          | codigo                   | done        | Telemetria permitida de persistência falha, sem dados sensíveis; testes locais, lint e tipos passaram. Política de sessão emitida e HML permanecem humanas.                                                  |
-| AR-G1-HML-1 | Homologar alcance e conexões técnicas HML           | auditoria-leitura        | done        | Endpoint público, CI, Neon Auth/domínio e contratos locais confirmados; binding efetivo, navegador, CAPTCHA e identidades continuam bloqueados em `G1-HML-TECHNICAL-VALIDATION-2026-09-10.md`.               |
-| AR-G2-D1    | Preparar decisão de CMV e reversões                 | documental               | done        | Alternativas, exemplo, recomendação técnica e testes em `G2-CMV-DECISION.md`; decisão financeira permanece humana.                                                                                           |
-| AR-E6       | Classificar vulnerabilidades do lockfile            | documental               | done        | Caminhos, contexto de uso, exploração condicionada e impacto de correção em `DEPENDENCY-AUDIT-2026-09-09.md`; sem atualização automática.                                                                    |
-| AR-G1-HML-2 | Declarar Rate Limiting HML e publicar com segurança | codigo-build-obrigatorio | blocked     | Binding `AUTH_RATE_LIMITER`, namespace `2026091001`, 20/60 s e fail-closed HML passaram localmente e na CI `34468924703`; deploy bloqueado sem site key pública HML injetada, sem usar valor sintético.      |
+O controlador só seleciona o primeiro pacote com estado exatamente `ready`
+ainda não tentado no ciclo. Antes de disponibilizar outro pacote, confrontar
+escopo, dependências e autorização com o roadmap e registrar o handoff.
+Não tratar instruções históricas de Prettier como procedimento atual:
+Oxlint/Oxfmt, builds isolados e checks seguem
+[DEVELOPMENT-WORKFLOW.md](DEVELOPMENT-WORKFLOW.md).
+Para documentação, revisar links e `git diff --check`. Falha de integridade,
+segurança, estoque, dinheiro ou lifecycle bloqueia conclusão; nunca enfraquecer
+testes ou alterar baseline para simular sucesso.
 
-Esses pacotes decorrem da missão manual de até 20 pacotes. A07 continua
-`blocked`; A08–A10 continuam `needs-human`. Não há promoção de nível permanente.
-
-### Próxima reconciliação de PR
-
-| ID    | Pacote                                                            | Tipo                             | Estado | Escopo e saída esperada                                                                                                                                                                                  |
-| ----- | ----------------------------------------------------------------- | -------------------------------- | ------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| PR-11 | Reconciliar e revisar `codex/workbook-parity-main-reconciliation` | revisão de integração/migrations | done   | Integrada por `baf9c4c`; CI da PR e CI pós-merge `37528365304` verdes. `0019`–`0026` somente versionadas, sem aplicação.                                                                                 |
-| WP-D  | Reconciliar `codex/wp-d-scenarios`                                | revisão de integração/migrations | done   | PR #12 integrada por `4590ca4`; CI pós-merge `37671827440` verde. `0027`/`0028` seguem somente versionadas; autorização controlada e homologação HML por papel permanecem humanas. PR #5 fica congelada. |
-
-PR-11 e WP-D foram concluídas. A próxima ação humana é autorizar a aplicação
-controlada de `0027`/`0028` em HML com backup, janela e rollback, seguida de
-homologação por navegador; não há autorização automática para aplicação ou
-deploy.
-
-### Remediação da cadeia 0017–0028
-
-| ID      | Pacote                                      | Tipo                      | Estado           | Escopo e saída esperada                                                                                                             |
-| ------- | ------------------------------------------- | ------------------------- | ---------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-| DB-36-R | Guard e prova local da cadeia de migrations | codigo/documental         | ready-for-review | Guard offline de `db:migrate`, regressão `0017` e ADR; não muda `drizzle/` nem acessa banco externo.                                |
-| DB-36-H | Inventário externo e decisão corretiva      | auditoria-leitura/decisão | needs-human      | Exige evidência privada de leitura estrita, abrangência das bases, backup/restauração, Worker→database e formulários `0019`/`0028`. |
-
-`DB-36-R` não promove `DB-36-H`. Qualquer execução de migration compartilhada
-permanece proibida até autorização nova, delimitada e revisável.
-
-### M44 — preparação da auditoria read-only — 16 de outubro de 2026 UTC
-
-`DB-36-H` permanece `needs-human` e o estado externo é
-`VALIDATION-BLOCKED-NO-READONLY-AUDIT`: apenas metadados MCP foram lidos; o
-MCP administrativo não pode executar SQL. A mudança para `ready` das três
-branches `steep-brook` não comprova HML, Worker, catálogo ou backup. Próximo
-gate: credencial temporária comprovadamente não gravável, atestação Worker,
-backup/restore e decisões `0019`/`0028`; ver
-[M44-READONLY-AUDIT-READINESS.md](M44-READONLY-AUDIT-READINESS.md).
-
-### M45 — integração e gates externos — 16 de outubro de 2026 UTC
-
-A PR #43 foi integrada em `32a9e119`; CI pós-merge `38922738966` verde. O
-pacote local de atestação/role foi reforçado e validado apenas em PostgreSQL 17
-descartável. `DB-36-H` continua `needs-human` e
-`VALIDATION-BLOCKED-NO-READONLY-AUDIT`: falta atestação privada Worker,
-credencial transitória comprovadamente não gravável, backup/restore e decisões
-`0019`/`0028`. Não executar SQL externo nem inferir HML de `ready`/MCP.
-Ver [M45-EXTERNAL-AUDIT-GATES.md](M45-EXTERNAL-AUDIT-GATES.md).
-A PR #44 é somente rascunho; CI de push, PR e PostgreSQL 17 passaram no SHA
-`395ebd6`, sem promover `DB-36-H` nem autorizar merge.
-
-### Checkpoint M42 — 14 de outubro de 2026 UTC
-
-`DB-36-R` foi integrado via PR #41 (`9610814`, CI pós-merge `38505897780`
-verde). `DB-36-H` continua `needs-human`: o inventário MCP confirma cinco
-branches mas só owner/endpoints graváveis; auditoria SQL, atestação Worker,
-backup/restore e decisões 0019/0028 não têm evidência suficiente. Próximo passo
-seguro: operador executa atestação sanitizada e providencia role de auditoria
-temporária estritamente não gravável, conforme M42; nenhuma migration ou SQL
-externo antes disso.
-
-O controlador escolhe o primeiro pacote com estado exatamente `ready` ainda
-não tentado na mesma execução. No loop autorizado, gates locais sem mudanças
-pendentes são registrados e outra tarefa `ready` pode continuar; dependências
-não são promovidas. Validação falha, limite e preflight continuam interrompendo.
-Antes de editar, o agente registra no handoff objetivo, não objetivos, arquivos
-previstos, critérios de aceite e comandos de validação. Um pacote não pode
-alterar seu próprio estado para `done` com checks vermelhos ou gate pendente.
-O tipo define a matriz de validação de `AUTONOMY-RUNBOOK.md`; um pacote que
-exija build usa `codigo-build-obrigatorio` e fica bloqueado até existir método
-isolado comprovado.
+Consulte [HUMAN-APPROVALS.md](HUMAN-APPROVALS.md),
+[AUTONOMY-HANDOFF.md](AUTONOMY-HANDOFF.md) e
+[AUTONOMY-RUNBOOK.md](AUTONOMY-RUNBOOK.md). Merge, aplicação compartilhada e
+produção conservam seus gates próprios.

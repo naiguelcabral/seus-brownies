@@ -1,5 +1,22 @@
 # Ambientes e evidência somente leitura — Cacau v1
 
+## Reconciliação atual — 21/10/2026
+
+Main `b82e044`; último HML registrado `bb76764`/`22733c04`. O
+[inventário sanitizado](../../evidence/environment-metadata-2026-10-21.json)
+reconfirma dez branches no projeto steep-brook, original production
+primary/default, Development e g1-auth-hml com IDs distintos. Metadados não
+provam schema atual, role não gravável ou vínculo Worker. Sem SQL externo,
+alteração de classificação, endpoint ou compute nesta rodada.
+
+Restore dos bytes baixados do Drive comprovado em PostgreSQL 17 sem rede:
+38 tabelas, 36 recibos exatos e catálogo independente 0033.
+[Recibo](../../evidence/offsite-restore-2026-10-21.json). Não torna a original
+production um laboratório nem autoriza migração genérica. Laboratório
+interface/HTTP/PostgreSQL entregue com identidade sintética; aceites reais
+seguem separados. Ver [procedimento T02](MIGRATION-OPERATOR-PROCEDURE.md).
+Esta seção prevalece sobre versões/dependências antigas abaixo.
+
 ## Reconciliação atual — 20/10/2026
 
 Esta seção prevalece sobre o retrato histórico de 08/10 abaixo. Inspeção atual

@@ -1,5 +1,21 @@
 # Knip e CodeQL no Cacau
 
+## Triagem atual — 21/10/2026
+
+Main b82e044: três análises atuais (103/50/23 regras) com zero resultados,
+erros ou avisos. Cinco alertas ainda abertos pertencem à categoria antiga,
+última instância 82011f4. Conferência confirmou correções presentes para
+arquivos temporários, leitura pelo mesmo descritor e comparação literal de
+URLs. Não foram dispensados/fechados manualmente. A troca de categoria não
+encerra automaticamente resultados antigos; tratamento administrativo segue
+explícito, assim como reanálise da candidata antes do aceite.
+
+Auditoria nova encontrou launch-editor 2.14.1 transitivo; patch 2.14.2 preparado
+sem outras atualizações. npm ci e auditoria posterior: zero vulnerabilidades.
+Knip conserva quatro referências contextuais e zero novas; não confundir os
+três itens iniciais da revisão histórica abaixo com a baseline atual. Veja
+[evidência e advisories](AUTOMATIC-READINESS-2026-10-21.md).
+
 ## Referência operacional adicional — 20/10/2026
 
 A cópia local autorizada usa a CLI Neon nativa já instalada/autenticada pelo

@@ -1,5 +1,25 @@
 # Runbook de resiliência operacional — Cacau v1
 
+## Recuperação comprovada — 21/10/2026
+
+A cópia public/drizzle do Drive privado escolhido pelo Dono foi efetivamente
+baixada, conferida por tamanho/SHA-256 e restaurada em PostgreSQL 17 local
+sem rede. Conferidos 38 tabelas, 36 recibos exatos, catálogo independente de
+0033, constraints e digests agregados. [Recibo](../../evidence/offsite-restore-2026-10-21.json).
+Sem nova exportação do Neon ou escrita na origem. Auth gerenciado excluído;
+sua recuperação precisa de procedimento próprio.
+
+Backup diário às 03h Brasília e monitor horário configurados no app; e-mail
+de teste entregue. Dependem do computador/app/conectores disponíveis. Restam
+retenção/expurgo, responsáveis, RPO/RTO, periodicidade dos ensaios e decisão
+sobre disponibilidade independente do host. Sem expurgo de backups existentes.
+O ensaio comprova a cópia observada, não o RTO integral da operação.
+
+As instruções de branch/corte abaixo descrevem recuperação da plataforma e
+não foram executadas nesta rodada. Esta seção prevalece sobre o estado
+histórico; I02/I03 continuam no roadmap. A liberação do runbook para produção
+exige as decisões operacionais restantes.
+
 Atualizado em 8 de setembro de 2026. Este runbook prepara a recuperação sem
 autorizar escrita em banco compartilhado, deploy, troca de secrets ou alteração
 de infraestrutura. Ele não substitui a autorização humana para cada incidente.

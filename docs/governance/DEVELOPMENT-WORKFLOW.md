@@ -84,15 +84,15 @@ Configurações em `.oxlintrc.json` e `.oxfmtrc.json`; critérios e diferenças 
 cobertura em [TYPESCRIPT-7-OXC-MIGRATION.md](TYPESCRIPT-7-OXC-MIGRATION.md).
 
 O [balanço de 17/10/2026](ATUALIZACOES-E-PENDENCIAS-2026-10-17.md) distingue
-esta branch da main ainda em TS 6 e da PR informativa de tooling. Não substituir
-as regras tipadas locais por configs informativas ao integrar Knip/CodeQL.
-O piloto ainda contém uma instrução ativa de Prettier; reconciliá-la e testar
-o controlador antes de usá-lo para executar a migração de procedimentos.
+aquele checkpoint da main então em TS 6 e da proposta informativa de tooling.
+A main atual já integra TypeScript 7/Oxc/Knip/CodeQL. Não substituir gates
+atuais por configs históricas. O controlador já usa contratos Oxfmt; a fila
+reconciliada é espelho do roadmap, sem pacotes ready nesta rodada.
 
 Knip executa análise completa com `knip:audit`/`knip:report`; `knip:check` é o
 gate da CI contra mudanças não revisadas da baseline. Relatório não zero pode
-conter as três referências contextuais revisadas (48 ocorrências iniciais
-triadas, 45 resolvidas); não usar `--fix` nem regenerar a baseline para
+conter as quatro referências contextuais revisadas (três iniciais e a CLI
+Neon do backup autorizado); não usar `--fix` nem regenerar a baseline para
 ocultar uma regressão. Remover entradas resolvidas junto com a correção.
 CodeQL cobre JS/TS, Python e Actions em jobs próprios. Consulte
 [KNIP-CODEQL.md](KNIP-CODEQL.md) para cobertura, limites e triagem.

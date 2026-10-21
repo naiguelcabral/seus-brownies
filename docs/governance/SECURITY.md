@@ -41,7 +41,7 @@ Sem aprovação humana explícita, o agente não pode:
 
 Build local e inspeção de configuração versionada são permitidos.
 
-## Autenticação futura
+## Autenticação — controles obrigatórios
 
 Requisitos mínimos:
 
