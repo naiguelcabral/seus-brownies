@@ -5,6 +5,29 @@ atual de tarefas, prioridades e critérios de conclusão. Os checkpoints de
 publicação abaixo preservam o estado comprovado de cada entrega; suas
 próximas etapas históricas não substituem o roadmap atualizado.
 
+## Reconciliação documental após análise do Work — 21/10/2026
+
+README e roadmap atualizados após a conversa “Análise do repositório” e
+conferência somente leitura no GitHub: `main` em `b82e044`, PRs #44–#49
+mescladas, issue #36 encerrada e nenhuma PR ou issue aberta na consulta.
+CI `39538349886`, negócio/browser `39538349936` e CodeQL `39538349907`
+concluídos com sucesso no mesmo SHA. Checkpoint: 560 testes Node, 39 casos
+de fixtures UI, dez conectados, runners PostgreSQL e build isolado aprovados.
+Não houve repetição de suítes ou nova auditoria de dependências nesta revisão.
+CodeQL aprovado não encerra a triagem dos alertas legados descritos abaixo.
+
+A API da `main` retornou `protected:false` e a consulta de rulesets veio vazia;
+proteção obrigatória de integração agora tem acompanhamento G03. O laboratório
+conectado está entregue com identidade sintética; permanecem aceites reais de
+autenticação/perfis/celular, restore dos bytes externos, retenção/RPO/RTO,
+ambientes/migrations e piloto autorizado. Estimativas do Work (85% interno,
+65% com WhatsApp/OCR; 60–100 h ou 180–300 h totais) foram registradas no roadmap
+como planejamento, sem equivaler a aceite ou cobertura de testes.
+
+Esta seção prevalece sobre estados intermediários de integração abaixo. O
+último HML registrado continua `bb76764`/`22733c04`; recibos e dados históricos
+preservados. Sem alteração de código, banco, configuração remota ou deploy.
+
 ## PR #48 integrada à main — 21/10/2026
 
 Após a resolução dos conflitos, o usuário autorizou explicitamente o merge.
