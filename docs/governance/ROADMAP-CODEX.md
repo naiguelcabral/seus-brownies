@@ -1,6 +1,6 @@
 # Roadmap único — Cacau v1
 
-Atualizado em **21/10/2026**, durante a resolução autorizada dos conflitos da PR #48.
+Atualizado em **21/10/2026**, após o merge autorizado da PR #48.
 Este é o **único arquivo de planejamento e acompanhamento de pendências**.
 Relatórios datados, recibos, matrizes e runbooks preservam evidências e
 procedimentos; suas listas antigas não são filas adicionais de execução.
@@ -35,18 +35,19 @@ Dez casos conectados passaram juntos em archive limpo, revelando correção de
 ordenação da razão em Relatórios. Código `bb76764`, CI/CodeQL aprovados,
 publicado em HML na versão `22733c04`, 100%, raiz307/login200.
 Detalhes em `CONNECTED-QA-2026-10-20.md`.
-Main avançou para `b71b359` pela PR #45; PR #48 saiu de rascunho e apresentou
-cinco conflitos de tooling. A reconciliação preserva os gates atuais e retira
-o preview advisory obsoleto; 560 testes e checks locais aprovados, build/CI
-do novo commit pendentes neste checkpoint. Revisão humana e merge da #48
-permanecem separados; nenhum deploy ou SQL compartilhado nesta resolução.
+PR #48 integrada à main em `83178a5` após autorização humana explícita.
+Conflitos resolvidos em `97195ac`, 560 testes e build/checks aprovados.
+CI, negócio/browser e CodeQL pós-merge aprovados; três análises atuais sem
+resultados. Cinco alertas legados da configuração antiga ainda aparecem
+abertos na API, última instância `82011f4`; não foram fechados manualmente.
+Sem deploy ou SQL compartilhado. Produção segue gate humano próprio.
 
 ## Estado confirmado
 
 | Área | Situação atual |
 | --- | --- |
 | HML | Código `bb76764`, versão `22733c04-7996-43b1-88e3-3f775db223fc`, 100%; primeiro acesso e ordenação de Relatórios publicados, deploy e GETs conferidos. |
-| Trabalho versionado | Branch `codex/integrated-validation-gates`; PR48 aberta fora de rascunho, em reconciliação com main `b71b359` após merge da #45. PR46 mantém preparação/revisão offline. Publicação HML não equivale a integração na `main`. |
+| Trabalho versionado | PR48 integrada à main em `83178a5`, com autorização explícita e CI pós-merge aprovada. Branch de trabalho preservada; PR46 mantém o histórico da preparação/revisão offline. Não equivale a publicação ou aceite de produção. |
 | Banco HML | Atualizações específicas aplicadas, 36 recibos; migrador genérico continua sendo tarefa separada |
 | Catálogo e produção | 38 produtos; duas versões de receita e 34 perfis contando os históricos; receita 2 ativa com 17 perfis completos e 31 componentes |
 | Cenários | Cenário 2/v2/rev2 ativo, 16 produtos orientativos em 100%; cenário 1 e seu histórico preservados |
@@ -156,7 +157,7 @@ sintético foi gravado no HML.
 | --- | --- | --- |
 | G01 | Parcial | Este roadmap já foi consolidado. Reconciliar os demais retratos de paridade, ambientes e fila do controlador quando suas frentes forem revisadas; preservar as evidências datadas. |
 | G02 / I01 | Plano técnico formalizado; execução parcial | `QA-VALIDATION-PROTOCOL.md` define topologia isolada, identidades/dados permitidos, responsabilidades, referências inéditas e critérios por camada. `ENVIRONMENT-MATRIX.md` reconciliada com metadados atuais. O aceite conectado ainda exige ambiente/identidades próprios; não presumir a original `production` como laboratório. |
-| T01 | Parcial | PR45 integrada na main `b71b359`. Conflitos da #48 conciliados na branch preservando tooling tipado, lockfile, baseline e CodeQL em três linguagens, sem preview advisory duplicado. 560 testes e checks locais aprovados; build/checks do novo SHA, revisão humana, merge e CI/CodeQL do resultado integrado permanecem necessários. #44 incorporada na candidata; gates da #36 não dispensados. |
+| T01 | Integração concluída; triagem legada pendente | PR48 integrada em `83178a5` por autorização explícita após reconciliação, 560 testes e build/checks aprovados. CI/negócio/browser/CodeQL pós-merge aprovados; análises atuais com zero resultados. Conferir os cinco alertas ainda abertos da categoria CodeQL anterior, última instância `82011f4`, sem dispensa automática. Gates da #36 e de produção não dispensados. |
 | I02 | Parcial | Transformar os backups e ensaios específicos já realizados em rotina: retenção, cópia independente, responsáveis, RPO/RTO e restauração periódica. Não apagar backups existentes para abrir quota. |
 | I03 | Parcial | Completar logs dos domínios, correlação, monitoramento, alertas de erro/disponibilidade e resposta a incidentes. Logs Cloudflare/auth e auditorias existentes não equivalem a monitoramento completo. |
 | I04 | Pendente / gate humano | Liberação definitiva somente após revisão/integridade/QA, integração, plano de recuperação, configuração revisada dos ambientes e aceite humano. Configurações HML existentes não precisam ser refeitas; secrets/DNS/produção exigem autorização específica. |

@@ -1,0 +1,32 @@
+{
+  "pull_request": 48,
+  "base": "main",
+  "approved_candidate": "97195ace6ed6c025b213740d29b027ab91f30e7c",
+  "merge_commit": "83178a50c03821c783be0a7f4110b7de5724d468",
+  "merged_at": "2026-10-21T03:13:45Z",
+  "human_merge_authorization": true,
+  "merged_tree_matches_candidate": true,
+  "node_tests_before_merge": 560,
+  "post_merge_runs": {
+    "ci": { "id": 39537417305, "conclusion": "success" },
+    "business_browser": { "id": 39537417397, "conclusion": "success" },
+    "codeql": { "id": 39537417438, "conclusion": "success" }
+  },
+  "current_codeql_analyses": [
+    { "id": 1993593115, "language": "javascript-typescript", "results": 0 },
+    { "id": 1993590607, "language": "python", "results": 0 },
+    { "id": 1993590518, "language": "actions", "results": 0 }
+  ],
+  "legacy_codeql_alerts": {
+    "open": [1, 6, 7, 8, 11],
+    "last_instance_commit": "82011f4d3021ad19d67c554457afebbc797550d7",
+    "category": ".github/workflows/codeql.yml:analyze",
+    "environment": {},
+    "manually_dismissed": false,
+    "requires_configuration_triage": true
+  },
+  "production_deployment_executed": false,
+  "shared_migrations_executed": false,
+  "secrets_changed": false,
+  "production_acceptance_granted": false
+}

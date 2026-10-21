@@ -1,5 +1,16 @@
 # Ações que exigem aprovação humana — Cacau v1
 
+## Merge da PR #48 — 21/10/2026
+
+Após o relato de conflitos resolvidos em `97195ac`, 560 testes, build/checks
+aprovados e revisão pendente, o usuário respondeu “Faça a Marge eu autorizo”.
+Autorização específica para integrar a PR #48 à main, incluindo o pacote de
+tooling/runtime já apresentado. Merge executado em `83178a5`, após reconferir
+o SHA, mergeabilidade, checks e resultados CodeQL. Não autoriza deploy de
+produção, SQL compartilhado, secrets, fechamento manual de alertas ou dispensa
+dos aceites funcionais/recuperação. CI e testes pós-merge aprovados; análises
+atuais sem resultados, cinco alertas da configuração anterior ainda abertos.
+
 ## Continuidade, cópia externa e alertas — 20/10/2026
 
 Usuário solicitou publicar primeiro acesso após CodeQL, validar perfis/fluxo

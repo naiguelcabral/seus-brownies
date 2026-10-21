@@ -5,6 +5,23 @@ atual de tarefas, prioridades e critérios de conclusão. Os checkpoints de
 publicação abaixo preservam o estado comprovado de cada entrega; suas
 próximas etapas históricas não substituem o roadmap atualizado.
 
+## PR #48 integrada à main — 21/10/2026
+
+Após a resolução dos conflitos, o usuário autorizou explicitamente o merge.
+PR48 integrada em `83178a50c03821c783be0a7f4110b7de5724d468`, às
+03:13:45 UTC, preservando o histórico. A árvore integrada é idêntica à
+candidata revisada `97195ac`. CI pós-merge `39537417305`, incluindo build
+isolado da main, e validação de negócio/browser `39537417397` aprovadas.
+CodeQL `39537417438` aprovado: três análises do SHA integrado com zero
+resultados/erros/avisos. A API ainda lista cinco alertas da categoria antiga,
+última instância em `82011f4`, não do novo SHA; não foram dispensados nem
+fechados manualmente. Triagem dessa configuração continua explícita.
+
+Merge não executou deploy, migrations, alterações de secrets ou dados.
+HML permanece no último checkpoint publicado; aceite de produção, restauração
+dos bytes externos e demais gates humanos continuam separados. Registro
+sanitizado: `evidence/pr48-main-merge-2026-10-21.json`.
+
 ## Conflitos da PR #48 — 21/10/2026
 
 A main avançou para `b71b359` pela integração da PR #45. Usuário solicitou
