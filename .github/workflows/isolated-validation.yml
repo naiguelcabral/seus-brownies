@@ -64,3 +64,30 @@ jobs:
       - run: npx playwright install --with-deps chromium
       - name: Isolated UI fixtures without shared backend
         run: npm run test:e2e:isolated
+
+  connected-postgres-browser:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      PLAYWRIGHT_BROWSERS_PATH: /tmp/cacau-playwright-browsers
+    services:
+      connected:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: connected_fixture
+          POSTGRES_PASSWORD: synthetic-connected-only
+          POSTGRES_DB: cacau_connected
+        ports: ['127.0.0.1:5440:5432']
+        options: >-
+          --health-cmd "pg_isready -U connected_fixture -d cacau_connected"
+          --health-interval 5s --health-timeout 5s --health-retries 12
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Real UI, HTTP authorization and isolated PostgreSQL
+        run: npm run test:e2e:connected

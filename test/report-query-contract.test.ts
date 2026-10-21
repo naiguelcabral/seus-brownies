@@ -25,3 +25,14 @@ test('somente ausência de schema opcional pode desativar seção do relatório'
     false,
   )
 })
+
+test('valorização do relatório recebe a razão na ordem temporal com desempate estável', async () => {
+  const source = await readFile(
+    new URL('../src/features/reports/functions.ts', import.meta.url),
+    'utf8',
+  )
+  assert.match(
+    source,
+    /\.where\(lt\(stockMovements\.occurredAt, until\)\)\s*\.orderBy\(asc\(stockMovements\.occurredAt\), asc\(stockMovements\.id\)\)/,
+  )
+})

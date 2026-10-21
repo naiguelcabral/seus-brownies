@@ -5,7 +5,36 @@ atual de tarefas, prioridades e critérios de conclusão. Os checkpoints de
 publicação abaixo preservam o estado comprovado de cada entrega; suas
 próximas etapas históricas não substituem o roadmap atualizado.
 
-## Primeiro acesso corrigido localmente — 20/10/2026
+## Validação conectada e sustentação — 20/10/2026
+
+Primeiro acesso publicado do HEAD `a5463ee`: versão HML
+`3daa8163-7b43-4aee-a46b-6b325ca1b9aa`, 100% desde23:25:07 UTC.
+CodeQL do SHA conferido nas três linguagens, zero resultados/alertas abertos;
+deployments relidos e raiz307/login200. Sem migration ou mudança de credencial.
+
+Dois runners PostgreSQL passaram novamente. Novo laboratório conecta interface
+real, HTTP TanStack, middleware e PostgreSQL17; apenas identidade é sintética,
+com papéis lidos no banco local. Dez casos passaram em execuções complementares
+(sete + três): quatro perfis, negações sem escrita, autoria, revogação imediata,
+compra→produção→venda→recebimento/entrega→lucro, celular390px, CSV, cancelamento,
+devolução, crédito/resgate parcial, reembolso, fechamento e correção.
+559 testes Node, lint/tipos/formato e Knip sem novos achados aprovados.
+
+O ensaio revelou falha real em Relatórios: razão sem ORDER BY podia processar
+saída antes da entrada e rejeitar estoque válido. Candidata ordena por data/ID;
+relatório contra os mesmos fatos passou. CI/CodeQL e publicação desse novo
+incremento ainda pendentes; não atribuir a ele o deploy anterior.
+
+Cópia atual public/drizzle enviada ao Google Drive privado escolhido, junto
+com manifesto; privacidade/tamanho conferidos. Restore local correspondente
+passou38 tabelas/36 recibos; restore dos bytes externos permanece pendente.
+Backup diário03h Brasília e monitor público horário ativos no aplicativo;
+e-mail de teste ao Dono entregue. Dependem do computador/app disponíveis.
+Migrations genéricas permanecem offline/bloqueantes para a original classificada
+como produção. Main, celular físico e liberação definitiva seguem gates próprios.
+Detalhes em [validação conectada](CONNECTED-QA-2026-10-20.md).
+
+## Primeiro acesso corrigido localmente — checkpoint anterior de20/10/2026
 
 O usuário confirmou que Funcionário, Gerente nova e conta gerencial anterior
 conseguem entrar. H03 continua parcial: falta a matriz de telas, chamadas

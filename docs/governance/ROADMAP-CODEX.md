@@ -25,19 +25,22 @@ de permissões ainda depende de aceite conectado H03.
 Correção de primeiro acesso pronta em `b0680dd`: recadastro de identidade
 existente não troca senha, e a tela agora orienta recuperação e retorna ao
 login após OTP. Passaram 556 testes Node, 39 casos de navegador, smoke público
-local, build isolado e checks remotos. Falta concluir a triagem detalhada dos
-resultados/alertas CodeQL e publicar no HML. A consulta foi interrompida;
-HML permanece em `3f0ba59`. Detalhes em `AUTH-FIRST-ACCESS-2026-10-20.md`.
-Também faltam alertas automáticos ao Dono e rotina independente de backups.
-Cópia local privada já criada e restaurada; sem periodicidade ou armazenamento
-externo.
+local, build isolado e checks remotos. Triagem concluída em `a5463ee`: três
+análises sem resultados e zero alertas abertos. Publicado em HML na versão
+`3daa8163`, 100%, probe público aprovado. Detalhes em `AUTH-FIRST-ACCESS-2026-10-20.md`.
+Backup atual/manifesto enviados ao Google Drive privado; restore local passou
+38 tabelas/36 recibos. Backup diário03h e monitor horário ativos, e-mail de teste
+ao Dono entregue. Restam restore externo, RPO/RTO e aceite de sustentação.
+Dez casos conectados passaram (sete + três), revelando correção de ordenação
+da razão em Relatórios; candidata ainda aguarda CI/CodeQL e publicação.
+Detalhes em `CONNECTED-QA-2026-10-20.md`.
 PRs47/48 em rascunho; revisão humana da integração à main permanece separada.
 
 ## Estado confirmado
 
 | Área | Situação atual |
 | --- | --- |
-| HML | Código `3f0ba59`, versão `e2aba61f-ca72-4459-a0d7-95867cdb2e67`, 100% do tráfego; publicação e GETs públicos conferidos em20/10/2026 |
+| HML | Primeiro acesso em `a5463ee` (código `b0680dd`), versão `3daa8163-7b43-4aee-a46b-6b325ca1b9aa`, 100%; deploy e GETs conferidos. Nova correção de Relatórios ainda candidata. |
 | Trabalho versionado | Branch `codex/integrated-validation-gates`, PRs47/48 em rascunho; PR46 mantém preparação/revisão offline. Publicação HML não equivale a integração na `main`. |
 | Banco HML | Atualizações específicas aplicadas, 36 recibos; migrador genérico continua sendo tarefa separada |
 | Catálogo e produção | 38 produtos; duas versões de receita e 34 perfis contando os históricos; receita 2 ativa com 17 perfis completos e 31 componentes |
@@ -45,7 +48,7 @@ PRs47/48 em rascunho; revisão humana da integração à main permanece separada
 | Meta | R$ 10.000 de lucro mensal após os custos de **todas as vendas**, inclusive Bordinhas realizadas; sem cotas obrigatórias por produto |
 | Operação real | Sem compras ou produção previstas; nenhum fato fictício criado no HML para testar as entregas |
 | Última validação de código | `b0680dd`: 556 testes Node, 39 casos browser de fixtures, smoke público local e build isolado aprovados; checks remotos verdes. Triagem detalhada CodeQL pendente. O checkpoint runtime de `3f0ba59` permanece histórico. |
-| Segurança | Três análises CodeQL do código3f0ba59 sem resultados e zero alertas abertos; conferência própria exigida para cada incremento. |
+| Segurança | Três análises CodeQL de `a5463ee` sem resultados e zero alertas abertos; nova correção de Relatórios exige conferência própria. |
 | Preservação | 21 tabelas acompanhadas com contagens e digests idênticos antes/depois da última entrega |
 
 Legenda: **concluído** significa que o resultado descrito foi comprovado;

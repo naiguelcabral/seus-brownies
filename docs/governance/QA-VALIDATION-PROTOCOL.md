@@ -45,6 +45,12 @@ specs existentes contêm somente dados sintéticos e ficam em `/tmp`.
 
 ## Execução reproduzível
 
+Atualização de20/10: `npm run test:e2e:connected` acrescenta aplicação TanStack
+real/HTTP/PostgreSQL17 sintético em5440, com identidades próprias do laboratório
+e RBAC lido no banco. CI tem serviço vazio próprio; apenas o provedor externo
+é simulado. Dez casos locais passaram em execuções complementares. Detalhes,
+correção encontrada, limites de aceite e sustentação em CONNECTED-QA-2026-10-20.md.
+
 ```sh
 npm test
 npm run lint

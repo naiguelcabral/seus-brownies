@@ -1,5 +1,16 @@
 # Ações que exigem aprovação humana — Cacau v1
 
+## Continuidade, cópia externa e alertas — 20/10/2026
+
+Usuário solicitou publicar primeiro acesso após CodeQL, validar perfis/fluxo
+isolado/celular/CSV, configurar alertas/backups, fechar gates e integrar à main
+antes do aceite de produção; confirmou “Pode seguir”. Depois escolheu Google
+Drive privado para cópia externa e e-mail do Dono para alertas. Autorizados
+upload privado da cópia public/drizzle da origem já aprovada e agendamentos
+locais de backup/monitoramento, sem expurgo. Não inclui dados Auth gerenciados,
+fatos fictícios compartilhados, reclassificação de ambiente ou dispensa dos
+gates de migrations/integração/produção. Resultado em CONNECTED-QA-2026-10-20.md.
+
 ## Novas identidades de Gerente e Funcionário — 20/10/2026
 
 O usuário solicitou criar uma conta de Gerente e uma de Funcionário para os

@@ -7,7 +7,7 @@ import {
 } from '../../lib/exact-cost'
 import type { ExactCost } from '../../lib/exact-cost'
 import { createServerFn } from '@tanstack/react-start'
-import { and, eq, gte, inArray, lt, lte, sql } from 'drizzle-orm'
+import { and, asc, eq, gte, inArray, lt, lte, sql } from 'drizzle-orm'
 import { z } from 'zod'
 
 import {
@@ -156,7 +156,8 @@ export const getOperationalReports = createServerFn({ method: 'GET' })
         })
         .from(stockMovements)
         .innerJoin(products, eq(stockMovements.productId, products.id))
-        .where(lt(stockMovements.occurredAt, until)),
+        .where(lt(stockMovements.occurredAt, until))
+        .orderBy(asc(stockMovements.occurredAt), asc(stockMovements.id)),
       database
         .select({
           productId: saleItems.productId,

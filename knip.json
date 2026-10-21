@@ -1,6 +1,12 @@
 {
   "$schema": "https://unpkg.com/knip@6/schema.json",
   "entry": [
+    "e2e/connected/bridge.ts",
+    "e2e/connected/cloudflare.server.ts",
+    "e2e/connected/identity.server.ts",
+    "e2e/connected/playwright.config.ts",
+    "e2e/connected/vite.config.ts",
+    "e2e/connected/connected.spec.mjs",
     "e2e/fixtures/auth-onboarding/main.tsx",
     "e2e/fixtures/auth-onboarding/router.ts",
     "e2e/fixtures/auth-onboarding/start.ts",
@@ -31,6 +37,7 @@
     "e2e/fixtures/integrity-report/csv.ts",
     "e2e/fixtures/integrity-report/money.ts"
   ],
+  "paths": { "/e2e/*": ["./e2e/*"] },
   "project": [
     "src/**/*.{ts,tsx,js,mjs}",
     "test/**/*.{ts,tsx,js,mjs}",

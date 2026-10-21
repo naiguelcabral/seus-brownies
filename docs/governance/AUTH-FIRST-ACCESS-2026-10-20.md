@@ -1,5 +1,15 @@
 # Primeiro acesso e recadastro — 20/10/2026
 
+## Publicação confirmada
+
+HEAD `a5463eef7914ac761adffa634269fec60843efa6`, contendo `b0680dd`, publicado
+em HML: versão `3daa8163-7b43-4aee-a46b-6b325ca1b9aa`, 100% desde20/10/2026
+23:25:07 UTC. Deployments relidos após a interrupção; raiz307/login200.
+CodeQL: análises1992698696(JS/TS,103 regras),1992696691(Python,50) e
+1992696417(Actions,23), zero resultados; zero alertas abertos na branch.
+Execução39514328174. Sem migration ou mudança de credencial. A seção final
+preserva o checkpoint anterior à publicação.
+
 ## Diagnóstico e limites
 
 O usuário confirmou a entrada de Funcionário, da Gerente nova e da conta
