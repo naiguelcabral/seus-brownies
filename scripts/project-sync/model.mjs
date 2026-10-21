@@ -1,4 +1,5 @@
 import { createHash } from 'node:crypto'
+
 export function canonical(value) {
   if (Array.isArray(value)) return value.map(canonical)
   if (value && typeof value === 'object')

@@ -1,0 +1,1 @@
+ALTER TABLE "management_settings" ADD COLUMN "payment_fees" jsonb;

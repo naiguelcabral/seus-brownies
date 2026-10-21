@@ -1,0 +1,269 @@
+{
+  "scope": "synthetic-disposable-postgres17",
+  "observed_at_utc": "2026-10-17T08:00:04.283Z",
+  "application_authorized": false,
+  "active_chain_replaced": false,
+  "external_sql_executed": false,
+  "source_journal_sha256": "815604e685be390e2511a316ba78efd3a46fe37fc18e8e7d41515addcce3761b",
+  "total_cases": 26,
+  "cases": [
+    {
+      "name": "isolated-0017-replacement-upgrade-0016",
+      "result": "passed"
+    },
+    {
+      "name": "rollback-isolated-0017-replacement-upgrade-0016",
+      "result": "passed"
+    },
+    {
+      "name": "isolated-0017-replacement-empty",
+      "result": "passed"
+    },
+    {
+      "name": "rollback-isolated-0017-replacement-empty",
+      "result": "passed"
+    },
+    {
+      "name": "isolated-0017-compatibility-upgrade-0016",
+      "result": "passed"
+    },
+    {
+      "name": "rollback-isolated-0017-compatibility-upgrade-0016",
+      "result": "passed"
+    },
+    {
+      "name": "isolated-0017-compatibility-empty",
+      "result": "passed"
+    },
+    {
+      "name": "rollback-isolated-0017-compatibility-empty",
+      "result": "passed"
+    },
+    {
+      "name": "replacement-upgrade-0016",
+      "result": "passed"
+    },
+    {
+      "name": "replacement-empty",
+      "result": "passed"
+    },
+    {
+      "name": "compatibility-upgrade-0016",
+      "result": "passed"
+    },
+    {
+      "name": "compatibility-empty",
+      "result": "passed"
+    },
+    {
+      "name": "rebuilt-line-upgrade-0016",
+      "result": "passed"
+    },
+    {
+      "name": "rebuilt-line-empty",
+      "result": "passed"
+    },
+    {
+      "name": "rollback-replacement-upgrade-0016",
+      "result": "passed"
+    },
+    {
+      "name": "rollback-replacement-empty",
+      "result": "passed"
+    },
+    {
+      "name": "rollback-compatibility-upgrade-0016",
+      "result": "passed"
+    },
+    {
+      "name": "rollback-compatibility-empty",
+      "result": "passed"
+    },
+    {
+      "name": "rollback-rebuilt-line-upgrade-0016",
+      "result": "passed"
+    },
+    {
+      "name": "rollback-rebuilt-line-empty",
+      "result": "passed"
+    },
+    {
+      "name": "official-0017-defect-rollback-from-0016",
+      "result": "passed"
+    },
+    {
+      "name": "original-fails-42703-upgrade-0016",
+      "result": "passed"
+    },
+    {
+      "name": "original-fails-42703-empty",
+      "result": "passed"
+    },
+    {
+      "name": "naive-compatibility-runtime-fails-42703",
+      "result": "passed"
+    },
+    {
+      "name": "0028-populated-mix-fails-23502",
+      "result": "passed"
+    },
+    {
+      "name": "readonly-access-diagnostic",
+      "result": "passed"
+    }
+  ],
+  "isolated": [
+    {
+      "name": "isolated-0017-replacement-upgrade-0016",
+      "result": "passed",
+      "catalog_sha256": "2a6711731d5bf7898b6a7116ea028741806e2b3f59eaf57a9e2271cc8ae6028a",
+      "candidate_journal_sha256": "664453ef236c9d9cdd366524e52f874dddf0e3945218e904b9742a46063f9601",
+      "candidate_migrations": [
+        {
+          "tag": "0017_orange_the_hand",
+          "when": "1788877037648",
+          "sha256": "db6659f2095c448e87e02b64c826b1e75f549939430f93c9c6ed4146946a674c"
+        }
+      ],
+      "product_guards": [
+        "stock_movement",
+        "purchase_item",
+        "sale_item",
+        "import_alias",
+        "recipe_item",
+        "profile_product",
+        "profile_packaging",
+        "profile_component",
+        "batch_output",
+        "unused_product_remains_editable"
+      ],
+      "idempotency_tables": [
+        "expenses",
+        "purchases",
+        "sales"
+      ],
+      "legacy_data_preserved": true,
+      "replay_verified": true,
+      "later_migrations_applied": false
+    },
+    {
+      "name": "isolated-0017-replacement-empty",
+      "result": "passed",
+      "catalog_sha256": "2a6711731d5bf7898b6a7116ea028741806e2b3f59eaf57a9e2271cc8ae6028a",
+      "candidate_journal_sha256": "664453ef236c9d9cdd366524e52f874dddf0e3945218e904b9742a46063f9601",
+      "candidate_migrations": [
+        {
+          "tag": "0017_orange_the_hand",
+          "when": "1788877037648",
+          "sha256": "db6659f2095c448e87e02b64c826b1e75f549939430f93c9c6ed4146946a674c"
+        }
+      ],
+      "product_guards": [
+        "stock_movement",
+        "purchase_item",
+        "sale_item",
+        "import_alias",
+        "recipe_item",
+        "profile_product",
+        "profile_packaging",
+        "profile_component",
+        "batch_output",
+        "unused_product_remains_editable"
+      ],
+      "idempotency_tables": [
+        "expenses",
+        "purchases",
+        "sales"
+      ],
+      "legacy_data_preserved": true,
+      "replay_verified": true,
+      "later_migrations_applied": false
+    },
+    {
+      "name": "isolated-0017-compatibility-upgrade-0016",
+      "result": "passed",
+      "catalog_sha256": "2a6711731d5bf7898b6a7116ea028741806e2b3f59eaf57a9e2271cc8ae6028a",
+      "candidate_journal_sha256": "362da0ab5033bcebf58ff72a4b10e72421b09189f8a69f287297088f4fbb2520",
+      "candidate_migrations": [
+        {
+          "tag": "0016_compatibility_prepare",
+          "when": "1788712214872",
+          "sha256": "2b65228bf086455642028ab782a9b8168294a4aaffec49379959d8e0404dba04"
+        },
+        {
+          "tag": "0017_orange_the_hand",
+          "when": "1788877037648",
+          "sha256": "ccaa9173aef5fda63ff980f4c1d254c0b040d7fe4df92f6f21046300c81fa256"
+        },
+        {
+          "tag": "0029_compatibility_cleanup",
+          "when": "1788877037649",
+          "sha256": "3e471dfaa5f3ddfec72142833942b9baec9fe0c3dd6041bd34719f8ccfc82c8b"
+        }
+      ],
+      "product_guards": [
+        "stock_movement",
+        "purchase_item",
+        "sale_item",
+        "import_alias",
+        "recipe_item",
+        "profile_product",
+        "profile_packaging",
+        "profile_component",
+        "batch_output",
+        "unused_product_remains_editable"
+      ],
+      "idempotency_tables": [
+        "expenses",
+        "purchases",
+        "sales"
+      ],
+      "legacy_data_preserved": true,
+      "replay_verified": true,
+      "later_migrations_applied": false
+    },
+    {
+      "name": "isolated-0017-compatibility-empty",
+      "result": "passed",
+      "catalog_sha256": "2a6711731d5bf7898b6a7116ea028741806e2b3f59eaf57a9e2271cc8ae6028a",
+      "candidate_journal_sha256": "362da0ab5033bcebf58ff72a4b10e72421b09189f8a69f287297088f4fbb2520",
+      "candidate_migrations": [
+        {
+          "tag": "0016_compatibility_prepare",
+          "when": "1788712214872",
+          "sha256": "2b65228bf086455642028ab782a9b8168294a4aaffec49379959d8e0404dba04"
+        },
+        {
+          "tag": "0017_orange_the_hand",
+          "when": "1788877037648",
+          "sha256": "ccaa9173aef5fda63ff980f4c1d254c0b040d7fe4df92f6f21046300c81fa256"
+        },
+        {
+          "tag": "0029_compatibility_cleanup",
+          "when": "1788877037649",
+          "sha256": "3e471dfaa5f3ddfec72142833942b9baec9fe0c3dd6041bd34719f8ccfc82c8b"
+        }
+      ],
+      "product_guards": [
+        "stock_movement",
+        "purchase_item",
+        "sale_item",
+        "import_alias",
+        "recipe_item",
+        "profile_product",
+        "profile_packaging",
+        "profile_component",
+        "batch_output",
+        "unused_product_remains_editable"
+      ],
+      "idempotency_tables": [
+        "expenses",
+        "purchases",
+        "sales"
+      ],
+      "legacy_data_preserved": true,
+      "replay_verified": true,
+      "later_migrations_applied": false
+    }
+  ]
+}

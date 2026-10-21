@@ -2,6 +2,8 @@ import assert from 'node:assert/strict'
 import { readFile } from 'node:fs/promises'
 import test from 'node:test'
 
+import { readPasswordResetRedirectTo } from '../src/features/auth/runtime-config.server'
+
 type WranglerConfig = {
   name: string
   compatibility_date: string
@@ -10,7 +12,10 @@ type WranglerConfig = {
     hml: {
       name: string
       workers_dev: boolean
-      vars: { AUTH_RATE_LIMITER_REQUIRED: string }
+      vars: {
+        AUTH_RATE_LIMITER_REQUIRED: string
+        PASSWORD_RESET_REDIRECT_ORIGIN?: string
+      }
       ratelimits: Array<{
         name: string
         namespace_id: string
@@ -40,6 +45,8 @@ test('Worker HML é separado e preserva a compatibilidade do Worker principal', 
   assert.equal(config.env.hml.workers_dev, true)
   assert.deepEqual(config.env.hml.vars, {
     AUTH_RATE_LIMITER_REQUIRED: 'true',
+    PASSWORD_RESET_REDIRECT_ORIGIN:
+      'https://cacau-v1-hml.naiguelcabral.workers.dev',
   })
   assert.deepEqual(config.env.hml.ratelimits, [
     {
@@ -56,6 +63,17 @@ test('Worker HML é separado e preserva a compatibilidade do Worker principal', 
     'TURNSTILE_SECRET_KEY',
     'AUTH_LOGIN_HASH_PEPPER',
   ])
+})
+
+test('build HML possui callback de recuperação HTTPS aceito pelo runtime', async () => {
+  const config = parseJsonc(
+    await readFile(new URL('../wrangler.jsonc', import.meta.url), 'utf8'),
+  )
+
+  assert.equal(
+    readPasswordResetRedirectTo(config.env.hml.vars, { development: false }),
+    'https://cacau-v1-hml.naiguelcabral.workers.dev/login/redefinir-senha',
+  )
 })
 
 test('build HML isolado só repassa a site key pública de Turnstile', async () => {

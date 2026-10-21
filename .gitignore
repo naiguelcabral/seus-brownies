@@ -30,3 +30,6 @@ test-results/
 # Estado, configuração, memória operacional e logs locais do Codex
 .codex/
 .codex-local/
+
+# Private local database copies requested by the owner; never publish.
+/backups-local/

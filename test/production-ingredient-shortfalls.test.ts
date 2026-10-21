@@ -1,3 +1,4 @@
+import { requireDefined } from '../src/lib/required-value'
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import { ingredientShortfalls } from '../src/features/production/ingredient-shortfalls'
@@ -9,17 +10,19 @@ test('déficits preservam unidades separadas e o limite exato do saldo', () => {
     { productId: 3, unit: 'l', quantity: '2', available: '-0.500' },
   ]
   assert.deepEqual(ingredientShortfalls(rows), [
-    { ...rows[0], shortfall: '0.001' },
-    { ...rows[2], shortfall: '2.500' },
+    { ...requireDefined(rows[0]), shortfall: '0.001' },
+    { ...requireDefined(rows[2]), shortfall: '2.500' },
   ])
-  assert.equal(rows[0].available, '1.000')
+  assert.equal(requireDefined(rows[0]).available, '1.000')
 })
 
 test('déficit grande é exato e dados inválidos não viram saldo zero', () => {
   assert.equal(
-    ingredientShortfalls([
-      { quantity: '9007199254740993.001', available: '9007199254740993.000' },
-    ])[0].shortfall,
+    requireDefined(
+      ingredientShortfalls([
+        { quantity: '9007199254740993.001', available: '9007199254740993.000' },
+      ])[0],
+    ).shortfall,
     '0.001',
   )
   assert.deepEqual(ingredientShortfalls([]), [])

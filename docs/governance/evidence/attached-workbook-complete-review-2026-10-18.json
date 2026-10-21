@@ -1,0 +1,291 @@
+{
+  "source": {
+    "path": "/tmp/codex-remote-attachments/01a14f33-8b1a-79a3-a834-a56e1e783432/dc898e3d-3a6f-410d-81ee-9ac60f950414/1-Workbook_Gerenciamento_Seus_Brownies.xlsx",
+    "sha256": "add0174b9d8f7224e03f88f71d7f92c599fc998e502e2174e68f8d49854ebbeb",
+    "unchanged": true
+  },
+  "coverage": {
+    "sheets": 15,
+    "nonemptyRows": 483,
+    "nonemptyCells": 5627,
+    "allCellFormulas": 0,
+    "cellErrors": 0,
+    "tables": 12,
+    "charts": 3,
+    "comments": 4,
+    "allSheetsVisible": true,
+    "externalLinks": 0,
+    "macroParts": 0
+  },
+  "sheets": [
+    {
+      "name": "00_Instrucoes",
+      "dimension": "A1:J16",
+      "nonemptyRows": 13,
+      "nonemptyCells": 19
+    },
+    {
+      "name": "01_Parametros",
+      "dimension": "A1:H11",
+      "nonemptyRows": 10,
+      "nonemptyCells": 26
+    },
+    {
+      "name": "02_Cadastro_Produtos",
+      "dimension": "A1:P21",
+      "nonemptyRows": 20,
+      "nonemptyCells": 288
+    },
+    {
+      "name": "03_Cadastro_Insumos",
+      "dimension": "A1:J40",
+      "nonemptyRows": 37,
+      "nonemptyCells": 205
+    },
+    {
+      "name": "04_Cadastro_Locais",
+      "dimension": "A1:H8",
+      "nonemptyRows": 7,
+      "nonemptyCells": 28
+    },
+    {
+      "name": "05_Base_Vendas",
+      "dimension": "A1:R205",
+      "nonemptyRows": 202,
+      "nonemptyCells": 3444
+    },
+    {
+      "name": "06_Auditoria_Receita",
+      "dimension": "A1:L19",
+      "nonemptyRows": 18,
+      "nonemptyCells": 163
+    },
+    {
+      "name": "07_Base_Compras_Despesas",
+      "dimension": "A1:R34",
+      "nonemptyRows": 33,
+      "nonemptyCells": 439
+    },
+    {
+      "name": "08_Estoque_Insumos",
+      "dimension": "A1:O27",
+      "nonemptyRows": 26,
+      "nonemptyCells": 247
+    },
+    {
+      "name": "09_Producao_Fornadas",
+      "dimension": "A1:P21",
+      "nonemptyRows": 20,
+      "nonemptyCells": 185
+    },
+    {
+      "name": "10_Metas_e_Cenarios",
+      "dimension": "A1:L35",
+      "nonemptyRows": 31,
+      "nonemptyCells": 203
+    },
+    {
+      "name": "11_Plano_de_Acao",
+      "dimension": "A1:I10",
+      "nonemptyRows": 9,
+      "nonemptyCells": 59
+    },
+    {
+      "name": "12_Dashboard_Atual_V2",
+      "dimension": "A1:Q33",
+      "nonemptyRows": 24,
+      "nonemptyCells": 179
+    },
+    {
+      "name": "13_Dashboard_Meta_10k",
+      "dimension": "A1:O30",
+      "nonemptyRows": 24,
+      "nonemptyCells": 126
+    },
+    {
+      "name": "14_Dashboard_Gerencial_Futuro",
+      "dimension": "A1:L10",
+      "nonemptyRows": 9,
+      "nonemptyCells": 16
+    }
+  ],
+  "tableReferences": [
+    {
+      "name": "tblInsumosV2",
+      "range": "A4:I25"
+    },
+    {
+      "name": "tblReceitaBaseV2",
+      "range": "A29:D40"
+    },
+    {
+      "name": "tblLocaisV2",
+      "range": "A4:F8"
+    },
+    {
+      "name": "tblPlanoAcaoV2",
+      "range": "A4:I10"
+    },
+    {
+      "name": "tblProdutosV2",
+      "range": "A4:P21"
+    },
+    {
+      "name": "tblAuditoriaReceita",
+      "range": "A4:K19"
+    },
+    {
+      "name": "tblVendasDetalhe",
+      "range": "A23:R205"
+    },
+    {
+      "name": "tblEstoqueV2",
+      "range": "A4:O27"
+    },
+    {
+      "name": "tblEventosVenda",
+      "range": "A4:J19"
+    },
+    {
+      "name": "tblProducaoV2",
+      "range": "A4:M21"
+    },
+    {
+      "name": "tblDespesasV2",
+      "range": "A4:Q34"
+    },
+    {
+      "name": "tblMetaMixV2",
+      "range": "A18:J35"
+    }
+  ],
+  "inventories": {
+    "products": 17,
+    "catalogResources": 21,
+    "physicalCatalogInputs": 19,
+    "operationalResources": 2,
+    "physicalRecipeLines": 7,
+    "eggsPerRecipe": 8,
+    "locations": [
+      "CEMTN",
+      "ESPLANADA",
+      "JAIME",
+      "SBS"
+    ],
+    "events": 15,
+    "salesLines": 182,
+    "purchasesAndExpenses": 30,
+    "stockTemplateRows": 23,
+    "plannedProductionRows": 17,
+    "scenarioMixRows": 17,
+    "actionRows": 6
+  },
+  "financial": {
+    "informedRevenue": "12479.00",
+    "calculatedRevenue": "12914.00",
+    "revenueDifference": "-435.00",
+    "units": "1198",
+    "sourceCostOfGoods": "3351.96",
+    "sourceGrossDifference": "9127.04",
+    "purchaseOutflow": "2838.38",
+    "monthly": {
+      "Junho": {
+        "revenue": "8632.00",
+        "calculated": "9067.00",
+        "units": "791.00",
+        "cost": "2388.71",
+        "events": 10
+      },
+      "Julho": {
+        "revenue": "3847.00",
+        "calculated": "3847.00",
+        "units": "407.00",
+        "cost": "963.25",
+        "events": 5
+      }
+    }
+  },
+  "scenario": {
+    "profitGoal": "10000.00",
+    "fixed": "2200.00",
+    "days": 20,
+    "weeks": 4,
+    "mixSum": "1.03",
+    "monthlyQuantity": "1535",
+    "weeklyQuantity": "391",
+    "targetRevenue": "16307.00",
+    "profitBeforeFixed": "12641.92",
+    "integerRecipePlansWeekly": "26",
+    "integerRecipePlansWeeklyExceptBordinhas": "23"
+  },
+  "checks": {
+    "lineNumericMismatchesAbove000001": [],
+    "salesAllocationMatchesAllEvents": true,
+    "productsCostMarginChecksPassed": true,
+    "productReferenceFailures": 0,
+    "locationReferenceFailures": 0,
+    "sourcePrecisionPolicy": "Decimal; residues below 0.000001 not treated as business discrepancies",
+    "duplicateIdsByEntity": {
+      "product": [],
+      "resource": [],
+      "location": [],
+      "event": [],
+      "saleLine": [],
+      "purchase": [],
+      "stock": [],
+      "productionPlan": [],
+      "scenarioMix": [],
+      "action": []
+    },
+    "sourceHashAfterAnalysis": "add0174b9d8f7224e03f88f71d7f92c599fc998e502e2174e68f8d49854ebbeb"
+  },
+  "missing": {
+    "allCatalogSupplierAndReorderBlank": true,
+    "allPurchaseSuppliersAndPaymentBlank": true,
+    "allActionOwnersBlank": true,
+    "allStockDatesBalancesExpiryLotsSuppliersBlank": true,
+    "allProductionActualAndLossBlank": true,
+    "salesPaymentFieldAbsent": true
+  },
+  "comparisonToPrevious": {
+    "previousSha256": "25aa62df5fc9b2e01402e9c242142322d9c6f54a345e800cb947b77865ce5b64",
+    "changes": [
+      {
+        "sheet": "04_Cadastro_Locais",
+        "row": 9,
+        "column": 1,
+        "old": "LOC005",
+        "attached": ""
+      },
+      {
+        "sheet": "04_Cadastro_Locais",
+        "row": 9,
+        "column": 2,
+        "old": "PATRÍCIA",
+        "attached": ""
+      },
+      {
+        "sheet": "04_Cadastro_Locais",
+        "row": 9,
+        "column": 3,
+        "old": "A classificar",
+        "attached": ""
+      },
+      {
+        "sheet": "04_Cadastro_Locais",
+        "row": 9,
+        "column": 4,
+        "old": "A definir",
+        "attached": ""
+      },
+      {
+        "sheet": "04_Cadastro_Locais",
+        "row": 9,
+        "column": 5,
+        "old": "Ativo",
+        "attached": ""
+      }
+    ],
+    "removedLocalHasSalesReferences": false
+  }
+}

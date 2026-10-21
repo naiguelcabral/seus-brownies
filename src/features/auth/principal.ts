@@ -1,4 +1,4 @@
-import { AuthorizationError, assertPermission } from './authorization'
+import { assertPermission } from './authorization'
 import type { AppRole, Permission } from './authorization'
 
 export type AuthenticatedIdentity = {
@@ -34,14 +34,14 @@ export class VerifiedEmailRequiredError extends Error {
  * and the Cacau access lookup have produced it. It must never deserialize a
  * role sent by a browser.
  */
-export function assertAuthenticated(
+function assertAuthenticated(
   principal: AppPrincipal | null | undefined,
 ): AppPrincipal {
   if (!principal) throw new AuthenticationRequiredError()
   return principal
 }
 
-export function assertVerifiedPrincipal(principal: AppPrincipal) {
+function assertVerifiedPrincipal(principal: AppPrincipal) {
   if (!principal.emailVerified) throw new VerifiedEmailRequiredError()
   return principal
 }
@@ -53,10 +53,4 @@ export function assertPrincipalPermission(
   const authenticated = assertVerifiedPrincipal(assertAuthenticated(principal))
   assertPermission(authenticated.role, permission)
   return authenticated
-}
-
-export function isAuthorizationError(
-  error: unknown,
-): error is AuthorizationError {
-  return error instanceof AuthorizationError
 }

@@ -1,0 +1,240 @@
+{
+  "status": "created-and-independently-verified",
+  "authorization": "Somente o sistema, como cenário em rascunho",
+  "method": "authenticated owner session; native createScenario; no direct SQL mutation",
+  "sourcePreparation": "scenario-mix-draft-preparation-2026-10-18.json",
+  "draftSha256": "a50eed18ea48413b3c282ff19566471ab3d3c82bfc6963f0921fdf8e4d52e970",
+  "scenario": {
+    "id": 1,
+    "scenario_key": "64bc47d5-11e7-4ca7-8827-326abaa0fc70",
+    "version": 1,
+    "revision": 1,
+    "status": "draft",
+    "name": "Mix 100% — referência histórica do workbook",
+    "description": "Rascunho solicitado em 18/10/2026. Fonte: Workbook_Gerenciamento_Seus_Brownies.xlsx, aba 10_Metas_e_Cenarios, linhas 19–35. Pesos originais somam 103%; normalização proporcional para 100% pelo maior resto e desempate pelo menor ID real do catálogo. Preços e custos são referências históricas; custos arredondados para 3 casas, conforme o campo planejado do sistema. Energia, mão de obra, adesivo, Bordinhas e cobertura/montagem de bombom/kit têm pendências na auditoria WORKBOOK-COMPLETENESS-REVIEW-2026-10-18.md. Reserva 0% herdada da parametrização, ainda a validar. Não homologado para operação. Manter como rascunho até revisão das premissas e dos custos.",
+    "effective_on": "2026-10-18T00:00:00.000Z",
+    "monthly_profit_goal": "10000.00",
+    "fixed_monthly_costs": "2200.00",
+    "sales_days_per_month": 20,
+    "weeks_per_month": "4.00",
+    "minimum_margin_bps": 7000,
+    "fee_tax_reserve_bps": 0,
+    "created_at": "2026-10-18T16:28:58.299Z",
+    "activated_at": null,
+    "archived_at": null,
+    "creator_matches_updater": true
+  },
+  "mix": [
+    {
+      "product_id": 1,
+      "sku": "PROD001",
+      "product_name": "Bombom Brownie Unitário",
+      "original_weight": "0.020000",
+      "normalized_weight_bps": 194,
+      "planned_unit_price": "5.00",
+      "planned_unit_cost": "1.677",
+      "scenario_id": 1
+    },
+    {
+      "product_id": 2,
+      "sku": "PROD002",
+      "product_name": "Bordinhas",
+      "original_weight": "0.020000",
+      "normalized_weight_bps": 194,
+      "planned_unit_price": "5.00",
+      "planned_unit_cost": "2.882",
+      "scenario_id": 1
+    },
+    {
+      "product_id": 3,
+      "sku": "PROD016",
+      "product_name": "Brownie Simples 7x7",
+      "original_weight": "0.100000",
+      "normalized_weight_bps": 971,
+      "planned_unit_price": "8.00",
+      "planned_unit_cost": "1.616",
+      "scenario_id": 1
+    },
+    {
+      "product_id": 4,
+      "sku": "PROD015",
+      "product_name": "Brownie Simples 5x5",
+      "original_weight": "0.100000",
+      "normalized_weight_bps": 971,
+      "planned_unit_price": "6.00",
+      "planned_unit_cost": "0.923",
+      "scenario_id": 1
+    },
+    {
+      "product_id": 5,
+      "sku": "PROD014",
+      "product_name": "Brownie Recheado 7x7 (Maracujá)",
+      "original_weight": "0.050000",
+      "normalized_weight_bps": 486,
+      "planned_unit_price": "17.00",
+      "planned_unit_cost": "4.172",
+      "scenario_id": 1
+    },
+    {
+      "product_id": 6,
+      "sku": "PROD013",
+      "product_name": "Brownie Recheado 7x7 (Leite Ninho)",
+      "original_weight": "0.020000",
+      "normalized_weight_bps": 194,
+      "planned_unit_price": "17.00",
+      "planned_unit_cost": "5.280",
+      "scenario_id": 1
+    },
+    {
+      "product_id": 7,
+      "sku": "PROD012",
+      "product_name": "Brownie Recheado 7x7 (Goiabada)",
+      "original_weight": "0.050000",
+      "normalized_weight_bps": 486,
+      "planned_unit_price": "17.00",
+      "planned_unit_cost": "3.652",
+      "scenario_id": 1
+    },
+    {
+      "product_id": 8,
+      "sku": "PROD011",
+      "product_name": "Brownie Recheado 7x7 (Doce de Leite)",
+      "original_weight": "0.050000",
+      "normalized_weight_bps": 486,
+      "planned_unit_price": "17.00",
+      "planned_unit_cost": "4.252",
+      "scenario_id": 1
+    },
+    {
+      "product_id": 9,
+      "sku": "PROD010",
+      "product_name": "Brownie Recheado 7x7 (Creme de avelã)",
+      "original_weight": "0.050000",
+      "normalized_weight_bps": 485,
+      "planned_unit_price": "17.00",
+      "planned_unit_cost": "4.172",
+      "scenario_id": 1
+    },
+    {
+      "product_id": 10,
+      "sku": "PROD009",
+      "product_name": "Brownie Recheado 7x7 (Brigadeiro)",
+      "original_weight": "0.050000",
+      "normalized_weight_bps": 485,
+      "planned_unit_price": "17.00",
+      "planned_unit_cost": "4.772",
+      "scenario_id": 1
+    },
+    {
+      "product_id": 11,
+      "sku": "PROD008",
+      "product_name": "Brownie Recheado 5x5 (Maracujá)",
+      "original_weight": "0.100000",
+      "normalized_weight_bps": 971,
+      "planned_unit_price": "12.00",
+      "planned_unit_cost": "2.216",
+      "scenario_id": 1
+    },
+    {
+      "product_id": 12,
+      "sku": "PROD007",
+      "product_name": "Brownie Recheado 5x5 (Leite Ninho)",
+      "original_weight": "0.050000",
+      "normalized_weight_bps": 485,
+      "planned_unit_price": "12.00",
+      "planned_unit_cost": "2.770",
+      "scenario_id": 1
+    },
+    {
+      "product_id": 13,
+      "sku": "PROD006",
+      "product_name": "Brownie Recheado 5x5 (Goiabada)",
+      "original_weight": "0.100000",
+      "normalized_weight_bps": 971,
+      "planned_unit_price": "12.00",
+      "planned_unit_cost": "1.956",
+      "scenario_id": 1
+    },
+    {
+      "product_id": 14,
+      "sku": "PROD005",
+      "product_name": "Brownie Recheado 5x5 (Doce de Leite)",
+      "original_weight": "0.100000",
+      "normalized_weight_bps": 971,
+      "planned_unit_price": "12.00",
+      "planned_unit_cost": "2.256",
+      "scenario_id": 1
+    },
+    {
+      "product_id": 15,
+      "sku": "PROD004",
+      "product_name": "Brownie Recheado 5x5 (Creme de Avelã)",
+      "original_weight": "0.100000",
+      "normalized_weight_bps": 971,
+      "planned_unit_price": "12.00",
+      "planned_unit_cost": "2.216",
+      "scenario_id": 1
+    },
+    {
+      "product_id": 16,
+      "sku": "PROD003",
+      "product_name": "Brownie Recheado 5x5 (Brigadeiro)",
+      "original_weight": "0.050000",
+      "normalized_weight_bps": 485,
+      "planned_unit_price": "12.00",
+      "planned_unit_cost": "2.516",
+      "scenario_id": 1
+    },
+    {
+      "product_id": 17,
+      "sku": "PROD017",
+      "product_name": "Kit 4 Bombons",
+      "original_weight": "0.020000",
+      "normalized_weight_bps": 194,
+      "planned_unit_price": "18.00",
+      "planned_unit_cost": "5.988",
+      "scenario_id": 1
+    }
+  ],
+  "history": [
+    {
+      "scenario_id": 1,
+      "revision": 1,
+      "scenario_version": 1,
+      "event": "created",
+      "occurred_at": "2026-10-18T16:28:58.299Z",
+      "actor_matches_creator": true,
+      "snapshot_mix_count": 17
+    }
+  ],
+  "audit": [
+    {
+      "action": "management_scenario.create",
+      "entity_type": "management_scenario",
+      "entity_id": "1",
+      "operation_reference": "management-scenario:64bc47d5-11e7-4ca7-8827-326abaa0fc70:version:1:revision:1",
+      "occurred_at": "2026-10-18T16:28:58.299Z",
+      "actor_matches_creator": true
+    }
+  ],
+  "totals": {
+    "items": "17",
+    "unique_products": "17",
+    "original_total": "1.030000",
+    "normalized_total_bps": "10000"
+  },
+  "operationalCounts": {
+    "active_scenarios": "0",
+    "sales": "0",
+    "purchases": "0",
+    "stock_movements": "0",
+    "production_batches": "0"
+  },
+  "validation": {
+    "payloadAndNormalizedRowsMatch": true,
+    "actorConsistencyVerifiedWithoutExportingIdentity": true,
+    "noActivation": true,
+    "workbookModified": false,
+    "scenarioTestsPassed": 14
+  }
+}

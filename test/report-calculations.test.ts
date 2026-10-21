@@ -1,3 +1,4 @@
+import { requireFirst } from '../src/lib/required-value'
 import assert from 'node:assert/strict'
 import test from 'node:test'
 
@@ -166,22 +167,24 @@ test('agrega despesas e valoriza estoque com custo médio', () => {
     sumReportMoney([{ amount: '20.00' }, { amount: '5.50' }]),
     '25.50',
   )
-  const [inventory] = valueInventory([
-    {
-      productId: 1,
-      productName: 'Chocolate',
-      unit: 'g',
-      quantityDelta: '100.000',
-      unitCost: '0.02',
-    },
-    {
-      productId: 1,
-      productName: 'Chocolate',
-      unit: 'g',
-      quantityDelta: '-25.000',
-      unitCost: null,
-    },
-  ])
+  const inventory = requireFirst(
+    valueInventory([
+      {
+        productId: 1,
+        productName: 'Chocolate',
+        unit: 'g',
+        quantityDelta: '100.000',
+        unitCost: '0.02',
+      },
+      {
+        productId: 1,
+        productName: 'Chocolate',
+        unit: 'g',
+        quantityDelta: '-25.000',
+        unitCost: null,
+      },
+    ]),
+  )
   assert.equal(inventory.balance, '75.000')
   assert.equal(inventory.value, '1.50')
 })

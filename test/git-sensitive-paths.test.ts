@@ -50,6 +50,8 @@ test('guard rejects nested, staged and tracked sensitive paths without changing 
     'nested/private.pem',
     '.codex-local/conversations/a.md',
     '.codex/config.toml',
+    'backups-local/private.dump',
+    'nested/backups-local/private.json',
   ]) {
     fixture((root, git) => {
       mkdirSync(dirname(join(root, path)), { recursive: true })

@@ -1,5 +1,10 @@
-import { useEffect, useState } from 'react'
-import { createFileRoute, useNavigate, useRouter } from '@tanstack/react-router'
+import { useState } from 'react'
+import {
+  createFileRoute,
+  useHydrated,
+  useNavigate,
+  useRouter,
+} from '@tanstack/react-router'
 import { useServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
 
@@ -70,10 +75,7 @@ function InventoryPage() {
   const { balances, movements, actionProducts } = Route.useLoaderData()
   const search = Route.useSearch()
   const navigate = useNavigate({ from: Route.fullPath })
-  const [clientReady, setClientReady] = useState(false)
-  useEffect(() => {
-    setClientReady(true)
-  }, [])
+  const clientReady = useHydrated()
   return (
     <ManagementLayout
       title="Estoque"
@@ -98,11 +100,12 @@ function InventoryPage() {
                 query: String(form.get('query') ?? '').trim() || undefined,
                 type:
                   (String(form.get('type') ?? '') as
-                    (typeof inventoryProductTypes)[number] | '') || undefined,
+                    | (typeof inventoryProductTypes)[number]
+                    | '') || undefined,
                 reorderStatus:
                   (String(form.get('reorderStatus') ?? '') as
-                    (typeof inventoryReorderStatuses)[number] | '') ||
-                  undefined,
+                    | (typeof inventoryReorderStatuses)[number]
+                    | '') || undefined,
                 page: 1,
               }),
             })
@@ -194,12 +197,16 @@ function InventoryPage() {
                     ) : item.reorderStatus === 'reorder' ? (
                       <span className="font-bold text-[#b65624]">
                         Repor · limite{' '}
-                        {formatQuantity(item.reorderPoint!, item.unit)}
+                        {item.reorderPoint === null
+                          ? '—'
+                          : formatQuantity(item.reorderPoint, item.unit)}
                       </span>
                     ) : (
                       <span className="font-bold text-emerald-700">
                         OK · limite{' '}
-                        {formatQuantity(item.reorderPoint!, item.unit)}
+                        {item.reorderPoint === null
+                          ? '—'
+                          : formatQuantity(item.reorderPoint, item.unit)}
                       </span>
                     )}
                   </td>
@@ -251,7 +258,8 @@ function InventoryPage() {
                   String(form.get('movementQuery') ?? '').trim() || undefined,
                 movementType:
                   (String(form.get('movementType') ?? '') as
-                    (typeof inventoryMovementTypes)[number] | '') || undefined,
+                    | (typeof inventoryMovementTypes)[number]
+                    | '') || undefined,
                 start: String(form.get('start') ?? '') || undefined,
                 end: String(form.get('end') ?? '') || undefined,
                 movementPage: 1,
@@ -451,7 +459,7 @@ function InventoryPending() {
   )
 }
 
-function InventoryError({ error }: { error: Error }) {
+function InventoryError({ error }: { error: unknown }) {
   const router = useRouter()
   return (
     <ManagementLayout
@@ -459,7 +467,10 @@ function InventoryError({ error }: { error: Error }) {
       description="Não foi possível carregar saldos e movimentações."
     >
       <div className="rounded-2xl border border-[#e7c9b8] bg-[#fff5ed] p-5 text-sm text-[#75411f]">
-        <p>{error.message || 'Tente novamente em alguns instantes.'}</p>
+        <p>
+          {(error instanceof Error && error.message) ||
+            'Tente novamente em alguns instantes.'}
+        </p>
         <button
           type="button"
           className="mt-3 rounded-lg border border-[#75411f] px-3 py-2 text-xs font-bold"
@@ -484,7 +495,7 @@ function LifecycleActions({
   const recordPositive = useServerFn(recordPositiveAdjustmentLifecycle)
   const [pending, setPending] = useState(false)
   const [message, setMessage] = useState<string | null>(null)
-  const [returnValues, setReturnValues] = useState({
+  const [returnValues, setReturnValues] = useState(() => ({
     saleItemId: '',
     quantity: '',
     settlement: 'refund',
@@ -493,7 +504,7 @@ function LifecycleActions({
     }).format(new Date()),
     reason: '',
     reference: '',
-  })
+  }))
   const [lossValues, setLossValues] = useState(
     createNegativeInventoryFormValues,
   )

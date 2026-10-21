@@ -359,7 +359,7 @@ function FilterInput({
 }: {
   label: string
   name: string
-  defaultValue?: string
+  defaultValue?: string | undefined
 }) {
   return (
     <label className="text-xs font-bold">
@@ -381,7 +381,7 @@ function FilterSelect({
 }: {
   label: string
   name: string
-  defaultValue?: string
+  defaultValue?: string | undefined
   options: readonly string[]
   labels: Record<string, string>
 }) {
@@ -508,7 +508,7 @@ function ActionPlanPending() {
     </ManagementLayout>
   )
 }
-function ActionPlanError({ error }: { error: Error }) {
+function ActionPlanError({ error }: { error: unknown }) {
   const router = useRouter()
   return (
     <ManagementLayout
@@ -516,7 +516,7 @@ function ActionPlanError({ error }: { error: Error }) {
       description="Não foi possível carregar as ações."
     >
       <div className="rounded-2xl border border-[#e7c9b8] bg-[#fff5ed] p-5 text-sm text-[#75411f]">
-        <p>{error.message || 'Tente novamente.'}</p>
+        <p>{(error instanceof Error && error.message) || 'Tente novamente.'}</p>
         <button
           className="mt-3 rounded border px-3 py-2 text-xs font-bold"
           onClick={() => void router.invalidate()}

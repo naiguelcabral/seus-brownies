@@ -1,3 +1,9 @@
+import { businessDate } from '#/lib/business-date'
+import {
+  expenseClassificationLabels,
+  expenseClassification,
+} from '#/features/finance/managerial-profit'
+import { OperationDialog } from '#/components/OperationDialog'
 import { useState } from 'react'
 import { createFileRoute, useNavigate, useRouter } from '@tanstack/react-router'
 import { useServerFn } from '@tanstack/react-start'
@@ -33,15 +39,17 @@ function ExpensesPage() {
   const router = useRouter()
   const navigate = useNavigate({ from: Route.fullPath })
   const save = useServerFn(createExpense)
+  const [editorOpen, setEditorOpen] = useState(false)
   const [idempotencyKey, setIdempotencyKey] = useState(() =>
     crypto.randomUUID(),
   )
   const [description, setDescription] = useState('')
+  const [classification, setClassification] = useState<
+    'fixed' | 'variable' | 'production'
+  >('fixed')
   const [category, setCategory] = useState('')
   const [amount, setAmount] = useState('')
-  const [occurredAt, setOccurredAt] = useState(
-    new Date().toISOString().slice(0, 10),
-  )
+  const [occurredAt, setOccurredAt] = useState(() => businessDate())
   const [notes, setNotes] = useState('')
   const [message, setMessage] = useState<string | null>(null)
   const [saving, setSaving] = useState(false)
@@ -63,11 +71,13 @@ function ExpensesPage() {
           idempotencyKey,
           description,
           category,
+          classification,
           amount,
           occurredAt,
           notes,
         },
       })
+      setEditorOpen(false)
       setDescription('')
       setCategory('')
       setAmount('')
@@ -90,7 +100,19 @@ function ExpensesPage() {
       title="Despesas"
       description="Registre despesas fixas e variáveis para acompanhar o resultado operacional."
     >
-      <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_380px]">
+      <button
+        type="button"
+        onClick={() => setEditorOpen(true)}
+        className="mb-4 rounded-lg bg-[#4a2114] px-4 py-2.5 font-bold text-white"
+      >
+        Registrar despesa
+      </button>
+      {!editorOpen && message ? (
+        <p role="status" className="mb-4 rounded-lg bg-[#fff5e7] p-3 text-sm">
+          {message}
+        </p>
+      ) : null}
+      <div className="space-y-6">
         <section className="overflow-hidden rounded-2xl border border-[#ecdfd4] bg-white">
           <div className="border-b border-[#f0e5dc] px-5 py-4">
             <h2 className="font-bold">Despesas recentes</h2>
@@ -163,6 +185,14 @@ function ExpensesPage() {
                     <p className="font-bold">{expense.description}</p>
                     <p className="mt-1 text-xs text-[#896d5b]">
                       {expense.category} ·{' '}
+                      {expense.classification &&
+                      expenseClassification.safeParse(expense.classification)
+                        .success
+                        ? expenseClassificationLabels[
+                            expenseClassification.parse(expense.classification)
+                          ]
+                        : 'Classificação pendente'}{' '}
+                      ·{' '}
                       {new Intl.DateTimeFormat('pt-BR').format(
                         new Date(`${expense.occurredAt}T12:00:00`),
                       )}
@@ -219,55 +249,89 @@ function ExpensesPage() {
             </div>
           </nav>
         </section>
-        <form
-          onSubmit={submit}
-          className="rounded-2xl border border-[#ecdfd4] bg-white p-5 space-y-4"
-        >
-          <h2 className="font-bold">Nova despesa</h2>
-          <Input
-            label="Descrição *"
-            value={description}
-            onChange={setDescription}
-          />
-          <Input
-            label="Categoria *"
-            value={category}
-            onChange={setCategory}
-            placeholder="Ex.: Embalagens"
-          />
-          <Input
-            label="Valor *"
-            value={amount}
-            onChange={setAmount}
-            placeholder="Ex.: 45,90"
-            inputMode="decimal"
-          />
-          <Input
-            label="Data *"
-            value={occurredAt}
-            onChange={setOccurredAt}
-            type="date"
-          />
-          <label className="block text-sm font-bold text-[#573524]">
-            Observações
-            <textarea
-              value={notes}
-              onChange={(event) => setNotes(event.target.value)}
-              className="field mt-1.5 min-h-20"
-            />
-          </label>
-          {message ? (
-            <p className="rounded-lg bg-[#fff5e7] p-3 text-sm text-[#75411f]">
-              {message}
-            </p>
-          ) : null}
-          <button
-            disabled={saving}
-            className="rounded-lg bg-[#4a2114] px-4 py-2.5 text-sm font-bold text-white disabled:opacity-60"
+        {editorOpen ? (
+          <OperationDialog
+            title="Registrar despesa"
+            pending={saving}
+            onClose={() => setEditorOpen(false)}
           >
-            {saving ? 'Registrando...' : 'Registrar despesa'}
-          </button>
-        </form>
+            <form
+              onSubmit={submit}
+              className="rounded-2xl border border-[#ecdfd4] bg-white p-5 space-y-4"
+            >
+              <h2 className="font-bold">Nova despesa</h2>
+              <Input
+                label="Descrição *"
+                value={description}
+                onChange={setDescription}
+              />
+              <Input
+                label="Categoria *"
+                value={category}
+                onChange={setCategory}
+                placeholder="Ex.: MEI, aluguel ou transporte"
+              />
+              <label className="block text-sm font-bold">
+                Tratamento no resultado
+                <select
+                  className="field mt-1.5"
+                  value={classification}
+                  onChange={(e) =>
+                    setClassification(
+                      expenseClassification.parse(e.target.value),
+                    )
+                  }
+                >
+                  {Object.entries(expenseClassificationLabels).map(
+                    ([value, label]) => (
+                      <option key={value} value={value}>
+                        {label}
+                      </option>
+                    ),
+                  )}
+                </select>
+              </label>
+              <p className="text-xs text-[#846859]">
+                MEI: fixa, R$ 88/mês. Mão de obra: R$ 150 por dia; energia e mão
+                de obra apropriadas nos lotes usam Produção. Insumos e
+                embalagens devem entrar por Compras. Registre somente gastos
+                reais; o orçamento não gera despesa automática.
+              </p>
+              <Input
+                label="Valor *"
+                value={amount}
+                onChange={setAmount}
+                placeholder="Ex.: 45,90"
+                inputMode="decimal"
+              />
+              <Input
+                label="Data *"
+                value={occurredAt}
+                onChange={setOccurredAt}
+                type="date"
+              />
+              <label className="block text-sm font-bold text-[#573524]">
+                Observações
+                <textarea
+                  value={notes}
+                  onChange={(event) => setNotes(event.target.value)}
+                  className="field mt-1.5 min-h-20"
+                />
+              </label>
+              {message ? (
+                <p className="rounded-lg bg-[#fff5e7] p-3 text-sm text-[#75411f]">
+                  {message}
+                </p>
+              ) : null}
+              <button
+                disabled={saving}
+                className="rounded-lg bg-[#4a2114] px-4 py-2.5 text-sm font-bold text-white disabled:opacity-60"
+              >
+                {saving ? 'Registrando...' : 'Registrar despesa'}
+              </button>
+            </form>
+          </OperationDialog>
+        ) : null}
       </div>
     </ManagementLayout>
   )
@@ -289,7 +353,7 @@ function ExpensesPending() {
   )
 }
 
-function ExpensesError({ error }: { error: Error }) {
+function ExpensesError({ error }: { error: unknown }) {
   const router = useRouter()
   return (
     <ManagementLayout
@@ -297,7 +361,10 @@ function ExpensesError({ error }: { error: Error }) {
       description="Não foi possível carregar o histórico de despesas."
     >
       <div className="rounded-2xl border border-[#e7c9b8] bg-[#fff5ed] p-5 text-sm text-[#75411f]">
-        <p>{error.message || 'Tente novamente em alguns instantes.'}</p>
+        <p>
+          {(error instanceof Error && error.message) ||
+            'Tente novamente em alguns instantes.'}
+        </p>
         <button
           type="button"
           className="mt-3 rounded-lg border border-[#75411f] px-3 py-2 text-xs font-bold"

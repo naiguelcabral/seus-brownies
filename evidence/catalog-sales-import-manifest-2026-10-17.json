@@ -1,0 +1,164 @@
+{
+  "workbookSha256": "25aa62df5fc9b2e01402e9c242142322d9c6f54a345e800cb947b77865ce5b64",
+  "products": [
+    {
+      "sku": "PROD001",
+      "name": "Bombom Brownie Unitário",
+      "category": "Bombom",
+      "type": "finished_product",
+      "unit": "unit",
+      "isActive": true,
+      "salePrice": "5.00"
+    },
+    {
+      "sku": "PROD002",
+      "name": "Bordinhas",
+      "category": "Bordinha",
+      "type": "finished_product",
+      "unit": "unit",
+      "isActive": true,
+      "salePrice": "5.00"
+    },
+    {
+      "sku": "PROD003",
+      "name": "Brownie Recheado 5x5 (Brigadeiro)",
+      "category": "Brownie",
+      "type": "finished_product",
+      "unit": "unit",
+      "isActive": true,
+      "salePrice": "12.00"
+    },
+    {
+      "sku": "PROD004",
+      "name": "Brownie Recheado 5x5 (Creme de Avelã)",
+      "category": "Brownie",
+      "type": "finished_product",
+      "unit": "unit",
+      "isActive": true,
+      "salePrice": "12.00"
+    },
+    {
+      "sku": "PROD005",
+      "name": "Brownie Recheado 5x5 (Doce de Leite)",
+      "category": "Brownie",
+      "type": "finished_product",
+      "unit": "unit",
+      "isActive": true,
+      "salePrice": "12.00"
+    },
+    {
+      "sku": "PROD006",
+      "name": "Brownie Recheado 5x5 (Goiabada)",
+      "category": "Brownie",
+      "type": "finished_product",
+      "unit": "unit",
+      "isActive": true,
+      "salePrice": "12.00"
+    },
+    {
+      "sku": "PROD007",
+      "name": "Brownie Recheado 5x5 (Leite Ninho)",
+      "category": "Brownie",
+      "type": "finished_product",
+      "unit": "unit",
+      "isActive": true,
+      "salePrice": "12.00"
+    },
+    {
+      "sku": "PROD008",
+      "name": "Brownie Recheado 5x5 (Maracujá)",
+      "category": "Brownie",
+      "type": "finished_product",
+      "unit": "unit",
+      "isActive": true,
+      "salePrice": "12.00"
+    },
+    {
+      "sku": "PROD009",
+      "name": "Brownie Recheado 7x7 (Brigadeiro)",
+      "category": "Brownie",
+      "type": "finished_product",
+      "unit": "unit",
+      "isActive": true,
+      "salePrice": "17.00"
+    },
+    {
+      "sku": "PROD010",
+      "name": "Brownie Recheado 7x7 (Creme de avelã)",
+      "category": "Brownie",
+      "type": "finished_product",
+      "unit": "unit",
+      "isActive": true,
+      "salePrice": "17.00"
+    },
+    {
+      "sku": "PROD011",
+      "name": "Brownie Recheado 7x7 (Doce de Leite)",
+      "category": "Brownie",
+      "type": "finished_product",
+      "unit": "unit",
+      "isActive": true,
+      "salePrice": "17.00"
+    },
+    {
+      "sku": "PROD012",
+      "name": "Brownie Recheado 7x7 (Goiabada)",
+      "category": "Brownie",
+      "type": "finished_product",
+      "unit": "unit",
+      "isActive": true,
+      "salePrice": "17.00"
+    },
+    {
+      "sku": "PROD013",
+      "name": "Brownie Recheado 7x7 (Leite Ninho)",
+      "category": "Brownie",
+      "type": "finished_product",
+      "unit": "unit",
+      "isActive": true,
+      "salePrice": "17.00"
+    },
+    {
+      "sku": "PROD014",
+      "name": "Brownie Recheado 7x7 (Maracujá)",
+      "category": "Brownie",
+      "type": "finished_product",
+      "unit": "unit",
+      "isActive": true,
+      "salePrice": "17.00"
+    },
+    {
+      "sku": "PROD015",
+      "name": "Brownie Simples 5x5",
+      "category": "Brownie",
+      "type": "finished_product",
+      "unit": "unit",
+      "isActive": true,
+      "salePrice": "6.00"
+    },
+    {
+      "sku": "PROD016",
+      "name": "Brownie Simples 7x7",
+      "category": "Brownie",
+      "type": "finished_product",
+      "unit": "unit",
+      "isActive": true,
+      "salePrice": "8.00"
+    },
+    {
+      "sku": "PROD017",
+      "name": "Kit 4 Bombons",
+      "category": "Kit",
+      "type": "finished_product",
+      "unit": "unit",
+      "isActive": true,
+      "salePrice": "18.00"
+    }
+  ],
+  "reference": "CATALOG-SALES-2026-10-17-001",
+  "projectId": "steep-brook-51659857",
+  "branchId": "br-lingering-wind-acwh5wap",
+  "database": "neondb",
+  "sourceSheet": "02_Cadastro_Produtos",
+  "scope": "17 finished products only; no stock, recipes, purchases, sales or historical events"
+}

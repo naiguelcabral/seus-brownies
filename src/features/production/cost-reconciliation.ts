@@ -2,12 +2,15 @@ import {
   moneyToCents,
   quantityToThousandths,
 } from '#/features/production/calculations'
+import { addCosts, exactCost, readExactCost } from '#/lib/exact-cost'
+import type { ExactCost } from '#/lib/exact-cost'
 
 type Output = {
   id: number
   productId: number
   actualQuantity: string | null
   allocatedCost: string | null
+  exactCost?: ExactCost | null
 }
 type Layer = {
   id: number
@@ -15,6 +18,7 @@ type Layer = {
   productId: number
   originalQuantity: string
   originalCost: string
+  exactOriginalCost?: ExactCost | null
 }
 export type ProductionCostDivergence = {
   code:
@@ -48,11 +52,30 @@ export const productionCostDivergenceMessages: Record<
   layer_cost_mismatch: 'Custo original FIFO difere do custo alocado da saída',
 }
 
+/** Prefer the recorded rational cost; cent values remain the legacy fallback. */
+function readCost(exact: ExactCost | null | undefined, legacy: string | null) {
+  try {
+    if (exact !== null && exact !== undefined) return readExactCost(exact)
+    const cents = moneyToCents(legacy)
+    return cents === null ? null : exactCost(cents, 100n)
+  } catch {
+    return null
+  }
+}
+
+function costsMatch(left: ExactCost, right: ExactCost) {
+  return (
+    BigInt(left.numerator) * BigInt(right.denominator) ===
+    BigInt(right.numerator) * BigInt(left.denominator)
+  )
+}
+
 /** Compares immutable recorded origins; remaining FIFO balances are not inputs. */
 export function reconcileProductionCosts(
   totalCost: string | null,
   outputs: Output[],
   layers: Layer[],
+  exactTotalCost?: ExactCost | null,
 ) {
   const divergences: ProductionCostDivergence[] = []
   const add = (
@@ -62,24 +85,24 @@ export function reconcileProductionCosts(
   ) => {
     divergences.push({ code, outputId, layerId })
   }
-  const batchCost = moneyToCents(totalCost)
+  const batchCost = readCost(exactTotalCost, totalCost)
   if (batchCost === null) add('invalid_batch_cost')
   if (outputs.length === 0) add('missing_outputs')
   const byOutput = new Map(
     layers.map((layer) => [layer.productionBatchOutputId, layer]),
   )
-  let allocated = 0n
+  let allocated = exactCost(0n)
   let allOutputCostsValid = true
   for (const output of outputs) {
     const quantity =
       output.actualQuantity === null
         ? null
         : quantityToThousandths(output.actualQuantity)
-    const cost = moneyToCents(output.allocatedCost)
+    const cost = readCost(output.exactCost, output.allocatedCost)
     if (quantity === null || cost === null)
       add('invalid_output_fact', output.id)
     if (cost === null) allOutputCostsValid = false
-    else allocated += cost
+    else allocated = addCosts(allocated, cost)
     const layer = byOutput.get(output.id)
     if (!layer) {
       add('missing_fifo_layer', output.id)
@@ -88,7 +111,7 @@ export function reconcileProductionCosts(
     if (layer.productId !== output.productId)
       add('layer_product_mismatch', output.id, layer.id)
     const layerQuantity = quantityToThousandths(layer.originalQuantity)
-    const layerCost = moneyToCents(layer.originalCost)
+    const layerCost = readCost(layer.exactOriginalCost, layer.originalCost)
     if (layerQuantity === null || layerCost === null)
       add('invalid_layer_fact', output.id, layer.id)
     if (
@@ -97,10 +120,14 @@ export function reconcileProductionCosts(
       quantity !== layerQuantity
     )
       add('layer_quantity_mismatch', output.id, layer.id)
-    if (cost !== null && layerCost !== null && cost !== layerCost)
+    if (cost !== null && layerCost !== null && !costsMatch(cost, layerCost))
       add('layer_cost_mismatch', output.id, layer.id)
   }
-  if (batchCost !== null && allOutputCostsValid && allocated !== batchCost)
+  if (
+    batchCost !== null &&
+    allOutputCostsValid &&
+    !costsMatch(allocated, batchCost)
+  )
     add('allocation_total_mismatch')
   return divergences
 }

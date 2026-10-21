@@ -2,7 +2,7 @@ name: CodeQL
 
 on:
   push:
-    branches: [main]
+    branches: [main, 'codex/**', 'feat/**', 'fix/**']
   pull_request:
     branches: [main]
   schedule:
@@ -18,19 +18,31 @@ concurrency:
 
 jobs:
   analyze:
-    name: Analyze JavaScript and TypeScript
-    runs-on: ubuntu-latest
-    timeout-minutes: 45
+    name: Analyze (${{ matrix.language }})
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
     permissions:
       contents: read
       security-events: write
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [javascript-typescript, python, actions]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        if: matrix.language == 'javascript-typescript'
+        with:
+          node-version-file: .nvmrc
+          package-manager-cache: false
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v4
         with:
-          languages: javascript-typescript
+          languages: ${{ matrix.language }}
           build-mode: none
           queries: security-extended
+          config-file: ./.github/codeql/codeql-config.yml
       - name: Analyze
         uses: github/codeql-action/analyze@v4
+        with:
+          category: /language:${{ matrix.language }}

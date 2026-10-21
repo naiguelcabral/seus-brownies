@@ -17,6 +17,15 @@
 
 ## Compras
 
+- Decisão de 18/10/2026: insumos de massa são comprados em kg pelo valor total
+  pago pelo item, sem multiplicar esse total pela quantidade. A implementação
+  nova está local e depende do pacote de schema exato e rollout aprovado.
+  Outras unidades físicas não são convertidas para kg por inferência.
+
+- Para os dez ingredientes do workbook com estoque em g, a compra pode ser
+  informada em kg: 1 kg corresponde a 1000 g. Quantidade e preço originais devem
+  permanecer rastreáveis; o valor total em centavos não pode ser recalculado
+  pelo custo por grama arredondado. A unidade canônica de consumo permanece g.
 - Compra confirmada registra seus itens e entradas de estoque na mesma transação.
 - Quantidade, custo unitário e valor total precisam manter precisão definida no schema.
 - Importações devem ser idempotentes e abortar diante de conflito relevante.
@@ -41,6 +50,16 @@
 
 ## Produção
 
+- Decisões de18/10/2026: receita nova com oito ovos/850 g frios por forma;
+  5×5:48 simples ou24 recheados;7×7:24 simples ou12 recheados. Bordinhas
+  são recuperação variável pesada por lote, sem quantidade automática pela
+  capacidade restante. Pacote vendável100 g; saldo não embalado fica separado.
+- Na versão de recuperação medida, custo comum é distribuído por massa;
+  acabamento direto fica no produto consumidor. MO/energia reais são totais
+  informados por lote; referências horárias antigas não os substituem.
+- Movimentos e disponibilidade FIFO de lotes concluídos usam o momento da
+  conclusão. Data informada de produção permanece metadado separado.
+
 - Lote nasce em rascunho e só movimenta estoque na conclusão explícita.
 - Conclusão deve ocorrer em transação única.
 - Antes de concluir, revalidar estoque, receita, perfil e rendimento.
@@ -52,6 +71,13 @@
 - Custos alocados devem fechar exatamente com o custo realizado do lote.
 
 ## Custos, FIFO e CMV
+
+- Exceção de precisão aprovada em 18/10/2026 (ADR-0002): custos derivados
+  preservam frações exatas internamente, inclusive frações de centavo e
+  dízimas. O total lançado não é arredondado. Consumos acumulados mais saldo
+  devem igualar exatamente as entradas; saídas e FIFO preservam o custo exato.
+  A exibição tem duas casas e arredonda apenas na apresentação, depois da
+  soma. Projeções legadas não substituem o custo exato quando ele existe.
 
 - Manter precisão monetária e quantitativa já definida no schema.
 - Camadas FIFO são fatos auditáveis; não podem ser reescritas silenciosamente.
@@ -74,6 +100,13 @@
 
 ## Metas e cenários
 
+- Meta é lucro conjunto de todas as vendas, inclusive Bordinhas realizadas.
+  Mix é orientativo; não impor cota de aproveitamento. O plano-base revisado
+  usa16 produtos e normalização100%, com Bordinhas como recuperação adicional.
+- Fixos2288 incluem MO600, energia e MEI88. Custos de referência do plano
+  não somam novamente MO/energia. Taxas são separadas por meio; Pix0,49 por
+  transação exige quantidade de pagamentos, não quantidade de produtos.
+
 - O mix informado deve somar exatamente 100% para ser ativado.
 - O mix histórico de 103% é normalizado proporcionalmente para 100%,
   preservando os pesos relativos e fechando o resíduo deterministicamente.
@@ -84,6 +117,25 @@
 - Importação exige validação e confirmação explícita.
 - Hashes, aliases e IDs externos preservam rastreabilidade.
 - Não repetir carga inicial sobre base já importada sem plano específico de migração/backfill.
+
+## Recebimentos e lucro registrado — decisão de 18/10/2026
+
+- Venda paga exige meio explícito; venda confirmada pode receber quitação
+  integral pelo fluxo de recebimento. Um recebimento reúne todos os itens.
+- Débito 1,43%, crédito 3,36%, Pix R$ 0,49 por transação, dinheiro sem taxa;
+  preservar tarifa e valor bruto/taxa/líquido no pagamento. Mudança posterior
+  de parâmetro não altera pagamentos anteriores. Sem combinação presumida.
+- Recebimento não cria nova receita de entrega nem outra baixa de estoque.
+  Estorno devolve valor bruto ao cliente, sem presumir restituição da tarifa
+  pela operadora; a tarifa continua custo até evidência compensatória própria.
+- Lucro conjunto registrado = receita por competência − CMV exato − taxas
+  efetivamente registradas − despesas fixas/variáveis classificadas. Somar
+  todos os produtos. Orçamento mensal de R$ 2.288 não é dedução automática.
+- Despesas de produção já apropriadas aos lotes são identificadas e não
+  descontadas outra vez; custos produtivos chegam ao resultado pelo CMV.
+- Despesa antiga não classificada, recebimento sem taxa conhecida ou cobertura
+  FIFO incompleta deixam lucro indisponível, sem assumir zero ou backfill.
+- Novo gasto exige classificação; período fechado bloqueia despesa/recebimento.
 
 ## Despesas
 

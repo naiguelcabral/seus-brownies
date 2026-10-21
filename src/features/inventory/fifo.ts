@@ -1,3 +1,12 @@
+import {
+  exactCost,
+  scaleCost,
+  subtractCosts,
+  addCosts,
+  sumCosts,
+} from '../../lib/exact-cost'
+import type { ExactCost } from '../../lib/exact-cost'
+
 export type InventoryCostLayer = {
   id: number
   productId: number
@@ -7,22 +16,26 @@ export type InventoryCostLayer = {
   availableAt: string
   originalQuantity: bigint
   originalCost: bigint
+  exactOriginalCost?: ExactCost | null
+  exactRemainingCost?: ExactCost | null
   remainingQuantity: bigint
   remainingCost: bigint
 }
 
-export type InventoryCostAllocation = {
+type InventoryCostAllocation = {
   layerId: number
   productId: number
   productionBatchOutputId: number | null
   sourceStockMovementId: number
   quantity: bigint
   allocatedCost: bigint
+  exactCost?: ExactCost | null
 }
 
 export type ReversibleFifoAllocation = InventoryCostAllocation & {
   id: number
   reversedQuantity?: bigint
+  exactReversedCost?: ExactCost | null
   reversedCost?: bigint
 }
 
@@ -33,6 +46,7 @@ export type FifoReversalPlan = {
     productId: number
     quantity: bigint
     allocatedCost: bigint
+    exactCost?: ExactCost | null
   }>
   layers: InventoryCostLayer[]
   restoredCost: bigint
@@ -42,6 +56,7 @@ export type FifoAllocationPlan = {
   allocations: InventoryCostAllocation[]
   layers: InventoryCostLayer[]
   allocatedCost: bigint
+  exactCost?: ExactCost | null
 }
 
 export function createsSaleCostAllocation(status: string) {
@@ -56,6 +71,7 @@ export function createProductionCostLayer(input: {
   availableAt: string
   quantity: bigint
   allocatedCost: bigint
+  exactCost?: ExactCost | null
 }): InventoryCostLayer {
   if (input.quantity <= 0n || input.allocatedCost < 0n)
     throw new Error('Saída de produção inválida para camada FIFO.')
@@ -68,6 +84,12 @@ export function createProductionCostLayer(input: {
     availableAt: input.availableAt,
     originalQuantity: input.quantity,
     originalCost: input.allocatedCost,
+    ...(input.exactCost
+      ? {
+          exactOriginalCost: input.exactCost,
+          exactRemainingCost: input.exactCost,
+        }
+      : {}),
     remainingQuantity: input.quantity,
     remainingCost: input.allocatedCost,
   }
@@ -81,6 +103,7 @@ export function createIncomingCostLayer(input: {
   availableAt: string
   quantity: bigint
   allocatedCost: bigint
+  exactCost?: ExactCost | null
   origin: 'purchase' | 'adjustment'
 }): InventoryCostLayer {
   if (input.quantity <= 0n || input.allocatedCost < 0n)
@@ -94,22 +117,31 @@ export function createIncomingCostLayer(input: {
     availableAt: input.availableAt,
     originalQuantity: input.quantity,
     originalCost: input.allocatedCost,
+    ...(input.exactCost
+      ? {
+          exactOriginalCost: input.exactCost,
+          exactRemainingCost: input.exactCost,
+        }
+      : {}),
     remainingQuantity: input.quantity,
     remainingCost: input.allocatedCost,
   }
 }
 
-export function orderFifoLayers(layers: InventoryCostLayer[], productId: number) {
+export function orderFifoLayers(
+  layers: InventoryCostLayer[],
+  productId: number,
+) {
   return layers
     .filter(
-      (layer) =>
-        layer.productId === productId && layer.remainingQuantity > 0n,
+      (layer) => layer.productId === productId && layer.remainingQuantity > 0n,
     )
     .sort((left, right) => {
       const byDate = left.availableAt.localeCompare(right.availableAt)
       if (byDate) return byDate
       const byOutput =
-        (left.productionBatchOutputId ?? 0) - (right.productionBatchOutputId ?? 0)
+        (left.productionBatchOutputId ?? 0) -
+        (right.productionBatchOutputId ?? 0)
       return byOutput || left.id - right.id
     })
 }
@@ -124,7 +156,9 @@ export function reverseFifoAllocations(
   requested: Array<{ allocationId: number; quantity: bigint }>,
 ): FifoReversalPlan {
   const updated = new Map(layers.map((layer) => [layer.id, { ...layer }]))
-  const byAllocation = new Map(allocations.map((allocation) => [allocation.id, allocation]))
+  const byAllocation = new Map(
+    allocations.map((allocation) => [allocation.id, allocation]),
+  )
   const seen = new Set<number>()
   const reversals: FifoReversalPlan['reversals'] = []
 
@@ -147,6 +181,37 @@ export function reverseFifoAllocations(
     )
     const layer = updated.get(allocation.layerId)
     if (!layer) throw new Error('Camada FIFO original não encontrada.')
+    const exactRestored =
+      allocation.exactCost != null
+        ? scaleCost(
+            subtractCosts(
+              allocation.exactCost,
+              allocation.exactReversedCost ??
+                exactCost(alreadyReversedCost, 100n),
+            ),
+            request.quantity,
+            availableQuantity,
+          )
+        : null
+    if (exactRestored !== null) {
+      if (BigInt(exactRestored.numerator) < 0n)
+        throw new Error('Custo exato reversível inconsistente.')
+      layer.exactRemainingCost = addCosts(
+        layer.exactRemainingCost ?? exactCost(layer.remainingCost, 100n),
+        exactRestored,
+      )
+      if (
+        BigInt(
+          subtractCosts(
+            layer.exactOriginalCost ?? exactCost(layer.originalCost, 100n),
+            layer.exactRemainingCost,
+          ).numerator,
+        ) < 0n
+      )
+        throw new Error(
+          'Reversão excede o custo exato original da camada FIFO.',
+        )
+    }
     layer.remainingQuantity += request.quantity
     layer.remainingCost += restoredCost
     if (
@@ -160,12 +225,16 @@ export function reverseFifoAllocations(
       productId: allocation.productId,
       quantity: request.quantity,
       allocatedCost: restoredCost,
+      ...(exactRestored !== null ? { exactCost: exactRestored } : {}),
     })
   }
   return {
     reversals,
     layers: [...updated.values()],
-    restoredCost: reversals.reduce((sum, reversal) => sum + reversal.allocatedCost, 0n),
+    restoredCost: reversals.reduce(
+      (sum, reversal) => sum + reversal.allocatedCost,
+      0n,
+    ),
   }
 }
 
@@ -195,7 +264,8 @@ export function allocateFifoCost(
 
   for (const layer of orderFifoLayers([...updated.values()], productId)) {
     if (!pending) break
-    const consumed = pending < layer.remainingQuantity ? pending : layer.remainingQuantity
+    const consumed =
+      pending < layer.remainingQuantity ? pending : layer.remainingQuantity
     const cost = allocatedCents(
       layer.remainingCost,
       consumed,
@@ -204,6 +274,17 @@ export function allocateFifoCost(
     if (cost < 0n || cost > layer.remainingCost)
       throw new Error('Custo FIFO inválido para camada de estoque.')
 
+    const exactAllocated =
+      layer.exactRemainingCost != null
+        ? scaleCost(layer.exactRemainingCost, consumed, layer.remainingQuantity)
+        : null
+    if (exactAllocated !== null && BigInt(exactAllocated.numerator) < 0n)
+      throw new Error('Custo exato FIFO inconsistente.')
+    if (exactAllocated !== null)
+      layer.exactRemainingCost = subtractCosts(
+        layer.exactRemainingCost ?? exactCost(layer.remainingCost, 100n),
+        exactAllocated,
+      )
     layer.remainingQuantity -= consumed
     layer.remainingCost -= cost
     pending -= consumed
@@ -214,6 +295,7 @@ export function allocateFifoCost(
       sourceStockMovementId: layer.sourceStockMovementId,
       quantity: consumed,
       allocatedCost: cost,
+      ...(exactAllocated !== null ? { exactCost: exactAllocated } : {}),
     })
   }
 
@@ -222,6 +304,17 @@ export function allocateFifoCost(
 
   return {
     allocations,
+    ...(allocations.some((allocation) => allocation.exactCost != null)
+      ? {
+          exactCost: sumCosts(
+            allocations.map(
+              (allocation) =>
+                allocation.exactCost ??
+                exactCost(allocation.allocatedCost, 100n),
+            ),
+          ),
+        }
+      : {}),
     layers: [...updated.values()],
     allocatedCost: allocations.reduce(
       (sum, allocation) => sum + allocation.allocatedCost,

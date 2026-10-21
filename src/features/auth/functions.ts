@@ -104,14 +104,16 @@ async function getAuthActionAuditContext(): Promise<
 
 async function getPublicAuthProtection(
   scope: AuthRateLimitScope,
-  data: { email: string; turnstileToken?: string },
+  data: { email: string; turnstileToken?: string | undefined },
   options: { forceChallenge?: boolean } = {},
 ) {
   return protectPublicAuthAction(
     {
       scope,
       identifier: data.email,
-      turnstileToken: data.turnstileToken,
+      ...(data.turnstileToken === undefined
+        ? {}
+        : { turnstileToken: data.turnstileToken }),
     },
     process.env,
     {},
@@ -125,7 +127,11 @@ async function getPublicAuthProtectionForIdentifier(
   turnstileToken?: string,
 ) {
   return protectPublicAuthAction(
-    { scope, identifier, turnstileToken },
+    {
+      scope,
+      identifier,
+      ...(turnstileToken === undefined ? {} : { turnstileToken }),
+    },
     process.env,
   )
 }

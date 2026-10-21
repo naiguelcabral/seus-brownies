@@ -57,9 +57,9 @@ export function buildCandidate(
   { last = 28, injectFailure = false, naiveCompatibility = false } = {},
 ) {
   assert.ok(strategies.includes(strategy), 'unknown strategy')
-  assert.ok([16, 27, 28].includes(last), 'unsupported checkpoint')
+  assert.ok([16, 17, 27, 28].includes(last), 'unsupported checkpoint')
   assert.ok(
-    strategy !== 'rebuilt-line' || last !== 27,
+    strategy !== 'rebuilt-line' || ![17, 27].includes(last),
     'rebuilt line is atomic to 0028',
   )
   const source = sourceManifest()

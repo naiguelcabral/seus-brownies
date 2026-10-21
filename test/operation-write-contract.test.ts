@@ -32,7 +32,20 @@ test('criações reservam a chave antes dos efeitos e registram o ator do servid
   assert.equal(
     (source.match(/createdByAuthUserId: context\.principal!\.id/g) ?? [])
       .length,
-    3,
+    1,
+  )
+  assert.equal(
+    (source.match(/createdByAuthUserId: actorAuthUserId/g) ?? []).length,
+    2,
+  )
+  assert.match(
+    source,
+    /persistSale\(getDb\(\), data, context\.principal!\.id\)/,
+  )
+  assert.match(source, /createdByAuthUserId: actorAuthUserId/)
+  assert.match(
+    source,
+    /persistPurchase\(getDb\(\), data, context\.principal!\.id\)/,
   )
   assert.equal(
     (source.match(/await appendOperationalAudit\(tx,/g) ?? []).length,

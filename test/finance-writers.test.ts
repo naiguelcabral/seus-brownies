@@ -1,3 +1,4 @@
+import { requireDefined } from '../src/lib/required-value'
 import assert from 'node:assert/strict'
 import test from 'node:test'
 
@@ -56,7 +57,7 @@ test('fechamento manual congela snapshot exato e autoria na mesma transação', 
     'insert:financialPeriods',
     'insert:operationalAudit',
   ])
-  const period = mock.committed[0].values as {
+  const period = requireDefined(mock.committed[0]).values as {
     status: string
     closedByAuthUserId: string
     closureSnapshot: unknown
@@ -134,7 +135,7 @@ test('correção do Dono preserva competência original e atualiza período fech
     'update:financialPeriods',
     'insert:operationalAudit',
   ])
-  const correction = mock.committed[0].values as {
+  const correction = requireDefined(mock.committed[0]).values as {
     correctsEventId: number
     amount: string
     revenueEffect: string
@@ -149,7 +150,7 @@ test('correção do Dono preserva competência original e atualiza período fech
     cashEffect: '0.00',
     competenceDate: '2026-08-15',
   })
-  const periodUpdate = mock.committed[1].values as {
+  const periodUpdate = requireDefined(mock.committed[1]).values as {
     version: number
     closureSnapshot: unknown
   }
@@ -311,7 +312,7 @@ test('resgate parcial consome saldo sem afetar receita ou caixa', async () => {
     'insert:financialEvents',
     'insert:operationalAudit',
   ])
-  const redemption = mock.committed[0].values as {
+  const redemption = requireDefined(mock.committed[0]).values as {
     type: string
     settlesEventId: number
     amount: string

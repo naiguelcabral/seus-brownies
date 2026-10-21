@@ -15,7 +15,7 @@ export const appRoles = [
 
 export type AppRole = (typeof appRoles)[number]
 
-export const permissions = [
+const permissions = [
   'catalog:read',
   'catalog:write',
   'purchases:read',

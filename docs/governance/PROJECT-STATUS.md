@@ -1,5 +1,1427 @@
 # Estado canônico do projeto — Cacau v1
 
+O [roadmap único](ROADMAP-CODEX.md) foi consolidado em 19/10/2026 e é a fonte
+atual de tarefas, prioridades e critérios de conclusão. Os checkpoints de
+publicação abaixo preservam o estado comprovado de cada entrega; suas
+próximas etapas históricas não substituem o roadmap atualizado.
+
+## Conflitos da PR #48 — 21/10/2026
+
+A main avançou para `b71b359` pela integração da PR #45. Usuário solicitou
+resolver os conflitos da #48, agora aberta fora de rascunho. Reconciliação
+na branch `codex/integrated-validation-gates` preserva as configurações já
+validadas de CodeQL em três linguagens, Oxlint tipado, Oxfmt e Knip com
+dependências do lockfile; remove somente o workflow advisory obsoleto que
+chamava scripts substituídos. A proposta histórica da #45 foi preservada.
+
+560 testes Node, lint, tipos, formato e Knip (quatro contextuais, zero novos)
+aprovados; contrato novo impede regressão dos gates conciliados. Build
+isolado e checks remotos do novo commit ainda aguardam execução neste
+checkpoint. Sem mudança de código operacional, migrations, dados ou deploy.
+Isso não integra a PR à main nem dispensa a revisão humana do pacote.
+Detalhes em [revisão de integração](INTEGRATION-REVIEW-2026-10-20.md).
+
+## Validação conectada e sustentação — 20/10/2026
+
+Checkpoint final: correção `bb76764` publicada em HML na versão
+`22733c04-7996-43b1-88e3-3f775db223fc`, 100% desde21/10 00:10:17 UTC
+(20/10 21:10 Brasília), raiz307/login200. Dez casos conectados passaram juntos
+no archive limpo; todos os jobs remotos, build isolado e triagem CodeQL sem
+achados aprovados. Os parágrafos de candidata abaixo são intermediários.
+PR48 atualizada para revisão, sem merge; nenhum SQL compartilhado aplicado.
+
+Primeiro acesso publicado do HEAD `a5463ee`: versão HML
+`3daa8163-7b43-4aee-a46b-6b325ca1b9aa`, 100% desde23:25:07 UTC.
+CodeQL do SHA conferido nas três linguagens, zero resultados/alertas abertos;
+deployments relidos e raiz307/login200. Sem migration ou mudança de credencial.
+
+Dois runners PostgreSQL passaram novamente. Novo laboratório conecta interface
+real, HTTP TanStack, middleware e PostgreSQL17; apenas identidade é sintética,
+com papéis lidos no banco local. Dez casos passaram em execuções complementares
+(sete + três): quatro perfis, negações sem escrita, autoria, revogação imediata,
+compra→produção→venda→recebimento/entrega→lucro, celular390px, CSV, cancelamento,
+devolução, crédito/resgate parcial, reembolso, fechamento e correção.
+559 testes Node, lint/tipos/formato e Knip sem novos achados aprovados.
+
+O ensaio revelou falha real em Relatórios: razão sem ORDER BY podia processar
+saída antes da entrada e rejeitar estoque válido. Candidata ordena por data/ID;
+relatório contra os mesmos fatos passou. CI/CodeQL e publicação desse novo
+incremento ainda pendentes; não atribuir a ele o deploy anterior.
+
+Cópia atual public/drizzle enviada ao Google Drive privado escolhido, junto
+com manifesto; privacidade/tamanho conferidos. Restore local correspondente
+passou38 tabelas/36 recibos; restore dos bytes externos permanece pendente.
+Backup diário03h Brasília e monitor público horário ativos no aplicativo;
+e-mail de teste ao Dono entregue. Dependem do computador/app disponíveis.
+Migrations genéricas permanecem offline/bloqueantes para a original classificada
+como produção. Main, celular físico e liberação definitiva seguem gates próprios.
+Detalhes em [validação conectada](CONNECTED-QA-2026-10-20.md).
+
+## Primeiro acesso corrigido localmente — checkpoint anterior de20/10/2026
+
+O usuário confirmou que Funcionário, Gerente nova e conta gerencial anterior
+conseguem entrar. H03 continua parcial: falta a matriz de telas, chamadas
+diretas e negações por permissão.
+
+A investigação reproduziu em memória que recadastrar um e-mail existente
+preserva a senha anterior, mesmo após OTP. Cadastro realmente novo entra com
+a senha inicial. A interface foi corrigida em `b0680dd` para orientar primeiro
+acesso/recuperação e retornar ao login após verificação, limpando senha/código.
+556 testes Node, lint, tipos, formato, Knip, build HML isolado, 39 casos de
+navegador e smoke público local passaram. Checks remotos passaram; consulta
+detalhada aos resultados/alertas CodeQL foi interrompida. Triagem e publicação
+HML pendentes; HML segue `3f0ba59`. Não houve alteração de credenciais ou dados
+compartilhados. Detalhes em [primeiro acesso](AUTH-FIRST-ACCESS-2026-10-20.md).
+
+## Recuperação da conta gerencial anterior — 20/10/2026
+
+O usuário relatou credenciais inválidas em sua conta anterior. Consulta exata
+confirmou identidade única com e-mail verificado, credencial existente e
+vínculo `manager` ativo na base operacional. Os eventos recentes de login
+incluíam `provider_rejected`; não contêm identificação da conta e não foram
+atribuídos individualmente. Nenhum papel foi alterado.
+
+Foi feita uma solicitação de recuperação pelo formulário público do Cacau.
+A auditoria registrou `password_reset_requested/success` às
+`2026-10-20T19:18:37.074Z`, após o marcador de operação pendente. Posteriormente,
+o usuário confirmou que o acesso dessa conta funcionou. Esse aceite de entrada
+não conclui a matriz de permissões H03. A senha e o token de recuperação não
+foram acessados pelo agente.
+
+## Aceite parcial de acesso — 20/10/2026
+
+O usuário confirmou que o acesso da conta de Funcionário funcionou. Esse
+relato comprova o aceite humano da entrada, sem concluir a matriz de telas,
+chamadas diretas e negações por permissão de H03. Também confirmou que a
+Gerente recebeu o e-mail de recuperação e vai redefinir a senha. A conclusão
+da redefinição e o novo login da Gerente ainda aguardam confirmação.
+
+## Login da nova Gerente — recuperação solicitada — 20/10/2026
+
+Após a concessão, o usuário relatou a mensagem de credenciais inválidas.
+Consultas confirmaram identidade única com e-mail verificado e vínculo
+`manager` ativo. Dois eventos recentes de login registraram `provider_rejected`;
+esses eventos não armazenam identidade e não são atribuídos individualmente.
+A credencial da identidade ainda tinha criação/atualização coincidentes com a
+criação administrativa. A senha informada no cadastro posterior pode não ter
+sido aplicada; isso é hipótese, sem inspeção de senha ou hash.
+
+O fluxo público “Esqueci minha senha” foi usado uma única vez para essa conta.
+A auditoria registrou `password_reset_requested/success` às
+`2026-10-20T18:42:15.668Z`, após o marcador `provider_outcome_pending`.
+O recebimento foi posteriormente confirmado pelo usuário. A titular deve
+concluir a redefinição pessoalmente e repetir o login; H03 segue aberto.
+Nenhuma credencial ou regra de autorização foi alterada pelo agente.
+
+## Acesso de Gerente concedido — 20/10/2026
+
+A identidade de Gerente em `g1-auth-hml` foi relida com e-mail verificado.
+A consulta prévia na base operacional original não encontrou vínculo para
+essa identidade. Uma transação concedeu `manager` e gravou `role_changed`
+com motivo e referência inédita. Releitura independente confirmou exatamente
+um vínculo ativo e um evento de sucesso correspondente. Funcionário e Gerente
+estão concedidos; o aceite conectado H03 permanece pendente.
+
+## Acesso de Funcionário concedido — 20/10/2026
+
+A identidade de Funcionário criada em `g1-auth-hml` foi relida com e-mail
+verificado. Na base operacional original, a preflight encontrou zero vínculos
+e zero eventos de acesso para essa identidade. Uma transação concedeu o papel
+`employee` e gravou o evento `role_changed` de sucesso com motivo e referência
+inédita. Releitura independente confirmou um vínculo ativo e um evento
+correspondente. Naquele checkpoint, Gerente ainda não tinha e-mail verificado;
+o aceite conectado H03 ainda está pendente. Nenhuma credencial, sessão, regra
+de autorização ou dado de negócio foi alterado.
+
+## Investigação e correção publicadas — 20/10/2026
+
+Capacidade renovada confirmada em100%, retomada local executada e branch
+`codex/integrated-validation-gates` limpa/sincronizada antes da alteração.
+Logs confirmam500 anterior ao deploy em seis eventos, incluindo dois na raiz.
+O runtime isolado reproduziu500 quando uma consulta desnecessária de sessão
+anônima recebeu429/503. A causa upstream histórica não foi registrada e não
+é presumida. Correção publicada elimina consulta sem token e acrescenta telemetria
+sanitizada; tokens presentes continuam no SDK e nos controles Cacau.
+
+Passaram556 testes Node, cinco novos de autenticação,16 casos no runtime local,
+lint/tipos/formato e Knip sem novas ocorrências. Quatro eventos sanitizados de
+erro HTTP foram comprovados no laboratório. Smoke público de navegador, build
+isolado e todos os checks remotos do código `3f0ba59` aprovados; três análises
+CodeQL sem resultados e zero alertas.
+
+HML publicado às 16:34:55 UTC: versão `e2aba61f-ca72-4459-a0d7-95867cdb2e67`,
+deployment `846b959a-1c69-4508-83bd-c823a6d8ce3a`, 100% do tráfego. Probe
+público raiz307/login200; oito GETs acompanhados por tail passaram sem
+exceções/logs de aplicação. Readback de14 eventos da versão nova sem500.
+Sem produção principal, secrets, migrations ou operações fictícias no HML.
+Servidores locais encerrados. Aceite autenticado e alertas ao Dono continuam
+pendentes, sem inferir autenticação a partir dos GETs públicos.
+Detalhes em [investigação](HML-SESSION-INCIDENT-2026-10-20.md).
+
+## Checkpoint anterior de encerramento — 20/10/2026
+
+Código `6acb11a`: 551 testes Node, 35 casos de navegador isolado, dois runners
+PostgreSQL e CI/CodeQL aprovados no SHA exato. CI39435180771,
+negócio/browser39435180794, migrations39435180012, evidência39435179660 e
+CodeQL39435179809; zero alertas abertos e zero avisos de runtime na CI.
+
+Backup explicitamente autorizado da original `production`, somente leitura
+(public/drizzle), salvo privado em `backups-local/` fora do Git. Restore local
+conferiu 38 tabelas, 36 recibos e catálogo exato. Auth gerenciado excluído;
+sem cópia externa ou periodicidade. Todos os containers desta tarefa encerrados.
+
+A publicação HML do incremento retornou 500 nas rotas públicas. Foi revertida
+para `f0c2e0e2-8798-4132-9abc-50c87bf7a973` (código `d5cc034`), 100% do tráfego,
+deployment `0698a29c-6021-4f98-a627-2a68025a7185`, às 14:06:44 UTC. A primeira
+checagem após rollback ainda falhou; após propagação, GETs completos conferiram
+raiz307 e login200. A causa permanece sem diagnóstico; não considerar o
+incremento publicado estável nem repetir deploy sem investigação. Produção
+principal, secrets, migrations e dados históricos não foram alterados.
+
+Próxima prioridade: investigar logs sanitizados do erro no HML e validar runtime
+antes de nova publicação. Depois, contas teste/Gerente que o usuário criará,
+aceite conectado e alertas automáticos no perfil Dono (ainda não implementados).
+PRs47/48 em rascunho; nenhuma integrada à main. Recibo:
+`evidence/integrated-validation-2026-10-20.json`.
+
+## Histórico da validação integrada — 20/10/2026
+
+Navegador: 35 casos passaram. Suíte final ampliada: 551 testes. Os novos jobs
+de negócio/browser, cadeia e evidência passaram na CI com Actions Node24 e
+Ubuntu24.04; os checks do HEAD final serão conferidos antes da publicação.
+
+Após autorização específica do usuário para o alvo `production`, cópia local
+somente leitura de `public`/`drizzle` foi criada em `backups-local/`, privada e
+fora do Git. Restore em container local vazio passou: catálogo canônico igual
+ao checkpoint0033, 38 tabelas e 36 recibos exatos; modos0700/0600 conferidos.
+Não inclui Auth gerenciado nem cópia externa independente. Quarta referência
+contextual Knip (`neon` nativo) revisada, justificada e mantida visível.
+Usuário criará duas contas (teste/Gerente) e escolheu perfil Dono para alertas;
+entrega automática de alertas ainda não implementada. PR #47 é incremental;
+#48 prepara a integração acumulada na main, sem merge. Containers de ensaio
+encerrados. Recibo `evidence/integrated-validation-2026-10-20.json`.
+
+### Checkpoint anterior da continuação
+
+Continuidade integral autorizada após a lista do roadmap. Branch
+`codex/integrated-validation-gates` parte do checkpoint `b3e595b`; PR #46
+permanece separada. Criados protocolo de QA e gates automáticos dos ensaios
+de custos/negócio PostgreSQL 17 e oito specs de navegador isolado. A configuração
+exclui specs compartilhadas antigas, usa archive de HEAD e ambiente limpo,
+restringe HTTP a loopback e bloqueia WebSockets. Backend e UI com fakes são
+evidências distintas; H04/H05 e H01–H03 não são declarados concluídos por isso.
+
+Ensaio revelou consultas simultâneas na conexão de uma transação. Leituras de
+venda/lote e atualizações de camadas/saídas agora são aguardadas em sequência;
+concorrência entre transações continua exercitada. Os dois runners passaram
+com `--throw-deprecation`, preservando dinheiro, estoque, replay, rollback e
+conservação dos custos. Suíte Node: 546 testes aprovados. Prompt/runbook do
+piloto alinhados ao Oxfmt; 21 testes do controlador com Codex simulado passaram.
+Oxc 1.64.1 instalada e confirmada no VS Code; Python 3.12 declarada e verificada
+na CI. Revisão de runtime das Actions permanece explícita, sem troca cega de majors.
+
+Metadados atuais do HML/Neon reconciliados em `ENVIRONMENT-MATRIX.md`, sem SQL
+externo, credenciais ou inferência Worker→banco. A original continua
+`production` e bloqueada para o migrador genérico. Protocolo de aceite em
+`QA-VALIDATION-PROTOCOL.md`. Navegador/CI/build/publicação do incremento ainda
+serão conferidos antes de concluir esta entrega.
+
+## T02 — preparação e revisão offline adotadas — 20/10/2026
+
+A continuidade autorizada pelo usuário foi aplicada à preparação e revisão
+local da linha `forward-compatibility-v1`. `db:prepare` entrega pacote temporário
+com manifesto; `db:review -- --evidence evidence/<arquivo>.json` avalia somente
+metadados sanitizados versionáveis, sem driver ou conexão. São exigidos alvo
+HML identificado e vínculo do Worker atestado, coleta independente somente de
+leitura com até 30 minutos, recibos exatos e catálogo completo compatível com
+um dos oito checkpoints reproduzidos no PostgreSQL 17 isolado. Quando há
+escrita pendente, recuperação e decisões 0019/0028 são exigidas conforme o
+trecho pendente. Mesmo sem bloqueios, o resultado é apenas
+`READY_FOR_OPERATOR_REVIEW`, com autorização e execução sempre falsas.
+
+A branch original conhecida como produção é rejeitada mesmo se rotulada como
+HML. Arquivos externos a `evidence/`, links simbólicos, caminhos ocultos,
+URLs e entradas sensíveis são recusados. Os 13 ensaios PostgreSQL passaram
+novamente, incluindo as oito referências de catálogo e rejeição de drift na
+revisão offline. A suíte CLI cobre sucesso sem execução e recusas de entrada.
+T02 segue parcial: falta classificação independente dos alvos relevantes e
+plano/autorização específicos antes de qualquer aplicação compartilhada.
+`db:migrate` conserva o bloqueio anterior; SQLs e metadados históricos intactos.
+Sem deploy, merge, SQL externo ou escrita no HML nesta continuação.
+546 testes Node aprovados (oito novos), lint, tipos, formato e Knip sem novas
+ocorrências. Container sintético encerrado. Recibo:
+[revisão offline](../../evidence/migration-chain-readiness-2026-10-20.json).
+Build HML isolado aprovado no código `45799a8`. A triagem do CodeQL desse
+commit encontrou `js/file-system-race` na leitura de evidência; corrigido para
+validar tipo/tamanho e ler pelo mesmo descritor, com abertura sem seguir
+symlink e sem bloquear em FIFO. Casos CLI também recusam diretório e arquivo
+acima de 1 MB.
+Código final `4d3821a` sincronizado na
+[PR #46 em rascunho](https://github.com/naiguelcabral/seus-brownies/pull/46).
+CI `39418068183`, PostgreSQL `39418068187` e CodeQL `39418061713` aprovados.
+Três análises com zero resultados; alerta #10 confirmado como `fixed` e zero
+alertas abertos na branch. Os checks remotos repetiram a suíte e os 48 casos
+PostgreSQL isolados. Definition of Done aplicada ao incremento offline;
+nenhuma alteração de runtime do HML requer publicação.
+
+### Evidência anterior da candidata
+
+Retomada com capacidade oficial renovada em 100% nas duas janelas, checkpoint
+`55950fa` limpo e sincronizado. Branch dedicada `codex/generic-migration-path`.
+Candidata offline temporária reúne SQLs originais, duas pontes e cinco
+extensões sem alterar arquivos históricos. Classificação por todos os hashes
+e timestamps rejeita drift, ausência de ponte e checkpoints parciais. Treze
+ensaios PostgreSQL 17 locais passaram: instalação nova e sete checkpoints
+até 0033, equivalência independente, dados/recibos preservados, replay e
+rollback tardio. Catálogo final com 36 recibos, SHA-256
+`b04d3ce50a8e8e2161522c7a5d3e77cbe508c8601bb266ceda7cdafe38268980`;
+as 38 tabelas atuais do ORM foram consultadas com LIMIT 0. Regressão: 26 casos
+da cadeia, quatro de baseline e cinco de upgrade delimitado aprovados.
+A geração Drizzle não produziu diff com o schema atual e produziu/aplicou uma
+migration aditiva sintética no próximo índice, preservando os recibos e dados.
+
+O teste histórico até 0028 agora confere todas as suas colunas versionadas;
+o novo teste cobre o ORM completo até 0033. Corrigida também uma asserção de
+S01 com `requireDefined`, para explicitar que o último evento deve existir.
+Workflow ampliado para executar e guardar os ensaios sintéticos novos.
+Suíte Node: 538 testes aprovados; lint, tipos, formato e Knip aprovados.
+Build HML isolado local aprovado. Código `c6d0bf8` sincronizado na
+[PR #46 em rascunho](https://github.com/naiguelcabral/seus-brownies/pull/46);
+CI `39412305542`, PostgreSQL `39412305442` e CodeQL `39412305514` passaram.
+Três análises CodeQL sem resultados; zero alertas abertos. Container sintético
+encerrado após os ensaios. Nenhum arquivo em `src/` ou SQL histórico alterado.
+Naquele checkpoint, T02 permanecia parcial: faltavam adoção oficial e revisão
+dos metadados já ensaiados e classificação independente dos alvos. `db:migrate`
+continua offline e bloqueante. Nenhum deploy, acesso SQL compartilhado,
+importação, alteração de referência consumida ou escrita no HML nesta etapa.
+Detalhes e limites: [ADR da cadeia](MIGRATION-CHAIN-REMEDIATION-ADR.md).
+
+## Autoria e auditoria operacional completas — 19/10/2026
+
+O inventário S01 cobriu todas as Server Functions mutáveis de catálogo,
+locais, parâmetros gerenciais, planos de ação, cenários, operações, produção,
+finanças e lifecycle de estoque. Autenticação permanece na trilha de auditoria
+própria; o diagnóstico SQL e a prévia de produção usam POST, mas não alteram
+estado. As lacunas reais eram as seis mutações de categorias/produtos e a
+criação/conclusão de lotes. Todas agora obtêm o ator do principal autorizado e
+anexam o evento em `operational_audit_events` dentro da mesma transação da
+escrita; falha ou ausência da entidade reverte o conjunto. A conclusão do lote
+também preserva referência operacional única. Nenhuma migration, alteração de
+regra financeira/estoque ou escrita compartilhada foi necessária. Contrato de
+regressão e ensaio de rollback da auditoria foram adicionados. Commit
+`d5cc034` publicado somente no `cacau-v1-hml`, versão
+`f0c2e0e2-8798-4132-9abc-50c87bf7a973`, com 100% do tráfego. Os 536 testes,
+lint, tipos, formato, Knip e builds principal/HML passaram. Após uma falha
+transitória na primeira leitura de sessão, o reload autenticado carregou os 38
+produtos e o Worker registrou login, painel e catálogo como `Ok`; nenhuma ação
+mutável foi executada e nenhum fato sintético foi criado no HML.
+
+## Compras e Produção publicados — 19/10/2026
+
+Revisão de UX a76c37c publicada às03:01 Brasília no `cacau-v1-hml`, versão
+`6bc5bd55-2bca-4adb-a8b1-36b6b42bf1a6`, 100% de tráfego. Compras mostra total
+em centavos exatos, unidades legíveis, opcionais agrupados e efeito no estoque.
+Produção limpa custos após salvar, invalida prévia ao alterar data/saídas/
+perdas, aproxima a prévia das ações e abre auditoria do lote em modal.
+Gravação concluída mantém sucesso se a atualização visual falhar.
+529 testes Node e15 ensaios de navegador aprovados (seis novos, nove de
+regressão), lint/tipos/formatação/Knip/build isolado aprovados.
+CI39207328944 e CodeQL39207328870 aprovados; três análises sem resultados e
+zero alertas abertos. Formulários autenticados abertos/fechados sem salvar;
+campos reais de custos em branco e data19/10/2026 conferidos.
+21 tabelas consultadas antes/depois com contagens/digests idênticos, incluindo
+compras, produção, custos/FIFO, cenários, catálogo, receitas/perfis e auditoria.
+Sem mudança de schema/backend/RBAC e sem fatos fictícios compartilhados.
+Detalhes: [PURCHASE-PRODUCTION-UX-HML-2026-10-19.md](PURCHASE-PRODUCTION-UX-HML-2026-10-19.md).
+Recibo: `evidence/purchase-production-ux-hml-2026-10-19.json`.
+
+
+## Metas e cenários publicados — 19/10/2026
+
+Execução única do heartbeat das 02:33 Brasília concluída. Incremento364a1c1,
+com fixture corrigida emdc0a37b, publicado no `cacau-v1-hml`: versão
+`97ffb52e-9ea5-4dff-a1a9-01738724e26c`, 100% de tráfego, às02:47 Brasília.
+Resumo da meta conjunta, detalhes expansíveis, histórico em largura integral,
+editor modal com prévia normalizada e confirmação motivada de lifecycle.
+529 testes Node, cinco ensaios de navegador, lint/tipos/formatação/Knip e build
+isolado aprovados; CI39206192382 e CodeQL39206192124 aprovados, zero resultados
+nas três análises e zero alertas abertos. Tela autenticada conferida: cadastro
+vazio e confirmação abertos/cancelados sem gravação; mix101% usado em100%.
+Contagens e digests de cenários, mix, histórico, auditoria operacional e fatos
+operacionais idênticos antes/depois. Dois cenários,33 itens de mix, quatro
+históricos,178 eventos de auditoria e zero fatos de compra/produção/venda/
+despesa/financeiro/estoque. Sem migration ou escrita em dados compartilhados.
+Detalhes: [SCENARIO-UX-HML-2026-10-19.md](SCENARIO-UX-HML-2026-10-19.md).
+Recibo: `evidence/scenario-ux-hml-2026-10-19.json`.
+A próxima revisão de Compras/Produção é uma tarefa separada; esta retomada
+programada executou somente a simplificação de Cenários.
+
+
+## Recebimentos, lucro e modais publicados — 18/10/2026
+
+Incremento60dbe08 e correção de data41820ba publicados no cacau-v1-hml,
+versão `12776985-3674-4474-8ecb-737cc7c35a53`,100% de tráfego.
+Migration0033 aplicada com preservação,36 recibos. Recebimentos integrais
+registram bruto/taxa/líquido e preservam tarifa; despesas classificadas e
+lucro conjunto no dashboard/Financeiro evitam dedução duplicada de produção.
+Compras, Produção, Vendas e Despesas usam modais; data padrão em Brasília.
+529 testes Node na CI, quatro de navegador, ensaio completo PostgreSQL17,
+rollback/replay de schema, lint/tipos/formatação/Knip/build aprovados.
+CI39186219166 e CodeQL39186219135 passaram; zero resultados/alertas abertos.
+Sessão autenticada conferida; original continua com zero compras, lotes,
+vendas, despesas, fatos financeiros e movimentos de estoque. Cenário2 segue
+ativo. Um carregamento SPA do painel falhou após deploy; reload recuperou e
+o botão Atualizar painel depois funcionou. Sem operações fictícias no HML.
+Recibo: evidence/payment-settlement-hml-execution-2026-10-18.json.
+Detalhes/limites: PAYMENT-SETTLEMENT-PROFIT-HML-2026-10-18.md.
+
+
+## Custos publicados e cenário ativo —18/10/2026
+
+Entrega73ead0a no cacau-v1-hml, versãoe206d319-feb7-4cc9-b86e-f61d83049b56
+com100% de tráfego. Migrations0031/0032 e pacote002 aplicados com preservação
+de histórico;35 recibos, receita2 ativa/17 perfis completos,31 componentes.
+Cenário2/v2/rev2 ativo,16 itens orientativos/100%; meta conjunta10mil, fixos2288,
+taxas separadas sem média ou cota de Bordinhas. Cenário1/17 itens arquivado
+e preservado. Nenhum lote/movimento fictício na base compartilhada.
+524 testes, dois testes de navegador, dois ensaios PostgreSQL17, lint/tipos/
+formatação/Knip/builds passaram. CI39183477371 e CodeQL39183477521 aprovados;
+zero resultados e zero alertas abertos. Operação real e classificação de
+despesas continuam tarefas próprias. Detalhes e limites:
+COST-RECOVERY-FEES-HML-2026-10-18.md e recibo de execução em evidence.
+
+Checkpoints abaixo descrevem estados anteriores à entrega.
+
+## Retomada e pacote final de custos —18/10/2026
+
+Franquia renovada100% e retomada oficial executada; branch limpa sincronizada.
+Implementados recuperação variável por peso, custos diretos por produto,
+MO/energia reais por lote, correção temporal dos movimentos, parâmetros de
+pagamento e comparação da meta por meio. Meta conjunta de todos os brownies;
+Bordinhas realizadas somam resultado sem cota mínima de aproveitamento.
+Nova versão de receita e cenário preparada com histórico anterior preservado.
+Pacote final002 ensaiado em réplica lógica local PostgreSQL17; 524 testes e
+2 ensaios de navegador passaram. HML ainda aguardando publicação/aplicação.
+Registro: COST-RECOVERY-FEES-HML-2026-10-18.md.
+
+
+## Rendimento esclarecido e publicação autorizada — 18/10/2026
+
+Usuário confirmou 32 ovos para quatro formas 44 × 31,3 × 3 cm, cada uma com
+850 g de massa assada/fria sem forma: oito ovos/receita, 3,4 kg nas quatro.
+Por forma: corte5×5 rende48 simples ou24 recheados; corte7×7 rende24 simples
+ou12 recheados. Alternativas, sem somar produção integral dos dois formatos.
+Sobra ínfima no5×5 e variável por corte/lote: implementar peso recuperado real,
+inclusive zero, sem rendimento fixo e sem duplicar custo. Não falta outra
+informação obrigatória prévia do usuário para implementar esse fluxo.
+
+“Pode fazer tudo e publicar” renova autorização para completar e publicar no
+HML. Ainda sem escrita compartilhada nem deploy. Execução permanece pausada:
+consulta oficial99% usado/1% restante, reset18/10/2026 21:31:53 Brasília, ainda
+não renovado. Detalhes no HANDOFF-PROFILE-MATERIALS-2026-10-18.md.
+
+
+## Materiais de ficha — implementação local em 18/10/2026
+
+Implementado suporte a cobertura e materiais de embalagem além de recheios.
+Conclusão do lote valida tipo/base de quantidade, impede repetir a embalagem
+individual nos componentes e usa os materiais na mesma transação de estoque,
+custos e FIFO. Migration candidata `0031_brave_thor.sql` acrescenta somente
+dois valores de enum; cadeia histórica e pacote de custos exatos preservados.
+Suíte completa com 512 testes aprovada; 20 testes focados finais, lint,
+tipos, formatação e builds isolados CI/HML aprovados. Ensaio do DDL em
+PostgreSQL 17 descartável passou com rollback integral. Ainda sem publicação, migration ou componentes no HML.
+Cadastro das fichas, preço/apresentação das Bordinhas, MEI/taxas por pagamento
+e revisão de cenário permanecem pendentes. Não ativar cenário com rateio de
+Bordinhas indefinido. Plano/resultado: `PROFILE-MATERIALS-2026-10-18.md`.
+
+
+## MEI e taxas de pagamento definidos — 18/10/2026
+
+MEI R$ 88/mês adicional confirmado: fixos revistos R$ 2.288. Débito 1,43%,
+crédito 3,36% e Pix R$ 0,49 por transação; substituem referência genérica de
+1,99. Combinação de pagamentos varia por local: não inferir taxa média global
+nem contar Pix por produto. Comparações locais preparadas e conferidas em
+Decimal; falta representar tarifas por pagamento no sistema e aplicar o pacote
+HML, sem ativação ou escrita compartilhada nesta etapa. Massa/rateio de
+Bordinhas continua pendente. Detalhes:
+[MEI-PAYMENT-FEES-2026-10-18.md](MEI-PAYMENT-FEES-2026-10-18.md).
+
+
+## Leitura integral do anexo atual — 18/10/2026
+
+Lidas 15 abas, 483 linhas preenchidas/5.627 células, 12 tabelas e três gráficos;
+sem fórmulas de célula. Hash do anexo `add0174b…` difere da fonte anterior;
+única diferença de valores: retirada de LOC005/PATRÍCIA, sem referência nas
+vendas do anexo. Agora são quatro locais. Demais valores reconciliados iguais.
+Relatório separa dados já presentes, respostas já confirmadas, inconsistências,
+faltas reais e pacote técnico HML. Nenhuma gravação ou deploy nesta leitura.
+[ATTACHED-WORKBOOK-COMPLETE-REVIEW-2026-10-18.md](ATTACHED-WORKBOOK-COMPLETE-REVIEW-2026-10-18.md).
+
+
+## Saquinho das Bordinhas — custo confirmado em 18/10/2026
+
+Usuário confirmou saquinho a R$ 0,11 por unidade, explicitado como 11 centavos
+no contexto da fonte. Com referência de adesivo R$ 0,16, acabamento R$ 0,27
+por pacote de 100 g/R$ 6,00. Valor já usado na comparação, sem recálculo ou
+soma duplicada. Identidade de estoque deve ser própria ou validada, sem
+fundir embalagens só por preço. Peso/rateio da massa e taxas de venda seguem
+pendentes; sem escrita no banco.
+
+
+## Ensaio de taxas e capacidade — 18/10/2026
+
+Continuidade da revisão: simulações ilustrativas de 0%/3%/5%/8%, sem adotar
+percentuais nem escrever no banco. Meta R$ 10 mil de lucro pede R$ 15.881 a
+R$ 17.783 de vendas e 61,495 a 68,705 receitas equivalentes. A 3%, cerca de
+64 receitas antes de perdas, praticamente no teto informado. Fonte não traz
+peso assado nem taxas operacionais; preparado procedimento de medição das
+Bordinhas. Preparação técnica identifica enum só de recheio e writer de
+Bordinhas por capacidade residual como itens a revisar antes de homologação.
+Detalhes: [SCENARIO-READINESS-2026-10-18.md](SCENARIO-READINESS-2026-10-18.md).
+
+
+## Bombom/Kit reconstruídos — 18/10/2026
+
+Confirmados cerca de 50 g de cobertura por bombom, Kit com quatro bombons
+sem embalagem individual e um adesivo por apresentação vendida. Referências
+variáveis reconstruídas em R$ 2,654/Bombom e R$ 9,898/Kit, com MO/energia
+nos fixos. Simulação atualizada: R$ 15.881, 1.477 unidades, R$ 10.058,27 de
+lucro, ainda com reserva 0% não aprovada e rateio de Bordinhas pendente.
+Conta independente aprovada; sem escrita de banco ou ativação. Capacidade
+condicional de 61,495 receitas mensais, sem Bordinhas como produção extra,
+frente a 56–64 informadas. Perguntados taxas/impostos e peso da massa assada.
+Detalhes: [SCENARIO-BUDGET-COMPARISON-2026-10-18.md](SCENARIO-BUDGET-COMPARISON-2026-10-18.md).
+
+
+## Chocolate e recheios esclarecidos — 18/10/2026
+
+Usuário confirmou Melken 50% em pó na massa e recheios comprados prontos
+conforme o workbook. Histórico confirma a descrição do chocolate; referência
+mestre preservada a R$ 60/kg, 300 g = R$ 18/receita. Sem sub-receitas de recheio;
+20/40 g aprovados mantidos. Não confundir pó INS003 com cobertura INS019 nem
+remapear fruta histórica para recheio pronto. Falta Bombom/Kit, rateio de
+Bordinhas e taxas antes de ativar. Estimativa “uns 50 g” recebida para Bombom;
+confirmada como apenas cobertura por unidade. Referência de R$ 40/kg resulta
+em R$ 2,00 de cobertura por bombom, sem massa/embalagem. Pergunta sobre
+embalagem do Kit respondida: quatro bombons diretamente em uma embalagem,
+sem embalagem individual. Estimativa de cobertura 200 g/R$ 8 por kit.
+Quantidade de adesivos no kit e embalagem/adesivo do avulso em confirmação;
+nenhum custo aplicado ainda.
+Especificações registradas, sem escrita na
+base. Meta confirmada pelo usuário continua R$ 10.000 de lucro após custos,
+incluindo todos os produtos, inclusive Bordinhas.
+Detalhes: [SCENARIO-COST-RECONCILIATION-2026-10-18.md](SCENARIO-COST-RECONCILIATION-2026-10-18.md).
+
+
+## Simulação de orçamento revisado — 18/10/2026
+
+Comparação local preparada com R$ 2.200 fixos integrais, MO/energia retiradas
+somente das referências variáveis e Bordinhas proposta a R$ 6,00. Funções
+nativas e conta Decimal independente conferem: R$ 15.551 de faturamento,
+1.437 unidades e R$ 10.057,87 de lucro projetado com reserva 0% ainda não
+aprovada. BOM e custos históricos pendentes impedem homologação. Capacidade:
+só brownies somam 58,625 receitas equivalentes frente a 56–64/mês informadas,
+antes de fechar Bombom/Kit. Cenário real permanece draft/rev1, preço anterior;
+nenhuma escrita compartilhada. Detalhes:
+[SCENARIO-BUDGET-COMPARISON-2026-10-18.md](SCENARIO-BUDGET-COMPARISON-2026-10-18.md).
+
+
+## Mão de obra diária e mensal definida — 18/10/2026
+
+Confirmados R$ 150/dia, quatro dias de produção por mês, 14–16 receitas por
+dia e serviço completo de corte/recheio/embalagem. MO mensal R$ 600 já
+incluída nos R$ 2.200 fixos; outros fixos R$ 1.600. Rateio informativo
+R$ 10,71–R$ 9,38/receita, com volume mensal condicional 56–64 receitas.
+Contar MO uma única vez e reconciliar eventual diferença de alocação/ociosidade.
+Energia também confirmada dentro dos R$ 1.600 restantes. Comparação de
+planejamento retira MO/energia já orçadas dos custos variáveis, mantendo
+R$ 2.200 integrais e sem alterar custeio realizado. Confirmada uma embalagem
+e um adesivo por brownie PROD003–PROD016; 14 vínculos preparados na evidência,
+sem aplicar no banco nem somar novamente o custo histórico do adesivo.
+Bordinhas definida pelo usuário como pacote de 100 g a R$ 6,00 (referência
+histórica R$ 5,00), aproveitando massa fora do padrão de brownie regular.
+Rendimento variável a pesar por lote, sem assumir doze pacotes/receita.
+Confirmado um saquinho e um adesivo por pacote. Usuário remeteu custo à fonte:
+acabamento histórico R$ 0,27, adesivo R$ 0,16 e resíduo calculado de saquinho
+R$ 0,11; vínculo nominal do saquinho não consta. Não escolher SKU apenas
+por preço. Rateio da massa aproveitada ainda pendente.
+Não atribuir custo zero nem duplicar custo/volume. Demais fichas/taxas e
+aquisições pendentes.
+Sem alteração de tarifas horárias, fichas, código ou cenário.
+Detalhes: [SCENARIO-COST-RECONCILIATION-2026-10-18.md](SCENARIO-COST-RECONCILIATION-2026-10-18.md).
+
+## Reconciliação de custos em revisão — 18/10/2026
+
+Usuário escolheu revisar custos/premissas antes da ativação. Fonte original
+reconferida com mesmo hash; receita com oito ovos e parâmetros atuais
+confirmados em READ ONLY. Comparação condicional de 1 kWh + 2 h por receita
+resulta em R$ 55,46 versus R$ 31,35 histórico e 11 margens abaixo de 70%.
+Não aplicado: falta definir base de rateio, ficha física, composição dos fixos
+e taxas. Cenário 1/v1/rev1 segue draft, mix 100%; sem dados modificados.
+Detalhes: [SCENARIO-COST-RECONCILIATION-2026-10-18.md](SCENARIO-COST-RECONCILIATION-2026-10-18.md).
+
+
+## Revisão de ativação solicitada — 18/10/2026
+
+Usuário pediu tirar o cenário do rascunho. Conferência atual: ID 1/v1/rev1,
+17 produtos finais ativos, mix 100%, nenhum cenário ativo e 22 testes locais
+aprovados. Custos históricos e reserva 0% continuam com ressalvas; solicitada
+decisão entre reconciliar antes de ativar ou aceitar referência provisória.
+Sem escrita de banco nesta revisão. Detalhes:
+[SCENARIO-ACTIVATION-REVIEW-2026-10-18.md](SCENARIO-ACTIVATION-REVIEW-2026-10-18.md).
+
+
+## Categorias e Locais — incremento de UX em 18/10/2026
+
+Listas em largura total e criação/edição em modal, com busca/situação em
+Categorias e limpeza dos filtros de Locais. Diálogo compartilhado com Produtos;
+valores preservados em erro, confirmação de descarte e envio bloqueado contra
+repetição. 509 testes e 13 ensaios locais de navegador aprovados, incluindo
+regressão de Produtos e celular. Lint, tipos e Oxfmt aprovados. Sem schema,
+regras de domínio ou dados alterados. Publicado do commit `e890e3d`, versão
+`29df3f6d-48be-4a80-b11c-a3c2b992cd69`, confirmada a 100% pela API. Filtros,
+criação e edição conferidos na sessão autenticada, sem envio dos cadastros.
+Contagens e digests completos de categorias/locais iguais antes/depois.
+Builds isolados de CI e HML aprovados; CI/CodeQL remoto deste commit pendente
+na integração GitHub. Recibo:
+[evidence/category-location-ux-hml-2026-10-18.json](evidence/category-location-ux-hml-2026-10-18.json).
+Detalhes: [CATEGORY-LOCATION-UX-2026-10-18.md](CATEGORY-LOCATION-UX-2026-10-18.md).
+
+
+## UX publicada e conferida no HML — 18/10/2026
+
+Sob autorização explícita, dashboard e modal de Produtos publicados pelo
+build HML isolado do commit `339eb80`. Versão
+`3790b237-6f04-4c9a-aa5b-6c8425d20270`, deployment
+`449caf92-cde8-4614-b772-f8bfd0fc49ce`, confirmados pela API com **100%**.
+Dashboard autenticado conferido com dados reais e modal aberto/cancelado sem
+gravação. Primeiro carregamento falhou temporariamente na verificação da
+sessão; reload recuperou o acesso e as duas telas foram confirmadas.
+
+Banco verificado antes/depois em READ ONLY: 37 produtos, um cenário draft,
+mix 10.000, nenhum cenário ativo e zero vendas/compras/movimentos. Não havia
+migration ou carga necessária para estas melhorias. Sem alteração de secrets,
+RBAC, tarifas, fichas ou produção. 509 testes, nove ensaios locais, tipos,
+lint, Oxfmt, Knip e builds aprovados. Recibo:
+[ux-hml-publication-2026-10-18.json](evidence/ux-hml-publication-2026-10-18.json).
+Checkpoints locais abaixo antecedem a autorização/publicação agora concluída.
+
+## Visão geral estruturada — 18/10/2026
+
+Dashboard local com resumo/atualização, quatro cartões navegáveis, atenção
+para reposição, seis atalhos por permissão e últimos registros com situação
+e datas. Orientação sem operações e layout móvel compacto. Despesas limitadas
+ao mês exibido em Brasília, sem incluir meses futuros. Sem novos fatos,
+alteração de custo/CMV, schema ou permissões. 509 testes, quatro cenários de
+dashboard e cinco do modal passaram; tipos/lint/Oxfmt e baseline Knip aprovados.
+Build isolado de CI aprovado em `bae3fa1`; dashboard e modal de Produtos
+aguardam autorização específica de publicação HML. Detalhes em
+[DASHBOARD-UX-2026-10-18.md](DASHBOARD-UX-2026-10-18.md).
+
+## Usabilidade de Produtos — 18/10/2026
+
+Primeiro incremento solicitado antes das tarifas: lista em largura total,
+botão Adicionar produto e editor modal para cadastro/edição. Campos opcionais
+agrupados, teclado/foco, confirmação de descarte, estado de envio e retenção
+dos valores em erro. Mesmas funções de servidor e permissões; sem escrita
+na base compartilhada. 507 testes e cinco cenários locais de navegador
+aprovados, incluindo celular; lint/tipos/Oxfmt e baseline Knip conferidos.
+Build isolado de CI aprovado em `8b39b67`; publicação HML ainda não autorizada.
+Detalhes em [PRODUCT-CATALOG-UX-2026-10-18.md](PRODUCT-CATALOG-UX-2026-10-18.md).
+
+## Mix 100% — rascunho solicitado — 18/10/2026
+
+Usuário limitou a correção ao sistema como cenário em rascunho. Payload dos
+17 produtos criado com IDs reais, pesos originais 103% preservados e
+normalização existente fechando em 10.000 pontos-base. Contrato, cálculo
+independente, invariância à ordem e 14 testes de cenários passaram. Preços
+conferidos; custos são referências históricas com três casas e ressalvas
+explícitas. Workbook permanece inalterado. Cenário **ID 1, versão 1, revisão 1,
+status draft**, criado pela sessão autenticada do Dono às 13:28:58 de Brasília.
+Leitura independente confirmou payload, 17 itens, soma 10.000, um histórico
+e uma auditoria com autoria consistente. Zero cenários ativos e zero fatos
+operacionais. Recibo `evidence/scenario-mix-draft-execution-2026-10-18.json`;
+não repetir criação nem ativar por inferência. Detalhes/payload em
+[SCENARIO-MIX-DRAFT-2026-10-18.md](SCENARIO-MIX-DRAFT-2026-10-18.md).
+
+## Revisão de completude do workbook — 18/10/2026
+
+Auditoria somente leitura das 15 abas e da original atual confirmou 17
+produtos/preços/categorias, 19 insumos físicos mais ovos, sete linhas da
+receita/8 ovos e oito parâmetros gerenciais. Detectadas lacunas além das duas
+fichas ressalvadas: INS006 não tem vínculo de consumo; os 14 brownies deixam
+resíduo histórico compatível com um adesivo de R$ 0,16/unidade. É inferência
+numérica forte, não regra física aprovada. Bordinhas tem acréscimo de R$ 0,27
+sem acabamento definido; bombom/kit têm cobertura/embalagem ainda sem BOM.
+
+Energia/MO da ficha histórica (R$ 0,04/R$ 1,70) divergem das quantidades e
+tarifas explícitas (1 kWh × R$ 0,85; 2 h × R$ 12,50). Total teórico com os
+mesmos custos físicos: R$ 55,46 versus R$ 31,35 antigo, antes de adicionais;
+não é custo realizado. Confirmar base de rateio antes de homologar produção.
+Metadados `operationallyComplete` não certificam completude física das fichas.
+
+Fonte não tem fórmulas de célula; preços sugeridos são compatíveis com markup
+2,5/margem 60%, frente ao mínimo 70%; mix soma 103%. Nove SKUs adicionais
+pertencem ao histórico não importado. Fornecedores/reposição, validade/lote,
+responsáveis das ações e motivos das duas divergências de receita faltam na
+própria fonte. Histórico, cinco locais, cenário e ações permanecem escopos
+separados, sem autorizar carga por esta análise. Nenhuma alteração de banco,
+workbook ou código operacional. Plano priorizado e células de origem em
+[WORKBOOK-COMPLETENESS-REVIEW-2026-10-18.md](WORKBOOK-COMPLETENESS-REVIEW-2026-10-18.md).
+
+## Ficha técnica cadastrada na original — 18/10/2026
+
+Usuário autorizou reconferir workbook/receita/ficha, incluir os ovos, ensaiar
+e prosseguir se tudo estivesse correto. Workbook disponível reaberto: mesmo
+SHA-256 e zero issues; receita, perfis e tarifas iguais ao pacote `1f23276`.
+Backup atual `br-solitary-unit-ac3lawit`, sem compute, LSN `0/21275A0`, preservado.
+Quota recusou segunda branch; cópia privada anterior `br-aged-violet-ac5aap1s`
+foi reutilizada após equivalência exata das 38 tabelas, journal completo e
+nove seções do schema com a original. Nenhum backup removido ou reset aplicado.
+
+Ensaio do SQL exato e leitura independente passaram; original revalidada e
+recebeu as mesmas 144 instruções em transação única. Leitura independente às
+`2026-10-18T15:03:03.883098Z` confirmou 37 produtos, incluindo Ovos Grandes em
+unidades, receita-base com sete linhas/8 ovos, dois requisitos e duas tarifas,
+17 perfis, 14 vínculos de embalagem e 12 recheios de 20/40 g. Um recibo novo e
+43 auditorias conferem com as entidades. Referência **consumida**
+`TECH-CATALOG-2026-10-18-001`; não repetir.
+
+Todos os registros anteriores das 38 tabelas e 33 recibos de schema preservados
+por SHA-256; definições do schema idênticas. Nenhum PLAN, compra, movimento,
+lote, venda, perda ou fato financeiro criado. Custos históricos continuam
+somente metadados brutos. Original conserva endpoint/default/primary; cópia
+de ensaio suspensa/idle, backup sem compute e demais backups preservados.
+Não houve deploy, mudança de segredo ou migration nesta aplicação.
+
+Recibo e leituras em `evidence/technical-catalog-{execution,original-readback,rehearsal-readback}-2026-10-18.json`.
+Verificador offline `scripts/verify-technical-catalog-readback.mjs` aprovou
+os dois readbacks. Pacote já passou 507 testes e 16 cenários PG17; checks
+locais finais também aprovados. Cadastro confirmado no banco; interface
+protegida e fluxo operacional não foram homologados por esta aplicação.
+Bombom/kit continuam com regras de embalagem/cobertura pendentes. Próxima
+etapa é preparar estoque rastreável e cenário de QA autorizado.
+O checkpoint seguinte é histórico, anterior à autorização/aplicação.
+
+## Ficha técnica — SQL separado ensaiado — 18/10/2026
+
+Pacote O01–O04 pronto para revisão, sem aplicação real. Workbook reaberto,
+mesmo SHA-256 e zero issues; manifesto v4 e candidato reconciliados.
+SQL exclusivo inclui Ovos Grandes, receita de sete linhas, dois requisitos,
+duas tarifas, 17 perfis de referência, 14 embalagens e 12 recheios, com
+recibo e 43 auditorias. Exclui os 17 PLAN e todo fato operacional; custos
+históricos fracionários ficam brutos em JSONB, sem projeção monetária.
+Bombom/kit conservam ressalva de ficha incompleta, sem bloqueio novo na UI.
+
+507 testes, 16 cenários PostgreSQL 17, tipos, lint, Oxfmt e Knip aprovados.
+Suíte restrita ao sandbox falhou em subprocessos e foi interrompida; repetição
+fora da restrição passou. Preservação das 38 tabelas e 33 recibos conferida
+no laboratório. Build não repetido, pois não mudou runtime da aplicação;
+CI/CodeQL remotos deste pacote não executados. Contêiner descartável encerrado.
+Nova leitura real READ ONLY confirma 36 produtos, domínio técnico vazio,
+zero compras/movimentos/lotes/vendas e referência/hash não consumidos.
+
+Plano concreto: [TECHNICAL-CATALOG-EXECUTION-PLAN-2026-10-18.md](TECHNICAL-CATALOG-EXECUTION-PLAN-2026-10-18.md).
+SQL e recibos em `evidence/technical-catalog-{apply,package,test,readonly-refresh}-2026-10-18.*`.
+Falta autorização específica para backup atual em branch sem compute, ensaio
+em cópia privada e cadastro na original somente após sucesso. Nenhum deploy,
+estoque, operação real, migration ou alteração de segredo nesta etapa.
+Referência `TECH-CATALOG-2026-10-18-001` continua disponível na base real.
+O checkpoint anterior abaixo descreve a preparação histórica já superada.
+
+## Próxima etapa — ficha técnica preparada para revisão — 18/10/2026
+
+Preflight READ ONLY reconfirmou 36 produtos e zero receitas/perfis/tarifas,
+movimentos e lotes. Candidato offline inclui Ovos Grandes, receita de sete
+linhas, dois requisitos/tarifas, 17 perfis e 12 componentes aprovados.
+Importador antigo inclui 17 PLAN históricos fora desse escopo; não executar
+com confirmação. Falta gerar e ensaiar SQL separado antes da autorização de
+cadastro. Bombom/kit continuam sem regra explícita completa de embalagem e
+cobertura. Plano e handoff: `TECHNICAL-CATALOG-PREPARATION-2026-10-18.md` e
+`HANDOFF-TECHNICAL-CATALOG-2026-10-18.md`. Nenhuma escrita externa nesta etapa.
+
+## Custos exatos — schema aplicado e HML publicado — 18 de outubro de 2026
+
+Usuário aprovou aplicar o pacote e publicar em HML. Snapshot novo recusado
+pela quota; backup sem compute `br-bold-union-acju2qrp`, LSN `0/2072808`,
+preservado. Ensaio na derivada `br-aged-violet-ac5aap1s` passou; original
+recebeu o mesmo lote em transação única com locks, guards de 31 recibos e
+preservação SHA-256 dos registros de todas as 38 tabelas. Nove colunas JSONB
+adicionadas sem backfill; 33 recibos finais, incluindo as duas pontes antigas.
+Leitura independente e 38 consultas de schema LIMIT 0 aprovadas. Nenhum fato
+operacional foi criado ou alterado; nenhuma cadeia histórica foi reescrita.
+CI 39121760695 e CodeQL 39121760660 aprovados em `e599a86`, zero alertas
+abertos conferidos. Publicado `b80a81f` (código idêntico a `e599a86`) pelo
+build isolado, preservando a chave pública real: versão
+`2e649847-ec1b-4997-bf74-bcad310977f7` confirmada a 100%. Cinco secrets,
+limiter e duas vars preservados; sem flags diagnósticos. Bundle servido
+`compras-CHINRhX7.js` confirma quantidade em kg e valor total do item.
+Login renderizado/HTTP 200; seis rotas protegidas redirecionam ao login.
+Primeira checagem de `/` com redirecionamento teve um 500; causa não estabelecida,
+consultas diretas seguintes e repetição completa passaram. Não declarar que
+houve zero falhas. Conferência autenticada e homologação operacional seguem
+pendentes, sem compra, lote ou venda de teste na original. Backup permanece;
+compute da cópia de ensaio suspenso/idle. Plano e recibo em
+`evidence/exact-costs-rollout*-2026-10-18.json`.
+
+## P0 — custos exatos preparados localmente — 18 de outubro de 2026
+
+Usuário definiu compra dos insumos de massa sempre em kg pelo valor total do
+item, precisão interna suficiente e apresentação monetária em duas casas.
+Implementação local passa a preservar frações inteiras exatas em JSONB, sem
+float ou escolha de escala que aproxime dízimas. R$ 12,50/1000 g → 250 g
+custa exatamente R$ 3,125; quatro consumos fecham R$ 12,50. Consumo, saldo,
+lote, energia/MO, saídas, FIFO/reversões e margens transportam o valor exato;
+projeções legadas em centavos não são a fonte dos novos custos.
+
+505 testes aprovados com ambiente limpo; tipos, lint, formatação e Knip
+aprovados (três referências contextuais, sem novos achados). PostgreSQL 17 local descartável
+confirmou migrations aditivas/preservação, compra pelo total, replay/conflito,
+quatro conclusões, custo/razão/FIFO e rollback tardio de compra e produção.
+Não houve escrita externa, backfill ou deploy. A versão HML abaixo ainda
+contém C01; não está homologada para esse custo novo.
+
+Código salvo em `8313eab`; build HML isolado desse HEAD aprovado com chave
+pública de teste e sem publicação. Regressão direcionada posterior dos writers
+de lifecycle e custos exatos também passou. Contêiner PostgreSQL descartável
+encerrado ao fim do ensaio. CI/CodeQL remotos desse código não foram executados
+nesta tarefa; os resultados remotos citados nos checkpoints antigos não o
+cobrem. A implementação está somente no Git local, sem push nesta rodada.
+
+[ADR-0002](../ADR-0002-CUSTOS-EXATOS-E-EXIBICAO-MONETARIA.md) documenta decisão,
+precisão, apresentação e rollout. Nove colunas em oito tabelas estão no pacote
+`drizzle/pending-exact-costs/`, fora da cadeia ativa congelada da issue #36.
+Journal, SQLs, snapshots e manifestos históricos permanecem intactos. Aplicar
+em base compartilhada exige plano por alvo, backup/ensaio e autorização; só
+então publicar código compatível e homologar. Não rodar o migrador genérico
+nem publicar esse código sobre o schema antigo.
+
+## Levantamento consolidado e bloqueio de custo — 18 de outubro de 2026
+
+Revisão de código, documentos, Git/GitHub, auditoria npm e contagens agregadas
+READ ONLY concluída em [LEVANTAMENTO-PENDENCIAS-2026-10-18.md](LEVANTAMENTO-PENDENCIAS-2026-10-18.md).
+Base `736953e`: 57 commits fora da main; PRs #44/#45 draft e issue #36 abertas.
+Original: 36 produtos; zero receitas, perfis, tarifas, movimentos, compras,
+lotes e vendas. Ovos Grandes, usado pela ficha técnica, ainda não cadastrado.
+CI/CodeQL da base aprovados, zero alertas abertos da branch e npm audit atual
+sem vulnerabilidades; esse resultado não comprova integridade de todo caminho.
+
+**C01 — corrigir antes de homologar custo produtivo:** entrada de 1000 g com
+valor exato R$ 12,50 conserva esse total, mas `enrichCosts` multiplica o custo
+médio previamente arredondado de R$ 0,013/g, calculando R$ 13,00 para consumir
+os 1000 g. Reprodução pura confirmada; a validação anterior de compras em kg
+não cobriu a composição até o consumo. Falta conservar o valor em centavos
+nos consumos e testar consumo parcial/sucessivo/integral. Nenhum dado ou código
+foi corrigido neste levantamento. Homologação financeira/produtiva depende
+dessa correção. Publicação HML existente permanece evidência técnica, sem
+promover o fluxo produtivo a homologado.
+
+## Relatórios como segunda guia — 18 de outubro de 2026
+
+Usuário pediu mover Relatórios para a segunda posição e deixar tudo disponível.
+Ordem publicada: Visão geral → Relatórios → Estoque → Metas e cenários; demais
+guias preservam sua sequência. Rotas, ícones e permissões mantidos. Publicado
+`161e6a5` pelo build isolado com a mesma chave pública real do HML; versão
+`b60a9d12-12b1-4458-81b4-53edaf674730` confirmada a 100%. Bundle servido
+`ManagementLayout-B6_qt7YQ.js` confere exatamente os 14 links. Login HTTP 200;
+páginas protegidas continuam redirecionando anônimos ao login. Tipos, lint,
+formatação, diff e build aprovados. Nenhuma escrita em banco ou mudança de
+configuração/secrets. Recibo: `evidence/hml-reports-second-publish-2026-10-18.json`.
+[CI 39114028314](https://github.com/naiguelcabral/seus-brownies/actions/runs/39114028314)
+e [CodeQL 39114028337](https://github.com/naiguelcabral/seus-brownies/actions/runs/39114028337)
+aprovados para `161e6a5`; três análises sem erro e zero resultados na API.
+
+## Guias e compras em kg publicadas em HML — 18 de outubro de 2026
+
+Usuário autorizou concluir integralmente após a apresentação do gate HML.
+Publicado HEAD `d8369bd` exclusivamente em `cacau-v1-hml`, pelo build isolado
+com a chave pública real recuperada do bundle público anterior. Versão
+`36960752-1cc0-4fee-8db7-76093d96a348` confirmada a 100% pela API de deployments.
+Versão anterior `1ea59a90-c289-4c99-bf8f-a0bbd82d6b37` continua referência de rollback.
+Cinco secrets preservados por nome/tipo; limiter, duas vars e ausência de flags
+diagnósticos confirmados. Nenhum secret lido/alterado ou SQL de escrita aplicado.
+
+HTTP confirmou a ordem exata dos 14 links no `ManagementLayout-R2aSpw8r.js`,
+iniciando Visão geral → Estoque → Metas e cenários → Relatórios; bundle de
+Compras contém quantidade/preço por kg e indicação de 1000 g no estoque.
+Login público HTTP 200 e renderizado no navegador. GETs anônimos de `/`,
+`/estoque`, `/cenarios`, `/relatorios` e `/compras` redirecionam ao login.
+Conferência autenticada depende da entrada humana solicitada na aba HML;
+não foi criada compra ou movimentação de teste no banco compartilhado.
+Evidência: `evidence/hml-navigation-publish-2026-10-18.json`.
+Código e evidências salvos na branch remota `feat/input-catalog-kg-purchases`.
+[CI 39113836930](https://github.com/naiguelcabral/seus-brownies/actions/runs/39113836930)
+e [CodeQL 39113836915](https://github.com/naiguelcabral/seus-brownies/actions/runs/39113836915)
+aprovados em `922b026` (código publicado idêntico, com documentação adicional).
+API de code scanning confirmou três análises sem erro e zero resultados.
+Este checkpoint substitui as pendências de publicação abaixo; homologação
+operacional autenticada continua distinta da conferência do código publicado.
+
+## Ordem das guias do sistema — 18 de outubro de 2026
+
+Navegação local reorganizada em `ManagementLayout`, com prioridade explícita
+do usuário: Visão geral; Estoque; Metas e cenários; Relatórios; Compras;
+Produção; Vendas; Despesas; Financeiro;
+Plano de ação; Categorias; Produtos; Locais; Parâmetros. Rótulo geral passa de
+Cadastro para Gestão; navegação acessível identificada como Navegação principal.
+Rotas, ícones, filtros de permissão e conteúdo das páginas preservados.
+Tipos, lint, formatação e revisão de diff aprovados também para a ordem final;
+build HML isolado de `25484b7` aprovado antes da preferência final de ordem.
+Essa preferência altera somente a posição dos links. Sem alteração de banco,
+permissão ou deploy. Publicação HML e conferência visual permanecem pendentes.
+
+## Insumos cadastrados e compra em kg — 18 de outubro de 2026
+
+Solicitação explícita do usuário autorizou a carga de `INS001–INS019` na original
+`steep-brook-51659857` / `br-lingering-wind-acwh5wap` / `neondb`: 11 ingredientes
+e oito embalagens/materiais, ativos, sem preço de venda, categoria
+`Insumos do workbook`. Dez ingredientes usam compra em kg e estoque/consumo em g,
+com dez aliases `purchase-kg:INS…`, multiplicador 1000. Óleo continua em ml;
+papel manteiga em m; demais materiais em unidades. Energia e mão de obra não
+integram estoque físico.
+
+Transação única com locks, guards e conferência exata, preservando todos os
+produtos, categorias, recibos e auditorias anteriores. Referência **consumida**
+`CATALOG-INPUTS-2026-10-18-001`; 29 auditorias, ator Auth não atribuído.
+Readback independente às `2026-10-18T08:42:13.546Z` confirmou os 19 itens,
+dez conversões, 17 produtos finais e zero movimentos. Manifesto, SQL e readback
+em `evidence/catalog-inputs-import*-2026-10-18.*`. Fonte tem o mesmo SHA-256 da
+carga anterior; nenhum saldo, compra, receita, perfil ou histórico foi importado.
+
+Correção local de Compras permite kg e preço por kg para produtos com estoque
+em g. Servidor valida a unidade e converte sem ponto flutuante; preserva a
+quantidade e preço originais e inclui a unidade no hash de idempotência.
+O total em centavos acompanha a entrada via `allocated_cost`; custo unitário
+conserva as três casas existentes, com arredondamento informativo. Não altera
+precisão nem algoritmo de consumo/CMV. Sem migration ou deploy nesta tarefa.
+A seleção kg/g depende de publicação HML autorizada; cadastro já persistido.
+
+495 testes, tipos, lint, formatação e Knip aprovados. PostgreSQL 17 descartável:
+sucesso/preservação, repetição rejeitada e rollback por falha tardia de auditoria.
+Build HML isolado de `021cf74` aprovado, com chave pública de teste e sem
+publicação. Primeira suíte sob sandbox interrompida após falha de ambiente;
+reexecução completa fora do sandbox passou os 495 testes. Homologação visual
+e publicação HML permanecem pendentes de autorização específica. Nenhuma
+alteração da sessão/auth preparada na branch anterior foi publicada por esta carga.
+
+## Revisão Knip — 18 de outubro de 2026 (UTC)
+
+Todas as 48 ocorrências iniciais foram revisadas: 10 arquivos órfãos e sete
+dependências diretas removidos, 21 exports tornados internos e sete declarações
+sem uso eliminadas. Baseline reduzida a três referências contextuais, com
+justificativa por item: CSS `tw-animate-css`, módulo virtual `cloudflare:workers`
+e loader transitivo Drizzle no teste de segurança. Nenhuma supressão ampla,
+regra operacional ou teste removido. Inventário completo em
+[KNIP-CODEQL.md](KNIP-CODEQL.md). Instalação limpa (`npm ci --ignore-scripts`),
+492 testes, tipos, lint, formatação e Knip aprovados. Lockfile perdeu 43 pacotes,
+sem alterar versões/resoluções/integridades dos restantes; auditoria npm sem
+vulnerabilidades. Build HML isolado e [CI 39089405535](https://github.com/naiguelcabral/seus-brownies/actions/runs/39089405535)
+aprovados em `00ae5be`; [CodeQL 39089405457](https://github.com/naiguelcabral/seus-brownies/actions/runs/39089405457)
+aprovado nas três linguagens, com zero resultados por análise e zero alertas
+abertos conferidos na API em `2026-10-18T08:29:46Z`. Sem deploy/escrita em banco.
+Resultados anteriores abaixo são históricos. Integração em main e homologação
+humana da sessão após publicação HML autorizada permanecem pendentes.
+
+## Knip e CodeQL — integração inicial na branch de trabalho
+
+Pedido do usuário para todo o projeto: Knip 6.41.0 fixado em manifesto/lockfile,
+configuração estática de fontes/testes/E2E/scripts, análise integral e gate
+incremental na CI com 48 ocorrências iniciais visíveis. Novos achados, retorno
+de item resolvido ou falha da ferramenta bloqueiam; nada foi apagado por Knip.
+TypeScript/Oxc e todas as versões de pacotes anteriores foram preservados.
+
+CodeQL configurado para JavaScript/TypeScript, Python e GitHub Actions,
+`security-extended`, sem build da aplicação, secrets ou operações em banco.
+Instalação limpa, 492 testes, tipos, lint, formatação e gate Knip aprovados.
+Build HML isolado local e CI remota `39088191790` aprovados; código final
+`a96a0f9`. CodeQL `39088191746` passou nas três linguagens e a API confirmou
+zero resultados por linguagem/zero alertas abertos na branch. Oito alertas
+iniciais foram corrigidos em testes/scripts, sem suprimir queries nem arquivos.
+PostgreSQL 17 descartável `39088137292` passou e preservou 17 arquivos em
+artefato. Integração em main/PR #45 continua separada; a triagem Knip foi concluída
+no checkpoint acima. Sem deploy ou alteração em banco compartilhado.
+Procedimento: [KNIP-CODEQL.md](KNIP-CODEQL.md).
+
+## Balanço de linguagens e procedimentos — 17 de outubro de 2026
+
+Revisão documental após cadastro dos 17 produtos e preparação da correção de
+sessão. Fetch confirmou main em `32a9e11`, ainda em TypeScript 6/ESLint/Prettier;
+esta branch contém TS 7/Oxc, segurança e contratos React ainda não integrados.
+`npm ls` reconfirmou TS 7.0.2 único; auditoria npm atual sem vulnerabilidades.
+PR #45 aberta (`2fa511b`): CI, CodeQL e três passos informativos Oxc/Knip verdes,
+porém sua configuração reduzida precisa ser reconciliada com as regras locais.
+CI remota desta branch ainda refere `48b101d`, anterior à correção de sessão.
+
+README/status histórico agora distinguem development da original; workflow/DoD
+explicitam builds isolados. Pendem reconciliação do prompt Prettier no piloto,
+versão Python suportada/CI, integração/CI final, publicação autorizada da
+correção de sessão e homologação login → Estoque. Não houve atualização de
+pacote, merge, deploy, importação ou SQL nesta revisão.
+Detalhes e prioridades em
+[ATUALIZACOES-E-PENDENCIAS-2026-10-17.md](ATUALIZACOES-E-PENDENCIAS-2026-10-17.md).
+
+## Sessão limitada pelo provedor — correção local preparada
+
+Relato de retorno ao login ao abrir Estoque em HML. Formulário público
+renderizado/HTTP 200; três logins `success` na auditoria coincidem com três
+erros 429 do Neon Auth ao criar `session_data` na versão HML `1ea59a90`.
+Correção local elimina a consulta duplicada em `getSessionStatus` e distingue
+falha temporária de sessão ausente, preservando negação de acesso, 401,
+cookies, permissões e revalidação do vínculo. Sem retry/cache global.
+489 testes, tipos, lint, formatação e build HML isolado de `899f7ec` aprovados
+(chave pública de teste, sem secrets). Publicação específica HML e confirmação
+humana de login → Estoque pendentes. Não foi aplicado deploy nem SQL de escrita.
+Detalhes: [AUTH-SESSION-THROTTLING-2026-10-17.md](AUTH-SESSION-THROTTLING-2026-10-17.md).
+
+## Catálogo de venda cadastrado — 17 de outubro de 2026
+
+Após solicitação explícita do usuário, cadastrados na original
+`steep-brook-51659857` / `br-lingering-wind-acwh5wap` (`production`) /
+`neondb` os 17 produtos finais `PROD001–PROD017`, ativos, unidade `unit`,
+com nomes e preços praticados da cópia disponível do workbook. Preflight
+confirmou zero produtos e zero recibos de importação; a categoria preexistente
+`Bombons` foi preservada e quatro categorias da fonte foram acrescentadas.
+
+Transação única com locks, guards de catálogo vazio, referência/hash não
+consumidos e conferência exata dos 17 registros. Recibo
+`CATALOG-SALES-2026-10-17-001` **consumido**, com 17 eventos de auditoria;
+ator Auth não atribuído, execução Codex sob instrução humana registrada no motivo.
+Consulta independente após commit às `2026-10-18T00:25:56.363Z` confirmou
+os 17 produtos, preços/categorias/atividade e recibo. Estoque, receitas e
+perfis continuam com zero registros; insumos e histórico não foram importados.
+
+Fonte disponível tem SHA-256
+`25aa62df5fc9b2e01402e9c242142322d9c6f54a345e800cb947b77865ce5b64`,
+idêntico às prévias históricas. Não comprova equivalência ao arquivo `(4)`
+citado na governança; preços são os da cópia apresentada e aceita na conversa.
+Manifesto, SQL executado e leitura posterior em
+`evidence/catalog-sales-import-{manifest-,readback-}2026-10-17.json` e
+`evidence/catalog-sales-import-2026-10-17.sql`. Não reaplicar a referência.
+Nenhum schema, deploy, secret, venda ou movimento foi alterado/criado.
+Listagem pelo banco confirmada; renderização na sessão autenticada não verificada.
+
+## Original atualizada até 0028 — 17 de outubro de 2026
+
+Usuário aceitou explicitamente o backup em branch no lugar do snapshot novo
+recusado pela quota. Plano/valores `0019` e mix novo vazio `0028` já estavam
+aprovados. Backup `br-morning-star-ac9j0kkh`, sem compute, e snapshot anterior
+preservados; cópia `br-misty-surf-acbrzli5` mantida com compute suspenso/idle.
+
+Preflight revalidou a original `br-lingering-wind-acwh5wap` como `production`,
+primary/default, endpoint `ep-late-water-acahd1z1`, baseline exata de 17 recibos
+e ausência de aplicação parcial. Lote ensaiado aplicado em transação única:
+102 instruções principais mais locks e verificações de preservação/ORM,
+148 instruções no total. SHA-256 do lote verificado:
+`a6a7e3f77a9a7f48f984c4e61ff819c75d2e3cc8b4bc77fcfc98f542aaa17783`.
+
+Conferência posterior READ ONLY às `2026-10-17T19:43:46.671Z`: **31 hashes e
+timestamps idênticos** ao manifesto (29 migrations originais e duas pontes),
+38 consultas ORM com LIMIT 0 aprovadas; todos os registros anteriores das
+29 tabelas, nove linhas incluindo acessos/auditoria, preservados por digests
+antes/depois e guard dentro da transação. Dono e Gerente permanecem ativos.
+
+Catálogo independente da original coincide exatamente com cópia e laboratório:
+SHA-256 `6832cef678c0a00c28f926fc75484ad8c6b1dd1e63a4cd29af4ff0dde30c7642`.
+São 38 tabelas, 435 colunas, 152 constraints, 112 índices, 21 enums, duas
+funções/dois triggers, 37 sequences e zero policies públicas. Configuração
+financeira confere com a aprovação; mix novo tem zero linhas. Nenhuma data de
+entrega antiga foi inventada e nenhum backfill ou importação foi executado.
+
+Auth G1 mantém seu endpoint; original conserva nome/default/primary. Worker
+HML segue em `1ea59a90-c289-4c99-bf8f-a0bbd82d6b37`, 100%, sem novo deploy,
+secrets alterados ou flags diagnósticos ativos. Login público renderizado em
+navegador anônimo. Usuário orientado a sair/entrar para confirmar o painel;
+**a sessão protegida ainda aguarda confirmação humana**. Homologações reais de
+venda/produção/FIFO/finanças continuam tarefas separadas.
+
+Recibo final: `evidence/scoped-upgrade-execution-2026-10-17.json`.
+A cadeia ativa versionada e seu preflight não foram modificados; a correção
+localizada do alvo não encerra a classificação global da cadeia para outras
+bases/novas instalações. Não reaplicar o lote nem resetar/apagar backups por
+inferência. Em resposta incerta, conferir journal antes de qualquer ação.
+
+## Ensaio externo e desvio de backup — registro anterior resolvido
+
+Usuário aprovou o plano e os valores `0019`/mix novo vazio `0028`. Preflight
+READ ONLY confirmou baseline exata `0016`, dois vínculos e sete eventos auth.
+Criação do snapshot novo foi recusada: `snapshots limit exceeded` (422).
+Snapshot antigo `snap-withered-poetry-achs77uu` permanece intocado.
+
+Preparação reversível alternativa concluída, sem DDL na original: backup
+`br-morning-star-ac9j0kkh`, sem compute, ancorado na original em LSN `0/1EA56F0`,
+`2026-10-17T19:36:11Z`. Cópia privada derivada `br-misty-surf-acbrzli5`,
+endpoint próprio `ep-bold-smoke-acrcoktt`, recebeu o lote de 102 instruções,
+com locks e guards adicionais de preservação na mesma transação. São 148
+instruções incluindo conferências; o SQL principal aprovado permanece idêntico.
+
+Ensaio passou: 31 recibos, 38 consultas ORM com LIMIT 0, 29 tabelas antigas e
+seus nove registros preservados por SHA-256, incluindo os dois acessos e a
+auditoria. Catálogo tem SHA-256
+`6832cef678c0a00c28f926fc75484ad8c6b1dd1e63a4cd29af4ff0dde30c7642`,
+exatamente o laboratório independente: 38 tabelas, 435 colunas, 152 constraints,
+112 índices, 21 enums, duas funções/dois triggers, 37 sequences e zero policies.
+Baseline/digests anteriores da cópia coincidem com a original; clone a partir
+do backup demonstrado. Nenhuma linha de negócio foi exportada.
+
+Original reconfirmada com 17 recibos; `production` continua primary/default e
+os endpoints original/G1 permanecem nas mesmas branches. Nenhum restore,
+finalização ou realocação de endpoint foi executado. A tentativa de definir
+suspensão automática da cópia foi recusada pela política da conta antes de
+criar recursos; a cópia foi criada com os parâmetros permitidos, 0,25 CU.
+
+Solicitado somente aceite da substituição do snapshot novo por backup em
+branch preservado, mantendo o snapshot antigo. Aceite recebido posteriormente; a aplicação está registrada no checkpoint
+acima. Valores financeiros já aprovados não exigem nova decisão.
+Recibo e lote verificado em `evidence/scoped-upgrade-execution-2026-10-17.json`
+e `evidence/scoped-upgrade-verified-batch-2026-10-17.json`.
+
+## Atualização 0016–0028 — correção delimitada preparada
+
+Continuidade autorizada para corrigir o painel após a liberação de acesso.
+Preparado lote offline de 102 instruções, mantendo todos os SQLs e hashes
+originais; ponte de compatibilidade corrige a `0017` dentro de uma transação.
+Final esperado: 31 recibos (29 originais + dois da ponte), com schema completo
+compatível com as 38 tabelas ORM. Não reescreve a cadeia ativa nem presume o
+histórico de outras bases. `npm run db:migrate` e os gates globais permanecem.
+
+Validação: 481 testes gerais, 26 cenários anteriores PostgreSQL 17 e cinco
+casos novos aprovados, incluindo rollback, drift de hashes, aplicação parcial,
+proteções de produto/idempotência e equivalência do catálogo com migrador
+independente. Dinheiro, quantidades, acessos e auditoria preservados nas fixtures.
+Tipos, lint e formatação aprovados. Nenhum SQL externo ou DDL nesta rodada.
+
+Plano revisável em `SCOPED-UPGRADE-0016-0028-PLAN.md`, com payload exato,
+consultas LIMIT 0 e evidências versionadas. Antes da aplicação: aprovar valores
+iniciais da `0019`, mix novo vazio na `0028`, snapshot novo e restore em cópia
+isolada com `finalize:false` explícito; somente após ensaio positivo aplicar
+na original. Não promove branch nem muda endpoint, secret ou cadastro.
+A autorização anterior até `0016` não cobre automaticamente esse pacote.
+
+## Concessões aprovadas e aplicadas — 17 de outubro de 2026
+
+Após apresentação do SQL e dos quatro ensaios, usuário autorizou explicitamente
+criar na original somente os vínculos Dono e Gerente das duas contas indicadas.
+Preflight revalidou as duas identidades verificadas e os mesmos papéis ativos
+em G1; original `br-lingering-wind-acwh5wap`, endpoint
+`ep-late-water-acahd1z1`, `neondb`, tinha zero vínculos e 17 migrations.
+
+Plano `SQL-ACCESS-RECONCILIATION-2026-10-17.sql` executado via MCP numa única
+transação. SHA-256 do SQL: `91403fbb43dcb8ec130a64cd9a0bce5864297dc1c7fe219dab36bd3a2684775d`.
+Referência **consumida**, não reutilizar:
+`access-reconciliation:20261017:300f24ea-2e14-4b1c-9e4c-b791856d1266`.
+
+Verificação em nova transação READ ONLY confirmou exatamente um `owner` ativo,
+um `manager` ativo e dois eventos `role_changed/success`, com motivo
+`operator_approved_access_reconciliation`, às `2026-10-17T19:19:01.429Z`.
+Journal continua com 17 recibos. Nenhuma identidade, senha, secret, schema,
+regra RBAC, vínculo de origem ou outra conta foi alterado. O ator de sessão
+permanece NULL; aprovação humana administrativa está identificada no metadata,
+sem atribuir ao operador uma sessão da aplicação inexistente.
+
+Usuário orientado a sair e entrar novamente no login HML para validar o painel.
+Concessão confirmada no banco; acesso pela interface ainda aguarda confirmação.
+Diagnósticos temporários permanecem desligados. `0017+` e homologação integral
+continuam fora desta concessão. Evidência em
+`evidence/access-reconciliation-2026-10-17.json`.
+
+## Limite operacional após a concessão
+
+Revisão do carregamento do painel encontrou incompatibilidade de schema:
+`getDashboard`, em `src/features/operations/functions.ts`, faz `select()` de
+`sales` usando o schema atual, que inclui `delivered_at`. Consulta READ ONLY
+a `information_schema.columns` confirmou a ausência dessa coluna na original.
+Ela é adicionada em `drizzle/0023_strange_union_jack.sql`; o journal permanece
+com os 17 recibos até `0016`. Portanto a concessão resolve a allowlist, mas
+não comprova painel operacional: esse caminho de consulta depende da cadeia
+posterior ainda não aplicada. Não aplicar `0023` isoladamente nem enfraquecer
+a consulta para esconder incompatibilidade. Retomar o reparo seguro de `0017`
+e os gates separados de migrations posteriores antes de homologação integral.
+Nenhuma linha de negócio foi consultada para esse diagnóstico de catálogo.
+
+
+## Diagnóstico executado — causa comprovada e correção preparada
+
+Publicação autorizada a partir de `410665b`, em build isolado sem arquivos de
+ambiente, com chave Turnstile pública real. Primeira comparação: versão
+`148a0a88-25e2-47a2-a687-7088ff64b53b`, deployment
+`22699057-f691-4f07-902c-529041779f59`, a 100%, retorno `matchesExpected=false`
+para o Auth declarado da branch original. Diagnóstico desativado em seguida
+(`81a4a309-69b5-4140-92c1-7c5999c07d0d`).
+
+Busca restrita aos dois e-mails confirmados localizou ambas as identidades
+verificadas em `g1-auth-hml` (`br-patient-lake-ac2t0cvq`), com vínculos ativos
+`owner` e `manager` já existentes nessa branch. Segunda comparação, usando
+metadados públicos do Auth dessa branch e a mesma expiração UTC, confirmou
+`matchesExpected=true` na versão `fab87c0e-611f-4003-a73a-5cb205a86cc8`.
+Nenhum secret foi revelado/alterado; e-mails e UUIDs pessoais omitidos do Git.
+
+Destino de auditoria do Worker atestado por correlação: request_id
+`048a6f17-94e1-4776-b8b8-ad3ab7ecb999`, observado na telemetria HML como reset
+concluído, tem os eventos SQL `password_reset_requested` blocked/success na
+original, às `18:31:52.360Z`/`18:31:53.867Z`. As duas identidades não possuem
+vínculo nessa original. Auth em G1 + consulta de acesso no banco original
+explicam a aceitação da senha seguida de negação de acesso. A arquitetura
+permite identidades externas: `app_user_access.auth_user_id` não tem FK para
+o schema gerenciado; não é necessário duplicar identidades nem trocar secrets
+para conceder vínculos, se a continuidade desse destino for aprovada.
+
+Encerramento confirmado: versão `1ea59a90-c289-4c99-bf8f-a0bbd82d6b37`,
+deployment `e22b130f-6e70-4f90-a02e-dc7c70a9f3a3`, 100%, criado
+`2026-10-17T18:58:09.806473Z`. Zero bindings `AUTH_DESTINATION_*`; probe SQL
+continua sem ativação. Cinco secrets preservados por nome/tipo, sem leitura
+de valores. Demais bindings e observabilidade preservados.
+
+Proposta pronta, ainda NÃO aplicada: `SQL-ACCESS-RECONCILIATION-2026-10-17.sql`.
+Após revalidar identidades verificadas e papéis ativos na origem, associar os
+mesmos dois UUIDs ao banco original: um `owner`, um `manager`, ambos ativos.
+Transação única com timeout, lock, precondição de allowlist vazia, referência
+nova e dois eventos de auditoria. Aprovação humana fora de sessão da aplicação
+é identificada no metadata; ator de sessão permanece NULL, sem fingir sessão
+administrativa. Nenhuma identidade, senha, secret, schema ou regra RBAC muda.
+Falha/repetição/conflito impedem a concessão, preservando dados e auditoria.
+
+Quatro ensaios em PostgreSQL 17 descartável passaram: sucesso/auditoria e
+referência consumida, rollback integral por falha tardia de auditoria,
+preservação de allowlist preexistente e rejeição de alvo/identidade inválidos.
+Journal e marcador gerenciado preservados em todos. Script explícito:
+`node scripts/test-access-reconciliation-disposable.mjs --ack-disposable-postgres17`.
+Tipos, lint, formatação e diff-check aprovados; a suíte de 479 testes e build
+isolado do diagnóstico já haviam passado. Nenhuma concessão externa executada.
+A nova escrita no banco original, incluindo seu primeiro Dono, exige aprovação
+específica do plano acima; após aplicação, exigir novo login e validar acesso.
+
+## Diagnóstico de destino preparado — aguardando publicação HML
+
+Usuário confirmou a página `https://cacau-v1-hml.naiguelcabral.workers.dev/login`.
+Preparado `src/features/auth/destination-diagnostic.server.ts`, chamado somente
+no servidor ao resolver configuração de autenticação. Não cria endpoint nem
+altera sessão, RBAC, cadastro ou vínculo. Emite exclusivamente JSON com evento
+fixo `auth.destination-diagnostic` e booleano `matchesExpected`.
+
+Desligado por padrão. Ativação requer as três variáveis não secretas:
+`AUTH_DESTINATION_DIAGNOSTIC_ENABLED=true`,
+`AUTH_DESTINATION_EXPECTED_BASE_URL` com o endereço Neon Auth já declarado
+pelo operador e `AUTH_DESTINATION_DIAGNOSTIC_UNTIL` com expiração UTC de no
+máximo 30 minutos à frente. Ausência, expiração ou configuração inválida
+silenciam o diagnóstico. Nenhum endereço efetivo, e-mail, UUID, senha, token,
+header, cookie ou erro bruto é registrado. Falha do logger não interrompe auth.
+
+Plano delimitado para aprovação: publicar somente em `cacau-v1-hml`, ativar
+as três vars por até 30 minutos, acessar a página de login para disparar leitura
+de configuração e consultar somente o evento sanitizado. Depois desativar as
+vars e reconfirmar o estado. Preservar secrets, demais bindings, observabilidade
+e controles. Não habilitar probe SQL, aplicar migrations, criar usuários ou
+conceder papéis por inferência. Coincidência do Auth não atesta o destino SQL.
+Divergência não autoriza reescrever o secret sem decisão posterior.
+
+Validação local: nove testes direcionados aprovados, tipos, lint, formatação,
+`git diff --check` e build HML em archive + três arquivos de fonte/teste,
+sem arquivos de ambiente e com chave pública sintética, aprovados. Testes de
+isolamento Git falharam com `EPERM` no sandbox e os três passaram na execução
+permitida fora dessa restrição. Suíte geral repetida com a permissão necessária: 479 testes aprovados,
+zero falhas. A execução inicial restrita não substitui esse resultado.
+Nenhuma publicação executada. Diff preserva `.env.example` fora do escopo.
+
+## Contas Dono/Gerente — conciliação do destino
+
+O usuário confirmou que o e-mail de Gerente é o mesmo que recebeu a
+recuperação e identificou também a conta de Dono. E-mails pessoais omitidos
+neste registro. Papéis solicitados: `owner` e `manager`, respectivamente.
+
+Consulta READ ONLY, restrita aos dois e-mails indicados, não encontrou
+nenhuma identidade na original `br-lingering-wind-acwh5wap`. Catálogo
+confirmou que `neon_auth.user` não possui RLS habilitado/forçado e a sessão
+não tem filtro RLS ativo nessa relação; portanto essa política não explica
+a ausência. A mesma busca limitada na cópia `br-super-waterfall-ac0mxtnt`
+retornou zero correspondências para ambas as contas.
+
+Metadados do Worker HML confirmam que `NEON_AUTH_BASE_URL` e `DATABASE_URL`
+são secrets; seus valores não foram lidos. O callback de recuperação aponta
+para HML, mas não comprova o destino efetivo do provedor. Código usa
+`config.baseUrl` derivado do binding para o reset. Divergência de destino é
+hipótese a verificar, não causa comprovada. Solicitada URL da página de
+bloqueio, sem query/token. Nenhuma identidade criada, vínculo concedido,
+credencial alterada ou evento de concessão gravado.
+
+## Acesso Gerente — verificação de 17 de outubro de 2026
+
+Usuário confirmou recebimento do e-mail e troca da senha e solicitou papel
+Gerente para sua conta. Consulta direcionada READ ONLY em `neondb`, branch
+`br-lingering-wind-acwh5wap`, endpoint `ep-late-water-acahd1z1`, não encontrou
+a identidade pelo e-mail informado, inclusive após normalizar espaços/caixa.
+Contagem de vínculos da aplicação permanece zero. Nenhum vínculo ou evento de
+concessão foi gravado. Aguardando confirmação do e-mail usado e da página de
+login; não atribuir a causa a senha, replicação ou ambiente sem evidência.
+
+## Incidente de restore — 17 de outubro de 2026
+
+**Recuperado após autorização específica:** original retomou nome
+`production`, default/primary e endpoint original; Auth/JWKS/origens
+reconfirmados. Cópia isolada e estacionamento preservados. Ensaio da baseline
+passou na cópia e `0000–0016` foram aplicadas na original sob aprovação
+condicional: 17 recibos, tabelas auth presentes, sem vínculo de usuário,
+sem `0017+`, catálogo gerenciado inalterado. Reset real passou na auditoria e
+no provedor (`completed` às `18:31:53.931Z`); recebimento/troca pendentes.
+Os parágrafos seguintes registram o estado histórico do incidente.
+
+Snapshot da baseline criado, mas restore com finalização padrão promoveu a
+cópia e moveu o endpoint original. Branch/dados originais preservados; nenhuma
+migration externa executada. Recuperação corretiva de endpoints foi rejeitada
+pela revisão automática por falta de consentimento específico e risco de
+interrupção. Plano e IDs em `NEON-RESTORE-INCIDENT-2026-10-17.md`.
+Não aplicar migrations nem inferir a branch alvo pelo nome atual/default.
+
+## Redefinição de senha HML — 17 de outubro de 2026
+
+Inventário ampliado autorizado confirmou ausência de tabelas/views/sequences
+de aplicação em `public`/`drizzle` e dos dois enums auth. Plano restrito a
+`0000–0016`, sem alterar originais, validado em PostgreSQL 17 descartável:
+journal real, reset auditado com provedor simulado, reaplicação sem duplicação
+e rollback preservando schema do provedor. Plano/snapshot/cópia/DDL pendentes
+em `AUTH-BASELINE-0016-EXECUTION-PLAN.md`; nenhuma escrita externa realizada.
+
+Catálogo mínimo executado após exceção humana explícita, READ ONLY confirmado:
+as três tabelas de autenticação estão ausentes em todos os schemas e o journal
+`drizzle.__drizzle_migrations` também está ausente em `neondb` do alvo declarado.
+Isso bloqueia tentativas de login, reset e autorização de sessão. Nenhum DDL,
+DML, vínculo, role/grant ou credencial alterado. Inventário mínimo de baseline
+preparado para nova autorização antes de propor migrations com histórico
+desconhecido; não presumir que a base esteja vazia.
+
+Retomada com 100% de franquia principal e preflight concluído. Tentativa
+posterior ao diagnóstico retornou `42P01` na auditoria inicial: relação SQL
+inexistente. Writer usa `auth_audit_events`, pré-requisito da migration `0014`.
+Ausência física versus resolução por schema/destino ainda requer catálogo.
+SQL mínimo READ ONLY executado sob exceção explícita para o MCP administrativo;
+resultado acima. Nenhuma migration, role/grant ou mudança de credencial.
+
+Nova tentativa sem recebimento: observabilidade confirmou três falhas de
+auditoria inicial e nenhuma chamada ao Neon. A causa subjacente da auditoria
+ainda não é observável; preparado diagnóstico local por códigos permitidos,
+sem mensagens/SQL/segredos e sem enfraquecer o bloqueio. Diagnóstico publicado
+após autorização: `f168418a`, 100% do tráfego. Código agora confirmado acima.
+Pausa anterior por reserva: 5% restante, reset 17/10 às 14:51:35 BRT; renovada.
+Handoff em `HML-PASSWORD-RESET-2026-10-17.md`.
+Não aplicar migrations ou mudanças de credenciais por inferência.
+
+Relato de falha de login e e-mail de redefinição não recebido. MCP confirmou
+ausência de `PASSWORD_RESET_REDIRECT_ORIGIN` no Worker e apenas localhost
+nas origens confiáveis do Neon Auth do alvo declarado `production`.
+Configuração HML corrigida localmente (`bb1717d`) e teste de regressão preparado;
+475 testes, tipos, lint, formatação e build HML isolado aprovados.
+Após autorização delimitada, origem HTTPS exata adicionada e reconfirmada
+no Neon; correção publicada em HML, versão `9ec9856d`, 100% do tráfego.
+Callback correto, secrets/rate limit/observabilidade preservados por MCP.
+Usuário solicitou novo link; entrega bloqueada pela auditoria inicial.
+Erro individual de login ainda sem mensagem exata/correlação; não atribuir
+à senha, SMTP ou schema por inferência. Diagnóstico SQL permanece desativado.
+Evidência, aplicação proposta e limites em
+[HML-PASSWORD-RESET-2026-10-17.md](HML-PASSWORD-RESET-2026-10-17.md).
+
+## Diagnóstico de conexão SQL — 17 de outubro de 2026
+
+Publicado em HML a partir da fonte `ee5acec`: deployment
+`dfacbe23-55d6-4db2-8a58-3ed3d1bde48e`, versão
+`6b737c00-e80b-4217-9b03-6d84829035e4`, 100% do tráfego,
+confirmados pela CLI e MCP. Secrets preservados sem leitura de valores;
+observabilidade remota preservada. Flag ausente, teste SQL ainda não executado.
+Usuário confirmou login no Cacau; navegador do agente continua anônimo.
+Operador relatou erro/acesso negado na página; texto exato solicitado para
+distinguir sessão, permissão ou diagnóstico ainda desativado antes da ativação
+temporária. Gates de migrations/auditoria permanecem abertos.
+
+Histórico das tentativas anteriores:
+
+Publicação/teste temporário autorizados pelo usuário. Fonte `0abf78b`, 474
+testes e verificações aprovados; build HML isolado com chave pública real
+aprovado. Login OAuth concluído e validado. Corrigido o acesso ao chaveiro na
+etapa de deploy isolado (`6a780e1`). Nova tentativa foi recusada pela API por
+permissão insuficiente; versão remota `d8673fd9` permanece ativa, flag ausente
+e probe SQL não executado. Configuração HML agora preserva a observabilidade
+remota (`ee5acec`). Ampliação OAuth proposta foi rejeitada pela revisão
+automática por incluir permissão de rotas além da publicação; depende de
+consentimento humano delimitado. Login no Cacau confirmado pelo usuário.
+Autorização de deploy continua válida. Retomada em `SQL-CONNECTION-DIAGNOSTIC.md`.
+
+Preparado localmente `/diagnostico-conexao`: acionamento manual por POST,
+CSRF, permissão existente `access:manage`, flag de runtime desativado por padrão,
+resposta sanitizada e sem cache. Cliente por operação com timeout, SELECT 1
+em READ ONLY, rollback e fechamento; sem leitura de negócio/migration.
+Publicação, ativação temporária e execução externa estão autorizadas, pendentes
+da permissão OAuth adequada para publicar;
+nenhum gate de destino ou auditoria foi fechado. Procedimento e limites em
+[SQL-CONNECTION-DIAGNOSTIC.md](SQL-CONNECTION-DIAGNOSTIC.md).
+
+## Identificação do alvo pelo operador — 17 de outubro de 2026
+
+O usuário informou Worker → `steep-brook-51659857` /
+`br-lingering-wind-acwh5wap`. MCP confirmou branch `production`, principal e
+padrão, `ready`, Auth Better Auth em `neondb` e JWKS exato informado. O novo
+deployment HML `475d3a10` usa versão `d8673fd9` a 100%; `DATABASE_URL` permanece
+secret_text, sem valor lido. Declaração do destino SQL vem do usuário;
+metadados comprovam Auth → branch, não schema/journal nem conexão do runtime.
+Auditoria desse alvo principal precisa de escopo e acesso não gravável
+aprovados; não reutilizar coletores HML que recusam produção.
+Detalhes em [MIGRATION-0017-ISOLATED-REPAIR.md](MIGRATION-0017-ISOLATED-REPAIR.md).
+
+## Reparo isolado da 0017 — 17 de outubro de 2026
+
+Candidatas temporárias agora permitem checkpoint `0017`, separado de `0019`
+e `0028`. Os 26 casos PostgreSQL 17 passaram, incluindo oito novos de sucesso
+e rollback, nove referências de produto usado, idempotência nas três tabelas
+e preservação de dados/journal. A cadeia ativa permanece intacta e bloqueada.
+Suíte geral com 464 testes, tipos, lint, check e build CI isolado no commit
+`2e56e59` aprovados. Não houve push, SQL externo, migration ou deploy.
+Metadados Neon agora retornam as cinco branches inventariadas `archived`,
+somente `neondb_owner` e zero snapshots nos dois projetos. Isso não comprova
+histórico, alvo ou recuperação. Auditoria read-only, atestação Worker e
+backup/restore continuam necessários antes da escolha ativa. Detalhes em
+[MIGRATION-0017-ISOLATED-REPAIR.md](MIGRATION-0017-ISOLATED-REPAIR.md).
+
+## Melhorias TypeScript/React — 16 de outubro de 2026
+
+Após o pacote de segurança `201a1ee`, contratos opcionais exatos e acessos a
+índices verificados em todo o projeto. Guards de resultados obrigatórios mantêm
+falha controlada; consultas opcionais conservam ausência explícita. Regras React
+de pureza/efeitos/imutabilidade/refs habilitadas, tema sincronizado por store e
+hidratação pelo hook do framework. Tipos, lint, check e regressões direcionadas
+aprovados, com 463 testes. Build HML isolado e smoke público com Chromium
+aprovados no HEAD `072cea1`; pacotes locais de segurança `201a1ee` e melhorias
+`072cea1` aguardam revisão/integração. Sem mudanças de regra financeira,
+precisão, RBAC, sessão ou dados. Detalhes no registro de modernização abaixo.
+
+## Correções de segurança — 16 de outubro de 2026
+
+Pacote local após `23f9d85`: dependências corrigidas e versões TanStack explícitas;
+auditoria reduzida de 26 entradas afetadas para zero. Instalação limpa, tipos,
+lint, testes originais e regressões dos overrides, além de build isolado,
+aprovados. Compatibilidade de cookies e telas de erro adaptada às APIs atuais.
+Detalhes e limites em [SECURITY-MODERNIZATION-2026-10-16.md](SECURITY-MODERNIZATION-2026-10-16.md).
+Revisão, CI remota e homologação real de autenticação continuam pendentes.
+Nenhuma migration, escrita compartilhada ou publicação foi executada.
+
+## TypeScript 7 e Oxc — validação local, 16 de outubro de 2026
+
+Branch `codex/typescript-7-upgrade`: TypeScript 7.0.2 é o único compilador no
+lockfile, sem alias ou API 6. ESLint/Prettier foram substituídos nos comandos
+do projeto por Oxlint 1.88.0 com tipos e Oxfmt 0.73.0. Dependências externas
+ainda podem utilizar Prettier internamente, como o gerador de rotas TanStack;
+isso não participa dos comandos de lint/formatação do projeto.
+
+O teste de composição do login extrai e executa o mesmo callback com Oxc.
+Foram preservadas as regras nativas equivalentes, adicionadas regras explícitas
+React/Hooks, ARIA e promises, e registrado o tratamento das diferenças em
+[TYPESCRIPT-7-OXC-MIGRATION.md](TYPESCRIPT-7-OXC-MIGRATION.md).
+
+Validação local: `npm ci`, typecheck, lint sem avisos, check Oxfmt de 267 arquivos
+e 456 testes aprovados. Dos 39 arquivos de código existentes alterados, 36 têm
+JavaScript emitido estruturalmente equivalente; os outros três contêm os ajustes
+revisados de teste e nome local. Build HML isolado aprovado, usando HEAD com o
+diff e os novos arquivos em diretório temporário, sem arquivos de ambiente e
+com chave pública sintética. Nenhuma migration, escrita compartilhada ou
+publicação. Revisão/integração e CI remota pendentes.
+
 ## Reconciliação da PR #39 — 14 de outubro de 2026 UTC
 
 A PR #38 foi integrada em `b7a8dcf9` após CI `38492599540` e PostgreSQL

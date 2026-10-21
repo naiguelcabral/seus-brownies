@@ -1,3 +1,4 @@
+import { requireDefined } from '../src/lib/required-value'
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import { readFileSync } from 'node:fs'
@@ -188,7 +189,7 @@ test('unapproved, expired, wrong fingerprint and known production abort before S
     { expiresAt: '2000-01-01T00:00:00Z' },
     { destinationFingerprint: 'a'.repeat(64) },
     { approvedRole: 'neondb_owner' },
-    { ...matrix[0], classification: 'confirmed-hml' },
+    { ...requireDefined(matrix[0]), classification: 'confirmed-hml' },
     { name: 'production' },
   ]) {
     const c = fake()
@@ -235,7 +236,10 @@ test('missing journal, altered hash, duplicate, later migration and drift remain
   for (const history of [
     base.slice(1),
     [...base, base[16]],
-    [...base.slice(0, 16), { ...base[16], hash: 'a'.repeat(64) }],
+    [
+      ...base.slice(0, 16),
+      { ...requireDefined(base[16]), hash: 'a'.repeat(64) },
+    ],
     historicalManifest(),
   ])
     assert.equal(compareHistory(history), 'divergent-or-0017plus')

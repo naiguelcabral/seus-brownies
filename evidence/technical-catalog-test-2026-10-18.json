@@ -1,0 +1,32 @@
+{
+  "mode": "LOCAL_DISPOSABLE_POSTGRESQL_17",
+  "testedAt": "2026-10-18T14:24:53.287Z",
+  "sqlSha256": "01fdc56d23954ef5ba9a92de501cb65834cab2ef36cecb2ee5aeac1d5332a645",
+  "cases": [
+    "SKU name conflict rejected",
+    "unit conflict rejected",
+    "inactive catalog rejected",
+    "missing SKU rejected",
+    "new SKU / partial catalog rejected",
+    "nonempty recipe / partial technical import rejected",
+    "consumed reference rejected",
+    "consumed hash under another reference rejected",
+    "schema receipt drift rejected",
+    "missing exact column rejected",
+    "late receipt audit failure rolls back every new record",
+    "late preservation guard rejects changes to existing rows",
+    "readback rejects silently changed recipe quantity",
+    "final readback rejects late change to a newly inserted recipe",
+    "success: complete technical catalog, 43 audits, 38 tables and journal preserved, no operational facts",
+    "replay rejected without duplicate or changed rows"
+  ],
+  "passed": 16,
+  "publicTables": 38,
+  "preservedJournalReceipts": 33,
+  "externalWrites": false,
+  "limits": [
+    "Synthetic fixtures; not a rehearsal of the real target backup",
+    "Nontransactional sequences may advance on failed attempts",
+    "No authenticated operational homologation"
+  ]
+}

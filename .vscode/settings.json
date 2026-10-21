@@ -8,5 +8,8 @@
   "files.readonlyInclude": {
     "**/routeTree.gen.ts": true
   },
-  "editor.accessibilityPageSize": 5000
+  "editor.accessibilityPageSize": 5000,
+  "[typescript][typescriptreact][javascript][javascriptreact][json][jsonc][css]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  }
 }

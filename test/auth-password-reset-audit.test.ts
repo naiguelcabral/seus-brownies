@@ -61,7 +61,9 @@ test('falha ao registrar intenção bloqueia o provedor antes de qualquer reset'
     action: 'password_reset_requested',
     writer: {
       append: async () => {
-        throw new Error('audit unavailable')
+        throw new Error('audit unavailable', {
+          cause: { code: '42P01', message: 'SYNTHETIC_SECRET' },
+        })
       },
     },
     execute: async () => {
@@ -77,6 +79,11 @@ test('falha ao registrar intenção bloqueia o provedor antes de qualquer reset'
   assert.deepEqual(
     telemetry.map((event) => event.stage),
     ['initial_audit_failed'],
+  )
+  assert.equal(telemetry[0]?.auditErrorCode, '42P01')
+  assert.doesNotMatch(
+    JSON.stringify(telemetry),
+    /SYNTHETIC_SECRET|audit unavailable/,
   )
 })
 
@@ -101,8 +108,10 @@ test('falha ao registrar resultado mantém intenção explícita e não aceita s
     result: { ok: true },
     stage: 'after-provider',
   })
-  assert.equal(events[0]?.outcome, 'blocked')
-  assert.equal(events[0]?.metadata instanceof Object, true)
+  const blockedEvent = events[0]
+  assert.ok(blockedEvent)
+  assert.equal(blockedEvent.outcome, 'blocked')
+  assert.equal(blockedEvent.metadata instanceof Object, true)
   assert.deepEqual(
     telemetry.map((event) => event.stage),
     [

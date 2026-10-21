@@ -1,3 +1,4 @@
+import { requireDefined } from '../src/lib/required-value'
 import assert from 'node:assert/strict'
 import test from 'node:test'
 
@@ -30,12 +31,12 @@ test('cancelamento integral restaura a camada sem apagar a alocação', () => {
   const restored = planStockRestoration({
     event: 'sale_cancellation',
     layers: sold.layers,
-    allocations: [{ id: 10, ...sold.allocations[0] }],
+    allocations: [{ id: 10, ...requireDefined(sold.allocations[0]) }],
     quantities: [{ allocationId: 10, quantity: 1_000n }],
   })
   assert.equal(restored.restoredCost, 378n)
-  assert.equal(restored.layers[0].remainingQuantity, 1_000n)
-  assert.equal(restored.reversals[0].originalAllocationId, 10)
+  assert.equal(requireDefined(restored.layers[0]).remainingQuantity, 1_000n)
+  assert.equal(requireDefined(restored.reversals[0]).originalAllocationId, 10)
 })
 
 test('perda e ajuste negativo consomem várias camadas FIFO com motivo', () => {

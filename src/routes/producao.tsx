@@ -1,4 +1,6 @@
-import { useMemo, useState } from 'react'
+import { businessDate } from '#/lib/business-date'
+import { OperationDialog } from '#/components/OperationDialog'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { CheckCircle2, Eye, Plus, Trash2 } from 'lucide-react'
 import { createFileRoute, useNavigate, useRouter } from '@tanstack/react-router'
 import { useServerFn } from '@tanstack/react-start'
@@ -30,7 +32,7 @@ const productionSearch = z.object({
   productId: z.coerce.number().int().positive().optional().catch(undefined),
   start: z.string().date().optional().catch(undefined),
   end: z.string().date().optional().catch(undefined),
-  page: z.number().int().min(1).max(10_000).catch(1),
+  page: z.coerce.number().int().min(1).max(10_000).catch(1),
 })
 
 export const Route = createFileRoute('/producao')({
@@ -74,22 +76,28 @@ function ProductionPage() {
   const [recipeVersionId, setRecipeVersionId] = useState(
     String(workspace.recipes[0]?.id ?? ''),
   )
-  const [productionDate, setProductionDate] = useState(
-    new Date().toISOString().slice(0, 10),
-  )
+  const [productionDate, setProductionDate] = useState(() => businessDate())
   const [recipeMultiplier, setRecipeMultiplier] = useState('1')
   const [outputs, setOutputs] = useState<Output[]>([emptyOutput()])
   const [bordinhasQuantity, setBordinhasQuantity] = useState('')
+  const [energyAmount, setEnergyAmount] = useState('')
+  const [laborAmount, setLaborAmount] = useState('')
   const [losses, setLosses] = useState<Loss[]>([])
   const [notes, setNotes] = useState('')
   const [preview, setPreview] = useState<Awaited<
     ReturnType<typeof previewProductionBatch>
   > | null>(null)
   const [message, setMessage] = useState<string | null>(null)
+  const [editorOpen, setEditorOpen] = useState(false)
   const [saving, setSaving] = useState(false)
   const [details, setDetails] = useState<Awaited<
     ReturnType<typeof getProductionBatch>
   > | null>(null)
+  const previewRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    if (preview)
+      previewRef.current?.scrollIntoView({ block: 'start', behavior: 'smooth' })
+  }, [preview])
   const selectedRecipeId = Number(recipeVersionId)
   const profiles = useMemo(
     () =>
@@ -98,9 +106,10 @@ function ProductionPage() {
       ),
     [selectedRecipeId, workspace.profiles],
   )
-  const bordinhas = profiles.find(
-    (profile) => profile.sku === 'PROD002' && profile.name === 'Bordinhas',
-  )
+  const measuredRecovery =
+    workspace.recipes.find((recipe) => recipe.id === selectedRecipeId)
+      ?.measuredRecovery ?? false
+  const bordinhas = profiles.find((profile) => profile.sku === 'PROD002')
   const selectableProfiles = profiles.filter(
     (profile) => profile.productId !== bordinhas?.productId,
   )
@@ -126,7 +135,15 @@ function ProductionPage() {
         productId: Number(output.productId),
         quantity: output.quantity,
       })),
-      bordinhasQuantity: bordinhasQuantity || undefined,
+      bordinhasQuantity: measuredRecovery
+        ? undefined
+        : bordinhasQuantity || undefined,
+      bordinhasWeightGrams: measuredRecovery
+        ? bordinhasQuantity || '0'
+        : undefined,
+      operationalAmounts: measuredRecovery
+        ? { energy: energyAmount, labor: laborAmount }
+        : undefined,
       losses: losses.map((loss) => ({
         productId: Number(loss.productId),
         quantity: loss.quantity,
@@ -179,7 +196,9 @@ function ProductionPage() {
     try {
       const nextPreview = await previewBatch({ data: payload() })
       setPreview(nextPreview)
-      setBordinhasQuantity((value) => value || nextPreview.bordinhas.suggested)
+      setBordinhasQuantity((value) =>
+        measuredRecovery ? value : value || nextPreview.bordinhas.suggested,
+      )
     } catch (error) {
       setPreview(null)
       setMessage(
@@ -197,6 +216,7 @@ function ProductionPage() {
     setMessage(null)
     try {
       const created = await createBatch({ data: payload() })
+      setEditorOpen(false)
       setMessage(
         `Lote #${created.id} criado como rascunho. Revise e conclua quando estiver pronto.`,
       )
@@ -205,7 +225,15 @@ function ProductionPage() {
       setBordinhasQuantity('')
       setLosses([])
       setNotes('')
-      await router.invalidate()
+      setEnergyAmount('')
+      setLaborAmount('')
+      try {
+        await router.invalidate()
+      } catch {
+        setMessage(
+          `Lote #${created.id} salvo como rascunho. Recarregue a página para atualizar o histórico.`,
+        )
+      }
     } catch (error) {
       setMessage(
         error instanceof Error
@@ -243,8 +271,15 @@ function ProductionPage() {
       setMessage(
         `Lote #${completed.id} concluído. Custo total: ${currency.format(Number(completed.totalCost))}.`,
       )
-      setDetails(await readBatch({ data: { id: details.batch.id } }))
-      await router.invalidate()
+      try {
+        setDetails(await readBatch({ data: { id: details.batch.id } }))
+        await router.invalidate()
+      } catch {
+        setDetails(null)
+        setMessage(
+          `Lote #${completed.id} concluído e estoque atualizado. Recarregue a página para consultar os detalhes.`,
+        )
+      }
     } catch (error) {
       setMessage(
         error instanceof Error
@@ -261,7 +296,27 @@ function ProductionPage() {
       title="Produção"
       description="Crie rascunhos, confira a capacidade e conclua lotes reais. Os planejamentos históricos permanecem apenas como referência e nunca movimentam estoque."
     >
-      <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_440px]">
+      <button
+        type="button"
+        disabled={saving || !workspace.recipes.length}
+        onClick={() => {
+          setMessage(null)
+          setEditorOpen(true)
+        }}
+        className="mb-4 rounded-lg bg-[#4a2114] px-4 py-2.5 font-bold text-white"
+      >
+        Adicionar lote
+      </button>
+      <p className="mb-4 text-sm text-[#846859]">
+        1. Salve o rascunho sem movimentar estoque. 2. Abra o lote, revise os
+        dados e conclua somente após a produção real.
+      </p>
+      {!editorOpen && !details && message ? (
+        <p role="status" className="mb-4 rounded-lg bg-[#fff5e7] p-3 text-sm">
+          {message}
+        </p>
+      ) : null}
+      <div className="space-y-6">
         <section className="overflow-hidden rounded-2xl border border-[#ecdfd4] bg-white">
           <div className="border-b border-[#f0e5dc] px-5 py-4">
             <h2 className="font-bold">Lotes reais</h2>
@@ -280,7 +335,8 @@ function ProductionPage() {
                   query: String(form.get('query') ?? '').trim() || undefined,
                   status:
                     (String(form.get('status') ?? '') as
-                      (typeof productionStatuses)[number] | '') || undefined,
+                      | (typeof productionStatuses)[number]
+                      | '') || undefined,
                   productId: Number(form.get('productId')) || undefined,
                   start: String(form.get('start') ?? '') || undefined,
                   end: String(form.get('end') ?? '') || undefined,
@@ -393,6 +449,8 @@ function ProductionPage() {
                     ) : null}
                     <button
                       type="button"
+                      disabled={saving}
+                      aria-label={`Ver lote #${batch.id}`}
                       onClick={() => openDetails(batch.id)}
                       className="inline-flex items-center gap-1 rounded-lg border border-[#d9c3b4] px-3 py-2 text-sm font-bold text-[#6c3e28]"
                     >
@@ -406,7 +464,7 @@ function ProductionPage() {
             <Empty text="Nenhum lote real encontrado para esses filtros." />
           )}
           <nav
-            className="flex items-center justify-between gap-3 border-t border-[#f0e5dc] px-5 py-4 text-sm"
+            className="flex flex-wrap items-center justify-between gap-3 border-t border-[#f0e5dc] px-5 py-4 text-sm"
             aria-label="Paginação dos lotes de produção"
           >
             <span aria-live="polite">
@@ -447,277 +505,379 @@ function ProductionPage() {
             </div>
           </nav>
         </section>
-        {workspace.recipes.length ? (
-          <form
-            className="space-y-4 rounded-2xl border border-[#ecdfd4] bg-white p-5"
-            onSubmit={(event) => {
-              event.preventDefault()
-              void saveDraft()
-            }}
+        {workspace.recipes.length && editorOpen ? (
+          <OperationDialog
+            title="Novo lote"
+            pending={saving}
+            onClose={() => setEditorOpen(false)}
           >
-            <div>
-              <h2 className="font-bold">Novo lote</h2>
-              <p className="mt-1 text-sm text-[#846859]">
-                O rascunho ainda não consome ou gera estoque.
-              </p>
-            </div>
-            <label className="block text-sm font-bold text-[#573524]">
-              Receita-base ativa
-              <select
-                className="field mt-1.5"
-                value={recipeVersionId}
-                onChange={(event) => {
-                  setRecipeVersionId(event.target.value)
-                  setOutputs([emptyOutput()])
-                  setBordinhasQuantity('')
-                  setPreview(null)
-                }}
-              >
-                {workspace.recipes.map((recipe) => (
-                  <option key={recipe.id} value={recipe.id}>
-                    {recipe.name} · versão {recipe.version}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <div className="grid grid-cols-2 gap-3">
-              <Input
-                label="Data do lote"
-                value={productionDate}
-                onChange={setProductionDate}
-                type="date"
-              />
-              <Input
-                label="Multiplicador"
-                value={recipeMultiplier}
-                onChange={(value) => {
-                  setRecipeMultiplier(value)
-                  setPreview(null)
-                }}
-                inputMode="decimal"
-                placeholder="Ex.: 1,5"
-              />
-            </div>
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <strong className="text-sm">Produtos principais</strong>
-                <span className="text-xs text-[#896d5b]">
-                  Rendimento por receita
-                </span>
+            <form
+              className="space-y-4 rounded-2xl border border-[#ecdfd4] bg-white p-5"
+              onSubmit={(event) => {
+                event.preventDefault()
+                void saveDraft()
+              }}
+            >
+              <div>
+                <h2 className="font-bold">Novo lote</h2>
+                <p className="mt-1 text-sm text-[#846859]">
+                  O rascunho ainda não consome ou gera estoque.
+                </p>
               </div>
-              {outputs.map((output, index) => (
-                <div
-                  key={index}
-                  className="rounded-xl border border-[#ead9ca] p-3"
+              <label className="block text-sm font-bold text-[#573524]">
+                Receita-base ativa
+                <select
+                  className="field mt-1.5"
+                  value={recipeVersionId}
+                  onChange={(event) => {
+                    setRecipeVersionId(event.target.value)
+                    setOutputs([emptyOutput()])
+                    setLosses([])
+                    setBordinhasQuantity('')
+                    setPreview(null)
+                  }}
                 >
-                  <div className="mb-2 flex justify-between">
-                    <strong className="text-sm">Saída {index + 1}</strong>
-                    {outputs.length > 1 ? (
+                  {workspace.recipes.map((recipe) => (
+                    <option key={recipe.id} value={recipe.id}>
+                      {recipe.name} · versão {recipe.version}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <div className="grid grid-cols-2 gap-3">
+                <Input
+                  label="Data do lote"
+                  value={productionDate}
+                  onChange={(value) => {
+                    setProductionDate(value)
+                    setPreview(null)
+                  }}
+                  type="date"
+                />
+                <Input
+                  label="Quantidade de receitas"
+                  value={recipeMultiplier}
+                  onChange={(value) => {
+                    setRecipeMultiplier(value)
+                    setPreview(null)
+                  }}
+                  inputMode="decimal"
+                  placeholder="Ex.: 1,5"
+                />
+              </div>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <strong className="text-sm">Produtos principais</strong>
+                  <span className="text-xs text-[#896d5b]">
+                    Rendimento por receita
+                  </span>
+                </div>
+                {outputs.map((output, index) => (
+                  <div
+                    key={index}
+                    className="rounded-xl border border-[#ead9ca] p-3"
+                  >
+                    <div className="mb-2 flex justify-between">
+                      <strong className="text-sm">Saída {index + 1}</strong>
+                      {outputs.length > 1 ? (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setOutputs(
+                              outputs.filter(
+                                (_, itemIndex) => itemIndex !== index,
+                              ),
+                            )
+                            setPreview(null)
+                          }}
+                          className="text-[#a64f23]"
+                          aria-label="Remover saída"
+                        >
+                          <Trash2 size={16} />
+                        </button>
+                      ) : null}
+                    </div>
+                    <label className="block text-sm font-bold text-[#573524]">
+                      Produto final
+                      <select
+                        aria-label="Produto final"
+                        className="field mt-1.5"
+                        value={output.productId}
+                        onChange={(event) =>
+                          updateOutput(index, { productId: event.target.value })
+                        }
+                      >
+                        <option value="">Selecione</option>
+                        {selectableProfiles.map((profile) => (
+                          <option
+                            key={profile.productId}
+                            value={profile.productId}
+                          >
+                            {profile.name} · rende{' '}
+                            {formatQuantity(profile.expectedYield, 'un.')}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+                    <Input
+                      label="Quantidade gerada"
+                      value={output.quantity}
+                      onChange={(value) =>
+                        updateOutput(index, { quantity: value })
+                      }
+                      inputMode="decimal"
+                      placeholder="Ex.: 24"
+                    />
+                  </div>
+                ))}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setOutputs([...outputs, emptyOutput()])
+                    setPreview(null)
+                  }}
+                  className="inline-flex items-center gap-1 text-sm font-bold text-[#a64f23]"
+                >
+                  <Plus size={16} /> Adicionar produto
+                </button>
+              </div>
+              <details
+                className="rounded-xl bg-[#fff7ec] p-3"
+                open={Boolean(bordinhasQuantity)}
+              >
+                <summary className="mb-2 cursor-pointer text-sm font-bold">
+                  Aproveitamento de Bordinhas (opcional)
+                </summary>
+                <label className="block text-sm font-bold text-[#573524]">
+                  {measuredRecovery
+                    ? 'Bordinhas aproveitáveis (gramas)'
+                    : 'Bordinhas (coproduto)'}
+                  <input
+                    className="field mt-1.5"
+                    value={bordinhasQuantity}
+                    onChange={(event) => {
+                      setBordinhasQuantity(event.target.value)
+                      setPreview(null)
+                    }}
+                    inputMode="decimal"
+                    placeholder={
+                      measuredRecovery
+                        ? '0 se não houver sobra'
+                        : 'Calcular pela capacidade restante'
+                    }
+                  />
+                </label>
+                <p className="mt-2 text-xs leading-5 text-[#846859]">
+                  {measuredRecovery
+                    ? 'Informe o peso real após o corte. Cada 100 g forma um pacote; a sobra inferior a 100 g fica informada e não entra no estoque de pacotes.'
+                    : 'O valor sugerido é calculado pela capacidade livre. Se informar menos, registre a diferença como perda manual de Bordinhas com motivo.'}
+                </p>
+              </details>
+              {measuredRecovery ? (
+                <fieldset className="rounded-xl border border-[#ecdfd4] p-3">
+                  <legend className="text-sm font-bold">
+                    Custos reais deste lote
+                  </legend>
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    <label className="text-sm">
+                      Mão de obra total (R$)
+                      <input
+                        className="field mt-1"
+                        inputMode="decimal"
+                        value={laborAmount}
+                        onChange={(event) => {
+                          setLaborAmount(event.target.value)
+                          setPreview(null)
+                        }}
+                        placeholder="Total alocado a este lote"
+                      />
+                    </label>
+                    <label className="text-sm">
+                      Energia total (R$)
+                      <input
+                        className="field mt-1"
+                        inputMode="decimal"
+                        value={energyAmount}
+                        onChange={(event) => {
+                          setEnergyAmount(event.target.value)
+                          setPreview(null)
+                        }}
+                        placeholder="Total alocado a este lote"
+                      />
+                    </label>
+                  </div>
+                  <p className="mt-2 text-xs text-[#846859]">
+                    A diária informada é R$ 150. Divida o custo entre os lotes
+                    do mesmo dia, sem repeti-lo. Informe zero somente quando não
+                    houver custo alocado. O orçamento mensal já inclui mão de
+                    obra e energia.
+                  </p>
+                </fieldset>
+              ) : null}
+              <details className="space-y-3" open={losses.length > 0}>
+                <summary className="cursor-pointer text-sm font-bold">
+                  Perdas manuais (somente quando houver)
+                </summary>
+                <div className="flex items-center justify-between">
+                  <strong className="text-sm">Perdas manuais (exceção)</strong>
+                  {losses.length ? null : (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setLosses([emptyLoss()])
+                        setPreview(null)
+                      }}
+                      className="text-sm font-bold text-[#a64f23]"
+                    >
+                      Adicionar
+                    </button>
+                  )}
+                </div>
+                {losses.map((loss, index) => (
+                  <div
+                    key={index}
+                    className="rounded-xl border border-[#ead9ca] p-3"
+                  >
+                    <div className="mb-2 flex justify-between">
+                      <strong className="text-sm">Perda {index + 1}</strong>
                       <button
                         type="button"
                         onClick={() => {
-                          setOutputs(
-                            outputs.filter(
+                          setLosses(
+                            losses.filter(
                               (_, itemIndex) => itemIndex !== index,
                             ),
                           )
                           setPreview(null)
                         }}
                         className="text-[#a64f23]"
-                        aria-label="Remover saída"
+                        aria-label="Remover perda"
                       >
                         <Trash2 size={16} />
                       </button>
-                    ) : null}
+                    </div>
+                    <label className="block text-sm font-bold text-[#573524]">
+                      Produto
+                      <select
+                        aria-label="Produto da perda"
+                        className="field mt-1.5"
+                        value={loss.productId}
+                        onChange={(event) =>
+                          updateLoss(index, { productId: event.target.value })
+                        }
+                      >
+                        <option value="">Selecione</option>
+                        {[
+                          ...selectableProfiles,
+                          ...(bordinhas ? [bordinhas] : []),
+                        ].map((profile) => (
+                          <option
+                            value={profile.productId}
+                            key={profile.productId}
+                          >
+                            {profile.name}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+                    <div className="mt-3 grid grid-cols-2 gap-3">
+                      <Input
+                        label="Quantidade"
+                        value={loss.quantity}
+                        onChange={(value) =>
+                          updateLoss(index, { quantity: value })
+                        }
+                        inputMode="decimal"
+                      />
+                      <Input
+                        label="Motivo"
+                        value={loss.reason}
+                        onChange={(value) =>
+                          updateLoss(index, { reason: value })
+                        }
+                      />
+                    </div>
                   </div>
-                  <label className="block text-sm font-bold text-[#573524]">
-                    Produto final
-                    <select
-                      className="field mt-1.5"
-                      value={output.productId}
-                      onChange={(event) =>
-                        updateOutput(index, { productId: event.target.value })
-                      }
-                    >
-                      <option value="">Selecione</option>
-                      {selectableProfiles.map((profile) => (
-                        <option
-                          key={profile.productId}
-                          value={profile.productId}
-                        >
-                          {profile.name} · rende{' '}
-                          {formatQuantity(profile.expectedYield, 'un.')}
-                        </option>
-                      ))}
-                    </select>
-                  </label>
-                  <Input
-                    label="Quantidade gerada"
-                    value={output.quantity}
-                    onChange={(value) =>
-                      updateOutput(index, { quantity: value })
-                    }
-                    inputMode="decimal"
-                    placeholder="Ex.: 24"
-                  />
-                </div>
-              ))}
-              <button
-                type="button"
-                onClick={() => setOutputs([...outputs, emptyOutput()])}
-                className="inline-flex items-center gap-1 text-sm font-bold text-[#a64f23]"
-              >
-                <Plus size={16} /> Adicionar produto
-              </button>
-            </div>
-            <div className="rounded-xl bg-[#fff7ec] p-3">
-              <label className="block text-sm font-bold text-[#573524]">
-                Bordinhas (coproduto)
-                <input
-                  className="field mt-1.5"
-                  value={bordinhasQuantity}
-                  onChange={(event) => {
-                    setBordinhasQuantity(event.target.value)
-                    setPreview(null)
-                  }}
-                  inputMode="decimal"
-                  placeholder="Calcular pela capacidade restante"
-                />
-              </label>
-              <p className="mt-2 text-xs leading-5 text-[#846859]">
-                O valor sugerido é calculado pela capacidade livre. Se informar
-                menos, registre a diferença como perda manual de Bordinhas com
-                motivo.
-              </p>
-            </div>
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <strong className="text-sm">Perdas manuais (exceção)</strong>
-                {losses.length ? null : (
+                ))}
+                {losses.length ? (
                   <button
                     type="button"
-                    onClick={() => setLosses([emptyLoss()])}
+                    onClick={() => {
+                      setLosses([...losses, emptyLoss()])
+                      setPreview(null)
+                    }}
                     className="text-sm font-bold text-[#a64f23]"
                   >
-                    Adicionar
+                    Adicionar outra perda
                   </button>
-                )}
-              </div>
-              {losses.map((loss, index) => (
-                <div
-                  key={index}
-                  className="rounded-xl border border-[#ead9ca] p-3"
+                ) : null}
+              </details>
+              <label className="block text-sm font-bold text-[#573524]">
+                Observações
+                <textarea
+                  className="field mt-1.5 min-h-20"
+                  value={notes}
+                  onChange={(event) => setNotes(event.target.value)}
+                />
+              </label>
+              {message ? (
+                <p
+                  role="alert"
+                  className="rounded-lg bg-[#fff5e7] p-3 text-sm text-[#75411f]"
                 >
-                  <div className="mb-2 flex justify-between">
-                    <strong className="text-sm">Perda {index + 1}</strong>
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setLosses(
-                          losses.filter((_, itemIndex) => itemIndex !== index),
-                        )
-                      }
-                      className="text-[#a64f23]"
-                      aria-label="Remover perda"
-                    >
-                      <Trash2 size={16} />
-                    </button>
-                  </div>
-                  <label className="block text-sm font-bold text-[#573524]">
-                    Produto
-                    <select
-                      className="field mt-1.5"
-                      value={loss.productId}
-                      onChange={(event) =>
-                        updateLoss(index, { productId: event.target.value })
-                      }
-                    >
-                      <option value="">Selecione</option>
-                      {[
-                        ...selectableProfiles,
-                        ...(bordinhas ? [bordinhas] : []),
-                      ].map((profile) => (
-                        <option
-                          value={profile.productId}
-                          key={profile.productId}
-                        >
-                          {profile.name}
-                        </option>
-                      ))}
-                    </select>
-                  </label>
-                  <div className="mt-3 grid grid-cols-2 gap-3">
-                    <Input
-                      label="Quantidade"
-                      value={loss.quantity}
-                      onChange={(value) =>
-                        updateLoss(index, { quantity: value })
-                      }
-                      inputMode="decimal"
-                    />
-                    <Input
-                      label="Motivo"
-                      value={loss.reason}
-                      onChange={(value) => updateLoss(index, { reason: value })}
-                    />
-                  </div>
+                  {message}
+                </p>
+              ) : null}
+              {preview ? (
+                <div ref={previewRef} tabIndex={-1}>
+                  <Preview preview={preview} />
                 </div>
-              ))}
-              {losses.length ? (
+              ) : null}
+              <div className="sticky bottom-0 flex flex-wrap gap-3 border-t border-[#ecdfd4] bg-white py-3">
                 <button
                   type="button"
-                  onClick={() => setLosses([...losses, emptyLoss()])}
-                  className="text-sm font-bold text-[#a64f23]"
+                  disabled={saving}
+                  onClick={() => void showPreview()}
+                  className="rounded-lg border border-[#d9c3b4] px-4 py-2.5 text-sm font-bold text-[#6c3e28] disabled:opacity-60"
                 >
-                  Adicionar outra perda
+                  {saving ? 'Calculando...' : 'Ver prévia'}
                 </button>
-              ) : null}
-            </div>
-            <label className="block text-sm font-bold text-[#573524]">
-              Observações
-              <textarea
-                className="field mt-1.5 min-h-20"
-                value={notes}
-                onChange={(event) => setNotes(event.target.value)}
-              />
-            </label>
-            {message ? (
-              <p className="rounded-lg bg-[#fff5e7] p-3 text-sm text-[#75411f]">
-                {message}
-              </p>
-            ) : null}
-            <div className="flex flex-wrap gap-3">
-              <button
-                type="button"
-                disabled={saving}
-                onClick={() => void showPreview()}
-                className="rounded-lg border border-[#d9c3b4] px-4 py-2.5 text-sm font-bold text-[#6c3e28] disabled:opacity-60"
-              >
-                {saving ? 'Calculando...' : 'Ver prévia'}
-              </button>
-              <button
-                disabled={saving}
-                className="rounded-lg bg-[#4a2114] px-4 py-2.5 text-sm font-bold text-white disabled:opacity-60"
-              >
-                Salvar rascunho
-              </button>
-            </div>
-          </form>
-        ) : (
+                <button
+                  disabled={saving}
+                  className="rounded-lg bg-[#4a2114] px-4 py-2.5 text-sm font-bold text-white disabled:opacity-60"
+                >
+                  Salvar rascunho
+                </button>
+              </div>
+            </form>
+          </OperationDialog>
+        ) : !workspace.recipes.length ? (
           <aside className="rounded-2xl border border-[#ecdfd4] bg-white p-5">
             <h2 className="font-bold">Novo lote indisponível</h2>
             <Empty text="Não há receita-base ativa. Importe ou ative uma receita antes de iniciar uma produção real." />
           </aside>
-        )}
+        ) : null}
       </div>
-      {preview ? <Preview preview={preview} /> : null}
       {details ? (
-        <Details
-          details={details}
-          saving={saving}
+        <OperationDialog
+          title={`Lote #${details.batch.id}`}
+          pending={saving}
           onClose={() => setDetails(null)}
-          onComplete={() => void conclude()}
-        />
+        >
+          {message ? (
+            <p
+              role="status"
+              className="m-5 rounded-lg bg-[#fff5e7] p-3 text-sm"
+            >
+              {message}
+            </p>
+          ) : null}
+          <Details
+            details={details}
+            saving={saving}
+            onComplete={() => void conclude()}
+          />
+        </OperationDialog>
       ) : null}
     </ManagementLayout>
   )
@@ -775,8 +935,11 @@ function Preview({
             restante: {formatQuantity(preview.capacity.remaining, 'receitas')}
           </p>
           <p className="mt-1 text-sm text-[#846859]">
-            Bordinhas sugeridas:{' '}
-            {formatQuantity(preview.bordinhas.suggested, 'un.')}
+            Bordinhas em pacotes:{' '}
+            {formatQuantity(preview.bordinhas.selected, 'un.')}
+            {preview.bordinhas.measuredGrams !== null
+              ? ` · Aproveitado: ${preview.bordinhas.measuredGrams} g · Não embalado: ${preview.bordinhas.unpackagedGrams} g`
+              : ''}
           </p>
           <ul className="mt-3 divide-y divide-[#f0e5dc]">
             {preview.outputs.map((output) => (
@@ -833,9 +996,15 @@ function Preview({
                 {item.type === 'energy' ? 'Energia' : 'Mão de obra'}
               </strong>
               <p className="mt-1 text-sm text-[#846859]">
-                {formatQuantity(item.quantity, item.unit)} ×{' '}
-                {currency.format(Number(item.rate))} (vigente desde{' '}
-                {formatDate(item.effectiveFrom)})
+                {item.unit === 'batch' ? (
+                  'Total real informado para este lote'
+                ) : (
+                  <>
+                    {formatQuantity(item.quantity, item.unit)} ×{' '}
+                    {currency.format(Number(item.rate))} (vigente desde{' '}
+                    {formatDate(item.effectiveFrom)})
+                  </>
+                )}
               </p>
               <strong className="mt-2 block">
                 {currency.format(Number(item.amount))}
@@ -851,12 +1020,10 @@ function Preview({
 function Details({
   details,
   saving,
-  onClose,
   onComplete,
 }: {
   details: Awaited<ReturnType<typeof getProductionBatch>>
   saving: boolean
-  onClose: () => void
   onComplete: () => void
 }) {
   const { batch } = details
@@ -889,13 +1056,6 @@ function Details({
             {batch.plannedFor ? formatDate(batch.plannedFor) : 'sem data'}
           </p>
         </div>
-        <button
-          type="button"
-          onClick={onClose}
-          className="text-sm font-bold text-[#6c3e28]"
-        >
-          Fechar
-        </button>
       </div>
       <div className="mt-5 grid gap-5 lg:grid-cols-2">
         <AuditList
@@ -996,7 +1156,7 @@ function ProductionPending() {
     </ManagementLayout>
   )
 }
-function ProductionError({ error }: { error: Error }) {
+function ProductionError({ error }: { error: unknown }) {
   const router = useRouter()
   return (
     <ManagementLayout
@@ -1004,7 +1164,10 @@ function ProductionError({ error }: { error: Error }) {
       description="Não foi possível carregar o histórico de produção."
     >
       <div className="rounded-2xl border border-[#e7c9b8] bg-[#fff5ed] p-5 text-sm text-[#75411f]">
-        <p>{error.message || 'Tente novamente em alguns instantes.'}</p>
+        <p>
+          {(error instanceof Error && error.message) ||
+            'Tente novamente em alguns instantes.'}
+        </p>
         <button
           type="button"
           className="mt-3 rounded-lg border border-[#75411f] px-3 py-2 text-xs font-bold"

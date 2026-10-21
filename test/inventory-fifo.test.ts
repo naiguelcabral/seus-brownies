@@ -1,3 +1,4 @@
+import { requireDefined } from '../src/lib/required-value'
 import assert from 'node:assert/strict'
 import test from 'node:test'
 
@@ -30,26 +31,33 @@ function layer(input: {
 }
 
 test('HML aloca duas vendas de PROD003 e preserva o resíduo da camada', () => {
-  const original = [layer({ id: 1, outputId: 18, quantity: 12_000n, cost: 4_533n })]
+  const original = [
+    layer({ id: 1, outputId: 18, quantity: 12_000n, cost: 4_533n }),
+  ]
   const first = allocateFifoCost(original, 3, 1_000n)
   const second = allocateFifoCost(first.layers, 3, 1_000n)
 
   assert.equal(first.allocatedCost, 378n)
   assert.equal(second.allocatedCost, 378n)
-  assert.equal(second.layers[0].remainingQuantity, 10_000n)
-  assert.equal(second.layers[0].remainingCost, 3_777n)
-  assert.equal(378n + 378n + second.layers[0].remainingCost, 4_533n)
+  assert.equal(requireDefined(second.layers[0]).remainingQuantity, 10_000n)
+  assert.equal(requireDefined(second.layers[0]).remainingCost, 3_777n)
+  assert.equal(
+    378n + 378n + requireDefined(second.layers[0]).remainingCost,
+    4_533n,
+  )
 })
 
 test('consumo parcial e final reconciliam o custo exato da camada', () => {
-  const original = [layer({ id: 1, outputId: 10, quantity: 3_000n, cost: 100n })]
+  const original = [
+    layer({ id: 1, outputId: 10, quantity: 3_000n, cost: 100n }),
+  ]
   const partial = allocateFifoCost(original, 3, 1_000n)
   const final = allocateFifoCost(partial.layers, 3, 2_000n)
 
   assert.equal(partial.allocatedCost, 33n)
   assert.equal(final.allocatedCost, 67n)
-  assert.equal(final.layers[0].remainingQuantity, 0n)
-  assert.equal(final.layers[0].remainingCost, 0n)
+  assert.equal(requireDefined(final.layers[0]).remainingQuantity, 0n)
+  assert.equal(requireDefined(final.layers[0]).remainingCost, 0n)
 })
 
 test('consome várias camadas pela ordem FIFO determinística', () => {
@@ -72,7 +80,10 @@ test('consome várias camadas pela ordem FIFO determinística', () => {
   const plan = allocateFifoCost(layers, 3, 1_500n)
 
   assert.deepEqual(
-    plan.allocations.map((allocation) => [allocation.layerId, allocation.quantity]),
+    plan.allocations.map((allocation) => [
+      allocation.layerId,
+      allocation.quantity,
+    ]),
     [
       [4, 1_000n],
       [9, 500n],
@@ -90,12 +101,20 @@ test('desempata camadas com a mesma data pelo ID da saída e depois da camada', 
     ],
     3,
   )
-  assert.deepEqual(ordered.map((item) => item.id), [1, 2, 9])
+  assert.deepEqual(
+    ordered.map((item) => item.id),
+    [1, 2, 9],
+  )
 })
 
 test('recusa quantidade sem camada FIFO suficiente', () => {
   assert.throws(
-    () => allocateFifoCost([layer({ id: 1, outputId: 1, quantity: 999n, cost: 10n })], 3, 1_000n),
+    () =>
+      allocateFifoCost(
+        [layer({ id: 1, outputId: 1, quantity: 999n, cost: 10n })],
+        3,
+        1_000n,
+      ),
     /insuficiente/,
   )
 })

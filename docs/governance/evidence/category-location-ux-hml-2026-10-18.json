@@ -1,0 +1,53 @@
+{
+  "status": "published-and-verified",
+  "sourceCommit": "e890e3d",
+  "worker": "cacau-v1-hml",
+  "versionId": "29df3f6d-48be-4a80-b11c-a3c2b992cd69",
+  "deploymentId": "4f1829bf-944d-40ed-b034-9909e7424c6c",
+  "createdOn": "2026-10-18T19:42:46.795827Z",
+  "trafficPercentage": 100,
+  "features": [
+    "category create/edit modal and search/status filters",
+    "location create/edit modal and clear filters",
+    "shared dialog with product editor"
+  ],
+  "checks": {
+    "nodeTests": 509,
+    "browserScenarios": 13,
+    "typecheck": "passed",
+    "lint": "passed",
+    "format": "passed",
+    "knipNewFindings": 0,
+    "knipExistingFindings": 3,
+    "isolatedCiBuild": "passed",
+    "isolatedHmlBuildAndDeploy": "passed",
+    "deploymentApi": "200; exact version at 100 percent",
+    "authenticatedCategories": "search Brownie gives 1/6; inactive filter shows Bombons; clear restores 6/6; create/edit opened and cancelled",
+    "authenticatedLocations": "query/type filter gives zero results; clear resets inputs and restores OneCoffee; create/edit opened and cancelled; existing fields verified",
+    "sharedDatabaseSubmissions": 0,
+    "remoteCiCodeql": "not run for this local commit; pending GitHub integration"
+  },
+  "database": {
+    "verificationMode": "READ ONLY; before and after counts and full category/location digests match",
+    "categories": 6,
+    "locations": 1,
+    "products": 37,
+    "draftScenarios": 1,
+    "activeScenarios": 0,
+    "sales": 0,
+    "purchases": 0,
+    "stockMovements": 0,
+    "categoriesDigest": "9abaa509983341cb06c1e053bfe6324f",
+    "locationsDigest": "dbd966e92b42f7ed6127db3a991c3248",
+    "migrationApplied": false,
+    "mutationRequired": false
+  },
+  "productionDeploy": false,
+  "secretsChanged": false,
+  "rbacChanged": false,
+  "screenshots": [
+    "/tmp/cacau-category-modal-hml-published.jpg",
+    "/tmp/cacau-location-modal-hml-published.jpg",
+    "/tmp/cacau-locations-hml-published.jpg"
+  ]
+}

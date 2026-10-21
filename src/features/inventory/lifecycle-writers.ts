@@ -1,3 +1,5 @@
+import { exactCost, addCosts } from '../../lib/exact-cost'
+import type { ExactCost } from '../../lib/exact-cost'
 import { createServerFn } from '@tanstack/react-start'
 import { asc, eq, inArray, sql } from 'drizzle-orm'
 
@@ -46,7 +48,7 @@ export class FifoLifecycleSchemaUnavailableError extends Error {
   }
 }
 
-export function assertFifoLifecycleSchema(error: unknown): never {
+function assertFifoLifecycleSchema(error: unknown): never {
   const code = (error as { code?: string } | null)?.code
   if (code === '42P01' || code === '42703')
     throw new FifoLifecycleSchemaUnavailableError()
@@ -143,6 +145,7 @@ async function updateBalances(
     id: number
     remainingQuantity: bigint
     remainingCost: bigint
+    exactRemainingCost?: ExactCost | null
   }>,
 ) {
   for (const layer of layers.sort((a, b) => a.id - b.id))
@@ -151,6 +154,7 @@ async function updateBalances(
       .set({
         remainingQuantity: quantity(layer.remainingQuantity),
         remainingCost: money(layer.remainingCost),
+        exactRemainingCost: layer.exactRemainingCost ?? null,
         updatedAt: new Date(),
       })
       .where(eq(inventoryCostLayers.id, layer.id))
@@ -184,14 +188,22 @@ async function applyReversal(
         .from(inventoryCostReversals)
         .where(inArray(inventoryCostReversals.originalAllocationId, ids))
     : []
-  const reversed = new Map<number, { quantity: bigint; cost: bigint }>()
+  const reversed = new Map<
+    number,
+    { quantity: bigint; cost: bigint; exact: ExactCost }
+  >()
   for (const row of existing) {
     const prior = reversed.get(row.originalAllocationId) ?? {
       quantity: 0n,
       cost: 0n,
+      exact: exactCost(0n),
     }
     prior.quantity += quantityToThousandths(row.quantity)!
     prior.cost += moneyToCents(row.restoredCost)!
+    prior.exact = addCosts(
+      prior.exact,
+      row.exactCost ?? exactCost(moneyToCents(row.restoredCost)!, 100n),
+    )
     reversed.set(row.originalAllocationId, prior)
   }
   const reversibleAllocations = input.allocations.map((row) => ({
@@ -202,8 +214,10 @@ async function applyReversal(
     sourceStockMovementId: 0,
     quantity: quantityToThousandths(row.quantity)!,
     allocatedCost: moneyToCents(row.allocatedCost)!,
-    reversedQuantity: reversed.get(row.id)?.quantity,
-    reversedCost: reversed.get(row.id)?.cost,
+    exactCost: row.exactCost,
+    exactReversedCost: reversed.get(row.id)?.exact ?? exactCost(0n),
+    reversedQuantity: reversed.get(row.id)?.quantity ?? 0n,
+    reversedCost: reversed.get(row.id)?.cost ?? 0n,
   }))
   const requested = planRemainingReversalQuantities({
     allocations: reversibleAllocations,
@@ -225,6 +239,7 @@ async function applyReversal(
         type: 'return',
         quantityDelta: quantity(reversal.quantity),
         allocatedCost: money(reversal.allocatedCost),
+        exactCost: reversal.exactCost ?? null,
         referenceType: input.event,
         referenceId: input.referenceId,
         sourceKey: movementKey,
@@ -239,6 +254,7 @@ async function applyReversal(
       referenceId: input.referenceId,
       quantity: quantity(reversal.quantity),
       restoredCost: money(reversal.allocatedCost),
+      exactCost: reversal.exactCost ?? null,
     })
   }
   await updateBalances(tx, plan.layers)
@@ -324,7 +340,7 @@ export async function persistSaleCancellation(
         })
         .where(eq(sales.id, sale.id))
       await appendOperationalAudit(tx, {
-        actorAuthUserId,
+        actorAuthUserId: actorAuthUserId ?? null,
         action: 'sale.cancel',
         entityType: 'sale',
         entityId: sale.id,
@@ -389,6 +405,7 @@ export async function persistNegativeInventoryEvent(
           type: event === 'loss' ? 'loss' : 'adjustment',
           quantityDelta: `-${quantity(parseQuantity(data.quantity))}`,
           allocatedCost: money(plan.allocatedCost),
+          exactCost: plan.exactCost ?? null,
           referenceType: event,
           sourceKey: key,
           notes: data.reason,
@@ -403,11 +420,12 @@ export async function persistNegativeInventoryEvent(
           eventReferenceType: event,
           quantity: quantity(row.quantity),
           allocatedCost: money(row.allocatedCost),
+          exactCost: row.exactCost ?? null,
         })),
       )
       await updateBalances(tx, plan.layers)
       await appendOperationalAudit(tx, {
-        actorAuthUserId,
+        actorAuthUserId: actorAuthUserId ?? null,
         action: `inventory.${event}`,
         entityType: 'stock_movement',
         entityId: movement.id,
@@ -482,6 +500,7 @@ export async function persistPositiveInventoryAdjustment(
           type: 'adjustment',
           quantityDelta: quantity(amount),
           allocatedCost: money(cost),
+          exactCost: exactCost(cost, 100n),
           referenceType: 'adjustment_positive',
           sourceKey: key,
           notes: `${data.reason} | origem: ${data.originReference}`,
@@ -496,12 +515,14 @@ export async function persistPositiveInventoryAdjustment(
           availableAt: new Date(),
           originalQuantity: quantity(amount),
           originalCost: money(cost),
+          exactOriginalCost: exactCost(cost, 100n),
+          exactRemainingCost: exactCost(cost, 100n),
           remainingQuantity: quantity(amount),
           remainingCost: money(cost),
         })
         .returning({ id: inventoryCostLayers.id })
       await appendOperationalAudit(tx, {
-        actorAuthUserId,
+        actorAuthUserId: actorAuthUserId ?? null,
         action: 'inventory.adjustment_positive',
         entityType: 'stock_movement',
         entityId: movement.id,

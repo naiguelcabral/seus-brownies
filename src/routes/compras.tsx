@@ -1,3 +1,6 @@
+import { PurchaseSummary } from '#/components/PurchaseSummary'
+import { businessDate } from '#/lib/business-date'
+import { OperationDialog } from '#/components/OperationDialog'
 import { useState } from 'react'
 import { Plus, Trash2 } from 'lucide-react'
 import { createFileRoute, useNavigate, useRouter } from '@tanstack/react-router'
@@ -16,7 +19,7 @@ const purchaseSearch = z.object({
   query: z.string().trim().max(100).optional().catch(undefined),
   start: z.string().date().optional().catch(undefined),
   end: z.string().date().optional().catch(undefined),
-  page: z.number().int().min(1).max(10_000).catch(1),
+  page: z.coerce.number().int().min(1).max(10_000).catch(1),
 })
 
 export const Route = createFileRoute('/compras')({
@@ -48,16 +51,18 @@ export const Route = createFileRoute('/compras')({
 type Item = {
   productId: string
   quantity: string
-  unitCost: string
+  totalAmount: string
   supplierLot: string
   expiresOn: string
+  purchaseInKg: boolean
 }
 const emptyItem = (): Item => ({
   productId: '',
   quantity: '',
-  unitCost: '',
+  totalAmount: '',
   supplierLot: '',
   expiresOn: '',
+  purchaseInKg: false,
 })
 
 function PurchasesPage() {
@@ -66,13 +71,12 @@ function PurchasesPage() {
   const router = useRouter()
   const navigate = useNavigate({ from: Route.fullPath })
   const save = useServerFn(createPurchase)
+  const [editorOpen, setEditorOpen] = useState(false)
   const [idempotencyKey, setIdempotencyKey] = useState(() =>
     crypto.randomUUID(),
   )
   const [supplierName, setSupplierName] = useState('')
-  const [purchasedAt, setPurchasedAt] = useState(
-    new Date().toISOString().slice(0, 10),
-  )
+  const [purchasedAt, setPurchasedAt] = useState(() => businessDate())
   const [invoiceFileReference, setInvoiceFileReference] = useState('')
   const [notes, setNotes] = useState('')
   const [items, setItems] = useState<Item[]>([emptyItem()])
@@ -90,10 +94,12 @@ function PurchasesPage() {
     event.preventDefault()
     if (
       supplierName.trim().length < 2 ||
-      items.some((item) => !item.productId || !item.quantity || !item.unitCost)
+      items.some(
+        (item) => !item.productId || !item.quantity || !item.totalAmount,
+      )
     ) {
       setMessage(
-        'Informe fornecedor, produto, quantidade e custo em todos os itens.',
+        'Informe fornecedor, produto, quantidade e valor total em todos os itens.',
       )
       return
     }
@@ -110,19 +116,27 @@ function PurchasesPage() {
           items: items.map((item) => ({
             productId: Number(item.productId),
             quantity: item.quantity,
-            unitCost: item.unitCost,
+            totalAmount: item.totalAmount,
+            ...(item.purchaseInKg ? { purchaseUnit: 'kg' as const } : {}),
             supplierLot: item.supplierLot,
             expiresOn: item.expiresOn || undefined,
           })),
         },
       })
+      setEditorOpen(false)
       setSupplierName('')
       setInvoiceFileReference('')
       setNotes('')
       setItems([emptyItem()])
       setIdempotencyKey(crypto.randomUUID())
       setMessage('Compra registrada e estoque atualizado.')
-      await router.invalidate()
+      try {
+        await router.invalidate()
+      } catch {
+        setMessage(
+          'Compra registrada e estoque atualizado. Recarregue a página para atualizar o histórico.',
+        )
+      }
     } catch (error) {
       setMessage(
         error instanceof Error
@@ -136,9 +150,25 @@ function PurchasesPage() {
   return (
     <ManagementLayout
       title="Compras"
-      description="Registre compras de ingredientes, embalagens ou produtos. Cada item gera uma entrada correspondente no estoque."
+      description="Registre compras de ingredientes, embalagens ou produtos. Informe a quantidade e o valor total pago por item. Compras de insumos em massa são em kg."
     >
-      <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_420px]">
+      <button
+        type="button"
+        disabled={saving}
+        onClick={() => {
+          setMessage(null)
+          setEditorOpen(true)
+        }}
+        className="mb-4 rounded-lg bg-[#4a2114] px-4 py-2.5 font-bold text-white"
+      >
+        Registrar compra
+      </button>
+      {!editorOpen && message ? (
+        <p role="status" className="mb-4 rounded-lg bg-[#fff5e7] p-3 text-sm">
+          {message}
+        </p>
+      ) : null}
+      <div className="space-y-6">
         <section className="overflow-hidden rounded-2xl border border-[#ecdfd4] bg-white">
           <div className="border-b border-[#f0e5dc] px-5 py-4">
             <h2 className="font-bold">Compras recentes</h2>
@@ -233,7 +263,7 @@ function PurchasesPage() {
                 <Empty text="Nenhuma compra encontrada para esses filtros." />
               )}
               <nav
-                className="flex items-center justify-between gap-3 border-t border-[#f0e5dc] px-5 py-4 text-sm"
+                className="flex flex-wrap items-center justify-between gap-3 border-t border-[#f0e5dc] px-5 py-4 text-sm"
                 aria-label="Paginação das compras"
               >
                 <span aria-live="polite">
@@ -276,125 +306,206 @@ function PurchasesPage() {
             </>
           )}
         </section>
-        <form
-          className="rounded-2xl border border-[#ecdfd4] bg-white p-5 space-y-4"
-          onSubmit={submit}
-        >
-          <h2 className="font-bold">Nova compra</h2>
-          <Input
-            label="Fornecedor *"
-            value={supplierName}
-            onChange={setSupplierName}
-          />
-          <Input
-            label="Data da compra *"
-            value={purchasedAt}
-            onChange={setPurchasedAt}
-            type="date"
-          />
-          <Input
-            label="Referência futura da nota fiscal"
-            value={invoiceFileReference}
-            onChange={setInvoiceFileReference}
-            placeholder="Nome do arquivo ou link futuro"
-          />
-          {items.map((item, index) => (
-            <div key={index} className="rounded-xl border border-[#ead9ca] p-3">
-              <div className="mb-2 flex justify-between">
-                <strong className="text-sm">Item {index + 1}</strong>
-                {items.length > 1 ? (
+        {editorOpen ? (
+          <OperationDialog
+            title="Registrar compra"
+            pending={saving}
+            onClose={() => setEditorOpen(false)}
+          >
+            <form
+              className="rounded-2xl border border-[#ecdfd4] bg-white p-5 space-y-4"
+              onSubmit={submit}
+            >
+              <p className="text-sm text-[#846859]">
+                Informe a compra real. Revise o total antes de registrar a
+                entrada no estoque.
+              </p>
+              <Input
+                label="Fornecedor *"
+                value={supplierName}
+                onChange={setSupplierName}
+              />
+              <Input
+                label="Data da compra *"
+                value={purchasedAt}
+                onChange={setPurchasedAt}
+                type="date"
+              />
+              {items.map((item, index) => (
+                <div
+                  key={index}
+                  className="rounded-xl border border-[#ead9ca] p-3"
+                >
+                  <div className="mb-2 flex justify-between">
+                    <strong className="text-sm">Item {index + 1}</strong>
+                    {items.length > 1 ? (
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setItems(
+                            items.filter((_, itemIndex) => itemIndex !== index),
+                          )
+                        }
+                        className="text-[#a64f23]"
+                        aria-label="Remover item"
+                      >
+                        <Trash2 size={16} />
+                      </button>
+                    ) : null}
+                  </div>
+                  <label className="block text-sm font-bold text-[#573524]">
+                    Produto
+                    <select
+                      aria-label="Produto"
+                      value={item.productId}
+                      onChange={(event) =>
+                        updateItem(index, {
+                          productId: event.target.value,
+                          quantity: '',
+                          totalAmount: '',
+                          purchaseInKg:
+                            products.find(
+                              (product) =>
+                                String(product.id) === event.target.value,
+                            )?.unit === 'g' ||
+                            products.find(
+                              (product) =>
+                                String(product.id) === event.target.value,
+                            )?.unit === 'kg',
+                        })
+                      }
+                      className="field mt-1.5"
+                    >
+                      <option value="">Selecione</option>
+                      {products.map((product) => (
+                        <option value={product.id} key={product.id}>
+                          {product.name} (
+                          {product.unit === 'g' || product.unit === 'kg'
+                            ? 'kg na compra'
+                            : displayUnit(product.unit)}
+                          )
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                  <div className="mt-3 grid grid-cols-2 gap-3">
+                    <Input
+                      label={
+                        item.purchaseInKg
+                          ? 'Quantidade (kg)'
+                          : `Quantidade (${displayUnit(products.find((product) => String(product.id) === item.productId)?.unit)})`
+                      }
+                      value={item.quantity}
+                      onChange={(quantity) => updateItem(index, { quantity })}
+                      placeholder="Ex.: 1,500"
+                      inputMode="decimal"
+                    />
+                    <Input
+                      label="Valor total do item (R$)"
+                      value={item.totalAmount}
+                      onChange={(totalAmount) =>
+                        updateItem(index, { totalAmount })
+                      }
+                      placeholder="Ex.: 12,50"
+                      inputMode="decimal"
+                    />
+                  </div>
+                  <p className="mt-2 text-xs text-[#846859]">
+                    {item.purchaseInKg
+                      ? 'Compra em kg; o sistema converte para a unidade de estoque do produto.'
+                      : 'Use a unidade indicada no produto selecionado.'}
+                  </p>
+                  <details
+                    className="mt-3"
+                    open={Boolean(item.supplierLot || item.expiresOn)}
+                  >
+                    <summary className="cursor-pointer text-sm font-bold">
+                      Lote e validade (opcionais)
+                    </summary>
+                    <div className="mt-3 grid grid-cols-2 gap-3">
+                      <Input
+                        label="Lote do fornecedor"
+                        value={item.supplierLot}
+                        onChange={(supplierLot) =>
+                          updateItem(index, { supplierLot })
+                        }
+                        maxLength={80}
+                      />
+                      <Input
+                        label="Validade"
+                        type="date"
+                        min={purchasedAt}
+                        value={item.expiresOn}
+                        onChange={(expiresOn) =>
+                          updateItem(index, { expiresOn })
+                        }
+                      />
+                    </div>
+                  </details>
+                </div>
+              ))}
+              <button
+                type="button"
+                onClick={() => setItems([...items, emptyItem()])}
+                className="inline-flex items-center gap-1 text-sm font-bold text-[#a64f23]"
+              >
+                <Plus size={16} />
+                Adicionar item
+              </button>
+              <details open={Boolean(invoiceFileReference || notes)}>
+                <summary className="cursor-pointer text-sm font-bold">
+                  Nota e observações (opcionais)
+                </summary>
+                <div className="mt-3 space-y-3">
+                  <Input
+                    label="Referência futura da nota fiscal"
+                    value={invoiceFileReference}
+                    onChange={setInvoiceFileReference}
+                    placeholder="Nome do arquivo ou link futuro"
+                  />
+                  <label className="block text-sm font-bold text-[#573524]">
+                    Observações
+                    <textarea
+                      value={notes}
+                      onChange={(event) => setNotes(event.target.value)}
+                      className="field mt-1.5 min-h-20"
+                    />
+                  </label>
+                </div>
+              </details>
+              {message ? (
+                <p
+                  role="alert"
+                  className="rounded-lg bg-[#fff5e7] p-3 text-sm text-[#75411f]"
+                >
+                  {message}
+                </p>
+              ) : null}
+              <div className="sticky bottom-0 space-y-3 border-t border-[#ecdfd4] bg-white py-3">
+                <PurchaseSummary
+                  amounts={items.map((item) => item.totalAmount)}
+                />
+                <div className="flex flex-wrap gap-3">
+                  <button
+                    disabled={saving}
+                    className="rounded-lg bg-[#4a2114] px-4 py-2.5 text-sm font-bold text-white disabled:opacity-60"
+                  >
+                    {saving
+                      ? 'Registrando...'
+                      : 'Registrar compra e atualizar estoque'}
+                  </button>
                   <button
                     type="button"
-                    onClick={() =>
-                      setItems(
-                        items.filter((_, itemIndex) => itemIndex !== index),
-                      )
-                    }
-                    className="text-[#a64f23]"
-                    aria-label="Remover item"
+                    onClick={() => setEditorOpen(false)}
+                    className="text-sm font-bold"
                   >
-                    <Trash2 size={16} />
+                    Fechar sem registrar
                   </button>
-                ) : null}
+                </div>
               </div>
-              <label className="block text-sm font-bold text-[#573524]">
-                Produto
-                <select
-                  value={item.productId}
-                  onChange={(event) =>
-                    updateItem(index, { productId: event.target.value })
-                  }
-                  className="field mt-1.5"
-                >
-                  <option value="">Selecione</option>
-                  {products.map((product) => (
-                    <option value={product.id} key={product.id}>
-                      {product.name} ({product.unit})
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <div className="mt-3 grid grid-cols-2 gap-3">
-                <Input
-                  label="Quantidade"
-                  value={item.quantity}
-                  onChange={(quantity) => updateItem(index, { quantity })}
-                  placeholder="Ex.: 1,500"
-                  inputMode="decimal"
-                />
-                <Input
-                  label="Custo unitário"
-                  value={item.unitCost}
-                  onChange={(unitCost) => updateItem(index, { unitCost })}
-                  placeholder="Ex.: 12,50"
-                  inputMode="decimal"
-                />
-              </div>
-              <div className="mt-3 grid grid-cols-2 gap-3">
-                <Input
-                  label="Lote do fornecedor"
-                  value={item.supplierLot}
-                  onChange={(supplierLot) => updateItem(index, { supplierLot })}
-                  maxLength={80}
-                />
-                <Input
-                  label="Validade"
-                  type="date"
-                  min={purchasedAt}
-                  value={item.expiresOn}
-                  onChange={(expiresOn) => updateItem(index, { expiresOn })}
-                />
-              </div>
-            </div>
-          ))}
-          <button
-            type="button"
-            onClick={() => setItems([...items, emptyItem()])}
-            className="inline-flex items-center gap-1 text-sm font-bold text-[#a64f23]"
-          >
-            <Plus size={16} />
-            Adicionar item
-          </button>
-          <label className="block text-sm font-bold text-[#573524]">
-            Observações
-            <textarea
-              value={notes}
-              onChange={(event) => setNotes(event.target.value)}
-              className="field mt-1.5 min-h-20"
-            />
-          </label>
-          {message ? (
-            <p className="rounded-lg bg-[#fff5e7] p-3 text-sm text-[#75411f]">
-              {message}
-            </p>
-          ) : null}
-          <button
-            disabled={saving}
-            className="rounded-lg bg-[#4a2114] px-4 py-2.5 text-sm font-bold text-white disabled:opacity-60"
-          >
-            {saving ? 'Registrando...' : 'Registrar compra'}
-          </button>
-        </form>
+            </form>
+          </OperationDialog>
+        ) : null}
       </div>
     </ManagementLayout>
   )
@@ -416,7 +527,7 @@ function PurchasesPending() {
   )
 }
 
-function PurchasesError({ error }: { error: Error }) {
+function PurchasesError({ error }: { error: unknown }) {
   const router = useRouter()
   return (
     <ManagementLayout
@@ -424,7 +535,10 @@ function PurchasesError({ error }: { error: Error }) {
       description="Não foi possível carregar o histórico de compras."
     >
       <div className="rounded-2xl border border-[#e7c9b8] bg-[#fff5ed] p-5 text-sm text-[#75411f]">
-        <p>{error.message || 'Tente novamente em alguns instantes.'}</p>
+        <p>
+          {(error instanceof Error && error.message) ||
+            'Tente novamente em alguns instantes.'}
+        </p>
         <button
           type="button"
           className="mt-3 rounded-lg border border-[#75411f] px-3 py-2 text-xs font-bold"
@@ -465,3 +579,7 @@ const currency = new Intl.NumberFormat('pt-BR', {
   style: 'currency',
   currency: 'BRL',
 })
+
+function displayUnit(unit: string | undefined) {
+  return unit === 'unit' ? 'un.' : (unit ?? 'unidade do produto')
+}

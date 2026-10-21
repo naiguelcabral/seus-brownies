@@ -1,3 +1,4 @@
+import { requireFirst } from '../../lib/required-value'
 import { createServerFn } from '@tanstack/react-start'
 import { and, asc, count, desc, eq, ilike, or } from 'drizzle-orm'
 import { z } from 'zod'
@@ -79,10 +80,9 @@ export const listActionPlans = createServerFn({ method: 'GET' })
       data.priority ? eq(actionPlans.priority, data.priority) : undefined,
       data.status ? eq(actionPlans.status, data.status) : undefined,
     )
-    const [{ total }] = await database
-      .select({ total: count() })
-      .from(actionPlans)
-      .where(where)
+    const { total } = requireFirst(
+      await database.select({ total: count() }).from(actionPlans).where(where),
+    )
     const pagination = calculateActionPlanPage(data.page, Number(total))
     const rows = await database
       .select()

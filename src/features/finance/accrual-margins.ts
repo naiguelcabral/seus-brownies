@@ -1,4 +1,12 @@
 import {
+  exactCost,
+  addCosts,
+  subtractCosts,
+  costOrDecimal,
+  displayCostMoney,
+} from '../../lib/exact-cost'
+import type { ExactCost } from '../../lib/exact-cost'
+import {
   centsToMoney,
   moneyToCents,
   quantityToThousandths,
@@ -32,9 +40,10 @@ export type AccrualMarginAllocation = {
   productionBatchId: number | null
   quantity: string
   allocatedCost: string
+  exactCost?: ExactCost | null
 }
 
-type MoneyTotals = { revenue: bigint; cogs: bigint }
+type MoneyTotals = { revenue: bigint; cogs: ExactCost }
 
 function signedMoneyToCents(value: string) {
   const normalized = value.trim().replace(',', '.')
@@ -98,17 +107,19 @@ function addTotals(
   key: string,
   values: Partial<MoneyTotals>,
 ) {
-  const current = totals.get(key) ?? { revenue: 0n, cogs: 0n }
+  const current = totals.get(key) ?? { revenue: 0n, cogs: exactCost(0n) }
   current.revenue += values.revenue ?? 0n
-  current.cogs += values.cogs ?? 0n
+  current.cogs = addCosts(current.cogs, values.cogs ?? exactCost(0n))
   totals.set(key, current)
 }
 
 function formatTotals(total: MoneyTotals) {
   return {
     revenue: centsToMoney(total.revenue),
-    cogs: centsToMoney(total.cogs),
-    grossMargin: centsToMoney(total.revenue - total.cogs),
+    cogs: displayCostMoney(total.cogs),
+    grossMargin: displayCostMoney(
+      subtractCosts(exactCost(total.revenue, 100n), total.cogs),
+    ),
   }
 }
 
@@ -116,9 +127,9 @@ function sumTotals(totals: Map<string, MoneyTotals>) {
   return [...totals.values()].reduce(
     (sum, item) => ({
       revenue: sum.revenue + item.revenue,
-      cogs: sum.cogs + item.cogs,
+      cogs: addCosts(sum.cogs, item.cogs),
     }),
-    { revenue: 0n, cogs: 0n },
+    { revenue: 0n, cogs: exactCost(0n) },
   )
 }
 
@@ -156,7 +167,7 @@ export function summarizeAccrualMargins(input: {
   >()
   const deliveredSales = new Set<number>()
   let netRevenue = 0n
-  let cogs = 0n
+  let cogs = exactCost(0n)
   let unattributedRevenue = 0n
 
   const productKey = (item: AccrualMarginSaleItem) =>
@@ -240,7 +251,7 @@ export function summarizeAccrualMargins(input: {
       throw new Error('Venda possui mais de um fato de receita de entrega.')
     deliveredSales.add(event.saleId)
 
-    let saleCogs = 0n
+    let saleCogs = exactCost(0n)
     for (const item of itemsBySale.get(event.saleId) ?? []) {
       const key = productKey(item)
       productLabels.set(key, {
@@ -248,9 +259,14 @@ export function summarizeAccrualMargins(input: {
         productName: item.productName,
       })
       for (const allocation of allocationsByItem.get(item.id) ?? []) {
-        const allocationCost = positiveMoneyToCents(allocation.allocatedCost)
-        saleCogs += allocationCost
-        cogs += allocationCost
+        const allocationCost = costOrDecimal(
+          allocation.exactCost,
+          allocation.allocatedCost,
+        )
+        if (BigInt(allocationCost.numerator) < 0n)
+          throw new Error('Alocação financeira com valor inválido.')
+        saleCogs = addCosts(saleCogs, allocationCost)
+        cogs = addCosts(cogs, allocationCost)
         addTotals(productTotals, key, { cogs: allocationCost })
         addTotals(batchTotals, batchKey(allocation.productionBatchId), {
           cogs: allocationCost,
@@ -268,12 +284,15 @@ export function summarizeAccrualMargins(input: {
   const locationSummary = sumTotals(locationTotals)
   const dimensionMatches = (summary: MoneyTotals) =>
     summary.revenue + unattributedRevenue === netRevenue &&
-    summary.cogs === cogs
+    subtractCosts(summary.cogs, cogs).numerator === '0'
 
   return {
     netRevenue: centsToMoney(netRevenue),
-    cogs: centsToMoney(cogs),
-    grossMargin: centsToMoney(netRevenue - cogs),
+    cogs: displayCostMoney(cogs),
+    exactCogs: cogs,
+    grossMargin: displayCostMoney(
+      subtractCosts(exactCost(netRevenue, 100n), cogs),
+    ),
     unattributedRevenue: centsToMoney(unattributedRevenue),
     reconciled:
       dimensionMatches(productSummary) &&

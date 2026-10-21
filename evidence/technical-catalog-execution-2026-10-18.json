@@ -1,0 +1,360 @@
+{
+  "status": "APPLIED_AND_INDEPENDENTLY_VERIFIED",
+  "sourceCommit": "1f23276",
+  "sqlSha256": "01fdc56d23954ef5ba9a92de501cb65834cab2ef36cecb2ee5aeac1d5332a645",
+  "authorization": "User explicitly authorized workbook/recipe recheck, eggs, backup, rehearsal and application only if all checks pass.",
+  "sourceRecheck": {
+    "workbookSha256": "25aa62df5fc9b2e01402e9c242142322d9c6f54a345e800cb947b77865ce5b64",
+    "issues": 0,
+    "recipeMatchesApproved": true,
+    "eggsPerRecipe": "8",
+    "eggUnit": "unit",
+    "historicalPlansExcluded": 17
+  },
+  "backup": {
+    "id": "br-solitary-unit-ac3lawit",
+    "parent": "br-lingering-wind-acwh5wap",
+    "lsn": "0/21275A0",
+    "parentTimestamp": "2026-10-18T14:39:22Z",
+    "createdAt": "2026-10-18T14:52:10Z",
+    "noCompute": true
+  },
+  "originalBefore": [
+    {
+      "name": "action_plan_history",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "action_plans",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "app_user_access",
+      "rows": "2",
+      "digest": "36df1894d19a46993f8cb3ec8c79c3a13dc0c4bed2950fbfab853e9413d496c8"
+    },
+    {
+      "name": "auth_audit_events",
+      "rows": "15",
+      "digest": "bce0e0b16006afc4947fc9a82702dbb3b0b7c30550889c84dfc55943349148bf"
+    },
+    {
+      "name": "auth_login_attempts",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "categories",
+      "rows": "6",
+      "digest": "f74cb40a9d260716d920fcef696939077d405236b287d5194594270b005679d7"
+    },
+    {
+      "name": "drizzle.__drizzle_migrations",
+      "rows": "33",
+      "digest": "3f95a21486f7634d5d4e8db2a2ba380b8163b411eba1c960fa33c815fa2509b4"
+    },
+    {
+      "name": "expenses",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "financial_events",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "financial_periods",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "historical_import_records",
+      "rows": "2",
+      "digest": "d40fc04d9452a1286871728c18cec7213b0f3536830e4239d3405ef57ecce8be"
+    },
+    {
+      "name": "inventory_cost_allocations",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "inventory_cost_layers",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "inventory_cost_reversals",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "management_scenario_history",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "management_scenario_mix",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "management_scenarios",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "management_settings",
+      "rows": "1",
+      "digest": "53b12543ad71edee41e16de3c886511be0649ebedeb04dd7017d1958beb99624"
+    },
+    {
+      "name": "message_processing_records",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "operational_audit_events",
+      "rows": "47",
+      "digest": "8752757e3ecdaf5e47a9939731132ae8813e2c891f91fb812926edb447f1f61f"
+    },
+    {
+      "name": "operational_cost_rates",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "operational_costs",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "product_import_aliases",
+      "rows": "10",
+      "digest": "2132e99b586d4ca80b324b7cd6e5ec8f4f31efd58ff6e51508f734c16083383c"
+    },
+    {
+      "name": "production_batch_consumptions",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "production_batch_losses",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "production_batch_outputs",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "production_batches",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "production_profile_components",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "production_profiles",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "products",
+      "rows": "36",
+      "digest": "f8049217191b8c9bdde0a4b8b288caee8ae0a03af9d2cb038bcf582cd4e5ebc1"
+    },
+    {
+      "name": "purchase_items",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "purchases",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "recipe_items",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "recipe_operational_requirements",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "recipe_versions",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "sale_items",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "sales",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "sales_locations",
+      "rows": "1",
+      "digest": "9b87b60cba8b97d56ac1231337911ac7758c0de1761eba2d230f950d5a6be08c"
+    },
+    {
+      "name": "stock_movements",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "originalBeforeAt": [
+    {
+      "checked_at": "2026-10-18 14:34:05.202555+00",
+      "read_only": "on"
+    }
+  ],
+  "reference": "TECH-CATALOG-2026-10-18-001",
+  "referenceConsumed": true,
+  "originalImmediateBeforeAt": [
+    {
+      "checked_at": "2026-10-18 15:02:38.327268+00",
+      "read_only": "on"
+    }
+  ],
+  "schemaBefore": [
+    {
+      "section": 0,
+      "records": 38,
+      "digest": "f3a25527e72ac58338b8d61d00a66fdd27d25086bb65517499168455ff4c50b7"
+    },
+    {
+      "section": 1,
+      "records": 444,
+      "digest": "568e88d6c14cb1fbf94e34a8c19b7832d35d8173f9dfc8cfd6a936658809d19b"
+    },
+    {
+      "section": 2,
+      "records": 152,
+      "digest": "00af5e8ecc3c4e9fed9b0f450163e64aaf627330e6f139be7be1936625eeaf6e"
+    },
+    {
+      "section": 3,
+      "records": 112,
+      "digest": "92a99c1e570553db3720fd17b519860e2879d7c3f553ccbe268c9087497a9378"
+    },
+    {
+      "section": 4,
+      "records": 21,
+      "digest": "063344b07725d88a73c41dad7a2c05473dea48fc3edc6248139141e2e0b7dff0"
+    },
+    {
+      "section": 5,
+      "records": 2,
+      "digest": "6190ae5aac3b2a3760529780fdd3434143254adde78b64bcc4b50a2a422ab88c"
+    },
+    {
+      "section": 6,
+      "records": 2,
+      "digest": "d69c9ae03897474ccaa0ddc3d36f2fc3f5f455e3ead838ec0fd1275349b986d1"
+    },
+    {
+      "section": 7,
+      "records": 37,
+      "digest": "afcdb7dc8f991202ca54a5e3cc720ceabb46c3141c6fc1965f0adfa9fd3ef1bc"
+    },
+    {
+      "section": 8,
+      "records": 0,
+      "digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    }
+  ],
+  "rehearsal": {
+    "branch": "br-aged-violet-ac5aap1s",
+    "compute": "ep-patient-bread-ac9lw4cq",
+    "newBranchAttempt": "Rejected: branches limit exceeded",
+    "deviation": "Reused prior private exact-cost validation copy after all 38 public table digests, complete 33-receipt journal and all nine schema sections matched the current original. No restore, reset, promotion, deletion or endpoint reassignment.",
+    "baselineEquivalent": true,
+    "statements": 144,
+    "sqlSha256": "01fdc56d23954ef5ba9a92de501cb65834cab2ef36cecb2ee5aeac1d5332a645",
+    "independentVerification": "passed all source values, relationships, receipt, 43 audits, old-row preservation and unchanged schema",
+    "readback": "evidence/technical-catalog-rehearsal-readback-2026-10-18.json",
+    "computeFinal": {
+      "id": "ep-patient-bread-ac9lw4cq",
+      "branch": "br-aged-violet-ac5aap1s",
+      "currentState": "idle",
+      "pendingState": null
+    }
+  },
+  "application": {
+    "branch": "br-lingering-wind-acwh5wap",
+    "compute": "ep-late-water-acahd1z1",
+    "sqlSha256": "01fdc56d23954ef5ba9a92de501cb65834cab2ef36cecb2ee5aeac1d5332a645",
+    "statements": 144,
+    "independentVerification": "passed",
+    "readback": "evidence/technical-catalog-original-readback-2026-10-18.json",
+    "checkedAt": [
+      {
+        "checked_at": "2026-10-18 15:03:03.883098+00",
+        "read_only": "on"
+      }
+    ],
+    "counts": {
+      "sales": 0,
+      "expenses": 0,
+      "products": 37,
+      "purchases": 0,
+      "categories": 6,
+      "sale_items": 0,
+      "action_plans": 0,
+      "recipe_items": 7,
+      "purchase_items": 0,
+      "app_user_access": 2,
+      "recipe_versions": 1,
+      "sales_locations": 1,
+      "stock_movements": 0,
+      "financial_events": 0,
+      "auth_audit_events": 15,
+      "financial_periods": 0,
+      "operational_costs": 0,
+      "production_batches": 0,
+      "action_plan_history": 0,
+      "auth_login_attempts": 0,
+      "management_settings": 1,
+      "production_profiles": 17,
+      "management_scenarios": 0,
+      "inventory_cost_layers": 0,
+      "operational_cost_rates": 2,
+      "product_import_aliases": 10,
+      "management_scenario_mix": 0,
+      "production_batch_losses": 0,
+      "inventory_cost_reversals": 0,
+      "operational_audit_events": 90,
+      "production_batch_outputs": 0,
+      "historical_import_records": 3,
+      "inventory_cost_allocations": 0,
+      "message_processing_records": 0,
+      "management_scenario_history": 0,
+      "production_batch_consumptions": 0,
+      "production_profile_components": 12,
+      "recipe_operational_requirements": 2
+    },
+    "oldRowsAndJournalPreserved": true,
+    "schemaUnchanged": true,
+    "originalEndpointPreserved": true,
+    "operationalFactsCreated": 0
+  },
+  "pending": [
+    "Bombom/kit packaging and coating rules remain incomplete; reference metadata does not enforce an application block",
+    "Traceable opening stock / real purchases and authenticated operational QA remain separate",
+    "No deployment or main integration performed"
+  ]
+}

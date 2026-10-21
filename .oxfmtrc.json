@@ -1,14 +1,22 @@
 {
-  "printWidth": 80,
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
   "semi": false,
   "singleQuote": true,
   "trailingComma": "all",
+  "printWidth": 80,
   "sortImports": false,
   "sortPackageJson": false,
   "ignorePatterns": [
     "src/routeTree.gen.ts",
     "package-lock.json",
+    "pnpm-lock.yaml",
+    "yarn.lock",
+    "drizzle/**",
+    "data/**",
+    "docs/**",
     "playwright-report/**",
-    "test-results/**"
+    "test-results/**",
+    ".codex/**",
+    ".codex-local/**"
   ]
 }

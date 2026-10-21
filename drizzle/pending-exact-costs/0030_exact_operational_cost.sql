@@ -1,0 +1,1 @@
+ALTER TABLE "operational_costs" ADD COLUMN "exact_cost" jsonb;

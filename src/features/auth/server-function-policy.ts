@@ -6,6 +6,7 @@ import type { Permission } from './authorization'
  * public Worker is blocked at the edge and awaits a deploy of this source.
  */
 export const serverFunctionPolicies = {
+  checkSqlConnection: 'access:manage',
   listCategories: 'catalog:read',
   createCategory: 'catalog:write',
   updateCategory: 'catalog:write',
@@ -36,6 +37,8 @@ export const serverFunctionPolicies = {
   completeProductionBatch: 'production:write',
   getOperationalReports: 'reports:financial:read',
   deliverSale: 'sales:write',
+  getSalePaymentOptions: 'catalog:read',
+  receiveSalePayment: 'sales:write',
   compensateDeliveredSale: 'financial:compensation:write',
   redeemStoreCredit: 'financial:compensation:write',
   closeFinancialPeriod: 'financial:period:close',

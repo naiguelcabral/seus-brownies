@@ -1,0 +1,519 @@
+{
+  "manifest": {
+    "scope": "review-only-target-through-0016",
+    "active_chain_replaced": false,
+    "application_authorized": false,
+    "source": {
+      "source_commit": "1e5bd557a1bd57c89f65fe03fa013eb0f8af6d70",
+      "journal_sha256": "815604e685be390e2511a316ba78efd3a46fe37fc18e8e7d41515addcce3761b",
+      "snapshots": {
+        "0000_snapshot.json": "58f28e31011c5d10b4a8c39ecf6e7a836b9061ce42c01577011e79174d29318c",
+        "0001_snapshot.json": "1d272651c1b69a64ed74ca87054bbff5cc352dc74bcf64fdb09ce64b97b0d8cc",
+        "0002_snapshot.json": "ff0e99852404e271072b640fe701c6ec75edf117f481935ed1fd902df2866456",
+        "0003_snapshot.json": "0f9fa8dc839d5e44a09c3003270f4c1640638b2090d5a8b4a197f1e7fe86e46f",
+        "0004_snapshot.json": "5f5a60cdc9d8e18d89ebda74f804d9fa1834478ee3232e9b36e8914daa3d3da0",
+        "0005_snapshot.json": "afc6fe72137d52457011a64a86be93edd4152c23134eab0f6b11e7ccdb128661",
+        "0006_snapshot.json": "d095207bc959819315493017c76fd8593280929cc46e8cdd0342e5df029e6f40",
+        "0007_snapshot.json": "1511a4d7f4fa306f37c25dbeb874ec34e15a47de4ec44c797af37f06e895bcc2",
+        "0008_snapshot.json": "a3660daf978e591048abf7dc7e5bb0c7d8036ca26cffb321265c489487f56c36",
+        "0009_snapshot.json": "d4cd9feff1bb4f29be43dcb0f2d2ef5311cd4dc781465c2914a4766bc0b8e144",
+        "0010_snapshot.json": "f1324402fbd0a38eaa6e28e07670c29d12991fb281c341d7320730d035fb8987",
+        "0011_snapshot.json": "535d1be04a31f6f933e307279dc9bd19419c5cfe49f039c39dc3bb17c8640097",
+        "0014_snapshot.json": "732dbf3d9152243214697ab889c825ccbb9356652fc6f04facf5ff2ec1e0e91b",
+        "0015_snapshot.json": "0e0b606b03024f1b420bf5cf447c3e8d84839e85caa303d37b21bbe6acd5d4a4",
+        "0016_snapshot.json": "95a1d4e7376cc656e8b0b58ecdc7a574641d1611fcd140584faa74c2be883432",
+        "0017_snapshot.json": "e3b6c86737e53a247fba8e0ab71d0ff648a3bf344e7173a1b4f4fa36d025e5ad",
+        "0018_snapshot.json": "93856fec5b36fdb88001040bcccccbee21e11e2d378e591fa136fab0e61918be",
+        "0019_snapshot.json": "8ef8baeb85ba960b891e48c5284c44a9dbb8d76f8afd1aef29b77643a619fcdb",
+        "0020_snapshot.json": "0fae5d71eb99ceb837765495b3ace90314b631ce5f5e9a390510c084685cb0df",
+        "0021_snapshot.json": "39ebe3d99bc741dd76c2b4e3715ebc629962d76119c457463ce717daf86143bb",
+        "0022_snapshot.json": "163e7e444cd7d10b41169972a5f0d25ad66207f8758ac17b1af339e6b92f24f0",
+        "0023_snapshot.json": "339c67a066791d82c5412fe405afc2ca413828c99557adffd55103ab402fee49",
+        "0024_snapshot.json": "75cefaaa490a8225b6511f6d7f3534730cc49098485b096ec7fafdaf4cb1cc83",
+        "0025_snapshot.json": "8f1a981eb797ae82b985bc1fd8e820f84074405675a036e94ab7f11a7aaf8d40",
+        "0026_snapshot.json": "e7dc90508d2e4170ba5899f797f96afa418237a38d56a888c73feb321563983e",
+        "0027_snapshot.json": "ca068a9311346e454845f75c6301542f052af0699b165736d59649f971d9d89c",
+        "0028_snapshot.json": "8f22e2a6cfca3a8c7f57b81c4432858a0c3d112bea833f39f7c583a947555291"
+      },
+      "migrations": [
+        {
+          "idx": 0,
+          "tag": "0000_groovy_gamora",
+          "when": "1787423495945",
+          "sha256": "dcca272960496a589a2608f589ca32413ef4990a86f7ec6b8261bbd07775493c"
+        },
+        {
+          "idx": 1,
+          "tag": "0001_nervous_carnage",
+          "when": "1787424766901",
+          "sha256": "2b6058d807efba5a31f1b669f1446eef3aab76907108a9bec93b21f7f92a2237"
+        },
+        {
+          "idx": 2,
+          "tag": "0002_yielding_oracle",
+          "when": "1787427473223",
+          "sha256": "36d2ece9d759551f63305da9d5dd2132b636c2ca1fbc43ccbd7a915e4c10d03a"
+        },
+        {
+          "idx": 3,
+          "tag": "0003_rare_brother_voodoo",
+          "when": "1787430409236",
+          "sha256": "15387c92f37791c45c58110750a935f006833da6f54192cf706e44e463723b19"
+        },
+        {
+          "idx": 4,
+          "tag": "0004_next_gorilla_man",
+          "when": "1787432718286",
+          "sha256": "ccd5000d2ac640ef448983c2dc1be91416d07d9a4ab0b56705b19c6625d28313"
+        },
+        {
+          "idx": 5,
+          "tag": "0005_lovely_amazoness",
+          "when": "1787438077691",
+          "sha256": "5907dbd41665df9b74db7a5963aeeb241d15fcf376ed2c766dd4548e1b037f24"
+        },
+        {
+          "idx": 6,
+          "tag": "0006_dusty_jack_murdock",
+          "when": "1787438761876",
+          "sha256": "c27845a8fdc1fe320f6b5f6e7f6c25d6928f990997cf2eb9d42efe0c89fbaa9d"
+        },
+        {
+          "idx": 7,
+          "tag": "0007_unique_post",
+          "when": "1787444572984",
+          "sha256": "7c747c01a4f1e3b70a0ee622fd17f1edc8e246c9be487582a84a76d645b066bb"
+        },
+        {
+          "idx": 8,
+          "tag": "0008_high_rumiko_fujikawa",
+          "when": "1787487111317",
+          "sha256": "dc56f3df5f04b01a0b690ea88295a3e5fbb2b5a6066ea4d974826eb9fe87246f"
+        },
+        {
+          "idx": 9,
+          "tag": "0009_lethal_pyro",
+          "when": "1787487709365",
+          "sha256": "17b24cc9eb31be71a1f13a6cfa54bbcfd4faef120f72d060b646dd338787f83f"
+        },
+        {
+          "idx": 10,
+          "tag": "0010_lying_tarantula",
+          "when": "1788014906712",
+          "sha256": "9cacf93eb29d260b70c8405d42649b3187b00c3c42702024ec2231aa09d81f43"
+        },
+        {
+          "idx": 11,
+          "tag": "0011_demonic_redwing",
+          "when": "1788043052905",
+          "sha256": "4ec5efaa97d0f8ffa474a2780ee7a5d05c0b4c1e6d915594c68b15be6659875f"
+        },
+        {
+          "idx": 12,
+          "tag": "0012_fifo_cost_layers",
+          "when": "1788051976601",
+          "sha256": "88196609cbf44bc10b39c1962d1b6aa6d50871a87152f2d7a6670f4a623ed165"
+        },
+        {
+          "idx": 13,
+          "tag": "0013_fifo_lifecycle",
+          "when": "1788371973551",
+          "sha256": "5e9bac5965719c28ad6978c62058fe239da87b4a34de1607a161df4a5741dd49"
+        },
+        {
+          "idx": 14,
+          "tag": "0014_puzzling_masque",
+          "when": "1788466591688",
+          "sha256": "4f265bceb33bca9a2e71a881ed218cf5e7dae0612e691687ae6b11fe57c9e5af"
+        },
+        {
+          "idx": 15,
+          "tag": "0015_add-owner-and-employee-roles",
+          "when": "1788712205881",
+          "sha256": "8d8a2d65b4d44a07e552b724f812a914bf88e164430a1ed7c800c13120225431"
+        },
+        {
+          "idx": 16,
+          "tag": "0016_migrate-admin-to-owner",
+          "when": "1788712214871",
+          "sha256": "43e1dcd65ff1c91f72cb08d7ccc6f0d27a27c99d6ffb0745c8343bb54e223f67"
+        },
+        {
+          "idx": 17,
+          "tag": "0017_orange_the_hand",
+          "when": "1788877037648",
+          "sha256": "ccaa9173aef5fda63ff980f4c1d254c0b040d7fe4df92f6f21046300c81fa256"
+        },
+        {
+          "idx": 18,
+          "tag": "0018_bouncy_odin",
+          "when": "1788878474257",
+          "sha256": "c81a4674267795208c11a276509db789a364b39f485dfed34a30f966902079db"
+        },
+        {
+          "idx": 19,
+          "tag": "0019_short_ulik",
+          "when": "1789083398103",
+          "sha256": "14b618089bed74795e7b75951dbe85256f913fa09fa4753a8a2f13d202f4177b"
+        },
+        {
+          "idx": 20,
+          "tag": "0020_colorful_kitty_pryde",
+          "when": "1789083942881",
+          "sha256": "0519a66242fe34952f04b0014798265bf22f543ef09f14f9415060845e286add"
+        },
+        {
+          "idx": 21,
+          "tag": "0021_short_korvac",
+          "when": "1789091511705",
+          "sha256": "b3056b1417b2e5753fecf9c624fa59454eb0dcf13affcd7ace4d979da5664bba"
+        },
+        {
+          "idx": 22,
+          "tag": "0022_ambitious_hellcat",
+          "when": "1789093270876",
+          "sha256": "c4b2df5f91cf12c0360ed3b71b6c9b2fb00dc3c78711dfd039ba3a9fe00e3cd5"
+        },
+        {
+          "idx": 23,
+          "tag": "0023_strange_union_jack",
+          "when": "1789130117098",
+          "sha256": "2fb019cac5f4fec814cc3ed8ed037254a4aead9666d6a5d43dd8b6824d67d750"
+        },
+        {
+          "idx": 24,
+          "tag": "0024_brainy_doorman",
+          "when": "1789130211788",
+          "sha256": "cc0b7bbff17c86657b864c83291ad1d89c8eebd81f0e734e095c04b331eea039"
+        },
+        {
+          "idx": 25,
+          "tag": "0025_talented_darwin",
+          "when": "1789130319541",
+          "sha256": "00f1f4644d17f9a3aa55b1c233f12f81cbe1070ef9e472b2de22dffec93c7511"
+        },
+        {
+          "idx": 26,
+          "tag": "0026_shiny_edwin_jarvis",
+          "when": "1789414692918",
+          "sha256": "e3072420477f960888bf427d7bec4187bd41da08afca2938fc1daace0355bc53"
+        },
+        {
+          "idx": 27,
+          "tag": "0027_clear_morgan_stark",
+          "when": "1789428887148",
+          "sha256": "6697ab771422c350b249172f84b8a944371d7c9b7c521b2e58060581c087dd9d"
+        },
+        {
+          "idx": 28,
+          "tag": "0028_brave_xavin",
+          "when": "1789429315597",
+          "sha256": "bb861a43bd5c8879fc1ebde85c0a8e402f80917ccd92c4b21f08ca9454a098e7"
+        }
+      ]
+    },
+    "strategy": "transactional-compatibility-bridge",
+    "last": 28,
+    "injectFailure": false,
+    "naiveCompatibility": false,
+    "candidate_journal_sha256": "32d7653673b001c2231cfebb7c8f51cac5eaa1a43950010328c10f8cc2d0e022",
+    "candidate_snapshots": {
+      "0000_snapshot.json": "58f28e31011c5d10b4a8c39ecf6e7a836b9061ce42c01577011e79174d29318c",
+      "0001_snapshot.json": "1d272651c1b69a64ed74ca87054bbff5cc352dc74bcf64fdb09ce64b97b0d8cc",
+      "0002_snapshot.json": "ff0e99852404e271072b640fe701c6ec75edf117f481935ed1fd902df2866456",
+      "0003_snapshot.json": "0f9fa8dc839d5e44a09c3003270f4c1640638b2090d5a8b4a197f1e7fe86e46f",
+      "0004_snapshot.json": "5f5a60cdc9d8e18d89ebda74f804d9fa1834478ee3232e9b36e8914daa3d3da0",
+      "0005_snapshot.json": "afc6fe72137d52457011a64a86be93edd4152c23134eab0f6b11e7ccdb128661",
+      "0006_snapshot.json": "d095207bc959819315493017c76fd8593280929cc46e8cdd0342e5df029e6f40",
+      "0007_snapshot.json": "1511a4d7f4fa306f37c25dbeb874ec34e15a47de4ec44c797af37f06e895bcc2",
+      "0008_snapshot.json": "a3660daf978e591048abf7dc7e5bb0c7d8036ca26cffb321265c489487f56c36",
+      "0009_snapshot.json": "d4cd9feff1bb4f29be43dcb0f2d2ef5311cd4dc781465c2914a4766bc0b8e144",
+      "0010_snapshot.json": "f1324402fbd0a38eaa6e28e07670c29d12991fb281c341d7320730d035fb8987",
+      "0011_snapshot.json": "535d1be04a31f6f933e307279dc9bd19419c5cfe49f039c39dc3bb17c8640097",
+      "0014_snapshot.json": "732dbf3d9152243214697ab889c825ccbb9356652fc6f04facf5ff2ec1e0e91b",
+      "0015_snapshot.json": "0e0b606b03024f1b420bf5cf447c3e8d84839e85caa303d37b21bbe6acd5d4a4",
+      "0016_snapshot.json": "95a1d4e7376cc656e8b0b58ecdc7a574641d1611fcd140584faa74c2be883432",
+      "0017_snapshot.json": "e3b6c86737e53a247fba8e0ab71d0ff648a3bf344e7173a1b4f4fa36d025e5ad",
+      "0018_snapshot.json": "93856fec5b36fdb88001040bcccccbee21e11e2d378e591fa136fab0e61918be",
+      "0019_snapshot.json": "8ef8baeb85ba960b891e48c5284c44a9dbb8d76f8afd1aef29b77643a619fcdb",
+      "0020_snapshot.json": "0fae5d71eb99ceb837765495b3ace90314b631ce5f5e9a390510c084685cb0df",
+      "0021_snapshot.json": "39ebe3d99bc741dd76c2b4e3715ebc629962d76119c457463ce717daf86143bb",
+      "0022_snapshot.json": "163e7e444cd7d10b41169972a5f0d25ad66207f8758ac17b1af339e6b92f24f0",
+      "0023_snapshot.json": "339c67a066791d82c5412fe405afc2ca413828c99557adffd55103ab402fee49",
+      "0024_snapshot.json": "75cefaaa490a8225b6511f6d7f3534730cc49098485b096ec7fafdaf4cb1cc83",
+      "0025_snapshot.json": "8f1a981eb797ae82b985bc1fd8e820f84074405675a036e94ab7f11a7aaf8d40",
+      "0026_snapshot.json": "e7dc90508d2e4170ba5899f797f96afa418237a38d56a888c73feb321563983e",
+      "0027_snapshot.json": "ca068a9311346e454845f75c6301542f052af0699b165736d59649f971d9d89c",
+      "0028_snapshot.json": "8f22e2a6cfca3a8c7f57b81c4432858a0c3d112bea833f39f7c583a947555291"
+    },
+    "candidate_migrations": [
+      {
+        "tag": "0000_groovy_gamora",
+        "when": "1787423495945",
+        "sha256": "dcca272960496a589a2608f589ca32413ef4990a86f7ec6b8261bbd07775493c"
+      },
+      {
+        "tag": "0001_nervous_carnage",
+        "when": "1787424766901",
+        "sha256": "2b6058d807efba5a31f1b669f1446eef3aab76907108a9bec93b21f7f92a2237"
+      },
+      {
+        "tag": "0002_yielding_oracle",
+        "when": "1787427473223",
+        "sha256": "36d2ece9d759551f63305da9d5dd2132b636c2ca1fbc43ccbd7a915e4c10d03a"
+      },
+      {
+        "tag": "0003_rare_brother_voodoo",
+        "when": "1787430409236",
+        "sha256": "15387c92f37791c45c58110750a935f006833da6f54192cf706e44e463723b19"
+      },
+      {
+        "tag": "0004_next_gorilla_man",
+        "when": "1787432718286",
+        "sha256": "ccd5000d2ac640ef448983c2dc1be91416d07d9a4ab0b56705b19c6625d28313"
+      },
+      {
+        "tag": "0005_lovely_amazoness",
+        "when": "1787438077691",
+        "sha256": "5907dbd41665df9b74db7a5963aeeb241d15fcf376ed2c766dd4548e1b037f24"
+      },
+      {
+        "tag": "0006_dusty_jack_murdock",
+        "when": "1787438761876",
+        "sha256": "c27845a8fdc1fe320f6b5f6e7f6c25d6928f990997cf2eb9d42efe0c89fbaa9d"
+      },
+      {
+        "tag": "0007_unique_post",
+        "when": "1787444572984",
+        "sha256": "7c747c01a4f1e3b70a0ee622fd17f1edc8e246c9be487582a84a76d645b066bb"
+      },
+      {
+        "tag": "0008_high_rumiko_fujikawa",
+        "when": "1787487111317",
+        "sha256": "dc56f3df5f04b01a0b690ea88295a3e5fbb2b5a6066ea4d974826eb9fe87246f"
+      },
+      {
+        "tag": "0009_lethal_pyro",
+        "when": "1787487709365",
+        "sha256": "17b24cc9eb31be71a1f13a6cfa54bbcfd4faef120f72d060b646dd338787f83f"
+      },
+      {
+        "tag": "0010_lying_tarantula",
+        "when": "1788014906712",
+        "sha256": "9cacf93eb29d260b70c8405d42649b3187b00c3c42702024ec2231aa09d81f43"
+      },
+      {
+        "tag": "0011_demonic_redwing",
+        "when": "1788043052905",
+        "sha256": "4ec5efaa97d0f8ffa474a2780ee7a5d05c0b4c1e6d915594c68b15be6659875f"
+      },
+      {
+        "tag": "0012_fifo_cost_layers",
+        "when": "1788051976601",
+        "sha256": "88196609cbf44bc10b39c1962d1b6aa6d50871a87152f2d7a6670f4a623ed165"
+      },
+      {
+        "tag": "0013_fifo_lifecycle",
+        "when": "1788371973551",
+        "sha256": "5e9bac5965719c28ad6978c62058fe239da87b4a34de1607a161df4a5741dd49"
+      },
+      {
+        "tag": "0014_puzzling_masque",
+        "when": "1788466591688",
+        "sha256": "4f265bceb33bca9a2e71a881ed218cf5e7dae0612e691687ae6b11fe57c9e5af"
+      },
+      {
+        "tag": "0015_add-owner-and-employee-roles",
+        "when": "1788712205881",
+        "sha256": "8d8a2d65b4d44a07e552b724f812a914bf88e164430a1ed7c800c13120225431"
+      },
+      {
+        "tag": "0016_migrate-admin-to-owner",
+        "when": "1788712214871",
+        "sha256": "43e1dcd65ff1c91f72cb08d7ccc6f0d27a27c99d6ffb0745c8343bb54e223f67"
+      },
+      {
+        "tag": "0016_compatibility_prepare",
+        "when": "1788712214872",
+        "sha256": "2b65228bf086455642028ab782a9b8168294a4aaffec49379959d8e0404dba04"
+      },
+      {
+        "tag": "0017_orange_the_hand",
+        "when": "1788877037648",
+        "sha256": "ccaa9173aef5fda63ff980f4c1d254c0b040d7fe4df92f6f21046300c81fa256"
+      },
+      {
+        "tag": "0018_bouncy_odin",
+        "when": "1788878474257",
+        "sha256": "c81a4674267795208c11a276509db789a364b39f485dfed34a30f966902079db"
+      },
+      {
+        "tag": "0019_short_ulik",
+        "when": "1789083398103",
+        "sha256": "14b618089bed74795e7b75951dbe85256f913fa09fa4753a8a2f13d202f4177b"
+      },
+      {
+        "tag": "0020_colorful_kitty_pryde",
+        "when": "1789083942881",
+        "sha256": "0519a66242fe34952f04b0014798265bf22f543ef09f14f9415060845e286add"
+      },
+      {
+        "tag": "0021_short_korvac",
+        "when": "1789091511705",
+        "sha256": "b3056b1417b2e5753fecf9c624fa59454eb0dcf13affcd7ace4d979da5664bba"
+      },
+      {
+        "tag": "0022_ambitious_hellcat",
+        "when": "1789093270876",
+        "sha256": "c4b2df5f91cf12c0360ed3b71b6c9b2fb00dc3c78711dfd039ba3a9fe00e3cd5"
+      },
+      {
+        "tag": "0023_strange_union_jack",
+        "when": "1789130117098",
+        "sha256": "2fb019cac5f4fec814cc3ed8ed037254a4aead9666d6a5d43dd8b6824d67d750"
+      },
+      {
+        "tag": "0024_brainy_doorman",
+        "when": "1789130211788",
+        "sha256": "cc0b7bbff17c86657b864c83291ad1d89c8eebd81f0e734e095c04b331eea039"
+      },
+      {
+        "tag": "0025_talented_darwin",
+        "when": "1789130319541",
+        "sha256": "00f1f4644d17f9a3aa55b1c233f12f81cbe1070ef9e472b2de22dffec93c7511"
+      },
+      {
+        "tag": "0026_shiny_edwin_jarvis",
+        "when": "1789414692918",
+        "sha256": "e3072420477f960888bf427d7bec4187bd41da08afca2938fc1daace0355bc53"
+      },
+      {
+        "tag": "0027_clear_morgan_stark",
+        "when": "1789428887148",
+        "sha256": "6697ab771422c350b249172f84b8a944371d7c9b7c521b2e58060581c087dd9d"
+      },
+      {
+        "tag": "0028_brave_xavin",
+        "when": "1789429315597",
+        "sha256": "bb861a43bd5c8879fc1ebde85c0a8e402f80917ccd92c4b21f08ca9454a098e7"
+      },
+      {
+        "tag": "0029_compatibility_cleanup",
+        "when": "1789429315598",
+        "sha256": "3e471dfaa5f3ddfec72142833942b9baec9fe0c3dd6041bd34719f8ccfc82c8b"
+      }
+    ],
+    "database_name": "neondb",
+    "expected_before_receipts": 17,
+    "expected_after_receipts": 31,
+    "decisions": {
+      "financial_0019": "requires-explicit-approval",
+      "scenario_0028": "requires-empty-new-mix"
+    },
+    "sql_sha256": "5ceff1d04b27db07800295e9f57a9f0d775e681f4ae0a0162d18dc11d2ff2711"
+  },
+  "statements": [
+    "SET LOCAL statement_timeout = '60s'",
+    "SET LOCAL lock_timeout = '5s'",
+    "SET LOCAL search_path TO public",
+    "SELECT pg_catalog.pg_advisory_xact_lock(169231028)",
+    "DO $$ BEGIN\n        IF current_database() <> 'neondb' OR current_setting('transaction_read_only') <> 'off'\n        THEN RAISE EXCEPTION 'SCOPED_UPGRADE_TARGET_MISMATCH'; END IF;\n      END $$",
+    "LOCK TABLE public.expenses, public.products, public.purchases, public.sales IN SHARE ROW EXCLUSIVE MODE",
+    "DO $$ BEGIN\n    IF (SELECT count(*) FROM drizzle.__drizzle_migrations) <> 17\n      OR EXISTS (\n        SELECT 1 FROM (VALUES ('dcca272960496a589a2608f589ca32413ef4990a86f7ec6b8261bbd07775493c',1787423495945::bigint),('2b6058d807efba5a31f1b669f1446eef3aab76907108a9bec93b21f7f92a2237',1787424766901::bigint),('36d2ece9d759551f63305da9d5dd2132b636c2ca1fbc43ccbd7a915e4c10d03a',1787427473223::bigint),('15387c92f37791c45c58110750a935f006833da6f54192cf706e44e463723b19',1787430409236::bigint),('ccd5000d2ac640ef448983c2dc1be91416d07d9a4ab0b56705b19c6625d28313',1787432718286::bigint),('5907dbd41665df9b74db7a5963aeeb241d15fcf376ed2c766dd4548e1b037f24',1787438077691::bigint),('c27845a8fdc1fe320f6b5f6e7f6c25d6928f990997cf2eb9d42efe0c89fbaa9d',1787438761876::bigint),('7c747c01a4f1e3b70a0ee622fd17f1edc8e246c9be487582a84a76d645b066bb',1787444572984::bigint),('dc56f3df5f04b01a0b690ea88295a3e5fbb2b5a6066ea4d974826eb9fe87246f',1787487111317::bigint),('17b24cc9eb31be71a1f13a6cfa54bbcfd4faef120f72d060b646dd338787f83f',1787487709365::bigint),('9cacf93eb29d260b70c8405d42649b3187b00c3c42702024ec2231aa09d81f43',1788014906712::bigint),('4ec5efaa97d0f8ffa474a2780ee7a5d05c0b4c1e6d915594c68b15be6659875f',1788043052905::bigint),('88196609cbf44bc10b39c1962d1b6aa6d50871a87152f2d7a6670f4a623ed165',1788051976601::bigint),('5e9bac5965719c28ad6978c62058fe239da87b4a34de1607a161df4a5741dd49',1788371973551::bigint),('4f265bceb33bca9a2e71a881ed218cf5e7dae0612e691687ae6b11fe57c9e5af',1788466591688::bigint),('8d8a2d65b4d44a07e552b724f812a914bf88e164430a1ed7c800c13120225431',1788712205881::bigint),('43e1dcd65ff1c91f72cb08d7ccc6f0d27a27c99d6ffb0745c8343bb54e223f67',1788712214871::bigint)) expected(hash, created_at)\n        FULL JOIN drizzle.__drizzle_migrations actual USING (created_at)\n        WHERE expected.hash IS DISTINCT FROM actual.hash\n      ) THEN RAISE EXCEPTION 'SCOPED_UPGRADE_REQUIRES_EXACT_0016'; END IF;\n  END $$",
+    "DO $$ BEGIN\n        IF to_regclass('public.operational_audit_events') IS NOT NULL\n          OR to_regclass('public.management_settings') IS NOT NULL\n          OR to_regclass('public.management_scenario_mix') IS NOT NULL\n          OR EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema='public'\n            AND ((table_name IN ('expenses','purchases','sales') AND column_name='idempotency_key')\n              OR (table_name='products' AND column_name='unit')))\n        THEN RAISE EXCEPTION 'SCOPED_UPGRADE_PARTIAL_APPLICATION'; END IF;\n      END $$",
+    "ALTER TABLE \"products\" RENAME COLUMN \"measurement_unit\" TO \"unit\";\n",
+    "INSERT INTO drizzle.__drizzle_migrations(hash,created_at) VALUES ('2b65228bf086455642028ab782a9b8168294a4aaffec49379959d8e0404dba04',1788712214872)",
+    "ALTER TABLE \"expenses\" ADD COLUMN \"idempotency_key\" varchar(160);",
+    "\nALTER TABLE \"expenses\" ADD COLUMN \"idempotency_hash\" varchar(64);",
+    "\nALTER TABLE \"expenses\" ADD COLUMN \"created_by_auth_user_id\" varchar(191);",
+    "\nALTER TABLE \"purchases\" ADD COLUMN \"idempotency_key\" varchar(160);",
+    "\nALTER TABLE \"purchases\" ADD COLUMN \"idempotency_hash\" varchar(64);",
+    "\nALTER TABLE \"purchases\" ADD COLUMN \"created_by_auth_user_id\" varchar(191);",
+    "\nALTER TABLE \"sales\" ADD COLUMN \"idempotency_key\" varchar(160);",
+    "\nALTER TABLE \"sales\" ADD COLUMN \"idempotency_hash\" varchar(64);",
+    "\nALTER TABLE \"sales\" ADD COLUMN \"created_by_auth_user_id\" varchar(191);",
+    "\nALTER TABLE \"expenses\" ADD CONSTRAINT \"expenses_idempotency_key_unique\" UNIQUE(\"idempotency_key\");",
+    "\nALTER TABLE \"purchases\" ADD CONSTRAINT \"purchases_idempotency_key_unique\" UNIQUE(\"idempotency_key\");",
+    "\nALTER TABLE \"sales\" ADD CONSTRAINT \"sales_idempotency_key_unique\" UNIQUE(\"idempotency_key\");",
+    "\nCREATE OR REPLACE FUNCTION \"prevent_used_product_structure_change\"()\nRETURNS trigger\nLANGUAGE plpgsql\nAS $$\nBEGIN\n  IF (NEW.\"product_type\", NEW.\"unit\") IS DISTINCT FROM (OLD.\"product_type\", OLD.\"unit\")\n    AND (\n      EXISTS (SELECT 1 FROM \"stock_movements\" WHERE \"product_id\" = OLD.\"id\")\n      OR EXISTS (SELECT 1 FROM \"purchase_items\" WHERE \"product_id\" = OLD.\"id\")\n      OR EXISTS (SELECT 1 FROM \"sale_items\" WHERE \"product_id\" = OLD.\"id\")\n      OR EXISTS (SELECT 1 FROM \"product_import_aliases\" WHERE \"product_id\" = OLD.\"id\")\n      OR EXISTS (SELECT 1 FROM \"recipe_items\" WHERE \"product_id\" = OLD.\"id\")\n      OR EXISTS (\n        SELECT 1 FROM \"production_profiles\"\n        WHERE \"product_id\" = OLD.\"id\" OR \"packaging_product_id\" = OLD.\"id\"\n      )\n      OR EXISTS (\n        SELECT 1 FROM \"production_profile_components\" WHERE \"product_id\" = OLD.\"id\"\n      )\n      OR EXISTS (SELECT 1 FROM \"production_batch_outputs\" WHERE \"product_id\" = OLD.\"id\")\n    )\n  THEN\n    RAISE EXCEPTION 'used product structure cannot change'\n      USING ERRCODE = '23514';\n  END IF;\n  RETURN NEW;\nEND;\n$$;",
+    "\nCREATE TRIGGER \"products_preserve_used_structure\"\nBEFORE UPDATE OF \"product_type\", \"unit\" ON \"products\"\nFOR EACH ROW\nEXECUTE FUNCTION \"prevent_used_product_structure_change\"();\n",
+    "INSERT INTO drizzle.__drizzle_migrations(hash,created_at) VALUES ('ccaa9173aef5fda63ff980f4c1d254c0b040d7fe4df92f6f21046300c81fa256',1788877037648)",
+    "CREATE TABLE \"operational_audit_events\" (\n\t\"id\" serial PRIMARY KEY NOT NULL,\n\t\"actor_auth_user_id\" varchar(191),\n\t\"action\" varchar(80) NOT NULL,\n\t\"entity_type\" varchar(80) NOT NULL,\n\t\"entity_id\" varchar(191) NOT NULL,\n\t\"operation_reference\" varchar(160),\n\t\"reason\" text,\n\t\"occurred_at\" timestamp with time zone DEFAULT now() NOT NULL\n);\n",
+    "\nCREATE INDEX \"operational_audit_events_actor_idx\" ON \"operational_audit_events\" USING btree (\"actor_auth_user_id\");",
+    "\nCREATE INDEX \"operational_audit_events_entity_idx\" ON \"operational_audit_events\" USING btree (\"entity_type\",\"entity_id\");",
+    "\nCREATE INDEX \"operational_audit_events_occurred_at_idx\" ON \"operational_audit_events\" USING btree (\"occurred_at\");",
+    "INSERT INTO drizzle.__drizzle_migrations(hash,created_at) VALUES ('c81a4674267795208c11a276509db789a364b39f485dfed34a30f966902079db',1788878474257)",
+    "CREATE TYPE \"public\".\"sale_adjustment_kind\" AS ENUM('none', 'discount', 'combo', 'gift', 'manual_adjustment');",
+    "\nCREATE TABLE \"management_settings\" (\n\t\"id\" integer PRIMARY KEY NOT NULL,\n\t\"version\" integer DEFAULT 1 NOT NULL,\n\t\"monthly_profit_goal\" numeric(12, 2) NOT NULL,\n\t\"fixed_monthly_costs\" numeric(12, 2) NOT NULL,\n\t\"sales_days_per_month\" integer NOT NULL,\n\t\"weeks_per_month\" numeric(5, 2) NOT NULL,\n\t\"normal_revenue_tolerance\" numeric(6, 4) NOT NULL,\n\t\"critical_revenue_tolerance\" numeric(6, 4) NOT NULL,\n\t\"minimum_product_margin\" numeric(6, 4) NOT NULL,\n\t\"fee_tax_reserve_rate\" numeric(6, 4) NOT NULL,\n\t\"updated_by_auth_user_id\" varchar(191),\n\t\"updated_at\" timestamp with time zone DEFAULT now() NOT NULL\n);\n",
+    "\nINSERT INTO \"management_settings\" (\n\t\"id\",\n\t\"version\",\n\t\"monthly_profit_goal\",\n\t\"fixed_monthly_costs\",\n\t\"sales_days_per_month\",\n\t\"weeks_per_month\",\n\t\"normal_revenue_tolerance\",\n\t\"critical_revenue_tolerance\",\n\t\"minimum_product_margin\",\n\t\"fee_tax_reserve_rate\"\n) VALUES (1, 1, '10000.00', '2200.00', 20, '4.00', '0.0300', '0.0800', '0.7000', '0.0000');\n",
+    "\nALTER TABLE \"sale_items\" ADD COLUMN \"reported_amount\" numeric(12, 2);",
+    "\nALTER TABLE \"sales\" ADD COLUMN \"adjustment_kind\" \"sale_adjustment_kind\" DEFAULT 'none' NOT NULL;",
+    "\nALTER TABLE \"sales\" ADD COLUMN \"adjustment_reason\" text;\n",
+    "INSERT INTO drizzle.__drizzle_migrations(hash,created_at) VALUES ('14b618089bed74795e7b75951dbe85256f913fa09fa4753a8a2f13d202f4177b',1789083398103)",
+    "CREATE TYPE \"public\".\"action_plan_priority\" AS ENUM('low', 'medium', 'high', 'critical');",
+    "\nCREATE TYPE \"public\".\"action_plan_status\" AS ENUM('open', 'in_progress', 'completed', 'cancelled');",
+    "\nCREATE TABLE \"action_plan_history\" (\n\t\"id\" serial PRIMARY KEY NOT NULL,\n\t\"action_plan_id\" integer NOT NULL,\n\t\"version\" integer NOT NULL,\n\t\"event\" varchar(40) NOT NULL,\n\t\"actor_auth_user_id\" varchar(191) NOT NULL,\n\t\"snapshot\" jsonb NOT NULL,\n\t\"occurred_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\tCONSTRAINT \"action_plan_history_plan_version_unique\" UNIQUE(\"action_plan_id\",\"version\")\n);\n",
+    "\nCREATE TABLE \"action_plans\" (\n\t\"id\" serial PRIMARY KEY NOT NULL,\n\t\"version\" integer DEFAULT 1 NOT NULL,\n\t\"alert\" text NOT NULL,\n\t\"probable_cause\" text,\n\t\"action\" text NOT NULL,\n\t\"priority\" \"action_plan_priority\" DEFAULT 'medium' NOT NULL,\n\t\"kpi\" varchar(160),\n\t\"responsible\" varchar(160),\n\t\"due_date\" date,\n\t\"status\" \"action_plan_status\" DEFAULT 'open' NOT NULL,\n\t\"created_by_auth_user_id\" varchar(191) NOT NULL,\n\t\"updated_by_auth_user_id\" varchar(191) NOT NULL,\n\t\"created_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"updated_at\" timestamp with time zone DEFAULT now() NOT NULL\n);\n",
+    "\nALTER TABLE \"action_plan_history\" ADD CONSTRAINT \"action_plan_history_action_plan_id_action_plans_id_fk\" FOREIGN KEY (\"action_plan_id\") REFERENCES \"public\".\"action_plans\"(\"id\") ON DELETE restrict ON UPDATE no action;",
+    "\nCREATE INDEX \"action_plan_history_actor_idx\" ON \"action_plan_history\" USING btree (\"actor_auth_user_id\");",
+    "\nCREATE INDEX \"action_plans_status_due_date_idx\" ON \"action_plans\" USING btree (\"status\",\"due_date\");",
+    "\nCREATE INDEX \"action_plans_priority_idx\" ON \"action_plans\" USING btree (\"priority\");",
+    "INSERT INTO drizzle.__drizzle_migrations(hash,created_at) VALUES ('0519a66242fe34952f04b0014798265bf22f543ef09f14f9415060845e286add',1789083942881)",
+    "ALTER TABLE \"products\" ADD COLUMN \"reorder_point\" numeric(14, 3);",
+    "\nALTER TABLE \"purchase_items\" ADD COLUMN \"supplier_lot\" varchar(80);",
+    "\nALTER TABLE \"purchase_items\" ADD COLUMN \"expires_on\" date;",
+    "INSERT INTO drizzle.__drizzle_migrations(hash,created_at) VALUES ('b3056b1417b2e5753fecf9c624fa59454eb0dcf13affcd7ace4d979da5664bba',1789091511705)",
+    "ALTER TABLE \"products\" ADD COLUMN \"preferred_supplier_name\" varchar(160);",
+    "INSERT INTO drizzle.__drizzle_migrations(hash,created_at) VALUES ('c4b2df5f91cf12c0360ed3b71b6c9b2fb00dc3c78711dfd039ba3a9fe00e3cd5',1789093270876)",
+    "CREATE TYPE \"public\".\"financial_event_type\" AS ENUM('sale_revenue', 'cash_receipt', 'cash_refund', 'store_credit_issued', 'store_credit_redeemed', 'revenue_correction', 'cash_correction');",
+    "\nCREATE TYPE \"public\".\"financial_period_status\" AS ENUM('open', 'closed');",
+    "\nCREATE TABLE \"financial_events\" (\n\t\"id\" serial PRIMARY KEY NOT NULL,\n\t\"idempotency_key\" varchar(160) NOT NULL,\n\t\"idempotency_hash\" varchar(64) NOT NULL,\n\t\"type\" \"financial_event_type\" NOT NULL,\n\t\"sale_id\" integer,\n\t\"sale_item_id\" integer,\n\t\"corrects_event_id\" integer,\n\t\"amount\" numeric(12, 2) NOT NULL,\n\t\"competence_date\" date NOT NULL,\n\t\"occurred_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"reason\" text NOT NULL,\n\t\"created_by_auth_user_id\" varchar(191) NOT NULL,\n\t\"authorized_by_auth_user_id\" varchar(191),\n\t\"created_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\tCONSTRAINT \"financial_events_idempotency_key_unique\" UNIQUE(\"idempotency_key\")\n);\n",
+    "\nCREATE TABLE \"financial_periods\" (\n\t\"id\" serial PRIMARY KEY NOT NULL,\n\t\"period_month\" date NOT NULL,\n\t\"status\" \"financial_period_status\" DEFAULT 'open' NOT NULL,\n\t\"version\" integer DEFAULT 1 NOT NULL,\n\t\"closure_snapshot\" jsonb,\n\t\"closure_notes\" text,\n\t\"closed_by_auth_user_id\" varchar(191),\n\t\"closed_at\" timestamp with time zone,\n\t\"created_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"updated_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\tCONSTRAINT \"financial_periods_period_month_unique\" UNIQUE(\"period_month\")\n);\n",
+    "\nALTER TABLE \"sales\" ADD COLUMN \"delivered_at\" timestamp with time zone;",
+    "\nALTER TABLE \"financial_events\" ADD CONSTRAINT \"financial_events_sale_id_sales_id_fk\" FOREIGN KEY (\"sale_id\") REFERENCES \"public\".\"sales\"(\"id\") ON DELETE restrict ON UPDATE no action;",
+    "\nALTER TABLE \"financial_events\" ADD CONSTRAINT \"financial_events_sale_item_id_sale_items_id_fk\" FOREIGN KEY (\"sale_item_id\") REFERENCES \"public\".\"sale_items\"(\"id\") ON DELETE restrict ON UPDATE no action;",
+    "\nALTER TABLE \"financial_events\" ADD CONSTRAINT \"financial_events_correction_fk\" FOREIGN KEY (\"corrects_event_id\") REFERENCES \"public\".\"financial_events\"(\"id\") ON DELETE restrict ON UPDATE no action;",
+    "\nCREATE INDEX \"financial_events_competence_idx\" ON \"financial_events\" USING btree (\"competence_date\",\"type\");",
+    "\nCREATE INDEX \"financial_events_occurred_idx\" ON \"financial_events\" USING btree (\"occurred_at\",\"type\");",
+    "\nCREATE INDEX \"financial_events_sale_idx\" ON \"financial_events\" USING btree (\"sale_id\");",
+    "\nALTER TABLE \"financial_periods\" ADD CONSTRAINT \"financial_periods_month_start_check\" CHECK (period_month = date_trunc('month', period_month::timestamp)::date);",
+    "\nALTER TABLE \"financial_periods\" ADD CONSTRAINT \"financial_periods_closure_check\" CHECK ((status = 'open' AND closed_at IS NULL AND closed_by_auth_user_id IS NULL AND closure_snapshot IS NULL) OR (status = 'closed' AND closed_at IS NOT NULL AND closed_by_auth_user_id IS NOT NULL AND closure_snapshot IS NOT NULL));",
+    "\nALTER TABLE \"financial_events\" ADD CONSTRAINT \"financial_events_amount_check\" CHECK ((type IN ('revenue_correction', 'cash_correction') AND amount <> 0) OR (type NOT IN ('revenue_correction', 'cash_correction') AND amount > 0));",
+    "\nALTER TABLE \"financial_events\" ADD CONSTRAINT \"financial_events_correction_check\" CHECK ((type IN ('revenue_correction', 'cash_correction')) = (corrects_event_id IS NOT NULL));",
+    "\nALTER TABLE \"financial_events\" ADD CONSTRAINT \"financial_events_authorization_check\" CHECK ((type NOT IN ('cash_refund', 'store_credit_issued')) OR authorized_by_auth_user_id IS NOT NULL);",
+    "\nCREATE FUNCTION prevent_financial_event_mutation() RETURNS trigger LANGUAGE plpgsql AS $$\nBEGIN\n\tRAISE EXCEPTION 'financial_events are immutable';\nEND;\n$$;",
+    "\nCREATE TRIGGER financial_events_immutable BEFORE UPDATE OR DELETE ON \"financial_events\" FOR EACH ROW EXECUTE FUNCTION prevent_financial_event_mutation();\n",
+    "INSERT INTO drizzle.__drizzle_migrations(hash,created_at) VALUES ('2fb019cac5f4fec814cc3ed8ed037254a4aead9666d6a5d43dd8b6824d67d750',1789130117098)",
+    "ALTER TABLE \"financial_events\" ADD COLUMN \"revenue_effect\" numeric(12, 2) DEFAULT '0' NOT NULL;",
+    "\nALTER TABLE \"financial_events\" ADD COLUMN \"cash_effect\" numeric(12, 2) DEFAULT '0' NOT NULL;",
+    "INSERT INTO drizzle.__drizzle_migrations(hash,created_at) VALUES ('cc0b7bbff17c86657b864c83291ad1d89c8eebd81f0e734e095c04b331eea039',1789130211788)",
+    "ALTER TABLE \"financial_events\" ADD COLUMN \"quantity\" numeric(14, 3);",
+    "INSERT INTO drizzle.__drizzle_migrations(hash,created_at) VALUES ('00f1f4644d17f9a3aa55b1c233f12f81cbe1070ef9e472b2de22dffec93c7511',1789130319541)",
+    "ALTER TABLE \"financial_events\" ADD COLUMN \"settles_event_id\" integer;",
+    "\nALTER TABLE \"financial_events\" ADD CONSTRAINT \"financial_events_settlement_fk\" FOREIGN KEY (\"settles_event_id\") REFERENCES \"public\".\"financial_events\"(\"id\") ON DELETE restrict ON UPDATE no action;",
+    "\nCREATE INDEX \"financial_events_settlement_idx\" ON \"financial_events\" USING btree (\"settles_event_id\");",
+    "\nALTER TABLE \"financial_events\" ADD CONSTRAINT \"financial_events_settlement_check\" CHECK ((type = 'store_credit_redeemed') = (settles_event_id IS NOT NULL));",
+    "\nALTER TABLE \"financial_events\" ADD CONSTRAINT \"financial_events_redemption_effect_check\" CHECK (type <> 'store_credit_redeemed' OR (revenue_effect = 0 AND cash_effect = 0 AND authorized_by_auth_user_id IS NOT NULL));\n",
+    "INSERT INTO drizzle.__drizzle_migrations(hash,created_at) VALUES ('e3072420477f960888bf427d7bec4187bd41da08afca2938fc1daace0355bc53',1789414692918)",
+    "CREATE TYPE \"public\".\"management_scenario_status\" AS ENUM('draft', 'active', 'archived');",
+    "\nCREATE TABLE \"management_scenario_history\" (\n\t\"id\" serial PRIMARY KEY NOT NULL,\n\t\"scenario_id\" integer NOT NULL,\n\t\"revision\" integer NOT NULL,\n\t\"scenario_version\" integer NOT NULL,\n\t\"event\" varchar(40) NOT NULL,\n\t\"actor_auth_user_id\" varchar(191) NOT NULL,\n\t\"reason\" text,\n\t\"snapshot\" jsonb NOT NULL,\n\t\"occurred_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\tCONSTRAINT \"management_scenario_history_revision_unique\" UNIQUE(\"scenario_id\",\"revision\")\n);\n",
+    "\nCREATE TABLE \"management_scenario_mix\" (\n\t\"id\" serial PRIMARY KEY NOT NULL,\n\t\"scenario_id\" integer NOT NULL,\n\t\"product_id\" integer NOT NULL,\n\t\"original_weight\" numeric(12, 6) NOT NULL,\n\t\"normalized_weight_bps\" integer NOT NULL,\n\t\"planned_unit_price\" numeric(12, 2) NOT NULL,\n\t\"planned_unit_cost\" numeric(12, 3) NOT NULL,\n\tCONSTRAINT \"management_scenario_mix_product_unique\" UNIQUE(\"scenario_id\",\"product_id\"),\n\tCONSTRAINT \"management_scenario_mix_original_weight_check\" CHECK (\"management_scenario_mix\".\"original_weight\" > 0),\n\tCONSTRAINT \"management_scenario_mix_normalized_weight_check\" CHECK (\"management_scenario_mix\".\"normalized_weight_bps\" > 0 and \"management_scenario_mix\".\"normalized_weight_bps\" <= 10000)\n);\n",
+    "\nCREATE TABLE \"management_scenarios\" (\n\t\"id\" serial PRIMARY KEY NOT NULL,\n\t\"scenario_key\" varchar(36) NOT NULL,\n\t\"version\" integer NOT NULL,\n\t\"revision\" integer DEFAULT 1 NOT NULL,\n\t\"status\" \"management_scenario_status\" DEFAULT 'draft' NOT NULL,\n\t\"name\" varchar(120) NOT NULL,\n\t\"description\" text,\n\t\"effective_on\" date NOT NULL,\n\t\"monthly_profit_goal\" numeric(12, 2) NOT NULL,\n\t\"fixed_monthly_costs\" numeric(12, 2) NOT NULL,\n\t\"sales_days_per_month\" integer NOT NULL,\n\t\"weeks_per_month\" numeric(5, 2) NOT NULL,\n\t\"minimum_margin_bps\" integer NOT NULL,\n\t\"fee_tax_reserve_bps\" integer NOT NULL,\n\t\"supersedes_scenario_id\" integer,\n\t\"replacement_reason\" text,\n\t\"archive_reason\" text,\n\t\"created_by_auth_user_id\" varchar(191) NOT NULL,\n\t\"updated_by_auth_user_id\" varchar(191) NOT NULL,\n\t\"activated_by_auth_user_id\" varchar(191),\n\t\"archived_by_auth_user_id\" varchar(191),\n\t\"created_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"updated_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"activated_at\" timestamp with time zone,\n\t\"archived_at\" timestamp with time zone,\n\tCONSTRAINT \"management_scenarios_key_version_unique\" UNIQUE(\"scenario_key\",\"version\"),\n\tCONSTRAINT \"management_scenarios_sales_days_check\" CHECK (\"management_scenarios\".\"sales_days_per_month\" between 1 and 31),\n\tCONSTRAINT \"management_scenarios_minimum_margin_check\" CHECK (\"management_scenarios\".\"minimum_margin_bps\" between 0 and 10000),\n\tCONSTRAINT \"management_scenarios_fee_tax_reserve_check\" CHECK (\"management_scenarios\".\"fee_tax_reserve_bps\" between 0 and 10000)\n);\n",
+    "\nALTER TABLE \"management_scenario_history\" ADD CONSTRAINT \"management_scenario_history_scenario_id_management_scenarios_id_fk\" FOREIGN KEY (\"scenario_id\") REFERENCES \"public\".\"management_scenarios\"(\"id\") ON DELETE restrict ON UPDATE no action;",
+    "\nALTER TABLE \"management_scenario_mix\" ADD CONSTRAINT \"management_scenario_mix_scenario_id_management_scenarios_id_fk\" FOREIGN KEY (\"scenario_id\") REFERENCES \"public\".\"management_scenarios\"(\"id\") ON DELETE restrict ON UPDATE no action;",
+    "\nALTER TABLE \"management_scenario_mix\" ADD CONSTRAINT \"management_scenario_mix_product_id_products_id_fk\" FOREIGN KEY (\"product_id\") REFERENCES \"public\".\"products\"(\"id\") ON DELETE restrict ON UPDATE no action;",
+    "\nALTER TABLE \"management_scenarios\" ADD CONSTRAINT \"management_scenarios_supersedes_fk\" FOREIGN KEY (\"supersedes_scenario_id\") REFERENCES \"public\".\"management_scenarios\"(\"id\") ON DELETE restrict ON UPDATE no action;",
+    "\nCREATE INDEX \"management_scenario_history_actor_idx\" ON \"management_scenario_history\" USING btree (\"actor_auth_user_id\");",
+    "\nCREATE INDEX \"management_scenario_mix_product_idx\" ON \"management_scenario_mix\" USING btree (\"product_id\");",
+    "\nCREATE UNIQUE INDEX \"management_scenarios_single_active_unique\" ON \"management_scenarios\" USING btree (\"status\") WHERE \"management_scenarios\".\"status\" = 'active';",
+    "\nCREATE INDEX \"management_scenarios_status_effective_idx\" ON \"management_scenarios\" USING btree (\"status\",\"effective_on\");",
+    "INSERT INTO drizzle.__drizzle_migrations(hash,created_at) VALUES ('6697ab771422c350b249172f84b8a944371d7c9b7c521b2e58060581c087dd9d',1789428887148)",
+    "ALTER TABLE \"management_scenario_mix\" ADD COLUMN \"product_name\" varchar(120) NOT NULL;",
+    "INSERT INTO drizzle.__drizzle_migrations(hash,created_at) VALUES ('bb861a43bd5c8879fc1ebde85c0a8e402f80917ccd92c4b21f08ca9454a098e7',1789429315597)",
+    "ALTER TABLE \"products\" RENAME COLUMN \"unit\" TO \"measurement_unit\";\n",
+    "\nCREATE OR REPLACE FUNCTION \"prevent_used_product_structure_change\"()\nRETURNS trigger\nLANGUAGE plpgsql\nAS $$\nBEGIN\n  IF (NEW.\"product_type\", NEW.\"measurement_unit\") IS DISTINCT FROM (OLD.\"product_type\", OLD.\"measurement_unit\")\n    AND (\n      EXISTS (SELECT 1 FROM \"stock_movements\" WHERE \"product_id\" = OLD.\"id\")\n      OR EXISTS (SELECT 1 FROM \"purchase_items\" WHERE \"product_id\" = OLD.\"id\")\n      OR EXISTS (SELECT 1 FROM \"sale_items\" WHERE \"product_id\" = OLD.\"id\")\n      OR EXISTS (SELECT 1 FROM \"product_import_aliases\" WHERE \"product_id\" = OLD.\"id\")\n      OR EXISTS (SELECT 1 FROM \"recipe_items\" WHERE \"product_id\" = OLD.\"id\")\n      OR EXISTS (\n        SELECT 1 FROM \"production_profiles\"\n        WHERE \"product_id\" = OLD.\"id\" OR \"packaging_product_id\" = OLD.\"id\"\n      )\n      OR EXISTS (\n        SELECT 1 FROM \"production_profile_components\" WHERE \"product_id\" = OLD.\"id\"\n      )\n      OR EXISTS (SELECT 1 FROM \"production_batch_outputs\" WHERE \"product_id\" = OLD.\"id\")\n    )\n  THEN\n    RAISE EXCEPTION 'used product structure cannot change'\n      USING ERRCODE = '23514';\n  END IF;\n  RETURN NEW;\nEND;\n$$;\n",
+    "INSERT INTO drizzle.__drizzle_migrations(hash,created_at) VALUES ('3e471dfaa5f3ddfec72142833942b9baec9fe0c3dd6041bd34719f8ccfc82c8b',1789429315598)",
+    "DO $$ BEGIN\n    IF (SELECT count(*) FROM drizzle.__drizzle_migrations) <> 31\n      OR EXISTS (\n        SELECT 1 FROM (VALUES ('dcca272960496a589a2608f589ca32413ef4990a86f7ec6b8261bbd07775493c',1787423495945::bigint),('2b6058d807efba5a31f1b669f1446eef3aab76907108a9bec93b21f7f92a2237',1787424766901::bigint),('36d2ece9d759551f63305da9d5dd2132b636c2ca1fbc43ccbd7a915e4c10d03a',1787427473223::bigint),('15387c92f37791c45c58110750a935f006833da6f54192cf706e44e463723b19',1787430409236::bigint),('ccd5000d2ac640ef448983c2dc1be91416d07d9a4ab0b56705b19c6625d28313',1787432718286::bigint),('5907dbd41665df9b74db7a5963aeeb241d15fcf376ed2c766dd4548e1b037f24',1787438077691::bigint),('c27845a8fdc1fe320f6b5f6e7f6c25d6928f990997cf2eb9d42efe0c89fbaa9d',1787438761876::bigint),('7c747c01a4f1e3b70a0ee622fd17f1edc8e246c9be487582a84a76d645b066bb',1787444572984::bigint),('dc56f3df5f04b01a0b690ea88295a3e5fbb2b5a6066ea4d974826eb9fe87246f',1787487111317::bigint),('17b24cc9eb31be71a1f13a6cfa54bbcfd4faef120f72d060b646dd338787f83f',1787487709365::bigint),('9cacf93eb29d260b70c8405d42649b3187b00c3c42702024ec2231aa09d81f43',1788014906712::bigint),('4ec5efaa97d0f8ffa474a2780ee7a5d05c0b4c1e6d915594c68b15be6659875f',1788043052905::bigint),('88196609cbf44bc10b39c1962d1b6aa6d50871a87152f2d7a6670f4a623ed165',1788051976601::bigint),('5e9bac5965719c28ad6978c62058fe239da87b4a34de1607a161df4a5741dd49',1788371973551::bigint),('4f265bceb33bca9a2e71a881ed218cf5e7dae0612e691687ae6b11fe57c9e5af',1788466591688::bigint),('8d8a2d65b4d44a07e552b724f812a914bf88e164430a1ed7c800c13120225431',1788712205881::bigint),('43e1dcd65ff1c91f72cb08d7ccc6f0d27a27c99d6ffb0745c8343bb54e223f67',1788712214871::bigint),('2b65228bf086455642028ab782a9b8168294a4aaffec49379959d8e0404dba04',1788712214872::bigint),('ccaa9173aef5fda63ff980f4c1d254c0b040d7fe4df92f6f21046300c81fa256',1788877037648::bigint),('c81a4674267795208c11a276509db789a364b39f485dfed34a30f966902079db',1788878474257::bigint),('14b618089bed74795e7b75951dbe85256f913fa09fa4753a8a2f13d202f4177b',1789083398103::bigint),('0519a66242fe34952f04b0014798265bf22f543ef09f14f9415060845e286add',1789083942881::bigint),('b3056b1417b2e5753fecf9c624fa59454eb0dcf13affcd7ace4d979da5664bba',1789091511705::bigint),('c4b2df5f91cf12c0360ed3b71b6c9b2fb00dc3c78711dfd039ba3a9fe00e3cd5',1789093270876::bigint),('2fb019cac5f4fec814cc3ed8ed037254a4aead9666d6a5d43dd8b6824d67d750',1789130117098::bigint),('cc0b7bbff17c86657b864c83291ad1d89c8eebd81f0e734e095c04b331eea039',1789130211788::bigint),('00f1f4644d17f9a3aa55b1c233f12f81cbe1070ef9e472b2de22dffec93c7511',1789130319541::bigint),('e3072420477f960888bf427d7bec4187bd41da08afca2938fc1daace0355bc53',1789414692918::bigint),('6697ab771422c350b249172f84b8a944371d7c9b7c521b2e58060581c087dd9d',1789428887148::bigint),('bb861a43bd5c8879fc1ebde85c0a8e402f80917ccd92c4b21f08ca9454a098e7',1789429315597::bigint),('3e471dfaa5f3ddfec72142833942b9baec9fe0c3dd6041bd34719f8ccfc82c8b',1789429315598::bigint)) expected(hash, created_at)\n        FULL JOIN drizzle.__drizzle_migrations actual USING (created_at)\n        WHERE expected.hash IS DISTINCT FROM actual.hash\n      ) THEN RAISE EXCEPTION 'SCOPED_UPGRADE_FINAL_HISTORY_MISMATCH'; END IF;\n  END $$",
+    "DO $$ BEGIN\n      IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema='public'\n        AND table_name='sales' AND column_name='delivered_at')\n        OR NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema='public'\n          AND table_name='products' AND column_name='measurement_unit')\n        OR EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema='public'\n          AND table_name='products' AND column_name='unit')\n        OR position('NEW.\"unit\"' IN pg_get_functiondef('public.prevent_used_product_structure_change()'::regprocedure)) > 0\n      THEN RAISE EXCEPTION 'SCOPED_UPGRADE_FINAL_SCHEMA_MISMATCH'; END IF;\n    END $$"
+  ]
+}

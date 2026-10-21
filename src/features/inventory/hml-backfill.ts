@@ -48,7 +48,9 @@ export function planHmlFifoBackfill(input: {
     new Set(input.sales.map((sale) => sale.prefix)).size !== 2 ||
     input.sales.some((sale) => !expectedPrefixes.has(sale.prefix as never))
   )
-    throw new Error('Backfill HML requer exatamente as duas vendas autorizadas.')
+    throw new Error(
+      'Backfill HML requer exatamente as duas vendas autorizadas.',
+    )
   if (
     input.sales.some(
       (sale) =>
@@ -91,7 +93,9 @@ export function planHmlFifoBackfill(input: {
   }
 
   if (!input.layer)
-    throw new Error('Backfill HML encontrou alocação sem camada correspondente.')
+    throw new Error(
+      'Backfill HML encontrou alocação sem camada correspondente.',
+    )
 
   if (
     input.allocations.length !== 2 ||

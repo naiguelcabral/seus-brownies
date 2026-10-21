@@ -1,0 +1,25 @@
+{
+  "status": "READY_FOR_REVIEW_NOT_APPLIED",
+  "reference": "TECH-CATALOG-2026-10-18-001",
+  "sourceHash": "e2080a94477280ee6eb67e61553f392bbe18543412f971ef5d26299d5350e6f1",
+  "sqlSha256": "01fdc56d23954ef5ba9a92de501cb65834cab2ef36cecb2ee5aeac1d5332a645",
+  "workbookSha256": "25aa62df5fc9b2e01402e9c242142322d9c6f54a345e800cb947b77865ce5b64",
+  "manifestSha256": "b58252dc0f47d109a000a70d879417069687db5432d0319c570915e580698ce0",
+  "additions": {
+    "products": 1,
+    "recipe_versions": 1,
+    "recipe_items": 7,
+    "recipe_operational_requirements": 2,
+    "operational_cost_rates": 2,
+    "production_profiles": 17,
+    "production_profile_components": 12,
+    "historical_import_records": 1,
+    "operational_audit_events": 43
+  },
+  "excludedHistoricalPlans": 17,
+  "incompleteProfiles": [
+    "PROD001",
+    "PROD017"
+  ],
+  "externalWrites": false
+}

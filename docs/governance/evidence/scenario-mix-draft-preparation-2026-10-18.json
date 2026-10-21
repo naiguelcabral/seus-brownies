@@ -1,0 +1,677 @@
+{
+  "status": "prepared-awaiting-authenticated-creation",
+  "source": {
+    "workbook": "Workbook_Gerenciamento_Seus_Brownies.xlsx",
+    "sha256": "25aa62df5fc9b2e01402e9c242142322d9c6f54a345e800cb947b77865ce5b64",
+    "sheet": "10_Metas_e_Cenarios",
+    "rows": "19–35",
+    "workbookModified": false
+  },
+  "authorization": "Somente o sistema, como cenário em rascunho",
+  "target": {
+    "projectId": "steep-brook-51659857",
+    "branchId": "br-lingering-wind-acwh5wap",
+    "database": "neondb"
+  },
+  "draft": {
+    "name": "Mix 100% — referência histórica do workbook",
+    "description": "Rascunho solicitado em 18/10/2026. Fonte: Workbook_Gerenciamento_Seus_Brownies.xlsx, aba 10_Metas_e_Cenarios, linhas 19–35. Pesos originais somam 103%; normalização proporcional para 100% pelo maior resto e desempate pelo menor ID real do catálogo. Preços e custos são referências históricas; custos arredondados para 3 casas, conforme o campo planejado do sistema. Energia, mão de obra, adesivo, Bordinhas e cobertura/montagem de bombom/kit têm pendências na auditoria WORKBOOK-COMPLETENESS-REVIEW-2026-10-18.md. Reserva 0% herdada da parametrização, ainda a validar. Não homologado para operação. Manter como rascunho até revisão das premissas e dos custos.",
+    "effectiveOn": "2026-10-18",
+    "monthlyProfitGoal": "10000.00",
+    "fixedMonthlyCosts": "2200.00",
+    "salesDaysPerMonth": 20,
+    "weeksPerMonth": "4.00",
+    "minimumMarginRate": "0.7000",
+    "feeTaxReserveRate": "0.0000",
+    "mix": [
+      {
+        "productId": 1,
+        "originalWeight": "0.02",
+        "plannedUnitPrice": "5.00",
+        "plannedUnitCost": "1.677"
+      },
+      {
+        "productId": 2,
+        "originalWeight": "0.02",
+        "plannedUnitPrice": "5.00",
+        "plannedUnitCost": "2.882"
+      },
+      {
+        "productId": 16,
+        "originalWeight": "0.05",
+        "plannedUnitPrice": "12.00",
+        "plannedUnitCost": "2.516"
+      },
+      {
+        "productId": 15,
+        "originalWeight": "0.1",
+        "plannedUnitPrice": "12.00",
+        "plannedUnitCost": "2.216"
+      },
+      {
+        "productId": 14,
+        "originalWeight": "0.1",
+        "plannedUnitPrice": "12.00",
+        "plannedUnitCost": "2.256"
+      },
+      {
+        "productId": 13,
+        "originalWeight": "0.1",
+        "plannedUnitPrice": "12.00",
+        "plannedUnitCost": "1.956"
+      },
+      {
+        "productId": 12,
+        "originalWeight": "0.05",
+        "plannedUnitPrice": "12.00",
+        "plannedUnitCost": "2.770"
+      },
+      {
+        "productId": 11,
+        "originalWeight": "0.1",
+        "plannedUnitPrice": "12.00",
+        "plannedUnitCost": "2.216"
+      },
+      {
+        "productId": 10,
+        "originalWeight": "0.05",
+        "plannedUnitPrice": "17.00",
+        "plannedUnitCost": "4.772"
+      },
+      {
+        "productId": 9,
+        "originalWeight": "0.05",
+        "plannedUnitPrice": "17.00",
+        "plannedUnitCost": "4.172"
+      },
+      {
+        "productId": 8,
+        "originalWeight": "0.05",
+        "plannedUnitPrice": "17.00",
+        "plannedUnitCost": "4.252"
+      },
+      {
+        "productId": 7,
+        "originalWeight": "0.05",
+        "plannedUnitPrice": "17.00",
+        "plannedUnitCost": "3.652"
+      },
+      {
+        "productId": 6,
+        "originalWeight": "0.02",
+        "plannedUnitPrice": "17.00",
+        "plannedUnitCost": "5.280"
+      },
+      {
+        "productId": 5,
+        "originalWeight": "0.05",
+        "plannedUnitPrice": "17.00",
+        "plannedUnitCost": "4.172"
+      },
+      {
+        "productId": 4,
+        "originalWeight": "0.1",
+        "plannedUnitPrice": "6.00",
+        "plannedUnitCost": "0.923"
+      },
+      {
+        "productId": 3,
+        "originalWeight": "0.1",
+        "plannedUnitPrice": "8.00",
+        "plannedUnitCost": "1.616"
+      },
+      {
+        "productId": 17,
+        "originalWeight": "0.02",
+        "plannedUnitPrice": "18.00",
+        "plannedUnitCost": "5.988"
+      }
+    ]
+  },
+  "normalized": {
+    "rows": [
+      {
+        "productId": 1,
+        "originalWeight": "0.020000",
+        "normalizedWeightBps": 194,
+        "plannedUnitPrice": "5.00",
+        "plannedUnitCost": "1.677"
+      },
+      {
+        "productId": 2,
+        "originalWeight": "0.020000",
+        "normalizedWeightBps": 194,
+        "plannedUnitPrice": "5.00",
+        "plannedUnitCost": "2.882"
+      },
+      {
+        "productId": 3,
+        "originalWeight": "0.100000",
+        "normalizedWeightBps": 971,
+        "plannedUnitPrice": "8.00",
+        "plannedUnitCost": "1.616"
+      },
+      {
+        "productId": 4,
+        "originalWeight": "0.100000",
+        "normalizedWeightBps": 971,
+        "plannedUnitPrice": "6.00",
+        "plannedUnitCost": "0.923"
+      },
+      {
+        "productId": 5,
+        "originalWeight": "0.050000",
+        "normalizedWeightBps": 486,
+        "plannedUnitPrice": "17.00",
+        "plannedUnitCost": "4.172"
+      },
+      {
+        "productId": 6,
+        "originalWeight": "0.020000",
+        "normalizedWeightBps": 194,
+        "plannedUnitPrice": "17.00",
+        "plannedUnitCost": "5.280"
+      },
+      {
+        "productId": 7,
+        "originalWeight": "0.050000",
+        "normalizedWeightBps": 486,
+        "plannedUnitPrice": "17.00",
+        "plannedUnitCost": "3.652"
+      },
+      {
+        "productId": 8,
+        "originalWeight": "0.050000",
+        "normalizedWeightBps": 486,
+        "plannedUnitPrice": "17.00",
+        "plannedUnitCost": "4.252"
+      },
+      {
+        "productId": 9,
+        "originalWeight": "0.050000",
+        "normalizedWeightBps": 485,
+        "plannedUnitPrice": "17.00",
+        "plannedUnitCost": "4.172"
+      },
+      {
+        "productId": 10,
+        "originalWeight": "0.050000",
+        "normalizedWeightBps": 485,
+        "plannedUnitPrice": "17.00",
+        "plannedUnitCost": "4.772"
+      },
+      {
+        "productId": 11,
+        "originalWeight": "0.100000",
+        "normalizedWeightBps": 971,
+        "plannedUnitPrice": "12.00",
+        "plannedUnitCost": "2.216"
+      },
+      {
+        "productId": 12,
+        "originalWeight": "0.050000",
+        "normalizedWeightBps": 485,
+        "plannedUnitPrice": "12.00",
+        "plannedUnitCost": "2.770"
+      },
+      {
+        "productId": 13,
+        "originalWeight": "0.100000",
+        "normalizedWeightBps": 971,
+        "plannedUnitPrice": "12.00",
+        "plannedUnitCost": "1.956"
+      },
+      {
+        "productId": 14,
+        "originalWeight": "0.100000",
+        "normalizedWeightBps": 971,
+        "plannedUnitPrice": "12.00",
+        "plannedUnitCost": "2.256"
+      },
+      {
+        "productId": 15,
+        "originalWeight": "0.100000",
+        "normalizedWeightBps": 971,
+        "plannedUnitPrice": "12.00",
+        "plannedUnitCost": "2.216"
+      },
+      {
+        "productId": 16,
+        "originalWeight": "0.050000",
+        "normalizedWeightBps": 485,
+        "plannedUnitPrice": "12.00",
+        "plannedUnitCost": "2.516"
+      },
+      {
+        "productId": 17,
+        "originalWeight": "0.020000",
+        "normalizedWeightBps": 194,
+        "plannedUnitPrice": "18.00",
+        "plannedUnitCost": "5.988"
+      }
+    ],
+    "originalTotal": "1.030000",
+    "wasNormalized": true
+  },
+  "sourceMapping": [
+    {
+      "sku": "PROD001",
+      "productId": 1,
+      "sourceRow": 19,
+      "sourceCost": "1.677085137085137",
+      "sourcePrice": "5"
+    },
+    {
+      "sku": "PROD002",
+      "productId": 2,
+      "sourceRow": 20,
+      "sourceCost": "2.8821296296296288",
+      "sourcePrice": "5"
+    },
+    {
+      "sku": "PROD003",
+      "productId": 16,
+      "sourceRow": 21,
+      "sourceCost": "2.5160648148148139",
+      "sourcePrice": "12"
+    },
+    {
+      "sku": "PROD004",
+      "productId": 15,
+      "sourceRow": 22,
+      "sourceCost": "2.216064814814815",
+      "sourcePrice": "12"
+    },
+    {
+      "sku": "PROD005",
+      "productId": 14,
+      "sourceRow": 23,
+      "sourceCost": "2.256064814814815",
+      "sourcePrice": "12"
+    },
+    {
+      "sku": "PROD006",
+      "productId": 13,
+      "sourceRow": 24,
+      "sourceCost": "1.956064814814815",
+      "sourcePrice": "12"
+    },
+    {
+      "sku": "PROD007",
+      "productId": 12,
+      "sourceRow": 25,
+      "sourceCost": "2.7699109686609691",
+      "sourcePrice": "12"
+    },
+    {
+      "sku": "PROD008",
+      "productId": 11,
+      "sourceRow": 26,
+      "sourceCost": "2.216064814814815",
+      "sourcePrice": "12"
+    },
+    {
+      "sku": "PROD009",
+      "productId": 10,
+      "sourceRow": 27,
+      "sourceCost": "4.7721296296296289",
+      "sourcePrice": "17"
+    },
+    {
+      "sku": "PROD010",
+      "productId": 9,
+      "sourceRow": 28,
+      "sourceCost": "4.1721296296296293",
+      "sourcePrice": "17"
+    },
+    {
+      "sku": "PROD011",
+      "productId": 8,
+      "sourceRow": 29,
+      "sourceCost": "4.2521296296296294",
+      "sourcePrice": "17"
+    },
+    {
+      "sku": "PROD012",
+      "productId": 7,
+      "sourceRow": 30,
+      "sourceCost": "3.6521296296296302",
+      "sourcePrice": "17"
+    },
+    {
+      "sku": "PROD013",
+      "productId": 6,
+      "sourceRow": 31,
+      "sourceCost": "5.2798219373219366",
+      "sourcePrice": "17"
+    },
+    {
+      "sku": "PROD014",
+      "productId": 5,
+      "sourceRow": 32,
+      "sourceCost": "4.1721296296296293",
+      "sourcePrice": "17"
+    },
+    {
+      "sku": "PROD015",
+      "productId": 4,
+      "sourceRow": 33,
+      "sourceCost": "0.92303240740740733",
+      "sourcePrice": "6"
+    },
+    {
+      "sku": "PROD016",
+      "productId": 3,
+      "sourceRow": 34,
+      "sourceCost": "1.616064814814814",
+      "sourcePrice": "8"
+    },
+    {
+      "sku": "PROD017",
+      "productId": 17,
+      "sourceRow": 35,
+      "sourceCost": "5.9883405483405481",
+      "sourcePrice": "18"
+    }
+  ],
+  "projection": {
+    "kind": "projection",
+    "label": "Estimativa baseada nas premissas da versão do cenário",
+    "originalMixTotal": "1.030000",
+    "mixWasNormalized": true,
+    "normalizedMixTotalBps": 10000,
+    "marginNeededBeforeFixedCosts": "12200.00",
+    "targetRevenue": "15868.00",
+    "mixGeneratedProfit": "12301.81",
+    "feeTaxReserve": "0.00",
+    "projectedManagerialProfit": "10101.81",
+    "gapToTarget": "101.81",
+    "unitsPerMonth": "1492",
+    "unitsPerWeek": "380",
+    "targetAverageTicket": "10.64",
+    "targetAverageTicketBasis": "por unidade planejada",
+    "productLines": [
+      {
+        "productId": 1,
+        "productName": "Bombom Brownie Unitário",
+        "originalWeight": "0.020000",
+        "normalizedWeightBps": 194,
+        "plannedUnitPrice": "5.00",
+        "plannedUnitCost": "1.677",
+        "quantityPerMonth": "72",
+        "quantityPerWeek": "18",
+        "projectedRevenue": "360.00",
+        "projectedMargin": "239.26",
+        "projectedFeeTaxReserve": "0.00",
+        "projectedMarginBps": "6646",
+        "belowMinimumMargin": true
+      },
+      {
+        "productId": 2,
+        "productName": "Bordinhas",
+        "originalWeight": "0.020000",
+        "normalizedWeightBps": 194,
+        "plannedUnitPrice": "5.00",
+        "plannedUnitCost": "2.882",
+        "quantityPerMonth": "112",
+        "quantityPerWeek": "28",
+        "projectedRevenue": "560.00",
+        "projectedMargin": "237.22",
+        "projectedFeeTaxReserve": "0.00",
+        "projectedMarginBps": "4236",
+        "belowMinimumMargin": true
+      },
+      {
+        "productId": 3,
+        "productName": "Brownie Simples 7x7",
+        "originalWeight": "0.100000",
+        "normalizedWeightBps": 971,
+        "plannedUnitPrice": "8.00",
+        "plannedUnitCost": "1.616",
+        "quantityPerMonth": "186",
+        "quantityPerWeek": "47",
+        "projectedRevenue": "1488.00",
+        "projectedMargin": "1187.42",
+        "projectedFeeTaxReserve": "0.00",
+        "projectedMarginBps": "7980",
+        "belowMinimumMargin": false
+      },
+      {
+        "productId": 4,
+        "productName": "Brownie Simples 5x5",
+        "originalWeight": "0.100000",
+        "normalizedWeightBps": 971,
+        "plannedUnitPrice": "6.00",
+        "plannedUnitCost": "0.923",
+        "quantityPerMonth": "234",
+        "quantityPerWeek": "59",
+        "projectedRevenue": "1404.00",
+        "projectedMargin": "1188.02",
+        "projectedFeeTaxReserve": "0.00",
+        "projectedMarginBps": "8462",
+        "belowMinimumMargin": false
+      },
+      {
+        "productId": 5,
+        "productName": "Brownie Recheado 7x7 (Maracujá)",
+        "originalWeight": "0.050000",
+        "normalizedWeightBps": 486,
+        "plannedUnitPrice": "17.00",
+        "plannedUnitCost": "4.172",
+        "quantityPerMonth": "47",
+        "quantityPerWeek": "12",
+        "projectedRevenue": "799.00",
+        "projectedMargin": "602.92",
+        "projectedFeeTaxReserve": "0.00",
+        "projectedMarginBps": "7546",
+        "belowMinimumMargin": false
+      },
+      {
+        "productId": 6,
+        "productName": "Brownie Recheado 7x7 (Leite Ninho)",
+        "originalWeight": "0.020000",
+        "normalizedWeightBps": 194,
+        "plannedUnitPrice": "17.00",
+        "plannedUnitCost": "5.280",
+        "quantityPerMonth": "21",
+        "quantityPerWeek": "6",
+        "projectedRevenue": "357.00",
+        "projectedMargin": "246.12",
+        "projectedFeeTaxReserve": "0.00",
+        "projectedMarginBps": "6894",
+        "belowMinimumMargin": true
+      },
+      {
+        "productId": 7,
+        "productName": "Brownie Recheado 7x7 (Goiabada)",
+        "originalWeight": "0.050000",
+        "normalizedWeightBps": 486,
+        "plannedUnitPrice": "17.00",
+        "plannedUnitCost": "3.652",
+        "quantityPerMonth": "45",
+        "quantityPerWeek": "12",
+        "projectedRevenue": "765.00",
+        "projectedMargin": "600.66",
+        "projectedFeeTaxReserve": "0.00",
+        "projectedMarginBps": "7852",
+        "belowMinimumMargin": false
+      },
+      {
+        "productId": 8,
+        "productName": "Brownie Recheado 7x7 (Doce de Leite)",
+        "originalWeight": "0.050000",
+        "normalizedWeightBps": 486,
+        "plannedUnitPrice": "17.00",
+        "plannedUnitCost": "4.252",
+        "quantityPerMonth": "47",
+        "quantityPerWeek": "12",
+        "projectedRevenue": "799.00",
+        "projectedMargin": "599.16",
+        "projectedFeeTaxReserve": "0.00",
+        "projectedMarginBps": "7499",
+        "belowMinimumMargin": false
+      },
+      {
+        "productId": 9,
+        "productName": "Brownie Recheado 7x7 (Creme de avelã)",
+        "originalWeight": "0.050000",
+        "normalizedWeightBps": 485,
+        "plannedUnitPrice": "17.00",
+        "plannedUnitCost": "4.172",
+        "quantityPerMonth": "47",
+        "quantityPerWeek": "12",
+        "projectedRevenue": "799.00",
+        "projectedMargin": "602.92",
+        "projectedFeeTaxReserve": "0.00",
+        "projectedMarginBps": "7546",
+        "belowMinimumMargin": false
+      },
+      {
+        "productId": 10,
+        "productName": "Brownie Recheado 7x7 (Brigadeiro)",
+        "originalWeight": "0.050000",
+        "normalizedWeightBps": 485,
+        "plannedUnitPrice": "17.00",
+        "plannedUnitCost": "4.772",
+        "quantityPerMonth": "49",
+        "quantityPerWeek": "13",
+        "projectedRevenue": "833.00",
+        "projectedMargin": "599.17",
+        "projectedFeeTaxReserve": "0.00",
+        "projectedMarginBps": "7193",
+        "belowMinimumMargin": false
+      },
+      {
+        "productId": 11,
+        "productName": "Brownie Recheado 5x5 (Maracujá)",
+        "originalWeight": "0.100000",
+        "normalizedWeightBps": 971,
+        "plannedUnitPrice": "12.00",
+        "plannedUnitCost": "2.216",
+        "quantityPerMonth": "122",
+        "quantityPerWeek": "31",
+        "projectedRevenue": "1464.00",
+        "projectedMargin": "1193.65",
+        "projectedFeeTaxReserve": "0.00",
+        "projectedMarginBps": "8153",
+        "belowMinimumMargin": false
+      },
+      {
+        "productId": 12,
+        "productName": "Brownie Recheado 5x5 (Leite Ninho)",
+        "originalWeight": "0.050000",
+        "normalizedWeightBps": 485,
+        "plannedUnitPrice": "12.00",
+        "plannedUnitCost": "2.770",
+        "quantityPerMonth": "65",
+        "quantityPerWeek": "17",
+        "projectedRevenue": "780.00",
+        "projectedMargin": "599.95",
+        "projectedFeeTaxReserve": "0.00",
+        "projectedMarginBps": "7692",
+        "belowMinimumMargin": false
+      },
+      {
+        "productId": 13,
+        "productName": "Brownie Recheado 5x5 (Goiabada)",
+        "originalWeight": "0.100000",
+        "normalizedWeightBps": 971,
+        "plannedUnitPrice": "12.00",
+        "plannedUnitCost": "1.956",
+        "quantityPerMonth": "118",
+        "quantityPerWeek": "30",
+        "projectedRevenue": "1416.00",
+        "projectedMargin": "1185.19",
+        "projectedFeeTaxReserve": "0.00",
+        "projectedMarginBps": "8370",
+        "belowMinimumMargin": false
+      },
+      {
+        "productId": 14,
+        "productName": "Brownie Recheado 5x5 (Doce de Leite)",
+        "originalWeight": "0.100000",
+        "normalizedWeightBps": 971,
+        "plannedUnitPrice": "12.00",
+        "plannedUnitCost": "2.256",
+        "quantityPerMonth": "122",
+        "quantityPerWeek": "31",
+        "projectedRevenue": "1464.00",
+        "projectedMargin": "1188.77",
+        "projectedFeeTaxReserve": "0.00",
+        "projectedMarginBps": "8120",
+        "belowMinimumMargin": false
+      },
+      {
+        "productId": 15,
+        "productName": "Brownie Recheado 5x5 (Creme de Avelã)",
+        "originalWeight": "0.100000",
+        "normalizedWeightBps": 971,
+        "plannedUnitPrice": "12.00",
+        "plannedUnitCost": "2.216",
+        "quantityPerMonth": "122",
+        "quantityPerWeek": "31",
+        "projectedRevenue": "1464.00",
+        "projectedMargin": "1193.65",
+        "projectedFeeTaxReserve": "0.00",
+        "projectedMarginBps": "8153",
+        "belowMinimumMargin": false
+      },
+      {
+        "productId": 16,
+        "productName": "Brownie Recheado 5x5 (Brigadeiro)",
+        "originalWeight": "0.050000",
+        "normalizedWeightBps": 485,
+        "plannedUnitPrice": "12.00",
+        "plannedUnitCost": "2.516",
+        "quantityPerMonth": "63",
+        "quantityPerWeek": "16",
+        "projectedRevenue": "756.00",
+        "projectedMargin": "597.49",
+        "projectedFeeTaxReserve": "0.00",
+        "projectedMarginBps": "7903",
+        "belowMinimumMargin": false
+      },
+      {
+        "productId": 17,
+        "productName": "Kit 4 Bombons",
+        "originalWeight": "0.020000",
+        "normalizedWeightBps": 194,
+        "plannedUnitPrice": "18.00",
+        "plannedUnitCost": "5.988",
+        "quantityPerMonth": "20",
+        "quantityPerWeek": "5",
+        "projectedRevenue": "360.00",
+        "projectedMargin": "240.24",
+        "projectedFeeTaxReserve": "0.00",
+        "projectedMarginBps": "6673",
+        "belowMinimumMargin": true
+      }
+    ],
+    "pendingAssumptions": [
+      "Despesas variáveis fora da reserva de taxas e impostos não estão classificadas neste cenário."
+    ]
+  },
+  "validation": {
+    "contract": "passed",
+    "independentLargestRemainder": "passed",
+    "inputOrderInvariant": "passed",
+    "exactTotalBps": 10000,
+    "uniqueProducts": 17,
+    "originalWeightTotal": "1.030000",
+    "rounding": "decimal half-up to 3 places; original source strings preserved in sourceMapping",
+    "sharedWritePerformed": false,
+    "scenarioTests": {
+      "passed": 14,
+      "failed": 0,
+      "files": [
+        "test/scenario-calculations.test.ts",
+        "test/scenario-route.test.ts"
+      ]
+    },
+    "liveCatalog": "17 active finished products; IDs/SKUs and prices verified read-only",
+    "liveSettings": "all six scenario premises match management_settings",
+    "sourceHashRechecked": true,
+    "browser": "redirected from /cenarios to /login; authenticated creation pending"
+  },
+  "draftSha256": "a50eed18ea48413b3c282ff19566471ab3d3c82bfc6963f0921fdf8e4d52e970"
+}

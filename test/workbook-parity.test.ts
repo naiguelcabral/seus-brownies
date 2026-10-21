@@ -1,3 +1,4 @@
+import { requireDefined } from '../src/lib/required-value'
 import assert from 'node:assert/strict'
 import { readFile } from 'node:fs/promises'
 import test from 'node:test'
@@ -104,7 +105,7 @@ test('resume ticket, preço médio, auditoria e local com valores exatos', () =>
   assert.equal(result.total.audit.difference, '-5.99')
   assert.equal(result.total.audit.differenceRate, '-0.0599')
   assert.equal(result.total.audit.auditedEvents, 1)
-  assert.equal(result.byLocation[0].units, '10.000')
+  assert.equal(requireDefined(result.byLocation[0]).units, '10.000')
 })
 
 test('paginação de locais limita a página solicitada', () => {

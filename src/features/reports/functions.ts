@@ -1,9 +1,18 @@
+import {
+  exactCost,
+  addCosts,
+  sumCosts,
+  displayCostMoney,
+  decimalCost,
+} from '../../lib/exact-cost'
+import type { ExactCost } from '../../lib/exact-cost'
 import { createServerFn } from '@tanstack/react-start'
-import { and, eq, gte, inArray, lt, lte, sql } from 'drizzle-orm'
+import { and, asc, eq, gte, inArray, lt, lte, sql } from 'drizzle-orm'
 import { z } from 'zod'
 
 import {
   expenses,
+  financialEvents,
   inventoryCostAllocations,
   inventoryCostLayers,
   inventoryCostReversals,
@@ -42,6 +51,7 @@ import {
 } from '#/features/reports/production-outcomes'
 import { reconcileInventoryLedger } from '#/features/reports/inventory-reconciliation'
 import type { ReconciliationDivergence } from '#/features/reports/inventory-reconciliation'
+import { reconcileOperationalIntegrity } from '#/features/reports/integrity-reconciliation'
 import { summarizeSalesMetrics } from '#/features/reports/sales-metrics'
 
 const periodValues = z.object({
@@ -142,10 +152,12 @@ export const getOperationalReports = createServerFn({ method: 'GET' })
           quantityDelta: stockMovements.quantityDelta,
           unitCost: stockMovements.unitCost,
           allocatedCost: stockMovements.allocatedCost,
+          exactCost: stockMovements.exactCost,
         })
         .from(stockMovements)
         .innerJoin(products, eq(stockMovements.productId, products.id))
-        .where(lt(stockMovements.occurredAt, until)),
+        .where(lt(stockMovements.occurredAt, until))
+        .orderBy(asc(stockMovements.occurredAt), asc(stockMovements.id)),
       database
         .select({
           productId: saleItems.productId,
@@ -345,6 +357,7 @@ export const getOperationalReports = createServerFn({ method: 'GET' })
               productName: products.name,
               actualQuantity: productionBatchOutputs.actualQuantity,
               allocatedCost: productionBatchOutputs.allocatedCost,
+              exactCost: productionBatchOutputs.exactCost,
             })
             .from(productionBatchOutputs)
             .innerJoin(
@@ -438,6 +451,8 @@ export const getOperationalReports = createServerFn({ method: 'GET' })
       }
       divergences: ReconciliationDivergence[]
     } | null = null
+    let integrity: ReturnType<typeof reconcileOperationalIntegrity> | null =
+      null
     try {
       const [
         allocationRows,
@@ -455,6 +470,7 @@ export const getOperationalReports = createServerFn({ method: 'GET' })
             productionBatchId: productionBatchOutputs.productionBatchId,
             quantity: inventoryCostAllocations.quantity,
             allocatedCost: inventoryCostAllocations.allocatedCost,
+            exactCost: inventoryCostAllocations.exactCost,
             saleItemRevenue:
               sql<string>`coalesce(${saleItems.reportedAmount}, ${saleItems.totalAmount})`.as(
                 'sale_item_revenue',
@@ -495,6 +511,7 @@ export const getOperationalReports = createServerFn({ method: 'GET' })
           .select({
             originalAllocationId: inventoryCostReversals.originalAllocationId,
             restoredCost: inventoryCostReversals.restoredCost,
+            exactCost: inventoryCostReversals.exactCost,
           })
           .from(inventoryCostReversals),
         database
@@ -505,8 +522,12 @@ export const getOperationalReports = createServerFn({ method: 'GET' })
             unit: products.unit,
             originalQuantity: inventoryCostLayers.originalQuantity,
             originalCost: inventoryCostLayers.originalCost,
+            productionBatchOutputId:
+              inventoryCostLayers.productionBatchOutputId,
+            exactOriginalCost: inventoryCostLayers.exactOriginalCost,
             remainingQuantity: inventoryCostLayers.remainingQuantity,
             remainingCost: inventoryCostLayers.remainingCost,
+            exactRemainingCost: inventoryCostLayers.exactRemainingCost,
           })
           .from(inventoryCostLayers)
           .innerJoin(products, eq(inventoryCostLayers.productId, products.id)),
@@ -519,9 +540,11 @@ export const getOperationalReports = createServerFn({ method: 'GET' })
             productId: inventoryCostAllocations.productId,
             quantity: inventoryCostAllocations.quantity,
             allocatedCost: inventoryCostAllocations.allocatedCost,
+            exactCost: inventoryCostAllocations.exactCost,
             movementProductId: stockMovements.productId,
             movementQuantity: stockMovements.quantityDelta,
             movementCost: stockMovements.allocatedCost,
+            movementExactCost: stockMovements.exactCost,
           })
           .from(inventoryCostAllocations)
           .innerJoin(
@@ -538,9 +561,11 @@ export const getOperationalReports = createServerFn({ method: 'GET' })
             incomingMovementId: inventoryCostReversals.incomingStockMovementId,
             quantity: inventoryCostReversals.quantity,
             restoredCost: inventoryCostReversals.restoredCost,
+            exactCost: inventoryCostReversals.exactCost,
             movementProductId: stockMovements.productId,
             movementQuantity: stockMovements.quantityDelta,
             movementCost: stockMovements.allocatedCost,
+            movementExactCost: stockMovements.exactCost,
           })
           .from(inventoryCostReversals)
           .innerJoin(
@@ -552,9 +577,18 @@ export const getOperationalReports = createServerFn({ method: 'GET' })
           ),
       ])
       if (allocationRows.length || layerRows.length) {
+        const reversedExactByAllocation = new Map<number, ExactCost>()
         const reversedCostByAllocation = new Map<number, bigint>()
         for (const reversal of reversalRows) {
           const restoredCost = moneyToCents(reversal.restoredCost) ?? 0n
+          reversedExactByAllocation.set(
+            reversal.originalAllocationId,
+            addCosts(
+              reversedExactByAllocation.get(reversal.originalAllocationId) ??
+                exactCost(0n),
+              reversal.exactCost ?? exactCost(restoredCost, 100n),
+            ),
+          )
           reversedCostByAllocation.set(
             reversal.originalAllocationId,
             (reversedCostByAllocation.get(reversal.originalAllocationId) ??
@@ -565,6 +599,9 @@ export const getOperationalReports = createServerFn({ method: 'GET' })
           ...summarizeFifoMargins(
             allocationRows.map((row) => ({
               ...row,
+              exactReversedCost:
+                reversedExactByAllocation.get(row.allocationId) ??
+                exactCost(0n),
               reversedCost: centsToMoney(
                 reversedCostByAllocation.get(row.allocationId) ?? 0n,
               ),
@@ -578,6 +615,133 @@ export const getOperationalReports = createServerFn({ method: 'GET' })
         allocations: reconciliationAllocations,
         reversals: reconciliationReversals,
       })
+      try {
+        const [batchRows, outputRows, eventRows] = await Promise.all([
+          database
+            .select({
+              id: productionBatches.id,
+              totalCost: productionBatches.totalCost,
+              exactCost: productionBatches.exactCost,
+            })
+            .from(productionBatches)
+            .where(
+              and(
+                eq(productionBatches.status, 'completed'),
+                gte(productionBatches.plannedFor, period.start),
+                lte(productionBatches.plannedFor, period.end),
+              ),
+            ),
+          database
+            .select({
+              id: productionBatchOutputs.id,
+              productionBatchId: productionBatchOutputs.productionBatchId,
+              productId: productionBatchOutputs.productId,
+              actualQuantity: productionBatchOutputs.actualQuantity,
+              allocatedCost: productionBatchOutputs.allocatedCost,
+              exactCost: productionBatchOutputs.exactCost,
+            })
+            .from(productionBatchOutputs)
+            .innerJoin(
+              productionBatches,
+              eq(
+                productionBatchOutputs.productionBatchId,
+                productionBatches.id,
+              ),
+            )
+            .where(
+              and(
+                eq(productionBatches.status, 'completed'),
+                gte(productionBatches.plannedFor, period.start),
+                lte(productionBatches.plannedFor, period.end),
+              ),
+            ),
+          database
+            .select({
+              type: financialEvents.type,
+              saleId: financialEvents.saleId,
+            })
+            .from(financialEvents)
+            .where(
+              and(
+                gte(financialEvents.competenceDate, period.start),
+                lte(financialEvents.competenceDate, period.end),
+              ),
+            ),
+        ])
+        const saleIds = [
+          ...new Set(
+            eventRows.flatMap((event) =>
+              event.saleId === null ? [] : [event.saleId],
+            ),
+          ),
+        ]
+        const deliveredItems = saleIds.length
+          ? await database
+              .select({
+                id: saleItems.id,
+                saleId: saleItems.saleId,
+                quantity: saleItems.quantity,
+              })
+              .from(saleItems)
+              .where(inArray(saleItems.saleId, saleIds))
+          : []
+        const deliveredItemIds = deliveredItems.map((item) => item.id)
+        const deliveryAllocations = deliveredItemIds.length
+          ? await database
+              .select({
+                id: inventoryCostAllocations.id,
+                saleItemId: inventoryCostAllocations.saleItemId,
+                quantity: inventoryCostAllocations.quantity,
+              })
+              .from(inventoryCostAllocations)
+              .where(
+                inArray(inventoryCostAllocations.saleItemId, deliveredItemIds),
+              )
+          : []
+        const outputsByBatch = new Map<number, typeof outputRows>()
+        for (const output of outputRows) {
+          const outputs = outputsByBatch.get(output.productionBatchId) ?? []
+          outputs.push(output)
+          outputsByBatch.set(output.productionBatchId, outputs)
+        }
+        integrity = reconcileOperationalIntegrity({
+          ledger: {
+            layers: layerRows,
+            allocations: reconciliationAllocations,
+            reversals: reconciliationReversals,
+          },
+          production: batchRows.map((batch) => {
+            const outputs = outputsByBatch.get(batch.id) ?? []
+            const outputIds = new Set(outputs.map((output) => output.id))
+            return {
+              ...batch,
+              outputs,
+              layers: layerRows.filter(
+                (layer) =>
+                  layer.productionBatchOutputId !== null &&
+                  outputIds.has(layer.productionBatchOutputId),
+              ),
+            }
+          }),
+          deliveries: {
+            events: eventRows,
+            saleItems: deliveredItems,
+            allocations: deliveryAllocations.flatMap((allocation) =>
+              allocation.saleItemId === null
+                ? []
+                : [
+                    {
+                      id: allocation.id,
+                      saleItemId: allocation.saleItemId,
+                      quantity: allocation.quantity,
+                    },
+                  ],
+            ),
+          },
+        })
+      } catch (error) {
+        if (!isMissingOptionalSchemaError(error)) throw error
+      }
     } catch (error) {
       // The feature is additively migrated; older bases retain existing reports.
       if (!isMissingOptionalSchemaError(error)) throw error
@@ -615,13 +779,16 @@ export const getOperationalReports = createServerFn({ method: 'GET' })
       expensesByCategory,
       expensesTotal: sumReportMoney(expenseRows),
       inventory,
-      inventoryTotal: sumReportMoney(
-        inventory.map((item) => ({ amount: item.value })),
+      inventoryTotal: displayCostMoney(
+        sumCosts(
+          inventory.map((item) => item.exactValue ?? decimalCost(item.value)),
+        ),
       ),
       salesByProduct: groupSalesByProduct(salesByProduct),
       topProducts: rankProductsByUnits(salesByProduct),
       production,
       fifo,
       reconciliation,
+      integrity,
     }
   })

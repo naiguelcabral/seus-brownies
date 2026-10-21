@@ -54,6 +54,10 @@ Cloudflare Workers hospeda a aplicação e fornece a borda de execução. Segred
 - Mudança de schema exige migration, teste, impacto documentado e plano de rollback quando aplicável.
 - Não persistir valores monetários em ponto flutuante.
 - Quantidades e custos devem respeitar as precisões já estabelecidas no schema.
+  A exceção aprovada de custos exatos está no [ADR-0002](../ADR-0002-CUSTOS-EXATOS-E-EXIBICAO-MONETARIA.md):
+  frações de inteiros em JSONB preservam o valor autoritativo; centavos/custo
+  unitário legados são projeções compatíveis. Quantidades físicas conservam
+  sua precisão e unidade. Aplicação do pacote de schema continua sob gate.
 
 ## Integrações futuras
 

@@ -1,16 +1,19 @@
 import {
   createAuthServer,
+  NEON_AUTH_SESSION_COOKIE_NAME,
+  parseCookieValue,
   serializeSetCookie,
 } from '@neondatabase/neon-js/auth/server'
 import type {
   CookieOptions,
   NeonAuthServer,
 } from '@neondatabase/neon-js/auth/server'
-import { getRequest, getResponseHeaders } from '@tanstack/react-start/server'
+import { appendResponseHeader, getRequest } from '@tanstack/react-start/server'
 
 import type { NeonAuthRuntimeConfig } from './runtime-config.server'
 import { requestNeonPasswordReset } from './neon-password-reset-provider.server'
 import type { PasswordResetProviderResult } from './neon-password-reset-provider.server'
+import { createSessionProviderLogger } from './session-provider-telemetry.server'
 
 export type TanStackRequestBindings = {
   getRequest: () => Request
@@ -20,8 +23,7 @@ export type TanStackRequestBindings = {
 function defaultBindings(): TanStackRequestBindings {
   return {
     getRequest,
-    appendSetCookie: (value) =>
-      getResponseHeaders().append('set-cookie', value),
+    appendSetCookie: (value) => appendResponseHeader('set-cookie', value),
   }
 }
 
@@ -47,6 +49,7 @@ export function createTanStackNeonAuthServer(
     baseUrl: config.baseUrl,
     cookieSecret: config.cookieSecret,
     sameSite: 'strict',
+    log: createSessionProviderLogger(),
     context: () => {
       const request = bindings.getRequest()
       return {
@@ -63,4 +66,18 @@ export function createTanStackNeonAuthServer(
       }
     },
   })
+}
+
+export async function readTanStackNeonSession(
+  auth: Pick<NeonAuthServer, 'getSession'>,
+  bindings: TanStackRequestBindings = defaultBindings(),
+) {
+  const cookies = bindings.getRequest().headers.get('cookie') ?? ''
+  // A visitor with no session token cannot have a provider session. Avoid
+  // making public pages depend on an unnecessary upstream request. A token
+  // still goes through the SDK and the Cacau access check, including errors.
+  if (!parseCookieValue(cookies, NEON_AUTH_SESSION_COOKIE_NAME)) {
+    return { data: null, error: null }
+  }
+  return auth.getSession()
 }

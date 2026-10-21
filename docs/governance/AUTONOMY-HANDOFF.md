@@ -1,5 +1,152 @@
 # Handoff de autonomia — Cacau v1
 
+## Investigação encerrada e correção publicada — 20/10/2026
+
+- Retomada com capacidade oficial renovada em 100%; `LIGARTUDO --prepare-only`
+  e fast-forward da branch limpa concluídos. Código `3f0ba59` sincronizado na
+  branch `codex/integrated-validation-gates`, PRs #47/#48 em rascunho, sem merge.
+- 500 preexistente confirmado na versão antiga; consulta anônima desnecessária
+  reproduziu o mesmo HTTP com 429/503 em workerd local. Causa upstream dos
+  eventos históricos não confirmada; não atribuir ao Neon ou à última alteração.
+- Alterados adaptador TanStack Neon, resolver, logger de sessão e cinco testes;
+  governança/recibo em `HML-SESSION-INCIDENT-2026-10-20.md` e
+  `evidence/hml-session-incident-2026-10-20.json`.
+- 556 testes Node, 16 casos runtime, smoke de navegador, lint/tipos/formato/Knip
+  e build HML isolado passaram. CI 39458289653, negócio/browser 39458289627,
+  migrations 39458297440, evidência 39458297385 e CodeQL 39458289645 passaram;
+  três análises sem resultados e zero alertas. Servidores locais encerrados.
+- HML: versão `e2aba61f-ca72-4459-a0d7-95867cdb2e67`, deployment
+  `846b959a-1c69-4508-83bd-c823a6d8ce3a`, 100%, às 16:34:55 UTC. Probe 307/200,
+  oito GETs/tail normais e readback de 14 eventos da versão nova sem 500.
+- Sem escrita de fatos, migrations, secrets ou Worker principal. Não repetir
+  backup, importações ou rollback anterior. Não há monitoramento recorrente.
+- Próximo passo no roadmap: aceite conectado com contas teste/Gerente que o
+  usuário criará e implementação dos alertas ao Dono. Sessão autenticada não
+  foi comprovada por esse smoke. Integração à main exige revisão humana própria.
+- Capacidade oficial consultada durante a tarefa: 82% restante na janela de
+  cinco horas, 82% semanal; reset exibido: 20/10/2026 18:19:38 America/Sao_Paulo. Tarefa encerrada normalmente,
+  sem gatilho de reserva e sem execução automática de `DESLIGARTUDO`.
+
+
+## Checkpoint de encerramento — 20/10/2026
+
+Código `6acb11a`: 551 testes Node, 35 casos de navegador isolado, dois runners
+PostgreSQL e CI/CodeQL aprovados no SHA exato. CI39435180771,
+negócio/browser39435180794, migrations39435180012, evidência39435179660 e
+CodeQL39435179809; zero alertas abertos e zero avisos de runtime na CI.
+
+Backup explicitamente autorizado da original `production`, somente leitura
+(public/drizzle), salvo privado em `backups-local/` fora do Git. Restore local
+conferiu 38 tabelas, 36 recibos e catálogo exato. Auth gerenciado excluído;
+sem cópia externa ou periodicidade. Todos os containers desta tarefa encerrados.
+
+A publicação HML do incremento retornou 500 nas rotas públicas. Foi revertida
+para `f0c2e0e2-8798-4132-9abc-50c87bf7a973` (código `d5cc034`), 100% do tráfego,
+deployment `0698a29c-6021-4f98-a627-2a68025a7185`, às 14:06:44 UTC. A primeira
+checagem após rollback ainda falhou; após propagação, GETs completos conferiram
+raiz307 e login200. A causa permanece sem diagnóstico; não considerar o
+incremento publicado estável nem repetir deploy sem investigação. Produção
+principal, secrets, migrations e dados históricos não foram alterados.
+
+Próxima prioridade: investigar logs sanitizados do erro no HML e validar runtime
+antes de nova publicação. Depois, contas teste/Gerente que o usuário criará,
+aceite conectado e alertas automáticos no perfil Dono (ainda não implementados).
+PRs47/48 em rascunho; nenhuma integrada à main. Recibo:
+`evidence/integrated-validation-2026-10-20.json`.
+
+Uso oficial: 4% restante na janela de cinco horas (96% consumido), reserva
+atingida; semanal85% restante. Reset exibido: 20/10/2026 12:52:05
+America/Sao_Paulo (1792511525). Estado: encerrando por reserva de capacidade.
+Branch `codex/integrated-validation-gates`, nunca main. Arquivos principais:
+functions de operações/produção, runners/workflow isolados, fixtures browser,
+backup/probe, ferramentas e governança. Detalhes no recibo e PRs47/48.
+Verificações pendentes: diagnóstico do 500, aceite autenticado e publicação
+estável; não repetir backup, importações ou operações históricas.
+
+Retomar somente após reset e confirmação da renovação, executar `./LIGARTUDO`,
+conferir Git e reler governança. Próximo passo exato: consultar deployment ativo,
+GET público e logs sanitizados do intervalo 14:01–14:08 UTC de20/10; distinguir
+falha transitória de serviço e regressão antes de publicar. Sem iniciar novo
+escopo na reserva. `./DESLIGARTUDO` será executado após este handoff.
+
+
+## T02 — revisão offline oficial — 20 de outubro de 2026
+
+- Continuação “Pode continuar”: preparação e revisão local adotadas, sem
+  aplicação compartilhada, merge ou publicação. Branch e PR #46 mantidas.
+- `db:prepare` gera pacote temporário; `db:review` valida metadados sanitizados
+  com catálogo completo, recibos exatos, coleta independente recente e gates
+  aplicáveis. Execução e autorização sempre falsas; `db:migrate` inalterado.
+- Oito referências de catálogo reproduzidas e rejeição de drift ensaiadas no
+  PostgreSQL 17 isolado. Treze casos forward passaram novamente.
+- 546 testes Node, lint, tipos, formato e Knip aprovados; zero novas
+  ocorrências. Container sintético encerrado. Recibo:
+  `evidence/migration-chain-readiness-2026-10-20.json`.
+- Código final `4d3821a` sincronizado. CI39418068183, PG39418068187 e
+  CodeQL39418061713 aprovados; 48 casos PostgreSQL remotos, três análises com
+  zero resultados e alerta #10 corrigido. Build HML isolado aprovado em
+  45799a8; a correção posterior toca apenas leitura da CLI offline e também
+  passou o build da CI. Árvore limpa após o checkpoint documental.
+- Próximo passo: completar a classificação independente dos alvos relevantes,
+  confrontar catálogo/journal real com a linha ensaiada e registrar plano e
+  autorização específicos antes de qualquer SQL compartilhado. Não presumir
+  que a branch original seja HML ou reutilizar decisões de outro alvo.
+- Nenhuma alteração em `src/`, migrations ou referências consumidas. Nenhum
+  fato fictício, SQL externo ou deploy nesta etapa. T02 permanece parcial.
+
+## T02 retomado e comprovado em laboratório — 20 de outubro de 2026
+
+- Capacidade oficial renovada: 100% nas duas janelas na retomada; a reserva
+  anterior está encerrada. `LIGARTUDO --codex` validou dependências/MCPs/keyring;
+  somente a abertura de outra TUI parou por falta de terminal interativo.
+- Branch `codex/generic-migration-path`, código `c6d0bf8`, PR #46 em rascunho,
+  base na branch publicada `feat/input-catalog-kg-purchases` para limitar o diff.
+- Candidata offline conserva SQLs/hashes/timestamps e pontes, inclui até 0033,
+  classifica prefixos exatos e valida geração futura. Nenhuma cadeia ativa
+  alterada, nenhum deploy, SQL externo ou operação fictícia compartilhada.
+- Passaram 538 testes Node, 48 casos PostgreSQL 17 (13 novos), lint, tipos,
+  formato, Knip e build HML isolado. CI39412305542, PG39412305442 e
+  CodeQL39412305514 verdes em c6d0bf8; três análises sem resultados e nenhum
+  alerta aberto. Container de teste encerrado.
+- Próximo passo exato: revisar a adoção da linha e seus metadados conforme a
+  revisão de20/10 do `MIGRATION-CHAIN-REMEDIATION-ADR.md`; T02 permanece parcial.
+  A candidata não é autorização de aplicação. Manter `db:migrate` bloqueante,
+  não modificar SQLs/recibos antigos nem reaplicar cargas/referências do HML.
+  Aplicação compartilhada continua exigindo classificação independente do
+  alvo, recuperação e autorização específica. Sem merge automático.
+
+## Reserva de capacidade após S01 — 19 de outubro de 2026
+
+- Tarefa concluída: S01, inventário e fechamento das lacunas de autoria e
+  auditoria operacional em todas as mutações.
+- Branch: `feat/input-catalog-kg-purchases`; entrega `d5cc034` já sincronizada
+  no remoto. Catálogo (seis mutações) e produção (criação/conclusão) agora
+  gravam ator e evento na mesma transação. Demais domínios foram inventariados
+  e já possuíam auditoria operacional ou histórico versionado.
+- Arquivos principais: `src/features/catalog/functions.ts`,
+  `src/features/production/functions.ts`, testes de produção,
+  `test/operational-mutation-audit-contract.test.ts`, roadmap e estado
+  canônico. Scripts de ensaio descartável receberam o ator explícito exigido.
+- Verificações concluídas: 536 testes, lint, typecheck, formato, Knip, build
+  principal e build HML isolado. Rollback por falha da auditoria foi ensaiado.
+- HML: commit `d5cc034`, versão
+  `f0c2e0e2-8798-4132-9abc-50c87bf7a973`, 100% do tráfego. Após falha
+  transitória da primeira leitura de sessão, catálogo autenticado carregou 38
+  produtos e o Worker registrou as requisições como `Ok`. Nenhuma mutação ou
+  dado sintético foi criado; nenhuma migration foi necessária.
+- Verificações pendentes desta entrega: nenhuma. A CI remota do commit pode ser
+  consultada na retomada, sem repetir deploy ou teste compartilhado.
+- Próximo passo exato: retomar somente após renovar a franquia, executar
+  `./LIGARTUDO`, confirmar branch/árvore/remote e então iniciar T02/#36 pela
+  revalidação dos documentos e experimentos da cadeia genérica de migrations.
+  Não aplicar migrations, usar `db:push`, ler secrets ou consultar/escrever
+  banco compartilhado sem os gates e aprovações específicos já documentados.
+- Riscos/gates: T02 continua condicionado à estratégia genérica, instalação
+  nova, preservação, evidência externa não gravável e decisões humanas da
+  cadeia. Produção principal segue fora do escopo.
+- Uso Codex: 5% semanal restante; reserva do projeto atingida. Reset exibido:
+  24/10/2026 às 20:43:53, horário de Brasília. Estado: pausado por reserva.
+
 ## M44 — preparação segura da auditoria read-only — 16 de outubro de 2026 UTC
 
 - Branch: `codex/m44-readonly-audit-readiness`, iniciada de `origin/main`

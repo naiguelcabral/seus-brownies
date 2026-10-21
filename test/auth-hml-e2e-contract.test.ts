@@ -8,8 +8,12 @@ test('spec HML de auth exige opt-in antes de qualquer navegador ou rede', async 
   const config = await readFile('playwright.auth-hml.config.ts', 'utf8')
 
   assert.match(config, /CACAU_HML_AUTH_E2E !== 'authorized'/)
-  assert.match(config, new RegExp(hmlUrl.replace(/[./]/g, '\\$&')))
-  assert.deepEqual(config.match(/https?:\/\/[^'\s]+/g), [hmlUrl])
+  const configuredUrls = config.match(/https?:\/\/[^'\s]+/g)
+  assert.deepEqual(configuredUrls, [hmlUrl])
+  assert.ok(configuredUrls)
+  for (const url of configuredUrls) {
+    assert.equal(new URL(url).origin, hmlUrl)
+  }
   assert.equal(config.includes('webServer'), false)
   assert.doesNotMatch(config, /baseURL:\s*process\.env/i)
 })

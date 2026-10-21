@@ -4,7 +4,7 @@ import { sql } from 'drizzle-orm'
 
 import { requireServerFunctionPermission } from '#/features/auth/server-function-middleware'
 
-export const positiveAdjustmentG6Prefix = 'HML2-POS-G6-20260902'
+const positiveAdjustmentG6Prefix = 'HML2-POS-G6-20260902'
 
 export function assertFifoMigrationAuditOrigin(input: {
   nodeEnv: string | undefined

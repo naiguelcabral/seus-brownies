@@ -1,11 +1,16 @@
+import { requireDefined } from '../src/lib/required-value'
 import assert from 'node:assert/strict'
 import {
   chmodSync,
+  closeSync,
+  constants,
   copyFileSync,
   existsSync,
+  fstatSync,
   lstatSync,
   mkdirSync,
   mkdtempSync,
+  openSync,
   readFileSync,
   readdirSync,
   rmSync,
@@ -21,6 +26,17 @@ import test from 'node:test'
 const sourceScript = fileURLToPath(
   new URL('../scripts/codex/conversation_memory.py', import.meta.url),
 )
+
+// Check permissions and read the same open file; never re-open a checked path.
+function readPrivateFile(path: string) {
+  const descriptor = openSync(path, constants.O_RDONLY | constants.O_NOFOLLOW)
+  try {
+    assert.equal(fstatSync(descriptor).mode & 0o777, 0o600)
+    return readFileSync(descriptor, 'utf8')
+  } finally {
+    closeSync(descriptor)
+  }
+}
 
 function fixture<T>(run: (root: string, script: string) => T): T {
   const root = mkdtempSync(join(tmpdir(), 'cacau-memory-test-'))
@@ -221,9 +237,9 @@ print(json.dumps([module.redact(value) for value in values]))
   const results = JSON.parse(output) as string[]
 
   for (const [index, { name, value }] of sensitive.entries()) {
-    assert.ok(results[index].includes(name))
-    assert.match(results[index], /\[REDACTED\]/)
-    assert.equal(results[index].includes(value), false)
+    assert.ok(requireDefined(results[index]).includes(name))
+    assert.match(requireDefined(results[index]), /\[REDACTED\]/)
+    assert.equal(requireDefined(results[index]).includes(value), false)
   }
   assert.deepEqual(results.slice(sensitive.length), preserved)
 })
@@ -246,7 +262,7 @@ test('notify separates roles, ignores tool payloads, blocks traversal and dedupl
     const files = readdirSync(join(root, '.codex-local/conversations'))
     assert.deepEqual(files, ['------synthetic-thread.md'])
     const transcript = readFileSync(
-      join(root, '.codex-local/conversations', files[0]),
+      join(root, '.codex-local/conversations', requireDefined(files[0])),
       'utf8',
     )
     assert.equal(transcript.match(/^## Usuário/gm)?.length, 1)
@@ -414,9 +430,7 @@ test('missing directories are created with private permissions and read-only fai
     const context = join(base, 'context/CURRENT-CONTEXT.md')
     assert.equal(lstatSync(base).mode & 0o777, 0o700)
     assert.equal(lstatSync(transcript).mode & 0o777, 0o600)
-    assert.equal(lstatSync(context).mode & 0o777, 0o600)
-
-    const prior = readFileSync(context, 'utf8')
+    const prior = readPrivateFile(context)
     chmodSync(join(base, 'context'), 0o500)
     const failed = notify(
       script,
@@ -424,7 +438,7 @@ test('missing directories are created with private permissions and read-only fai
     )
     assert.equal(failed.status, 1)
     assert.match(failed.stderr, /memória local do Codex não foi atualizada/)
-    assert.equal(readFileSync(context, 'utf8'), prior)
+    assert.equal(readPrivateFile(context), prior)
     chmodSync(join(base, 'context'), 0o700)
   })
 })
@@ -476,13 +490,11 @@ test('finalize keeps bounded private Git snapshots and a context index', () => {
     assert.equal(snapshots.length, 20)
     for (const snapshot of snapshots) {
       const path = join(base, 'history', snapshot)
-      assert.equal(lstatSync(path).mode & 0o777, 0o600)
-      assert.match(readFileSync(path, 'utf8'), /Registro local não confiável/)
+      assert.match(readPrivateFile(path), /Registro local não confiável/)
     }
     const indexPath = join(base, 'context/CONTEXT-INDEX.md')
-    const index = readFileSync(indexPath, 'utf8')
+    const index = readPrivateFile(indexPath)
     assert.equal(index.match(/^- /gm)?.length, 25)
-    assert.equal(lstatSync(indexPath).mode & 0o777, 0o600)
     assert.match(
       readFileSync(join(base, 'context/CURRENT-CONTEXT.md'), 'utf8'),
       /Snapshot Git: `history\//,

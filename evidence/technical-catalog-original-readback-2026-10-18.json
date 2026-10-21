@@ -1,0 +1,3698 @@
+{
+  "branch": "br-lingering-wind-acwh5wap",
+  "sqlSha256": "01fdc56d23954ef5ba9a92de501cb65834cab2ef36cecb2ee5aeac1d5332a645",
+  "before": [
+    {
+      "name": "action_plan_history",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "action_plans",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "app_user_access",
+      "rows": "2",
+      "digest": "36df1894d19a46993f8cb3ec8c79c3a13dc0c4bed2950fbfab853e9413d496c8"
+    },
+    {
+      "name": "auth_audit_events",
+      "rows": "15",
+      "digest": "bce0e0b16006afc4947fc9a82702dbb3b0b7c30550889c84dfc55943349148bf"
+    },
+    {
+      "name": "auth_login_attempts",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "categories",
+      "rows": "6",
+      "digest": "f74cb40a9d260716d920fcef696939077d405236b287d5194594270b005679d7"
+    },
+    {
+      "name": "drizzle.__drizzle_migrations",
+      "rows": "33",
+      "digest": "3f95a21486f7634d5d4e8db2a2ba380b8163b411eba1c960fa33c815fa2509b4"
+    },
+    {
+      "name": "expenses",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "financial_events",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "financial_periods",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "historical_import_records",
+      "rows": "2",
+      "digest": "d40fc04d9452a1286871728c18cec7213b0f3536830e4239d3405ef57ecce8be"
+    },
+    {
+      "name": "inventory_cost_allocations",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "inventory_cost_layers",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "inventory_cost_reversals",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "management_scenario_history",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "management_scenario_mix",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "management_scenarios",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "management_settings",
+      "rows": "1",
+      "digest": "53b12543ad71edee41e16de3c886511be0649ebedeb04dd7017d1958beb99624"
+    },
+    {
+      "name": "message_processing_records",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "operational_audit_events",
+      "rows": "47",
+      "digest": "8752757e3ecdaf5e47a9939731132ae8813e2c891f91fb812926edb447f1f61f"
+    },
+    {
+      "name": "operational_cost_rates",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "operational_costs",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "product_import_aliases",
+      "rows": "10",
+      "digest": "2132e99b586d4ca80b324b7cd6e5ec8f4f31efd58ff6e51508f734c16083383c"
+    },
+    {
+      "name": "production_batch_consumptions",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "production_batch_losses",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "production_batch_outputs",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "production_batches",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "production_profile_components",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "production_profiles",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "products",
+      "rows": "36",
+      "digest": "f8049217191b8c9bdde0a4b8b288caee8ae0a03af9d2cb038bcf582cd4e5ebc1"
+    },
+    {
+      "name": "purchase_items",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "purchases",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "recipe_items",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "recipe_operational_requirements",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "recipe_versions",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "sale_items",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "sales",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "sales_locations",
+      "rows": "1",
+      "digest": "9b87b60cba8b97d56ac1231337911ac7758c0de1761eba2d230f950d5a6be08c"
+    },
+    {
+      "name": "stock_movements",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "schemaBefore": [
+    {
+      "section": 0,
+      "records": 38,
+      "digest": "f3a25527e72ac58338b8d61d00a66fdd27d25086bb65517499168455ff4c50b7"
+    },
+    {
+      "section": 1,
+      "records": 444,
+      "digest": "568e88d6c14cb1fbf94e34a8c19b7832d35d8173f9dfc8cfd6a936658809d19b"
+    },
+    {
+      "section": 2,
+      "records": 152,
+      "digest": "00af5e8ecc3c4e9fed9b0f450163e64aaf627330e6f139be7be1936625eeaf6e"
+    },
+    {
+      "section": 3,
+      "records": 112,
+      "digest": "92a99c1e570553db3720fd17b519860e2879d7c3f553ccbe268c9087497a9378"
+    },
+    {
+      "section": 4,
+      "records": 21,
+      "digest": "063344b07725d88a73c41dad7a2c05473dea48fc3edc6248139141e2e0b7dff0"
+    },
+    {
+      "section": 5,
+      "records": 2,
+      "digest": "6190ae5aac3b2a3760529780fdd3434143254adde78b64bcc4b50a2a422ab88c"
+    },
+    {
+      "section": 6,
+      "records": 2,
+      "digest": "d69c9ae03897474ccaa0ddc3d36f2fc3f5f455e3ead838ec0fd1275349b986d1"
+    },
+    {
+      "section": 7,
+      "records": 37,
+      "digest": "afcdb7dc8f991202ca54a5e3cc720ceabb46c3141c6fc1965f0adfa9fd3ef1bc"
+    },
+    {
+      "section": 8,
+      "records": 0,
+      "digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    }
+  ],
+  "preserved": [
+    {
+      "name": "action_plan_history",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "action_plans",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "app_user_access",
+      "rows": "2",
+      "digest": "36df1894d19a46993f8cb3ec8c79c3a13dc0c4bed2950fbfab853e9413d496c8"
+    },
+    {
+      "name": "auth_audit_events",
+      "rows": "15",
+      "digest": "bce0e0b16006afc4947fc9a82702dbb3b0b7c30550889c84dfc55943349148bf"
+    },
+    {
+      "name": "auth_login_attempts",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "categories",
+      "rows": "6",
+      "digest": "f74cb40a9d260716d920fcef696939077d405236b287d5194594270b005679d7"
+    },
+    {
+      "name": "drizzle.__drizzle_migrations",
+      "rows": "33",
+      "digest": "3f95a21486f7634d5d4e8db2a2ba380b8163b411eba1c960fa33c815fa2509b4"
+    },
+    {
+      "name": "expenses",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "financial_events",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "financial_periods",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "historical_import_records",
+      "rows": "2",
+      "digest": "d40fc04d9452a1286871728c18cec7213b0f3536830e4239d3405ef57ecce8be"
+    },
+    {
+      "name": "inventory_cost_allocations",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "inventory_cost_layers",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "inventory_cost_reversals",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "management_scenario_history",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "management_scenario_mix",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "management_scenarios",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "management_settings",
+      "rows": "1",
+      "digest": "53b12543ad71edee41e16de3c886511be0649ebedeb04dd7017d1958beb99624"
+    },
+    {
+      "name": "message_processing_records",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "operational_audit_events",
+      "rows": "47",
+      "digest": "8752757e3ecdaf5e47a9939731132ae8813e2c891f91fb812926edb447f1f61f"
+    },
+    {
+      "name": "operational_cost_rates",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "operational_costs",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "product_import_aliases",
+      "rows": "10",
+      "digest": "2132e99b586d4ca80b324b7cd6e5ec8f4f31efd58ff6e51508f734c16083383c"
+    },
+    {
+      "name": "production_batch_consumptions",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "production_batch_losses",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "production_batch_outputs",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "production_batches",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "production_profile_components",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "production_profiles",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "products",
+      "rows": "36",
+      "digest": "f8049217191b8c9bdde0a4b8b288caee8ae0a03af9d2cb038bcf582cd4e5ebc1"
+    },
+    {
+      "name": "purchase_items",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "purchases",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "recipe_items",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "recipe_operational_requirements",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "recipe_versions",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "sale_items",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "sales",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "sales_locations",
+      "rows": "1",
+      "digest": "9b87b60cba8b97d56ac1231337911ac7758c0de1761eba2d230f950d5a6be08c"
+    },
+    {
+      "name": "stock_movements",
+      "rows": "0",
+      "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "actual": {
+    "egg": {
+      "sku": "HIS-OVOS-GRANDES",
+      "name": "Ovos Grandes",
+      "type": "ingredient",
+      "unit": "unit",
+      "isActive": true,
+      "salePrice": null
+    },
+    "audit": [
+      {
+        "actor": null,
+        "action": "technical.catalog.create",
+        "reason": "Cadastro tecnico delimitado; aplicacao exige aprovacao humana especifica. Executor SQL/Codex; ator Auth nao atribuido. Sem estoque ou fatos operacionais.",
+        "entityId": "37",
+        "reference": "TECH-CATALOG-2026-10-18-001",
+        "entityType": "products"
+      },
+      {
+        "actor": null,
+        "action": "technical.catalog.create",
+        "reason": "Cadastro tecnico delimitado; aplicacao exige aprovacao humana especifica. Executor SQL/Codex; ator Auth nao atribuido. Sem estoque ou fatos operacionais.",
+        "entityId": "1",
+        "reference": "TECH-CATALOG-2026-10-18-001",
+        "entityType": "recipe_versions"
+      },
+      {
+        "actor": null,
+        "action": "technical.catalog.create",
+        "reason": "Cadastro tecnico delimitado; aplicacao exige aprovacao humana especifica. Executor SQL/Codex; ator Auth nao atribuido. Sem estoque ou fatos operacionais.",
+        "entityId": "1",
+        "reference": "TECH-CATALOG-2026-10-18-001",
+        "entityType": "recipe_items"
+      },
+      {
+        "actor": null,
+        "action": "technical.catalog.create",
+        "reason": "Cadastro tecnico delimitado; aplicacao exige aprovacao humana especifica. Executor SQL/Codex; ator Auth nao atribuido. Sem estoque ou fatos operacionais.",
+        "entityId": "2",
+        "reference": "TECH-CATALOG-2026-10-18-001",
+        "entityType": "recipe_items"
+      },
+      {
+        "actor": null,
+        "action": "technical.catalog.create",
+        "reason": "Cadastro tecnico delimitado; aplicacao exige aprovacao humana especifica. Executor SQL/Codex; ator Auth nao atribuido. Sem estoque ou fatos operacionais.",
+        "entityId": "3",
+        "reference": "TECH-CATALOG-2026-10-18-001",
+        "entityType": "recipe_items"
+      },
+      {
+        "actor": null,
+        "action": "technical.catalog.create",
+        "reason": "Cadastro tecnico delimitado; aplicacao exige aprovacao humana especifica. Executor SQL/Codex; ator Auth nao atribuido. Sem estoque ou fatos operacionais.",
+        "entityId": "4",
+        "reference": "TECH-CATALOG-2026-10-18-001",
+        "entityType": "recipe_items"
+      },
+      {
+        "actor": null,
+        "action": "technical.catalog.create",
+        "reason": "Cadastro tecnico delimitado; aplicacao exige aprovacao humana especifica. Executor SQL/Codex; ator Auth nao atribuido. Sem estoque ou fatos operacionais.",
+        "entityId": "5",
+        "reference": "TECH-CATALOG-2026-10-18-001",
+        "entityType": "recipe_items"
+      },
+      {
+        "actor": null,
+        "action": "technical.catalog.create",
+        "reason": "Cadastro tecnico delimitado; aplicacao exige aprovacao humana especifica. Executor SQL/Codex; ator Auth nao atribuido. Sem estoque ou fatos operacionais.",
+        "entityId": "6",
+        "reference": "TECH-CATALOG-2026-10-18-001",
+        "entityType": "recipe_items"
+      },
+      {
+        "actor": null,
+        "action": "technical.catalog.create",
+        "reason": "Cadastro tecnico delimitado; aplicacao exige aprovacao humana especifica. Executor SQL/Codex; ator Auth nao atribuido. Sem estoque ou fatos operacionais.",
+        "entityId": "7",
+        "reference": "TECH-CATALOG-2026-10-18-001",
+        "entityType": "recipe_items"
+      },
+      {
+        "actor": null,
+        "action": "technical.catalog.create",
+        "reason": "Cadastro tecnico delimitado; aplicacao exige aprovacao humana especifica. Executor SQL/Codex; ator Auth nao atribuido. Sem estoque ou fatos operacionais.",
+        "entityId": "1",
+        "reference": "TECH-CATALOG-2026-10-18-001",
+        "entityType": "recipe_operational_requirements"
+      },
+      {
+        "actor": null,
+        "action": "technical.catalog.create",
+        "reason": "Cadastro tecnico delimitado; aplicacao exige aprovacao humana especifica. Executor SQL/Codex; ator Auth nao atribuido. Sem estoque ou fatos operacionais.",
+        "entityId": "2",
+        "reference": "TECH-CATALOG-2026-10-18-001",
+        "entityType": "recipe_operational_requirements"
+      },
+      {
+        "actor": null,
+        "action": "technical.catalog.create",
+        "reason": "Cadastro tecnico delimitado; aplicacao exige aprovacao humana especifica. Executor SQL/Codex; ator Auth nao atribuido. Sem estoque ou fatos operacionais.",
+        "entityId": "1",
+        "reference": "TECH-CATALOG-2026-10-18-001",
+        "entityType": "operational_cost_rates"
+      },
+      {
+        "actor": null,
+        "action": "technical.catalog.create",
+        "reason": "Cadastro tecnico delimitado; aplicacao exige aprovacao humana especifica. Executor SQL/Codex; ator Auth nao atribuido. Sem estoque ou fatos operacionais.",
+        "entityId": "2",
+        "reference": "TECH-CATALOG-2026-10-18-001",
+        "entityType": "operational_cost_rates"
+      },
+      {
+        "actor": null,
+        "action": "technical.catalog.create",
+        "reason": "Cadastro tecnico delimitado; aplicacao exige aprovacao humana especifica. Executor SQL/Codex; ator Auth nao atribuido. Sem estoque ou fatos operacionais.",
+        "entityId": "1",
+        "reference": "TECH-CATALOG-2026-10-18-001",
+        "entityType": "production_profiles"
+      },
+      {
+        "actor": null,
+        "action": "technical.catalog.create",
+        "reason": "Cadastro tecnico delimitado; aplicacao exige aprovacao humana especifica. Executor SQL/Codex; ator Auth nao atribuido. Sem estoque ou fatos operacionais.",
+        "entityId": "2",
+        "reference": "TECH-CATALOG-2026-10-18-001",
+        "entityType": "production_profiles"
+      },
+      {
+        "actor": null,
+        "action": "technical.catalog.create",
+        "reason": "Cadastro tecnico delimitado; aplicacao exige aprovacao humana especifica. Executor SQL/Codex; ator Auth nao atribuido. Sem estoque ou fatos operacionais.",
+        "entityId": "3",
+        "reference": "TECH-CATALOG-2026-10-18-001",
+        "entityType": "production_profiles"
+      },
+      {
+        "actor": null,
+        "action": "technical.catalog.create",
+        "reason": "Cadastro tecnico delimitado; aplicacao exige aprovacao humana especifica. Executor SQL/Codex; ator Auth nao atribuido. Sem estoque ou fatos operacionais.",
+        "entityId": "4",
+        "reference": "TECH-CATALOG-2026-10-18-001",
+        "entityType": "production_profiles"
+      },
+      {
+        "actor": null,
+        "action": "technical.catalog.create",
+        "reason": "Cadastro tecnico delimitado; aplicacao exige aprovacao humana especifica. Executor SQL/Codex; ator Auth nao atribuido. Sem estoque ou fatos operacionais.",
+        "entityId": "5",
+        "reference": "TECH-CATALOG-2026-10-18-001",
+        "entityType": "production_profiles"
+      },
+      {
+        "actor": null,
+        "action": "technical.catalog.create",
+        "reason": "Cadastro tecnico delimitado; aplicacao exige aprovacao humana especifica. Executor SQL/Codex; ator Auth nao atribuido. Sem estoque ou fatos operacionais.",
+        "entityId": "6",
+        "reference": "TECH-CATALOG-2026-10-18-001",
+        "entityType": "production_profiles"
+      },
+      {
+        "actor": null,
+        "action": "technical.catalog.create",
+        "reason": "Cadastro tecnico delimitado; aplicacao exige aprovacao humana especifica. Executor SQL/Codex; ator Auth nao atribuido. Sem estoque ou fatos operacionais.",
+        "entityId": "7",
+        "reference": "TECH-CATALOG-2026-10-18-001",
+        "entityType": "production_profiles"
+      },
+      {
+        "actor": null,
+        "action": "technical.catalog.create",
+        "reason": "Cadastro tecnico delimitado; aplicacao exige aprovacao humana especifica. Executor SQL/Codex; ator Auth nao atribuido. Sem estoque ou fatos operacionais.",
+        "entityId": "8",
+        "reference": "TECH-CATALOG-2026-10-18-001",
+        "entityType": "production_profiles"
+      },
+      {
+        "actor": null,
+        "action": "technical.catalog.create",
+        "reason": "Cadastro tecnico delimitado; aplicacao exige aprovacao humana especifica. Executor SQL/Codex; ator Auth nao atribuido. Sem estoque ou fatos operacionais.",
+        "entityId": "9",
+        "reference": "TECH-CATALOG-2026-10-18-001",
+        "entityType": "production_profiles"
+      },
+      {
+        "actor": null,
+        "action": "technical.catalog.create",
+        "reason": "Cadastro tecnico delimitado; aplicacao exige aprovacao humana especifica. Executor SQL/Codex; ator Auth nao atribuido. Sem estoque ou fatos operacionais.",
+        "entityId": "10",
+        "reference": "TECH-CATALOG-2026-10-18-001",
+        "entityType": "production_profiles"
+      },
+      {
+        "actor": null,
+        "action": "technical.catalog.create",
+        "reason": "Cadastro tecnico delimitado; aplicacao exige aprovacao humana especifica. Executor SQL/Codex; ator Auth nao atribuido. Sem estoque ou fatos operacionais.",
+        "entityId": "11",
+        "reference": "TECH-CATALOG-2026-10-18-001",
+        "entityType": "production_profiles"
+      },
+      {
+        "actor": null,
+        "action": "technical.catalog.create",
+        "reason": "Cadastro tecnico delimitado; aplicacao exige aprovacao humana especifica. Executor SQL/Codex; ator Auth nao atribuido. Sem estoque ou fatos operacionais.",
+        "entityId": "12",
+        "reference": "TECH-CATALOG-2026-10-18-001",
+        "entityType": "production_profiles"
+      },
+      {
+        "actor": null,
+        "action": "technical.catalog.create",
+        "reason": "Cadastro tecnico delimitado; aplicacao exige aprovacao humana especifica. Executor SQL/Codex; ator Auth nao atribuido. Sem estoque ou fatos operacionais.",
+        "entityId": "13",
+        "reference": "TECH-CATALOG-2026-10-18-001",
+        "entityType": "production_profiles"
+      },
+      {
+        "actor": null,
+        "action": "technical.catalog.create",
+        "reason": "Cadastro tecnico delimitado; aplicacao exige aprovacao humana especifica. Executor SQL/Codex; ator Auth nao atribuido. Sem estoque ou fatos operacionais.",
+        "entityId": "14",
+        "reference": "TECH-CATALOG-2026-10-18-001",
+        "entityType": "production_profiles"
+      },
+      {
+        "actor": null,
+        "action": "technical.catalog.create",
+        "reason": "Cadastro tecnico delimitado; aplicacao exige aprovacao humana especifica. Executor SQL/Codex; ator Auth nao atribuido. Sem estoque ou fatos operacionais.",
+        "entityId": "15",
+        "reference": "TECH-CATALOG-2026-10-18-001",
+        "entityType": "production_profiles"
+      },
+      {
+        "actor": null,
+        "action": "technical.catalog.create",
+        "reason": "Cadastro tecnico delimitado; aplicacao exige aprovacao humana especifica. Executor SQL/Codex; ator Auth nao atribuido. Sem estoque ou fatos operacionais.",
+        "entityId": "16",
+        "reference": "TECH-CATALOG-2026-10-18-001",
+        "entityType": "production_profiles"
+      },
+      {
+        "actor": null,
+        "action": "technical.catalog.create",
+        "reason": "Cadastro tecnico delimitado; aplicacao exige aprovacao humana especifica. Executor SQL/Codex; ator Auth nao atribuido. Sem estoque ou fatos operacionais.",
+        "entityId": "17",
+        "reference": "TECH-CATALOG-2026-10-18-001",
+        "entityType": "production_profiles"
+      },
+      {
+        "actor": null,
+        "action": "technical.catalog.create",
+        "reason": "Cadastro tecnico delimitado; aplicacao exige aprovacao humana especifica. Executor SQL/Codex; ator Auth nao atribuido. Sem estoque ou fatos operacionais.",
+        "entityId": "1",
+        "reference": "TECH-CATALOG-2026-10-18-001",
+        "entityType": "production_profile_components"
+      },
+      {
+        "actor": null,
+        "action": "technical.catalog.create",
+        "reason": "Cadastro tecnico delimitado; aplicacao exige aprovacao humana especifica. Executor SQL/Codex; ator Auth nao atribuido. Sem estoque ou fatos operacionais.",
+        "entityId": "2",
+        "reference": "TECH-CATALOG-2026-10-18-001",
+        "entityType": "production_profile_components"
+      },
+      {
+        "actor": null,
+        "action": "technical.catalog.create",
+        "reason": "Cadastro tecnico delimitado; aplicacao exige aprovacao humana especifica. Executor SQL/Codex; ator Auth nao atribuido. Sem estoque ou fatos operacionais.",
+        "entityId": "3",
+        "reference": "TECH-CATALOG-2026-10-18-001",
+        "entityType": "production_profile_components"
+      },
+      {
+        "actor": null,
+        "action": "technical.catalog.create",
+        "reason": "Cadastro tecnico delimitado; aplicacao exige aprovacao humana especifica. Executor SQL/Codex; ator Auth nao atribuido. Sem estoque ou fatos operacionais.",
+        "entityId": "4",
+        "reference": "TECH-CATALOG-2026-10-18-001",
+        "entityType": "production_profile_components"
+      },
+      {
+        "actor": null,
+        "action": "technical.catalog.create",
+        "reason": "Cadastro tecnico delimitado; aplicacao exige aprovacao humana especifica. Executor SQL/Codex; ator Auth nao atribuido. Sem estoque ou fatos operacionais.",
+        "entityId": "5",
+        "reference": "TECH-CATALOG-2026-10-18-001",
+        "entityType": "production_profile_components"
+      },
+      {
+        "actor": null,
+        "action": "technical.catalog.create",
+        "reason": "Cadastro tecnico delimitado; aplicacao exige aprovacao humana especifica. Executor SQL/Codex; ator Auth nao atribuido. Sem estoque ou fatos operacionais.",
+        "entityId": "6",
+        "reference": "TECH-CATALOG-2026-10-18-001",
+        "entityType": "production_profile_components"
+      },
+      {
+        "actor": null,
+        "action": "technical.catalog.create",
+        "reason": "Cadastro tecnico delimitado; aplicacao exige aprovacao humana especifica. Executor SQL/Codex; ator Auth nao atribuido. Sem estoque ou fatos operacionais.",
+        "entityId": "7",
+        "reference": "TECH-CATALOG-2026-10-18-001",
+        "entityType": "production_profile_components"
+      },
+      {
+        "actor": null,
+        "action": "technical.catalog.create",
+        "reason": "Cadastro tecnico delimitado; aplicacao exige aprovacao humana especifica. Executor SQL/Codex; ator Auth nao atribuido. Sem estoque ou fatos operacionais.",
+        "entityId": "8",
+        "reference": "TECH-CATALOG-2026-10-18-001",
+        "entityType": "production_profile_components"
+      },
+      {
+        "actor": null,
+        "action": "technical.catalog.create",
+        "reason": "Cadastro tecnico delimitado; aplicacao exige aprovacao humana especifica. Executor SQL/Codex; ator Auth nao atribuido. Sem estoque ou fatos operacionais.",
+        "entityId": "9",
+        "reference": "TECH-CATALOG-2026-10-18-001",
+        "entityType": "production_profile_components"
+      },
+      {
+        "actor": null,
+        "action": "technical.catalog.create",
+        "reason": "Cadastro tecnico delimitado; aplicacao exige aprovacao humana especifica. Executor SQL/Codex; ator Auth nao atribuido. Sem estoque ou fatos operacionais.",
+        "entityId": "10",
+        "reference": "TECH-CATALOG-2026-10-18-001",
+        "entityType": "production_profile_components"
+      },
+      {
+        "actor": null,
+        "action": "technical.catalog.create",
+        "reason": "Cadastro tecnico delimitado; aplicacao exige aprovacao humana especifica. Executor SQL/Codex; ator Auth nao atribuido. Sem estoque ou fatos operacionais.",
+        "entityId": "11",
+        "reference": "TECH-CATALOG-2026-10-18-001",
+        "entityType": "production_profile_components"
+      },
+      {
+        "actor": null,
+        "action": "technical.catalog.create",
+        "reason": "Cadastro tecnico delimitado; aplicacao exige aprovacao humana especifica. Executor SQL/Codex; ator Auth nao atribuido. Sem estoque ou fatos operacionais.",
+        "entityId": "12",
+        "reference": "TECH-CATALOG-2026-10-18-001",
+        "entityType": "production_profile_components"
+      },
+      {
+        "actor": null,
+        "action": "technical.catalog.create",
+        "reason": "Cadastro tecnico delimitado; aplicacao exige aprovacao humana especifica. Executor SQL/Codex; ator Auth nao atribuido. Sem estoque ou fatos operacionais.",
+        "entityId": "3",
+        "reference": "TECH-CATALOG-2026-10-18-001",
+        "entityType": "historical_import_records"
+      }
+    ],
+    "items": [
+      {
+        "sku": "INS001",
+        "unit": "g",
+        "quantity": "500.000",
+        "sourceName": "Açúcar",
+        "sourcePayload": {
+          "unit": "g",
+          "source": {
+            "Unidade": "g",
+            "Item_Utilizado": "Açúcar",
+            "Consumo_Receita": "500",
+            "Custo_Proporcional": "3"
+          },
+          "quantity": "500",
+          "productSku": "INS001",
+          "sourceName": "Açúcar",
+          "productName": "Açúcar",
+          "historicalCost": "3.00"
+        },
+        "historicalCost": null
+      },
+      {
+        "sku": "INS004",
+        "unit": "g",
+        "quantity": "240.000",
+        "sourceName": "Farinha de Trigo",
+        "sourcePayload": {
+          "unit": "g",
+          "source": {
+            "Unidade": "g",
+            "Item_Utilizado": "Farinha de Trigo",
+            "Consumo_Receita": "240",
+            "Custo_Proporcional": "1.2"
+          },
+          "quantity": "240",
+          "productSku": "INS004",
+          "sourceName": "Farinha de Trigo",
+          "productName": "Farinha de Trigo",
+          "historicalCost": "1.20"
+        },
+        "historicalCost": null
+      },
+      {
+        "sku": "HIS-OVOS-GRANDES",
+        "unit": "unit",
+        "quantity": "8.000",
+        "sourceName": "Ovos",
+        "sourcePayload": {
+          "unit": "unit",
+          "source": {
+            "Unidade": "unidades",
+            "Item_Utilizado": "Ovos",
+            "Consumo_Receita": "8",
+            "Custo_Proporcional": "5.333333333333333"
+          },
+          "quantity": "8",
+          "productSku": "HIS-OVOS-GRANDES",
+          "sourceName": "Ovos",
+          "productName": "Ovos Grandes",
+          "historicalCost": "5.333333333333333"
+        },
+        "historicalCost": null
+      },
+      {
+        "sku": "INS002",
+        "unit": "ml",
+        "quantity": "200.000",
+        "sourceName": "Óleo (Massa)",
+        "sourcePayload": {
+          "unit": "ml",
+          "source": {
+            "Unidade": "ml",
+            "Item_Utilizado": "Óleo (Massa)",
+            "Consumo_Receita": "200",
+            "Custo_Proporcional": "1.555555555555556"
+          },
+          "quantity": "200",
+          "productSku": "INS002",
+          "sourceName": "Óleo (Massa)",
+          "productName": "Óleo",
+          "historicalCost": "1.555555555555556"
+        },
+        "historicalCost": null
+      },
+      {
+        "sku": "INS003",
+        "unit": "g",
+        "quantity": "300.000",
+        "sourceName": "Chocolate Meio Amargo",
+        "sourcePayload": {
+          "unit": "g",
+          "source": {
+            "Unidade": "g",
+            "Item_Utilizado": "Chocolate Meio Amargo",
+            "Consumo_Receita": "300",
+            "Custo_Proporcional": "18"
+          },
+          "quantity": "300",
+          "productSku": "INS003",
+          "sourceName": "Chocolate Meio Amargo",
+          "productName": "Chocolate",
+          "historicalCost": "18.00"
+        },
+        "historicalCost": null
+      },
+      {
+        "sku": "INS002",
+        "unit": "ml",
+        "quantity": "15.000",
+        "sourceName": "Óleo (Untar)",
+        "sourcePayload": {
+          "unit": "ml",
+          "source": {
+            "Unidade": "ml",
+            "Item_Utilizado": "Óleo (Untar)",
+            "Consumo_Receita": "15",
+            "Custo_Proporcional": "0.1166666666666667"
+          },
+          "quantity": "15",
+          "productSku": "INS002",
+          "sourceName": "Óleo (Untar)",
+          "productName": "Óleo",
+          "historicalCost": "0.1166666666666667"
+        },
+        "historicalCost": null
+      },
+      {
+        "sku": "INS005",
+        "unit": "m",
+        "quantity": "0.800",
+        "sourceName": "Papel Manteiga",
+        "sourcePayload": {
+          "unit": "m",
+          "source": {
+            "Unidade": "m",
+            "Item_Utilizado": "Papel Manteiga",
+            "Consumo_Receita": "0.8",
+            "Custo_Proporcional": "0.4"
+          },
+          "quantity": "0.8",
+          "productSku": "INS005",
+          "sourceName": "Papel Manteiga",
+          "productName": "Papel Manteiga (rolo)",
+          "historicalCost": "0.40"
+        },
+        "historicalCost": null
+      }
+    ],
+    "rates": [
+      {
+        "type": "energy",
+        "unit": "kWh",
+        "source": {
+          "note": "Tarifa vigente aprovada do cadastro do workbook.",
+          "type": "energy",
+          "unit": "kWh",
+          "source": {
+            "Ativo": "Sim",
+            "Unidade": "kWh",
+            "ID_Insumo": "INS020",
+            "Insumo_Recurso": "Forno Elétrico (Tarifa kWh média)",
+            "Preco_Unitario": "0.85",
+            "Ponto_Reposicao": "",
+            "Fornecedor_Padrao": "",
+            "Quantidade_Embalagem": "1",
+            "Custo_Unitario_Calculado": "0.85"
+          },
+          "sourceId": "OPRATE-ENERGY-2026-001",
+          "unitAmount": "0.85",
+          "sourceItemId": "INS020",
+          "effectiveFrom": "2026-01-01"
+        },
+        "sourceId": "OPRATE-ENERGY-2026-001",
+        "sourceHash": "fe2f147561372c3a4b20aa7e84d71cf3173e4af27dfe8c91a033b78cf925db2c",
+        "unitAmount": "0.85",
+        "effectiveFrom": "2026-01-01"
+      },
+      {
+        "type": "labor",
+        "unit": "hour",
+        "source": {
+          "note": "Tarifa vigente aprovada do cadastro do workbook.",
+          "type": "labor",
+          "unit": "hour",
+          "source": {
+            "Ativo": "Sim",
+            "Unidade": "horas",
+            "ID_Insumo": "INS021",
+            "Insumo_Recurso": "Mão de Obra (Salário Referência)",
+            "Preco_Unitario": "2000",
+            "Ponto_Reposicao": "",
+            "Fornecedor_Padrao": "",
+            "Quantidade_Embalagem": "160",
+            "Custo_Unitario_Calculado": "12.5"
+          },
+          "sourceId": "OPRATE-LABOR-2026-001",
+          "unitAmount": "12.50",
+          "sourceItemId": "INS021",
+          "effectiveFrom": "2026-01-01"
+        },
+        "sourceId": "OPRATE-LABOR-2026-001",
+        "sourceHash": "3659fd0f7678ba3557aea86fa39018d58f2955aa4990a86bc42137e4d328891d",
+        "unitAmount": "12.50",
+        "effectiveFrom": "2026-01-01"
+      }
+    ],
+    "counts": {
+      "sales": 0,
+      "expenses": 0,
+      "products": 37,
+      "purchases": 0,
+      "categories": 6,
+      "sale_items": 0,
+      "action_plans": 0,
+      "recipe_items": 7,
+      "purchase_items": 0,
+      "app_user_access": 2,
+      "recipe_versions": 1,
+      "sales_locations": 1,
+      "stock_movements": 0,
+      "financial_events": 0,
+      "auth_audit_events": 15,
+      "financial_periods": 0,
+      "operational_costs": 0,
+      "production_batches": 0,
+      "action_plan_history": 0,
+      "auth_login_attempts": 0,
+      "management_settings": 1,
+      "production_profiles": 17,
+      "management_scenarios": 0,
+      "inventory_cost_layers": 0,
+      "operational_cost_rates": 2,
+      "product_import_aliases": 10,
+      "management_scenario_mix": 0,
+      "production_batch_losses": 0,
+      "inventory_cost_reversals": 0,
+      "operational_audit_events": 90,
+      "production_batch_outputs": 0,
+      "historical_import_records": 3,
+      "inventory_cost_allocations": 0,
+      "message_processing_records": 0,
+      "management_scenario_history": 0,
+      "production_batch_consumptions": 0,
+      "production_profile_components": 12,
+      "recipe_operational_requirements": 2
+    },
+    "recipe": {
+      "name": "Receita Base de Brownie",
+      "source": {
+        "name": "Receita Base de Brownie",
+        "items": [
+          {
+            "unit": "g",
+            "source": {
+              "Unidade": "g",
+              "Item_Utilizado": "Açúcar",
+              "Consumo_Receita": "500",
+              "Custo_Proporcional": "3"
+            },
+            "quantity": "500",
+            "productSku": "INS001",
+            "sourceName": "Açúcar",
+            "productName": "Açúcar",
+            "historicalCost": "3.00"
+          },
+          {
+            "unit": "g",
+            "source": {
+              "Unidade": "g",
+              "Item_Utilizado": "Farinha de Trigo",
+              "Consumo_Receita": "240",
+              "Custo_Proporcional": "1.2"
+            },
+            "quantity": "240",
+            "productSku": "INS004",
+            "sourceName": "Farinha de Trigo",
+            "productName": "Farinha de Trigo",
+            "historicalCost": "1.20"
+          },
+          {
+            "unit": "unit",
+            "source": {
+              "Unidade": "unidades",
+              "Item_Utilizado": "Ovos",
+              "Consumo_Receita": "8",
+              "Custo_Proporcional": "5.333333333333333"
+            },
+            "quantity": "8",
+            "productSku": "HIS-OVOS-GRANDES",
+            "sourceName": "Ovos",
+            "productName": "Ovos Grandes",
+            "historicalCost": "5.333333333333333"
+          },
+          {
+            "unit": "ml",
+            "source": {
+              "Unidade": "ml",
+              "Item_Utilizado": "Óleo (Massa)",
+              "Consumo_Receita": "200",
+              "Custo_Proporcional": "1.555555555555556"
+            },
+            "quantity": "200",
+            "productSku": "INS002",
+            "sourceName": "Óleo (Massa)",
+            "productName": "Óleo",
+            "historicalCost": "1.555555555555556"
+          },
+          {
+            "unit": "g",
+            "source": {
+              "Unidade": "g",
+              "Item_Utilizado": "Chocolate Meio Amargo",
+              "Consumo_Receita": "300",
+              "Custo_Proporcional": "18"
+            },
+            "quantity": "300",
+            "productSku": "INS003",
+            "sourceName": "Chocolate Meio Amargo",
+            "productName": "Chocolate",
+            "historicalCost": "18.00"
+          },
+          {
+            "unit": "ml",
+            "source": {
+              "Unidade": "ml",
+              "Item_Utilizado": "Óleo (Untar)",
+              "Consumo_Receita": "15",
+              "Custo_Proporcional": "0.1166666666666667"
+            },
+            "quantity": "15",
+            "productSku": "INS002",
+            "sourceName": "Óleo (Untar)",
+            "productName": "Óleo",
+            "historicalCost": "0.1166666666666667"
+          },
+          {
+            "unit": "m",
+            "source": {
+              "Unidade": "m",
+              "Item_Utilizado": "Papel Manteiga",
+              "Consumo_Receita": "0.8",
+              "Custo_Proporcional": "0.4"
+            },
+            "quantity": "0.8",
+            "productSku": "INS005",
+            "sourceName": "Papel Manteiga",
+            "productName": "Papel Manteiga (rolo)",
+            "historicalCost": "0.40"
+          }
+        ],
+        "externalId": "RECIPE-BASE-001",
+        "operational": [
+          {
+            "note": "Usar a tarifa atual cadastrada em novos lotes; este valor é apenas auditoria da fonte.",
+            "type": "energy",
+            "unit": "kWh",
+            "source": {
+              "Unidade": "kWh",
+              "Item_Utilizado": "Energia Forno Elétrico (1kWh)",
+              "Consumo_Receita": "1",
+              "Custo_Proporcional": "0.04"
+            },
+            "quantity": "1",
+            "sourceName": "Energia Forno Elétrico (1kWh)",
+            "historicalCost": "0.04"
+          },
+          {
+            "note": "Usar a tarifa atual cadastrada em novos lotes; este valor é apenas auditoria da fonte.",
+            "type": "labor",
+            "unit": "hours",
+            "source": {
+              "Unidade": "horas",
+              "Item_Utilizado": "Custo de Mão de Obra (2 horas por fornada)",
+              "Consumo_Receita": "2",
+              "Custo_Proporcional": "1.7"
+            },
+            "quantity": "2",
+            "sourceName": "Custo de Mão de Obra (2 horas por fornada)",
+            "historicalCost": "1.70"
+          }
+        ]
+      },
+      "status": "active",
+      "version": 1,
+      "externalId": "RECIPE-BASE-001",
+      "sourceHash": "dc7d23cedc9f0acbbecbe1f51edc397f03cd5123b0f3b4013fd57ea375202666"
+    },
+    "receipt": {
+      "payload": {
+        "source": {
+          "rates": [
+            {
+              "note": "Tarifa vigente aprovada do cadastro do workbook.",
+              "type": "energy",
+              "unit": "kWh",
+              "source": {
+                "note": "Tarifa vigente aprovada do cadastro do workbook.",
+                "type": "energy",
+                "unit": "kWh",
+                "source": {
+                  "Ativo": "Sim",
+                  "Unidade": "kWh",
+                  "ID_Insumo": "INS020",
+                  "Insumo_Recurso": "Forno Elétrico (Tarifa kWh média)",
+                  "Preco_Unitario": "0.85",
+                  "Ponto_Reposicao": "",
+                  "Fornecedor_Padrao": "",
+                  "Quantidade_Embalagem": "1",
+                  "Custo_Unitario_Calculado": "0.85"
+                },
+                "sourceId": "OPRATE-ENERGY-2026-001",
+                "unitAmount": "0.85",
+                "sourceItemId": "INS020",
+                "effectiveFrom": "2026-01-01"
+              },
+              "sourceId": "OPRATE-ENERGY-2026-001",
+              "sourceKey": "workbook:operational-rate:OPRATE-ENERGY-2026-001",
+              "sourceHash": "fe2f147561372c3a4b20aa7e84d71cf3173e4af27dfe8c91a033b78cf925db2c",
+              "unitAmount": "0.85",
+              "sourceItemId": "INS020",
+              "effectiveFrom": "2026-01-01"
+            },
+            {
+              "note": "Tarifa vigente aprovada do cadastro do workbook.",
+              "type": "labor",
+              "unit": "hour",
+              "source": {
+                "note": "Tarifa vigente aprovada do cadastro do workbook.",
+                "type": "labor",
+                "unit": "hour",
+                "source": {
+                  "Ativo": "Sim",
+                  "Unidade": "horas",
+                  "ID_Insumo": "INS021",
+                  "Insumo_Recurso": "Mão de Obra (Salário Referência)",
+                  "Preco_Unitario": "2000",
+                  "Ponto_Reposicao": "",
+                  "Fornecedor_Padrao": "",
+                  "Quantidade_Embalagem": "160",
+                  "Custo_Unitario_Calculado": "12.5"
+                },
+                "sourceId": "OPRATE-LABOR-2026-001",
+                "unitAmount": "12.50",
+                "sourceItemId": "INS021",
+                "effectiveFrom": "2026-01-01"
+              },
+              "sourceId": "OPRATE-LABOR-2026-001",
+              "sourceKey": "workbook:operational-rate:OPRATE-LABOR-2026-001",
+              "sourceHash": "3659fd0f7678ba3557aea86fa39018d58f2955aa4990a86bc42137e4d328891d",
+              "unitAmount": "12.50",
+              "sourceItemId": "INS021",
+              "effectiveFrom": "2026-01-01"
+            }
+          ],
+          "recipe": {
+            "name": "Receita Base de Brownie",
+            "items": [
+              {
+                "unit": "g",
+                "source": {
+                  "Unidade": "g",
+                  "Item_Utilizado": "Açúcar",
+                  "Consumo_Receita": "500",
+                  "Custo_Proporcional": "3"
+                },
+                "quantity": "500",
+                "productSku": "INS001",
+                "sourceName": "Açúcar",
+                "productName": "Açúcar",
+                "historicalCost": "3.00"
+              },
+              {
+                "unit": "g",
+                "source": {
+                  "Unidade": "g",
+                  "Item_Utilizado": "Farinha de Trigo",
+                  "Consumo_Receita": "240",
+                  "Custo_Proporcional": "1.2"
+                },
+                "quantity": "240",
+                "productSku": "INS004",
+                "sourceName": "Farinha de Trigo",
+                "productName": "Farinha de Trigo",
+                "historicalCost": "1.20"
+              },
+              {
+                "unit": "unit",
+                "source": {
+                  "Unidade": "unidades",
+                  "Item_Utilizado": "Ovos",
+                  "Consumo_Receita": "8",
+                  "Custo_Proporcional": "5.333333333333333"
+                },
+                "quantity": "8",
+                "productSku": "HIS-OVOS-GRANDES",
+                "sourceName": "Ovos",
+                "productName": "Ovos Grandes",
+                "historicalCost": "5.333333333333333"
+              },
+              {
+                "unit": "ml",
+                "source": {
+                  "Unidade": "ml",
+                  "Item_Utilizado": "Óleo (Massa)",
+                  "Consumo_Receita": "200",
+                  "Custo_Proporcional": "1.555555555555556"
+                },
+                "quantity": "200",
+                "productSku": "INS002",
+                "sourceName": "Óleo (Massa)",
+                "productName": "Óleo",
+                "historicalCost": "1.555555555555556"
+              },
+              {
+                "unit": "g",
+                "source": {
+                  "Unidade": "g",
+                  "Item_Utilizado": "Chocolate Meio Amargo",
+                  "Consumo_Receita": "300",
+                  "Custo_Proporcional": "18"
+                },
+                "quantity": "300",
+                "productSku": "INS003",
+                "sourceName": "Chocolate Meio Amargo",
+                "productName": "Chocolate",
+                "historicalCost": "18.00"
+              },
+              {
+                "unit": "ml",
+                "source": {
+                  "Unidade": "ml",
+                  "Item_Utilizado": "Óleo (Untar)",
+                  "Consumo_Receita": "15",
+                  "Custo_Proporcional": "0.1166666666666667"
+                },
+                "quantity": "15",
+                "productSku": "INS002",
+                "sourceName": "Óleo (Untar)",
+                "productName": "Óleo",
+                "historicalCost": "0.1166666666666667"
+              },
+              {
+                "unit": "m",
+                "source": {
+                  "Unidade": "m",
+                  "Item_Utilizado": "Papel Manteiga",
+                  "Consumo_Receita": "0.8",
+                  "Custo_Proporcional": "0.4"
+                },
+                "quantity": "0.8",
+                "productSku": "INS005",
+                "sourceName": "Papel Manteiga",
+                "productName": "Papel Manteiga (rolo)",
+                "historicalCost": "0.40"
+              }
+            ],
+            "source": {
+              "name": "Receita Base de Brownie",
+              "items": [
+                {
+                  "unit": "g",
+                  "source": {
+                    "Unidade": "g",
+                    "Item_Utilizado": "Açúcar",
+                    "Consumo_Receita": "500",
+                    "Custo_Proporcional": "3"
+                  },
+                  "quantity": "500",
+                  "productSku": "INS001",
+                  "sourceName": "Açúcar",
+                  "productName": "Açúcar",
+                  "historicalCost": "3.00"
+                },
+                {
+                  "unit": "g",
+                  "source": {
+                    "Unidade": "g",
+                    "Item_Utilizado": "Farinha de Trigo",
+                    "Consumo_Receita": "240",
+                    "Custo_Proporcional": "1.2"
+                  },
+                  "quantity": "240",
+                  "productSku": "INS004",
+                  "sourceName": "Farinha de Trigo",
+                  "productName": "Farinha de Trigo",
+                  "historicalCost": "1.20"
+                },
+                {
+                  "unit": "unit",
+                  "source": {
+                    "Unidade": "unidades",
+                    "Item_Utilizado": "Ovos",
+                    "Consumo_Receita": "8",
+                    "Custo_Proporcional": "5.333333333333333"
+                  },
+                  "quantity": "8",
+                  "productSku": "HIS-OVOS-GRANDES",
+                  "sourceName": "Ovos",
+                  "productName": "Ovos Grandes",
+                  "historicalCost": "5.333333333333333"
+                },
+                {
+                  "unit": "ml",
+                  "source": {
+                    "Unidade": "ml",
+                    "Item_Utilizado": "Óleo (Massa)",
+                    "Consumo_Receita": "200",
+                    "Custo_Proporcional": "1.555555555555556"
+                  },
+                  "quantity": "200",
+                  "productSku": "INS002",
+                  "sourceName": "Óleo (Massa)",
+                  "productName": "Óleo",
+                  "historicalCost": "1.555555555555556"
+                },
+                {
+                  "unit": "g",
+                  "source": {
+                    "Unidade": "g",
+                    "Item_Utilizado": "Chocolate Meio Amargo",
+                    "Consumo_Receita": "300",
+                    "Custo_Proporcional": "18"
+                  },
+                  "quantity": "300",
+                  "productSku": "INS003",
+                  "sourceName": "Chocolate Meio Amargo",
+                  "productName": "Chocolate",
+                  "historicalCost": "18.00"
+                },
+                {
+                  "unit": "ml",
+                  "source": {
+                    "Unidade": "ml",
+                    "Item_Utilizado": "Óleo (Untar)",
+                    "Consumo_Receita": "15",
+                    "Custo_Proporcional": "0.1166666666666667"
+                  },
+                  "quantity": "15",
+                  "productSku": "INS002",
+                  "sourceName": "Óleo (Untar)",
+                  "productName": "Óleo",
+                  "historicalCost": "0.1166666666666667"
+                },
+                {
+                  "unit": "m",
+                  "source": {
+                    "Unidade": "m",
+                    "Item_Utilizado": "Papel Manteiga",
+                    "Consumo_Receita": "0.8",
+                    "Custo_Proporcional": "0.4"
+                  },
+                  "quantity": "0.8",
+                  "productSku": "INS005",
+                  "sourceName": "Papel Manteiga",
+                  "productName": "Papel Manteiga (rolo)",
+                  "historicalCost": "0.40"
+                }
+              ],
+              "externalId": "RECIPE-BASE-001",
+              "operational": [
+                {
+                  "note": "Usar a tarifa atual cadastrada em novos lotes; este valor é apenas auditoria da fonte.",
+                  "type": "energy",
+                  "unit": "kWh",
+                  "source": {
+                    "Unidade": "kWh",
+                    "Item_Utilizado": "Energia Forno Elétrico (1kWh)",
+                    "Consumo_Receita": "1",
+                    "Custo_Proporcional": "0.04"
+                  },
+                  "quantity": "1",
+                  "sourceName": "Energia Forno Elétrico (1kWh)",
+                  "historicalCost": "0.04"
+                },
+                {
+                  "note": "Usar a tarifa atual cadastrada em novos lotes; este valor é apenas auditoria da fonte.",
+                  "type": "labor",
+                  "unit": "hours",
+                  "source": {
+                    "Unidade": "horas",
+                    "Item_Utilizado": "Custo de Mão de Obra (2 horas por fornada)",
+                    "Consumo_Receita": "2",
+                    "Custo_Proporcional": "1.7"
+                  },
+                  "quantity": "2",
+                  "sourceName": "Custo de Mão de Obra (2 horas por fornada)",
+                  "historicalCost": "1.70"
+                }
+              ]
+            },
+            "sourceKey": "workbook:recipe:RECIPE-BASE-001",
+            "externalId": "RECIPE-BASE-001",
+            "sourceHash": "dc7d23cedc9f0acbbecbe1f51edc397f03cd5123b0f3b4013fd57ea375202666",
+            "operational": [
+              {
+                "note": "Usar a tarifa atual cadastrada em novos lotes; este valor é apenas auditoria da fonte.",
+                "type": "energy",
+                "unit": "kWh",
+                "source": {
+                  "Unidade": "kWh",
+                  "Item_Utilizado": "Energia Forno Elétrico (1kWh)",
+                  "Consumo_Receita": "1",
+                  "Custo_Proporcional": "0.04"
+                },
+                "quantity": "1",
+                "sourceName": "Energia Forno Elétrico (1kWh)",
+                "historicalCost": "0.04"
+              },
+              {
+                "note": "Usar a tarifa atual cadastrada em novos lotes; este valor é apenas auditoria da fonte.",
+                "type": "labor",
+                "unit": "hours",
+                "source": {
+                  "Unidade": "horas",
+                  "Item_Utilizado": "Custo de Mão de Obra (2 horas por fornada)",
+                  "Consumo_Receita": "2",
+                  "Custo_Proporcional": "1.7"
+                },
+                "quantity": "2",
+                "sourceName": "Custo de Mão de Obra (2 horas por fornada)",
+                "historicalCost": "1.70"
+              }
+            ]
+          },
+          "profiles": [
+            {
+              "source": {
+                "Produto": "Bombom Brownie Unitário",
+                "Recheio": "Nenhum",
+                "Tamanho": "Unitário",
+                "Margem_%": "0.66458297258297261",
+                "Categoria": "Bombom",
+                "ID_Produto": "PROD001",
+                "Produto_Ativo": "Sim",
+                "Status_Margem": "Revisar",
+                "Lucro_Unitario": "3.322914862914863",
+                "Preco_Sugerido": "4.1927128427128419",
+                "Margem_Minima_%": "0.7",
+                "Preco_Praticado": "5",
+                "Custo_Total_c_MO": "1.677085137085137",
+                "Custo_Total_s_MO": "1.655007215007215",
+                "Custo_Unit_Massa": "0.38500721500721491",
+                "Rendimento_Fornada": "77"
+              },
+              "cutSize": "Unitário",
+              "filling": null,
+              "sourceId": "RECIPE-BASE-001:PROD001",
+              "sourceKey": "workbook:production-profile:RECIPE-BASE-001:PROD001",
+              "productSku": "PROD001",
+              "sourceHash": "0399eb58184e18847f2785dd639089ad73b1ef29ceb696bb9ef994c71ae4afae",
+              "productName": "Bombom Brownie Unitário",
+              "packagingSku": null,
+              "expectedYield": "77",
+              "sourceProductId": "PROD001",
+              "packagingQuantity": null
+            },
+            {
+              "source": {
+                "Produto": "Bordinhas",
+                "Recheio": "Nenhum",
+                "Tamanho": "",
+                "Margem_%": "0.42357407407407421",
+                "Categoria": "Bordinha",
+                "ID_Produto": "PROD002",
+                "Produto_Ativo": "Sim",
+                "Status_Margem": "Revisar",
+                "Lucro_Unitario": "2.1178703703703712",
+                "Preco_Sugerido": "7.2053240740740732",
+                "Margem_Minima_%": "0.7",
+                "Preco_Praticado": "5",
+                "Custo_Total_c_MO": "2.8821296296296288",
+                "Custo_Total_s_MO": "2.7404629629629631",
+                "Custo_Unit_Massa": "2.4704629629629631",
+                "Rendimento_Fornada": "12"
+              },
+              "cutSize": null,
+              "filling": null,
+              "sourceId": "RECIPE-BASE-001:PROD002",
+              "sourceKey": "workbook:production-profile:RECIPE-BASE-001:PROD002",
+              "productSku": "PROD002",
+              "sourceHash": "cab9d74eae5797496cb9b957f2f2dbde065d2dce0ef106e20571e53b8957cc50",
+              "productName": "Bordinhas",
+              "packagingSku": null,
+              "expectedYield": "12",
+              "sourceProductId": "PROD002",
+              "packagingQuantity": null
+            },
+            {
+              "source": {
+                "Produto": "Brownie Recheado 5x5 (Brigadeiro)",
+                "Recheio": "Brigadeiro",
+                "Tamanho": "5x5",
+                "Margem_%": "0.7903279320987654",
+                "Categoria": "Brownie",
+                "ID_Produto": "PROD003",
+                "Produto_Ativo": "Sim",
+                "Status_Margem": "OK",
+                "Lucro_Unitario": "9.4839351851851852",
+                "Preco_Sugerido": "6.2901620370370361",
+                "Margem_Minima_%": "0.7",
+                "Preco_Praticado": "12",
+                "Custo_Total_c_MO": "2.5160648148148139",
+                "Custo_Total_s_MO": "2.4452314814814819",
+                "Custo_Unit_Massa": "1.2352314814814811",
+                "Rendimento_Fornada": "24"
+              },
+              "cutSize": "5x5",
+              "filling": "Brigadeiro",
+              "sourceId": "RECIPE-BASE-001:PROD003",
+              "sourceKey": "workbook:production-profile:RECIPE-BASE-001:PROD003",
+              "productSku": "PROD003",
+              "sourceHash": "66d5655a74f26def833a58f53336419dc3f34e1ba966860f6e201ff18ac595e1",
+              "productName": "Brownie Recheado 5x5 (Brigadeiro)",
+              "packagingSku": "INS009",
+              "expectedYield": "24",
+              "sourceProductId": "PROD003",
+              "packagingQuantity": "1"
+            },
+            {
+              "source": {
+                "Produto": "Brownie Recheado 5x5 (Creme de Avelã)",
+                "Recheio": "Creme De Avelã",
+                "Tamanho": "5x5",
+                "Margem_%": "0.81532793209876553",
+                "Categoria": "Brownie",
+                "ID_Produto": "PROD004",
+                "Produto_Ativo": "Sim",
+                "Status_Margem": "OK",
+                "Lucro_Unitario": "9.7839351851851859",
+                "Preco_Sugerido": "5.5401620370370361",
+                "Margem_Minima_%": "0.7",
+                "Preco_Praticado": "12",
+                "Custo_Total_c_MO": "2.216064814814815",
+                "Custo_Total_s_MO": "2.1452314814814808",
+                "Custo_Unit_Massa": "1.2352314814814811",
+                "Rendimento_Fornada": "24"
+              },
+              "cutSize": "5x5",
+              "filling": "Creme De Avelã",
+              "sourceId": "RECIPE-BASE-001:PROD004",
+              "sourceKey": "workbook:production-profile:RECIPE-BASE-001:PROD004",
+              "productSku": "PROD004",
+              "sourceHash": "e4c28709190c6effa2e42fe4e3e09690f634731fe765f36b13ebefd824048e7a",
+              "productName": "Brownie Recheado 5x5 (Creme de Avelã)",
+              "packagingSku": "INS009",
+              "expectedYield": "24",
+              "sourceProductId": "PROD004",
+              "packagingQuantity": "1"
+            },
+            {
+              "source": {
+                "Produto": "Brownie Recheado 5x5 (Doce de Leite)",
+                "Recheio": "Doce De Leite",
+                "Tamanho": "5x5",
+                "Margem_%": "0.81199459876543212",
+                "Categoria": "Brownie",
+                "ID_Produto": "PROD005",
+                "Produto_Ativo": "Sim",
+                "Status_Margem": "OK",
+                "Lucro_Unitario": "9.743935185185185",
+                "Preco_Sugerido": "5.6401620370370367",
+                "Margem_Minima_%": "0.7",
+                "Preco_Praticado": "12",
+                "Custo_Total_c_MO": "2.256064814814815",
+                "Custo_Total_s_MO": "2.1852314814814808",
+                "Custo_Unit_Massa": "1.2352314814814811",
+                "Rendimento_Fornada": "24"
+              },
+              "cutSize": "5x5",
+              "filling": "Doce De Leite",
+              "sourceId": "RECIPE-BASE-001:PROD005",
+              "sourceKey": "workbook:production-profile:RECIPE-BASE-001:PROD005",
+              "productSku": "PROD005",
+              "sourceHash": "ee59de158ab2e714525bb45592f9470da9eb7c299a6134954c4c601d3b2591aa",
+              "productName": "Brownie Recheado 5x5 (Doce de Leite)",
+              "packagingSku": "INS009",
+              "expectedYield": "24",
+              "sourceProductId": "PROD005",
+              "packagingQuantity": "1"
+            },
+            {
+              "source": {
+                "Produto": "Brownie Recheado 5x5 (Goiabada)",
+                "Recheio": "Goiabada",
+                "Tamanho": "5x5",
+                "Margem_%": "0.83699459876543214",
+                "Categoria": "Brownie",
+                "ID_Produto": "PROD006",
+                "Produto_Ativo": "Sim",
+                "Status_Margem": "OK",
+                "Lucro_Unitario": "10.043935185185189",
+                "Preco_Sugerido": "4.8901620370370367",
+                "Margem_Minima_%": "0.7",
+                "Preco_Praticado": "12",
+                "Custo_Total_c_MO": "1.956064814814815",
+                "Custo_Total_s_MO": "1.885231481481481",
+                "Custo_Unit_Massa": "1.2352314814814811",
+                "Rendimento_Fornada": "24"
+              },
+              "cutSize": "5x5",
+              "filling": "Goiabada",
+              "sourceId": "RECIPE-BASE-001:PROD006",
+              "sourceKey": "workbook:production-profile:RECIPE-BASE-001:PROD006",
+              "productSku": "PROD006",
+              "sourceHash": "c6fd85b4879b597b2199cade29f987b4f24db6e5b917a0d01cc526f4eaf6db1b",
+              "productName": "Brownie Recheado 5x5 (Goiabada)",
+              "packagingSku": "INS009",
+              "expectedYield": "24",
+              "sourceProductId": "PROD006",
+              "packagingQuantity": "1"
+            },
+            {
+              "source": {
+                "Produto": "Brownie Recheado 5x5 (Leite Ninho)",
+                "Recheio": "Leite Ninho",
+                "Tamanho": "5x5",
+                "Margem_%": "0.76917408594491921",
+                "Categoria": "Brownie",
+                "ID_Produto": "PROD007",
+                "Produto_Ativo": "Sim",
+                "Status_Margem": "OK",
+                "Lucro_Unitario": "9.2300890313390305",
+                "Preco_Sugerido": "6.924777421652422",
+                "Margem_Minima_%": "0.7",
+                "Preco_Praticado": "12",
+                "Custo_Total_c_MO": "2.7699109686609691",
+                "Custo_Total_s_MO": "2.6990776353276349",
+                "Custo_Unit_Massa": "1.2352314814814811",
+                "Rendimento_Fornada": "24"
+              },
+              "cutSize": "5x5",
+              "filling": "Leite Ninho",
+              "sourceId": "RECIPE-BASE-001:PROD007",
+              "sourceKey": "workbook:production-profile:RECIPE-BASE-001:PROD007",
+              "productSku": "PROD007",
+              "sourceHash": "dbc4ec7c7561b006f5624fa6d93d15cdd6767926655eb664ff3e4e65f311d7bb",
+              "productName": "Brownie Recheado 5x5 (Leite Ninho)",
+              "packagingSku": "INS009",
+              "expectedYield": "24",
+              "sourceProductId": "PROD007",
+              "packagingQuantity": "1"
+            },
+            {
+              "source": {
+                "Produto": "Brownie Recheado 5x5 (Maracujá)",
+                "Recheio": "Maracujá",
+                "Tamanho": "5x5",
+                "Margem_%": "0.81532793209876553",
+                "Categoria": "Brownie",
+                "ID_Produto": "PROD008",
+                "Produto_Ativo": "Sim",
+                "Status_Margem": "OK",
+                "Lucro_Unitario": "9.7839351851851859",
+                "Preco_Sugerido": "5.5401620370370361",
+                "Margem_Minima_%": "0.7",
+                "Preco_Praticado": "12",
+                "Custo_Total_c_MO": "2.216064814814815",
+                "Custo_Total_s_MO": "2.1452314814814808",
+                "Custo_Unit_Massa": "1.2352314814814811",
+                "Rendimento_Fornada": "24"
+              },
+              "cutSize": "5x5",
+              "filling": "Maracujá",
+              "sourceId": "RECIPE-BASE-001:PROD008",
+              "sourceKey": "workbook:production-profile:RECIPE-BASE-001:PROD008",
+              "productSku": "PROD008",
+              "sourceHash": "ab603336e5c9f1e3ab3730331cd3ad0b61214a19fc78d9e03496b927beebd96e",
+              "productName": "Brownie Recheado 5x5 (Maracujá)",
+              "packagingSku": "INS009",
+              "expectedYield": "24",
+              "sourceProductId": "PROD008",
+              "packagingQuantity": "1"
+            },
+            {
+              "source": {
+                "Produto": "Brownie Recheado 7x7 (Brigadeiro)",
+                "Recheio": "Brigadeiro",
+                "Tamanho": "7x7",
+                "Margem_%": "0.71928649237472775",
+                "Categoria": "Brownie",
+                "ID_Produto": "PROD009",
+                "Produto_Ativo": "Sim",
+                "Status_Margem": "OK",
+                "Lucro_Unitario": "12.22787037037037",
+                "Preco_Sugerido": "11.93032407407407",
+                "Margem_Minima_%": "0.7",
+                "Preco_Praticado": "17",
+                "Custo_Total_c_MO": "4.7721296296296289",
+                "Custo_Total_s_MO": "4.6304629629629632",
+                "Custo_Unit_Massa": "2.4704629629629631",
+                "Rendimento_Fornada": "12"
+              },
+              "cutSize": "7x7",
+              "filling": "Brigadeiro",
+              "sourceId": "RECIPE-BASE-001:PROD009",
+              "sourceKey": "workbook:production-profile:RECIPE-BASE-001:PROD009",
+              "productSku": "PROD009",
+              "sourceHash": "6422940bc5921bf7bdae7da638ddde9fbd6717c6341343f48902cc1adbe198db",
+              "productName": "Brownie Recheado 7x7 (Brigadeiro)",
+              "packagingSku": "INS010",
+              "expectedYield": "12",
+              "sourceProductId": "PROD009",
+              "packagingQuantity": "1"
+            },
+            {
+              "source": {
+                "Produto": "Brownie Recheado 7x7 (Creme de avelã)",
+                "Recheio": "Creme De Avelã",
+                "Tamanho": "7x7",
+                "Margem_%": "0.75458061002178645",
+                "Categoria": "Brownie",
+                "ID_Produto": "PROD010",
+                "Produto_Ativo": "Sim",
+                "Status_Margem": "OK",
+                "Lucro_Unitario": "12.82787037037037",
+                "Preco_Sugerido": "10.43032407407407",
+                "Margem_Minima_%": "0.7",
+                "Preco_Praticado": "17",
+                "Custo_Total_c_MO": "4.1721296296296293",
+                "Custo_Total_s_MO": "4.0304629629629627",
+                "Custo_Unit_Massa": "2.4704629629629631",
+                "Rendimento_Fornada": "12"
+              },
+              "cutSize": "7x7",
+              "filling": "Creme De Avelã",
+              "sourceId": "RECIPE-BASE-001:PROD010",
+              "sourceKey": "workbook:production-profile:RECIPE-BASE-001:PROD010",
+              "productSku": "PROD010",
+              "sourceHash": "6faf090fc3acc878bc648170c0ec73e1bfc9156e80fda3a70eb4d0890eaf422a",
+              "productName": "Brownie Recheado 7x7 (Creme de avelã)",
+              "packagingSku": "INS010",
+              "expectedYield": "12",
+              "sourceProductId": "PROD010",
+              "packagingQuantity": "1"
+            },
+            {
+              "source": {
+                "Produto": "Brownie Recheado 7x7 (Doce de Leite)",
+                "Recheio": "Doce De Leite",
+                "Tamanho": "7x7",
+                "Margem_%": "0.74987472766884533",
+                "Categoria": "Brownie",
+                "ID_Produto": "PROD011",
+                "Produto_Ativo": "Sim",
+                "Status_Margem": "OK",
+                "Lucro_Unitario": "12.74787037037037",
+                "Preco_Sugerido": "10.630324074074069",
+                "Margem_Minima_%": "0.7",
+                "Preco_Praticado": "17",
+                "Custo_Total_c_MO": "4.2521296296296294",
+                "Custo_Total_s_MO": "4.1104629629629628",
+                "Custo_Unit_Massa": "2.4704629629629631",
+                "Rendimento_Fornada": "12"
+              },
+              "cutSize": "7x7",
+              "filling": "Doce De Leite",
+              "sourceId": "RECIPE-BASE-001:PROD011",
+              "sourceKey": "workbook:production-profile:RECIPE-BASE-001:PROD011",
+              "productSku": "PROD011",
+              "sourceHash": "c586adc0995392379835882e0aee9bed716ef19d18aa8e1d83a5abc32403d53d",
+              "productName": "Brownie Recheado 7x7 (Doce de Leite)",
+              "packagingSku": "INS010",
+              "expectedYield": "12",
+              "sourceProductId": "PROD011",
+              "packagingQuantity": "1"
+            },
+            {
+              "source": {
+                "Produto": "Brownie Recheado 7x7 (Goiabada)",
+                "Recheio": "Goiabada",
+                "Tamanho": "7x7",
+                "Margem_%": "0.78516884531590403",
+                "Categoria": "Brownie",
+                "ID_Produto": "PROD012",
+                "Produto_Ativo": "Sim",
+                "Status_Margem": "OK",
+                "Lucro_Unitario": "13.347870370370369",
+                "Preco_Sugerido": "9.1303240740740748",
+                "Margem_Minima_%": "0.7",
+                "Preco_Praticado": "17",
+                "Custo_Total_c_MO": "3.6521296296296302",
+                "Custo_Total_s_MO": "3.5104629629629631",
+                "Custo_Unit_Massa": "2.4704629629629631",
+                "Rendimento_Fornada": "12"
+              },
+              "cutSize": "7x7",
+              "filling": "Goiabada",
+              "sourceId": "RECIPE-BASE-001:PROD012",
+              "sourceKey": "workbook:production-profile:RECIPE-BASE-001:PROD012",
+              "productSku": "PROD012",
+              "sourceHash": "b641aa41a00d8b7148c4eb0e3b9b7ea6099bb4bd2790bdb13bb928bf6eb348b3",
+              "productName": "Brownie Recheado 7x7 (Goiabada)",
+              "packagingSku": "INS010",
+              "expectedYield": "12",
+              "sourceProductId": "PROD012",
+              "packagingQuantity": "1"
+            },
+            {
+              "source": {
+                "Produto": "Brownie Recheado 7x7 (Leite Ninho)",
+                "Recheio": "Leite Ninho",
+                "Tamanho": "7x7",
+                "Margem_%": "0.68942223898106247",
+                "Categoria": "Brownie",
+                "ID_Produto": "PROD013",
+                "Produto_Ativo": "Sim",
+                "Status_Margem": "Revisar",
+                "Lucro_Unitario": "11.720178062678061",
+                "Preco_Sugerido": "13.19955484330484",
+                "Margem_Minima_%": "0.7",
+                "Preco_Praticado": "17",
+                "Custo_Total_c_MO": "5.2798219373219366",
+                "Custo_Total_s_MO": "5.1381552706552709",
+                "Custo_Unit_Massa": "2.4704629629629631",
+                "Rendimento_Fornada": "12"
+              },
+              "cutSize": "7x7",
+              "filling": "Leite Ninho",
+              "sourceId": "RECIPE-BASE-001:PROD013",
+              "sourceKey": "workbook:production-profile:RECIPE-BASE-001:PROD013",
+              "productSku": "PROD013",
+              "sourceHash": "8b183a0a50448f6ff37e3b704e7b2af38b42a48f98a8cc714e9aa7b43c6b15c4",
+              "productName": "Brownie Recheado 7x7 (Leite Ninho)",
+              "packagingSku": "INS010",
+              "expectedYield": "12",
+              "sourceProductId": "PROD013",
+              "packagingQuantity": "1"
+            },
+            {
+              "source": {
+                "Produto": "Brownie Recheado 7x7 (Maracujá)",
+                "Recheio": "Maracujá",
+                "Tamanho": "7x7",
+                "Margem_%": "0.75458061002178645",
+                "Categoria": "Brownie",
+                "ID_Produto": "PROD014",
+                "Produto_Ativo": "Sim",
+                "Status_Margem": "OK",
+                "Lucro_Unitario": "12.82787037037037",
+                "Preco_Sugerido": "10.43032407407407",
+                "Margem_Minima_%": "0.7",
+                "Preco_Praticado": "17",
+                "Custo_Total_c_MO": "4.1721296296296293",
+                "Custo_Total_s_MO": "4.0304629629629627",
+                "Custo_Unit_Massa": "2.4704629629629631",
+                "Rendimento_Fornada": "12"
+              },
+              "cutSize": "7x7",
+              "filling": "Maracujá",
+              "sourceId": "RECIPE-BASE-001:PROD014",
+              "sourceKey": "workbook:production-profile:RECIPE-BASE-001:PROD014",
+              "productSku": "PROD014",
+              "sourceHash": "3410ddaa518efe689b71da5f56a14ae06dc518f6e5bf0c0c4c8d395b2c32e660",
+              "productName": "Brownie Recheado 7x7 (Maracujá)",
+              "packagingSku": "INS010",
+              "expectedYield": "12",
+              "sourceProductId": "PROD014",
+              "packagingQuantity": "1"
+            },
+            {
+              "source": {
+                "Produto": "Brownie Simples 5x5",
+                "Recheio": "Nenhum",
+                "Tamanho": "5x5",
+                "Margem_%": "0.8461612654320988",
+                "Categoria": "Brownie",
+                "ID_Produto": "PROD015",
+                "Produto_Ativo": "Sim",
+                "Status_Margem": "OK",
+                "Lucro_Unitario": "5.0769675925925926",
+                "Preco_Sugerido": "2.3075810185185182",
+                "Margem_Minima_%": "0.7",
+                "Preco_Praticado": "6",
+                "Custo_Total_c_MO": "0.92303240740740733",
+                "Custo_Total_s_MO": "0.88761574074074068",
+                "Custo_Unit_Massa": "0.61761574074074066",
+                "Rendimento_Fornada": "48"
+              },
+              "cutSize": "5x5",
+              "filling": null,
+              "sourceId": "RECIPE-BASE-001:PROD015",
+              "sourceKey": "workbook:production-profile:RECIPE-BASE-001:PROD015",
+              "productSku": "PROD015",
+              "sourceHash": "a3ba5716a2f667e0ef2085493f0181de5bd90f34a3e043dd0b4822a1f5d39bc1",
+              "productName": "Brownie Simples 5x5",
+              "packagingSku": "INS007",
+              "expectedYield": "48",
+              "sourceProductId": "PROD015",
+              "packagingQuantity": "1"
+            },
+            {
+              "source": {
+                "Produto": "Brownie Simples 7x7",
+                "Recheio": "Nenhum",
+                "Tamanho": "7x7",
+                "Margem_%": "0.79799189814814819",
+                "Categoria": "Brownie",
+                "ID_Produto": "PROD016",
+                "Produto_Ativo": "Sim",
+                "Status_Margem": "OK",
+                "Lucro_Unitario": "6.3839351851851864",
+                "Preco_Sugerido": "4.0401620370370361",
+                "Margem_Minima_%": "0.7",
+                "Preco_Praticado": "8",
+                "Custo_Total_c_MO": "1.616064814814814",
+                "Custo_Total_s_MO": "1.5452314814814809",
+                "Custo_Unit_Massa": "1.2352314814814811",
+                "Rendimento_Fornada": "24"
+              },
+              "cutSize": "7x7",
+              "filling": null,
+              "sourceId": "RECIPE-BASE-001:PROD016",
+              "sourceKey": "workbook:production-profile:RECIPE-BASE-001:PROD016",
+              "productSku": "PROD016",
+              "sourceHash": "a2c62e2fc850e4013775ba8d44ee2486c2026e9c6130485fcc5f3ad274d94e9a",
+              "productName": "Brownie Simples 7x7",
+              "packagingSku": "INS008",
+              "expectedYield": "24",
+              "sourceProductId": "PROD016",
+              "packagingQuantity": "1"
+            },
+            {
+              "source": {
+                "Produto": "Kit 4 Bombons",
+                "Recheio": "Nenhum",
+                "Tamanho": "",
+                "Margem_%": "0.6673144139810806",
+                "Categoria": "Kit",
+                "ID_Produto": "PROD017",
+                "Produto_Ativo": "Sim",
+                "Status_Margem": "Revisar",
+                "Lucro_Unitario": "12.011659451659449",
+                "Preco_Sugerido": "14.970851370851371",
+                "Margem_Minima_%": "0.7",
+                "Preco_Praticado": "18",
+                "Custo_Total_c_MO": "5.9883405483405481",
+                "Custo_Total_s_MO": "5.9000288600288604",
+                "Custo_Unit_Massa": "1.5400288600288601",
+                "Rendimento_Fornada": "19.25"
+              },
+              "cutSize": null,
+              "filling": null,
+              "sourceId": "RECIPE-BASE-001:PROD017",
+              "sourceKey": "workbook:production-profile:RECIPE-BASE-001:PROD017",
+              "productSku": "PROD017",
+              "sourceHash": "dd2c07f2f6d5021486b7e7fe34b1654f145f3e1adda64bac75d864086f411249",
+              "productName": "Kit 4 Bombons",
+              "packagingSku": null,
+              "expectedYield": "19.25",
+              "sourceProductId": "PROD017",
+              "packagingQuantity": null
+            }
+          ],
+          "manifestSha256": "b58252dc0f47d109a000a70d879417069687db5432d0319c570915e580698ce0",
+          "workbookSha256": "25aa62df5fc9b2e01402e9c242142322d9c6f54a345e800cb947b77865ce5b64",
+          "excludedHistoricalPlans": 17
+        },
+        "executor": "SQL/Codex; actor Auth unassigned",
+        "candidate": {
+          "recipe": {
+            "name": "Receita Base de Brownie",
+            "externalId": "RECIPE-BASE-001",
+            "sourceSheet": "03_Cadastro_Insumos",
+            "physicalItems": [
+              {
+                "unit": "g",
+                "quantity": "500",
+                "productSku": "INS001",
+                "sourceName": "Açúcar",
+                "productName": "Açúcar",
+                "historicalCost": "3.00"
+              },
+              {
+                "unit": "g",
+                "quantity": "240",
+                "productSku": "INS004",
+                "sourceName": "Farinha de Trigo",
+                "productName": "Farinha de Trigo",
+                "historicalCost": "1.20"
+              },
+              {
+                "unit": "unit",
+                "quantity": "8",
+                "productSku": "HIS-OVOS-GRANDES",
+                "sourceName": "Ovos",
+                "productName": "Ovos Grandes",
+                "historicalCost": "5.333333333333333"
+              },
+              {
+                "unit": "ml",
+                "quantity": "200",
+                "productSku": "INS002",
+                "sourceName": "Óleo (Massa)",
+                "productName": "Óleo",
+                "historicalCost": "1.555555555555556"
+              },
+              {
+                "unit": "g",
+                "quantity": "300",
+                "productSku": "INS003",
+                "sourceName": "Chocolate Meio Amargo",
+                "productName": "Chocolate",
+                "historicalCost": "18.00"
+              },
+              {
+                "unit": "ml",
+                "quantity": "15",
+                "productSku": "INS002",
+                "sourceName": "Óleo (Untar)",
+                "productName": "Óleo",
+                "historicalCost": "0.1166666666666667"
+              },
+              {
+                "unit": "m",
+                "quantity": "0.8",
+                "productSku": "INS005",
+                "sourceName": "Papel Manteiga",
+                "productName": "Papel Manteiga (rolo)",
+                "historicalCost": "0.40"
+              }
+            ],
+            "operationalRates": [
+              {
+                "note": "Tarifa vigente aprovada do cadastro do workbook.",
+                "type": "energy",
+                "unit": "kWh",
+                "sourceId": "OPRATE-ENERGY-2026-001",
+                "unitAmount": "0.85",
+                "sourceItemId": "INS020",
+                "effectiveFrom": "2026-01-01"
+              },
+              {
+                "note": "Tarifa vigente aprovada do cadastro do workbook.",
+                "type": "labor",
+                "unit": "hour",
+                "sourceId": "OPRATE-LABOR-2026-001",
+                "unitAmount": "12.50",
+                "sourceItemId": "INS021",
+                "effectiveFrom": "2026-01-01"
+              }
+            ],
+            "operationalRequirements": [
+              {
+                "note": "Usar a tarifa atual cadastrada em novos lotes; este valor é apenas auditoria da fonte.",
+                "type": "energy",
+                "unit": "kWh",
+                "quantity": "1",
+                "sourceName": "Energia Forno Elétrico (1kWh)",
+                "historicalCost": "0.04"
+              },
+              {
+                "note": "Usar a tarifa atual cadastrada em novos lotes; este valor é apenas auditoria da fonte.",
+                "type": "labor",
+                "unit": "hours",
+                "quantity": "2",
+                "sourceName": "Custo de Mão de Obra (2 horas por fornada)",
+                "historicalCost": "1.70"
+              }
+            ]
+          },
+          "status": "REVIEW_ONLY_NOT_EXECUTABLE",
+          "version": 1,
+          "excluded": {
+            "sales": true,
+            "purchases": true,
+            "stockMovements": true,
+            "historicalPlans": 17,
+            "completedProduction": true,
+            "historicalBusinessImports": true
+          },
+          "profiles": [
+            {
+              "source": "docs/IMPORTACAO-PRODUCAO-WORKBOOK-PREVIA.md#perfis-de-produção-extraídos",
+              "cutSize": "Unitário",
+              "filling": null,
+              "productSku": "PROD001",
+              "productName": "Bombom Brownie Unitário",
+              "packagingSku": null,
+              "expectedYield": "77",
+              "packagingQuantity": null,
+              "sourceProductName": "Bombom Brownie Unitário",
+              "operationallyComplete": false
+            },
+            {
+              "source": "docs/IMPORTACAO-PRODUCAO-WORKBOOK-PREVIA.md#perfis-de-produção-extraídos",
+              "cutSize": null,
+              "filling": null,
+              "productSku": "PROD002",
+              "productName": "Bordinhas",
+              "packagingSku": null,
+              "expectedYield": "12",
+              "packagingQuantity": null,
+              "sourceProductName": "Bordinhas",
+              "operationallyComplete": true
+            },
+            {
+              "source": "docs/IMPORTACAO-PRODUCAO-WORKBOOK-PREVIA.md#perfis-de-produção-extraídos",
+              "cutSize": "5x5",
+              "filling": "Brigadeiro",
+              "productSku": "PROD003",
+              "productName": "Brownie Recheado 5x5 (Brigadeiro)",
+              "packagingSku": "INS009",
+              "expectedYield": "24",
+              "packagingQuantity": "1",
+              "sourceProductName": "Brownie Recheado 5x5 (Brigadeiro)",
+              "operationallyComplete": true
+            },
+            {
+              "source": "docs/IMPORTACAO-PRODUCAO-WORKBOOK-PREVIA.md#perfis-de-produção-extraídos",
+              "cutSize": "5x5",
+              "filling": "Creme De Avelã",
+              "productSku": "PROD004",
+              "productName": "Brownie Recheado 5x5 (Creme de Avelã)",
+              "packagingSku": "INS009",
+              "expectedYield": "24",
+              "packagingQuantity": "1",
+              "sourceProductName": "Brownie Recheado 5x5 (Creme de Avelã)",
+              "operationallyComplete": true
+            },
+            {
+              "source": "docs/IMPORTACAO-PRODUCAO-WORKBOOK-PREVIA.md#perfis-de-produção-extraídos",
+              "cutSize": "5x5",
+              "filling": "Doce De Leite",
+              "productSku": "PROD005",
+              "productName": "Brownie Recheado 5x5 (Doce de Leite)",
+              "packagingSku": "INS009",
+              "expectedYield": "24",
+              "packagingQuantity": "1",
+              "sourceProductName": "Brownie Recheado 5x5 (Doce de Leite)",
+              "operationallyComplete": true
+            },
+            {
+              "source": "docs/IMPORTACAO-PRODUCAO-WORKBOOK-PREVIA.md#perfis-de-produção-extraídos",
+              "cutSize": "5x5",
+              "filling": "Goiabada",
+              "productSku": "PROD006",
+              "productName": "Brownie Recheado 5x5 (Goiabada)",
+              "packagingSku": "INS009",
+              "expectedYield": "24",
+              "packagingQuantity": "1",
+              "sourceProductName": "Brownie Recheado 5x5 (Goiabada)",
+              "operationallyComplete": true
+            },
+            {
+              "source": "docs/IMPORTACAO-PRODUCAO-WORKBOOK-PREVIA.md#perfis-de-produção-extraídos",
+              "cutSize": "5x5",
+              "filling": "Leite Ninho",
+              "productSku": "PROD007",
+              "productName": "Brownie Recheado 5x5 (Leite Ninho)",
+              "packagingSku": "INS009",
+              "expectedYield": "24",
+              "packagingQuantity": "1",
+              "sourceProductName": "Brownie Recheado 5x5 (Leite Ninho)",
+              "operationallyComplete": true
+            },
+            {
+              "source": "docs/IMPORTACAO-PRODUCAO-WORKBOOK-PREVIA.md#perfis-de-produção-extraídos",
+              "cutSize": "5x5",
+              "filling": "Maracujá",
+              "productSku": "PROD008",
+              "productName": "Brownie Recheado 5x5 (Maracujá)",
+              "packagingSku": "INS009",
+              "expectedYield": "24",
+              "packagingQuantity": "1",
+              "sourceProductName": "Brownie Recheado 5x5 (Maracujá)",
+              "operationallyComplete": true
+            },
+            {
+              "source": "docs/IMPORTACAO-PRODUCAO-WORKBOOK-PREVIA.md#perfis-de-produção-extraídos",
+              "cutSize": "7x7",
+              "filling": "Brigadeiro",
+              "productSku": "PROD009",
+              "productName": "Brownie Recheado 7x7 (Brigadeiro)",
+              "packagingSku": "INS010",
+              "expectedYield": "12",
+              "packagingQuantity": "1",
+              "sourceProductName": "Brownie Recheado 7x7 (Brigadeiro)",
+              "operationallyComplete": true
+            },
+            {
+              "source": "docs/IMPORTACAO-PRODUCAO-WORKBOOK-PREVIA.md#perfis-de-produção-extraídos",
+              "cutSize": "7x7",
+              "filling": "Creme De Avelã",
+              "productSku": "PROD010",
+              "productName": "Brownie Recheado 7x7 (Creme de avelã)",
+              "packagingSku": "INS010",
+              "expectedYield": "12",
+              "packagingQuantity": "1",
+              "sourceProductName": "Brownie Recheado 7x7 (Creme de avelã)",
+              "operationallyComplete": true
+            },
+            {
+              "source": "docs/IMPORTACAO-PRODUCAO-WORKBOOK-PREVIA.md#perfis-de-produção-extraídos",
+              "cutSize": "7x7",
+              "filling": "Doce De Leite",
+              "productSku": "PROD011",
+              "productName": "Brownie Recheado 7x7 (Doce de Leite)",
+              "packagingSku": "INS010",
+              "expectedYield": "12",
+              "packagingQuantity": "1",
+              "sourceProductName": "Brownie Recheado 7x7 (Doce de Leite)",
+              "operationallyComplete": true
+            },
+            {
+              "source": "docs/IMPORTACAO-PRODUCAO-WORKBOOK-PREVIA.md#perfis-de-produção-extraídos",
+              "cutSize": "7x7",
+              "filling": "Goiabada",
+              "productSku": "PROD012",
+              "productName": "Brownie Recheado 7x7 (Goiabada)",
+              "packagingSku": "INS010",
+              "expectedYield": "12",
+              "packagingQuantity": "1",
+              "sourceProductName": "Brownie Recheado 7x7 (Goiabada)",
+              "operationallyComplete": true
+            },
+            {
+              "source": "docs/IMPORTACAO-PRODUCAO-WORKBOOK-PREVIA.md#perfis-de-produção-extraídos",
+              "cutSize": "7x7",
+              "filling": "Leite Ninho",
+              "productSku": "PROD013",
+              "productName": "Brownie Recheado 7x7 (Leite Ninho)",
+              "packagingSku": "INS010",
+              "expectedYield": "12",
+              "packagingQuantity": "1",
+              "sourceProductName": "Brownie Recheado 7x7 (Leite Ninho)",
+              "operationallyComplete": true
+            },
+            {
+              "source": "docs/IMPORTACAO-PRODUCAO-WORKBOOK-PREVIA.md#perfis-de-produção-extraídos",
+              "cutSize": "7x7",
+              "filling": "Maracujá",
+              "productSku": "PROD014",
+              "productName": "Brownie Recheado 7x7 (Maracujá)",
+              "packagingSku": "INS010",
+              "expectedYield": "12",
+              "packagingQuantity": "1",
+              "sourceProductName": "Brownie Recheado 7x7 (Maracujá)",
+              "operationallyComplete": true
+            },
+            {
+              "source": "docs/IMPORTACAO-PRODUCAO-WORKBOOK-PREVIA.md#perfis-de-produção-extraídos",
+              "cutSize": "5x5",
+              "filling": null,
+              "productSku": "PROD015",
+              "productName": "Brownie Simples 5x5",
+              "packagingSku": "INS007",
+              "expectedYield": "48",
+              "packagingQuantity": "1",
+              "sourceProductName": "Brownie Simples 5x5",
+              "operationallyComplete": true
+            },
+            {
+              "source": "docs/IMPORTACAO-PRODUCAO-WORKBOOK-PREVIA.md#perfis-de-produção-extraídos",
+              "cutSize": "7x7",
+              "filling": null,
+              "productSku": "PROD016",
+              "productName": "Brownie Simples 7x7",
+              "packagingSku": "INS008",
+              "expectedYield": "24",
+              "packagingQuantity": "1",
+              "sourceProductName": "Brownie Simples 7x7",
+              "operationallyComplete": true
+            },
+            {
+              "source": "docs/IMPORTACAO-PRODUCAO-WORKBOOK-PREVIA.md#perfis-de-produção-extraídos",
+              "cutSize": null,
+              "filling": null,
+              "productSku": "PROD017",
+              "productName": "Kit 4 Bombons",
+              "packagingSku": null,
+              "expectedYield": "19.25",
+              "packagingQuantity": null,
+              "sourceProductName": "Kit 4 Bombons",
+              "operationallyComplete": false
+            }
+          ],
+          "catalogPreflight": "evidence/technical-catalog-preflight-2026-10-18.json",
+          "productsToCreate": [
+            {
+              "sku": "HIS-OVOS-GRANDES",
+              "name": "Ovos Grandes",
+              "type": "ingredient",
+              "unit": "unit",
+              "salePrice": null,
+              "initialStock": null
+            }
+          ],
+          "proposedReference": "TECH-CATALOG-2026-10-18-001",
+          "referenceConsumed": false,
+          "sourceManifestSha256": "b58252dc0f47d109a000a70d879417069687db5432d0319c570915e580698ce0",
+          "sourceManifestVersion": 4,
+          "preApplicationRequirements": [
+            "Generate separate transactional SQL with exact catalog/zero-count/hash/idempotency guards",
+            "Preserve fractional historical reference costs as raw source metadata; never use them as realized cost",
+            "Audit all new records in the same transaction",
+            "Test PostgreSQL 17 success, conflict, replay rejection and late rollback",
+            "Review bombom/kit packaging and coating before declaring their technical production complete",
+            "Present the exact tested application package for approval; revalidate target and backup before writing"
+          ],
+          "profileAdditionalComponents": [
+            {
+              "role": "filling",
+              "unit": "g",
+              "source": {
+                "origin": "operational_decision",
+                "decision": "Quantidade aprovada pela usuária; não extraída do workbook.",
+                "decisionId": "OPDEC-PROFILE-FILLINGS-2026-001",
+                "workbookTypeReference": {
+                  "fillingCell": "02_Cadastro_Produtos!E7",
+                  "catalogCells": "03_Cadastro_Insumos!B17:E17",
+                  "productCells": "02_Cadastro_Produtos!A7:E7"
+                }
+              },
+              "status": "approved_operational_decision",
+              "quantity": "20",
+              "sourceId": "OPDEC-FILLING-PROD003-V1",
+              "productSku": "PROD003",
+              "fillingSource": "Brigadeiro",
+              "quantityBasis": "per_finished_unit",
+              "productSourceId": "PROD003",
+              "fillingProductSku": "INS013",
+              "fillingProductName": "Brigadeiro (Recheio)"
+            },
+            {
+              "role": "filling",
+              "unit": "g",
+              "source": {
+                "origin": "operational_decision",
+                "decision": "Quantidade aprovada pela usuária; não extraída do workbook.",
+                "decisionId": "OPDEC-PROFILE-FILLINGS-2026-001",
+                "workbookTypeReference": {
+                  "fillingCell": "02_Cadastro_Produtos!E8",
+                  "catalogCells": "03_Cadastro_Insumos!B20:E20",
+                  "productCells": "02_Cadastro_Produtos!A8:E8"
+                }
+              },
+              "status": "approved_operational_decision",
+              "quantity": "20",
+              "sourceId": "OPDEC-FILLING-PROD004-V1",
+              "productSku": "PROD004",
+              "fillingSource": "Creme De Avelã",
+              "quantityBasis": "per_finished_unit",
+              "productSourceId": "PROD004",
+              "fillingProductSku": "INS016",
+              "fillingProductName": "Creme de Avelã (Recheio)"
+            },
+            {
+              "role": "filling",
+              "unit": "g",
+              "source": {
+                "origin": "operational_decision",
+                "decision": "Quantidade aprovada pela usuária; não extraída do workbook.",
+                "decisionId": "OPDEC-PROFILE-FILLINGS-2026-001",
+                "workbookTypeReference": {
+                  "fillingCell": "02_Cadastro_Produtos!E9",
+                  "catalogCells": "03_Cadastro_Insumos!B18:E18",
+                  "productCells": "02_Cadastro_Produtos!A9:E9"
+                }
+              },
+              "status": "approved_operational_decision",
+              "quantity": "20",
+              "sourceId": "OPDEC-FILLING-PROD005-V1",
+              "productSku": "PROD005",
+              "fillingSource": "Doce De Leite",
+              "quantityBasis": "per_finished_unit",
+              "productSourceId": "PROD005",
+              "fillingProductSku": "INS014",
+              "fillingProductName": "Doce de Leite (Recheio)"
+            },
+            {
+              "role": "filling",
+              "unit": "g",
+              "source": {
+                "origin": "operational_decision",
+                "decision": "Quantidade aprovada pela usuária; não extraída do workbook.",
+                "decisionId": "OPDEC-PROFILE-FILLINGS-2026-001",
+                "workbookTypeReference": {
+                  "fillingCell": "02_Cadastro_Produtos!E10",
+                  "catalogCells": "03_Cadastro_Insumos!B21:E21",
+                  "productCells": "02_Cadastro_Produtos!A10:E10"
+                }
+              },
+              "status": "approved_operational_decision",
+              "quantity": "20",
+              "sourceId": "OPDEC-FILLING-PROD006-V1",
+              "productSku": "PROD006",
+              "fillingSource": "Goiabada",
+              "quantityBasis": "per_finished_unit",
+              "productSourceId": "PROD006",
+              "fillingProductSku": "INS017",
+              "fillingProductName": "Goiabada (Recheio)"
+            },
+            {
+              "role": "filling",
+              "unit": "g",
+              "source": {
+                "origin": "operational_decision",
+                "decision": "Quantidade aprovada pela usuária; não extraída do workbook.",
+                "decisionId": "OPDEC-PROFILE-FILLINGS-2026-001",
+                "workbookTypeReference": {
+                  "fillingCell": "02_Cadastro_Produtos!E11",
+                  "catalogCells": "03_Cadastro_Insumos!B19:E19",
+                  "productCells": "02_Cadastro_Produtos!A11:E11"
+                }
+              },
+              "status": "approved_operational_decision",
+              "quantity": "20",
+              "sourceId": "OPDEC-FILLING-PROD007-V1",
+              "productSku": "PROD007",
+              "fillingSource": "Leite Ninho",
+              "quantityBasis": "per_finished_unit",
+              "productSourceId": "PROD007",
+              "fillingProductSku": "INS015",
+              "fillingProductName": "Leite Ninho (Recheio)"
+            },
+            {
+              "role": "filling",
+              "unit": "g",
+              "source": {
+                "origin": "operational_decision",
+                "decision": "Quantidade aprovada pela usuária; não extraída do workbook.",
+                "decisionId": "OPDEC-PROFILE-FILLINGS-2026-001",
+                "workbookTypeReference": {
+                  "fillingCell": "02_Cadastro_Produtos!E12",
+                  "catalogCells": "03_Cadastro_Insumos!B22:E22",
+                  "productCells": "02_Cadastro_Produtos!A12:E12"
+                }
+              },
+              "status": "approved_operational_decision",
+              "quantity": "20",
+              "sourceId": "OPDEC-FILLING-PROD008-V1",
+              "productSku": "PROD008",
+              "fillingSource": "Maracujá",
+              "quantityBasis": "per_finished_unit",
+              "productSourceId": "PROD008",
+              "fillingProductSku": "INS018",
+              "fillingProductName": "Maracujá (Recheio)"
+            },
+            {
+              "role": "filling",
+              "unit": "g",
+              "source": {
+                "origin": "operational_decision",
+                "decision": "Quantidade aprovada pela usuária; não extraída do workbook.",
+                "decisionId": "OPDEC-PROFILE-FILLINGS-2026-001",
+                "workbookTypeReference": {
+                  "fillingCell": "02_Cadastro_Produtos!E13",
+                  "catalogCells": "03_Cadastro_Insumos!B17:E17",
+                  "productCells": "02_Cadastro_Produtos!A13:E13"
+                }
+              },
+              "status": "approved_operational_decision",
+              "quantity": "40",
+              "sourceId": "OPDEC-FILLING-PROD009-V1",
+              "productSku": "PROD009",
+              "fillingSource": "Brigadeiro",
+              "quantityBasis": "per_finished_unit",
+              "productSourceId": "PROD009",
+              "fillingProductSku": "INS013",
+              "fillingProductName": "Brigadeiro (Recheio)"
+            },
+            {
+              "role": "filling",
+              "unit": "g",
+              "source": {
+                "origin": "operational_decision",
+                "decision": "Quantidade aprovada pela usuária; não extraída do workbook.",
+                "decisionId": "OPDEC-PROFILE-FILLINGS-2026-001",
+                "workbookTypeReference": {
+                  "fillingCell": "02_Cadastro_Produtos!E14",
+                  "catalogCells": "03_Cadastro_Insumos!B20:E20",
+                  "productCells": "02_Cadastro_Produtos!A14:E14"
+                }
+              },
+              "status": "approved_operational_decision",
+              "quantity": "40",
+              "sourceId": "OPDEC-FILLING-PROD010-V1",
+              "productSku": "PROD010",
+              "fillingSource": "Creme De Avelã",
+              "quantityBasis": "per_finished_unit",
+              "productSourceId": "PROD010",
+              "fillingProductSku": "INS016",
+              "fillingProductName": "Creme de Avelã (Recheio)"
+            },
+            {
+              "role": "filling",
+              "unit": "g",
+              "source": {
+                "origin": "operational_decision",
+                "decision": "Quantidade aprovada pela usuária; não extraída do workbook.",
+                "decisionId": "OPDEC-PROFILE-FILLINGS-2026-001",
+                "workbookTypeReference": {
+                  "fillingCell": "02_Cadastro_Produtos!E15",
+                  "catalogCells": "03_Cadastro_Insumos!B18:E18",
+                  "productCells": "02_Cadastro_Produtos!A15:E15"
+                }
+              },
+              "status": "approved_operational_decision",
+              "quantity": "40",
+              "sourceId": "OPDEC-FILLING-PROD011-V1",
+              "productSku": "PROD011",
+              "fillingSource": "Doce De Leite",
+              "quantityBasis": "per_finished_unit",
+              "productSourceId": "PROD011",
+              "fillingProductSku": "INS014",
+              "fillingProductName": "Doce de Leite (Recheio)"
+            },
+            {
+              "role": "filling",
+              "unit": "g",
+              "source": {
+                "origin": "operational_decision",
+                "decision": "Quantidade aprovada pela usuária; não extraída do workbook.",
+                "decisionId": "OPDEC-PROFILE-FILLINGS-2026-001",
+                "workbookTypeReference": {
+                  "fillingCell": "02_Cadastro_Produtos!E16",
+                  "catalogCells": "03_Cadastro_Insumos!B21:E21",
+                  "productCells": "02_Cadastro_Produtos!A16:E16"
+                }
+              },
+              "status": "approved_operational_decision",
+              "quantity": "40",
+              "sourceId": "OPDEC-FILLING-PROD012-V1",
+              "productSku": "PROD012",
+              "fillingSource": "Goiabada",
+              "quantityBasis": "per_finished_unit",
+              "productSourceId": "PROD012",
+              "fillingProductSku": "INS017",
+              "fillingProductName": "Goiabada (Recheio)"
+            },
+            {
+              "role": "filling",
+              "unit": "g",
+              "source": {
+                "origin": "operational_decision",
+                "decision": "Quantidade aprovada pela usuária; não extraída do workbook.",
+                "decisionId": "OPDEC-PROFILE-FILLINGS-2026-001",
+                "workbookTypeReference": {
+                  "fillingCell": "02_Cadastro_Produtos!E17",
+                  "catalogCells": "03_Cadastro_Insumos!B19:E19",
+                  "productCells": "02_Cadastro_Produtos!A17:E17"
+                }
+              },
+              "status": "approved_operational_decision",
+              "quantity": "40",
+              "sourceId": "OPDEC-FILLING-PROD013-V1",
+              "productSku": "PROD013",
+              "fillingSource": "Leite Ninho",
+              "quantityBasis": "per_finished_unit",
+              "productSourceId": "PROD013",
+              "fillingProductSku": "INS015",
+              "fillingProductName": "Leite Ninho (Recheio)"
+            },
+            {
+              "role": "filling",
+              "unit": "g",
+              "source": {
+                "origin": "operational_decision",
+                "decision": "Quantidade aprovada pela usuária; não extraída do workbook.",
+                "decisionId": "OPDEC-PROFILE-FILLINGS-2026-001",
+                "workbookTypeReference": {
+                  "fillingCell": "02_Cadastro_Produtos!E18",
+                  "catalogCells": "03_Cadastro_Insumos!B22:E22",
+                  "productCells": "02_Cadastro_Produtos!A18:E18"
+                }
+              },
+              "status": "approved_operational_decision",
+              "quantity": "40",
+              "sourceId": "OPDEC-FILLING-PROD014-V1",
+              "productSku": "PROD014",
+              "fillingSource": "Maracujá",
+              "quantityBasis": "per_finished_unit",
+              "productSourceId": "PROD014",
+              "fillingProductSku": "INS018",
+              "fillingProductName": "Maracujá (Recheio)"
+            }
+          ]
+        },
+        "requiresSpecificHumanApproval": true
+      },
+      "reference": "TECH-CATALOG-2026-10-18-001",
+      "entityType": "technical_catalog",
+      "importedAt": "2026-10-18T15:02:53.055657+00:00",
+      "sourceHash": "e2080a94477280ee6eb67e61553f392bbe18543412f971ef5d26299d5350e6f1"
+    },
+    "profiles": [
+      {
+        "sku": "PROD001",
+        "recipe": "RECIPE-BASE-001",
+        "cutSize": "Unitário",
+        "filling": null,
+        "sourceId": "RECIPE-BASE-001:PROD001",
+        "sourceHash": "0399eb58184e18847f2785dd639089ad73b1ef29ceb696bb9ef994c71ae4afae",
+        "packagingSku": null,
+        "expectedYield": "77.000",
+        "sourcePayload": {
+          "Produto": "Bombom Brownie Unitário",
+          "Recheio": "Nenhum",
+          "Tamanho": "Unitário",
+          "Margem_%": "0.66458297258297261",
+          "Categoria": "Bombom",
+          "ID_Produto": "PROD001",
+          "limitation": "Embalagem/cobertura pendentes; perfil de referencia sem homologacao operacional.",
+          "Produto_Ativo": "Sim",
+          "Status_Margem": "Revisar",
+          "Lucro_Unitario": "3.322914862914863",
+          "Preco_Sugerido": "4.1927128427128419",
+          "Margem_Minima_%": "0.7",
+          "Preco_Praticado": "5",
+          "Custo_Total_c_MO": "1.677085137085137",
+          "Custo_Total_s_MO": "1.655007215007215",
+          "Custo_Unit_Massa": "0.38500721500721491",
+          "Rendimento_Fornada": "77",
+          "operationallyComplete": false
+        },
+        "packagingQuantity": null
+      },
+      {
+        "sku": "PROD002",
+        "recipe": "RECIPE-BASE-001",
+        "cutSize": null,
+        "filling": null,
+        "sourceId": "RECIPE-BASE-001:PROD002",
+        "sourceHash": "cab9d74eae5797496cb9b957f2f2dbde065d2dce0ef106e20571e53b8957cc50",
+        "packagingSku": null,
+        "expectedYield": "12.000",
+        "sourcePayload": {
+          "Produto": "Bordinhas",
+          "Recheio": "Nenhum",
+          "Tamanho": "",
+          "Margem_%": "0.42357407407407421",
+          "Categoria": "Bordinha",
+          "ID_Produto": "PROD002",
+          "limitation": null,
+          "Produto_Ativo": "Sim",
+          "Status_Margem": "Revisar",
+          "Lucro_Unitario": "2.1178703703703712",
+          "Preco_Sugerido": "7.2053240740740732",
+          "Margem_Minima_%": "0.7",
+          "Preco_Praticado": "5",
+          "Custo_Total_c_MO": "2.8821296296296288",
+          "Custo_Total_s_MO": "2.7404629629629631",
+          "Custo_Unit_Massa": "2.4704629629629631",
+          "Rendimento_Fornada": "12",
+          "operationallyComplete": true
+        },
+        "packagingQuantity": null
+      },
+      {
+        "sku": "PROD003",
+        "recipe": "RECIPE-BASE-001",
+        "cutSize": "5x5",
+        "filling": "Brigadeiro",
+        "sourceId": "RECIPE-BASE-001:PROD003",
+        "sourceHash": "66d5655a74f26def833a58f53336419dc3f34e1ba966860f6e201ff18ac595e1",
+        "packagingSku": "INS009",
+        "expectedYield": "24.000",
+        "sourcePayload": {
+          "Produto": "Brownie Recheado 5x5 (Brigadeiro)",
+          "Recheio": "Brigadeiro",
+          "Tamanho": "5x5",
+          "Margem_%": "0.7903279320987654",
+          "Categoria": "Brownie",
+          "ID_Produto": "PROD003",
+          "limitation": null,
+          "Produto_Ativo": "Sim",
+          "Status_Margem": "OK",
+          "Lucro_Unitario": "9.4839351851851852",
+          "Preco_Sugerido": "6.2901620370370361",
+          "Margem_Minima_%": "0.7",
+          "Preco_Praticado": "12",
+          "Custo_Total_c_MO": "2.5160648148148139",
+          "Custo_Total_s_MO": "2.4452314814814819",
+          "Custo_Unit_Massa": "1.2352314814814811",
+          "Rendimento_Fornada": "24",
+          "operationallyComplete": true
+        },
+        "packagingQuantity": "1.000"
+      },
+      {
+        "sku": "PROD004",
+        "recipe": "RECIPE-BASE-001",
+        "cutSize": "5x5",
+        "filling": "Creme De Avelã",
+        "sourceId": "RECIPE-BASE-001:PROD004",
+        "sourceHash": "e4c28709190c6effa2e42fe4e3e09690f634731fe765f36b13ebefd824048e7a",
+        "packagingSku": "INS009",
+        "expectedYield": "24.000",
+        "sourcePayload": {
+          "Produto": "Brownie Recheado 5x5 (Creme de Avelã)",
+          "Recheio": "Creme De Avelã",
+          "Tamanho": "5x5",
+          "Margem_%": "0.81532793209876553",
+          "Categoria": "Brownie",
+          "ID_Produto": "PROD004",
+          "limitation": null,
+          "Produto_Ativo": "Sim",
+          "Status_Margem": "OK",
+          "Lucro_Unitario": "9.7839351851851859",
+          "Preco_Sugerido": "5.5401620370370361",
+          "Margem_Minima_%": "0.7",
+          "Preco_Praticado": "12",
+          "Custo_Total_c_MO": "2.216064814814815",
+          "Custo_Total_s_MO": "2.1452314814814808",
+          "Custo_Unit_Massa": "1.2352314814814811",
+          "Rendimento_Fornada": "24",
+          "operationallyComplete": true
+        },
+        "packagingQuantity": "1.000"
+      },
+      {
+        "sku": "PROD005",
+        "recipe": "RECIPE-BASE-001",
+        "cutSize": "5x5",
+        "filling": "Doce De Leite",
+        "sourceId": "RECIPE-BASE-001:PROD005",
+        "sourceHash": "ee59de158ab2e714525bb45592f9470da9eb7c299a6134954c4c601d3b2591aa",
+        "packagingSku": "INS009",
+        "expectedYield": "24.000",
+        "sourcePayload": {
+          "Produto": "Brownie Recheado 5x5 (Doce de Leite)",
+          "Recheio": "Doce De Leite",
+          "Tamanho": "5x5",
+          "Margem_%": "0.81199459876543212",
+          "Categoria": "Brownie",
+          "ID_Produto": "PROD005",
+          "limitation": null,
+          "Produto_Ativo": "Sim",
+          "Status_Margem": "OK",
+          "Lucro_Unitario": "9.743935185185185",
+          "Preco_Sugerido": "5.6401620370370367",
+          "Margem_Minima_%": "0.7",
+          "Preco_Praticado": "12",
+          "Custo_Total_c_MO": "2.256064814814815",
+          "Custo_Total_s_MO": "2.1852314814814808",
+          "Custo_Unit_Massa": "1.2352314814814811",
+          "Rendimento_Fornada": "24",
+          "operationallyComplete": true
+        },
+        "packagingQuantity": "1.000"
+      },
+      {
+        "sku": "PROD006",
+        "recipe": "RECIPE-BASE-001",
+        "cutSize": "5x5",
+        "filling": "Goiabada",
+        "sourceId": "RECIPE-BASE-001:PROD006",
+        "sourceHash": "c6fd85b4879b597b2199cade29f987b4f24db6e5b917a0d01cc526f4eaf6db1b",
+        "packagingSku": "INS009",
+        "expectedYield": "24.000",
+        "sourcePayload": {
+          "Produto": "Brownie Recheado 5x5 (Goiabada)",
+          "Recheio": "Goiabada",
+          "Tamanho": "5x5",
+          "Margem_%": "0.83699459876543214",
+          "Categoria": "Brownie",
+          "ID_Produto": "PROD006",
+          "limitation": null,
+          "Produto_Ativo": "Sim",
+          "Status_Margem": "OK",
+          "Lucro_Unitario": "10.043935185185189",
+          "Preco_Sugerido": "4.8901620370370367",
+          "Margem_Minima_%": "0.7",
+          "Preco_Praticado": "12",
+          "Custo_Total_c_MO": "1.956064814814815",
+          "Custo_Total_s_MO": "1.885231481481481",
+          "Custo_Unit_Massa": "1.2352314814814811",
+          "Rendimento_Fornada": "24",
+          "operationallyComplete": true
+        },
+        "packagingQuantity": "1.000"
+      },
+      {
+        "sku": "PROD007",
+        "recipe": "RECIPE-BASE-001",
+        "cutSize": "5x5",
+        "filling": "Leite Ninho",
+        "sourceId": "RECIPE-BASE-001:PROD007",
+        "sourceHash": "dbc4ec7c7561b006f5624fa6d93d15cdd6767926655eb664ff3e4e65f311d7bb",
+        "packagingSku": "INS009",
+        "expectedYield": "24.000",
+        "sourcePayload": {
+          "Produto": "Brownie Recheado 5x5 (Leite Ninho)",
+          "Recheio": "Leite Ninho",
+          "Tamanho": "5x5",
+          "Margem_%": "0.76917408594491921",
+          "Categoria": "Brownie",
+          "ID_Produto": "PROD007",
+          "limitation": null,
+          "Produto_Ativo": "Sim",
+          "Status_Margem": "OK",
+          "Lucro_Unitario": "9.2300890313390305",
+          "Preco_Sugerido": "6.924777421652422",
+          "Margem_Minima_%": "0.7",
+          "Preco_Praticado": "12",
+          "Custo_Total_c_MO": "2.7699109686609691",
+          "Custo_Total_s_MO": "2.6990776353276349",
+          "Custo_Unit_Massa": "1.2352314814814811",
+          "Rendimento_Fornada": "24",
+          "operationallyComplete": true
+        },
+        "packagingQuantity": "1.000"
+      },
+      {
+        "sku": "PROD008",
+        "recipe": "RECIPE-BASE-001",
+        "cutSize": "5x5",
+        "filling": "Maracujá",
+        "sourceId": "RECIPE-BASE-001:PROD008",
+        "sourceHash": "ab603336e5c9f1e3ab3730331cd3ad0b61214a19fc78d9e03496b927beebd96e",
+        "packagingSku": "INS009",
+        "expectedYield": "24.000",
+        "sourcePayload": {
+          "Produto": "Brownie Recheado 5x5 (Maracujá)",
+          "Recheio": "Maracujá",
+          "Tamanho": "5x5",
+          "Margem_%": "0.81532793209876553",
+          "Categoria": "Brownie",
+          "ID_Produto": "PROD008",
+          "limitation": null,
+          "Produto_Ativo": "Sim",
+          "Status_Margem": "OK",
+          "Lucro_Unitario": "9.7839351851851859",
+          "Preco_Sugerido": "5.5401620370370361",
+          "Margem_Minima_%": "0.7",
+          "Preco_Praticado": "12",
+          "Custo_Total_c_MO": "2.216064814814815",
+          "Custo_Total_s_MO": "2.1452314814814808",
+          "Custo_Unit_Massa": "1.2352314814814811",
+          "Rendimento_Fornada": "24",
+          "operationallyComplete": true
+        },
+        "packagingQuantity": "1.000"
+      },
+      {
+        "sku": "PROD009",
+        "recipe": "RECIPE-BASE-001",
+        "cutSize": "7x7",
+        "filling": "Brigadeiro",
+        "sourceId": "RECIPE-BASE-001:PROD009",
+        "sourceHash": "6422940bc5921bf7bdae7da638ddde9fbd6717c6341343f48902cc1adbe198db",
+        "packagingSku": "INS010",
+        "expectedYield": "12.000",
+        "sourcePayload": {
+          "Produto": "Brownie Recheado 7x7 (Brigadeiro)",
+          "Recheio": "Brigadeiro",
+          "Tamanho": "7x7",
+          "Margem_%": "0.71928649237472775",
+          "Categoria": "Brownie",
+          "ID_Produto": "PROD009",
+          "limitation": null,
+          "Produto_Ativo": "Sim",
+          "Status_Margem": "OK",
+          "Lucro_Unitario": "12.22787037037037",
+          "Preco_Sugerido": "11.93032407407407",
+          "Margem_Minima_%": "0.7",
+          "Preco_Praticado": "17",
+          "Custo_Total_c_MO": "4.7721296296296289",
+          "Custo_Total_s_MO": "4.6304629629629632",
+          "Custo_Unit_Massa": "2.4704629629629631",
+          "Rendimento_Fornada": "12",
+          "operationallyComplete": true
+        },
+        "packagingQuantity": "1.000"
+      },
+      {
+        "sku": "PROD010",
+        "recipe": "RECIPE-BASE-001",
+        "cutSize": "7x7",
+        "filling": "Creme De Avelã",
+        "sourceId": "RECIPE-BASE-001:PROD010",
+        "sourceHash": "6faf090fc3acc878bc648170c0ec73e1bfc9156e80fda3a70eb4d0890eaf422a",
+        "packagingSku": "INS010",
+        "expectedYield": "12.000",
+        "sourcePayload": {
+          "Produto": "Brownie Recheado 7x7 (Creme de avelã)",
+          "Recheio": "Creme De Avelã",
+          "Tamanho": "7x7",
+          "Margem_%": "0.75458061002178645",
+          "Categoria": "Brownie",
+          "ID_Produto": "PROD010",
+          "limitation": null,
+          "Produto_Ativo": "Sim",
+          "Status_Margem": "OK",
+          "Lucro_Unitario": "12.82787037037037",
+          "Preco_Sugerido": "10.43032407407407",
+          "Margem_Minima_%": "0.7",
+          "Preco_Praticado": "17",
+          "Custo_Total_c_MO": "4.1721296296296293",
+          "Custo_Total_s_MO": "4.0304629629629627",
+          "Custo_Unit_Massa": "2.4704629629629631",
+          "Rendimento_Fornada": "12",
+          "operationallyComplete": true
+        },
+        "packagingQuantity": "1.000"
+      },
+      {
+        "sku": "PROD011",
+        "recipe": "RECIPE-BASE-001",
+        "cutSize": "7x7",
+        "filling": "Doce De Leite",
+        "sourceId": "RECIPE-BASE-001:PROD011",
+        "sourceHash": "c586adc0995392379835882e0aee9bed716ef19d18aa8e1d83a5abc32403d53d",
+        "packagingSku": "INS010",
+        "expectedYield": "12.000",
+        "sourcePayload": {
+          "Produto": "Brownie Recheado 7x7 (Doce de Leite)",
+          "Recheio": "Doce De Leite",
+          "Tamanho": "7x7",
+          "Margem_%": "0.74987472766884533",
+          "Categoria": "Brownie",
+          "ID_Produto": "PROD011",
+          "limitation": null,
+          "Produto_Ativo": "Sim",
+          "Status_Margem": "OK",
+          "Lucro_Unitario": "12.74787037037037",
+          "Preco_Sugerido": "10.630324074074069",
+          "Margem_Minima_%": "0.7",
+          "Preco_Praticado": "17",
+          "Custo_Total_c_MO": "4.2521296296296294",
+          "Custo_Total_s_MO": "4.1104629629629628",
+          "Custo_Unit_Massa": "2.4704629629629631",
+          "Rendimento_Fornada": "12",
+          "operationallyComplete": true
+        },
+        "packagingQuantity": "1.000"
+      },
+      {
+        "sku": "PROD012",
+        "recipe": "RECIPE-BASE-001",
+        "cutSize": "7x7",
+        "filling": "Goiabada",
+        "sourceId": "RECIPE-BASE-001:PROD012",
+        "sourceHash": "b641aa41a00d8b7148c4eb0e3b9b7ea6099bb4bd2790bdb13bb928bf6eb348b3",
+        "packagingSku": "INS010",
+        "expectedYield": "12.000",
+        "sourcePayload": {
+          "Produto": "Brownie Recheado 7x7 (Goiabada)",
+          "Recheio": "Goiabada",
+          "Tamanho": "7x7",
+          "Margem_%": "0.78516884531590403",
+          "Categoria": "Brownie",
+          "ID_Produto": "PROD012",
+          "limitation": null,
+          "Produto_Ativo": "Sim",
+          "Status_Margem": "OK",
+          "Lucro_Unitario": "13.347870370370369",
+          "Preco_Sugerido": "9.1303240740740748",
+          "Margem_Minima_%": "0.7",
+          "Preco_Praticado": "17",
+          "Custo_Total_c_MO": "3.6521296296296302",
+          "Custo_Total_s_MO": "3.5104629629629631",
+          "Custo_Unit_Massa": "2.4704629629629631",
+          "Rendimento_Fornada": "12",
+          "operationallyComplete": true
+        },
+        "packagingQuantity": "1.000"
+      },
+      {
+        "sku": "PROD013",
+        "recipe": "RECIPE-BASE-001",
+        "cutSize": "7x7",
+        "filling": "Leite Ninho",
+        "sourceId": "RECIPE-BASE-001:PROD013",
+        "sourceHash": "8b183a0a50448f6ff37e3b704e7b2af38b42a48f98a8cc714e9aa7b43c6b15c4",
+        "packagingSku": "INS010",
+        "expectedYield": "12.000",
+        "sourcePayload": {
+          "Produto": "Brownie Recheado 7x7 (Leite Ninho)",
+          "Recheio": "Leite Ninho",
+          "Tamanho": "7x7",
+          "Margem_%": "0.68942223898106247",
+          "Categoria": "Brownie",
+          "ID_Produto": "PROD013",
+          "limitation": null,
+          "Produto_Ativo": "Sim",
+          "Status_Margem": "Revisar",
+          "Lucro_Unitario": "11.720178062678061",
+          "Preco_Sugerido": "13.19955484330484",
+          "Margem_Minima_%": "0.7",
+          "Preco_Praticado": "17",
+          "Custo_Total_c_MO": "5.2798219373219366",
+          "Custo_Total_s_MO": "5.1381552706552709",
+          "Custo_Unit_Massa": "2.4704629629629631",
+          "Rendimento_Fornada": "12",
+          "operationallyComplete": true
+        },
+        "packagingQuantity": "1.000"
+      },
+      {
+        "sku": "PROD014",
+        "recipe": "RECIPE-BASE-001",
+        "cutSize": "7x7",
+        "filling": "Maracujá",
+        "sourceId": "RECIPE-BASE-001:PROD014",
+        "sourceHash": "3410ddaa518efe689b71da5f56a14ae06dc518f6e5bf0c0c4c8d395b2c32e660",
+        "packagingSku": "INS010",
+        "expectedYield": "12.000",
+        "sourcePayload": {
+          "Produto": "Brownie Recheado 7x7 (Maracujá)",
+          "Recheio": "Maracujá",
+          "Tamanho": "7x7",
+          "Margem_%": "0.75458061002178645",
+          "Categoria": "Brownie",
+          "ID_Produto": "PROD014",
+          "limitation": null,
+          "Produto_Ativo": "Sim",
+          "Status_Margem": "OK",
+          "Lucro_Unitario": "12.82787037037037",
+          "Preco_Sugerido": "10.43032407407407",
+          "Margem_Minima_%": "0.7",
+          "Preco_Praticado": "17",
+          "Custo_Total_c_MO": "4.1721296296296293",
+          "Custo_Total_s_MO": "4.0304629629629627",
+          "Custo_Unit_Massa": "2.4704629629629631",
+          "Rendimento_Fornada": "12",
+          "operationallyComplete": true
+        },
+        "packagingQuantity": "1.000"
+      },
+      {
+        "sku": "PROD015",
+        "recipe": "RECIPE-BASE-001",
+        "cutSize": "5x5",
+        "filling": null,
+        "sourceId": "RECIPE-BASE-001:PROD015",
+        "sourceHash": "a3ba5716a2f667e0ef2085493f0181de5bd90f34a3e043dd0b4822a1f5d39bc1",
+        "packagingSku": "INS007",
+        "expectedYield": "48.000",
+        "sourcePayload": {
+          "Produto": "Brownie Simples 5x5",
+          "Recheio": "Nenhum",
+          "Tamanho": "5x5",
+          "Margem_%": "0.8461612654320988",
+          "Categoria": "Brownie",
+          "ID_Produto": "PROD015",
+          "limitation": null,
+          "Produto_Ativo": "Sim",
+          "Status_Margem": "OK",
+          "Lucro_Unitario": "5.0769675925925926",
+          "Preco_Sugerido": "2.3075810185185182",
+          "Margem_Minima_%": "0.7",
+          "Preco_Praticado": "6",
+          "Custo_Total_c_MO": "0.92303240740740733",
+          "Custo_Total_s_MO": "0.88761574074074068",
+          "Custo_Unit_Massa": "0.61761574074074066",
+          "Rendimento_Fornada": "48",
+          "operationallyComplete": true
+        },
+        "packagingQuantity": "1.000"
+      },
+      {
+        "sku": "PROD016",
+        "recipe": "RECIPE-BASE-001",
+        "cutSize": "7x7",
+        "filling": null,
+        "sourceId": "RECIPE-BASE-001:PROD016",
+        "sourceHash": "a2c62e2fc850e4013775ba8d44ee2486c2026e9c6130485fcc5f3ad274d94e9a",
+        "packagingSku": "INS008",
+        "expectedYield": "24.000",
+        "sourcePayload": {
+          "Produto": "Brownie Simples 7x7",
+          "Recheio": "Nenhum",
+          "Tamanho": "7x7",
+          "Margem_%": "0.79799189814814819",
+          "Categoria": "Brownie",
+          "ID_Produto": "PROD016",
+          "limitation": null,
+          "Produto_Ativo": "Sim",
+          "Status_Margem": "OK",
+          "Lucro_Unitario": "6.3839351851851864",
+          "Preco_Sugerido": "4.0401620370370361",
+          "Margem_Minima_%": "0.7",
+          "Preco_Praticado": "8",
+          "Custo_Total_c_MO": "1.616064814814814",
+          "Custo_Total_s_MO": "1.5452314814814809",
+          "Custo_Unit_Massa": "1.2352314814814811",
+          "Rendimento_Fornada": "24",
+          "operationallyComplete": true
+        },
+        "packagingQuantity": "1.000"
+      },
+      {
+        "sku": "PROD017",
+        "recipe": "RECIPE-BASE-001",
+        "cutSize": null,
+        "filling": null,
+        "sourceId": "RECIPE-BASE-001:PROD017",
+        "sourceHash": "dd2c07f2f6d5021486b7e7fe34b1654f145f3e1adda64bac75d864086f411249",
+        "packagingSku": null,
+        "expectedYield": "19.250",
+        "sourcePayload": {
+          "Produto": "Kit 4 Bombons",
+          "Recheio": "Nenhum",
+          "Tamanho": "",
+          "Margem_%": "0.6673144139810806",
+          "Categoria": "Kit",
+          "ID_Produto": "PROD017",
+          "limitation": "Embalagem/cobertura pendentes; perfil de referencia sem homologacao operacional.",
+          "Produto_Ativo": "Sim",
+          "Status_Margem": "Revisar",
+          "Lucro_Unitario": "12.011659451659449",
+          "Preco_Sugerido": "14.970851370851371",
+          "Margem_Minima_%": "0.7",
+          "Preco_Praticado": "18",
+          "Custo_Total_c_MO": "5.9883405483405481",
+          "Custo_Total_s_MO": "5.9000288600288604",
+          "Custo_Unit_Massa": "1.5400288600288601",
+          "Rendimento_Fornada": "19.25",
+          "operationallyComplete": false
+        },
+        "packagingQuantity": null
+      }
+    ],
+    "components": [
+      {
+        "role": "filling",
+        "unit": "g",
+        "quantity": "20.000",
+        "sourceId": "OPDEC-FILLING-PROD003-V1",
+        "fillingSku": "INS013",
+        "productSku": "PROD003",
+        "quantityBasis": "per_finished_unit",
+        "sourcePayload": {
+          "role": "filling",
+          "unit": "g",
+          "source": {
+            "origin": "operational_decision",
+            "decision": "Quantidade aprovada pela usuária; não extraída do workbook.",
+            "decisionId": "OPDEC-PROFILE-FILLINGS-2026-001",
+            "workbookTypeReference": {
+              "fillingCell": "02_Cadastro_Produtos!E7",
+              "catalogCells": "03_Cadastro_Insumos!B17:E17",
+              "productCells": "02_Cadastro_Produtos!A7:E7"
+            }
+          },
+          "status": "approved_operational_decision",
+          "quantity": "20",
+          "sourceId": "OPDEC-FILLING-PROD003-V1",
+          "productSku": "PROD003",
+          "fillingSource": "Brigadeiro",
+          "quantityBasis": "per_finished_unit",
+          "productSourceId": "PROD003",
+          "fillingProductSku": "INS013",
+          "fillingProductName": "Brigadeiro (Recheio)"
+        }
+      },
+      {
+        "role": "filling",
+        "unit": "g",
+        "quantity": "20.000",
+        "sourceId": "OPDEC-FILLING-PROD004-V1",
+        "fillingSku": "INS016",
+        "productSku": "PROD004",
+        "quantityBasis": "per_finished_unit",
+        "sourcePayload": {
+          "role": "filling",
+          "unit": "g",
+          "source": {
+            "origin": "operational_decision",
+            "decision": "Quantidade aprovada pela usuária; não extraída do workbook.",
+            "decisionId": "OPDEC-PROFILE-FILLINGS-2026-001",
+            "workbookTypeReference": {
+              "fillingCell": "02_Cadastro_Produtos!E8",
+              "catalogCells": "03_Cadastro_Insumos!B20:E20",
+              "productCells": "02_Cadastro_Produtos!A8:E8"
+            }
+          },
+          "status": "approved_operational_decision",
+          "quantity": "20",
+          "sourceId": "OPDEC-FILLING-PROD004-V1",
+          "productSku": "PROD004",
+          "fillingSource": "Creme De Avelã",
+          "quantityBasis": "per_finished_unit",
+          "productSourceId": "PROD004",
+          "fillingProductSku": "INS016",
+          "fillingProductName": "Creme de Avelã (Recheio)"
+        }
+      },
+      {
+        "role": "filling",
+        "unit": "g",
+        "quantity": "20.000",
+        "sourceId": "OPDEC-FILLING-PROD005-V1",
+        "fillingSku": "INS014",
+        "productSku": "PROD005",
+        "quantityBasis": "per_finished_unit",
+        "sourcePayload": {
+          "role": "filling",
+          "unit": "g",
+          "source": {
+            "origin": "operational_decision",
+            "decision": "Quantidade aprovada pela usuária; não extraída do workbook.",
+            "decisionId": "OPDEC-PROFILE-FILLINGS-2026-001",
+            "workbookTypeReference": {
+              "fillingCell": "02_Cadastro_Produtos!E9",
+              "catalogCells": "03_Cadastro_Insumos!B18:E18",
+              "productCells": "02_Cadastro_Produtos!A9:E9"
+            }
+          },
+          "status": "approved_operational_decision",
+          "quantity": "20",
+          "sourceId": "OPDEC-FILLING-PROD005-V1",
+          "productSku": "PROD005",
+          "fillingSource": "Doce De Leite",
+          "quantityBasis": "per_finished_unit",
+          "productSourceId": "PROD005",
+          "fillingProductSku": "INS014",
+          "fillingProductName": "Doce de Leite (Recheio)"
+        }
+      },
+      {
+        "role": "filling",
+        "unit": "g",
+        "quantity": "20.000",
+        "sourceId": "OPDEC-FILLING-PROD006-V1",
+        "fillingSku": "INS017",
+        "productSku": "PROD006",
+        "quantityBasis": "per_finished_unit",
+        "sourcePayload": {
+          "role": "filling",
+          "unit": "g",
+          "source": {
+            "origin": "operational_decision",
+            "decision": "Quantidade aprovada pela usuária; não extraída do workbook.",
+            "decisionId": "OPDEC-PROFILE-FILLINGS-2026-001",
+            "workbookTypeReference": {
+              "fillingCell": "02_Cadastro_Produtos!E10",
+              "catalogCells": "03_Cadastro_Insumos!B21:E21",
+              "productCells": "02_Cadastro_Produtos!A10:E10"
+            }
+          },
+          "status": "approved_operational_decision",
+          "quantity": "20",
+          "sourceId": "OPDEC-FILLING-PROD006-V1",
+          "productSku": "PROD006",
+          "fillingSource": "Goiabada",
+          "quantityBasis": "per_finished_unit",
+          "productSourceId": "PROD006",
+          "fillingProductSku": "INS017",
+          "fillingProductName": "Goiabada (Recheio)"
+        }
+      },
+      {
+        "role": "filling",
+        "unit": "g",
+        "quantity": "20.000",
+        "sourceId": "OPDEC-FILLING-PROD007-V1",
+        "fillingSku": "INS015",
+        "productSku": "PROD007",
+        "quantityBasis": "per_finished_unit",
+        "sourcePayload": {
+          "role": "filling",
+          "unit": "g",
+          "source": {
+            "origin": "operational_decision",
+            "decision": "Quantidade aprovada pela usuária; não extraída do workbook.",
+            "decisionId": "OPDEC-PROFILE-FILLINGS-2026-001",
+            "workbookTypeReference": {
+              "fillingCell": "02_Cadastro_Produtos!E11",
+              "catalogCells": "03_Cadastro_Insumos!B19:E19",
+              "productCells": "02_Cadastro_Produtos!A11:E11"
+            }
+          },
+          "status": "approved_operational_decision",
+          "quantity": "20",
+          "sourceId": "OPDEC-FILLING-PROD007-V1",
+          "productSku": "PROD007",
+          "fillingSource": "Leite Ninho",
+          "quantityBasis": "per_finished_unit",
+          "productSourceId": "PROD007",
+          "fillingProductSku": "INS015",
+          "fillingProductName": "Leite Ninho (Recheio)"
+        }
+      },
+      {
+        "role": "filling",
+        "unit": "g",
+        "quantity": "20.000",
+        "sourceId": "OPDEC-FILLING-PROD008-V1",
+        "fillingSku": "INS018",
+        "productSku": "PROD008",
+        "quantityBasis": "per_finished_unit",
+        "sourcePayload": {
+          "role": "filling",
+          "unit": "g",
+          "source": {
+            "origin": "operational_decision",
+            "decision": "Quantidade aprovada pela usuária; não extraída do workbook.",
+            "decisionId": "OPDEC-PROFILE-FILLINGS-2026-001",
+            "workbookTypeReference": {
+              "fillingCell": "02_Cadastro_Produtos!E12",
+              "catalogCells": "03_Cadastro_Insumos!B22:E22",
+              "productCells": "02_Cadastro_Produtos!A12:E12"
+            }
+          },
+          "status": "approved_operational_decision",
+          "quantity": "20",
+          "sourceId": "OPDEC-FILLING-PROD008-V1",
+          "productSku": "PROD008",
+          "fillingSource": "Maracujá",
+          "quantityBasis": "per_finished_unit",
+          "productSourceId": "PROD008",
+          "fillingProductSku": "INS018",
+          "fillingProductName": "Maracujá (Recheio)"
+        }
+      },
+      {
+        "role": "filling",
+        "unit": "g",
+        "quantity": "40.000",
+        "sourceId": "OPDEC-FILLING-PROD009-V1",
+        "fillingSku": "INS013",
+        "productSku": "PROD009",
+        "quantityBasis": "per_finished_unit",
+        "sourcePayload": {
+          "role": "filling",
+          "unit": "g",
+          "source": {
+            "origin": "operational_decision",
+            "decision": "Quantidade aprovada pela usuária; não extraída do workbook.",
+            "decisionId": "OPDEC-PROFILE-FILLINGS-2026-001",
+            "workbookTypeReference": {
+              "fillingCell": "02_Cadastro_Produtos!E13",
+              "catalogCells": "03_Cadastro_Insumos!B17:E17",
+              "productCells": "02_Cadastro_Produtos!A13:E13"
+            }
+          },
+          "status": "approved_operational_decision",
+          "quantity": "40",
+          "sourceId": "OPDEC-FILLING-PROD009-V1",
+          "productSku": "PROD009",
+          "fillingSource": "Brigadeiro",
+          "quantityBasis": "per_finished_unit",
+          "productSourceId": "PROD009",
+          "fillingProductSku": "INS013",
+          "fillingProductName": "Brigadeiro (Recheio)"
+        }
+      },
+      {
+        "role": "filling",
+        "unit": "g",
+        "quantity": "40.000",
+        "sourceId": "OPDEC-FILLING-PROD010-V1",
+        "fillingSku": "INS016",
+        "productSku": "PROD010",
+        "quantityBasis": "per_finished_unit",
+        "sourcePayload": {
+          "role": "filling",
+          "unit": "g",
+          "source": {
+            "origin": "operational_decision",
+            "decision": "Quantidade aprovada pela usuária; não extraída do workbook.",
+            "decisionId": "OPDEC-PROFILE-FILLINGS-2026-001",
+            "workbookTypeReference": {
+              "fillingCell": "02_Cadastro_Produtos!E14",
+              "catalogCells": "03_Cadastro_Insumos!B20:E20",
+              "productCells": "02_Cadastro_Produtos!A14:E14"
+            }
+          },
+          "status": "approved_operational_decision",
+          "quantity": "40",
+          "sourceId": "OPDEC-FILLING-PROD010-V1",
+          "productSku": "PROD010",
+          "fillingSource": "Creme De Avelã",
+          "quantityBasis": "per_finished_unit",
+          "productSourceId": "PROD010",
+          "fillingProductSku": "INS016",
+          "fillingProductName": "Creme de Avelã (Recheio)"
+        }
+      },
+      {
+        "role": "filling",
+        "unit": "g",
+        "quantity": "40.000",
+        "sourceId": "OPDEC-FILLING-PROD011-V1",
+        "fillingSku": "INS014",
+        "productSku": "PROD011",
+        "quantityBasis": "per_finished_unit",
+        "sourcePayload": {
+          "role": "filling",
+          "unit": "g",
+          "source": {
+            "origin": "operational_decision",
+            "decision": "Quantidade aprovada pela usuária; não extraída do workbook.",
+            "decisionId": "OPDEC-PROFILE-FILLINGS-2026-001",
+            "workbookTypeReference": {
+              "fillingCell": "02_Cadastro_Produtos!E15",
+              "catalogCells": "03_Cadastro_Insumos!B18:E18",
+              "productCells": "02_Cadastro_Produtos!A15:E15"
+            }
+          },
+          "status": "approved_operational_decision",
+          "quantity": "40",
+          "sourceId": "OPDEC-FILLING-PROD011-V1",
+          "productSku": "PROD011",
+          "fillingSource": "Doce De Leite",
+          "quantityBasis": "per_finished_unit",
+          "productSourceId": "PROD011",
+          "fillingProductSku": "INS014",
+          "fillingProductName": "Doce de Leite (Recheio)"
+        }
+      },
+      {
+        "role": "filling",
+        "unit": "g",
+        "quantity": "40.000",
+        "sourceId": "OPDEC-FILLING-PROD012-V1",
+        "fillingSku": "INS017",
+        "productSku": "PROD012",
+        "quantityBasis": "per_finished_unit",
+        "sourcePayload": {
+          "role": "filling",
+          "unit": "g",
+          "source": {
+            "origin": "operational_decision",
+            "decision": "Quantidade aprovada pela usuária; não extraída do workbook.",
+            "decisionId": "OPDEC-PROFILE-FILLINGS-2026-001",
+            "workbookTypeReference": {
+              "fillingCell": "02_Cadastro_Produtos!E16",
+              "catalogCells": "03_Cadastro_Insumos!B21:E21",
+              "productCells": "02_Cadastro_Produtos!A16:E16"
+            }
+          },
+          "status": "approved_operational_decision",
+          "quantity": "40",
+          "sourceId": "OPDEC-FILLING-PROD012-V1",
+          "productSku": "PROD012",
+          "fillingSource": "Goiabada",
+          "quantityBasis": "per_finished_unit",
+          "productSourceId": "PROD012",
+          "fillingProductSku": "INS017",
+          "fillingProductName": "Goiabada (Recheio)"
+        }
+      },
+      {
+        "role": "filling",
+        "unit": "g",
+        "quantity": "40.000",
+        "sourceId": "OPDEC-FILLING-PROD013-V1",
+        "fillingSku": "INS015",
+        "productSku": "PROD013",
+        "quantityBasis": "per_finished_unit",
+        "sourcePayload": {
+          "role": "filling",
+          "unit": "g",
+          "source": {
+            "origin": "operational_decision",
+            "decision": "Quantidade aprovada pela usuária; não extraída do workbook.",
+            "decisionId": "OPDEC-PROFILE-FILLINGS-2026-001",
+            "workbookTypeReference": {
+              "fillingCell": "02_Cadastro_Produtos!E17",
+              "catalogCells": "03_Cadastro_Insumos!B19:E19",
+              "productCells": "02_Cadastro_Produtos!A17:E17"
+            }
+          },
+          "status": "approved_operational_decision",
+          "quantity": "40",
+          "sourceId": "OPDEC-FILLING-PROD013-V1",
+          "productSku": "PROD013",
+          "fillingSource": "Leite Ninho",
+          "quantityBasis": "per_finished_unit",
+          "productSourceId": "PROD013",
+          "fillingProductSku": "INS015",
+          "fillingProductName": "Leite Ninho (Recheio)"
+        }
+      },
+      {
+        "role": "filling",
+        "unit": "g",
+        "quantity": "40.000",
+        "sourceId": "OPDEC-FILLING-PROD014-V1",
+        "fillingSku": "INS018",
+        "productSku": "PROD014",
+        "quantityBasis": "per_finished_unit",
+        "sourcePayload": {
+          "role": "filling",
+          "unit": "g",
+          "source": {
+            "origin": "operational_decision",
+            "decision": "Quantidade aprovada pela usuária; não extraída do workbook.",
+            "decisionId": "OPDEC-PROFILE-FILLINGS-2026-001",
+            "workbookTypeReference": {
+              "fillingCell": "02_Cadastro_Produtos!E18",
+              "catalogCells": "03_Cadastro_Insumos!B22:E22",
+              "productCells": "02_Cadastro_Produtos!A18:E18"
+            }
+          },
+          "status": "approved_operational_decision",
+          "quantity": "40",
+          "sourceId": "OPDEC-FILLING-PROD014-V1",
+          "productSku": "PROD014",
+          "fillingSource": "Maracujá",
+          "quantityBasis": "per_finished_unit",
+          "productSourceId": "PROD014",
+          "fillingProductSku": "INS018",
+          "fillingProductName": "Maracujá (Recheio)"
+        }
+      }
+    ],
+    "requirements": [
+      {
+        "type": "energy",
+        "unit": "kWh",
+        "quantity": "1.000",
+        "sourcePayload": {
+          "note": "Usar a tarifa atual cadastrada em novos lotes; este valor é apenas auditoria da fonte.",
+          "type": "energy",
+          "unit": "kWh",
+          "source": {
+            "Unidade": "kWh",
+            "Item_Utilizado": "Energia Forno Elétrico (1kWh)",
+            "Consumo_Receita": "1",
+            "Custo_Proporcional": "0.04"
+          },
+          "quantity": "1",
+          "sourceName": "Energia Forno Elétrico (1kWh)",
+          "historicalCost": "0.04"
+        },
+        "historicalCost": null
+      },
+      {
+        "type": "labor",
+        "unit": "hours",
+        "quantity": "2.000",
+        "sourcePayload": {
+          "note": "Usar a tarifa atual cadastrada em novos lotes; este valor é apenas auditoria da fonte.",
+          "type": "labor",
+          "unit": "hours",
+          "source": {
+            "Unidade": "horas",
+            "Item_Utilizado": "Custo de Mão de Obra (2 horas por fornada)",
+            "Consumo_Receita": "2",
+            "Custo_Proporcional": "1.7"
+          },
+          "quantity": "2",
+          "sourceName": "Custo de Mão de Obra (2 horas por fornada)",
+          "historicalCost": "1.70"
+        },
+        "historicalCost": null
+      }
+    ],
+    "auditEntityMatches": 43
+  },
+  "schemaAfter": [
+    {
+      "section": 0,
+      "records": 38,
+      "digest": "f3a25527e72ac58338b8d61d00a66fdd27d25086bb65517499168455ff4c50b7"
+    },
+    {
+      "section": 1,
+      "records": 444,
+      "digest": "568e88d6c14cb1fbf94e34a8c19b7832d35d8173f9dfc8cfd6a936658809d19b"
+    },
+    {
+      "section": 2,
+      "records": 152,
+      "digest": "00af5e8ecc3c4e9fed9b0f450163e64aaf627330e6f139be7be1936625eeaf6e"
+    },
+    {
+      "section": 3,
+      "records": 112,
+      "digest": "92a99c1e570553db3720fd17b519860e2879d7c3f553ccbe268c9087497a9378"
+    },
+    {
+      "section": 4,
+      "records": 21,
+      "digest": "063344b07725d88a73c41dad7a2c05473dea48fc3edc6248139141e2e0b7dff0"
+    },
+    {
+      "section": 5,
+      "records": 2,
+      "digest": "6190ae5aac3b2a3760529780fdd3434143254adde78b64bcc4b50a2a422ab88c"
+    },
+    {
+      "section": 6,
+      "records": 2,
+      "digest": "d69c9ae03897474ccaa0ddc3d36f2fc3f5f455e3ead838ec0fd1275349b986d1"
+    },
+    {
+      "section": 7,
+      "records": 37,
+      "digest": "afcdb7dc8f991202ca54a5e3cc720ceabb46c3141c6fc1965f0adfa9fd3ef1bc"
+    },
+    {
+      "section": 8,
+      "records": 0,
+      "digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    }
+  ],
+  "checkedAt": [
+    {
+      "checked_at": "2026-10-18 15:03:03.883098+00",
+      "read_only": "on"
+    }
+  ]
+}

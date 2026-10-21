@@ -1,3 +1,4 @@
+import { ProfitSummary } from '#/components/ProfitSummary'
 import { useState } from 'react'
 import {
   createFileRoute,
@@ -237,7 +238,7 @@ function FinancialPage() {
           value={formatBrlMoney(overview.accrualMargins.grossMargin)}
         />
         <Metric
-          label="Fluxo de caixa"
+          label="Recebimentos líquidos de taxas e reembolsos"
           value={formatBrlMoney(overview.currentSnapshot.cashFlow)}
         />
         <Metric
@@ -246,6 +247,7 @@ function FinancialPage() {
         />
       </div>
 
+      <ProfitSummary data={overview.managerial} />
       <section className="mt-6 rounded-2xl border border-[#ecdfd4] bg-white p-5">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
@@ -474,6 +476,7 @@ function FinancialPage() {
                           missing_allocation: 'alocação FIFO ausente',
                           quantity_mismatch: 'quantidade FIFO divergente',
                           invalid_quantity: 'quantidade inválida',
+                          missing_sale_reference: 'venda de origem ausente',
                         }[row.code]
                       }
                     </li>
@@ -792,7 +795,7 @@ function FinancialPending() {
   )
 }
 
-function FinancialError({ error }: { error: Error }) {
+function FinancialError({ error }: { error: unknown }) {
   const router = useRouter()
   return (
     <ManagementLayout
@@ -800,7 +803,10 @@ function FinancialError({ error }: { error: Error }) {
       description="Não foi possível carregar o período."
     >
       <div className="rounded-2xl border border-[#e7c9b8] bg-[#fff5ed] p-5 text-sm text-[#75411f]">
-        <p>{error.message || 'Tente novamente em alguns instantes.'}</p>
+        <p>
+          {(error instanceof Error && error.message) ||
+            'Tente novamente em alguns instantes.'}
+        </p>
         <button
           className="mt-3 rounded-lg border border-[#75411f] px-3 py-2 text-xs font-bold"
           onClick={() => void router.invalidate()}

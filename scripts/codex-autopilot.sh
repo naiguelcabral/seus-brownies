@@ -50,7 +50,7 @@ preflight() {
 next_package() { awk -F '|' -v attempted="$ATTEMPTED" '/^\| A[0-9]+ / { gsub(/^[[:space:]]+|[[:space:]]+$/, "", $5); gsub(/^[[:space:]]+|[[:space:]]+$/, "", $2); if ($5 == "ready" && index(" " attempted " ", " " $2 " ") == 0) { gsub(/^[[:space:]]+|[[:space:]]+$/, "", $4); print $2 "|" $4; exit } }' "$QUEUE"; }
 validation_contract() {
   case "$1" in
-    documental) printf '%s' 'Execute Prettier direcionado, git diff --check e verificações documentais previstas. Execute npm test e lint somente se o contrato do pacote os exigir. Não execute build nem check global.' ;;
+    documental) printf '%s' 'Para Markdown, revise links e execute git diff --check; não há formatação automática global da documentação. Para formatos suportados alterados, execute Oxfmt direcionado. Execute verificações documentais previstas e npm test/lint somente se o contrato do pacote os exigir. Não execute build nem check global.' ;;
     codigo) printf '%s' 'Execute testes direcionados, npm test e lint conforme o contrato. Build só é permitido por mecanismo previamente comprovado como isolado de arquivos secretos; caso seja obrigatório e não exista esse mecanismo, termine validation-blocked.' ;;
     codigo-build-obrigatorio) printf '%s' 'Build obrigatório sem mecanismo isolado comprovado: o controlador bloqueará este pacote antes de chamar o agente.' ;;
     auditoria-leitura) printf '%s' 'Execute somente comandos de inspeção previstos no contrato. Não altere estado externo, não escreva em banco ou HML e não execute build.' ;;

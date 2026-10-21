@@ -1,3 +1,5 @@
+import type { CostedMovement } from '../../src/features/production/calculations'
+import { requireDefined } from '../../src/lib/required-value'
 import { getTableName } from 'drizzle-orm'
 import type { SQL, Table } from 'drizzle-orm'
 import { PgDialect } from 'drizzle-orm/pg-core'
@@ -10,9 +12,18 @@ type Write = {
 }
 export function createProductionDrizzleMock(
   options: {
+    recipeQuantity?: string
+    movements?: CostedMovement[]
     available?: string
     status?: string
     failAt?: string
+    missingBatch?: boolean
+    components?: Record<string, unknown>[]
+    componentMovements?: Record<string, unknown>[]
+    profilePackagingId?: number
+    recipePayload?: Record<string, unknown>
+    recoveredWeight?: string
+    coProductQuantity?: string
   } = {},
 ) {
   const batch = {
@@ -21,17 +32,30 @@ export function createProductionDrizzleMock(
     recipeVersionId: 1,
     plannedFor: '2026-10-08',
     recipeMultiplier: '1.000',
-    sourcePayload: {},
+    sourcePayload: { bordinhasWeightGrams: options.recoveredWeight },
     notes: null,
   }
   const rows: Record<string, Record<string, unknown>[]> = {
-    production_batches: [batch],
+    production_batches: options.missingBatch ? [] : [batch],
     production_batch_outputs: [
       { id: 11, productId: 3, plannedQuantity: '12.000', role: 'primary' },
-      { id: 12, productId: 2, plannedQuantity: '6.000', role: 'co_product' },
+      {
+        id: 12,
+        productId: 2,
+        plannedQuantity: options.coProductQuantity ?? '6.000',
+        role: 'co_product',
+      },
     ],
     production_batch_losses: [],
-    recipe_versions: [{ id: 1, name: 'Base', status: 'active', version: 1 }],
+    recipe_versions: [
+      {
+        id: 1,
+        name: 'Base',
+        status: 'active',
+        version: 1,
+        sourcePayload: options.recipePayload ?? {},
+      },
+    ],
     production_profiles: [
       {
         id: 1,
@@ -41,7 +65,7 @@ export function createProductionDrizzleMock(
         productName: 'Brownie',
         productUnit: 'unit',
         productType: 'finished_product',
-        packagingId: null,
+        packagingId: options.profilePackagingId ?? null,
       },
       {
         id: 2,
@@ -59,14 +83,14 @@ export function createProductionDrizzleMock(
         recipeItemId: 1,
         id: 10,
         productId: 10,
-        quantity: '1.000',
+        quantity: options.recipeQuantity ?? '1.000',
         sku: 'ING001',
         name: 'Chocolate',
         unit: 'kg',
         type: 'ingredient',
       },
     ],
-    production_profile_components: [],
+    production_profile_components: options.components ?? [],
     recipe_operational_requirements: [
       { type: 'energy', quantity: '1.000', unit: 'kwh' },
       { type: 'labor', quantity: '1.000', unit: 'hour' },
@@ -80,7 +104,10 @@ export function createProductionDrizzleMock(
       },
       { id: 2, type: 'labor', unitAmount: '2.00', effectiveFrom: '2026-10-01' },
     ],
-    stock_movements: [
+    stock_movements: options.movements?.map((movement) => ({
+      ...movement,
+      productId: 10,
+    })) ?? [
       {
         productId: 10,
         quantityDelta: options.available ?? '10.000',
@@ -89,6 +116,9 @@ export function createProductionDrizzleMock(
       },
     ],
   }
+  requireDefined(rows.stock_movements).push(
+    ...(options.componentMovements ?? []),
+  )
   const journal: Array<{ kind: string; table?: string; sql?: string }> = []
   const committed: Write[] = []
   let pending: Write[] = []
@@ -110,7 +140,7 @@ export function createProductionDrizzleMock(
             where: () => query,
             orderBy: () => query,
             then: (resolve: (value: Record<string, unknown>[]) => unknown) =>
-              resolve(rows[name]),
+              resolve(requireDefined(rows[name])),
           }
           return query
         },
@@ -144,7 +174,9 @@ export function createProductionDrizzleMock(
               const params = dialect.sqlToQuery(predicate).params
               const target =
                 name === 'production_batch_outputs'
-                  ? rows[name].find((row) => row.productId === params[1])
+                  ? requireDefined(rows[name]).find(
+                      (row) => row.productId === params[1],
+                    )
                   : batch
               if (!target) throw new Error('Unexpected update target')
               pending.push({

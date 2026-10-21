@@ -1,4 +1,10 @@
 import { useState } from 'react'
+import {
+  ProductEditor,
+  typeLabels,
+  unitLabels,
+} from '#/features/catalog/ProductEditor'
+import type { ProductFormValues } from '#/features/catalog/ProductEditor'
 import { Pencil, Plus, Power } from 'lucide-react'
 import { createFileRoute, useNavigate, useRouter } from '@tanstack/react-router'
 import { useServerFn } from '@tanstack/react-start'
@@ -43,35 +49,6 @@ export const Route = createFileRoute('/produtos')({
 })
 
 type Product = Awaited<ReturnType<typeof listProducts>>['products'][number]
-type Category = Awaited<ReturnType<typeof listCategories>>[number]
-type ProductType = 'ingredient' | 'packaging' | 'finished_product'
-type ProductFormValues = {
-  name: string
-  sku: string
-  type: ProductType
-  unit: 'g' | 'kg' | 'ml' | 'l' | 'm' | 'unit'
-  categoryId: number | null
-  description: string
-  salePrice: string
-  reorderPoint: string
-  preferredSupplierName: string
-}
-
-const typeLabels: Record<ProductType, string> = {
-  ingredient: 'Ingrediente',
-  packaging: 'Embalagem',
-  finished_product: 'Produto final',
-}
-
-const unitLabels = {
-  g: 'g',
-  kg: 'kg',
-  ml: 'ml',
-  l: 'l',
-  m: 'm',
-  unit: 'unidade',
-}
-
 function ProductsPage() {
   const { history, categories } = Route.useLoaderData()
   const search = Route.useSearch()
@@ -83,22 +60,26 @@ function ProductsPage() {
   const update = useServerFn(updateProduct)
   const setActive = useServerFn(setProductActive)
   const [editing, setEditing] = useState<Product | null>(null)
+  const [editorOpen, setEditorOpen] = useState(false)
   const [notice, setNotice] = useState<string | null>(null)
 
   async function save(values: ProductFormValues) {
-    setNotice(null)
+    if (editing) {
+      await update({ data: { id: editing.id, ...values } })
+    } else {
+      await create({ data: values })
+    }
+    setNotice(
+      editing
+        ? 'Produto atualizado com sucesso.'
+        : 'Produto criado com sucesso.',
+    )
+    setEditorOpen(false)
+    setEditing(null)
     try {
-      if (editing) {
-        await update({ data: { id: editing.id, ...values } })
-        setNotice('Produto atualizado com sucesso.')
-      } else {
-        await create({ data: values })
-        setNotice('Produto criado com sucesso.')
-      }
-      setEditing(null)
       await router.invalidate()
-    } catch (error) {
-      setNotice(readableError(error))
+    } catch {
+      setNotice('Produto salvo. Atualize a página para conferir a lista.')
     }
   }
 
@@ -120,19 +101,38 @@ function ProductsPage() {
       title="Produtos"
       description="Cadastre ingredientes, embalagens e produtos finais. Nenhum item é excluído: você pode desativá-lo quando não fizer mais parte da operação."
     >
-      <div
-        className={
-          canWrite
-            ? 'grid gap-6 xl:grid-cols-[minmax(0,1fr)_390px]'
-            : 'grid gap-6'
-        }
-      >
+      {notice ? (
+        <p
+          role="status"
+          className="mb-4 rounded-xl border border-[#ecdfd4] bg-[#fff5e7] p-4 text-sm text-[#75411f]"
+        >
+          {notice}
+        </p>
+      ) : null}
+      <div className="grid gap-6">
         <section className="overflow-hidden rounded-2xl border border-[#ecdfd4] bg-white">
-          <div className="flex items-center justify-between border-b border-[#f0e5dc] px-5 py-4">
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#f0e5dc] px-5 py-4">
             <h2 className="font-bold">Produtos cadastrados</h2>
-            <span className="rounded-full bg-[#f8eee4] px-2.5 py-1 text-xs font-bold text-[#92522e]">
-              {history.total}
-            </span>
+            <div className="flex flex-wrap items-center gap-3">
+              <span className="rounded-full bg-[#f8eee4] px-2.5 py-1 text-xs font-bold text-[#92522e]">
+                {history.total}
+              </span>
+              {canWrite ? (
+                <button
+                  type="button"
+                  aria-haspopup="dialog"
+                  onClick={() => {
+                    setEditing(null)
+                    setNotice(null)
+                    setEditorOpen(true)
+                  }}
+                  className="inline-flex items-center gap-2 rounded-lg bg-[#4a2114] px-4 py-2.5 text-sm font-bold text-white hover:bg-[#653321]"
+                >
+                  <Plus size={17} aria-hidden="true" />
+                  Adicionar produto
+                </button>
+              ) : null}
+            </div>
           </div>
           <form
             className="flex flex-wrap items-end gap-3 border-b border-[#f0e5dc] px-5 py-4"
@@ -256,7 +256,12 @@ function ProductsPage() {
                             <>
                               <button
                                 type="button"
-                                onClick={() => setEditing(product)}
+                                aria-haspopup="dialog"
+                                onClick={() => {
+                                  setEditing(product)
+                                  setNotice(null)
+                                  setEditorOpen(true)
+                                }}
                                 className="rounded-lg border border-[#e6d4c5] p-2 text-[#72462f] hover:bg-[#fff8f2]"
                                 aria-label={`Editar ${product.name}`}
                               >
@@ -326,14 +331,16 @@ function ProductsPage() {
             </div>
           </nav>
         </section>
-        {canWrite ? (
-          <ProductForm
+        {canWrite && editorOpen ? (
+          <ProductEditor
             key={editing?.id ?? 'new'}
             product={editing}
             categories={categories}
-            onCancel={() => setEditing(null)}
+            onCancel={() => {
+              setEditorOpen(false)
+              setEditing(null)
+            }}
             onSave={save}
-            notice={notice}
           />
         ) : null}
       </div>
@@ -357,7 +364,7 @@ function ProductsPending() {
   )
 }
 
-function ProductsError({ error }: { error: Error }) {
+function ProductsError({ error }: { error: unknown }) {
   const router = useRouter()
   return (
     <ManagementLayout
@@ -365,7 +372,10 @@ function ProductsError({ error }: { error: Error }) {
       description="Não foi possível carregar o catálogo de produtos."
     >
       <div className="rounded-2xl border border-[#e7c9b8] bg-[#fff5ed] p-5 text-sm text-[#75411f]">
-        <p>{error.message || 'Tente novamente em alguns instantes.'}</p>
+        <p>
+          {(error instanceof Error && error.message) ||
+            'Tente novamente em alguns instantes.'}
+        </p>
         <button
           type="button"
           className="mt-3 rounded-lg border border-[#75411f] px-3 py-2 text-xs font-bold"
@@ -378,255 +388,6 @@ function ProductsError({ error }: { error: Error }) {
   )
 }
 
-function ProductForm({
-  product,
-  categories,
-  onCancel,
-  onSave,
-  notice,
-}: {
-  product: Product | null
-  categories: Category[]
-  onCancel: () => void
-  onSave: (values: ProductFormValues) => Promise<void>
-  notice: string | null
-}) {
-  const [values, setValues] = useState<ProductFormValues>({
-    name: product?.name ?? '',
-    sku: product?.sku ?? '',
-    type: product?.type ?? 'finished_product',
-    unit: product?.unit ?? 'unit',
-    categoryId: product?.categoryId ?? null,
-    description: product?.description ?? '',
-    salePrice: product?.salePrice ?? '',
-    reorderPoint: product?.reorderPoint ?? '',
-    preferredSupplierName: product?.preferredSupplierName ?? '',
-  })
-  const [error, setError] = useState<string | null>(null)
-  const [submitting, setSubmitting] = useState(false)
-  const priceRequired = values.type === 'finished_product'
-
-  async function submit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault()
-    if (values.name.trim().length < 2 || values.sku.trim().length < 2) {
-      setError('Preencha nome e SKU com pelo menos 2 caracteres.')
-      return
-    }
-    if (priceRequired && !values.salePrice.trim()) {
-      setError('Informe o preço de venda do produto final.')
-      return
-    }
-    setError(null)
-    setSubmitting(true)
-    await onSave(values)
-    setSubmitting(false)
-  }
-
-  return (
-    <aside className="h-fit rounded-2xl border border-[#ecdfd4] bg-white p-5">
-      <div className="flex items-center gap-2">
-        <span className="rounded-lg bg-[#fff0e3] p-2 text-[#a64f23]">
-          <Plus size={17} />
-        </span>
-        <h2 className="font-bold">
-          {product ? 'Editar produto' : 'Novo produto'}
-        </h2>
-      </div>
-      <form className="mt-5 space-y-4" onSubmit={submit} noValidate>
-        <Input
-          label="Nome"
-          required
-          value={values.name}
-          onChange={(name) => setValues({ ...values, name })}
-          maxLength={120}
-          autoFocus
-        />
-        <Input
-          label="SKU"
-          required
-          value={values.sku}
-          onChange={(sku) => setValues({ ...values, sku: sku.toUpperCase() })}
-          maxLength={64}
-        />
-        <Select
-          label="Tipo"
-          value={values.type}
-          onChange={(type) =>
-            setValues({ ...values, type: type as ProductType })
-          }
-        >
-          {Object.entries(typeLabels).map(([value, label]) => (
-            <option key={value} value={value}>
-              {label}
-            </option>
-          ))}
-        </Select>
-        <Select
-          label="Unidade de medida"
-          value={values.unit}
-          onChange={(unit) =>
-            setValues({ ...values, unit: unit as ProductFormValues['unit'] })
-          }
-        >
-          {Object.entries(unitLabels).map(([value, label]) => (
-            <option key={value} value={value}>
-              {label}
-            </option>
-          ))}
-        </Select>
-        <Select
-          label="Categoria"
-          value={values.categoryId ?? ''}
-          onChange={(categoryId) =>
-            setValues({
-              ...values,
-              categoryId: categoryId ? Number(categoryId) : null,
-            })
-          }
-        >
-          <option value="">Sem categoria</option>
-          {categories
-            .filter(
-              (category) =>
-                category.isActive || category.id === product?.categoryId,
-            )
-            .map((category) => (
-              <option key={category.id} value={category.id}>
-                {category.name}
-                {category.isActive ? '' : ' (inativa)'}
-              </option>
-            ))}
-        </Select>
-        <label className="block text-sm font-bold text-[#573524]">
-          Descrição
-          <textarea
-            value={values.description}
-            onChange={(event) =>
-              setValues({ ...values, description: event.target.value })
-            }
-            className="field mt-1.5 min-h-20 resize-y"
-            maxLength={1000}
-          />
-        </label>
-        <Input
-          label={`Preço de venda${priceRequired ? ' *' : ' (opcional)'}`}
-          value={values.salePrice}
-          onChange={(salePrice) => setValues({ ...values, salePrice })}
-          placeholder="Ex.: 12,50"
-          inputMode="decimal"
-        />
-        <p className="-mt-2 text-xs text-[#896d5b]">
-          {priceRequired
-            ? 'Obrigatório para produto final.'
-            : 'Opcional para ingredientes e embalagens.'}
-        </p>
-        <Input
-          label="Ponto de reposição (opcional)"
-          value={values.reorderPoint}
-          onChange={(reorderPoint) => setValues({ ...values, reorderPoint })}
-          placeholder={`Na unidade ${unitLabels[values.unit]}`}
-          inputMode="decimal"
-        />
-        <p className="-mt-2 text-xs text-[#896d5b]">
-          O alerta compara o saldo calculado a este limite; não altera estoque.
-        </p>
-        <Input
-          label="Fornecedor padrão (opcional)"
-          value={values.preferredSupplierName}
-          onChange={(preferredSupplierName) =>
-            setValues({ ...values, preferredSupplierName })
-          }
-          maxLength={160}
-          placeholder="Referência para a próxima compra"
-        />
-        <p className="-mt-2 text-xs text-[#896d5b]">
-          Campo informativo. Cada compra mantém o fornecedor realmente usado.
-        </p>
-        {error ? (
-          <p className="rounded-lg bg-red-50 p-3 text-sm font-medium text-red-700">
-            {error}
-          </p>
-        ) : null}
-        {notice ? (
-          <p className="rounded-lg bg-[#fff5e7] p-3 text-sm text-[#75411f]">
-            {notice}
-          </p>
-        ) : null}
-        <div className="flex gap-2 pt-1">
-          <button
-            disabled={submitting}
-            className="rounded-lg bg-[#4a2114] px-4 py-2.5 text-sm font-bold text-white disabled:opacity-60"
-          >
-            {submitting
-              ? 'Salvando...'
-              : product
-                ? 'Salvar alterações'
-                : 'Criar produto'}
-          </button>
-          {product ? (
-            <button
-              type="button"
-              onClick={onCancel}
-              className="rounded-lg px-3 py-2 text-sm font-bold text-[#795747]"
-            >
-              Cancelar
-            </button>
-          ) : null}
-        </div>
-      </form>
-    </aside>
-  )
-}
-
-function Input({
-  label,
-  required = false,
-  value,
-  onChange,
-  ...props
-}: {
-  label: string
-  required?: boolean
-  value: string
-  onChange: (value: string) => void
-} & Omit<React.InputHTMLAttributes<HTMLInputElement>, 'value' | 'onChange'>) {
-  return (
-    <label className="block text-sm font-bold text-[#573524]">
-      {label}
-      {required ? ' *' : ''}
-      <input
-        value={value}
-        onChange={(event) => onChange(event.target.value)}
-        className="field mt-1.5"
-        {...props}
-      />
-    </label>
-  )
-}
-function Select({
-  label,
-  value,
-  onChange,
-  children,
-}: {
-  label: string
-  value: string | number
-  onChange: (value: string) => void
-  children: React.ReactNode
-}) {
-  return (
-    <label className="block text-sm font-bold text-[#573524]">
-      {label}
-      <select
-        value={value}
-        onChange={(event) => onChange(event.target.value)}
-        className="field mt-1.5"
-      >
-        {children}
-      </select>
-    </label>
-  )
-}
 function Status({ active }: { active: boolean }) {
   return (
     <span

@@ -1,4 +1,4 @@
-export const authAuditActions = [
+const authAuditActions = [
   'login',
   'logout',
   'password_reset_requested',

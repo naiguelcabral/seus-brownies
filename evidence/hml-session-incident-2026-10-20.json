@@ -1,0 +1,159 @@
+{
+  "date": "2026-10-20",
+  "worker": "cacau-v1-hml",
+  "source_baseline_sha": "7952dfa",
+  "preexisting_500_events": 6,
+  "preexisting_root_500_events": 2,
+  "preexisting_utc_interval": [
+    "2026-10-20T00:01:11.151Z",
+    "2026-10-20T00:02:56.671Z"
+  ],
+  "incident_window_utc": [
+    "2026-10-20T14:00:00Z",
+    "2026-10-20T14:10:00Z"
+  ],
+  "incident_events": {
+    "new_version": {
+      "total": 7,
+      "http_500": 4,
+      "normal": 3
+    },
+    "previous_version": {
+      "total": 5,
+      "http_500": 2,
+      "normal": 3
+    },
+    "all_worker_outcomes_ok": true,
+    "upstream_error_detail_recorded": false
+  },
+  "historical_upstream_cause_confirmed": false,
+  "prechange_local_runtime": {
+    "anonymous_get_cases": 8,
+    "provider_200_results": [
+      307,
+      200
+    ],
+    "provider_429_results": [
+      500,
+      500
+    ],
+    "provider_503_results": [
+      500,
+      500
+    ],
+    "provider_200_recovery_results": [
+      307,
+      200
+    ],
+    "upstream_calls_per_request": 1,
+    "provider_error_body_exposed": false
+  },
+  "current_hml_readonly_tail": {
+    "get_requests": 8,
+    "normal_responses": 8,
+    "exceptions": 0,
+    "application_logs": 0
+  },
+  "synthetic_provider_loopback_only": true,
+  "real_auth_used_for_testing": false,
+  "shared_operations_created": false,
+  "secrets_read_or_changed": false,
+  "production_worker_changed": false,
+  "fix_published": true,
+  "postchange_local_runtime": {
+    "get_cases": 16,
+    "all_expectations_passed": true,
+    "anonymous_upstream_calls": 0,
+    "token_upstream_validation_preserved": true,
+    "http_error_events": [
+      {
+        "event": "auth.session.provider",
+        "stage": "http_error",
+        "status": 429,
+        "code": null
+      },
+      {
+        "event": "auth.session.provider",
+        "stage": "http_error",
+        "status": 429,
+        "code": null
+      },
+      {
+        "event": "auth.session.provider",
+        "stage": "http_error",
+        "status": 503,
+        "code": null
+      },
+      {
+        "event": "auth.session.provider",
+        "stage": "http_error",
+        "status": 503,
+        "code": null
+      }
+    ],
+    "provider_error_body_exposed": false
+  },
+  "node_tests_passed": 556,
+  "new_auth_tests_passed": 5,
+  "lint_passed": true,
+  "typecheck_passed": true,
+  "format_check_passed": true,
+  "knip_new_unreviewed_findings": 0,
+  "code_sha": "3f0ba59ad018f9b2d4e872c5632e54da7f0ef480",
+  "head_isolated_build_passed": true,
+  "public_browser_smoke_passed": true,
+  "ci_passed": {
+    "ci": 39458289653,
+    "business_browser": 39458289627,
+    "migration_chain": 39458297440,
+    "hml_evidence": 39458297385,
+    "codeql": 39458289645
+  },
+  "codeql_analyses": [
+    {
+      "id": 1990026365,
+      "language": "javascript-typescript",
+      "results": 0
+    },
+    {
+      "id": 1990020696,
+      "language": "python",
+      "results": 0
+    },
+    {
+      "id": 1990019415,
+      "language": "actions",
+      "results": 0
+    }
+  ],
+  "codeql_open_alerts": 0,
+  "hml_release": {
+    "version": "e2aba61f-ca72-4459-a0d7-95867cdb2e67",
+    "deployment": "846b959a-1c69-4508-83bd-c823a6d8ce3a",
+    "created_utc": "2026-10-20T16:34:55.804019Z",
+    "traffic_percent": 100,
+    "initial_public_probe": {
+      "root": 307,
+      "login": 200
+    },
+    "authenticated_session_validated": false,
+    "public_tail": {
+      "get_requests": 8,
+      "normal_responses": 8,
+      "exceptions": 0,
+      "application_logs": 0,
+      "stderr_bytes": 0
+    },
+    "historic_log_readback": {
+      "events": 14,
+      "all_on_published_version": true,
+      "http_500": 0,
+      "statuses": [
+        200,
+        307
+      ],
+      "all_worker_outcomes_ok": true
+    }
+  },
+  "local_fixture_servers_stopped": true
+}

@@ -8,8 +8,28 @@
     "hml": {
       "name": "cacau-v1-hml",
       "workers_dev": true,
+      "observability": {
+        "enabled": false,
+        "head_sampling_rate": 1,
+        "redact_query_string": false,
+        "logs": {
+          "enabled": true,
+          "head_sampling_rate": 1,
+          "persist": true,
+          "invocation_logs": true,
+        },
+        "traces": {
+          "enabled": false,
+          "persist": true,
+          "head_sampling_rate": 1,
+        },
+        "issues": {
+          "enabled": false,
+        },
+      },
       "vars": {
         "AUTH_RATE_LIMITER_REQUIRED": "true",
+        "PASSWORD_RESET_REDIRECT_ORIGIN": "https://cacau-v1-hml.naiguelcabral.workers.dev",
       },
       "ratelimits": [
         {

@@ -23,6 +23,9 @@ O arquivo raiz [`AGENTS.md`](../../AGENTS.md) é a porta de entrada do Codex e a
 
 ## Procedimentos operacionais
 
+- [`LEVANTAMENTO-PENDENCIAS-2026-10-18.md`](LEVANTAMENTO-PENDENCIAS-2026-10-18.md)
+  — inventário reconciliado de pendências, lacuna de custo reproduzida,
+  cadastros faltantes, homologação, integração, infraestrutura e roadmap futuro.
 - [`GITHUB-MCP-PERSISTENT-AUTH.md`](GITHUB-MCP-PERSISTENT-AUTH.md) — configuração,
   verificação, rotação e início do Codex com credencial no GNOME Keyring.
 

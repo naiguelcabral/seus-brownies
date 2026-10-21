@@ -42,7 +42,9 @@ export function createCloudflareTurnstileVerifier(
       }
       return {
         success: result.success === true,
-        reasonCode: result['error-codes']?.[0],
+        ...(result['error-codes']?.[0] === undefined
+          ? {}
+          : { reasonCode: result['error-codes'][0] }),
       }
     },
   }

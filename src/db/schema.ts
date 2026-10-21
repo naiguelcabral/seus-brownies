@@ -1,3 +1,4 @@
+import type { ExactCost } from '../lib/exact-cost'
 import {
   boolean,
   check,
@@ -95,7 +96,7 @@ export const productionBatchOutputRole = pgEnum(
 )
 export const productionProfileComponentRole = pgEnum(
   'production_profile_component_role',
-  ['filling'],
+  ['filling', 'coating', 'packaging'],
 )
 export const operationalCostType = pgEnum('operational_cost_type', [
   'energy',
@@ -333,6 +334,7 @@ export const managementSettings = pgTable('management_settings', {
     precision: 6,
     scale: 4,
   }).notNull(),
+  paymentFees: jsonb('payment_fees'),
   updatedByAuthUserId: varchar('updated_by_auth_user_id', { length: 191 }),
   updatedAt: timestamp('updated_at', { withTimezone: true })
     .notNull()
@@ -541,6 +543,7 @@ export const actionPlanHistory = pgTable(
 /** A signed quantityDelta forms the inventory ledger: positive enters, negative leaves. */
 export const stockMovements = pgTable('stock_movements', {
   id: serial().primaryKey(),
+  exactCost: jsonb('exact_cost').$type<ExactCost>(),
   productId: integer('product_id')
     .notNull()
     .references(() => products.id, { onDelete: 'restrict' }),
@@ -638,6 +641,7 @@ export const sales = pgTable('sales', {
   }),
   customerName: varchar('customer_name', { length: 120 }),
   customerPhone: varchar('customer_phone', { length: 32 }),
+  paymentDetails: jsonb('payment_details'),
   status: saleStatus().notNull().default('draft'),
   subtotalAmount: money('subtotal_amount').notNull(),
   discountAmount: money('discount_amount').notNull().default('0'),
@@ -705,6 +709,7 @@ export const financialEvents = pgTable(
     /** Signed effects keep accrual and cash views independently additive. */
     revenueEffect: money('revenue_effect').notNull().default('0'),
     cashEffect: money('cash_effect').notNull().default('0'),
+    paymentFee: money('payment_fee'),
     competenceDate: date('competence_date').notNull(),
     occurredAt: timestamp('occurred_at', { withTimezone: true })
       .notNull()
@@ -767,6 +772,7 @@ export const expenses = pgTable('expenses', {
   sourceHash: varchar('source_hash', { length: 64 }),
   description: varchar({ length: 180 }).notNull(),
   category: varchar({ length: 80 }).notNull(),
+  classification: varchar({ length: 24 }),
   amount: money('amount').notNull(),
   occurredAt: date('occurred_at').notNull(),
   notes: text(),
@@ -924,6 +930,7 @@ export const productionProfileComponents = pgTable(
 /** A batch records planned or completed production, separately from inventory movement. */
 export const productionBatches = pgTable('production_batches', {
   id: serial().primaryKey(),
+  exactCost: jsonb('exact_cost').$type<ExactCost>(),
   sourceId: varchar('source_id', { length: 80 }).unique(),
   sourceHash: varchar('source_hash', { length: 64 }),
   productionProfileId: integer('production_profile_id').references(
@@ -961,6 +968,7 @@ export const productionBatchOutputs = pgTable(
   'production_batch_outputs',
   {
     id: serial().primaryKey(),
+    exactCost: jsonb('exact_cost').$type<ExactCost>(),
     sourceKey: varchar('source_key', { length: 160 }).unique(),
     sourceHash: varchar('source_hash', { length: 64 }).unique(),
     productionBatchId: integer('production_batch_id')
@@ -994,6 +1002,8 @@ export const inventoryCostLayers = pgTable(
   'inventory_cost_layers',
   {
     id: serial().primaryKey(),
+    exactOriginalCost: jsonb('exact_original_cost').$type<ExactCost>(),
+    exactRemainingCost: jsonb('exact_remaining_cost').$type<ExactCost>(),
     productId: integer('product_id')
       .notNull()
       .references(() => products.id, { onDelete: 'restrict' }),
@@ -1034,6 +1044,7 @@ export const inventoryCostAllocations = pgTable(
   'inventory_cost_allocations',
   {
     id: serial().primaryKey(),
+    exactCost: jsonb('exact_cost').$type<ExactCost>(),
     inventoryCostLayerId: integer('inventory_cost_layer_id')
       .notNull()
       .references(() => inventoryCostLayers.id, { onDelete: 'restrict' }),
@@ -1079,6 +1090,7 @@ export const inventoryCostReversals = pgTable(
   'inventory_cost_reversals',
   {
     id: serial().primaryKey(),
+    exactCost: jsonb('exact_cost').$type<ExactCost>(),
     originalAllocationId: integer('original_allocation_id')
       .notNull()
       .references(() => inventoryCostAllocations.id, { onDelete: 'restrict' }),
@@ -1111,6 +1123,7 @@ export const productionBatchConsumptions = pgTable(
   'production_batch_consumptions',
   {
     id: serial().primaryKey(),
+    exactCost: jsonb('exact_cost').$type<ExactCost>(),
     sourceKey: varchar('source_key', { length: 160 }).notNull().unique(),
     sourceHash: varchar('source_hash', { length: 64 }).notNull().unique(),
     productionBatchId: integer('production_batch_id')
@@ -1148,6 +1161,7 @@ export const productionBatchLosses = pgTable('production_batch_losses', {
 /** Energy and labor are operational costs, never stock products or stock movements. */
 export const operationalCosts = pgTable('operational_costs', {
   id: serial().primaryKey(),
+  exactCost: jsonb('exact_cost').$type<ExactCost>(),
   sourceId: varchar('source_id', { length: 80 }).unique(),
   sourceHash: varchar('source_hash', { length: 64 }),
   type: operationalCostType('type').notNull(),

@@ -1,0 +1,339 @@
+{
+  "status": "illustrative-local-analysis-not-applied",
+  "ratesMeaning": "Hypothetical shares of total revenue only; not known charges or chosen policy",
+  "originalCandidateUnchanged": true,
+  "examples": [
+    {
+      "illustrativeRate": "0.0000",
+      "targetRevenue": "15881.00",
+      "unitsPerMonth": "1477",
+      "projectedFeeTaxReserve": "0.00",
+      "projectedManagerialProfit": "10058.27",
+      "productLines": [
+        {
+          "sku": "PROD001",
+          "quantity": "101"
+        },
+        {
+          "sku": "PROD002",
+          "quantity": "73"
+        },
+        {
+          "sku": "PROD016",
+          "quantity": "184"
+        },
+        {
+          "sku": "PROD015",
+          "quantity": "232"
+        },
+        {
+          "sku": "PROD014",
+          "quantity": "46"
+        },
+        {
+          "sku": "PROD013",
+          "quantity": "20"
+        },
+        {
+          "sku": "PROD012",
+          "quantity": "44"
+        },
+        {
+          "sku": "PROD011",
+          "quantity": "46"
+        },
+        {
+          "sku": "PROD010",
+          "quantity": "46"
+        },
+        {
+          "sku": "PROD009",
+          "quantity": "48"
+        },
+        {
+          "sku": "PROD008",
+          "quantity": "121"
+        },
+        {
+          "sku": "PROD007",
+          "quantity": "64"
+        },
+        {
+          "sku": "PROD006",
+          "quantity": "118"
+        },
+        {
+          "sku": "PROD005",
+          "quantity": "121"
+        },
+        {
+          "sku": "PROD004",
+          "quantity": "121"
+        },
+        {
+          "sku": "PROD003",
+          "quantity": "62"
+        },
+        {
+          "sku": "PROD017",
+          "quantity": "30"
+        }
+      ],
+      "equivalentRecipesExcludingRecoveredBordinhas": "37881/616",
+      "equivalentRecipesApprox": 61.495,
+      "exceeds64BeforeWholeBatchAndLosses": false
+    },
+    {
+      "illustrativeRate": "0.0300",
+      "targetRevenue": "16549.00",
+      "unitsPerMonth": "1540",
+      "projectedFeeTaxReserve": "496.47",
+      "projectedManagerialProfit": "10064.90",
+      "productLines": [
+        {
+          "sku": "PROD001",
+          "quantity": "108"
+        },
+        {
+          "sku": "PROD002",
+          "quantity": "77"
+        },
+        {
+          "sku": "PROD016",
+          "quantity": "191"
+        },
+        {
+          "sku": "PROD015",
+          "quantity": "241"
+        },
+        {
+          "sku": "PROD014",
+          "quantity": "48"
+        },
+        {
+          "sku": "PROD013",
+          "quantity": "21"
+        },
+        {
+          "sku": "PROD012",
+          "quantity": "46"
+        },
+        {
+          "sku": "PROD011",
+          "quantity": "48"
+        },
+        {
+          "sku": "PROD010",
+          "quantity": "48"
+        },
+        {
+          "sku": "PROD009",
+          "quantity": "50"
+        },
+        {
+          "sku": "PROD008",
+          "quantity": "125"
+        },
+        {
+          "sku": "PROD007",
+          "quantity": "67"
+        },
+        {
+          "sku": "PROD006",
+          "quantity": "122"
+        },
+        {
+          "sku": "PROD005",
+          "quantity": "126"
+        },
+        {
+          "sku": "PROD004",
+          "quantity": "125"
+        },
+        {
+          "sku": "PROD003",
+          "quantity": "65"
+        },
+        {
+          "sku": "PROD017",
+          "quantity": "32"
+        }
+      ],
+      "equivalentRecipesExcludingRecoveredBordinhas": "236707/3696",
+      "equivalentRecipesApprox": 64.044,
+      "exceeds64BeforeWholeBatchAndLosses": true
+    },
+    {
+      "illustrativeRate": "0.0500",
+      "targetRevenue": "17002.00",
+      "unitsPerMonth": "1583",
+      "projectedFeeTaxReserve": "850.10",
+      "projectedManagerialProfit": "10053.06",
+      "productLines": [
+        {
+          "sku": "PROD001",
+          "quantity": "113"
+        },
+        {
+          "sku": "PROD002",
+          "quantity": "80"
+        },
+        {
+          "sku": "PROD016",
+          "quantity": "196"
+        },
+        {
+          "sku": "PROD015",
+          "quantity": "247"
+        },
+        {
+          "sku": "PROD014",
+          "quantity": "49"
+        },
+        {
+          "sku": "PROD013",
+          "quantity": "22"
+        },
+        {
+          "sku": "PROD012",
+          "quantity": "47"
+        },
+        {
+          "sku": "PROD011",
+          "quantity": "50"
+        },
+        {
+          "sku": "PROD010",
+          "quantity": "49"
+        },
+        {
+          "sku": "PROD009",
+          "quantity": "52"
+        },
+        {
+          "sku": "PROD008",
+          "quantity": "128"
+        },
+        {
+          "sku": "PROD007",
+          "quantity": "68"
+        },
+        {
+          "sku": "PROD006",
+          "quantity": "125"
+        },
+        {
+          "sku": "PROD005",
+          "quantity": "129"
+        },
+        {
+          "sku": "PROD004",
+          "quantity": "128"
+        },
+        {
+          "sku": "PROD003",
+          "quantity": "67"
+        },
+        {
+          "sku": "PROD017",
+          "quantity": "33"
+        }
+      ],
+      "equivalentRecipesExcludingRecoveredBordinhas": "34735/528",
+      "equivalentRecipesApprox": 65.786,
+      "exceeds64BeforeWholeBatchAndLosses": true
+    },
+    {
+      "illustrativeRate": "0.0800",
+      "targetRevenue": "17783.00",
+      "unitsPerMonth": "1657",
+      "projectedFeeTaxReserve": "1422.64",
+      "projectedManagerialProfit": "10062.35",
+      "productLines": [
+        {
+          "sku": "PROD001",
+          "quantity": "122"
+        },
+        {
+          "sku": "PROD002",
+          "quantity": "86"
+        },
+        {
+          "sku": "PROD016",
+          "quantity": "204"
+        },
+        {
+          "sku": "PROD015",
+          "quantity": "256"
+        },
+        {
+          "sku": "PROD014",
+          "quantity": "52"
+        },
+        {
+          "sku": "PROD013",
+          "quantity": "23"
+        },
+        {
+          "sku": "PROD012",
+          "quantity": "49"
+        },
+        {
+          "sku": "PROD011",
+          "quantity": "52"
+        },
+        {
+          "sku": "PROD010",
+          "quantity": "51"
+        },
+        {
+          "sku": "PROD009",
+          "quantity": "54"
+        },
+        {
+          "sku": "PROD008",
+          "quantity": "134"
+        },
+        {
+          "sku": "PROD007",
+          "quantity": "71"
+        },
+        {
+          "sku": "PROD006",
+          "quantity": "130"
+        },
+        {
+          "sku": "PROD005",
+          "quantity": "134"
+        },
+        {
+          "sku": "PROD004",
+          "quantity": "134"
+        },
+        {
+          "sku": "PROD003",
+          "quantity": "69"
+        },
+        {
+          "sku": "PROD017",
+          "quantity": "36"
+        }
+      ],
+      "equivalentRecipesExcludingRecoveredBordinhas": "3023/44",
+      "equivalentRecipesApprox": 68.705,
+      "exceeds64BeforeWholeBatchAndLosses": true
+    }
+  ],
+  "otherUnresolved": [
+    "Bordinhas cost allocation based on historical yield, not measured recovery",
+    "fees actual percentages and bases",
+    "whole-batch production schedule and losses"
+  ],
+  "verification": {
+    "allNativeProjectionsCloseMixAt10000": true,
+    "allNativeProjectionsMeetGoalWithRounding": true,
+    "capacityDiagnostic": "rational sum quantity/historical yield; excludes Bordinhas as independent production",
+    "sourceFeesSearch": "all workbook rows searched: only 01_Parametros!A11:C11 reserve 0 found; no operative charge percentages",
+    "sharedDatabaseWrites": false
+  }
+}

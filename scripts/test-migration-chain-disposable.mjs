@@ -1,6 +1,7 @@
 // Intentionally ignores environment DSNs, dotenv and Neon. Fixed local CI fixture only.
 import assert from 'node:assert/strict'
-import { mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import pg from 'pg'
@@ -14,6 +15,10 @@ import {
 } from './migration-chain-candidates.mjs'
 import { captureCatalog } from './migration-chain-catalog.mjs'
 import { diagnoseAccess } from './migration-chain-access-diagnostic.mjs'
+import {
+  verify0017Idempotency,
+  verify0017ProductGuards,
+} from './migration-chain-0017-checks.mjs'
 
 assert.deepEqual(
   process.argv.slice(2),
@@ -27,8 +32,7 @@ const connection = {
   password: 'synthetic-ci-only',
   database: 'cacau_chain_disposable',
 }
-const evidenceFolder = '/tmp/cacau-chain-evidence'
-mkdirSync(evidenceFolder, { recursive: true })
+const evidenceFolder = mkdtempSync(join(tmpdir(), 'cacau-chain-evidence-'))
 const admin = new pg.Client(connection)
 await admin.connect()
 const identity = (
@@ -71,10 +75,11 @@ const history = async (client) =>
       'SELECT hash, created_at::text FROM drizzle.__drizzle_migrations ORDER BY created_at',
     )
   ).rows
-const save = (name, data) =>
+const save = (name, evidence) =>
   writeFileSync(
     join(evidenceFolder, `${name}.json`),
-    JSON.stringify(data, null, 2) + '\n',
+    JSON.stringify(evidence, null, 2) + '\n',
+    { mode: 0o600, flag: 'wx' },
   )
 async function fixture(name, run) {
   const database = `cacau_chain_${Date.now()}_${++counter}`
@@ -194,6 +199,100 @@ async function behaviors(client) {
   )
 }
 try {
+  // Prove the 0017 repair separately: no 0018+ SQL, financial defaults or
+  // scenario-name policy is needed to validate this structural correction.
+  let isolatedCatalog
+  for (const strategy of ['replacement', 'compatibility'])
+    for (const path of ['upgrade-0016', 'empty']) {
+      await fixture(`isolated-0017-${strategy}-${path}`, async (client) => {
+        let before
+        if (path === 'upgrade-0016') {
+          await apply(client, candidate('replacement', { last: 16 }).folder)
+          await seed(client)
+          before = await data(client)
+        }
+        const target = candidate(strategy, { last: 17 })
+        await apply(client, target.folder)
+        if (path === 'empty') {
+          await seed(client)
+          before = await data(client)
+        }
+        assert.deepEqual(await data(client), before)
+        const rows = await history(client)
+        assert.deepEqual(
+          rows,
+          target.manifest.candidate_migrations.map((entry) => ({
+            hash: entry.sha256,
+            created_at: entry.when,
+          })),
+        )
+        const catalog = await captureCatalog(client)
+        if (!isolatedCatalog) isolatedCatalog = catalog
+        assert.deepEqual(catalog, isolatedCatalog)
+        assert.deepEqual(
+          (
+            await client.query(`SELECT
+          to_regclass('public.management_settings')::text AS settings,
+          to_regclass('public.financial_events')::text AS events,
+          to_regclass('public.management_scenario_mix')::text AS mix`)
+          ).rows,
+          [{ settings: null, events: null, mix: null }],
+        )
+        for (const table of ['expenses', 'purchases', 'sales']) {
+          assert.equal(
+            (
+              await client.query(`SELECT count(*)::int AS n FROM ${table}
+            WHERE idempotency_key IS NOT NULL OR idempotency_hash IS NOT NULL
+              OR created_by_auth_user_id IS NOT NULL`)
+            ).rows[0].n,
+            0,
+          )
+        }
+        const productGuards = await verify0017ProductGuards(client)
+        const uniqueKeys = await verify0017Idempotency(client)
+        assert.equal(productGuards.length, 10)
+        assert.equal(uniqueKeys.length, 3)
+        await apply(client, target.folder)
+        assert.deepEqual(await history(client), rows)
+        assert.deepEqual(await captureCatalog(client), catalog)
+        assert.deepEqual(await data(client), before)
+        save(`isolated-0017-${strategy}-${path}`, {
+          manifest: target.manifest,
+          product_guards: productGuards,
+          idempotency_tables: uniqueKeys,
+          catalog_sha256: hash(JSON.stringify(catalog)),
+          history: rows,
+          later_migrations_applied: false,
+          legacy_data_preserved: true,
+          replay_verified: true,
+        })
+      })
+      await fixture(
+        `rollback-isolated-0017-${strategy}-${path}`,
+        async (client) => {
+          let beforeData
+          let beforeRows = []
+          if (path === 'upgrade-0016') {
+            await apply(client, candidate('replacement', { last: 16 }).folder)
+            await seed(client)
+            beforeData = await data(client)
+            beforeRows = await history(client)
+          }
+          const catalog = await captureCatalog(client)
+          await fails(
+            () =>
+              apply(
+                client,
+                candidate(strategy, { last: 17, injectFailure: true }).folder,
+              ),
+            '22012',
+          )
+          assert.deepEqual(await history(client), beforeRows)
+          assert.deepEqual(await captureCatalog(client), catalog)
+          if (beforeData) assert.deepEqual(await data(client), beforeData)
+        },
+      )
+    }
   for (const strategy of strategies)
     for (const path of ['upgrade-0016', 'empty']) {
       const name = `${strategy}-${path}`

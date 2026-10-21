@@ -1,5 +1,22 @@
 # Modernização incremental: Oxlint, Oxfmt, Knip e CodeQL
 
+## Reconciliação da PR #48 — 21/10/2026
+
+A proposta da PR #45 foi integrada à main em `b71b359`. Este documento
+preserva a proposta e seus diagnósticos históricos; as instruções abaixo não
+definem mais os comandos ativos na candidata da PR #48. A reconciliação mantém
+TypeScript 7, Oxlint tipado/Oxfmt locais e Knip fixados no lockfile, o gate
+Knip bloqueante e CodeQL em JavaScript/TypeScript, Python e Actions. Consulte
+[workflow atual](DEVELOPMENT-WORKFLOW.md), [migração TS/Oxc](TYPESCRIPT-7-OXC-MIGRATION.md)
+e [Knip/CodeQL](KNIP-CODEQL.md).
+
+O workflow advisory `tooling-preview.yml` foi retirado da candidata porque
+duplicaria os gates obrigatórios de `ci.yml` e chamaria scripts experimentais
+substituídos. Não foram reintroduzidos downloads por `npm exec`, configurações
+menos restritivas ou comandos de correção automática. O histórico continua no
+Git e neste registro. A resolução dos conflitos não é merge da PR na main,
+aceite de produção, publicação ou autorização de migrations.
+
 Data da proposta: 2026-10-17. Estado: **PR de implantação, não homologada**.
 
 ## Limites e escopo

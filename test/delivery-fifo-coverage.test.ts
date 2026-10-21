@@ -1,3 +1,4 @@
+import { requireDefined } from '../src/lib/required-value'
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import { diagnoseDeliveryFifoCoverage } from '../src/features/finance/delivery-fifo-coverage'
@@ -22,11 +23,13 @@ test('cobertura exige alocações completas e aceita múltiplas origens FIFO', (
 
 test('entrega sem item ou sem FIFO é diagnóstico explícito, não custo zero comprovado', () => {
   assert.equal(
-    diagnoseDeliveryFifoCoverage({
-      events: [event],
-      saleItems: [],
-      allocations: [],
-    }).divergences[0].code,
+    requireDefined(
+      diagnoseDeliveryFifoCoverage({
+        events: [event],
+        saleItems: [],
+        allocations: [],
+      }).divergences[0],
+    ).code,
     'missing_items',
   )
   const result = diagnoseDeliveryFifoCoverage({
@@ -35,7 +38,7 @@ test('entrega sem item ou sem FIFO é diagnóstico explícito, não custo zero c
     allocations: [],
   })
   assert.equal(result.complete, false)
-  assert.equal(result.divergences[0].code, 'missing_allocation')
+  assert.equal(requireDefined(result.divergences[0]).code, 'missing_allocation')
 })
 
 test('soma exata detecta falta e excesso sem depender da ordem das origens', () => {
@@ -45,7 +48,10 @@ test('soma exata detecta falta e excesso sem depender da ordem das origens', () 
       saleItems: [item],
       allocations: [{ ...allocation, quantity }],
     })
-    assert.equal(result.divergences[0].code, 'quantity_mismatch')
+    assert.equal(
+      requireDefined(result.divergences[0]).code,
+      'quantity_mismatch',
+    )
   }
 })
 
@@ -56,14 +62,17 @@ test('valor inválido é sanitizado e não vira zero', () => {
       saleItems: [item],
       allocations: [{ ...allocation, quantity }],
     })
-    assert.equal(result.divergences[0].code, 'invalid_quantity')
+    assert.equal(requireDefined(result.divergences[0]).code, 'invalid_quantity')
     assert.doesNotMatch(JSON.stringify(result), /secret/)
     const invalidItem = diagnoseDeliveryFifoCoverage({
       events: [event],
       saleItems: [{ ...item, quantity }],
       allocations: [allocation],
     })
-    assert.equal(invalidItem.divergences[0].code, 'invalid_quantity')
+    assert.equal(
+      requireDefined(invalidItem.divergences[0]).code,
+      'invalid_quantity',
+    )
     assert.doesNotMatch(JSON.stringify(invalidItem), /secret/)
   }
 })

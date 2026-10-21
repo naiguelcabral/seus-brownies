@@ -1,8 +1,8 @@
 import type { NeonAuthRuntimeConfig } from './runtime-config.server'
 
-export const passwordResetProviderTimeoutMs = 12_000
+const passwordResetProviderTimeoutMs = 12_000
 
-export type PasswordResetProviderReasonCode =
+type PasswordResetProviderReasonCode =
   | 'provider_timeout'
   | 'provider_network_error'
   | 'provider_http_error'
@@ -13,7 +13,7 @@ export type PasswordResetProviderResult = {
   reasonCode: PasswordResetProviderReasonCode
 }
 
-export type PasswordResetRequestBindings = {
+type PasswordResetRequestBindings = {
   getRequest: () => Request
 }
 

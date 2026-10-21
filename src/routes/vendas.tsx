@@ -1,6 +1,18 @@
-import { useEffect, useState } from 'react'
+import { SettlementPreview } from '#/components/SettlementPreview'
+import {
+  paymentMethod,
+  paymentMethodLabels,
+} from '#/features/finance/settlement'
+import type { PaymentMethod } from '#/features/finance/settlement'
+import { OperationDialog } from '#/components/OperationDialog'
+import { useState } from 'react'
 import { Plus, Trash2 } from 'lucide-react'
-import { createFileRoute, useNavigate, useRouter } from '@tanstack/react-router'
+import {
+  createFileRoute,
+  useHydrated,
+  useNavigate,
+  useRouter,
+} from '@tanstack/react-router'
 import { useServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
 
@@ -13,7 +25,11 @@ import {
 } from '#/features/operations/functions'
 import { listActiveSalesLocations } from '#/features/locations/functions'
 import { cancelSaleLifecycle } from '#/features/inventory/lifecycle-writers'
-import { deliverSale } from '#/features/finance/functions'
+import {
+  deliverSale,
+  receiveSalePayment,
+  getSalePaymentOptions,
+} from '#/features/finance/functions'
 import {
   canCancelSale,
   canSubmitLifecycle,
@@ -55,13 +71,15 @@ export const Route = createFileRoute('/vendas')({
     const canDeliverSales = Boolean(
       context.appRole && hasPermission(context.appRole, 'sales:write'),
     )
-    const [products, locations] = await Promise.all([
+    const [products, locations, paymentFees] = await Promise.all([
       listSaleProducts(),
       listActiveSalesLocations(),
+      getSalePaymentOptions(),
     ])
     return {
       products,
       locations,
+      paymentFees,
       history: canReadHistory
         ? await listSales({ data: deps })
         : { sales: [], total: 0, page: 1, pageSize: 20, totalPages: 1 },
@@ -101,11 +119,21 @@ function SalesPage() {
     canReadHistory,
     canManageLifecycle,
     canDeliverSales,
+    paymentFees,
   } = Route.useLoaderData()
   const search = Route.useSearch()
   const router = useRouter()
   const navigate = useNavigate({ from: Route.fullPath })
   const save = useServerFn(createSale)
+  const receive = useServerFn(receiveSalePayment)
+  const [method, setMethod] = useState<PaymentMethod | ' '>(' ')
+  const [receiving, setReceiving] = useState<number | null>(null)
+  const [receiptReference, setReceiptReference] = useState(() =>
+    crypto.randomUUID(),
+  )
+  const [receivedOn, setReceivedOn] = useState(today)
+  const [receiptMethod, setReceiptMethod] = useState<PaymentMethod | ' '>(' ')
+  const [editorOpen, setEditorOpen] = useState(false)
   const [idempotencyKey, setIdempotencyKey] = useState(() =>
     crypto.randomUUID(),
   )
@@ -131,10 +159,7 @@ function SalesPage() {
   const [deliveringId, setDeliveringId] = useState<number | null>(null)
   const [deliveredOn, setDeliveredOn] = useState(today)
   const [deliveryConfirmed, setDeliveryConfirmed] = useState(false)
-  const [clientReady, setClientReady] = useState(false)
-  useEffect(() => {
-    setClientReady(true)
-  }, [])
+  const clientReady = useHydrated()
   function updateItem(index: number, patch: Partial<Item>) {
     setItems(
       items.map((item, itemIndex) =>
@@ -208,7 +233,7 @@ function SalesPage() {
       items.some((item) => !item.productId || !item.quantity)
     ) {
       setMessage(
-        'Selecione o local, informe o faturamento recebido e complete todos os itens.',
+        'Selecione o local, informe o valor bruto da venda e complete todos os itens.',
       )
       return
     }
@@ -222,6 +247,8 @@ function SalesPage() {
           customerName,
           customerPhone,
           status,
+          paymentMethod:
+            status === 'paid' ? paymentMethod.parse(method) : undefined,
           reportedAmount,
           adjustmentKind,
           adjustmentReason,
@@ -232,10 +259,12 @@ function SalesPage() {
           })),
         },
       })
+      setEditorOpen(false)
       setCustomerName('')
       setCustomerPhone('')
       setNotes('')
       setStatus('draft')
+      setMethod(' ')
       setLocationId('')
       setReportedAmount('')
       setAdjustmentKind('none')
@@ -268,7 +297,106 @@ function SalesPage() {
           Interface pronta
         </span>
       ) : null}
-      <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_420px]">
+      <button
+        type="button"
+        onClick={() => setEditorOpen(true)}
+        className="mb-4 rounded-lg bg-[#4a2114] px-4 py-2.5 font-bold text-white"
+      >
+        Registrar venda
+      </button>
+      {receiving !== null ? (
+        <OperationDialog
+          title={`Receber venda #${receiving}`}
+          pending={saving}
+          onClose={() => setReceiving(null)}
+        >
+          <form
+            className="space-y-4 p-5"
+            onSubmit={async (event) => {
+              event.preventDefault()
+              setSaving(true)
+              setMessage(null)
+              try {
+                await receive({
+                  data: {
+                    saleId: receiving,
+                    method: paymentMethod.parse(receiptMethod),
+                    occurredOn: receivedOn,
+                    reference: receiptReference,
+                  },
+                })
+                setReceiving(null)
+                setMessage(
+                  'Recebimento integral registrado com taxa e valor líquido.',
+                )
+                await router.invalidate({ sync: true })
+              } catch (error) {
+                setMessage(
+                  error instanceof Error
+                    ? error.message
+                    : 'Não foi possível receber.',
+                )
+              } finally {
+                setSaving(false)
+              }
+            }}
+          >
+            <p className="text-sm">
+              Recebimento integral do valor bruto da venda. Não registra uma
+              nova venda nem baixa estoque novamente.
+            </p>
+            <label className="block text-sm font-bold">
+              Meio de pagamento
+              <select
+                className="field"
+                value={receiptMethod}
+                onChange={(e) =>
+                  setReceiptMethod(
+                    e.target.value === ' '
+                      ? ' '
+                      : paymentMethod.parse(e.target.value),
+                  )
+                }
+              >
+                <option value=" ">Selecione</option>
+                {Object.entries(paymentMethodLabels).map(([value, label]) => (
+                  <option key={value} value={value}>
+                    {label}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <Input
+              label="Data do recebimento"
+              type="date"
+              value={receivedOn}
+              onChange={setReceivedOn}
+            />
+            <SettlementPreview
+              method={receiptMethod}
+              amount={
+                history.sales.find((sale) => sale.id === receiving)
+                  ?.totalAmount ?? ''
+              }
+              date={receivedOn}
+              fees={paymentFees}
+            />
+            {message ? <p role="alert">{message}</p> : null}
+            <button
+              disabled={saving}
+              className="rounded-lg bg-[#4a2114] px-4 py-2 text-white"
+            >
+              Confirmar recebimento
+            </button>
+          </form>
+        </OperationDialog>
+      ) : null}
+      {!editorOpen && message ? (
+        <p role="status" className="mb-4 rounded-lg bg-[#fff5e7] p-3 text-sm">
+          {message}
+        </p>
+      ) : null}
+      <div className="space-y-6">
         <section className="overflow-hidden rounded-2xl border border-[#ecdfd4] bg-white">
           <div className="border-b border-[#f0e5dc] px-5 py-4">
             <h2 className="font-bold">Vendas recentes</h2>
@@ -430,6 +558,21 @@ function SalesPage() {
                         <strong>
                           {currency.format(Number(sale.totalAmount))}
                         </strong>
+                        {canDeliverSales && sale.status === 'confirmed' ? (
+                          <button
+                            type="button"
+                            disabled={saving}
+                            onClick={() => {
+                              setReceiving(sale.id)
+                              setReceiptReference(crypto.randomUUID())
+                              setReceivedOn(today())
+                              setReceiptMethod(' ')
+                            }}
+                            className="mt-2 block text-xs font-bold text-[#a64f23]"
+                          >
+                            Registrar recebimento
+                          </button>
+                        ) : null}
                         {canManageLifecycle && canCancelSale(sale.status) ? (
                           <button
                             type="button"
@@ -606,161 +749,213 @@ function SalesPage() {
             </>
           )}
         </section>
-        <form
-          className="rounded-2xl border border-[#ecdfd4] bg-white p-5 space-y-4"
-          onSubmit={submit}
-        >
-          <h2 className="font-bold">Nova venda</h2>
-          <Input
-            label="Cliente"
-            value={customerName}
-            onChange={setCustomerName}
-          />
-          <Input
-            label="Telefone"
-            value={customerPhone}
-            onChange={setCustomerPhone}
-          />
-          <label className="block text-sm font-bold text-[#573524]">
-            Local ou canal
-            <select
-              value={locationId}
-              onChange={(event) => setLocationId(event.target.value)}
-              className="field mt-1.5"
-              required
+        {editorOpen ? (
+          <OperationDialog
+            title="Registrar venda"
+            pending={saving}
+            onClose={() => setEditorOpen(false)}
+          >
+            <form
+              className="rounded-2xl border border-[#ecdfd4] bg-white p-5 space-y-4"
+              onSubmit={submit}
             >
-              <option value="">Selecione</option>
-              {locations.map((location) => (
-                <option value={location.id} key={location.id}>
-                  {location.name}
-                </option>
-              ))}
-            </select>
-          </label>
-          <label className="block text-sm font-bold text-[#573524]">
-            Status
-            <select
-              value={status}
-              onChange={(event) =>
-                setStatus(event.target.value as typeof status)
-              }
-              className="field mt-1.5"
-            >
-              {saleStatuses.map((value) => (
-                <option value={value} key={value}>
-                  {statusLabels[value]}
-                </option>
-              ))}
-            </select>
-          </label>
-          {items.map((item, index) => (
-            <div key={index} className="rounded-xl border border-[#ead9ca] p-3">
-              <div className="mb-2 flex justify-between">
-                <strong className="text-sm">Item {index + 1}</strong>
-                {items.length > 1 ? (
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setItems(
-                        items.filter((_, itemIndex) => itemIndex !== index),
-                      )
-                    }
-                    className="text-[#a64f23]"
-                  >
-                    <Trash2 size={16} />
-                  </button>
-                ) : null}
-              </div>
+              <h2 className="font-bold">Nova venda</h2>
+              <Input
+                label="Cliente"
+                value={customerName}
+                onChange={setCustomerName}
+              />
+              <Input
+                label="Telefone"
+                value={customerPhone}
+                onChange={setCustomerPhone}
+              />
               <label className="block text-sm font-bold text-[#573524]">
-                Produto
+                Local ou canal
                 <select
-                  value={item.productId}
-                  onChange={(event) =>
-                    updateItem(index, { productId: event.target.value })
-                  }
+                  value={locationId}
+                  onChange={(event) => setLocationId(event.target.value)}
                   className="field mt-1.5"
+                  required
                 >
                   <option value="">Selecione</option>
-                  {products.map((product) => (
-                    <option value={product.id} key={product.id}>
-                      {product.name} ·{' '}
-                      {currency.format(Number(product.salePrice))}
+                  {locations.map((location) => (
+                    <option value={location.id} key={location.id}>
+                      {location.name}
                     </option>
                   ))}
                 </select>
               </label>
+              <label className="block text-sm font-bold text-[#573524]">
+                Status
+                <select
+                  value={status}
+                  onChange={(event) =>
+                    setStatus(event.target.value as typeof status)
+                  }
+                  className="field mt-1.5"
+                >
+                  {saleStatuses.map((value) => (
+                    <option value={value} key={value}>
+                      {statusLabels[value]}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              {status === 'paid' ? (
+                <label className="block text-sm font-bold">
+                  Meio do pagamento recebido
+                  <select
+                    className="field mt-1.5"
+                    value={method}
+                    onChange={(event) =>
+                      setMethod(
+                        event.target.value === ' '
+                          ? ' '
+                          : paymentMethod.parse(event.target.value),
+                      )
+                    }
+                  >
+                    <option value=" ">Selecione</option>
+                    {Object.entries(paymentMethodLabels).map(
+                      ([value, label]) => (
+                        <option key={value} value={value}>
+                          {label}
+                        </option>
+                      ),
+                    )}
+                  </select>
+                  <span className="mt-2 block text-xs font-normal">
+                    Informe o valor bruto da venda. A taxa é descontada uma vez
+                    por pagamento, mesmo com vários produtos.
+                  </span>
+                </label>
+              ) : null}
+              {status === 'paid' ? (
+                <SettlementPreview
+                  method={method}
+                  amount={reportedAmount}
+                  date={today()}
+                  fees={paymentFees}
+                />
+              ) : null}
+              {items.map((item, index) => (
+                <div
+                  key={index}
+                  className="rounded-xl border border-[#ead9ca] p-3"
+                >
+                  <div className="mb-2 flex justify-between">
+                    <strong className="text-sm">Item {index + 1}</strong>
+                    {items.length > 1 ? (
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setItems(
+                            items.filter((_, itemIndex) => itemIndex !== index),
+                          )
+                        }
+                        className="text-[#a64f23]"
+                      >
+                        <Trash2 size={16} />
+                      </button>
+                    ) : null}
+                  </div>
+                  <label className="block text-sm font-bold text-[#573524]">
+                    Produto
+                    <select
+                      value={item.productId}
+                      onChange={(event) =>
+                        updateItem(index, { productId: event.target.value })
+                      }
+                      className="field mt-1.5"
+                    >
+                      <option value="">Selecione</option>
+                      {products.map((product) => (
+                        <option value={product.id} key={product.id}>
+                          {product.name} ·{' '}
+                          {currency.format(Number(product.salePrice))}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                  <Input
+                    label="Quantidade"
+                    value={item.quantity}
+                    onChange={(quantity) => updateItem(index, { quantity })}
+                    placeholder="Ex.: 2,000"
+                    inputMode="decimal"
+                  />
+                </div>
+              ))}
+              <button
+                type="button"
+                onClick={() => setItems([...items, emptyItem()])}
+                className="inline-flex items-center gap-1 text-sm font-bold text-[#a64f23]"
+              >
+                <Plus size={16} />
+                Adicionar item
+              </button>
               <Input
-                label="Quantidade"
-                value={item.quantity}
-                onChange={(quantity) => updateItem(index, { quantity })}
-                placeholder="Ex.: 2,000"
+                label="Valor bruto da venda (antes da taxa)"
+                value={reportedAmount}
+                onChange={setReportedAmount}
+                placeholder="Ex.: 120,00"
                 inputMode="decimal"
-              />
-            </div>
-          ))}
-          <button
-            type="button"
-            onClick={() => setItems([...items, emptyItem()])}
-            className="inline-flex items-center gap-1 text-sm font-bold text-[#a64f23]"
-          >
-            <Plus size={16} />
-            Adicionar item
-          </button>
-          <Input
-            label="Faturamento recebido"
-            value={reportedAmount}
-            onChange={setReportedAmount}
-            placeholder="Ex.: 120,00"
-            inputMode="decimal"
-            required
-          />
-          <label className="block text-sm font-bold text-[#573524]">
-            Motivo da diferença
-            <select
-              value={adjustmentKind}
-              onChange={(event) =>
-                setAdjustmentKind(event.target.value as typeof adjustmentKind)
-              }
-              className="field mt-1.5"
-            >
-              <option value="none">Sem ajuste</option>
-              <option value="discount">Desconto</option>
-              <option value="combo">Combo</option>
-              <option value="gift">Brinde</option>
-              <option value="manual_adjustment">Ajuste manual</option>
-            </select>
-          </label>
-          {adjustmentKind !== 'none' ? (
-            <label className="block text-sm font-bold text-[#573524]">
-              Justificativa do ajuste
-              <textarea
-                className="field mt-1.5 min-h-20"
-                value={adjustmentReason}
-                onChange={(event) => setAdjustmentReason(event.target.value)}
                 required
               />
-            </label>
-          ) : null}
-          <label className="block text-sm font-bold text-[#573524]">
-            Observações
-            <textarea
-              className="field mt-1.5 min-h-20"
-              value={notes}
-              onChange={(event) => setNotes(event.target.value)}
-            />
-          </label>
-          {message ? (
-            <p className="rounded-lg bg-[#fff5e7] p-3 text-sm text-[#75411f]">
-              {message}
-            </p>
-          ) : null}
-          <button
-            disabled={saving}
-            className="rounded-lg bg-[#4a2114] px-4 py-2.5 text-sm font-bold text-white disabled:opacity-60"
-          >
-            {saving ? 'Registrando...' : 'Registrar venda'}
-          </button>
-        </form>
+              <label className="block text-sm font-bold text-[#573524]">
+                Motivo da diferença
+                <select
+                  value={adjustmentKind}
+                  onChange={(event) =>
+                    setAdjustmentKind(
+                      event.target.value as typeof adjustmentKind,
+                    )
+                  }
+                  className="field mt-1.5"
+                >
+                  <option value="none">Sem ajuste</option>
+                  <option value="discount">Desconto</option>
+                  <option value="combo">Combo</option>
+                  <option value="gift">Brinde</option>
+                  <option value="manual_adjustment">Ajuste manual</option>
+                </select>
+              </label>
+              {adjustmentKind !== 'none' ? (
+                <label className="block text-sm font-bold text-[#573524]">
+                  Justificativa do ajuste
+                  <textarea
+                    className="field mt-1.5 min-h-20"
+                    value={adjustmentReason}
+                    onChange={(event) =>
+                      setAdjustmentReason(event.target.value)
+                    }
+                    required
+                  />
+                </label>
+              ) : null}
+              <label className="block text-sm font-bold text-[#573524]">
+                Observações
+                <textarea
+                  className="field mt-1.5 min-h-20"
+                  value={notes}
+                  onChange={(event) => setNotes(event.target.value)}
+                />
+              </label>
+              {message ? (
+                <p className="rounded-lg bg-[#fff5e7] p-3 text-sm text-[#75411f]">
+                  {message}
+                </p>
+              ) : null}
+              <button
+                disabled={saving}
+                className="rounded-lg bg-[#4a2114] px-4 py-2.5 text-sm font-bold text-white disabled:opacity-60"
+              >
+                {saving ? 'Registrando...' : 'Registrar venda'}
+              </button>
+            </form>
+          </OperationDialog>
+        ) : null}
       </div>
     </ManagementLayout>
   )
@@ -782,7 +977,7 @@ function SalesPending() {
   )
 }
 
-function SalesError({ error }: { error: Error }) {
+function SalesError({ error }: { error: unknown }) {
   const router = useRouter()
   return (
     <ManagementLayout
@@ -790,7 +985,10 @@ function SalesError({ error }: { error: Error }) {
       description="Não foi possível carregar o histórico de vendas."
     >
       <div className="rounded-2xl border border-[#e7c9b8] bg-[#fff5ed] p-5 text-sm text-[#75411f]">
-        <p>{error.message || 'Tente novamente em alguns instantes.'}</p>
+        <p>
+          {(error instanceof Error && error.message) ||
+            'Tente novamente em alguns instantes.'}
+        </p>
         <button
           type="button"
           className="mt-3 rounded-lg border border-[#75411f] px-3 py-2 text-xs font-bold"

@@ -1,3 +1,5 @@
+import { requireDefined } from './required-value'
+
 const wholeNumber = new Intl.NumberFormat('pt-BR', {
   maximumFractionDigits: 0,
   useGrouping: true,
@@ -10,7 +12,8 @@ export function formatBrlMoney(value: string): string {
 
   const [, sign, whole, fraction = ''] = match
   const cents = fraction.padEnd(2, '0')
-  const isNegative = sign === '-' && (BigInt(whole) !== 0n || cents !== '00')
+  const isNegative =
+    sign === '-' && (BigInt(requireDefined(whole)) !== 0n || cents !== '00')
 
-  return `${isNegative ? '-' : ''}R$ ${wholeNumber.format(BigInt(whole))},${cents}`
+  return `${isNegative ? '-' : ''}R$ ${wholeNumber.format(BigInt(requireDefined(whole)))},${cents}`
 }

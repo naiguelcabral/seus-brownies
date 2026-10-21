@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useSyncExternalStore } from 'react'
 
 type ThemeMode = 'light' | 'dark' | 'auto'
 
@@ -31,14 +31,27 @@ function applyThemeMode(mode: ThemeMode) {
   document.documentElement.style.colorScheme = resolved
 }
 
+function subscribeTheme(onChange: () => void) {
+  window.addEventListener('storage', onChange)
+  window.addEventListener('cacau-theme-change', onChange)
+  return () => {
+    window.removeEventListener('storage', onChange)
+    window.removeEventListener('cacau-theme-change', onChange)
+  }
+}
+
+const getServerMode = (): ThemeMode => 'auto'
+
 export default function ThemeToggle() {
-  const [mode, setMode] = useState<ThemeMode>('auto')
+  const mode = useSyncExternalStore(
+    subscribeTheme,
+    getInitialMode,
+    getServerMode,
+  )
 
   useEffect(() => {
-    const initialMode = getInitialMode()
-    setMode(initialMode)
-    applyThemeMode(initialMode)
-  }, [])
+    applyThemeMode(mode)
+  }, [mode])
 
   useEffect(() => {
     if (mode !== 'auto') {
@@ -57,9 +70,9 @@ export default function ThemeToggle() {
   function toggleMode() {
     const nextMode: ThemeMode =
       mode === 'light' ? 'dark' : mode === 'dark' ? 'auto' : 'light'
-    setMode(nextMode)
     applyThemeMode(nextMode)
     window.localStorage.setItem('theme', nextMode)
+    window.dispatchEvent(new Event('cacau-theme-change'))
   }
 
   const label =

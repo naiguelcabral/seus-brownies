@@ -1,3 +1,4 @@
+import { requireDefined } from '../src/lib/required-value'
 import assert from 'node:assert/strict'
 import { createHash } from 'node:crypto'
 import { spawnSync } from 'node:child_process'
@@ -71,7 +72,9 @@ function fixture(last: number) {
                 ['uniques', 'uniqueConstraints'],
               ].map(([output, input]) => [
                 output,
-                Object.keys(table[input]).sort(),
+                Object.keys(
+                  requireDefined(table[requireDefined(input)]),
+                ).sort(),
               ]),
             ),
             definitions: {
@@ -118,8 +121,8 @@ function fixture(last: number) {
     ]
   }
   for (const [name, checks] of Object.entries(manualChecks)) {
-    tables[name].checks.push(...checks)
-    tables[name].checks.sort()
+    requireDefined(tables[name]).checks.push(...checks)
+    requireDefined(tables[name]).checks.sort()
   }
   return data
 }
@@ -220,7 +223,10 @@ test('rejects definition drift even when catalog names are unchanged', () => {
       string,
       Record<string, Record<string, unknown>>
     >
-    defs[object][field] = { ...defs[object][field], ...replacement }
+    requireDefined(defs[object])[field] = {
+      ...requireDefined(defs[object])[field],
+      ...replacement,
+    }
     const result = run('pre', data)
     assert.notEqual(result.status, 0)
     assert.match(result.stderr, /public.products.definitions/)
@@ -231,8 +237,9 @@ test('rejects definition drift even when catalog names are unchanged', () => {
     string,
     Record<string, Record<string, unknown>>
   >
-  const index = Object.keys(defs.indexes)[0]
-  defs.indexes[index].isUnique = !defs.indexes[index].isUnique
+  const index = requireDefined(Object.keys(requireDefined(defs.indexes))[0])
+  requireDefined(requireDefined(defs.indexes)[index]).isUnique =
+    !requireDefined(requireDefined(defs.indexes)[index]).isUnique
   assert.notEqual(run('post', data).status, 0)
 })
 
@@ -243,8 +250,8 @@ test('rejects changed checks, RLS and enum values and accepts object key orderin
     string,
     Record<string, Record<string, unknown>>
   >
-  const check = Object.keys(defs.checks)[0]
-  defs.checks[check].value = 'true'
+  const check = requireDefined(Object.keys(requireDefined(defs.checks))[0])
+  requireDefined(requireDefined(defs.checks)[check]).value = 'true'
   assert.notEqual(run('post', data).status, 0)
   const rls = fixture(16)
   rls.tables['public.products'].definitions.rls_enabled = true

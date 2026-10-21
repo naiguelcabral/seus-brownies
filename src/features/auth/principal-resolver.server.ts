@@ -3,9 +3,10 @@ import { eq } from 'drizzle-orm'
 import { getDb } from '#/db/index'
 import { appUserAccess } from '#/db/schema'
 
-import { createNeonPrincipalResolver } from './neon-adapter'
+import { createNeonSessionResolver } from './neon-adapter'
 import { createConfiguredNeonAuthServer } from './configured-neon-auth.server'
 import type { PrincipalResolver } from './guard'
+import { readTanStackNeonSession } from './neon-tanstack-adapter.server'
 
 async function readCacauAccess(authUserId: string) {
   const [access] = await getDb()
@@ -13,7 +14,7 @@ async function readCacauAccess(authUserId: string) {
     .from(appUserAccess)
     .where(eq(appUserAccess.authUserId, authUserId))
     .limit(1)
-  return access
+  return access ?? null
 }
 
 /**
@@ -21,18 +22,26 @@ async function readCacauAccess(authUserId: string) {
  * bindings. Missing configuration is intentionally indistinguishable from an
  * anonymous request, keeping every protected Server Function closed.
  */
-export function createConfiguredPrincipalResolver(
+function createConfiguredPrincipalResolver(
   environment: Record<string, string | undefined>,
 ): PrincipalResolver {
+  const resolveSession = createConfiguredSessionResolver(environment)
+  return async () => (await resolveSession()).principal
+}
+
+export function createConfiguredSessionResolver(
+  environment: Record<string, string | undefined>,
+) {
   const auth = createConfiguredNeonAuthServer(environment)
-  if (!auth) return async () => null
-  return createNeonPrincipalResolver(
+  if (!auth) return async () => ({ user: null, principal: null })
+  return createNeonSessionResolver(
     {
       getSession: async () => {
-        const result = await auth.getSession()
+        const result = await readTanStackNeonSession(auth)
         const user = result.data?.user
-        if (!user) return { data: null }
+        if (!user) return { data: null, error: result.error }
         return {
+          error: result.error,
           data: {
             user: {
               id: user.id,

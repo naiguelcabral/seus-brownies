@@ -1,3 +1,4 @@
+import { requireDefined } from '../src/lib/required-value'
 import { execFileSync } from 'node:child_process'
 import { resolve } from 'node:path'
 
@@ -32,7 +33,9 @@ type ComponentPayload = {
 }
 
 function usage(): never {
-  throw new Error('Uso: npm run production:profiles:sync -- <caminho-do-workbook> [--confirm]')
+  throw new Error(
+    'Uso: npm run production:profiles:sync -- <caminho-do-workbook> [--confirm]',
+  )
 }
 
 function parseArguments() {
@@ -52,10 +55,14 @@ function parseArguments() {
 }
 
 function readPayload(workbook: string): ComponentPayload {
-  const raw = execFileSync('python3', ['scripts/production_profile_components_payload.py', workbook], {
-    cwd: process.cwd(),
-    encoding: 'utf8',
-  })
+  const raw = execFileSync(
+    'python3',
+    ['scripts/production_profile_components_payload.py', workbook],
+    {
+      cwd: process.cwd(),
+      encoding: 'utf8',
+    },
+  )
   return JSON.parse(raw) as ComponentPayload
 }
 
@@ -88,7 +95,8 @@ function sameComponent(
     existing.productionProfileId === profileId &&
     existing.productId === productId &&
     existing.role === component.role &&
-    normalizeDecimal(existing.quantity) === normalizeDecimal(component.quantity) &&
+    normalizeDecimal(existing.quantity) ===
+      normalizeDecimal(component.quantity) &&
     existing.unit === component.unit &&
     existing.quantityBasis === component.quantityBasis
   )
@@ -99,7 +107,9 @@ const workbookPath = resolve(workbook)
 const payload = readPayload(workbookPath)
 
 if (payload.issues.length) {
-  throw new Error(`Sincronização bloqueada sem gravar dados:\n- ${payload.issues.join('\n- ')}`)
+  throw new Error(
+    `Sincronização bloqueada sem gravar dados:\n- ${payload.issues.join('\n- ')}`,
+  )
 }
 
 if (!confirm) {
@@ -111,30 +121,58 @@ if (!confirm) {
 
 config({ path: ['.env.local', '.env'], quiet: true })
 const databaseUrl = process.env.DATABASE_URL
-if (!databaseUrl) throw new Error('Defina DATABASE_URL em .env.local antes de sincronizar componentes de perfil.')
+if (!databaseUrl)
+  throw new Error(
+    'Defina DATABASE_URL em .env.local antes de sincronizar componentes de perfil.',
+  )
 
 const db = drizzle(databaseUrl, {
   schema: { products, productionProfileComponents, productionProfiles },
 })
 
 await db.transaction(async (tx) => {
-  const profileSourceIds = payload.components.map((component) => component.profileSourceId)
+  const profileSourceIds = payload.components.map(
+    (component) => component.profileSourceId,
+  )
   const profiles = await tx
-    .select({ id: productionProfiles.id, sourceId: productionProfiles.sourceId, productId: productionProfiles.productId })
+    .select({
+      id: productionProfiles.id,
+      sourceId: productionProfiles.sourceId,
+      productId: productionProfiles.productId,
+    })
     .from(productionProfiles)
     .where(inArray(productionProfiles.sourceId, profileSourceIds))
   if (profiles.length !== profileSourceIds.length) {
-    throw new Error('Sincronização interrompida: perfil de produção inicial ausente.')
+    throw new Error(
+      'Sincronização interrompida: perfil de produção inicial ausente.',
+    )
   }
-  const profileBySourceId = new Map(profiles.map((profile) => [profile.sourceId, profile]))
+  const profileBySourceId = new Map(
+    profiles.map((profile) => [profile.sourceId, profile]),
+  )
 
-  const skus = [...new Set(payload.components.flatMap((component) => [component.productSku, component.fillingProductSku]))]
+  const skus = [
+    ...new Set(
+      payload.components.flatMap((component) => [
+        component.productSku,
+        component.fillingProductSku,
+      ]),
+    ),
+  ]
   const catalog = await tx
-    .select({ id: products.id, sku: products.sku, name: products.name, type: products.type, unit: products.unit })
+    .select({
+      id: products.id,
+      sku: products.sku,
+      name: products.name,
+      type: products.type,
+      unit: products.unit,
+    })
     .from(products)
     .where(inArray(products.sku, skus))
   if (catalog.length !== skus.length) {
-    throw new Error('Sincronização interrompida: produto final ou recheio ausente do catálogo.')
+    throw new Error(
+      'Sincronização interrompida: produto final ou recheio ausente do catálogo.',
+    )
   }
   const productBySku = new Map(catalog.map((product) => [product.sku, product]))
   for (const component of payload.components) {
@@ -149,7 +187,9 @@ await db.transaction(async (tx) => {
       fillingProduct.type !== 'ingredient' ||
       fillingProduct.unit !== component.unit
     ) {
-      throw new Error(`Sincronização interrompida: catálogo ou perfil incompatível para ${component.sourceId}.`)
+      throw new Error(
+        `Sincronização interrompida: catálogo ou perfil incompatível para ${component.sourceId}.`,
+      )
     }
   }
 
@@ -169,8 +209,14 @@ await db.transaction(async (tx) => {
     .from(productionProfileComponents)
     .where(
       or(
-        inArray(productionProfileComponents.sourceId, payload.components.map((component) => component.sourceId)),
-        inArray(productionProfileComponents.sourceHash, payload.components.map((component) => component.sourceHash)),
+        inArray(
+          productionProfileComponents.sourceId,
+          payload.components.map((component) => component.sourceId),
+        ),
+        inArray(
+          productionProfileComponents.sourceHash,
+          payload.components.map((component) => component.sourceHash),
+        ),
       ),
     )
   const existingByComposite = await tx
@@ -178,12 +224,25 @@ await db.transaction(async (tx) => {
     .from(productionProfileComponents)
     .where(
       and(
-        inArray(productionProfileComponents.productionProfileId, profiles.map((profile) => profile.id)),
-        inArray(productionProfileComponents.productId, payload.components.map((component) => productBySku.get(component.fillingProductSku)!.id)),
+        inArray(
+          productionProfileComponents.productionProfileId,
+          profiles.map((profile) => profile.id),
+        ),
+        inArray(
+          productionProfileComponents.productId,
+          payload.components.map(
+            (component) => productBySku.get(component.fillingProductSku)!.id,
+          ),
+        ),
         eq(productionProfileComponents.role, 'filling'),
       ),
     )
-  const existing = new Map([...existingByIdentity, ...existingByComposite].map((component) => [component.id, component]))
+  const existing = new Map(
+    [...existingByIdentity, ...existingByComposite].map((component) => [
+      component.id,
+      component,
+    ]),
+  )
   const newComponents: Component[] = []
   for (const component of payload.components) {
     const profileId = profileBySourceId.get(component.profileSourceId)!.id
@@ -199,23 +258,36 @@ await db.transaction(async (tx) => {
       newComponents.push(component)
       continue
     }
-    if (matches.length !== 1 || !sameComponent(matches[0], component, profileId, productId)) {
-      throw new Error(`Sincronização interrompida: componente existente diverge de ${component.sourceId}.`)
+    if (
+      matches.length !== 1 ||
+      !sameComponent(
+        requireDefined(matches[0]),
+        component,
+        profileId,
+        productId,
+      )
+    ) {
+      throw new Error(
+        `Sincronização interrompida: componente existente diverge de ${component.sourceId}.`,
+      )
     }
   }
 
   if (newComponents.length) {
-    await tx.insert(productionProfileComponents).values(newComponents.map((component) => ({
-      sourceId: component.sourceId,
-      sourceHash: component.sourceHash,
-      productionProfileId: profileBySourceId.get(component.profileSourceId)!.id,
-      productId: productBySku.get(component.fillingProductSku)!.id,
-      role: component.role,
-      quantity: component.quantity,
-      unit: component.unit,
-      quantityBasis: component.quantityBasis,
-      sourcePayload: component.source,
-    })))
+    await tx.insert(productionProfileComponents).values(
+      newComponents.map((component) => ({
+        sourceId: component.sourceId,
+        sourceHash: component.sourceHash,
+        productionProfileId: profileBySourceId.get(component.profileSourceId)!
+          .id,
+        productId: productBySku.get(component.fillingProductSku)!.id,
+        role: component.role,
+        quantity: component.quantity,
+        unit: component.unit,
+        quantityBasis: component.quantityBasis,
+        sourcePayload: component.source,
+      })),
+    )
   }
 
   console.log(

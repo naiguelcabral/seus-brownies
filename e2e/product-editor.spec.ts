@@ -1,0 +1,185 @@
+import { test, expect } from './isolated-test'
+import { startPreview } from './preview-server'
+
+let preview: Awaited<ReturnType<typeof startPreview>>
+let baseURL: string
+test.beforeAll(async () => {
+  preview = await startPreview('e2e/fixtures/product-editor')
+  baseURL = preview.url
+})
+test.afterAll(async () => {
+  await preview.close()
+})
+
+test.beforeEach(async ({ page }) => {
+  await page.goto(baseURL)
+})
+
+test('fixture bloqueia conexões externas sem consultar serviços compartilhados', async ({
+  page,
+}) => {
+  const failure = page.waitForEvent('requestfailed', {
+    predicate: (request) =>
+      request.url().startsWith('https://external-fixture.invalid/'),
+  })
+  const outcome = await page.evaluate(async () => {
+    try {
+      await fetch('https://external-fixture.invalid/no-shared-backend')
+      return 'unexpected-success'
+    } catch {
+      return 'blocked'
+    }
+  })
+  expect(outcome).toBe('blocked')
+  expect((await failure).failure()?.errorText).toMatch(
+    /^net::ERR_BLOCKED_BY_CLIENT(?:\.Inspector)?$/,
+  )
+})
+
+test('abre, contém o foco, fecha com Escape e devolve foco ao botão', async ({
+  page,
+}) => {
+  const trigger = page.getByRole('button', {
+    name: 'Adicionar produto',
+    exact: true,
+  })
+  await expect(page.getByRole('dialog')).toHaveCount(0)
+  await trigger.click()
+  const dialog = page.getByRole('dialog', {
+    name: 'Adicionar produto',
+    exact: true,
+  })
+  await expect(dialog).toBeVisible()
+  const desktopBox = await dialog.boundingBox()
+  expect(desktopBox?.x).toBeGreaterThan(0)
+  expect(desktopBox?.width).toBeLessThanOrEqual(672)
+  await expect(dialog.getByLabel('Nome *', { exact: true })).toBeFocused()
+  for (let index = 0; index < 15; index++) {
+    await page.keyboard.press('Tab')
+    expect(
+      await dialog.evaluate((element) =>
+        element.contains(document.activeElement),
+      ),
+    ).toBe(true)
+  }
+  await page.keyboard.press('Escape')
+  await expect(dialog).toHaveCount(0)
+  await expect(trigger).toBeFocused()
+})
+
+test('preserva valores no erro, confirma descarte e permite corrigir e salvar', async ({
+  page,
+}) => {
+  await page.getByLabel('Resultado do salvamento').selectOption('retry')
+  await page
+    .getByRole('button', { name: 'Adicionar produto', exact: true })
+    .click()
+  const dialog = page.getByRole('dialog')
+  await dialog
+    .getByRole('button', { name: 'Adicionar produto', exact: true })
+    .click()
+  await expect(page.getByRole('alert')).toContainText('Preencha nome e SKU')
+  await dialog.getByLabel('Nome *', { exact: true }).fill('Brownie novo')
+  await dialog.getByLabel('SKU *', { exact: true }).fill('qa-novo')
+  await dialog
+    .getByRole('button', { name: 'Adicionar produto', exact: true })
+    .click()
+  await expect(page.getByRole('alert')).toContainText('preço de venda')
+  await dialog.getByLabel('Preço de venda *', { exact: true }).fill('15,50')
+  await dialog
+    .getByRole('button', { name: 'Adicionar produto', exact: true })
+    .click()
+  await expect(page.getByRole('alert')).toContainText('SKU já cadastrado')
+  await expect(dialog.getByLabel('Nome *', { exact: true })).toHaveValue(
+    'Brownie novo',
+  )
+  page.once('dialog', (confirmation) => confirmation.dismiss())
+  await page.keyboard.press('Escape')
+  await expect(dialog).toBeVisible()
+  await dialog.getByLabel('SKU *', { exact: true }).fill('QA-CORRIGIDO')
+  await dialog
+    .getByRole('button', { name: 'Adicionar produto', exact: true })
+    .click()
+  await expect(dialog).toHaveCount(0)
+  await expect(page.getByTestId('saved')).toContainText('QA-CORRIGIDO')
+  await expect(page.getByTestId('calls')).toHaveText('2')
+})
+
+test('permite ingrediente sem preço e impede fechar ou reenviar enquanto salva', async ({
+  page,
+}) => {
+  await page.getByLabel('Resultado do salvamento').selectOption('slow')
+  await page
+    .getByRole('button', { name: 'Adicionar produto', exact: true })
+    .click()
+  const dialog = page.getByRole('dialog')
+  await dialog
+    .getByLabel('Nome *', { exact: true })
+    .fill('Ingrediente de ensaio')
+  await dialog.getByLabel('SKU *', { exact: true }).fill('QA-ING')
+  await dialog
+    .getByRole('combobox', { name: 'Tipo', exact: true })
+    .selectOption('ingredient')
+  await dialog
+    .getByRole('button', { name: 'Adicionar produto', exact: true })
+    .click()
+  await expect(
+    dialog.getByRole('button', { name: 'Salvando...' }),
+  ).toBeDisabled()
+  await expect(dialog.getByRole('button', { name: 'Cancelar' })).toBeDisabled()
+  await page.keyboard.press('Escape')
+  await expect(dialog).toBeVisible()
+  await expect(dialog).toHaveCount(0)
+  await expect(page.getByTestId('calls')).toHaveText('1')
+  await expect(page.getByTestId('saved')).toContainText('"salePrice":""')
+})
+
+test('edita com campos opcionais preservados e cabe em tela móvel', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 })
+  await page.getByRole('button', { name: 'Editar Brownie de ensaio' }).click()
+  const dialog = page.getByRole('dialog', { name: 'Editar produto' })
+  await expect(dialog.getByLabel('Nome *', { exact: true })).toHaveValue(
+    'Brownie de ensaio',
+  )
+  await expect(
+    dialog.getByRole('textbox', { name: 'Descrição', exact: true }),
+  ).toBeVisible()
+  await expect(
+    dialog.getByRole('textbox', {
+      name: 'Fornecedor padrão (opcional)',
+      exact: true,
+    }),
+  ).toHaveValue('Fornecedor de ensaio')
+  const box = await dialog.boundingBox()
+  expect(box).not.toBeNull()
+  expect(box?.width).toBeLessThanOrEqual(390)
+  expect(box?.x).toBeGreaterThan(0)
+  expect(box?.height).toBeLessThanOrEqual(760)
+  await page.screenshot({ path: '/tmp/cacau-product-editor-mobile.png' })
+  await dialog.getByRole('button', { name: 'Salvar alterações' }).click()
+  await expect(dialog).toHaveCount(0)
+  await expect(page.getByTestId('saved')).toContainText('Somente ensaio local')
+})
+
+test('confirma descarte, reabre cadastro limpo e registra visual desktop', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1280, height: 900 })
+  const trigger = page.getByRole('button', {
+    name: 'Adicionar produto',
+    exact: true,
+  })
+  await trigger.click()
+  await page.getByLabel('Nome *', { exact: true }).fill('Não salvar')
+  page.once('dialog', (confirmation) => confirmation.accept())
+  await page.getByRole('button', { name: 'Cancelar' }).click()
+  await expect(page.getByRole('dialog')).toHaveCount(0)
+  await trigger.click()
+  await expect(page.getByLabel('Nome *', { exact: true })).toHaveValue('')
+  await expect(
+    page.getByRole('textbox', { name: 'Descrição', exact: true }),
+  ).not.toBeVisible()
+  await page.screenshot({ path: '/tmp/cacau-product-editor-desktop.png' })
+})

@@ -1,4 +1,6 @@
+import { requireDefined } from '../../lib/required-value'
 import { z } from 'zod'
+import { paymentFeeSchedule } from '#/features/finance/payment-fees'
 
 const decimalText = z.string().trim().min(1).max(32)
 
@@ -12,6 +14,7 @@ export const managementSettingsValues = z
     criticalRevenueTolerance: decimalText,
     minimumProductMargin: decimalText,
     feeTaxReserveRate: decimalText,
+    paymentFees: paymentFeeSchedule.nullable().optional(),
   })
   .superRefine((value, context) => {
     const moneyFields = [
@@ -68,7 +71,7 @@ export const managementSettingsValues = z
 
 export type ManagementSettingsInput = z.infer<typeof managementSettingsValues>
 
-export function parseUnsignedDecimal(value: string, scale: number) {
+function parseUnsignedDecimal(value: string, scale: number) {
   const normalized = value.trim().replace(',', '.')
   const match = /^(\d+)(?:\.(\d+))?$/.exec(normalized)
   if (!match) return null
@@ -76,10 +79,11 @@ export function parseUnsignedDecimal(value: string, scale: number) {
   if (fraction.length > scale) return null
   const paddedFraction = fraction.padEnd(scale, '0')
   const factor = 10n ** BigInt(scale)
-  const scaled = BigInt(whole) * factor + BigInt(paddedFraction || '0')
+  const scaled =
+    BigInt(requireDefined(whole)) * factor + BigInt(paddedFraction || '0')
   return {
     scaled,
-    normalized: `${BigInt(whole)}.${paddedFraction}`,
+    normalized: `${BigInt(requireDefined(whole))}.${paddedFraction}`,
   }
 }
 

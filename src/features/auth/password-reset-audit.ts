@@ -4,8 +4,9 @@ import type {
   AuthAuditWriter,
 } from './audit'
 import type { PasswordResetTelemetry } from './password-reset-telemetry.server'
+import { readAuditErrorCode } from './password-reset-telemetry.server'
 
-export type PasswordResetAuditAction = Extract<
+type PasswordResetAuditAction = Extract<
   AuthAuditAction,
   'password_reset_requested' | 'password_reset_completed'
 >
@@ -47,11 +48,15 @@ export async function executeAuditedPasswordReset<T>(
   const emit = (
     stage: Parameters<PasswordResetTelemetry['emit']>[0]['stage'],
     reasonCode?: Parameters<PasswordResetTelemetry['emit']>[0]['reasonCode'],
+    auditErrorCode?: Parameters<
+      PasswordResetTelemetry['emit']
+    >[0]['auditErrorCode'],
   ) =>
     operation.telemetry?.emit({
       requestId,
       stage,
       ...(reasonCode ? { reasonCode } : {}),
+      ...(auditErrorCode ? { auditErrorCode } : {}),
     })
   const baseEvent = {
     action: operation.action,
@@ -69,8 +74,8 @@ export async function executeAuditedPasswordReset<T>(
         reasonCode: 'provider_outcome_pending',
       },
     })
-  } catch {
-    emit('initial_audit_failed')
+  } catch (error) {
+    emit('initial_audit_failed', undefined, readAuditErrorCode(error))
     return { auditComplete: false, stage: 'before-provider' }
   }
 
@@ -96,8 +101,8 @@ export async function executeAuditedPasswordReset<T>(
     })
     if (outcome === 'success') emit('completed')
     return { auditComplete: true, result }
-  } catch {
-    emit('final_audit_failed')
+  } catch (error) {
+    emit('final_audit_failed', undefined, readAuditErrorCode(error))
     return { auditComplete: false, result, stage: 'after-provider' }
   }
 }

@@ -1,7 +1,11 @@
+import { requireDefined } from '../src/lib/required-value'
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import { createAuthAuditTelemetry } from '../src/features/auth/auth-audit-telemetry.server'
-import { createPasswordResetTelemetry } from '../src/features/auth/password-reset-telemetry.server'
+import {
+  createPasswordResetTelemetry,
+  readAuditErrorCode,
+} from '../src/features/auth/password-reset-telemetry.server'
 import type { PasswordResetTelemetryEvent } from '../src/features/auth/password-reset-telemetry.server'
 
 const requestId = '12345678-1234-4321-abcd-123456789abc'
@@ -19,7 +23,7 @@ test('audit log is structured and excludes extra runtime fields', (t) => {
     error: new Error('SYNTHETIC_PROVIDER_RESPONSE'),
   }
   createAuthAuditTelemetry().emit(input)
-  assert.deepEqual(JSON.parse(records[0]), {
+  assert.deepEqual(JSON.parse(requireDefined(records[0])), {
     event: 'auth.audit',
     level: 'warn',
     requestId,
@@ -40,7 +44,7 @@ test('password reset log preserves correlation and allowlisted reason only', (t)
     email: 'synthetic@example.invalid',
   }
   createPasswordResetTelemetry().emit(input)
-  assert.deepEqual(JSON.parse(records[0]), {
+  assert.deepEqual(JSON.parse(requireDefined(records[0])), {
     event: 'auth.password-reset',
     level: 'info',
     requestId,
@@ -57,8 +61,9 @@ test('invalid correlation, reason and stage cannot carry arbitrary content', (t)
     requestId: 'SYNTHETIC_TOKEN\nforged log',
     stage: 'completed',
     reasonCode: 'SYNTHETIC_REASON',
+    auditErrorCode: 'SYNTHETIC_SECRET',
   } as unknown as PasswordResetTelemetryEvent)
-  assert.deepEqual(JSON.parse(records[0]), {
+  assert.deepEqual(JSON.parse(requireDefined(records[0])), {
     event: 'auth.password-reset',
     level: 'info',
     requestId: 'invalid_request_id',
@@ -70,4 +75,22 @@ test('invalid correlation, reason and stage cannot carry arbitrary content', (t)
   } as unknown as PasswordResetTelemetryEvent)
   assert.equal(records.length, 1)
   assert.doesNotMatch(records.join(''), /SYNTHETIC|forged/)
+})
+
+test('audit diagnostics read allowlisted driver codes through bounded causes only', () => {
+  assert.equal(
+    readAuditErrorCode({
+      cause: { code: '42P01', message: 'SYNTHETIC_SECRET' },
+    }),
+    '42P01',
+  )
+  assert.equal(readAuditErrorCode({ code: 'ECONNREFUSED' }), 'ECONNREFUSED')
+  assert.equal(readAuditErrorCode({ code: 'SYNTHETIC_SECRET' }), undefined)
+  assert.equal(
+    readAuditErrorCode(new Error('42P01 SYNTHETIC_SECRET')),
+    undefined,
+  )
+  const cyclic: { cause?: unknown } = {}
+  cyclic.cause = cyclic
+  assert.equal(readAuditErrorCode(cyclic), undefined)
 })

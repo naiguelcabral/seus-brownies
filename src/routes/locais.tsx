@@ -1,3 +1,9 @@
+import { Plus } from 'lucide-react'
+import {
+  LocationEditor,
+  locationLabels,
+} from '#/features/locations/LocationEditor'
+import type { LocationFormValues } from '#/features/locations/LocationEditor'
 import { useState } from 'react'
 import { createFileRoute, useNavigate, useRouter } from '@tanstack/react-router'
 import { useServerFn } from '@tanstack/react-start'
@@ -32,13 +38,9 @@ export const Route = createFileRoute('/locais')({
   errorComponent: LocationsError,
 })
 
-const emptyForm = {
-  name: '',
-  classification:
-    'unclassified' as (typeof salesLocationClassifications)[number],
-  frequency: '',
-  notes: '',
-}
+type SalesLocation = Awaited<
+  ReturnType<typeof listSalesLocations>
+>['locations'][number]
 
 function SalesLocationsPage() {
   const result = Route.useLoaderData()
@@ -48,31 +50,21 @@ function SalesLocationsPage() {
   const createLocation = useServerFn(createSalesLocation)
   const updateLocation = useServerFn(updateSalesLocation)
   const setActive = useServerFn(setSalesLocationActive)
-  const [editingId, setEditingId] = useState<number | null>(null)
-  const [form, setForm] = useState(emptyForm)
+  const [editing, setEditing] = useState<SalesLocation | null>(null)
+  const [editorOpen, setEditorOpen] = useState(false)
   const [saving, setSaving] = useState(false)
   const [message, setMessage] = useState<string | null>(null)
 
-  async function submit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault()
-    setSaving(true)
-    setMessage(null)
+  async function save(values: LocationFormValues) {
+    if (editing) await updateLocation({ data: { ...values, id: editing.id } })
+    else await createLocation({ data: values })
+    setMessage(editing ? 'Local atualizado.' : 'Local criado.')
+    setEditorOpen(false)
+    setEditing(null)
     try {
-      const data = { ...form }
-      if (editingId) await updateLocation({ data: { ...data, id: editingId } })
-      else await createLocation({ data })
-      setForm(emptyForm)
-      setEditingId(null)
-      setMessage(editingId ? 'Local atualizado.' : 'Local criado.')
       await router.invalidate()
-    } catch (error) {
-      setMessage(
-        error instanceof Error
-          ? error.message
-          : 'Não foi possível salvar o local.',
-      )
-    } finally {
-      setSaving(false)
+    } catch {
+      setMessage('Local salvo. Atualize a página para conferir a lista.')
     }
   }
 
@@ -81,9 +73,39 @@ function SalesLocationsPage() {
       title="Locais e canais"
       description="Cadastre os pontos de venda usados nas vendas e nos relatórios."
     >
-      <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_380px]">
+      {message ? (
+        <p
+          role="status"
+          className="mb-4 rounded-xl border border-[#ecdfd4] bg-[#fff5e7] p-4 text-sm text-[#75411f]"
+        >
+          {message}
+        </p>
+      ) : null}
+      <div className="grid gap-6">
         <section className="overflow-hidden rounded-2xl border border-[#ecdfd4] bg-white">
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#f0e5dc] px-5 py-4">
+            <h2 className="font-bold">Locais cadastrados</h2>
+            <div className="flex items-center gap-3">
+              <span className="rounded-full bg-[#f8eee4] px-2.5 py-1 text-xs font-bold text-[#92522e]">
+                {result.total}
+              </span>
+              <button
+                type="button"
+                aria-haspopup="dialog"
+                className="inline-flex items-center gap-2 rounded-lg bg-[#4a2114] px-4 py-2.5 text-sm font-bold text-white hover:bg-[#653321]"
+                onClick={() => {
+                  setEditing(null)
+                  setMessage(null)
+                  setEditorOpen(true)
+                }}
+              >
+                <Plus size={17} aria-hidden="true" />
+                Adicionar local
+              </button>
+            </div>
+          </div>
           <form
+            key={JSON.stringify(search)}
             role="search"
             className="flex flex-wrap items-end gap-3 border-b border-[#f0e5dc] p-5"
             onSubmit={(event) => {
@@ -139,6 +161,15 @@ function SalesLocationsPage() {
             <button className="rounded-lg border border-[#4a2114] px-3 py-2 text-xs font-bold">
               Filtrar
             </button>
+            {search.query || search.classification || search.activity ? (
+              <button
+                type="button"
+                className="px-3 py-2 text-xs font-bold text-[#75411f]"
+                onClick={() => void navigate({ search: { page: 1 } })}
+              >
+                Limpar filtros
+              </button>
+            ) : null}
           </form>
           {result.locations.length ? (
             <ul className="divide-y divide-[#f0e5dc]">
@@ -159,14 +190,12 @@ function SalesLocationsPage() {
                     <button
                       type="button"
                       className="text-xs font-bold"
+                      aria-haspopup="dialog"
+                      aria-label={`Editar ${location.name}`}
                       onClick={() => {
-                        setEditingId(location.id)
-                        setForm({
-                          name: location.name,
-                          classification: location.classification,
-                          frequency: location.frequency ?? '',
-                          notes: location.notes ?? '',
-                        })
+                        setEditing(location)
+                        setMessage(null)
+                        setEditorOpen(true)
                       }}
                     >
                       Editar
@@ -250,99 +279,24 @@ function SalesLocationsPage() {
             </div>
           </nav>
         </section>
-        <form
-          className="space-y-4 rounded-2xl border border-[#ecdfd4] bg-white p-5"
-          onSubmit={submit}
-        >
-          <h2 className="font-bold">
-            {editingId ? 'Editar local' : 'Novo local'}
-          </h2>
-          <EditField
-            label="Nome"
-            value={form.name}
-            onChange={(name) => setForm({ ...form, name })}
+        {editorOpen ? (
+          <LocationEditor
+            key={editing?.id ?? 'new'}
+            location={editing}
+            onCancel={() => {
+              setEditorOpen(false)
+              setEditing(null)
+            }}
+            onSave={save}
           />
-          <label className="block text-sm font-bold">
-            Tipo
-            <select
-              className="field mt-1.5"
-              value={form.classification}
-              onChange={(event) =>
-                setForm({
-                  ...form,
-                  classification: event.target
-                    .value as typeof form.classification,
-                })
-              }
-            >
-              {salesLocationClassifications.map((value) => (
-                <option key={value} value={value}>
-                  {classificationLabel(value)}
-                </option>
-              ))}
-            </select>
-          </label>
-          <EditField
-            label="Frequência"
-            value={form.frequency}
-            onChange={(frequency) => setForm({ ...form, frequency })}
-          />
-          <label className="block text-sm font-bold">
-            Observação
-            <textarea
-              className="field mt-1.5 min-h-20"
-              value={form.notes}
-              onChange={(event) =>
-                setForm({ ...form, notes: event.target.value })
-              }
-            />
-          </label>
-          {message ? (
-            <p
-              aria-live="polite"
-              className="rounded-lg bg-[#fff5e7] p-3 text-sm text-[#75411f]"
-            >
-              {message}
-            </p>
-          ) : null}
-          <div className="flex gap-2">
-            <button
-              disabled={saving}
-              className="rounded-lg bg-[#4a2114] px-4 py-2.5 text-sm font-bold text-white disabled:opacity-60"
-            >
-              {saving ? 'Salvando…' : 'Salvar'}
-            </button>
-            {editingId ? (
-              <button
-                type="button"
-                className="text-sm font-bold"
-                onClick={() => {
-                  setEditingId(null)
-                  setForm(emptyForm)
-                }}
-              >
-                Cancelar
-              </button>
-            ) : null}
-          </div>
-        </form>
+        ) : null}
       </div>
     </ManagementLayout>
   )
 }
 
-function classificationLabel(value: string) {
-  return (
-    (
-      {
-        unclassified: 'Não classificado',
-        physical: 'Físico',
-        online: 'Online',
-        event: 'Evento',
-        partner: 'Parceiro',
-      } as Record<string, string>
-    )[value] ?? value
-  )
+function classificationLabel(value: keyof typeof locationLabels) {
+  return locationLabels[value]
 }
 function Filter({
   label,
@@ -351,7 +305,7 @@ function Filter({
 }: {
   label: string
   name: string
-  defaultValue?: string
+  defaultValue?: string | undefined
 }) {
   return (
     <label className="text-xs font-bold">
@@ -360,27 +314,6 @@ function Filter({
         className="field mt-1 block"
         name={name}
         defaultValue={defaultValue}
-      />
-    </label>
-  )
-}
-function EditField({
-  label,
-  value,
-  onChange,
-}: {
-  label: string
-  value: string
-  onChange: (value: string) => void
-}) {
-  return (
-    <label className="block text-sm font-bold">
-      {label}
-      <input
-        className="field mt-1.5"
-        value={value}
-        onChange={(event) => onChange(event.target.value)}
-        required={label === 'Nome'}
       />
     </label>
   )
@@ -397,7 +330,7 @@ function LocationsPending() {
     </ManagementLayout>
   )
 }
-function LocationsError({ error }: { error: Error }) {
+function LocationsError({ error }: { error: unknown }) {
   const router = useRouter()
   return (
     <ManagementLayout
@@ -405,7 +338,7 @@ function LocationsError({ error }: { error: Error }) {
       description="Não foi possível carregar o cadastro."
     >
       <div className="rounded-2xl border border-[#e7c9b8] bg-[#fff5ed] p-5 text-sm text-[#75411f]">
-        <p>{error.message || 'Tente novamente.'}</p>
+        <p>{(error instanceof Error && error.message) || 'Tente novamente.'}</p>
         <button
           className="mt-3 rounded border px-3 py-2 text-xs font-bold"
           onClick={() => void router.invalidate()}

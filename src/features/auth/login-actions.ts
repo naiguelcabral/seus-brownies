@@ -14,9 +14,6 @@ export const accessDeniedLoginMessage =
 export const emailVerificationRequiredMessage =
   'Verifique seu e-mail antes de acessar o Cacau. Use o código enviado ou solicite um novo.'
 
-export const invalidSignUpMessage =
-  'Não foi possível concluir o cadastro. Confira os dados e tente novamente.'
-
 export const invalidOtpMessage =
   'Não foi possível verificar o código. Solicite um novo código e tente novamente.'
 
@@ -85,7 +82,7 @@ async function recordAuthAction(
         outcome,
         targetType,
         requestId: audit.requestId,
-        metadata: reasonCode ? { reasonCode } : undefined,
+        ...(reasonCode ? { metadata: { reasonCode } } : {}),
       }),
     )
   } catch {
@@ -138,6 +135,8 @@ export async function signUpWithEmailPassword(
   try {
     // Always attempt the same OTP delivery step. An existing unverified
     // identity can continue here, while the visible response stays identical.
+    // Re-registration never replaces an existing password: its owner must
+    // use the password-reset flow, independently of email verification.
     await auth.signUp.email(input)
     await auth.emailOtp.sendVerificationOtp({
       email: input.email,

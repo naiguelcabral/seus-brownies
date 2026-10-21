@@ -86,6 +86,29 @@ export type OperationalReportExport = {
     }>
     operationalCosts: Array<{ type: 'energy' | 'labor'; amount: string }>
   } | null
+  integrity: {
+    complete: boolean
+    checked: {
+      layers: number
+      allocations: number
+      reversals: number
+      movements: number
+      productionBatches: number
+      productionOutputs: number
+      deliveries: number
+      deliveryItems: number
+    }
+    divergences: Array<{
+      area: string
+      code: string
+      entityType: string
+      entityId: number | null
+      relatedIds: number[]
+      message: string
+      expected?: string
+      actual?: string
+    }>
+  } | null
 }
 
 type ExportRow = [
@@ -381,6 +404,35 @@ export function createOperationalReportCsv(
         '',
         item.amount,
         '',
+      ]),
+    )
+  }
+
+  if (report.integrity) {
+    rows.push(
+      [
+        'Conferência integrada',
+        report.integrity.complete
+          ? 'Sem divergências'
+          : 'Divergências encontradas',
+        report.integrity.checked.layers,
+        'camadas FIFO',
+        '',
+        '',
+        '',
+        '',
+        `${report.integrity.checked.productionBatches} lotes; ${report.integrity.checked.deliveries} entregas`,
+      ],
+      ...report.integrity.divergences.map((item): ExportRow => [
+        'Conferência integrada',
+        item.message,
+        '',
+        item.area,
+        item.expected ?? '',
+        item.actual ?? '',
+        '',
+        '',
+        `${item.code}; ${item.entityType}${item.entityId === null ? '' : ` #${item.entityId}`}; relacionados ${item.relatedIds.join(', ')}`,
       ]),
     )
   }

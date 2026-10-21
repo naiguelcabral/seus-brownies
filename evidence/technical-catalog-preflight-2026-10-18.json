@@ -1,0 +1,295 @@
+{
+  "date": "2026-10-18",
+  "project": "steep-brook-51659857",
+  "branch": "br-lingering-wind-acwh5wap",
+  "mode": "READ ONLY",
+  "catalog": [
+    {
+      "sku": "INS001",
+      "name": "Açúcar",
+      "product_type": "ingredient",
+      "unit": "g",
+      "is_active": true
+    },
+    {
+      "sku": "INS002",
+      "name": "Óleo",
+      "product_type": "ingredient",
+      "unit": "ml",
+      "is_active": true
+    },
+    {
+      "sku": "INS003",
+      "name": "Chocolate",
+      "product_type": "ingredient",
+      "unit": "g",
+      "is_active": true
+    },
+    {
+      "sku": "INS004",
+      "name": "Farinha de Trigo",
+      "product_type": "ingredient",
+      "unit": "g",
+      "is_active": true
+    },
+    {
+      "sku": "INS005",
+      "name": "Papel Manteiga (rolo)",
+      "product_type": "packaging",
+      "unit": "m",
+      "is_active": true
+    },
+    {
+      "sku": "INS006",
+      "name": "Adesivo",
+      "product_type": "packaging",
+      "unit": "unit",
+      "is_active": true
+    },
+    {
+      "sku": "INS007",
+      "name": "Embalagem Simples 5x5",
+      "product_type": "packaging",
+      "unit": "unit",
+      "is_active": true
+    },
+    {
+      "sku": "INS008",
+      "name": "Embalagem Simples 7x7",
+      "product_type": "packaging",
+      "unit": "unit",
+      "is_active": true
+    },
+    {
+      "sku": "INS009",
+      "name": "Embalagem Recheado 5x5",
+      "product_type": "packaging",
+      "unit": "unit",
+      "is_active": true
+    },
+    {
+      "sku": "INS010",
+      "name": "Embalagem Recheado 7x7",
+      "product_type": "packaging",
+      "unit": "unit",
+      "is_active": true
+    },
+    {
+      "sku": "INS011",
+      "name": "Embalagem Bombom Unitário",
+      "product_type": "packaging",
+      "unit": "unit",
+      "is_active": true
+    },
+    {
+      "sku": "INS012",
+      "name": "Embalagem Kit 4 Bombons",
+      "product_type": "packaging",
+      "unit": "unit",
+      "is_active": true
+    },
+    {
+      "sku": "INS013",
+      "name": "Brigadeiro (Recheio)",
+      "product_type": "ingredient",
+      "unit": "g",
+      "is_active": true
+    },
+    {
+      "sku": "INS014",
+      "name": "Doce de Leite (Recheio)",
+      "product_type": "ingredient",
+      "unit": "g",
+      "is_active": true
+    },
+    {
+      "sku": "INS015",
+      "name": "Leite Ninho (Recheio)",
+      "product_type": "ingredient",
+      "unit": "g",
+      "is_active": true
+    },
+    {
+      "sku": "INS016",
+      "name": "Creme de Avelã (Recheio)",
+      "product_type": "ingredient",
+      "unit": "g",
+      "is_active": true
+    },
+    {
+      "sku": "INS017",
+      "name": "Goiabada (Recheio)",
+      "product_type": "ingredient",
+      "unit": "g",
+      "is_active": true
+    },
+    {
+      "sku": "INS018",
+      "name": "Maracujá (Recheio)",
+      "product_type": "ingredient",
+      "unit": "g",
+      "is_active": true
+    },
+    {
+      "sku": "INS019",
+      "name": "Chocolate Ao Leite / Branco",
+      "product_type": "ingredient",
+      "unit": "g",
+      "is_active": true
+    },
+    {
+      "sku": "PROD001",
+      "name": "Bombom Brownie Unitário",
+      "product_type": "finished_product",
+      "unit": "unit",
+      "is_active": true
+    },
+    {
+      "sku": "PROD002",
+      "name": "Bordinhas",
+      "product_type": "finished_product",
+      "unit": "unit",
+      "is_active": true
+    },
+    {
+      "sku": "PROD003",
+      "name": "Brownie Recheado 5x5 (Brigadeiro)",
+      "product_type": "finished_product",
+      "unit": "unit",
+      "is_active": true
+    },
+    {
+      "sku": "PROD004",
+      "name": "Brownie Recheado 5x5 (Creme de Avelã)",
+      "product_type": "finished_product",
+      "unit": "unit",
+      "is_active": true
+    },
+    {
+      "sku": "PROD005",
+      "name": "Brownie Recheado 5x5 (Doce de Leite)",
+      "product_type": "finished_product",
+      "unit": "unit",
+      "is_active": true
+    },
+    {
+      "sku": "PROD006",
+      "name": "Brownie Recheado 5x5 (Goiabada)",
+      "product_type": "finished_product",
+      "unit": "unit",
+      "is_active": true
+    },
+    {
+      "sku": "PROD007",
+      "name": "Brownie Recheado 5x5 (Leite Ninho)",
+      "product_type": "finished_product",
+      "unit": "unit",
+      "is_active": true
+    },
+    {
+      "sku": "PROD008",
+      "name": "Brownie Recheado 5x5 (Maracujá)",
+      "product_type": "finished_product",
+      "unit": "unit",
+      "is_active": true
+    },
+    {
+      "sku": "PROD009",
+      "name": "Brownie Recheado 7x7 (Brigadeiro)",
+      "product_type": "finished_product",
+      "unit": "unit",
+      "is_active": true
+    },
+    {
+      "sku": "PROD010",
+      "name": "Brownie Recheado 7x7 (Creme de avelã)",
+      "product_type": "finished_product",
+      "unit": "unit",
+      "is_active": true
+    },
+    {
+      "sku": "PROD011",
+      "name": "Brownie Recheado 7x7 (Doce de Leite)",
+      "product_type": "finished_product",
+      "unit": "unit",
+      "is_active": true
+    },
+    {
+      "sku": "PROD012",
+      "name": "Brownie Recheado 7x7 (Goiabada)",
+      "product_type": "finished_product",
+      "unit": "unit",
+      "is_active": true
+    },
+    {
+      "sku": "PROD013",
+      "name": "Brownie Recheado 7x7 (Leite Ninho)",
+      "product_type": "finished_product",
+      "unit": "unit",
+      "is_active": true
+    },
+    {
+      "sku": "PROD014",
+      "name": "Brownie Recheado 7x7 (Maracujá)",
+      "product_type": "finished_product",
+      "unit": "unit",
+      "is_active": true
+    },
+    {
+      "sku": "PROD015",
+      "name": "Brownie Simples 5x5",
+      "product_type": "finished_product",
+      "unit": "unit",
+      "is_active": true
+    },
+    {
+      "sku": "PROD016",
+      "name": "Brownie Simples 7x7",
+      "product_type": "finished_product",
+      "unit": "unit",
+      "is_active": true
+    },
+    {
+      "sku": "PROD017",
+      "name": "Kit 4 Bombons",
+      "product_type": "finished_product",
+      "unit": "unit",
+      "is_active": true
+    }
+  ],
+  "counts": [
+    {
+      "entity": "recipe_versions",
+      "records": "0"
+    },
+    {
+      "entity": "recipe_items",
+      "records": "0"
+    },
+    {
+      "entity": "production_profiles",
+      "records": "0"
+    },
+    {
+      "entity": "production_profile_components",
+      "records": "0"
+    },
+    {
+      "entity": "recipe_operational_requirements",
+      "records": "0"
+    },
+    {
+      "entity": "operational_cost_rates",
+      "records": "0"
+    },
+    {
+      "entity": "stock_movements",
+      "records": "0"
+    },
+    {
+      "entity": "production_batches",
+      "records": "0"
+    }
+  ],
+  "writes": false
+}

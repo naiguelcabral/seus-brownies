@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "knipVersion": "6.41.0",
+  "review": "Initial 48 findings: 45 resolved, three contextual references retained. On 2026-10-20 reviewed one native operator CLI reference for the owner-authorized local backup; retained visibly with its prerequisite. See docs/governance/KNIP-CODEQL.md.",
+  "findings": [
+    {
+      "file": "scripts/create-local-backup.mjs",
+      "type": "binaries",
+      "name": "neon",
+      "reason": "Native operator-authenticated Neon CLI prerequisite for an explicit local backup, not an application npm dependency. Fixed project/branch/database, no DSN arguments/logs. Installed CLI and real owner-authorized readonly export verified on 2026-10-20. Keep finding visible."
+    },
+    {
+      "file": "package.json",
+      "type": "dependencies",
+      "name": "tw-animate-css",
+      "reason": "Used by @import in src/styles.css; CSS dependency outside the JS/TS graph."
+    },
+    {
+      "file": "src/features/auth/cloudflare-rate-limit.server.ts",
+      "type": "unlisted",
+      "name": "cloudflare",
+      "reason": "Virtual cloudflare:workers module supplied by the Workers runtime, not an npm dependency."
+    },
+    {
+      "file": "test/security-dependencies.test.ts",
+      "type": "unlisted",
+      "name": "@esbuild-kit/core-utils",
+      "reason": "Intentional transitive Drizzle loader security regression test; keep testing the installed patched loader."
+    }
+  ]
+}

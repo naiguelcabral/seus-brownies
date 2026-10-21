@@ -6,6 +6,14 @@ on:
       - 'scripts/migration-chain-*.mjs'
       - 'scripts/migration-chain-*.sql'
       - 'scripts/test-migration-chain-disposable.mjs'
+      - 'scripts/test-migration-chain-forward-disposable.mjs'
+      - 'test/migration-chain-forward-candidate.test.ts'
+      - 'test/migration-chain-readiness.test.ts'
+      - 'test/fixtures/migration-chain-forward-catalogs.json'
+      - 'scripts/test-auth-baseline-disposable.mjs'
+      - 'scripts/auth-baseline-payload.mjs'
+      - 'scripts/test-scoped-upgrade-disposable.mjs'
+      - 'test/migration-chain-scoped-payload.test.ts'
       - 'test/migration-chain-candidates.test.ts'
       - 'test/migration-chain-access-diagnostic.test.ts'
       - 'test/migration-chain-preflight.test.ts'
@@ -13,7 +21,10 @@ on:
       - 'drizzle/**'
       - '.github/workflows/migration-chain-disposable.yml'
   push:
-    branches: ['codex/migration-chain-repair-candidates']
+    branches:
+      - 'codex/migration-chain-repair-candidates'
+      - 'codex/migration-0017-isolated-repair'
+      - 'codex/generic-migration-path'
   workflow_dispatch:
 
 permissions:
@@ -21,7 +32,7 @@ permissions:
 
 jobs:
   disposable-postgres:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     services:
       postgres:
@@ -35,16 +46,23 @@ jobs:
           --health-cmd "pg_isready -U cacau_chain_test -d cacau_chain_disposable"
           --health-interval 5s --health-timeout 5s --health-retries 12
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         with:
           node-version-file: .nvmrc
           cache: npm
       - run: npm ci
       - run: node scripts/test-migration-chain-disposable.mjs --ack-disposable-postgres17
-      - uses: actions/upload-artifact@v4
+      - run: node --import tsx scripts/test-auth-baseline-disposable.mjs --ack-disposable-postgres17
+      - run: node --import tsx scripts/test-scoped-upgrade-disposable.mjs --ack-disposable-postgres17
+      - run: node --import tsx scripts/test-migration-chain-forward-disposable.mjs --ack-disposable-postgres17
+      - uses: actions/upload-artifact@v6
         if: always()
         with:
           name: migration-chain-synthetic-evidence
-          path: /tmp/cacau-chain-evidence
+          path: |
+            /tmp/cacau-chain-evidence-*/*.json
+            /tmp/cacau-auth-baseline-evidence-*/*.json
+            /tmp/cacau-scoped-upgrade-evidence-*/*.json
+            /tmp/cacau-forward-evidence-*/*.json
           retention-days: 7

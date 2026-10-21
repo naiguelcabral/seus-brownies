@@ -1,3 +1,5 @@
+import { reportNeonAuthDestination } from './destination-diagnostic.server'
+
 export type NeonAuthRuntimeConfig = {
   baseUrl: string
   cookieSecret: string
@@ -7,6 +9,9 @@ type AuthEnvironment = {
   NEON_AUTH_BASE_URL?: string
   NEON_AUTH_COOKIE_SECRET?: string
   PASSWORD_RESET_REDIRECT_ORIGIN?: string
+  AUTH_DESTINATION_DIAGNOSTIC_ENABLED?: string
+  AUTH_DESTINATION_DIAGNOSTIC_UNTIL?: string
+  AUTH_DESTINATION_EXPECTED_BASE_URL?: string
 }
 
 const localPasswordResetRedirectTo =
@@ -19,6 +24,7 @@ const localPasswordResetRedirectTo =
 export function readNeonAuthRuntimeConfig(
   environment: AuthEnvironment,
 ): NeonAuthRuntimeConfig | null {
+  reportNeonAuthDestination(environment)
   const baseUrl = environment.NEON_AUTH_BASE_URL?.trim()
   const cookieSecret = environment.NEON_AUTH_COOKIE_SECRET
 

@@ -1,0 +1,15 @@
+{
+  "reference": "PROFILE-RECOVERY-FEES-2026-10-18-001",
+  "fingerprints": {
+    "products": "5933a57611d4d1e59b86ae2958cd0fb1",
+    "recipe_items": "057a21d5fadcf4e8553084ec917293c7",
+    "recipe_versions": "0ee0c91aa9cf65095a0e3e60c2d9a6b8",
+    "management_settings": "dacddc33e6a13fc7f49c82e405a382a8",
+    "production_profiles": "36f821827ea930fe4d9a161eaf09a624",
+    "management_scenarios": "2013fad69cb7a8ca2765ec1c29d51e5f",
+    "management_scenario_mix": "ff728c9b45196f0260de7cba45caee5c",
+    "production_profile_components": "7c26e5e94956ade01d3aa0d2ddab2de9",
+    "recipe_operational_requirements": "2afffe68e026d98258ca7c40eb66f64f"
+  },
+  "rule": "Semantic configuration guard excludes created_at/updated_at and new nullable payment_fees; historic row preservation is verified inside the application transaction."
+}

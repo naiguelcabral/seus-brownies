@@ -73,4 +73,3 @@ export type CorrectFinancialEventInput = z.infer<
   typeof correctFinancialEventValues
 >
 export type RedeemStoreCreditInput = z.infer<typeof redeemStoreCreditValues>
-export type FinancialOverviewInput = z.infer<typeof financialOverviewValues>

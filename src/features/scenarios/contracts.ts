@@ -1,3 +1,4 @@
+import { requireDefined } from '../../lib/required-value'
 import { z } from 'zod'
 
 export const scenarioStatuses = ['draft', 'active', 'archived'] as const
@@ -9,7 +10,8 @@ const money = z
   .trim()
   .regex(/^\d+(?:[,.]\d{1,2})?$/, 'Informe um valor monetário válido.')
   .refine(
-    (value) => value.replace(',', '.').split('.')[0].length <= 10,
+    (value) =>
+      requireDefined(value.replace(',', '.').split('.')[0]).length <= 10,
     'O valor monetário excede o limite permitido.',
   )
 const positiveMoney = money.refine(
@@ -21,7 +23,8 @@ const unitCost = z
   .trim()
   .regex(/^\d+(?:[,.]\d{1,3})?$/, 'Informe um custo unitário válido.')
   .refine(
-    (value) => value.replace(',', '.').split('.')[0].length <= 9,
+    (value) =>
+      requireDefined(value.replace(',', '.').split('.')[0]).length <= 9,
     'O custo unitário excede o limite permitido.',
   )
 const positiveWeight = z
@@ -29,7 +32,8 @@ const positiveWeight = z
   .trim()
   .regex(/^\d+(?:[,.]\d{1,6})?$/, 'Informe um peso válido.')
   .refine(
-    (value) => value.replace(',', '.').split('.')[0].length <= 6,
+    (value) =>
+      requireDefined(value.replace(',', '.').split('.')[0]).length <= 6,
     'O peso excede o limite permitido.',
   )
   .refine(
@@ -46,7 +50,7 @@ const weeks = z
   .regex(/^\d+(?:[,.]\d{1,2})?$/, 'Informe uma quantidade de semanas válida.')
 const reason = z.string().trim().min(3).max(500)
 
-export const scenarioMixValues = z.object({
+const scenarioMixValues = z.object({
   productId: z.number().int().positive(),
   originalWeight: positiveWeight,
   plannedUnitPrice: positiveMoney,
@@ -70,7 +74,9 @@ export const scenarioDraftValues = z
     for (const field of ['minimumMarginRate', 'feeTaxReserveRate'] as const) {
       const normalized = value[field].replace(',', '.')
       const [whole, fraction = ''] = normalized.split('.')
-      const scaled = BigInt(whole) * 10_000n + BigInt(fraction.padEnd(4, '0'))
+      const scaled =
+        BigInt(requireDefined(whole)) * 10_000n +
+        BigInt(fraction.padEnd(4, '0'))
       if (scaled > 10_000n)
         context.addIssue({
           code: 'custom',
@@ -81,7 +87,8 @@ export const scenarioDraftValues = z
 
     const normalizedWeeks = value.weeksPerMonth.replace(',', '.')
     const [whole, fraction = ''] = normalizedWeeks.split('.')
-    const scaledWeeks = BigInt(whole) * 100n + BigInt(fraction.padEnd(2, '0'))
+    const scaledWeeks =
+      BigInt(requireDefined(whole)) * 100n + BigInt(fraction.padEnd(2, '0'))
     if (scaledWeeks < 100n || scaledWeeks > 600n)
       context.addIssue({
         code: 'custom',
@@ -129,7 +136,6 @@ export const archiveScenarioValues = z.object({
 })
 
 export type ScenarioDraftInput = z.infer<typeof scenarioDraftValues>
-export type ScenarioMixInput = z.infer<typeof scenarioMixValues>
 export type UpdateScenarioDraftInput = z.infer<typeof updateScenarioDraftValues>
 export type CreateScenarioVersionInput = z.infer<
   typeof createScenarioVersionValues
