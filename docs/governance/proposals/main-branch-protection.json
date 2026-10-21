@@ -1,6 +1,7 @@
 {
   "required_status_checks": {
     "strict": true,
+    "contexts": [],
     "checks": [
       { "context": "verify", "app_id": 15368 },
       { "context": "business-postgres", "app_id": 15368 },
