@@ -23,8 +23,9 @@ do Git. Auth excluído; políticas de recuperação permanecem humanas.
 Inventário de metadados, procedimento T02 e proposta G03 prontos. Documentos
 ativos reconciliados e fila antiga substituída por espelho do roadmap.
 Main/HML preservados, sem aplicação compartilhada, secrets ou deploy.
-Candidata segue para PR/CI e revisão; merge e aceites reais não autorizados
-por esta rodada. Detalhes em [validação automática](AUTOMATIC-READINESS-2026-10-21.md).
+PR #51 aberta em rascunho. CI/negócio/browser/CodeQL de `bf1c25c` aprovados;
+análises da candidata sem resultados/erros/avisos. Merge e aceites reais não
+autorizados nesta rodada. Detalhes em [validação automática](AUTOMATIC-READINESS-2026-10-21.md).
 
 ## Reconciliação documental após análise do Work — 21/10/2026
 

@@ -82,7 +82,14 @@ Execução restrita de alguns testes falhou por spawnSync git EPERM; repetição
 autorizada no host passou sem alterar testes. Build HML isolado em 2bcb597
 aprovado com chave pública sintética, sem deploy. 40 casos de navegador
 isolado aprovados em 33,7s, incluindo o novo caso de teclado/320px.
-Checks remotos serão registrados no checkpoint final desta evidência.
+Checkpoint remoto do código/documentação `bf1c25c`: [CI 39596428628](https://github.com/naiguelcabral/seus-brownies/actions/runs/39596428628),
+[negócio/browser 39596428701](https://github.com/naiguelcabral/seus-brownies/actions/runs/39596428701)
+e [CodeQL 39596428714](https://github.com/naiguelcabral/seus-brownies/actions/runs/39596428714)
+aprovados. Os três jobs de negócio passaram, inclusive os dez casos conectados.
+Análises da branch 1996178355/1996175535/1996174522 confirmaram zero resultados,
+erros e avisos nas 103/50/23 regras. [PR #51](https://github.com/naiguelcabral/seus-brownies/pull/51)
+aberta em rascunho, sem conflitos e sem merge. Este registro posterior altera
+somente documentação/evidência; não repete testes do código sem motivo.
 
 Ainda humanos: H01–H03, H06 físico/uso diário, políticas I02/I03, G03 aplicado,
 aplicações compartilhadas T02, piloto I05 e produção I04. Nenhuma permissão,

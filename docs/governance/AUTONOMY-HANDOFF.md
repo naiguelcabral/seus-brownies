@@ -13,7 +13,9 @@ catálogo independente e constraints; sem alteração da origem. Dump privado
 fora do Git, Auth excluído. Proposta G03 e procedimento T02 preparados.
 Fila antiga substituída por espelho do roadmap, sem pacotes ready.
 
-Aguardar/revisar a PR da candidata e seus checks. Próximos gates humanos:
+PR51 em rascunho; CI/negócio/browser/CodeQL de bf1c25c aprovados, três análises
+sem resultados/erros/avisos. Container do restore encerrado/removido; arquivos
+privados e evidências preservados. Próximos gates humanos:
 autenticação real, perfis/celular, recuperação/retenção/RPO/RTO/Auth, proteção
 administrativa, plano específico de migrations, piloto e produção. Não repetir
 restore, importações ou publicações antigas por instruções históricas abaixo.
