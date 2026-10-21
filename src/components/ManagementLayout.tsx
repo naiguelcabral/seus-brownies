@@ -113,6 +113,13 @@ const navigation = [
   },
 ] as const
 
+const employeeNavigationOrder: Readonly<Record<string, number>> = {
+  '/vendas': 0,
+  '/produtos': 1,
+  '/compras': 2,
+  '/categorias': 3,
+}
+
 export function ManagementLayout({
   title,
   description,
@@ -132,6 +139,14 @@ export function ManagementLayout({
         hasPermission(appRole, item.permission as Permission),
       )
     : []
+  const orderedNavigation =
+    appRole === 'employee'
+      ? [...visibleNavigation].sort(
+          (left, right) =>
+            (employeeNavigationOrder[left.to] ?? 4) -
+            (employeeNavigationOrder[right.to] ?? 4),
+        )
+      : visibleNavigation
 
   async function leave() {
     setSigningOut(true)
@@ -183,7 +198,7 @@ export function ManagementLayout({
             className="flex flex-wrap gap-2"
             aria-label="Navegação principal"
           >
-            {visibleNavigation.map(({ to, label, icon: Icon }) => (
+            {orderedNavigation.map(({ to, label, icon: Icon }) => (
               <Link
                 key={to}
                 to={to}

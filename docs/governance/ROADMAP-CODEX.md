@@ -35,6 +35,14 @@ Node, 40 browser, lint/tipos/formato/Knip e build isolado aprovados. Candidata
 não integrada nem publicada em HML; sem deploy ou SQL compartilhado.
 Evidência: [rodada automática](AUTOMATIC-READINESS-2026-10-21.md).
 
+Aceite assistido do Funcionário em andamento no tablet: nove rotas restritas
+relatadas como bloqueadas com retorno a Compras. Menu e preços de venda no
+catálogo conferidos pelo usuário. Isso não comprova chamadas diretas, versão
+publicada ou papel canônico. [Registro manual](AUTH-HML-PERMISSIONS-MANUAL-2026-10-21.md).
+Ordem solicitada para esse perfil: **Vendas → Produtos → Compras → Categorias**;
+candidata para publicação conjunta, sem mudança de permissões ou dos demais
+perfis. H03/H06 permanecem parciais.
+
 ## Estimativa de planejamento — análise do Work de 21/10/2026
 
 Referência: conversa **“Análise do repositório”**, confrontada com a `main`

@@ -5,6 +5,22 @@ atual de tarefas, prioridades e critérios de conclusão. Os checkpoints de
 publicação abaixo preservam o estado comprovado de cada entrega; suas
 próximas etapas históricas não substituem o roadmap atualizado.
 
+## Funcionário — relato manual e ordem do menu — 21/10/2026
+
+Usuário testou no próprio tablet: menu apenas de Compras/Vendas/Categorias/
+Produtos e bloqueio por navegação direta de Estoque, Relatórios, Financeiro,
+Produção, Cenários, Parâmetros, Despesas, Locais e Plano de ação, com retorno
+a Compras. Evidência é relato humano, sem acesso do agente à sessão do tablet,
+sem releitura de papel canônico/versão ativa e sem chamadas diretas ao servidor.
+H03 continua parcial; detalhes em
+[aceite manual](AUTH-HML-PERMISSIONS-MANUAL-2026-10-21.md).
+
+Solicitada ordem Vendas → Produtos → Compras → Categorias somente para o
+Funcionário. Candidata altera apresentação, mantém filtro por permissão e
+ordem dos demais perfis. Teste conectado verifica menu real por perfil, sem
+alterar permissões, guards ou página inicial (/compras). Publicação HML
+permanece para o pacote conjunto após homologação; nenhuma nesta etapa.
+
 ## Execução automática autorizada — 21/10/2026
 
 Candidata `2bcb597`: override/lockfile launch-editor 2.14.2 e regressão de
