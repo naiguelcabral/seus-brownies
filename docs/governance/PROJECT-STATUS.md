@@ -23,7 +23,8 @@ S04 permanece parcial para as extrações maiores. Nenhuma migration, operação
 compartilhada, integração ou publicação por este incremento.
 
 Homologação H03 segue assistida no dispositivo do usuário, conforme preferência
-expressa nesta execução. Não há sessão real acessível ao agente; validação
+expressa nesta execução. Gerente confirmou as áreas de leitura, Cenários sem
+edição e bloqueio de Parâmetros/FIFO com retorno à Visão geral. Não há sessão real acessível ao agente; validação
 isolada não substitui chamadas diretas autenticadas no ambiente publicado.
 Revisão, integração das PRs #50–#52 e desta candidata, seguidas da publicação
 conjunta no HML, dependem da conclusão dessa evidência, na ordem solicitada.

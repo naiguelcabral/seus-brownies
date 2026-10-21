@@ -47,7 +47,12 @@ alteração de comportamento ou layout.
   Doze casos conectados aprovados (dez anteriores + dois novos), incluindo
   dez injeções de falha transacional. Conexão local bloqueada por EPERM na
   sandbox; runner repetido no host, sem configuração ou dados compartilhados.
-  CI/CodeQL serão registrados na PR após publicação.
+  [PR #53](https://github.com/naiguelcabral/seus-brownies/pull/53) aberta em
+  rascunho. Checks de push e PR do SHA `a5ce6ac` aprovados: CI
+  `39632923720`/`39633044977`, negócio/browser `39632923664`/`39633044954`.
+  CodeQL `39632923655` aprovado; análises `1998032254` (JS/TS), `1998030129`
+  (Python) e `1998029109` (Actions), zero resultados/erros/avisos. Não dispensa
+  alertas legados de outros SHAs. PostgreSQL descartável encerrado.
 
 ## Limites
 
