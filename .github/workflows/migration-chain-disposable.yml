@@ -6,6 +6,10 @@ on:
       - 'scripts/migration-chain-*.mjs'
       - 'scripts/migration-chain-*.sql'
       - 'scripts/test-migration-chain-disposable.mjs'
+      - 'scripts/test-migration-chain-forward-disposable.mjs'
+      - 'test/migration-chain-forward-candidate.test.ts'
+      - 'test/migration-chain-readiness.test.ts'
+      - 'test/fixtures/migration-chain-forward-catalogs.json'
       - 'scripts/test-auth-baseline-disposable.mjs'
       - 'scripts/auth-baseline-payload.mjs'
       - 'scripts/test-scoped-upgrade-disposable.mjs'
@@ -20,6 +24,7 @@ on:
     branches:
       - 'codex/migration-chain-repair-candidates'
       - 'codex/migration-0017-isolated-repair'
+      - 'codex/generic-migration-path'
   workflow_dispatch:
 
 permissions:
@@ -50,6 +55,7 @@ jobs:
       - run: node scripts/test-migration-chain-disposable.mjs --ack-disposable-postgres17
       - run: node --import tsx scripts/test-auth-baseline-disposable.mjs --ack-disposable-postgres17
       - run: node --import tsx scripts/test-scoped-upgrade-disposable.mjs --ack-disposable-postgres17
+      - run: node --import tsx scripts/test-migration-chain-forward-disposable.mjs --ack-disposable-postgres17
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -58,4 +64,5 @@ jobs:
             /tmp/cacau-chain-evidence-*/*.json
             /tmp/cacau-auth-baseline-evidence-*/*.json
             /tmp/cacau-scoped-upgrade-evidence-*/*.json
+            /tmp/cacau-forward-evidence-*/*.json
           retention-days: 7

@@ -5,6 +5,76 @@ atual de tarefas, prioridades e critérios de conclusão. Os checkpoints de
 publicação abaixo preservam o estado comprovado de cada entrega; suas
 próximas etapas históricas não substituem o roadmap atualizado.
 
+## T02 — preparação e revisão offline adotadas — 20/10/2026
+
+A continuidade autorizada pelo usuário foi aplicada à preparação e revisão
+local da linha `forward-compatibility-v1`. `db:prepare` entrega pacote temporário
+com manifesto; `db:review -- --evidence evidence/<arquivo>.json` avalia somente
+metadados sanitizados versionáveis, sem driver ou conexão. São exigidos alvo
+HML identificado e vínculo do Worker atestado, coleta independente somente de
+leitura com até 30 minutos, recibos exatos e catálogo completo compatível com
+um dos oito checkpoints reproduzidos no PostgreSQL 17 isolado. Quando há
+escrita pendente, recuperação e decisões 0019/0028 são exigidas conforme o
+trecho pendente. Mesmo sem bloqueios, o resultado é apenas
+`READY_FOR_OPERATOR_REVIEW`, com autorização e execução sempre falsas.
+
+A branch original conhecida como produção é rejeitada mesmo se rotulada como
+HML. Arquivos externos a `evidence/`, links simbólicos, caminhos ocultos,
+URLs e entradas sensíveis são recusados. Os 13 ensaios PostgreSQL passaram
+novamente, incluindo as oito referências de catálogo e rejeição de drift na
+revisão offline. A suíte CLI cobre sucesso sem execução e recusas de entrada.
+T02 segue parcial: falta classificação independente dos alvos relevantes e
+plano/autorização específicos antes de qualquer aplicação compartilhada.
+`db:migrate` conserva o bloqueio anterior; SQLs e metadados históricos intactos.
+Sem deploy, merge, SQL externo ou escrita no HML nesta continuação.
+546 testes Node aprovados (oito novos), lint, tipos, formato e Knip sem novas
+ocorrências. Container sintético encerrado. Recibo:
+[revisão offline](../../evidence/migration-chain-readiness-2026-10-20.json).
+Build HML isolado aprovado no código `45799a8`. A triagem do CodeQL desse
+commit encontrou `js/file-system-race` na leitura de evidência; corrigido para
+validar tipo/tamanho e ler pelo mesmo descritor, com abertura sem seguir
+symlink e sem bloquear em FIFO. Casos CLI também recusam diretório e arquivo
+acima de 1 MB.
+Código final `4d3821a` sincronizado na
+[PR #46 em rascunho](https://github.com/naiguelcabral/seus-brownies/pull/46).
+CI `39418068183`, PostgreSQL `39418068187` e CodeQL `39418061713` aprovados.
+Três análises com zero resultados; alerta #10 confirmado como `fixed` e zero
+alertas abertos na branch. Os checks remotos repetiram a suíte e os 48 casos
+PostgreSQL isolados. Definition of Done aplicada ao incremento offline;
+nenhuma alteração de runtime do HML requer publicação.
+
+### Evidência anterior da candidata
+
+Retomada com capacidade oficial renovada em 100% nas duas janelas, checkpoint
+`55950fa` limpo e sincronizado. Branch dedicada `codex/generic-migration-path`.
+Candidata offline temporária reúne SQLs originais, duas pontes e cinco
+extensões sem alterar arquivos históricos. Classificação por todos os hashes
+e timestamps rejeita drift, ausência de ponte e checkpoints parciais. Treze
+ensaios PostgreSQL 17 locais passaram: instalação nova e sete checkpoints
+até 0033, equivalência independente, dados/recibos preservados, replay e
+rollback tardio. Catálogo final com 36 recibos, SHA-256
+`b04d3ce50a8e8e2161522c7a5d3e77cbe508c8601bb266ceda7cdafe38268980`;
+as 38 tabelas atuais do ORM foram consultadas com LIMIT 0. Regressão: 26 casos
+da cadeia, quatro de baseline e cinco de upgrade delimitado aprovados.
+A geração Drizzle não produziu diff com o schema atual e produziu/aplicou uma
+migration aditiva sintética no próximo índice, preservando os recibos e dados.
+
+O teste histórico até 0028 agora confere todas as suas colunas versionadas;
+o novo teste cobre o ORM completo até 0033. Corrigida também uma asserção de
+S01 com `requireDefined`, para explicitar que o último evento deve existir.
+Workflow ampliado para executar e guardar os ensaios sintéticos novos.
+Suíte Node: 538 testes aprovados; lint, tipos, formato e Knip aprovados.
+Build HML isolado local aprovado. Código `c6d0bf8` sincronizado na
+[PR #46 em rascunho](https://github.com/naiguelcabral/seus-brownies/pull/46);
+CI `39412305542`, PostgreSQL `39412305442` e CodeQL `39412305514` passaram.
+Três análises CodeQL sem resultados; zero alertas abertos. Container sintético
+encerrado após os ensaios. Nenhum arquivo em `src/` ou SQL histórico alterado.
+Naquele checkpoint, T02 permanecia parcial: faltavam adoção oficial e revisão
+dos metadados já ensaiados e classificação independente dos alvos. `db:migrate`
+continua offline e bloqueante. Nenhum deploy, acesso SQL compartilhado,
+importação, alteração de referência consumida ou escrita no HML nesta etapa.
+Detalhes e limites: [ADR da cadeia](MIGRATION-CHAIN-REMEDIATION-ADR.md).
+
 ## Autoria e auditoria operacional completas — 19/10/2026
 
 O inventário S01 cobriu todas as Server Functions mutáveis de catálogo,

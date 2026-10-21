@@ -1,14 +1,11 @@
 // Synthetic loopback only. No dotenv, environment DSNs or external SQL.
 import assert from 'node:assert/strict'
-import { mkdtempSync, rmSync, writeFileSync } from 'node:fs'
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import pg from 'pg'
-import { is } from 'drizzle-orm'
-import { PgTable } from 'drizzle-orm/pg-core'
 import { drizzle } from 'drizzle-orm/node-postgres'
 import { migrate } from 'drizzle-orm/node-postgres/migrator'
-import * as schema from '../src/db/schema.ts'
 import { buildAuthBaselinePayload } from './auth-baseline-payload.mjs'
 import { buildScopedUpgradePayload } from './migration-chain-scoped-payload.mjs'
 import {
@@ -43,8 +40,15 @@ assert.equal(
 const sourceBefore = sourceManifest()
 const cases = []
 let fullCatalog
-let ormTablesChecked = 0
-const ormShapeQueries = []
+let snapshotTablesChecked = 0
+const snapshotShapeQueries = []
+const checkpointSchema = JSON.parse(
+  readFileSync(
+    new URL('../drizzle/meta/0028_snapshot.json', import.meta.url),
+    'utf8',
+  ),
+)
+const quoteIdentifier = (name) => '"' + name.replaceAll('"', '""') + '"'
 const history = async (client) =>
   (
     await client.query(
@@ -130,7 +134,7 @@ async function fixture(name, verify) {
 }
 try {
   await fixture(
-    'full upgrade, current ORM schema, money, guards and repeat rejection',
+    'full upgrade, historical 0028 shape, money, guards and repeat rejection',
     async ({ client, payload, baselineHistory }) => {
       await run(client, payload.statements)
       const rows = await history(client)
@@ -167,18 +171,19 @@ try {
       )
       const db = drizzle(client)
       let checkedTables = 0
-      for (const table of Object.values(schema))
-        if (is(table, PgTable)) {
-          const query = db.select().from(table).limit(0)
-          const compiled = query.toSQL()
-          assert.deepEqual(compiled.params, [0])
-          assert.match(compiled.sql, / limit \$1$/)
-          ormShapeQueries.push(compiled.sql.replace(/ limit \$1$/, ' limit 0'))
-          await query
-          checkedTables++
-        }
-      assert.ok(checkedTables > 20)
-      ormTablesChecked = checkedTables
+      // This fixture stops at 0028. Check every historical column; the forward
+      // fixture separately checks the complete current ORM through 0033.
+      for (const table of Object.values(checkpointSchema.tables)) {
+        const columns = Object.values(table.columns).map((column) =>
+          quoteIdentifier(column.name),
+        )
+        const statement = `SELECT ${columns.join(',')} FROM public.${quoteIdentifier(table.name)} LIMIT 0`
+        snapshotShapeQueries.push(statement)
+        await client.query(statement)
+        checkedTables++
+      }
+      assert.equal(checkedTables, 38)
+      snapshotTablesChecked = checkedTables
       assert.deepEqual(
         (
           await client.query(`SELECT monthly_profit_goal::text, fixed_monthly_costs::text,
@@ -279,13 +284,13 @@ try {
     join(tmpdir(), 'cacau-scoped-upgrade-evidence-'),
   )
   writeFileSync(
-    join(evidenceFolder, 'orm-shape-readonly.json'),
+    join(evidenceFolder, 'checkpoint-0028-shape-readonly.json'),
     JSON.stringify(
       {
-        scope: 'read-only-shape-checks',
+        scope: 'historical-0028-read-only-shape-checks',
         row_limit: 0,
-        sql_sha256: hash(JSON.stringify(ormShapeQueries)),
-        statements: ormShapeQueries,
+        sql_sha256: hash(JSON.stringify(snapshotShapeQueries)),
+        statements: snapshotShapeQueries,
       },
       null,
       2,
@@ -299,7 +304,7 @@ try {
         scope: 'synthetic-disposable-postgres17',
         application_authorized: false,
         source_unchanged: true,
-        orm_tables_checked: ormTablesChecked,
+        snapshot_tables_checked: snapshotTablesChecked,
         cases,
         catalog_sha256: hash(JSON.stringify(fullCatalog)),
       },

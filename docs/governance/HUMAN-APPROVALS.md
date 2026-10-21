@@ -1,5 +1,17 @@
 # Ações que exigem aprovação humana — Cacau v1
 
+## Continuação T02 — preparação e revisão local — 20/10/2026
+
+Após a entrega da candidata genérica e indicação da adoção/revisão como
+próximo passo, o usuário respondeu “Pode continuar”. A continuidade abrange
+adotar a linha com pontes para preparação e revisão offline, testar em
+PostgreSQL descartável, documentar e atualizar a PR #46. Não há execução
+automática ou ativação do migrador compartilhado. Essa continuidade não
+substitui classificação independente do alvo, recuperação e decisão específica
+para aplicar SQL compartilhado, nem autoriza merge, produção ou secrets.
+Os comandos novos retornam `application_authorized:false` e
+`execution_enabled:false` em todos os resultados.
+
 ## Continuação de Compras e Produção — 19/10/2026
 
 Após a entrega de Cenários e a indicação da revisão de Compras/Produção como
