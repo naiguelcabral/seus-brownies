@@ -102,3 +102,16 @@ Parâmetros diretos negados por permissão. Complementa o aceite anterior das
 rotas e do menu. Resultado é relato humano; nenhum payload, credencial ou
 sessão foi coletado pelo agente. Dono permanece pendente e recebeu o roteiro
 de interface, papel canônico e duas consultas diretas, sem salvar operações.
+
+
+## Dono — falha de sessão, aceite pendente
+
+Usuário relatou inicialmente autenticação obrigatória no GET e depois falha
+na verificação da sessão ao colar o endereço no HML já autenticado. Não há
+confirmação de `owner` ou dos GETs permitidos. Logs agregados recentes revelam
+duas falhas HTTP 429 no caminho de sessão, sem identificação da conta ou
+correlação individual. [Investigação e limites](AUTH-HML-SESSION-LIMIT-2026-10-21.md).
+Orientada uma consulta após intervalo sem repetição; usuário confirmou
+“Agora apareceu owner”. Sessão recuperada nessa leitura e papel confirmado
+por relato do endpoint. Dashboard/Parâmetros e controles da interface do Dono
+seguem em coleta; a causa/solução permanente do limite não foi demonstrada.

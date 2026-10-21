@@ -1,0 +1,47 @@
+{
+  "collected_at": "2026-10-21T16:45:04Z",
+  "source": "cloudflare-workers-observability",
+  "read_only": true,
+  "worker": "cacau-v1-hml",
+  "window": {
+    "from": "2026-10-21T16:30:00Z",
+    "to": "2026-10-21T16:44:00Z"
+  },
+  "selection": {
+    "event": "auth.session.provider",
+    "fields": ["stage", "status", "$workers.scriptVersion.id"],
+    "aggregation": "count"
+  },
+  "groups": [
+    {
+      "stage": "http_error",
+      "status": 429,
+      "script_version_id": "22733c04-7996-43b1-88e3-3f775db223fc",
+      "count": 2
+    }
+  ],
+  "user_report": {
+    "profile_claimed": "owner",
+    "canonical_role_verified": false,
+    "session_verification_failed": true
+  },
+  "limits": [
+    "Aggregates do not identify the account or prove an individual request correlation.",
+    "Rate-limit scope, reset, initiating traffic and recovery remain unverified.",
+    "No raw events, headers, cookies, identities or provider payloads collected."
+  ],
+  "changes": {
+    "code": false,
+    "secrets": false,
+    "roles": false,
+    "database": false,
+    "deployment": false
+  },
+  "follow_up": {
+    "source": "human report of direct session endpoint",
+    "role": "owner",
+    "session_read_recovered": true,
+    "dashboard_and_settings_acceptance": "pending",
+    "permanent_resolution_verified": false
+  }
+}

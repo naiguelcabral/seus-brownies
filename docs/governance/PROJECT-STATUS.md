@@ -5,6 +5,19 @@ atual de tarefas, prioridades e critérios de conclusão. Os checkpoints de
 publicação abaixo preservam o estado comprovado de cada entrega; suas
 próximas etapas históricas não substituem o roadmap atualizado.
 
+## Aceite do Dono — falha de sessão em investigação — 21/10/2026
+
+Funcionário e Gerente confirmaram papel e GETs diretos do roteiro. Dono relatou
+falha ao verificar sessão mesmo na aba autenticada. Agregação de logs HML
+16:30–16:44 UTC confirmou dois eventos sanitizados de sessão com HTTP 429 na
+versão `22733c04`; sem correlação individual ou causa do limite comprovadas.
+Após intervalo, usuário confirmou `owner` no endpoint de sessão. Recuperação
+dessa leitura relatada; consultas Dashboard/Parâmetros e interface do Dono
+seguem em coleta, sem prova de solução permanente do limite. Não é
+aceite concluído nem prova de erro de RBAC. Integração/publicação conjunta
+permanecem após a homologação. [Registro](AUTH-HML-SESSION-LIMIT-2026-10-21.md).
+Nenhuma mudança de código, dados, secrets ou deploy nesta investigação.
+
 ## S04 — Cenários tipados — candidata de 21/10/2026
 
 Continuidade sobre a PR #52: consultas inferidas do Drizzle, snapshots derivados
