@@ -128,27 +128,16 @@ test('e-mail não verificado permanece no fluxo de confirmação', async ({
 test('papel insuficiente não acessa relatório protegido', async ({ page }) => {
   await login(page, inputs.identities.insufficientRole)
   await page.goto('/relatorios', { waitUntil: 'networkidle' })
+  await expect(page).toHaveURL(/\/(?:compras|vendas|produtos)$/)
   await expect(
-    page.getByText(/não foi possível carregar os indicadores/i),
-  ).toBeVisible()
+    page.getByRole('heading', { name: 'Relatórios', exact: true }),
+  ).not.toBeVisible()
 })
 
-test.fixme(
-  true,
-  'OTP real é uma etapa humana: não consumir código nem alterar identidade por esta spec',
-)
+test.fixme('OTP real é uma etapa humana: não consumir código nem alterar identidade por esta spec', () => {})
 
-test.fixme(
-  true,
-  'recuperação real é uma etapa humana: não solicitar ou redefinir senha por esta spec',
-)
+test.fixme('recuperação real é uma etapa humana: não solicitar ou redefinir senha por esta spec', () => {})
 
-test.fixme(
-  true,
-  'auditoria persistida é conferida por operador autorizado, sem consulta automática ao HML',
-)
+test.fixme('auditoria persistida é conferida por operador autorizado, sem consulta automática ao HML', () => {})
 
-test.fixme(
-  true,
-  'atributos do cookie são conferidos manualmente, sem coletar ou registrar seu valor',
-)
+test.fixme('atributos do cookie são conferidos manualmente, sem coletar ou registrar seu valor', () => {})
