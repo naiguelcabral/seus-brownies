@@ -28,6 +28,9 @@ edição e bloqueio de Parâmetros/FIFO com retorno à Visão geral. Endpoint de
 sessão confirmou `manager`; GET direto de Dashboard retornou resultado e GET
 de Parâmetros negou permissão, conforme relato do usuário. Não há sessão real acessível ao agente; validação
 isolada não substitui chamadas diretas autenticadas no ambiente publicado.
+Funcionário também confirmou o roteiro direto: `employee` na sessão e negação
+por permissão em Dashboard/Parâmetros. Dono ainda em coleta, com conferência
+de áreas/controles e chamadas GET, sem salvar operações.
 Revisão, integração das PRs #50–#52 e desta candidata, seguidas da publicação
 conjunta no HML, dependem da conclusão dessa evidência, na ordem solicitada.
 

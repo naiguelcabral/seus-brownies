@@ -88,6 +88,17 @@ O endpoint de Dashboard sem sessão foi consultado pelo agente e retornou
 `Autenticação obrigatória para esta operação.`, em erro RPC serializado com
 HTTP 200. É evidência nova de negação anônima dessa leitura, não de RBAC dos
 três perfis. Gerente confirmou os três resultados esperados em sessão própria.
-Funcionário e Dono seguem em coleta. A consulta anônima de sessão também
+Funcionário confirmou depois os três resultados esperados; Dono segue em coleta. A consulta anônima de sessão também
 confirmou flags falsas/papel nulo; Parâmetros anônimo negou autenticação. Os três links não representam cobertura de todas as 55 políticas;
 mutações válidas no HML continuam fora deste roteiro sem fatos reais.
+
+
+## Funcionário — confirmação das chamadas diretas
+
+Após o roteiro de três GETs no mesmo navegador autenticado, o usuário
+confirmou: “Testes do funcionário estão ok”. O aceite corresponde ao roteiro
+imediatamente anterior: sessão com papel `employee`, Dashboard direto e
+Parâmetros diretos negados por permissão. Complementa o aceite anterior das
+rotas e do menu. Resultado é relato humano; nenhum payload, credencial ou
+sessão foi coletado pelo agente. Dono permanece pendente e recebeu o roteiro
+de interface, papel canônico e duas consultas diretas, sem salvar operações.
