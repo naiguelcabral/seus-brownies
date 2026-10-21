@@ -1,0 +1,29 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  "entry": [
+    "src/router.tsx",
+    "src/start.ts",
+    "src/routes/**/*.{ts,tsx}",
+    "test/**/*.test.ts",
+    "e2e/**/*.spec.ts",
+    "scripts/*.{ts,js,mjs}",
+    "scripts/project-sync/cli.mjs",
+    "scripts/codex/**/*.{ts,js,mjs}",
+    "*.config.{ts,js}",
+    "drizzle.config.ts"
+  ],
+  "project": [
+    "src/**/*.{ts,tsx}",
+    "test/**/*.{ts,tsx}",
+    "e2e/**/*.{ts,tsx}",
+    "scripts/**/*.{ts,js,mjs}",
+    "*.{ts,js}"
+  ],
+  "ignore": [
+    "src/routeTree.gen.ts",
+    "**/*.d.ts"
+  ],
+  "drizzle": {
+    "config": []
+  }
+}

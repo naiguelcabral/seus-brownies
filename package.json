@@ -41,7 +41,11 @@
     "production:preview": "python3 scripts/preview_production_workbook.py",
     "production:import": "tsx scripts/import_production.ts",
     "production:profiles:sync": "tsx scripts/sync_production_profile_components.ts",
-    "fifo:backfill:hml": "tsx scripts/backfill-hml-fifo.ts"
+    "fifo:backfill:hml": "tsx scripts/backfill-hml-fifo.ts",
+    "lint:ox": "npm exec --yes --package=oxlint@1.88.0 -- oxlint src test e2e scripts",
+    "format:ox:check": "npm exec --yes --package=oxfmt@0.73.0 -- oxfmt --check src test e2e scripts",
+    "format:ox:write": "npm exec --yes --package=oxfmt@0.73.0 -- oxfmt src test e2e scripts",
+    "knip:audit": "npm exec --yes --package=knip@6.41.0 -- knip --reporter compact"
   },
   "engines": {
     "node": ">=22.12.0 <23"

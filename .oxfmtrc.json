@@ -1,0 +1,14 @@
+{
+  "printWidth": 80,
+  "semi": false,
+  "singleQuote": true,
+  "trailingComma": "all",
+  "sortImports": false,
+  "sortPackageJson": false,
+  "ignorePatterns": [
+    "src/routeTree.gen.ts",
+    "package-lock.json",
+    "playwright-report/**",
+    "test-results/**"
+  ]
+}

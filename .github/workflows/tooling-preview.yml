@@ -1,0 +1,55 @@
+name: Tooling Preview (Oxlint Oxfmt Knip)
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tooling-preview-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  advisory:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - name: Install existing locked dependencies
+        run: npm ci
+      - name: Oxlint (advisory)
+        id: oxlint
+        continue-on-error: true
+        run: npm run lint:ox
+      - name: Oxfmt check (advisory)
+        id: oxfmt
+        continue-on-error: true
+        run: npm run format:ox:check
+      - name: Knip (advisory)
+        id: knip
+        continue-on-error: true
+        run: npm run knip:audit
+      - name: Summarize preview results
+        if: always()
+        env:
+          OXLINT_OUTCOME: ${{ steps.oxlint.outcome }}
+          OXFMT_OUTCOME: ${{ steps.oxfmt.outcome }}
+          KNIP_OUTCOME: ${{ steps.knip.outcome }}
+        run: |
+          {
+            echo "## Tooling preview — diagnóstico, ainda não bloqueante"
+            echo ""
+            echo "| Ferramenta | Resultado |"
+            echo "| --- | --- |"
+            echo "| Oxlint | $OXLINT_OUTCOME |"
+            echo "| Oxfmt | $OXFMT_OUTCOME |"
+            echo "| Knip | $KNIP_OUTCOME |"
+            echo ""
+            echo "Falhas deste job precisam de triagem; sucesso do job não comprova ausência de achados."
+          } >> "$GITHUB_STEP_SUMMARY"
