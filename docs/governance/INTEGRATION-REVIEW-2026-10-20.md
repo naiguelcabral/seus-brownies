@@ -1,5 +1,29 @@
 # Revisão de integração — 20/10/2026
 
+## Reconciliação dos conflitos da #48 — 21/10/2026
+
+Após solicitação explícita do usuário, main `b71b359` (merge da #45) foi
+incorporada à branch da #48, anteriormente `0a377fe`, sem merge da PR na main.
+Cinco conflitos: `codeql.yml`, `.oxfmtrc.json`, `.oxlintrc.json`, `knip.json`
+e `package.json`. A revisão dos dois lados manteve exatamente as versões
+da candidata nesses cinco arquivos: lint tipado obrigatório, escopo Oxfmt
+deliberado, Knip estático sem avaliar configs, dependências locais do lockfile
+e CodeQL em JS/TS, Python e Actions com suíte estendida. Nenhuma mudança no
+lockfile, código de negócio, schema, SQL histórico ou migração foi necessária.
+
+O novo `tooling-preview.yml` da main foi retirado na conciliação: duplicaria
+os checks obrigatórios e chamaria aliases experimentais já substituídos.
+O documento da proposta da #45 continua preservado com aviso histórico e
+links para os procedimentos vigentes. Um teste novo protege versões locais
+e lockfile coerentes, gates bloqueantes, leitura estática das configs e as
+três linguagens CodeQL. 560 testes Node, lint/tipos/formato e Knip sem novos
+achados aprovados; ensaio inicial Knip restrito falhou, repetição autorizada
+fora do sandbox passou. Build isolado e CI do novo commit pendentes neste
+checkpoint. Sem deploy, escrita compartilhada ou aceite de produção.
+
+Os registros de sobreposição abaixo descrevem a revisão anterior ao merge
+da #45 e não significam que essa PR ainda esteja aberta.
+
 Evidência de T01/G01; a fila permanece em `ROADMAP-CODEX.md`. Revisão da
 main `32a9e11984d9d3957340d1ab6ae31adb3b2b22f6` e da candidata
 `c96b207825f5199d66163b6a2279b8da10cbb053`. A main é ancestral da candidata:

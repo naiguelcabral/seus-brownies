@@ -5,6 +5,22 @@ atual de tarefas, prioridades e critérios de conclusão. Os checkpoints de
 publicação abaixo preservam o estado comprovado de cada entrega; suas
 próximas etapas históricas não substituem o roadmap atualizado.
 
+## Conflitos da PR #48 — 21/10/2026
+
+A main avançou para `b71b359` pela integração da PR #45. Usuário solicitou
+resolver os conflitos da #48, agora aberta fora de rascunho. Reconciliação
+na branch `codex/integrated-validation-gates` preserva as configurações já
+validadas de CodeQL em três linguagens, Oxlint tipado, Oxfmt e Knip com
+dependências do lockfile; remove somente o workflow advisory obsoleto que
+chamava scripts substituídos. A proposta histórica da #45 foi preservada.
+
+560 testes Node, lint, tipos, formato e Knip (quatro contextuais, zero novos)
+aprovados; contrato novo impede regressão dos gates conciliados. Build
+isolado e checks remotos do novo commit ainda aguardam execução neste
+checkpoint. Sem mudança de código operacional, migrations, dados ou deploy.
+Isso não integra a PR à main nem dispensa a revisão humana do pacote.
+Detalhes em [revisão de integração](INTEGRATION-REVIEW-2026-10-20.md).
+
 ## Validação conectada e sustentação — 20/10/2026
 
 Checkpoint final: correção `bb76764` publicada em HML na versão

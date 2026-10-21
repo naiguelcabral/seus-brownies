@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict'
 import { spawnSync } from 'node:child_process'
 import {
+  existsSync,
   mkdtempSync,
   mkdirSync,
   readFileSync,
@@ -13,6 +14,61 @@ import { join, resolve } from 'node:path'
 import test from 'node:test'
 
 const root = resolve(import.meta.dirname, '..')
+
+test('reconciled tooling retains locked blocking checks and all CodeQL languages', () => {
+  const readJson = (file: string) =>
+    JSON.parse(readFileSync(join(root, file), 'utf8')) as Record<
+      string,
+      unknown
+    >
+  const manifest = readJson('package.json')
+  const scripts = manifest.scripts as Record<string, string>
+  const dependencies = manifest.devDependencies as Record<string, string>
+  const lock = readJson('package-lock.json')
+  const packages = lock.packages as Record<
+    string,
+    { devDependencies?: Record<string, string>; version?: string }
+  >
+  for (const name of [
+    'typescript',
+    'oxlint',
+    'oxlint-tsgolint',
+    'oxfmt',
+    'knip',
+  ]) {
+    assert.equal(dependencies[name], packages['']?.devDependencies?.[name])
+    assert.equal(dependencies[name], packages[`node_modules/${name}`]?.version)
+  }
+  assert.equal(scripts.lint, 'oxlint --type-aware --deny-warnings')
+  assert.equal(scripts['knip:check'], 'node scripts/check-knip.mjs')
+  assert.equal(scripts['knip:audit'], 'knip --config knip.json --no-progress')
+  assert.ok(scripts.check?.startsWith('oxfmt --check '))
+  for (const name of ['lint:ox', 'format:ox:check', 'format:ox:write']) {
+    assert.equal(scripts[name], undefined)
+  }
+  assert.deepEqual(readJson('.oxlintrc.json').options, { typeAware: true })
+  const knip = readJson('knip.json')
+  for (const name of ['drizzle', 'vite', 'playwright']) {
+    assert.deepEqual(knip[name], { config: [] })
+  }
+  const ci = readFileSync(join(root, '.github/workflows/ci.yml'), 'utf8')
+  for (const name of ['lint', 'check', 'typecheck', 'knip:check']) {
+    assert.ok(ci.includes(`run: npm run ${name}\n`))
+  }
+  assert.doesNotMatch(ci, /continue-on-error/)
+  const codeql = readFileSync(
+    join(root, '.github/workflows/codeql.yml'),
+    'utf8',
+  )
+  assert.match(codeql, /language: \[javascript-typescript, python, actions\]/)
+  assert.match(codeql, /queries: security-extended/)
+  assert.match(codeql, /config-file: \.\/\.github\/codeql\/codeql-config.yml/)
+  assert.doesNotMatch(codeql, /continue-on-error/)
+  assert.equal(
+    existsSync(join(root, '.github/workflows/tooling-preview.yml')),
+    false,
+  )
+})
 
 test('the dependency graph contains only the TypeScript 7 compiler', () => {
   const lock = JSON.parse(
