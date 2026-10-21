@@ -24,23 +24,54 @@ const options = {
 }
 const admin = new pg.Client(options)
 let reader
+let adminConnected = false
 try {
   await admin.connect()
+  adminConnected = true
   const v = (await admin.query('SHOW server_version_num')).rows[0]
     .server_version_num
   assert.ok(Number(v) >= 170000 && Number(v) < 180000)
   // DDL and grants only in the loopback service created by this workflow.
-  await admin.query(`CREATE ROLE fixture_audit LOGIN PASSWORD 'synthetic-fixture-password';
-    ALTER ROLE fixture_audit SET default_transaction_read_only=on;
-    REVOKE TEMP ON DATABASE neondb FROM PUBLIC;
-    CREATE SCHEMA drizzle;
+  await admin.query(`CREATE SCHEMA drizzle;
     CREATE TABLE drizzle.__drizzle_migrations(id serial PRIMARY KEY,hash text NOT NULL,created_at bigint);
     CREATE TABLE public.sales(id integer);
     CREATE TABLE public.management_scenario_mix(id integer);
+    CREATE SEQUENCE public.fixture_mutable_sequence;
     INSERT INTO public.sales VALUES(1);
-    INSERT INTO public.management_scenario_mix VALUES(1);
-    GRANT USAGE ON SCHEMA drizzle,public TO fixture_audit;
-    GRANT SELECT ON ALL TABLES IN SCHEMA drizzle,public TO fixture_audit;`)
+    INSERT INTO public.management_scenario_mix VALUES(1);`)
+  await admin.query(
+    readFileSync(
+      new URL('./hml-readonly-audit-role.lab.sql', import.meta.url),
+      'utf8',
+    ).replaceAll(
+      '@@VALID_UNTIL_UTC@@',
+      new Date(Date.now() + 30 * 60 * 1000).toISOString(),
+    ),
+  )
+  await admin.query(
+    "ALTER ROLE fixture_audit PASSWORD 'synthetic-fixture-password'",
+  )
+  const role = (
+    await admin.query(`SELECT rolsuper, rolcreatedb, rolcreaterole, rolreplication,
+      rolbypassrls, rolinherit, rolvaliduntil > clock_timestamp() AS unexpired
+      FROM pg_roles WHERE rolname = 'fixture_audit'`)
+  ).rows[0]
+  assert.deepEqual(role, {
+    rolsuper: false,
+    rolcreatedb: false,
+    rolcreaterole: false,
+    rolreplication: false,
+    rolbypassrls: false,
+    rolinherit: false,
+    unexpired: true,
+  })
+  assert.equal(
+    (
+      await admin.query(`SELECT count(*)::int AS count FROM pg_auth_members m
+      JOIN pg_roles r ON r.oid=m.member WHERE r.rolname='fixture_audit'`)
+    ).rows[0].count,
+    0,
+  )
   for (const row of historicalManifest().slice(0, 17))
     await admin.query(
       'INSERT INTO drizzle.__drizzle_migrations(hash,created_at) VALUES($1,$2)',
@@ -106,6 +137,25 @@ try {
   assert.equal(evidence.counts.management_scenario_mix, '1')
   assert.equal(evidence.drift, false)
   assert.equal(evidence.application_authorized, false)
+  await reader.query('BEGIN READ WRITE')
+  await assert.rejects(
+    reader.query('CREATE TABLE public.fixture_forbidden(id integer)'),
+    (e) => e.code === '42501',
+  )
+  await reader.query('ROLLBACK')
+  await reader.query('BEGIN READ WRITE')
+  await assert.rejects(
+    reader.query("SELECT nextval('public.fixture_mutable_sequence')"),
+    (e) => e.code === '42501',
+  )
+  await reader.query('ROLLBACK')
+  await admin.query('CREATE TABLE public.fixture_default_privilege(id integer)')
+  await reader.query('BEGIN READ WRITE')
+  await assert.rejects(
+    reader.query('SELECT * FROM public.fixture_default_privilege'),
+    (e) => e.code === '42501',
+  )
+  await reader.query('ROLLBACK')
   await admin.query(
     'GRANT EXECUTE ON FUNCTION pg_catalog.lo_create(oid) TO fixture_audit',
   )
@@ -171,5 +221,18 @@ try {
   process.exitCode = 1
 } finally {
   await reader?.end()
+  if (adminConnected) {
+    await admin
+      .query('REVOKE fixture_owner FROM fixture_audit')
+      .catch(() => undefined)
+    await admin
+      .query(
+        readFileSync(
+          new URL('./hml-readonly-audit-role-revoke.lab.sql', import.meta.url),
+          'utf8',
+        ),
+      )
+      .catch(() => undefined)
+  }
   await admin.end()
 }
