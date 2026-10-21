@@ -1,5 +1,9 @@
 # S04 — contratos tipados de finanças e lifecycle — 21/10/2026
 
+Seguimento: incremento integrado pelas PRs #52/#53 e publicado no HML em
+21/10/2026. O texto abaixo preserva o checkpoint de preparação/validação.
+[Publicação e limites](JOINT-HML-PUBLICATION-2026-10-21.md).
+
 Incremento técnico preparado em branch própria, a partir de `32a0b11` da
 PR #51. A revisão desta entrega compara com essa branch; integração e
 publicação conjunta continuam separadas. S04 permanece parcial: a extração

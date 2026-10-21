@@ -1,7 +1,7 @@
 # Roadmap único — Cacau v1
 
-Atualizado em **21/10/2026**, após a análise no Work e a conferência da
-`main` em `b82e044`, com as PRs #44–#49 mescladas.
+Atualizado em **21/10/2026**, após integração das PRs #50–#53 e publicação
+conjunta do código `91658ed` no HML, versão `de9a88e6`, 100% do tráfego.
 Este é o **único arquivo de planejamento e acompanhamento de pendências**.
 Relatórios datados, recibos, matrizes e runbooks preservam evidências e
 procedimentos; suas listas antigas não são filas adicionais de execução.
@@ -25,23 +25,21 @@ migrations), G03/S03 (proteção de integração e segurança) e H06 (uso diári
 celular físico). Depois, executar piloto autorizado e preparar o aceite I04.
 WhatsApp e OCR vêm após a validação do núcleo interno.
 
-A PR #48 foi integrada em `83178a5`; a #49 levou a linha da #46 à `main`
-`b82e044`. Na consulta de 21/10, PRs #44–#49 mescladas, nenhuma PR ou issue
-aberta; a issue #36 está encerrada. Isso não encerra T02 nem libera produção.
-A reconciliação inicial foi documental. Rodada automática posterior entregou
-patch launch-editor 2.14.2, triagem técnica dos cinco alertas legados, restore
-dos bytes externos e teste móvel 320px. Código candidato `2bcb597`: 560 testes
-Node, 40 browser, lint/tipos/formato/Knip e build isolado aprovados. Candidata
-não integrada nem publicada em HML; sem deploy ou SQL compartilhado.
-Evidência: [rodada automática](AUTOMATIC-READINESS-2026-10-21.md).
+PRs #44–#53 mescladas, incluindo tipagem de Cenários/finanças/lifecycle,
+patch launch-editor 2.14.2, ordem do menu do Funcionário e coleta do aceite.
+Código `91658ed` aprovado com 570 testes Node, 12 casos conectados isolados,
+tipos/lint/formato/Knip/build e CI/CodeQL. Publicação conjunta HML concluída
+às 15:17 Brasília, versão `de9a88e6` em 100%; sem SQL compartilhado ou produção.
+[Recibo](JOINT-HML-PUBLICATION-2026-10-21.md).
 
-Aceite assistido do Funcionário em andamento no tablet: nove rotas restritas
-relatadas como bloqueadas com retorno a Compras. Menu e preços de venda no
-catálogo conferidos pelo usuário. Isso não comprova chamadas diretas, versão
-publicada ou papel canônico. [Registro manual](AUTH-HML-PERMISSIONS-MANUAL-2026-10-21.md).
-Ordem solicitada para esse perfil: **Vendas → Produtos → Compras → Categorias**;
-candidata para publicação conjunta, sem mudança de permissões ou dos demais
-perfis. H03/H06 permanecem parciais.
+Usuário confirmou no tablet os papéis employee/manager/owner e as rotas/GETs
+de Dashboard/Parâmetros conforme a matriz. Após deploy, Cenários e Financeiro
+abriram como Dono. A repetição automática de permissões usou identidades
+sintéticas em PostgreSQL 17 isolado; não equivale a sessões reais no HML.
+A ordem Vendas → Produtos → Compras → Categorias do Funcionário foi publicada.
+H03 permanece parcial para cobertura ampliada; H01/H02 conservam a
+investigação do 429, inclusive uma ocorrência na nova versão. H06 segue parcial.
+[Registro manual](AUTH-HML-PERMISSIONS-MANUAL-2026-10-21.md).
 
 ## Estimativa de planejamento — análise do Work de 21/10/2026
 
@@ -78,18 +76,18 @@ reduz automaticamente o esforço estimado nem autoriza novas ações externas.
 
 | Área | Situação atual |
 | --- | --- |
-| HML | Código `bb76764`, versão `22733c04-7996-43b1-88e3-3f775db223fc`, 100%; primeiro acesso e ordenação de Relatórios publicados, deploy e GETs conferidos. |
-| Trabalho versionado | `main` em `b82e044` após PR49; PRs #44–#49 mescladas, nenhuma PR ou issue aberta na consulta. Integração não equivale a deploy ou aceite de produção. |
+| HML | Código `91658ed`, versão `de9a88e6-a2e0-4224-8c9c-e6f3da8ccb6c`, 100%; deploy, smoke público e Cenários/Financeiro do Dono confirmados. [Recibo](JOINT-HML-PUBLICATION-2026-10-21.md). |
+| Trabalho versionado | PRs #44–#53 mescladas; main de aplicação `91658ed`. Integração/publicação HML não equivalem a aceite de produção. |
 | Banco usado no HML | Atualizações específicas até `0033`, 36 recibos. A original conserva classificação `production`; seu uso histórico autorizado não a torna laboratório. Migrador genérico continua bloqueante. |
 | Catálogo e produção | 38 produtos; duas versões de receita e 34 perfis contando os históricos; receita 2 ativa com 17 perfis completos e 31 componentes |
 | Cenários | Cenário 2/v2/rev2 ativo, 16 produtos orientativos em 100%; cenário 1 e seu histórico preservados |
 | Meta | R$ 10.000 de lucro mensal após os custos de **todas as vendas**, inclusive Bordinhas realizadas; sem cotas obrigatórias por produto |
 | Operação real | Sem compras ou produção previstas; nenhum fato fictício criado no HML para testar as entregas |
-| Última validação de código | `b82e044`: CI com 560 testes Node, lint, formato, tipos, Knip e build isolado; workflow de negócio/browser com dois runners PostgreSQL, 39 casos de fixtures e dez conectados aprovado. Não representa percentual de cobertura. |
-| Segurança | Candidata `2bcb597`: launch-editor 2.14.2 e npm audit zero vulnerabilidades; apenas um nó do lockfile mudou. Main `b82e044`: análises CodeQL 1993629049/1993627128/1993626413 com zero resultados/erros/avisos. Cinco alertas abertos da categoria antiga foram triados contra correções presentes, sem dispensa manual; confirmar CodeQL da candidata e decidir tratamento administrativo. |
+| Última validação de código | `91658ed`: CI com 570 testes Node, lint/formato/tipos/Knip/build isolado; negócio/browser e 12 casos conectados PostgreSQL 17 aprovados. Não representa percentual de cobertura. |
+| Segurança | launch-editor 2.14.2 integrado/publicado; npm audit zero no pacote validado. Três análises CodeQL da main `91658ed` sem resultados/erros/avisos. Cinco alertas legados continuam sem dispensa administrativa; S03 preserva essa pendência. |
 | Proteção de integração | API da `main`: `protected:false`; lista de rulesets vazia em 21/10. Ver G03. |
 | Recuperação e alertas | Dump/manifesto efetivamente baixados do Drive e restaurados em PostgreSQL 17 sem rede: 38 tabelas/36 recibos exatos, catálogo independente e constraints validadas. Auth gerenciado excluído; retenção/responsáveis/RPO/RTO pendentes. Backup diário 03h e monitor horário dependem do computador/app/conectores; continuidade não atestada. |
-| Preservação | 21 tabelas acompanhadas com contagens e digests idênticos antes/depois da última entrega |
+| Preservação | 21 tabelas tiveram contagens/digests idênticos no checkpoint anterior. A publicação de 21/10 não executou SQL/migrations ou salvou operações; não coletou novo digest operacional. |
 
 Legenda: **concluído** significa que o resultado descrito foi comprovado;
 **parcial** distingue implementação de homologação; **pendente** exige trabalho;
@@ -180,28 +178,28 @@ sintético foi gravado no HML.
 | T02 / #36 | Parcial; issue encerrada no GitHub | Preparação/revisão offline integradas via `db:prepare` e `db:review`, com oito referências de catálogo PostgreSQL 17 e treze ensaios de instalação, upgrades, preservação, replay, drift, rollback e geração futura; 38 tabelas conferidas. Falta classificar independentemente os alvos relevantes e definir plano/autorização específicos para futuras aplicações compartilhadas. A aplicação específica até `0033` já tem 36 recibos; não reaplicar. Detalhes em `MIGRATION-CHAIN-REMEDIATION-ADR.md`. Nenhum comando novo executa SQL; `db:migrate` permanece bloqueante e `db:push` não é atalho. |
 | T03 | Concluído no escopo isolado | Workflow aprovado na `main` `b82e044`: dois runners PostgreSQL 17, 39 casos de fixtures UI e dez conectados. A correção de ordenação da razão está publicada no HML. Aceites reais H01–H03/H06 continuam separados; a causa upstream do incidente histórico de sessão permanece inconclusiva. |
 | H04 / H05 | Concluído no laboratório isolado; aceite real separado | Dez casos conectados aprovados: compra em kg → consumo em g → produção → venda → recebimento/entrega → lucro; cancelamento, devolução, crédito/resgate parcial, reembolso e fechamento/correção. Backend/banco, transações, rollback e falhas cobertos também pelos runners. Interface/HTTP reais com identidade sintética; não substitui H01–H03 nem o piloto I05. Não gravar fatos sintéticos na base compartilhada. |
-| H01 / H02 | Parcial | Completar a homologação integrada de login/logout, expiração/revogação, OTP/reset, cooldown, limiter distribuído e Turnstile válido/inválido/replay, preservando controles e auditoria. Sessão e recuperação do Dono já foram comprovadas. Preparação em revisão: [AUTH-HML-ACCEPTANCE.md](AUTH-HML-ACCEPTANCE.md), com roteiro assistido e coleta corrigida (seis testes executáveis, quatro etapas humanas pendentes). Coleta offline não equivale a aceite conectado. |
-| H03 | Parcial; matriz isolada aprovada | Laboratório comprovou quatro perfis, chamadas proibidas entre 55 políticas, ausência de escrita na negação e revogação na próxima chamada. Concessões reais `manager`/`employee` auditadas; usuário confirmou entrada de Funcionário, Gerente nova e conta gerencial anterior. Aceite de interface do Funcionário e Gerente relatado no [registro manual](AUTH-HML-PERMISSIONS-MANUAL-2026-10-21.md); Gerente sem edição de Cenários e bloqueado em Parâmetros/FIFO. Falta completar Dono, releitura dos papéis e chamadas diretas com identidades autorizadas no ambiente publicado. Links GET da versão atual preparados, sem mutações no HML. Funcionário confirmou `employee` e as negações GET; Dono encontrou falha de sessão, com dois HTTP 429 no log agregado recente. [Investigação](AUTH-HML-SESSION-LIMIT-2026-10-21.md); usuário confirmou depois `owner` e recuperação dessa leitura; GETs de Dashboard/Parâmetros do Dono também confirmados com resultado; interface do Dono também aprovada. Rodada assistida dos perfis ativos concluída nas leituras/rotas testadas; cobertura ampliada e estabilidade não comprovadas. Não conceder papéis apenas para contornar teste. |
+| H01 / H02 | Parcial | Completar login/logout, expiração/revogação, OTP/reset, cooldown, limiter e Turnstile válido/inválido/replay. Roteiro/coleta integrados: [AUTH-HML-ACCEPTANCE.md](AUTH-HML-ACCEPTANCE.md). Recuperação de leitura do Dono relatada; dois HTTP 429 anteriores e um na nova versão, sem causa/correlação individual ou solução permanente comprovadas. [Investigação](AUTH-HML-SESSION-LIMIT-2026-10-21.md). |
+| H03 | Parcial; roteiro dos perfis ativos aceito | Laboratório aprovou quatro perfis, matriz negativa das 55 políticas, ausência de escrita na negação e revogação na próxima chamada. No tablet, usuário confirmou employee/manager/owner, Dashboard negado ao Funcionário e permitido aos demais, Parâmetros negado a Funcionário/Gerente e permitido ao Dono; interface/controles conforme roteiro, sem salvar. Após publicação, Dono confirmou Cenários/Financeiro. [Aceite manual](AUTH-HML-PERMISSIONS-MANUAL-2026-10-21.md). Repetição automática com identidades sintéticas isoladas, não com sessões reais no HML. Falta cobertura ampliada real e estabilidade; não conceder papéis para contornar testes. |
 | H06 | Parcial; QA automático ampliado | 40 casos de fixtures aprovados, incluindo Enter/Shift+Tab/Escape, foco e ausência de overflow em 320px com redução de movimento. Relatório/CSV e 390px já comprovados no laboratório conectado. Falta aceite no ambiente publicado por perfil, celular físico, acessibilidade/uso diário pela operadora; não equivale a auditoria WCAG completa. |
 | T04 | Concluído | Oxfmt alinhado; 21 testes do controlador simulado, Oxc1.64.1 conferida e Python3.12 validada. ActionsNode24 revisadas, Ubuntu24.04 fixado; CI sem avisos de runtime. |
-| S03 | Validação técnica concluída; revisão/legado pendentes | Patch launch-editor 2.14.2, regressão e npm audit zero; cinco alertas legados conferidos contra correções presentes. CI/negócio/browser/CodeQL de bf1c25c aprovados; análises da candidata sem resultados/erros/avisos. PR51 em rascunho. Resta revisão humana e tratamento administrativo da categoria antiga; não fechar/dispensar alertas por inferência. Detalhes em AUTOMATIC-READINESS-2026-10-21.md. |
+| S03 | Patch integrado; legado administrativo pendente | launch-editor 2.14.2, regressão e npm audit zero no pacote validado, integrado pelas PRs #51–#53 e publicado. CI/negócio/browser/CodeQL da main `91658ed` aprovados, três análises sem resultados/erros/avisos. Cinco alertas legados triados contra correções presentes, sem fechamento/dispensa por inferência. Detalhes em AUTOMATIC-READINESS-2026-10-21.md e no recibo conjunto. |
 
 ## Preparação e liberação da operação
 
 | ID | Estado | Resultado que falta |
 | --- | --- | --- |
-| G01 | Concluído no escopo documental desta rodada | README/roadmap/status, arquitetura/estado de controles, workflow, QA, resiliência, ambientes, paridade, checklist de operação e fila/handoff reconciliados. Fila virou espelho do roadmap, sem pacotes ready; evidências históricas preservadas nos documentos datados e no Git. Revisão/integração da PR permanece separada. |
+| G01 | Concluído no escopo documental desta rodada | README/roadmap/status, arquitetura/controles, workflow, QA, resiliência, ambientes, paridade, checklist e fila/handoff reconciliados. Fila é espelho do roadmap, sem pacotes ready; evidências históricas preservadas. Incremento integrado nas PRs #51–#53. |
 | G02 / I01 | Plano formalizado; laboratório conectado entregue | `QA-VALIDATION-PROTOCOL.md` define topologia, dados, responsabilidades e critérios; `CONNECTED-QA-2026-10-20.md` comprova interface/HTTP/PostgreSQL isolados. Resta consolidar identificação/configuração dos destinos e identidades para aceites reais e operação. Não presumir a original `production` como laboratório. |
 | G03 | Proposta preparada; decisão administrativa pendente | Payload com sete checks conferidos na main e política para um mantenedor em MAIN-PROTECTION-PROPOSAL.md. Decidir revisores/exceções e autorizar aplicação/readback. Main permanece protected:false, sem ruleset; nenhum PUT executado. |
-| T01 | Concluído | PR48 integrada em `83178a5` e PR49 em `b82e044`; PRs #44–#49 mescladas. CI, negócio/browser e CodeQL da `main` `b82e044` aprovados. Triagem de segurança segue em S03, aplicação genérica em T02 e produção em I04; integração não dispensa esses gates. |
+| T01 | Concluído | PRs #44–#53 mescladas, main de aplicação `91658ed` com CI/negócio/browser/CodeQL aprovados e publicação HML confirmada. Segurança administrativa segue em S03/G03, aplicação genérica em T02 e produção em I04; integração não dispensa esses gates. |
 | I02 | Restore externo concluído; política parcial | Baixados dump/manifesto do Drive, conferidos SHA-256/tamanho e restaurados esses bytes em PostgreSQL 17 sem rede: 38 tabelas/36 recibos exatos e catálogo independente de 0033. Recibo evidence/offsite-restore-2026-10-21.json. Restam retenção, responsáveis, periodicidade, RPO/RTO e recuperação de Auth, excluído do dump public/drizzle. Não apagar backups para abrir quota. |
 | I03 | Parcial | Backup diário às 03h Brasília, monitor horário e e-mail de teste configurados; execuções futuras e incidente real não observados. Validar rotina e resposta, completar logs/correlação/alertas dos domínios e decidir disponibilidade independente do computador/app. Automação local não comprova serviço contínuo. |
 | I04 | Pendente / gate humano | Liberação definitiva somente após revisão/integridade/QA, integração, plano de recuperação, configuração revisada dos ambientes e aceite humano. Configurações HML existentes não precisam ser refeitas; secrets/DNS/produção exigem autorização específica. |
 | I05 | Pendente / operação autorizada | Após os aceites e a recuperação, conduzir piloto com a operadora e fatos reais expressamente autorizados: compra, produção, venda, recebimento, entrega e conferência de lucro/estoque. Registrar problemas e decisão de aceite; não criar demonstrações fictícias no HML nem iniciar compras/produção sem previsão real. |
 
-Conferência GitHub em 21/10/2026: PRs #44–#49 mescladas e issue #36 encerrada;
-nenhuma PR ou issue aberta. Esta revisão apenas reconcilia esses estados;
-não alterou configurações, encerrou registros nem habilitou o migrador.
+Conferência GitHub anterior ao recibo final em 21/10/2026: PRs #44–#53
+mescladas, issue #36 encerrada e nenhuma PR aberta. O registro final desta
+publicação é documental; não habilita o migrador nem altera proteções.
 
 ## Ajustes operacionais e evoluções de produto
 
@@ -220,7 +218,7 @@ não alterou configurações, encerrou registros nem habilitou o migrador.
 | R04 | Condicional | Multitenancy/SaaS somente após decisão sobre memberships, tenant ativo e mapeamento histórico. Não atribuir tenant fictício aos fatos; não é pré-requisito para uma única operação interna. |
 | R05 / R06 | Evolução futura | Planejamento entre lotes, gestão avançada e XLSX conforme necessidade. A UX diária revisada e o CSV existente já estão entregues. |
 | R07 | Condicional | Avançar automação/autonomia somente após avaliação do piloto e estabilidade; multiagente requer autorização. A retomada pontual das 02:33 foi concluída e não cria recorrência. |
-| S04 | Parcial; incremento tipado candidato | Finanças e lifecycle sem `any` explícito, com contratos derivados do driver/schema, retorno transacional genérico, seleções inferidas e falha controlada para resultados obrigatórios ausentes. 60 testes focados, seis regressões novas e fixture de compilação aprovados; verificações completas registradas na PR. [Evidência](TYPED-TRANSACTIONS-2026-10-21.md). Cenários agora também tem candidata tipada sobre a PR #52, com snapshots/seleções derivados do schema, retornos dos cinco writers conferidos e três regressões de resultados/erros. [Registro](TYPED-SCENARIOS-2026-10-21.md). Restam avaliação gradual de extrações em operações/produção/financeiro e revisão/integração dos incrementos. Sem mudança de regras, migration ou deploy; revisão/integração separadas. |
+| S04 | Parcial; incremento tipado integrado e publicado | Finanças, lifecycle e Cenários sem `any` explícito nos módulos tratados; contratos derivados do driver/schema, callback genérico, seleções/snapshots inferidos e falha controlada para resultados obrigatórios ausentes. PRs #52/#53 integradas e publicadas no HML; 570 testes Node e 12 casos conectados isolados aprovados, incluindo lifecycle e rollback dos cinco writers de Cenários. [Transações](TYPED-TRANSACTIONS-2026-10-21.md), [Cenários](TYPED-SCENARIOS-2026-10-21.md), [publicação](JOINT-HML-PUBLICATION-2026-10-21.md). Restam extrações graduais em operações/produção/financeiro. Cálculos, versões, ativação e permissões preservados; nenhuma migration. |
 
 ## Pendências antigas encerradas ou substituídas
 

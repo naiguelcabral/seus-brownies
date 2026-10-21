@@ -1,4 +1,11 @@
-# Permissões HML — aceite manual em andamento — 21/10/2026
+# Permissões HML — roteiro dos perfis ativos aceito — 21/10/2026
+
+Estado atual: rodada guiada dos três perfis aceita nas rotas e GETs descritos
+no fechamento. As seções iniciais preservam a coleta histórica, inclusive
+pendências já superadas. Publicação conjunta e conferência posterior do Dono
+concluídas; [recibo](JOINT-HML-PUBLICATION-2026-10-21.md). H03 permanece parcial
+para a cobertura ampliada; H01/H02 conservam a investigação de sessão.
+
 
 H03 permanece **parcial**. Fonte desta evidência: relatos do usuário executando
 os passos no próprio tablet, em sessão separada da aba integrada do agente.
@@ -136,3 +143,13 @@ Não prova todas as 55 políticas no HML, mutações reais, expiração/revogaç
 antiabuso ou estabilidade permanente. O episódio 429 permanece acompanhado
 em H01/H02. Autoriza seguir a revisão/integração e publicação conjunta HML
 já solicitadas, preservando os gates separados de produção e dados.
+
+## Conferência após publicação
+
+Versão HML `de9a88e6-a2e0-4224-8c9c-e6f3da8ccb6c`, em 100%, confirmada por
+leitura administrativa do deployment. Usuário, no tablet como Dono, confirmou
+que Cenários e Financeiro abriram normalmente após atualizar, sem salvar.
+As chamadas diretas autenticadas dos três perfis acima pertencem ao roteiro
+anterior ao deploy. Após deploy, o agente repetiu apenas negações anônimas e
+smoke público; não recebeu sessões reais. Um HTTP 429 agregado na nova versão
+mantém o acompanhamento de disponibilidade, sem correlação individual.

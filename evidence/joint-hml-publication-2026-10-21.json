@@ -1,0 +1,92 @@
+{
+  "collected_at": "2026-10-21T18:26:47Z",
+  "worker": "cacau-v1-hml",
+  "source_commit": "91658ed73a27c61ef3e4f779381584adf8b0834c",
+  "integrated_pull_requests": [
+    50,
+    51,
+    52,
+    53
+  ],
+  "deployment": {
+    "id": "387bddcc-f0ac-4f5d-89fa-30ee2381a505",
+    "created_on": "2026-10-21T18:17:06.27024Z",
+    "versions": [
+      {
+        "version_id": "de9a88e6-a2e0-4224-8c9c-e6f3da8ccb6c",
+        "percentage": 100
+      }
+    ]
+  },
+  "previous_version_id": "22733c04-7996-43b1-88e3-3f775db223fc",
+  "build": {
+    "method": "git archive HEAD; isolated environment; explicit existing public Turnstile key",
+    "command": "npm run deploy:hml",
+    "exit_code": 0
+  },
+  "validation": {
+    "node_tests": 570,
+    "connected_http_browser_postgresql17_cases": 12,
+    "identities_for_automated_tests": "synthetic; isolated database only",
+    "main_ci_runs": {
+      "ci": 39639558961,
+      "business_browser": 39639559227,
+      "codeql": 39639559207
+    },
+    "main_ci_conclusions": "success",
+    "current_codeql_results_errors_warnings": 0,
+    "legacy_codeql_alerts_not_dismissed": 5
+  },
+  "post_deployment": {
+    "anonymous_root": {
+      "status": 307,
+      "location": "/login"
+    },
+    "login_status": 200,
+    "browser_headings_verified": [
+      "Entrar no Cacau",
+      "Definir ou recuperar senha",
+      "Redefinir senha"
+    ],
+    "anonymous_direct_dashboard": "serialized authentication error",
+    "anonymous_direct_settings": "serialized authentication error",
+    "rpc_error_transport_status": 200,
+    "human_owner_report": "As duas telas abriram normalmente",
+    "human_owner_screens": [
+      "Cenários",
+      "Financeiro"
+    ],
+    "human_device": "tablet",
+    "operations_saved_by_test": false
+  },
+  "session_provider_observation": {
+    "source": "cloudflare-workers-observability",
+    "read_only": true,
+    "window": {
+      "from": "2026-10-21T18:17:06Z",
+      "to": "2026-10-21T18:25:00Z"
+    },
+    "event": "auth.session.provider",
+    "stage": "http_error",
+    "status": 429,
+    "script_version_id": "de9a88e6-a2e0-4224-8c9c-e6f3da8ccb6c",
+    "count": 1,
+    "per_account_correlation_verified": false,
+    "permanent_resolution_verified": false
+  },
+  "changes": {
+    "hml_deployment": true,
+    "production_deployment": false,
+    "migrations": false,
+    "shared_sql_commands": false,
+    "secrets": false,
+    "dns": false,
+    "synthetic_hml_facts": false
+  },
+  "limits": [
+    "Real HML permission results are human reports, not automated authenticated account tests.",
+    "No operational database digest was collected in this publication round.",
+    "One post-deployment provider HTTP 429 remains under H01/H02; cause and scope are unverified.",
+    "No raw logs, headers, cookies, credentials or operational payloads retained."
+  ]
+}

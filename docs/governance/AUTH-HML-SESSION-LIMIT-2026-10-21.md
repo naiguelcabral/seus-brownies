@@ -21,7 +21,7 @@ A agregação é compatível com a falha relatada, mas não identifica a conta n
 comprova correlação individual. O motivo do limite, seu escopo (sessão, conta,
 origem ou serviço), horário de liberação e mecanismo de recuperação permanecem desconhecidos.
 Não atribuir a causa à quantidade de cliques do usuário ou à tipagem candidata.
-O código S04 não foi publicado no HML.
+O código S04 ainda não tinha sido publicado no momento dessa primeira coleta.
 
 ## Tratamento e verificação
 
@@ -58,3 +58,17 @@ Referências: [aceite manual](AUTH-HML-PERMISSIONS-MANUAL-2026-10-21.md),
 [incidente anterior](HML-SESSION-INCIDENT-2026-10-20.md),
 [tratamento 429 anterior](AUTH-SESSION-THROTTLING-2026-10-17.md),
 [roadmap](ROADMAP-CODEX.md).
+
+## Seguimento após publicação conjunta
+
+Código `91658ed` publicado às 18:17:06 UTC na versão
+`de9a88e6-a2e0-4224-8c9c-e6f3da8ccb6c`, em 100%. Usuário confirmou abertura
+de Cenários/Financeiro como Dono no tablet, sem salvar. Agregação somente de
+leitura, janela **18:17:06–18:25:00 UTC**, encontrou **um** evento de sessão
+`http_error`, HTTP 429, nessa nova versão. Consulta reconferida às 18:26 UTC.
+
+A recorrência mantém H01/H02 parciais; não prova causa ligada ao incremento,
+correlação com o usuário ou solução permanente. Não houve mudança nos controles
+de sessão para ocultar a falha. O sucesso das telas e a ocorrência agregada
+são evidências distintas. As etapas anteriores de revisão/integração/deploy
+foram concluídas conforme [recibo conjunto](JOINT-HML-PUBLICATION-2026-10-21.md).
