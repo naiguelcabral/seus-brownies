@@ -5,6 +5,25 @@ atual de tarefas, prioridades e critérios de conclusão. Os checkpoints de
 publicação abaixo preservam o estado comprovado de cada entrega; suas
 próximas etapas históricas não substituem o roadmap atualizado.
 
+## Preparação do aceite real de acesso — 21/10/2026
+
+Na branch de revisão `codex/hml-auth-acceptance-20261021`, a coleta offline
+identificou seis testes HML indevidamente ignorados por quatro marcações
+`test.fixme(true, ...)` globais. As pendências humanas passaram a casos
+individuais; a coleta agora exige seis executáveis e quatro pendentes. O teste
+de perfil insuficiente foi alinhado ao redirecionamento atual da guarda.
+
+[Matriz de autorização](AUTHORIZATION-MATRIX.md) reconciliada com as 55
+políticas atuais e [roteiro de aceite](AUTH-HML-ACCEPTANCE.md) preparado.
+Validação local: 561 testes Node, lint, tipos, formato e Knip aprovados
+(quatro achados contextuais, zero novos). A suíte completa passou fora da
+sandbox; tentativas dentro dela falharam em subprocessos. Sem mudança de
+bundle operacional, build não repetido neste pacote de testes/documentação.
+
+H01–H03 continuam parciais; esta preparação não executou a suíte no HML nem
+alterou usuários, permissões, provedor, dados ou deploy. A integração desta
+branch e o aceite conectado permanecem separados.
+
 ## Conflitos da PR #48 — 21/10/2026
 
 A main avançou para `b71b359` pela integração da PR #45. Usuário solicitou
