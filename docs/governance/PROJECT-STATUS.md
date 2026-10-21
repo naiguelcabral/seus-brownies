@@ -7,6 +7,13 @@ próximas etapas históricas não substituem o roadmap atualizado.
 
 ## Validação conectada e sustentação — 20/10/2026
 
+Checkpoint final: correção `bb76764` publicada em HML na versão
+`22733c04-7996-43b1-88e3-3f775db223fc`, 100% desde21/10 00:10:17 UTC
+(20/10 21:10 Brasília), raiz307/login200. Dez casos conectados passaram juntos
+no archive limpo; todos os jobs remotos, build isolado e triagem CodeQL sem
+achados aprovados. Os parágrafos de candidata abaixo são intermediários.
+PR48 atualizada para revisão, sem merge; nenhum SQL compartilhado aplicado.
+
 Primeiro acesso publicado do HEAD `a5463ee`: versão HML
 `3daa8163-7b43-4aee-a46b-6b325ca1b9aa`, 100% desde23:25:07 UTC.
 CodeQL do SHA conferido nas três linguagens, zero resultados/alertas abertos;

@@ -1,5 +1,21 @@
 # Validação conectada e sustentação — 20/10/2026
 
+## Checkpoint final de código
+
+Publicado `bb76764` no HML: versão `22733c04-7996-43b1-88e3-3f775db223fc`,
+100% desde21/10 00:10:17 UTC (20/10 21:10 Brasília). Deployments relidos;
+raiz307/login200. Sem SQL compartilhado, secrets alterados ou merge.
+
+Código `bb76764`: dez casos passaram juntos em1,3min pelo wrapper de HEAD
+arquivado/ambiente limpo. Todos os jobs remotos passaram, inclusive o novo
+`connected-postgres-browser`: CI39519039630, negócio/browser39519039633,
+migrations39519039669, evidência39519039646 e CodeQL39519039641.
+Análises1992888500/1992887454/1992886788 têm zero resultados, sem erro/aviso;
+zero alertas abertos. Build HML isolado passou. Quatro containers da tarefa
+encerrados/removidos; backups locais/Drive preservados. Recibo sanitizado em
+`evidence/connected-qa-2026-10-20.json`. Checkpoints intermediários abaixo
+preservam a descoberta/correção, sem substituir o resultado final.
+
 Evidência; o acompanhamento permanece exclusivamente no ROADMAP-CODEX.md.
 
 ## Laboratório

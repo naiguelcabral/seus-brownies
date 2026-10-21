@@ -31,8 +31,9 @@ análises sem resultados e zero alertas abertos. Publicado em HML na versão
 Backup atual/manifesto enviados ao Google Drive privado; restore local passou
 38 tabelas/36 recibos. Backup diário03h e monitor horário ativos, e-mail de teste
 ao Dono entregue. Restam restore externo, RPO/RTO e aceite de sustentação.
-Dez casos conectados passaram (sete + três), revelando correção de ordenação
-da razão em Relatórios; candidata ainda aguarda CI/CodeQL e publicação.
+Dez casos conectados passaram juntos em archive limpo, revelando correção de
+ordenação da razão em Relatórios. Código `bb76764`, CI/CodeQL aprovados,
+publicado em HML na versão `22733c04`, 100%, raiz307/login200.
 Detalhes em `CONNECTED-QA-2026-10-20.md`.
 PRs47/48 em rascunho; revisão humana da integração à main permanece separada.
 
@@ -40,7 +41,7 @@ PRs47/48 em rascunho; revisão humana da integração à main permanece separada
 
 | Área | Situação atual |
 | --- | --- |
-| HML | Primeiro acesso em `a5463ee` (código `b0680dd`), versão `3daa8163-7b43-4aee-a46b-6b325ca1b9aa`, 100%; deploy e GETs conferidos. Nova correção de Relatórios ainda candidata. |
+| HML | Código `bb76764`, versão `22733c04-7996-43b1-88e3-3f775db223fc`, 100%; primeiro acesso e ordenação de Relatórios publicados, deploy e GETs conferidos. |
 | Trabalho versionado | Branch `codex/integrated-validation-gates`, PRs47/48 em rascunho; PR46 mantém preparação/revisão offline. Publicação HML não equivale a integração na `main`. |
 | Banco HML | Atualizações específicas aplicadas, 36 recibos; migrador genérico continua sendo tarefa separada |
 | Catálogo e produção | 38 produtos; duas versões de receita e 34 perfis contando os históricos; receita 2 ativa com 17 perfis completos e 31 componentes |
@@ -48,7 +49,7 @@ PRs47/48 em rascunho; revisão humana da integração à main permanece separada
 | Meta | R$ 10.000 de lucro mensal após os custos de **todas as vendas**, inclusive Bordinhas realizadas; sem cotas obrigatórias por produto |
 | Operação real | Sem compras ou produção previstas; nenhum fato fictício criado no HML para testar as entregas |
 | Última validação de código | `b0680dd`: 556 testes Node, 39 casos browser de fixtures, smoke público local e build isolado aprovados; checks remotos verdes. Triagem detalhada CodeQL pendente. O checkpoint runtime de `3f0ba59` permanece histórico. |
-| Segurança | Três análises CodeQL de `a5463ee` sem resultados e zero alertas abertos; nova correção de Relatórios exige conferência própria. |
+| Segurança | Três análises CodeQL de `bb76764` sem resultados/erros/avisos e zero alertas abertos. |
 | Preservação | 21 tabelas acompanhadas com contagens e digests idênticos antes/depois da última entrega |
 
 Legenda: **concluído** significa que o resultado descrito foi comprovado;

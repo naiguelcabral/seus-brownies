@@ -1,0 +1,48 @@
+{
+  "source_commit": "bb76764a3b25e5dc7d9cfc9daf16c6cc499430c3",
+  "node_tests_passed": 559,
+  "connected_browser_tests_passed": 10,
+  "single_clean_archive_run": true,
+  "hml": {
+    "version": "22733c04-7996-43b1-88e3-3f775db223fc",
+    "traffic_percent": 100,
+    "deployed_at": "2026-10-21T00:10:17.109Z",
+    "root_http": 307,
+    "login_http": 200
+  },
+  "shared_synthetic_writes": false,
+  "ci": {
+    "quality": 39519039630,
+    "business_and_browser": 39519039633,
+    "migration_chain": 39519039669,
+    "evidence_gates": 39519039646,
+    "codeql": 39519039641,
+    "conclusion": "success"
+  },
+  "codeql": {
+    "analysis_ids": [1992888500, 1992887454, 1992886788],
+    "results_count": 0,
+    "open_alerts": 0
+  },
+  "backup": {
+    "source_read_only": true,
+    "schemas": ["public", "drizzle"],
+    "managed_auth_included": false,
+    "offsite_provider": "private-google-drive",
+    "offsite_metadata_verified": true,
+    "bytes": 224555,
+    "sha256": "0bd53e39fb98df6b1edf2da4f191bc2dc0b0603ce334e68fe787204ce55126e6",
+    "local_restore_passed": true,
+    "restored_tables": 38,
+    "restored_receipts": 36,
+    "offsite_bytes_restored": false
+  },
+  "scheduling": {
+    "backup": "daily-0300-America-Sao_Paulo",
+    "availability": "hourly",
+    "owner_test_email_delivered": true,
+    "requires_local_host_and_app": true
+  },
+  "shared_migration_application_authorized": false,
+  "production_release_approved": false
+}
