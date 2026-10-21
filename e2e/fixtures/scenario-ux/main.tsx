@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import type { ComponentProps } from 'react'
 import { requireDefined } from '../../../src/lib/required-value'
 import { createRoot } from 'react-dom/client'
 import { OperationDialog } from '../../../src/components/OperationDialog'
@@ -55,21 +56,22 @@ const draft = {
   ],
 }
 const projection = calculateScenarioProjection(draft, products)
-const scenario = {
-  ...draft,
-  version: 2,
-  feeTaxReserveBps: 0,
-  projection,
-  projectionMessage: '',
-  paymentComparisonMessage: '',
-  paymentComparisons: [],
-  mix: draft.mix.map((row, index) => ({
-    ...row,
-    productName: requireDefined(products[index]).name,
-    productType: 'finished_product',
-    productIsActive: true,
-  })),
-}
+const scenario: NonNullable<ComponentProps<typeof ActiveScenario>['scenario']> =
+  {
+    ...draft,
+    version: 2,
+    feeTaxReserveBps: 0,
+    projection,
+    projectionMessage: '',
+    paymentComparisonMessage: '',
+    paymentComparisons: [],
+    mix: draft.mix.map((row, index) => ({
+      ...row,
+      productName: requireDefined(products[index]).name,
+      productType: 'finished_product',
+      productIsActive: true,
+    })),
+  }
 function Preview() {
   const [open, setOpen] = useState(false),
     [form, setForm] = useState<ScenarioForm>({

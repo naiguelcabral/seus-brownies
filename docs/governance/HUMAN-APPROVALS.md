@@ -1,5 +1,17 @@
 # Ações que exigem aprovação humana — Cacau v1
 
+## Continuidade S04 e homologação assistida — 21/10/2026
+
+Usuário solicitou executar o reforço de tipagem de Cenários e, em paralelo,
+concluir a homologação de Funcionário/Gerente/Dono, incluindo chamadas diretas.
+A execução paralela fica restrita a essas duas frentes. Cálculos, versões,
+ativação e permissões devem ser preservados. Depois da homologação, seguir
+para revisão, integração das PRs e publicação conjunta somente no HML.
+O usuário escolheu executar os testes guiados no próprio dispositivo; não
+forneceu sessões ou credenciais ao agente. Não presume aceite de casos ainda
+não relatados, nem autoriza fatos fictícios, migração compartilhada, secrets
+ou produção. Integração/publicação respeitam os checks e a ordem solicitada.
+
 ## Execução das tarefas automáticas — 21/10/2026
 
 Após apresentação das frentes S03, I02, T02, H06, G01 e proposta G03, usuário
