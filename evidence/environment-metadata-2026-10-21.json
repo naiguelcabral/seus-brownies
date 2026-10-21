@@ -1,0 +1,90 @@
+{
+  "collected_at": "2026-10-21T11:44:39.946Z",
+  "source": "neon-api-metadata-only",
+  "project_id": "steep-brook-51659857",
+  "sql_executed": false,
+  "worker_binding_verified": false,
+  "classification_changed": false,
+  "branches": [
+    {
+      "id": "br-lingering-wind-acwh5wap",
+      "name": "production",
+      "state": "ready",
+      "primary": true,
+      "default": true,
+      "parent_id": null
+    },
+    {
+      "id": "br-patient-lake-ac2t0cvq",
+      "name": "g1-auth-hml",
+      "state": "ready",
+      "primary": false,
+      "default": false,
+      "parent_id": "br-bitter-dew-ac31uci9"
+    },
+    {
+      "id": "br-bitter-dew-ac31uci9",
+      "name": "Development",
+      "state": "ready",
+      "primary": false,
+      "default": false,
+      "parent_id": "br-lingering-wind-acwh5wap"
+    },
+    {
+      "id": "br-aged-violet-ac5aap1s",
+      "name": "cacau-exact-costs-validation-20261018",
+      "state": "ready",
+      "primary": false,
+      "default": false,
+      "parent_id": "br-bold-union-acju2qrp"
+    },
+    {
+      "id": "br-super-waterfall-ac0mxtnt",
+      "name": "cacau-baseline-0016-validation-20261017",
+      "state": "ready",
+      "primary": false,
+      "default": false,
+      "parent_id": null
+    },
+    {
+      "id": "br-solitary-unit-ac3lawit",
+      "name": "backup-technical-catalog-2026-10-18",
+      "state": "ready",
+      "primary": false,
+      "default": false,
+      "parent_id": "br-lingering-wind-acwh5wap"
+    },
+    {
+      "id": "br-bold-union-acju2qrp",
+      "name": "cacau-exact-costs-backup-20261018",
+      "state": "ready",
+      "primary": false,
+      "default": false,
+      "parent_id": "br-lingering-wind-acwh5wap"
+    },
+    {
+      "id": "br-misty-surf-acbrzli5",
+      "name": "cacau-upgrade-0028-validation-20261017",
+      "state": "ready",
+      "primary": false,
+      "default": false,
+      "parent_id": "br-morning-star-ac9j0kkh"
+    },
+    {
+      "id": "br-dawn-salad-acxz7vha",
+      "name": "cacau-baseline-endpoint-parking-20261017",
+      "state": "ready",
+      "primary": false,
+      "default": false,
+      "parent_id": "br-lingering-wind-acwh5wap"
+    },
+    {
+      "id": "br-morning-star-ac9j0kkh",
+      "name": "cacau-pre-upgrade-0028-backup-20261017",
+      "state": "ready",
+      "primary": false,
+      "default": false,
+      "parent_id": "br-lingering-wind-acwh5wap"
+    }
+  ]
+}

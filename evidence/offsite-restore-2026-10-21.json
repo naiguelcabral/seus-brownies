@@ -1,0 +1,211 @@
+{
+  "checked_at": "2026-10-21T09:36:49.683Z",
+  "scope": "downloaded-offsite-public-drizzle-to-local-postgres17",
+  "offsite_bytes_restored": true,
+  "manifest_matches": true,
+  "sha256": "0bd53e39fb98df6b1edf2da4f191bc2dc0b0603ce334e68fe787204ce55126e6",
+  "bytes": 224555,
+  "tables": 38,
+  "receipts": 36,
+  "exact_receipts_match": true,
+  "catalog_sha256": "eaf0bdbe68314126ae27af14c1b01f5a7ecd5fd77859290a9b5e90d6fdcc17ec",
+  "independent_catalog_matches": true,
+  "constraints_validated": true,
+  "managed_auth_included": false,
+  "source_mutated": false,
+  "network": "none",
+  "data_digests": [
+    {
+      "table": "action_plan_history",
+      "rows": 0,
+      "digest": "d41d8cd98f00b204e9800998ecf8427e"
+    },
+    {
+      "table": "action_plans",
+      "rows": 0,
+      "digest": "d41d8cd98f00b204e9800998ecf8427e"
+    },
+    {
+      "table": "app_user_access",
+      "rows": 4,
+      "digest": "e144b28bcef25b05dbe8b3f53b32a25c"
+    },
+    {
+      "table": "auth_audit_events",
+      "rows": 66,
+      "digest": "7d83758585f04395e330c7a6698342da"
+    },
+    {
+      "table": "auth_login_attempts",
+      "rows": 4,
+      "digest": "9947c547fd1b2ff904f6dcea9694b2cc"
+    },
+    {
+      "table": "categories",
+      "rows": 6,
+      "digest": "2d600b42f757578633884f24d8190432"
+    },
+    {
+      "table": "expenses",
+      "rows": 0,
+      "digest": "d41d8cd98f00b204e9800998ecf8427e"
+    },
+    {
+      "table": "financial_events",
+      "rows": 0,
+      "digest": "d41d8cd98f00b204e9800998ecf8427e"
+    },
+    {
+      "table": "financial_periods",
+      "rows": 0,
+      "digest": "d41d8cd98f00b204e9800998ecf8427e"
+    },
+    {
+      "table": "historical_import_records",
+      "rows": 4,
+      "digest": "6fec4e5e6a0bf3e5dee9256176a5cfaa"
+    },
+    {
+      "table": "inventory_cost_allocations",
+      "rows": 0,
+      "digest": "d41d8cd98f00b204e9800998ecf8427e"
+    },
+    {
+      "table": "inventory_cost_layers",
+      "rows": 0,
+      "digest": "d41d8cd98f00b204e9800998ecf8427e"
+    },
+    {
+      "table": "inventory_cost_reversals",
+      "rows": 0,
+      "digest": "d41d8cd98f00b204e9800998ecf8427e"
+    },
+    {
+      "table": "management_scenario_history",
+      "rows": 4,
+      "digest": "508035f9f96ed72258a54d34d8cff405"
+    },
+    {
+      "table": "management_scenario_mix",
+      "rows": 33,
+      "digest": "18d84756a8890b73a6c74d270d55a37e"
+    },
+    {
+      "table": "management_scenarios",
+      "rows": 2,
+      "digest": "fa223b0d95656b9df6750d79a1ba1fe8"
+    },
+    {
+      "table": "management_settings",
+      "rows": 1,
+      "digest": "c12b11217e4e3bea50bcb834a6c35203"
+    },
+    {
+      "table": "message_processing_records",
+      "rows": 0,
+      "digest": "d41d8cd98f00b204e9800998ecf8427e"
+    },
+    {
+      "table": "operational_audit_events",
+      "rows": 178,
+      "digest": "8b7d76cd19a14261ee4e4113ab4c60c0"
+    },
+    {
+      "table": "operational_cost_rates",
+      "rows": 2,
+      "digest": "0be05fc30499d577f36f04784870107f"
+    },
+    {
+      "table": "operational_costs",
+      "rows": 0,
+      "digest": "d41d8cd98f00b204e9800998ecf8427e"
+    },
+    {
+      "table": "product_import_aliases",
+      "rows": 10,
+      "digest": "aa0e9d187a4a3ea74647c555c62b9ed6"
+    },
+    {
+      "table": "production_batch_consumptions",
+      "rows": 0,
+      "digest": "d41d8cd98f00b204e9800998ecf8427e"
+    },
+    {
+      "table": "production_batch_losses",
+      "rows": 0,
+      "digest": "d41d8cd98f00b204e9800998ecf8427e"
+    },
+    {
+      "table": "production_batch_outputs",
+      "rows": 0,
+      "digest": "d41d8cd98f00b204e9800998ecf8427e"
+    },
+    {
+      "table": "production_batches",
+      "rows": 0,
+      "digest": "d41d8cd98f00b204e9800998ecf8427e"
+    },
+    {
+      "table": "production_profile_components",
+      "rows": 43,
+      "digest": "d687465f4afe9389caff808d67631df1"
+    },
+    {
+      "table": "production_profiles",
+      "rows": 34,
+      "digest": "c54aafa05c0297db975ae4926fa07fe4"
+    },
+    {
+      "table": "products",
+      "rows": 38,
+      "digest": "73697b64a09ab291ca9542797566dd82"
+    },
+    {
+      "table": "purchase_items",
+      "rows": 0,
+      "digest": "d41d8cd98f00b204e9800998ecf8427e"
+    },
+    {
+      "table": "purchases",
+      "rows": 0,
+      "digest": "d41d8cd98f00b204e9800998ecf8427e"
+    },
+    {
+      "table": "recipe_items",
+      "rows": 14,
+      "digest": "511c9f2ce9e11c8d2a1981842489bec6"
+    },
+    {
+      "table": "recipe_operational_requirements",
+      "rows": 4,
+      "digest": "8e96ed4dca9cae399930da4d3b6f790e"
+    },
+    {
+      "table": "recipe_versions",
+      "rows": 2,
+      "digest": "29ec5a634663ea8ddca7b30e3a24f937"
+    },
+    {
+      "table": "sale_items",
+      "rows": 0,
+      "digest": "d41d8cd98f00b204e9800998ecf8427e"
+    },
+    {
+      "table": "sales",
+      "rows": 0,
+      "digest": "d41d8cd98f00b204e9800998ecf8427e"
+    },
+    {
+      "table": "sales_locations",
+      "rows": 1,
+      "digest": "a750643f4fb7db0adbda14059d9c192c"
+    },
+    {
+      "table": "stock_movements",
+      "rows": 0,
+      "digest": "d41d8cd98f00b204e9800998ecf8427e"
+    }
+  ],
+  "application_authorized": false,
+  "production_ready": false
+}

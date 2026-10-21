@@ -67,6 +67,45 @@ test('abre, contém o foco, fecha com Escape e devolve foco ao botão', async ({
   await expect(trigger).toBeFocused()
 })
 
+test('teclado em 320px: abre sem mouse, contém Shift+Tab e restaura foco sem overflow', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 320, height: 568 })
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  const trigger = page.getByRole('button', {
+    name: 'Adicionar produto',
+    exact: true,
+  })
+  await trigger.focus()
+  await page.keyboard.press('Enter')
+  const dialog = page.getByRole('dialog', {
+    name: 'Adicionar produto',
+    exact: true,
+  })
+  await expect(dialog.getByLabel('Nome *', { exact: true })).toBeFocused()
+  for (let index = 0; index < 20; index++) {
+    await page.keyboard.press('Shift+Tab')
+    expect(
+      await dialog.evaluate((element) =>
+        element.contains(document.activeElement),
+      ),
+    ).toBe(true)
+  }
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= window.innerWidth,
+    ),
+  ).toBe(true)
+  expect(
+    await dialog.evaluate(
+      (element) => element.scrollWidth <= element.clientWidth,
+    ),
+  ).toBe(true)
+  await page.keyboard.press('Escape')
+  await expect(dialog).toHaveCount(0)
+  await expect(trigger).toBeFocused()
+})
+
 test('preserva valores no erro, confirma descarte e permite corrigir e salvar', async ({
   page,
 }) => {
