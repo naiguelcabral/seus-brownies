@@ -38,7 +38,7 @@ planejamento, não cobertura de testes ou aceite. Premissas e pacotes estão no
 [roadmap](docs/governance/ROADMAP-CODEX.md#estimativa-de-planejamento--análise-do-work-de-21102026).
 
 As prioridades restantes são autenticação real e aceite de permissões,
-restauração dos bytes da cópia externa, retenção/responsáveis/RPO/RTO,
+retenção/responsáveis/RPO/RTO e recuperação de Auth,
 ambientes e futuras migrations, proteção da `main`, triagem de segurança,
 celular físico e piloto autorizado. Há backup privado externo e automações
 locais de backup/monitoramento; dependem do computador/app disponíveis.
@@ -46,6 +46,14 @@ WhatsApp/IA conversacional e notas por imagem/OCR continuam como evoluções.
 SaaS, pagamentos ampliados e XLSX são condicionais e não bloqueiam por si o
 uso interno. Não há compras ou lotes reais previstos nem fatos fictícios
 criados no HML para demonstração.
+
+Rodada automática de 21/10: restore dos bytes baixados do Drive comprovado,
+com 38 tabelas/36 recibos exatos e catálogo independente. Na candidata
+`2bcb597`, patch launch-editor 2.14.2, auditoria npm com zero vulnerabilidades,
+560 testes Node, 40 browser e build isolado aprovados. Proposta de proteção
+da main e procedimento de migrations preparados, sem aplicação. Essa
+candidata ainda exige revisão/CI e integração. Consulte a
+[evidência técnica](docs/governance/AUTOMATIC-READINESS-2026-10-21.md).
 
 ## Executar localmente
 
@@ -122,8 +130,8 @@ reais nem substitui o aceite humano. Detalhes em
 `test:e2e:isolated` e `test:e2e:connected` usam os laboratórios restritos
 descritos no [protocolo de QA](docs/governance/QA-VALIDATION-PROTOCOL.md).
 Não executar a descoberta E2E de ambientes compartilhados sem cenário,
-destino e referências autorizados. Esta revisão documental não repetiu as
-suítes nem executou nova auditoria de dependências. Sucesso do CodeQL não
+destino e referências autorizados. A reconciliação documental inicial não
+repetiu suítes; a rodada automática posterior está registrada acima. Sucesso do CodeQL não
 dispensa triagem de alertas; a `main` ainda estava sem proteção/ruleset na
 consulta de 21/10.
 

@@ -1,5 +1,16 @@
 # Ações que exigem aprovação humana — Cacau v1
 
+## Execução das tarefas automáticas — 21/10/2026
+
+Após apresentação das frentes S03, I02, T02, H06, G01 e proposta G03, usuário
+respondeu “Pode seguir realizando as tarefas de forma automática”. Autoriza
+triagem/auditoria, correções/testes e PR de revisão, download/restauração da
+cópia externa já autorizada em ambiente isolado, procedimentos offline,
+verificações móveis e reconciliação documental. Não autoriza merge, aplicação
+de proteção administrativa, fechamento manual de alertas, mudança de regras,
+SQL compartilhado, secrets ou produção. Não é pedido de nova recorrência,
+autonomia permanente ou delegação. Resultado em AUTOMATIC-READINESS-2026-10-21.md.
+
 ## Merge da PR #48 — 21/10/2026
 
 Após o relato de conflitos resolvidos em `97195ac`, 560 testes, build/checks

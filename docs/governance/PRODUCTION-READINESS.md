@@ -1,5 +1,19 @@
 # Preparação para operação de produção — Cacau v1
 
+## Evidência técnica — 21/10/2026
+
+Estado atual: **PREPARED / NOT RELEASED**. Main b82e044 integrada e com CI
+aprovada; laboratório conectado entregue com identidade sintética. Último
+HML registrado bb76764/22733c04; catálogo/receitas/cenário ativos conferidos
+nos recibos de 18/10. Não repetir importações ou aplicações.
+
+Restore externo agora comprovado: bytes baixados do Drive, PostgreSQL 17
+sem rede, 38 tabelas/36 recibos exatos e catálogo independente. Persistem
+política de recuperação/Auth, autenticação/perfis reais, celular físico,
+proteção administrativa da main e piloto autorizado. O checklist abaixo
+conserva o aceite humano; estados iniciais históricos não reabrem entregas.
+Detalhes em [validação automática](AUTOMATIC-READINESS-2026-10-21.md).
+
 Estado: **PREPARED**, 8 de outubro de 2026. Checklist documental, sem
 homologação de ambiente ou autorização de produção. Cada execução humana
 deve registrar responsável, instante UTC, commit, ambiente, resultado e

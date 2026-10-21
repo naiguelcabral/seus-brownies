@@ -5,6 +5,27 @@ atual de tarefas, prioridades e critérios de conclusão. Os checkpoints de
 publicação abaixo preservam o estado comprovado de cada entrega; suas
 próximas etapas históricas não substituem o roadmap atualizado.
 
+## Execução automática autorizada — 21/10/2026
+
+Candidata `2bcb597`: override/lockfile launch-editor 2.14.2 e regressão de
+segurança; somente esse nó transitivo alterado. npm ci/audit zero, 560 testes
+Node, lint/tipos/formato/Knip e build isolado aprovados; 40 casos browser,
+incluindo teclado/320px/redução de movimento. Sem alteração do código de
+negócio. Cinco alertas legados CodeQL triados contra correções presentes;
+análises atuais da main sem resultados, sem dispensa manual de alertas.
+
+Dump e manifesto efetivamente baixados do Drive privado; SHA-256/tamanho
+conferidos. Restore em PostgreSQL 17 local sem rede passou 38 tabelas,
+36 recibos exatos, catálogo independente de 0033 e constraints. Evidência
+sanitizada em `evidence/offsite-restore-2026-10-21.json`; bytes privados fora
+do Git. Auth excluído; políticas de recuperação permanecem humanas.
+
+Inventário de metadados, procedimento T02 e proposta G03 prontos. Documentos
+ativos reconciliados e fila antiga substituída por espelho do roadmap.
+Main/HML preservados, sem aplicação compartilhada, secrets ou deploy.
+Candidata segue para PR/CI e revisão; merge e aceites reais não autorizados
+por esta rodada. Detalhes em [validação automática](AUTOMATIC-READINESS-2026-10-21.md).
+
 ## Reconciliação documental após análise do Work — 21/10/2026
 
 README e roadmap atualizados após a conversa “Análise do repositório” e

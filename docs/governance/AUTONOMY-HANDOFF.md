@@ -1,5 +1,24 @@
 # Handoff de autonomia — Cacau v1
 
+## Validação automática autorizada — 21/10/2026
+
+Branch codex/automatic-readiness-20261021; incremento 2bcb597: patch isolado
+launch-editor 2.14.2, regressão de segurança e teclado móvel 320px. npm ci e
+audit zero vulnerabilidades; 560 testes, lint/tipos/formato/Knip e build HML
+isolado aprovados. Navegador isolado: 40 casos aprovados. Restrições EPERM do
+sandbox foram resolvidas repetindo a suíte no host, sem enfraquecer testes.
+
+Restore dos bytes baixados do Drive aprovado: 38 tabelas/36 recibos exatos,
+catálogo independente e constraints; sem alteração da origem. Dump privado
+fora do Git, Auth excluído. Proposta G03 e procedimento T02 preparados.
+Fila antiga substituída por espelho do roadmap, sem pacotes ready.
+
+Aguardar/revisar a PR da candidata e seus checks. Próximos gates humanos:
+autenticação real, perfis/celular, recuperação/retenção/RPO/RTO/Auth, proteção
+administrativa, plano específico de migrations, piloto e produção. Não repetir
+restore, importações ou publicações antigas por instruções históricas abaixo.
+Detalhes em [evidência da rodada](AUTOMATIC-READINESS-2026-10-21.md).
+
 ## Investigação encerrada e correção publicada — 20/10/2026
 
 - Retomada com capacidade oficial renovada em 100%; `LIGARTUDO --prepare-only`

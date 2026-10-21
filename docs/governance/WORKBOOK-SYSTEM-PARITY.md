@@ -1,5 +1,21 @@
 # Matriz de paridade — workbook original × Cacau v1
 
+## Estado de referência — 21/10/2026
+
+As tabelas abaixo preservam a avaliação de 14/09; não são fila nem retrato
+dos aceites atuais. Reconciliação do workbook completo, cadastros, receitas,
+custos exatos, recebimentos/lucro e cenários foi aplicada. Consulte a
+[revisão integral](ATTACHED-WORKBOOK-COMPLETE-REVIEW-2026-10-18.md) e o
+[roadmap único](ROADMAP-CODEX.md). Não reabrir decisões consumidas por uma
+célula histórica dizer aguardando-decisao ou ausente.
+
+Main b82e044 e laboratório interface/HTTP/PostgreSQL comprovam o fluxo
+operacional; H01–H03 e H06 conservam aceites reais por perfil/celular.
+WhatsApp/OCR continuam evoluções. O histórico do workbook não foi reimportado
+nem seus valores publicados como fatos reais por esta rodada.
+
+## Avaliação histórica de 14/09/2026
+
 Atualizada em 14 de setembro de 2026. Esta matriz é a fonte canônica de
 paridade funcional entre o workbook original e o sistema. Ela descreve
 estrutura e totais sanitizados; não reproduz linhas históricas, nomes pessoais

@@ -19,7 +19,7 @@
 
 - Decisão de 18/10/2026: insumos de massa são comprados em kg pelo valor total
   pago pelo item, sem multiplicar esse total pela quantidade. A implementação
-  nova está local e depende do pacote de schema exato e rollout aprovado.
+  e o pacote específico de custos exatos já foram publicados no HML autorizado.
   Outras unidades físicas não são convertidas para kg por inferência.
 
 - Para os dez ingredientes do workbook com estoque em g, a compra pode ser

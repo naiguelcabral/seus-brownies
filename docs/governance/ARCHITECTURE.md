@@ -57,13 +57,17 @@ Cloudflare Workers hospeda a aplicação e fornece a borda de execução. Segred
   A exceção aprovada de custos exatos está no [ADR-0002](../ADR-0002-CUSTOS-EXATOS-E-EXIBICAO-MONETARIA.md):
   frações de inteiros em JSONB preservam o valor autoritativo; centavos/custo
   unitário legados são projeções compatíveis. Quantidades físicas conservam
-  sua precisão e unidade. Aplicação do pacote de schema continua sob gate.
+  sua precisão e unidade. O pacote específico foi aplicado ao alvo autorizado;
+  futuras aplicações em outro destino continuam sob gate.
 
-## Integrações futuras
+## Autenticação e integrações
 
 ### Autenticação
 
-Planejada como camada transversal antes de abertura do painel para múltiplos usuários. Deve incluir sessão segura, RBAC, rate limiting, proteção de endpoints e auditoria por identidade.
+Camada transversal implementada com Neon Auth, sessão SSR, RBAC no servidor,
+CSRF, rate limiting, Turnstile e auditoria por identidade. Laboratório usa
+identidade sintética; aceite do provedor/desafio reais e dos perfis no ambiente
+publicado continua em H01–H03. Estratégia e controles permanecem preservados.
 
 ### WhatsApp
 

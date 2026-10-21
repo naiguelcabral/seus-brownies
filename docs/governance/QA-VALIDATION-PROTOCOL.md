@@ -11,8 +11,8 @@ evidências; não declara aceite nem cria outra fila.
 | --- | --- | --- |
 | Unitários/contratos | Node 22, Python 3.12 na CI; fakes e arquivos temporários sintéticos | Agente executa e registra checks do SHA |
 | Banco de negócio | PostgreSQL 17 local/serviço efêmero de CI em 127.0.0.1:5437 e :5439, nomes e papéis fixos dos runners | Agente cria somente laboratório vazio e encerra os containers que criou |
-| Navegador de componentes/telas | Chromium, bundle explícito sem configuração/credenciais do app, backend simulado; rede HTTP somente 127.0.0.1 e WebSockets bloqueados | Agente executa a lista explícita de oito specs |
-| Futuro ensaio interface + backend + identidade | Ambiente isolado próprio, banco sintético e identidades de teste próprias; sem promover papéis de contas reais | Operador confirma o ambiente/identidades; agente ensaia o fluxo conectado |
+| Navegador de componentes/telas | Chromium, bundle explícito sem credenciais do app, backend simulado e rede só loopback | Agente executa a allowlist versionada de specs |
+| Interface + backend + identidade sintética | Laboratório conectado entregue, PostgreSQL 17/HTTP/telas reais e identidade sintética | Agente ensaia somente em laboratório vazio; operador aceita perfis/serviços reais separadamente |
 | HML compartilhado | Conferência não destrutiva; compras, produção e vendas reais continuam sem previsão | Dono decide fatos reais e aceite funcional; agente preserva histórico |
 | Produção principal | Fora da execução automática | Dono revisa plano e autoriza especificamente a liberação |
 
@@ -45,10 +45,10 @@ specs existentes contêm somente dados sintéticos e ficam em `/tmp`.
 
 ## Execução reproduzível
 
-Atualização de20/10: `npm run test:e2e:connected` acrescenta aplicação TanStack
+Atualização de 21/10: `npm run test:e2e:connected` acrescenta aplicação TanStack
 real/HTTP/PostgreSQL17 sintético em5440, com identidades próprias do laboratório
 e RBAC lido no banco. CI tem serviço vazio próprio; apenas o provedor externo
-é simulado. Dez casos locais passaram em execuções complementares. Detalhes,
+é simulado. Dez casos passaram juntos e na CI da main b82e044. Detalhes,
 correção encontrada, limites de aceite e sustentação em CONNECTED-QA-2026-10-20.md.
 
 ```sh
