@@ -1,7 +1,5 @@
 name: HML evidence gates disposable PostgreSQL 17
 on:
-  push:
-    branches: [codex/hml-migration-evidence-gates]
   pull_request:
     paths:
       - scripts/hml-evidence-*
