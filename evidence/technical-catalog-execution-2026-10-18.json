@@ -279,7 +279,7 @@
   ],
   "rehearsal": {
     "branch": "br-aged-violet-ac5aap1s",
-    "compute": "ep-patient-bread-ac9lw4cq",
+    "compute": "ep-[redacted:ae1b7b79]",
     "newBranchAttempt": "Rejected: branches limit exceeded",
     "deviation": "Reused prior private exact-cost validation copy after all 38 public table digests, complete 33-receipt journal and all nine schema sections matched the current original. No restore, reset, promotion, deletion or endpoint reassignment.",
     "baselineEquivalent": true,
@@ -288,7 +288,7 @@
     "independentVerification": "passed all source values, relationships, receipt, 43 audits, old-row preservation and unchanged schema",
     "readback": "evidence/technical-catalog-rehearsal-readback-2026-10-18.json",
     "computeFinal": {
-      "id": "ep-patient-bread-ac9lw4cq",
+      "id": "ep-[redacted:ae1b7b79]",
       "branch": "br-aged-violet-ac5aap1s",
       "currentState": "idle",
       "pendingState": null
@@ -296,7 +296,7 @@
   },
   "application": {
     "branch": "br-lingering-wind-acwh5wap",
-    "compute": "ep-late-water-acahd1z1",
+    "compute": "ep-[redacted:26398d41]",
     "sqlSha256": "01fdc56d23954ef5ba9a92de501cb65834cab2ef36cecb2ee5aeac1d5332a645",
     "statements": 144,
     "independentVerification": "passed",

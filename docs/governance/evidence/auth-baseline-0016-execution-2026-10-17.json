@@ -6,7 +6,7 @@
     "branch_id": "br-lingering-wind-acwh5wap",
     "name": "production",
     "database": "neondb",
-    "endpoint_id": "ep-late-water-acahd1z1"
+    "endpoint_id": "ep-[redacted:26398d41]"
   },
   "snapshot": {
     "id": "snap-withered-poetry-achs77uu",
@@ -14,7 +14,7 @@
   },
   "validation_copy": {
     "branch_id": "br-super-waterfall-ac0mxtnt",
-    "endpoint_id": "ep-holy-grass-acgby01h",
+    "endpoint_id": "ep-[redacted:67a3843e]",
     "audit_reference_consumed": "baseline-copy-validation:20261017:3cfb0309"
   },
   "restore_incident": {

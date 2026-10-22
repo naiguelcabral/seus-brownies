@@ -2,7 +2,7 @@
   "project_id": "steep-brook-51659857",
   "source_identity_branch_id": "br-patient-lake-ac2t0cvq",
   "target_application_branch_id": "br-lingering-wind-acwh5wap",
-  "target_endpoint_id": "ep-late-water-acahd1z1",
+  "target_endpoint_id": "ep-[redacted:26398d41]",
   "database_name": "neondb",
   "sql_sha256": "91403fbb43dcb8ec130a64cd9a0bce5864297dc1c7fe219dab36bd3a2684775d",
   "reference": "access-reconciliation:20261017:300f24ea-2e14-4b1c-9e4c-b791856d1266",

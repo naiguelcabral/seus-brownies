@@ -3,6 +3,7 @@ import { createHash } from 'node:crypto'
 import { readFileSync } from 'node:fs'
 
 const sql = (name) => readFileSync(new URL(name, import.meta.url), 'utf8')
+const sha256 = (value) => createHash('sha256').update(value).digest('hex')
 function canonical(value) {
   if (Array.isArray(value)) return value.map(canonical)
   if (value && typeof value === 'object')
@@ -57,15 +58,18 @@ export function accessIsSafe(row, target) {
     zeroFields.every((key) => row[key] === 0)
   )
 }
-function requireTarget(target) {
-  const matrix = JSON.parse(
+function targetMatrix() {
+  return JSON.parse(
     sql('../docs/governance/evidence/hml-evidence-targets.json'),
   ).databases
+}
+function requireTarget(target, matrix) {
   const known = matrix.find(
     (r) =>
       r.project === target?.project &&
       r.branch === target?.branch &&
-      r.endpoint === target?.endpoint &&
+      typeof target?.endpoint === 'string' &&
+      r.endpoint_sha256 === sha256(target.endpoint) &&
       r.database === target?.database,
   )
   if (
@@ -75,10 +79,7 @@ function requireTarget(target) {
     !known ||
     known.classification === 'production-do-not-access' ||
     target.connectionBoundByOperator !== true ||
-    target.destinationFingerprint !==
-      createHash('sha256')
-        .update(`${known.host}:5432/${known.database}`)
-        .digest('hex') ||
+    target.destinationFingerprint !== known.destination_fingerprint ||
     target.operatorApproved !== true ||
     target.capabilityReviewApproved !== true ||
     !/^\d{4}-\d{2}-\d{2}T/.test(target.expiresAt ?? '') ||
@@ -129,8 +130,9 @@ export function compareHistory(rows, manifest = historicalManifest()) {
     return 'divergent-or-0017plus'
   return 'verified-through-0016'
 }
-export async function verifyEvidence(client, target) {
-  requireTarget(target) // no SQL before explicit target and approval
+/** `matrix` defaults to the versioned map; tests inject synthetic hashed rows. */
+export async function verifyEvidence(client, target, matrix = targetMatrix()) {
+  requireTarget(target, matrix) // no SQL before explicit target and approval
   let began = false
   try {
     await client.query('BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY')
@@ -195,7 +197,7 @@ export async function verifyEvidence(client, target) {
       observed_at_utc: new Date().toISOString(),
       project: target.project,
       branch: target.branch,
-      endpoint: target.endpoint,
+      endpoint_sha256: sha256(target.endpoint),
       destination_fingerprint: target.destinationFingerprint,
       database_verified: true,
       role_identity_verified: true,

@@ -20,18 +20,31 @@ const root = fileURLToPath(new URL('..', import.meta.url))
 const source = {
   project_id: 'steep-brook-51659857',
   branch_id: 'br-lingering-wind-acwh5wap',
-  endpoint_id: 'ep-late-water-acahd1z1',
+  // SHA-256 of the production endpoint id; the plain id is not versioned.
+  endpoint_sha256:
+    '26398d41eb1bf1a3715eb6be27f6e0b35cd59bb94a9fed340ba35c0ff5a3f914',
   database_name: 'neondb',
   classification: 'production',
 }
 
-export function backupPostgresEnvironment(raw) {
+function endpointMatches(hostname, expectedSha256) {
+  const endpoint = /^(ep-[a-z0-9-]+)(?:\.[a-z0-9-]+)+\.neon\.tech$/.exec(
+    hostname,
+  )?.[1]
+  return (
+    endpoint !== undefined &&
+    createHash('sha256').update(endpoint).digest('hex') === expectedSha256
+  )
+}
+
+export function backupPostgresEnvironment(
+  raw,
+  expectedEndpointSha256 = source.endpoint_sha256,
+) {
   const url = new URL(raw.trim())
   if (
     !['postgres:', 'postgresql:'].includes(url.protocol) ||
-    !/^ep-late-water-acahd1z1(?:\.[a-z0-9-]+)+\.neon\.tech$/.test(
-      url.hostname,
-    ) ||
+    !endpointMatches(url.hostname, expectedEndpointSha256) ||
     (url.port && url.port !== '5432') ||
     url.pathname !== '/neondb' ||
     !url.username ||
