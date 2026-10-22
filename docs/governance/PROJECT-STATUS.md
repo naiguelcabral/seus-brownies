@@ -5,6 +5,31 @@ atual de tarefas, prioridades e critérios de conclusão. Os checkpoints de
 publicação abaixo preservam o estado comprovado de cada entrega; suas
 próximas etapas históricas não substituem o roadmap atualizado.
 
+## Correção de segurança e proteção de integração — 22/10/2026
+
+Por autorização do Dono, a ruleset ativa `main-production-integration` (ID
+`25611109`) foi criada para a branch padrão. O readback confirmou
+`main.protected:true`, sem atores de bypass: ela exige PR atualizado,
+conversas resolvidas, os sete checks de CI/CodeQL, bloqueia exclusão e force
+push e exige resultados CodeQL sem erros nem alertas de segurança altos ou
+críticos. A política preserva zero aprovações formais enquanto houver somente
+um mantenedor; a autorização humana de merge continua obrigatória.
+
+As duas análises da configuração CodeQL legada
+`.github/workflows/codeql.yml:analyze` foram removidas pelo procedimento
+oficial do GitHub depois da conferência das três configurações atuais da main,
+que reportavam zero resultados. Isso encerrou os cinco alertas obsoletos sem
+dispensa individual e sem remover análises atuais. A candidata versionada
+fixa as Actions em SHAs, reduz a duplicação de execução e reforça o teste
+estrutural do workflow; ela aguarda PR e seus gates antes de integrar.
+
+A [PR #55](https://github.com/naiguelcabral/seus-brownies/pull/55) foi aberta
+com essa candidata. Os três jobs `Analyze`, o resultado CodeQL e os checks
+`verify`, `business-postgres`, `browser-fixtures` e
+`connected-postgres-browser` passaram; a consulta atual retorna zero alertas
+CodeQL abertos. A PR está pronta para revisão e autorização humana de merge;
+nenhuma integração, deploy, migration ou escrita no HML ocorreu nesta rodada.
+
 ## Publicação conjunta concluída — 21/10/2026
 
 PRs #50–#53 integradas; código `91658ed73a27c61ef3e4f779381584adf8b0834c`
