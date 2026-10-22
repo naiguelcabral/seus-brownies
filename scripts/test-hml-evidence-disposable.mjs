@@ -104,8 +104,8 @@ try {
   const syntheticHost = `${syntheticEndpoint}.sa-east-1.aws.neon.tech`
   const matrix = [
     {
-      project: 'synthetic-project-00000001',
-      branch: 'br-synthetic-hml-cccc0003',
+      project: 'fixture-project-00000003',
+      branch: 'br-fixture-hml-cccc0003',
       name: 'development',
       database: 'neondb',
       endpoint_sha256: sha256(syntheticEndpoint),
