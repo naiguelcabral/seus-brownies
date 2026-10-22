@@ -85,6 +85,37 @@ test('guard permits only the explicit root env example', () => {
   })
 })
 
+test('guard rejects real credentials in the root env example in every mode', () => {
+  for (const value of [
+    'DATABASE_URL=postgresql://neondb_owner:npg_SyntheticAb12@ep/neondb',
+    'DATABASE_URL=postgresql://owner:lowercase-secret@db.example.invalid/neondb',
+    'NEON_API_KEY=napi_SyntheticSyntheticSynthetic0',
+  ]) {
+    fixture((root, git) => {
+      writeFileSync(join(root, '.env.example'), `${value}\n`)
+      assert.equal(status(root), 1, value)
+      git('add', '.env.example')
+      assert.equal(status(root, 'staged'), 1, value)
+      git('commit', '-m', 'synthetic credential fixture')
+      assert.equal(status(root, 'head'), 1, value)
+    })
+  }
+})
+
+test('guard accepts placeholder credentials in the root env example', () => {
+  fixture((root, git) => {
+    writeFileSync(
+      join(root, '.env.example'),
+      'DATABASE_URL=postgresql://USUARIO:SENHA@HOST-DO-NEON/neondb?sslmode=require\n',
+    )
+    git('add', '.env.example')
+    assert.equal(status(root), 0)
+    assert.equal(status(root, 'staged'), 0)
+    git('commit', '-m', 'placeholder fixture')
+    assert.equal(status(root, 'head'), 0)
+  })
+})
+
 test('ignored sensitive files stay untracked while forced staging is rejected', () => {
   fixture((root, git) => {
     writeFileSync(join(root, '.gitignore'), '.env*\n.codex-local/\n')
