@@ -60,7 +60,28 @@ test('reconciled tooling retains locked blocking checks and all CodeQL languages
     join(root, '.github/workflows/codeql.yml'),
     'utf8',
   )
-  assert.match(codeql, /language: \[javascript-typescript, python, actions\]/)
+  assert.match(codeql, /push:\n[ ]{4}branches: \[main\]/)
+  assert.doesNotMatch(codeql, /'?(?:codex|feat|fix)\/\*\*'?/)
+  const matrix = codeql.match(/^[ ]{6}matrix:\n[ ]{8}language: \[([^\]]+)\]$/m)
+  assert.ok(matrix, 'the active CodeQL matrix must declare its languages')
+  const languages = matrix[1]
+  assert.ok(languages, 'the active CodeQL matrix must list its languages')
+  assert.deepEqual(
+    languages.split(',').map((language) => language.trim()),
+    ['javascript-typescript', 'python', 'actions'],
+  )
+  for (const action of [
+    'actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803',
+    'actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38',
+    'github/codeql-action/init@9b3254085494b55a0f7c4c2b3d2d52cc712ce370',
+    'github/codeql-action/analyze@9b3254085494b55a0f7c4c2b3d2d52cc712ce370',
+  ]) {
+    assert.ok(codeql.includes(`uses: ${action}`), `missing pinned ${action}`)
+  }
+  assert.match(
+    codeql,
+    /uses: actions\/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6\n[ ]{8}with:\n[ ]{10}persist-credentials: false/,
+  )
   assert.match(codeql, /queries: security-extended/)
   assert.match(codeql, /config-file: \.\/\.github\/codeql\/codeql-config.yml/)
   assert.doesNotMatch(codeql, /continue-on-error/)

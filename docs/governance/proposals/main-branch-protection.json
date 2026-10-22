@@ -1,27 +1,57 @@
 {
-  "required_status_checks": {
-    "strict": true,
-    "contexts": [],
-    "checks": [
-      { "context": "verify", "app_id": 15368 },
-      { "context": "business-postgres", "app_id": 15368 },
-      { "context": "browser-fixtures", "app_id": 15368 },
-      { "context": "connected-postgres-browser", "app_id": 15368 },
-      { "context": "Analyze (javascript-typescript)", "app_id": 15368 },
-      { "context": "Analyze (python)", "app_id": 15368 },
-      { "context": "Analyze (actions)", "app_id": 15368 }
-    ]
+  "name": "main-production-integration",
+  "target": "branch",
+  "enforcement": "active",
+  "conditions": {
+    "ref_name": {
+      "include": ["~DEFAULT_BRANCH"],
+      "exclude": []
+    }
   },
-  "enforce_admins": true,
-  "required_pull_request_reviews": {
-    "dismiss_stale_reviews": true,
-    "require_code_owner_reviews": false,
-    "required_approving_review_count": 0,
-    "require_last_push_approval": false
-  },
-  "restrictions": null,
-  "required_linear_history": false,
-  "allow_force_pushes": false,
-  "allow_deletions": false,
-  "required_conversation_resolution": true
+  "rules": [
+    { "type": "deletion" },
+    { "type": "non_fast_forward" },
+    {
+      "type": "pull_request",
+      "parameters": {
+        "allowed_merge_methods": ["merge", "squash", "rebase"],
+        "dismiss_stale_reviews_on_push": true,
+        "require_code_owner_review": false,
+        "require_extra_approval_for_unattributed_changes": true,
+        "require_last_push_approval": false,
+        "required_approving_review_count": 0,
+        "required_review_thread_resolution": true,
+        "required_reviewers": []
+      }
+    },
+    {
+      "type": "required_status_checks",
+      "parameters": {
+        "strict_required_status_checks_policy": true,
+        "do_not_enforce_on_create": false,
+        "required_status_checks": [
+          { "context": "verify", "integration_id": 15368 },
+          { "context": "business-postgres", "integration_id": 15368 },
+          { "context": "browser-fixtures", "integration_id": 15368 },
+          { "context": "connected-postgres-browser", "integration_id": 15368 },
+          { "context": "Analyze (javascript-typescript)", "integration_id": 15368 },
+          { "context": "Analyze (python)", "integration_id": 15368 },
+          { "context": "Analyze (actions)", "integration_id": 15368 }
+        ]
+      }
+    },
+    {
+      "type": "code_scanning",
+      "parameters": {
+        "code_scanning_tools": [
+          {
+            "tool": "CodeQL",
+            "alerts_threshold": "errors",
+            "security_alerts_threshold": "high_or_higher"
+          }
+        ]
+      }
+    }
+  ],
+  "bypass_actors": []
 }

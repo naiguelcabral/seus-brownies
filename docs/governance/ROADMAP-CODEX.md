@@ -1,7 +1,8 @@
 # Roadmap único — Cacau v1
 
-Atualizado em **21/10/2026**, após integração das PRs #50–#53 e publicação
-conjunta do código `91658ed` no HML, versão `de9a88e6`, 100% do tráfego.
+Atualizado em **22/10/2026**, após a correção de segurança do CodeQL e a
+proteção da `main`; a publicação conjunta anterior usou o código `91658ed` no
+HML, versão `de9a88e6`, em 100% do tráfego.
 Este é o **único arquivo de planejamento e acompanhamento de pendências**.
 Relatórios datados, recibos, matrizes e runbooks preservam evidências e
 procedimentos; suas listas antigas não são filas adicionais de execução.
@@ -21,8 +22,9 @@ corrigidos e publicados no HML. Não refazer esses incrementos.
 
 Priorizar H01–H03 (autenticação real e permissões), I02 (definir política de
 recuperação após o restore externo comprovado), T02 (ambientes e futuras
-migrations), G03/S03 (proteção de integração e segurança) e H06 (uso diário e
-celular físico). Depois, executar piloto autorizado e preparar o aceite I04.
+migrations) e H06 (uso diário e celular físico). A candidata de hardening do
+CodeQL deve passar pelos gates ativos antes da integração. Depois, executar
+piloto autorizado e preparar o aceite I04.
 WhatsApp e OCR vêm após a validação do núcleo interno.
 
 PRs #44–#53 mescladas, incluindo tipagem de Cenários/finanças/lifecycle,
@@ -84,8 +86,8 @@ reduz automaticamente o esforço estimado nem autoriza novas ações externas.
 | Meta | R$ 10.000 de lucro mensal após os custos de **todas as vendas**, inclusive Bordinhas realizadas; sem cotas obrigatórias por produto |
 | Operação real | Sem compras ou produção previstas; nenhum fato fictício criado no HML para testar as entregas |
 | Última validação de código | `91658ed`: CI com 570 testes Node, lint/formato/tipos/Knip/build isolado; negócio/browser e 12 casos conectados PostgreSQL 17 aprovados. Não representa percentual de cobertura. |
-| Segurança | launch-editor 2.14.2 integrado/publicado; npm audit zero no pacote validado. Três análises CodeQL da main `91658ed` sem resultados/erros/avisos. Cinco alertas legados continuam sem dispensa administrativa; S03 preserva essa pendência. |
-| Proteção de integração | API da `main`: `protected:false`; lista de rulesets vazia em 21/10. Ver G03. |
+| Segurança | launch-editor 2.14.2 integrado/publicado; análises atuais do CodeQL da main `1061f4e` sem resultados. Em 22/10, as duas análises da configuração legada foram removidas pelo procedimento oficial, encerrando os cinco alertas obsoletos sem dispensa individual. A candidata de pins/teste estrutural do workflow aguarda PR. |
+| Proteção de integração | `main.protected:true`; ruleset ativa `main-production-integration` (ID 25611109), sem bypass. Exige PR atualizado, conversas resolvidas, sete checks e CodeQL com bloqueio de segurança alta/crítica. Ver G03. |
 | Recuperação e alertas | Dump/manifesto efetivamente baixados do Drive e restaurados em PostgreSQL 17 sem rede: 38 tabelas/36 recibos exatos, catálogo independente e constraints validadas. Auth gerenciado excluído; retenção/responsáveis/RPO/RTO pendentes. Backup diário 03h e monitor horário dependem do computador/app/conectores; continuidade não atestada. |
 | Preservação | 21 tabelas tiveram contagens/digests idênticos no checkpoint anterior. A publicação de 21/10 não executou SQL/migrations ou salvou operações; não coletou novo digest operacional. |
 
@@ -97,8 +99,9 @@ liberação definitiva de produção.
 ## Entregas concluídas
 
 - [x] **Governança e ferramentas:** arquitetura/regras/segurança/DoD, workflow
-  Git, TypeScript 7/Oxlint/Oxfmt, Knip e CodeQL integrados à `main`.
-  Proteção obrigatória da integração e triagem contínua seguem em G03/S03.
+  Git, TypeScript 7/Oxlint/Oxfmt, Knip e CodeQL integrados à `main`. A
+  ruleset G03 está ativa e a configuração CodeQL legada foi reconciliada; o
+  hardening versionado do workflow segue na PR candidata.
 - [x] **Acesso HML implementado:** Neon Auth, sessão SSR, guards e RBAC no
   servidor, recuperação auditada, Turnstile e limiter distribuído publicados.
   Vínculos Dono/Gerente auditados; recuperação e sessão do Dono confirmadas.
@@ -182,7 +185,7 @@ sintético foi gravado no HML.
 | H03 | Parcial; roteiro dos perfis ativos aceito | Laboratório aprovou quatro perfis, matriz negativa das 55 políticas, ausência de escrita na negação e revogação na próxima chamada. No tablet, usuário confirmou employee/manager/owner, Dashboard negado ao Funcionário e permitido aos demais, Parâmetros negado a Funcionário/Gerente e permitido ao Dono; interface/controles conforme roteiro, sem salvar. Após publicação, Dono confirmou Cenários/Financeiro. [Aceite manual](AUTH-HML-PERMISSIONS-MANUAL-2026-10-21.md). Repetição automática com identidades sintéticas isoladas, não com sessões reais no HML. Falta cobertura ampliada real e estabilidade; não conceder papéis para contornar testes. |
 | H06 | Parcial; QA automático ampliado | 40 casos de fixtures aprovados, incluindo Enter/Shift+Tab/Escape, foco e ausência de overflow em 320px com redução de movimento. Relatório/CSV e 390px já comprovados no laboratório conectado. Falta aceite no ambiente publicado por perfil, celular físico, acessibilidade/uso diário pela operadora; não equivale a auditoria WCAG completa. |
 | T04 | Concluído | Oxfmt alinhado; 21 testes do controlador simulado, Oxc1.64.1 conferida e Python3.12 validada. ActionsNode24 revisadas, Ubuntu24.04 fixado; CI sem avisos de runtime. |
-| S03 | Patch integrado; legado administrativo pendente | launch-editor 2.14.2, regressão e npm audit zero no pacote validado, integrado pelas PRs #51–#53 e publicado. CI/negócio/browser/CodeQL da main `91658ed` aprovados, três análises sem resultados/erros/avisos. Cinco alertas legados triados contra correções presentes, sem fechamento/dispensa por inferência. Detalhes em AUTOMATIC-READINESS-2026-10-21.md e no recibo conjunto. |
+| S03 | Reconciliação administrativa concluída; hardening versionado pendente de PR | launch-editor 2.14.2, regressão e npm audit zero no pacote validado, integrado pelas PRs #51–#53 e publicado. As três análises atuais da main `1061f4e` não tiveram resultados; em 22/10, a configuração `.github/workflows/codeql.yml:analyze` obsoleta foi removida oficialmente, encerrando seus cinco alertas legados sem dispensa individual. A candidata fixa as Actions em SHAs e reforça o teste estrutural antes da integração. |
 
 ## Preparação e liberação da operação
 
@@ -190,7 +193,7 @@ sintético foi gravado no HML.
 | --- | --- | --- |
 | G01 | Concluído no escopo documental desta rodada | README/roadmap/status, arquitetura/controles, workflow, QA, resiliência, ambientes, paridade, checklist e fila/handoff reconciliados. Fila é espelho do roadmap, sem pacotes ready; evidências históricas preservadas. Incremento integrado nas PRs #51–#53. |
 | G02 / I01 | Plano formalizado; laboratório conectado entregue | `QA-VALIDATION-PROTOCOL.md` define topologia, dados, responsabilidades e critérios; `CONNECTED-QA-2026-10-20.md` comprova interface/HTTP/PostgreSQL isolados. Resta consolidar identificação/configuração dos destinos e identidades para aceites reais e operação. Não presumir a original `production` como laboratório. |
-| G03 | Proposta preparada; decisão administrativa pendente | Payload com sete checks conferidos na main e política para um mantenedor em MAIN-PROTECTION-PROPOSAL.md. Decidir revisores/exceções e autorizar aplicação/readback. Main permanece protected:false, sem ruleset; nenhum PUT executado. |
+| G03 | Concluído; ruleset ativa | Após autorização do Dono, a ruleset `main-production-integration` (ID 25611109) foi aplicada e lida de volta: main `protected:true`, sem bypass, PR atualizado, conversas resolvidas, sete checks exigidos, sem force push/exclusão e CodeQL bloqueando alertas de segurança altos/críticos. Política de mantenedor único mantém zero aprovações formais; o Dono continua aprovando merges conforme a governança. [Registro](MAIN-PROTECTION-PROPOSAL.md). |
 | T01 | Concluído | PRs #44–#53 mescladas, main de aplicação `91658ed` com CI/negócio/browser/CodeQL aprovados e publicação HML confirmada. Segurança administrativa segue em S03/G03, aplicação genérica em T02 e produção em I04; integração não dispensa esses gates. |
 | I02 | Restore externo concluído; política parcial | Baixados dump/manifesto do Drive, conferidos SHA-256/tamanho e restaurados esses bytes em PostgreSQL 17 sem rede: 38 tabelas/36 recibos exatos e catálogo independente de 0033. Recibo evidence/offsite-restore-2026-10-21.json. Restam retenção, responsáveis, periodicidade, RPO/RTO e recuperação de Auth, excluído do dump public/drizzle. Não apagar backups para abrir quota. |
 | I03 | Parcial | Backup diário às 03h Brasília, monitor horário e e-mail de teste configurados; execuções futuras e incidente real não observados. Validar rotina e resposta, completar logs/correlação/alertas dos domínios e decidir disponibilidade independente do computador/app. Automação local não comprova serviço contínuo. |
