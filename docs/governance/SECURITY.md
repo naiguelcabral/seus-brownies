@@ -21,21 +21,21 @@ Neon em qualquer arquivo versionado.
 
 ### Identificadores públicos — decisão de 22/10/2026
 
-O repositório é público e permanece assim. Hostnames de endpoints Neon, IDs de
-projeto/branch/conta, a URL do HML e SQL de importação com receitas e preços
-estão versionados como evidência e continuam no histórico do Git. A decisão
-é não sanitizar esses arquivos só no HEAD:
+O repositório é público e permanece assim.
 
-- eles alimentam os gates auditados de destino HML
-  (`hml-worker-destination.mjs`, `hml-evidence-verifier.mjs`), e alterá-los
-  muda a trilha de auditoria;
-- removê-los do HEAD não os tira do histórico, então a proteção seria quase nula;
-- nenhum desses itens dá acesso sozinho; a proteção real é a credencial.
-
-Por isso, qualquer credencial que chegue ao repositório deve ser rotacionada
-imediatamente, e a reescrita de histórico só deve ser feita por decisão
-própria. Novas evidências não devem incluir hostnames, IDs ou dados comerciais
-que não sejam indispensáveis ao gate; quando forem, prefira o hash.
+- **IDs de endpoint e hostnames Neon** são a parte roteável de uma conexão e
+  passam a ser versionados só como hash: SHA-256 no mapa de destinos HML e
+  `ep-[redacted:<8 hex>]` em documentos e evidências. Os gates comparam
+  hashes, e nenhuma evidência nova deve gravar o valor em texto puro.
+- **IDs de projeto/branch/conta** só funcionam com uma chave da API e ficam
+  como referência de auditoria. A **URL do HML** é o próprio site público.
+- **SQL de importação com receitas e preços** continua como evidência
+  histórica; novas evidências não devem incluir dados comerciais
+  dispensáveis ao gate.
+- Os valores originais continuam no histórico do Git. A proteção real é a
+  credencial: qualquer credencial que chegue ao repositório deve ser
+  rotacionada imediatamente, e a reescrita de histórico só deve ser feita
+  por decisão própria.
 
 ## Banco de dados
 
