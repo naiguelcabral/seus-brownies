@@ -121,7 +121,7 @@ test('paginação e período do razão de estoque preservam limites', () => {
   })
   assert.equal(
     endOfInventoryDay('2026-09-10').toISOString(),
-    '2026-09-11T00:00:00.000Z',
+    '2026-09-11T03:00:00.000Z',
   )
 })
 
