@@ -85,11 +85,15 @@ test('guard permits only the explicit root env example', () => {
   })
 })
 
+// Built at runtime so this file never contains a Neon token shape itself.
+const neonPassword = ['npg', 'SyntheticAb12'].join('_')
+const neonApiKey = ['napi', 'SyntheticSyntheticSynthetic0'].join('_')
+
 test('guard rejects real credentials in the root env example in every mode', () => {
   for (const value of [
-    'DATABASE_URL=postgresql://neondb_owner:npg_SyntheticAb12@ep/neondb',
+    `DATABASE_URL=postgresql://neondb_owner:${neonPassword}@ep/neondb`,
     'DATABASE_URL=postgresql://owner:lowercase-secret@db.example.invalid/neondb',
-    'NEON_API_KEY=napi_SyntheticSyntheticSynthetic0',
+    `NEON_API_KEY=${neonApiKey}`,
   ]) {
     fixture((root, git) => {
       writeFileSync(join(root, '.env.example'), `${value}\n`)
@@ -100,6 +104,29 @@ test('guard rejects real credentials in the root env example in every mode', () 
       assert.equal(status(root, 'head'), 1, value)
     })
   }
+})
+
+test('guard rejects Neon tokens in any versioned or untracked file', () => {
+  for (const value of [neonPassword, neonApiKey]) {
+    fixture((root, git) => {
+      writeFileSync(join(root, 'notes.md'), `copied value: ${value}\n`)
+      assert.equal(status(root), 1, value)
+      git('add', 'notes.md')
+      assert.equal(status(root, 'staged'), 1, value)
+      git('commit', '-m', 'synthetic token fixture')
+      assert.equal(status(root, 'head'), 1, value)
+    })
+  }
+})
+
+test('guard ignores Neon tokens in gitignored files', () => {
+  fixture((root, git) => {
+    writeFileSync(join(root, '.gitignore'), 'local-notes/\n')
+    git('add', '.gitignore')
+    mkdirSync(join(root, 'local-notes'))
+    writeFileSync(join(root, 'local-notes', 'scratch.md'), neonPassword)
+    assert.equal(status(root), 0)
+  })
 })
 
 test('guard accepts placeholder credentials in the root env example', () => {
