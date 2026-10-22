@@ -92,14 +92,6 @@
     "vite": "8.3.4",
     "wrangler": "4.151.1"
   },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "esbuild",
-      "lightningcss",
-      "sharp",
-      "workerd"
-    ]
-  },
   "overrides": {
     "typescript": "7.0.2",
     "launch-editor": "2.14.2",
