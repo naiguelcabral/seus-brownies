@@ -72,7 +72,7 @@ test('reconciled tooling retains locked blocking checks and all CodeQL languages
   )
   for (const action of [
     'actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803',
-    'actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38',
+    'actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1',
     'github/codeql-action/init@9b3254085494b55a0f7c4c2b3d2d52cc712ce370',
     'github/codeql-action/analyze@9b3254085494b55a0f7c4c2b3d2d52cc712ce370',
   ]) {
