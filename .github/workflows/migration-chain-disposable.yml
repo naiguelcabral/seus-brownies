@@ -56,7 +56,7 @@ jobs:
       - run: node --import tsx scripts/test-auth-baseline-disposable.mjs --ack-disposable-postgres17
       - run: node --import tsx scripts/test-scoped-upgrade-disposable.mjs --ack-disposable-postgres17
       - run: node --import tsx scripts/test-migration-chain-forward-disposable.mjs --ack-disposable-postgres17
-      - uses: actions/upload-artifact@v6
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: migration-chain-synthetic-evidence
