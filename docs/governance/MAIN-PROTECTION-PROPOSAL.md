@@ -30,8 +30,9 @@ concede bypass. Se houver um segundo revisor habilitado, elevar
 `required_approving_review_count` para 1 exige nova decisão administrativa.
 
 Não desligar a proteção para resolver uma CI vermelha. A candidata de
-hardening do workflow deve passar por estes gates em uma PR real; não se cria
-uma prova artificial por escrita direta na main.
+hardening do workflow passou pelos gates em uma PR real (#55); ela permanece
+aguardando revisão e autorização humana de merge, sem prova artificial por
+escrita direta na main.
 
 Referências: [rulesets de repositório](https://docs.github.com/en/rest/repos/rules)
 e [proteção de merge do CodeQL](https://docs.github.com/en/code-security/how-tos/find-and-fix-code-vulnerabilities/manage-your-configuration/set-merge-protection).

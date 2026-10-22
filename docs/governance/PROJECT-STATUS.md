@@ -23,6 +23,13 @@ dispensa individual e sem remover análises atuais. A candidata versionada
 fixa as Actions em SHAs, reduz a duplicação de execução e reforça o teste
 estrutural do workflow; ela aguarda PR e seus gates antes de integrar.
 
+A [PR #55](https://github.com/naiguelcabral/seus-brownies/pull/55) foi aberta
+com essa candidata. Os três jobs `Analyze`, o resultado CodeQL e os checks
+`verify`, `business-postgres`, `browser-fixtures` e
+`connected-postgres-browser` passaram; a consulta atual retorna zero alertas
+CodeQL abertos. A PR está pronta para revisão e autorização humana de merge;
+nenhuma integração, deploy, migration ou escrita no HML ocorreu nesta rodada.
+
 ## Publicação conjunta concluída — 21/10/2026
 
 PRs #50–#53 integradas; código `91658ed73a27c61ef3e4f779381584adf8b0834c`

@@ -23,8 +23,8 @@ corrigidos e publicados no HML. Não refazer esses incrementos.
 Priorizar H01–H03 (autenticação real e permissões), I02 (definir política de
 recuperação após o restore externo comprovado), T02 (ambientes e futuras
 migrations) e H06 (uso diário e celular físico). A candidata de hardening do
-CodeQL deve passar pelos gates ativos antes da integração. Depois, executar
-piloto autorizado e preparar o aceite I04.
+CodeQL passou pelos gates ativos na PR #55 e aguarda autorização humana de
+merge. Depois, executar piloto autorizado e preparar o aceite I04.
 WhatsApp e OCR vêm após a validação do núcleo interno.
 
 PRs #44–#53 mescladas, incluindo tipagem de Cenários/finanças/lifecycle,
@@ -86,7 +86,7 @@ reduz automaticamente o esforço estimado nem autoriza novas ações externas.
 | Meta | R$ 10.000 de lucro mensal após os custos de **todas as vendas**, inclusive Bordinhas realizadas; sem cotas obrigatórias por produto |
 | Operação real | Sem compras ou produção previstas; nenhum fato fictício criado no HML para testar as entregas |
 | Última validação de código | `91658ed`: CI com 570 testes Node, lint/formato/tipos/Knip/build isolado; negócio/browser e 12 casos conectados PostgreSQL 17 aprovados. Não representa percentual de cobertura. |
-| Segurança | launch-editor 2.14.2 integrado/publicado; análises atuais do CodeQL da main `1061f4e` sem resultados. Em 22/10, as duas análises da configuração legada foram removidas pelo procedimento oficial, encerrando os cinco alertas obsoletos sem dispensa individual. A candidata de pins/teste estrutural do workflow aguarda PR. |
+| Segurança | launch-editor 2.14.2 integrado/publicado; análises atuais do CodeQL da main `1061f4e` sem resultados. Em 22/10, as duas análises da configuração legada foram removidas pelo procedimento oficial, encerrando os cinco alertas obsoletos sem dispensa individual. A PR #55 de pins/teste estrutural passou todos os gates e aguarda autorização humana de merge. |
 | Proteção de integração | `main.protected:true`; ruleset ativa `main-production-integration` (ID 25611109), sem bypass. Exige PR atualizado, conversas resolvidas, sete checks e CodeQL com bloqueio de segurança alta/crítica. Ver G03. |
 | Recuperação e alertas | Dump/manifesto efetivamente baixados do Drive e restaurados em PostgreSQL 17 sem rede: 38 tabelas/36 recibos exatos, catálogo independente e constraints validadas. Auth gerenciado excluído; retenção/responsáveis/RPO/RTO pendentes. Backup diário 03h e monitor horário dependem do computador/app/conectores; continuidade não atestada. |
 | Preservação | 21 tabelas tiveram contagens/digests idênticos no checkpoint anterior. A publicação de 21/10 não executou SQL/migrations ou salvou operações; não coletou novo digest operacional. |
@@ -101,7 +101,7 @@ liberação definitiva de produção.
 - [x] **Governança e ferramentas:** arquitetura/regras/segurança/DoD, workflow
   Git, TypeScript 7/Oxlint/Oxfmt, Knip e CodeQL integrados à `main`. A
   ruleset G03 está ativa e a configuração CodeQL legada foi reconciliada; o
-  hardening versionado do workflow segue na PR candidata.
+  hardening versionado do workflow passou os gates na PR #55 e aguarda merge.
 - [x] **Acesso HML implementado:** Neon Auth, sessão SSR, guards e RBAC no
   servidor, recuperação auditada, Turnstile e limiter distribuído publicados.
   Vínculos Dono/Gerente auditados; recuperação e sessão do Dono confirmadas.
@@ -185,7 +185,7 @@ sintético foi gravado no HML.
 | H03 | Parcial; roteiro dos perfis ativos aceito | Laboratório aprovou quatro perfis, matriz negativa das 55 políticas, ausência de escrita na negação e revogação na próxima chamada. No tablet, usuário confirmou employee/manager/owner, Dashboard negado ao Funcionário e permitido aos demais, Parâmetros negado a Funcionário/Gerente e permitido ao Dono; interface/controles conforme roteiro, sem salvar. Após publicação, Dono confirmou Cenários/Financeiro. [Aceite manual](AUTH-HML-PERMISSIONS-MANUAL-2026-10-21.md). Repetição automática com identidades sintéticas isoladas, não com sessões reais no HML. Falta cobertura ampliada real e estabilidade; não conceder papéis para contornar testes. |
 | H06 | Parcial; QA automático ampliado | 40 casos de fixtures aprovados, incluindo Enter/Shift+Tab/Escape, foco e ausência de overflow em 320px com redução de movimento. Relatório/CSV e 390px já comprovados no laboratório conectado. Falta aceite no ambiente publicado por perfil, celular físico, acessibilidade/uso diário pela operadora; não equivale a auditoria WCAG completa. |
 | T04 | Concluído | Oxfmt alinhado; 21 testes do controlador simulado, Oxc1.64.1 conferida e Python3.12 validada. ActionsNode24 revisadas, Ubuntu24.04 fixado; CI sem avisos de runtime. |
-| S03 | Reconciliação administrativa concluída; hardening versionado pendente de PR | launch-editor 2.14.2, regressão e npm audit zero no pacote validado, integrado pelas PRs #51–#53 e publicado. As três análises atuais da main `1061f4e` não tiveram resultados; em 22/10, a configuração `.github/workflows/codeql.yml:analyze` obsoleta foi removida oficialmente, encerrando seus cinco alertas legados sem dispensa individual. A candidata fixa as Actions em SHAs e reforça o teste estrutural antes da integração. |
+| S03 | Reconciliação administrativa concluída; hardening pronto para merge | launch-editor 2.14.2, regressão e npm audit zero no pacote validado, integrado pelas PRs #51–#53 e publicado. As três análises atuais da main `1061f4e` não tiveram resultados; em 22/10, a configuração `.github/workflows/codeql.yml:analyze` obsoleta foi removida oficialmente, encerrando seus cinco alertas legados sem dispensa individual. A PR #55 fixa as Actions em SHAs e reforça o teste estrutural; todos os gates passaram, mas integração requer autorização humana. |
 
 ## Preparação e liberação da operação
 
