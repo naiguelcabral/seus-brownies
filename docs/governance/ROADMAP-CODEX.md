@@ -1,8 +1,9 @@
 # Roadmap único — Cacau v1
 
 Atualizado em **22/10/2026**, após a correção de segurança do CodeQL e a
-proteção da `main`; a publicação conjunta anterior usou o código `91658ed` no
-HML, versão `de9a88e6`, em 100% do tráfego.
+proteção da `main` e o reparo de configuração Neon/Auth no HML. O código da
+publicação conjunta anterior foi `91658ed`; a versão HML atual é `997f47bb`,
+em 100% do tráfego, após restaurar os bindings de conexão/autenticação.
 Este é o **único arquivo de planejamento e acompanhamento de pendências**.
 Relatórios datados, recibos, matrizes e runbooks preservam evidências e
 procedimentos; suas listas antigas não são filas adicionais de execução.
@@ -10,6 +11,13 @@ procedimentos; suas listas antigas não são filas adicionais de execução.
 A consolidação substitui os checkpoints repetidos deste arquivo. Seu histórico
 completo permanece no Git. Não autoriza executar itens pendentes, mudar regras,
 conceder acessos, aplicar migrations ou publicar em produção.
+
+Reparo de 22/10: consultas Neon e vínculos dos quatro acessos conferidos;
+`DATABASE_URL` restaurado como secret e endpoint Auth reconstruído da branch
+de identidades. Sessão inválida passou de500 para200, raiz307/login200 e
+25 testes Node aprovados. Entrada com senha real solicitada ao usuário, ainda
+sem confirmação neste checkpoint. H01–H03 continuam parciais; detalhes em
+[recuperação Neon/Auth](NEON-AUTH-RECOVERY-2026-10-22.md).
 
 ## Prioridade de retomada
 
@@ -78,7 +86,7 @@ reduz automaticamente o esforço estimado nem autoriza novas ações externas.
 
 | Área | Situação atual |
 | --- | --- |
-| HML | Código `91658ed`, versão `de9a88e6-a2e0-4224-8c9c-e6f3da8ccb6c`, 100%; deploy, smoke público e Cenários/Financeiro do Dono confirmados. [Recibo](JOINT-HML-PUBLICATION-2026-10-21.md). |
+| HML | Publicação de aplicação anterior `91658ed`; versão atual de configuração `997f47bb-6be0-4a78-b1fe-f46ea1fef512`, 100%. Conexão/Auth reparados em 22/10: raiz307/login200, sessão inválida500→200; novo login real ainda sem confirmação. [Reparo](NEON-AUTH-RECOVERY-2026-10-22.md). |
 | Trabalho versionado | PRs #44–#53 mescladas; main de aplicação `91658ed`. Integração/publicação HML não equivalem a aceite de produção. |
 | Banco usado no HML | Atualizações específicas até `0033`, 36 recibos. A original conserva classificação `production`; seu uso histórico autorizado não a torna laboratório. Migrador genérico continua bloqueante. |
 | Catálogo e produção | 38 produtos; duas versões de receita e 34 perfis contando os históricos; receita 2 ativa com 17 perfis completos e 31 componentes |

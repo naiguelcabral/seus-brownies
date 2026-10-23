@@ -5,6 +5,23 @@ atual de tarefas, prioridades e critérios de conclusão. Os checkpoints de
 publicação abaixo preservam o estado comprovado de cada entrega; suas
 próximas etapas históricas não substituem o roadmap atualizado.
 
+## Recuperação da conexão Neon e do login HML — 22/10/2026
+
+Após relato de falha de login para todos os usuários e autorização expressa,
+restaurados `DATABASE_URL` como secret e o apontamento de `NEON_AUTH_BASE_URL`
+para o endpoint atual da branch de identidades `g1-auth-hml`. Banco operacional
+preservado: SELECT 1 aprovado, 38 tabelas/36 recibos, nenhum cooldown ativo.
+Os quatro vínculos ativos (Dono, dois Gerentes e Funcionário) correspondem
+exatamente a identidades verificadas, não banidas e com credencial presente.
+
+Versão HML `997f47bb-6be0-4a78-b1fe-f46ea1fef512`, 100% desde
+23/10/2026 00:36:05 UTC (22/10, 21:36 Brasília). Teste de sessão inválida
+passou de HTTP 500 para 200 após corrigir Auth; raiz307/login200 e 25 testes
+Node aprovados. Sem alteração de fonte, banco, usuários, senhas, papéis ou
+Worker principal. Entrada real foi solicitada ao usuário e permanece sem
+confirmação neste checkpoint; H01–H03 seguem parciais. Detalhes e limites em
+[recuperação Neon/Auth](NEON-AUTH-RECOVERY-2026-10-22.md).
+
 ## Correção de segurança e proteção de integração — 22/10/2026
 
 Por autorização do Dono, a ruleset ativa `main-production-integration` (ID
