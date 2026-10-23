@@ -2,6 +2,35 @@
 
 ## Resultado e escopo
 
+### Aceite posterior — 23/10/2026
+
+Após solicitar uma nova entrada em janela privativa com a conta de Gerente
+indicada pelo usuário, ele confirmou: **“Abriu normal”**. Isso comprova, por
+relato humano, a entrada real e abertura do painel dessa conta após o reparo.
+O agente não recebeu senha, OTP, cookie ou sessão autenticada e não repetiu o
+login por ela. Não equivale a aceite de todos os perfis, rotas ou controles.
+
+Nova conferência somente de leitura confirmou e-mail verificado, identidade
+não banida e com credencial presente, vínculo `manager` ativo no banco
+operacional, origem HML autorizada e nenhum cooldown de login ativo. Os cinco
+secrets obrigatórios e a versão `997f47bb` em 100% foram relidos por metadados.
+A tela real de login abriu no navegador do agente, sem sessão prévia.
+
+32 testes Node de configuração, sessão, principal, autorização e guarda de
+rotas passaram. Consultas HTTP conferiram raiz307/login200, formulário de
+login renderizado, rotas Estoque/Financeiro com307 sem autenticação e
+tratamento de token sintético inválido com200 na página de login. A primeira
+tentativa HTTP foi limitada pelo DNS do sandbox; repetição autorizada no host
+passou. Nenhuma nova falha funcional foi reproduzida nessas verificações.
+
+Esta rodada não exigiu alteração de schema, fonte, usuários, senha, papel,
+secret ou deploy. O problema específico de entrada dessa Gerente está aceito;
+H01–H03 continuam parciais para OTP/reset, expiração/revogação, antiabuso,
+matriz completa e estabilidade. Evidência sanitizada:
+[aceite pós-reparo](../../evidence/neon-auth-recovery-acceptance-2026-10-23.json).
+
+### Checkpoint inicial do reparo — 22/10/2026
+
 Reparo de configuração aplicado somente ao Worker `cacau-v1-hml`, após o
 relato de que todos os usuários estavam sem conseguir entrar e autorização
 expressa para executar os procedimentos necessários à correção. Última versão

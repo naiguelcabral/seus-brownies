@@ -1,7 +1,7 @@
 # Roadmap único — Cacau v1
 
-Atualizado em **22/10/2026**, após a correção de segurança do CodeQL e a
-proteção da `main` e o reparo de configuração Neon/Auth no HML. O código da
+Atualizado em **23/10/2026**, após o aceite de entrada da Gerente no HML,
+a correção de segurança do CodeQL e a proteção da `main`. O código da
 publicação conjunta anterior foi `91658ed`; a versão HML atual é `997f47bb`,
 em 100% do tráfego, após restaurar os bindings de conexão/autenticação.
 Este é o **único arquivo de planejamento e acompanhamento de pendências**.
@@ -15,8 +15,10 @@ conceder acessos, aplicar migrations ou publicar em produção.
 Reparo de 22/10: consultas Neon e vínculos dos quatro acessos conferidos;
 `DATABASE_URL` restaurado como secret e endpoint Auth reconstruído da branch
 de identidades. Sessão inválida passou de500 para200, raiz307/login200 e
-25 testes Node aprovados. Entrada com senha real solicitada ao usuário, ainda
-sem confirmação neste checkpoint. H01–H03 continuam parciais; detalhes em
+25 testes Node aprovados no reparo. Em 23/10, usuário confirmou nova entrada
+da Gerente e abertura normal do painel; 32 testes direcionados e smoke público
+passaram no seguimento, sem nova alteração de schema, fonte ou configuração.
+H01–H03 continuam parciais para os demais casos; detalhes em
 [recuperação Neon/Auth](NEON-AUTH-RECOVERY-2026-10-22.md).
 
 ## Prioridade de retomada
@@ -86,7 +88,7 @@ reduz automaticamente o esforço estimado nem autoriza novas ações externas.
 
 | Área | Situação atual |
 | --- | --- |
-| HML | Publicação de aplicação anterior `91658ed`; versão atual de configuração `997f47bb-6be0-4a78-b1fe-f46ea1fef512`, 100%. Conexão/Auth reparados em 22/10: raiz307/login200, sessão inválida500→200; novo login real ainda sem confirmação. [Reparo](NEON-AUTH-RECOVERY-2026-10-22.md). |
+| HML | Publicação de aplicação anterior `91658ed`; versão atual de configuração `997f47bb-6be0-4a78-b1fe-f46ea1fef512`, 100%. Conexão/Auth reparados em 22/10: raiz307/login200, sessão inválida500→200. Em 23/10, usuário confirmou entrada real da Gerente e abertura normal do painel; demais aceites H01–H03 continuam parciais. [Reparo e aceite](NEON-AUTH-RECOVERY-2026-10-22.md). |
 | Trabalho versionado | PRs #44–#53 mescladas; main de aplicação `91658ed`. Integração/publicação HML não equivalem a aceite de produção. |
 | Banco usado no HML | Atualizações específicas até `0033`, 36 recibos. A original conserva classificação `production`; seu uso histórico autorizado não a torna laboratório. Migrador genérico continua bloqueante. |
 | Catálogo e produção | 38 produtos; duas versões de receita e 34 perfis contando os históricos; receita 2 ativa com 17 perfis completos e 31 componentes |

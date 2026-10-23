@@ -7,6 +7,16 @@ próximas etapas históricas não substituem o roadmap atualizado.
 
 ## Recuperação da conexão Neon e do login HML — 22/10/2026
 
+Seguimento de 23/10: usuário confirmou **“Abriu normal”** após o roteiro de
+nova entrada da Gerente em janela privativa. E-mail, identidade não banida,
+credencial e vínculo `manager` ativo reconferidos; nenhum cooldown ativo.
+Versão `997f47bb` ainda em 100%, tela de login renderizada, smoke público e
+sessão inválida aprovados; 32 testes Node direcionados passaram. Nenhuma
+alteração adicional de schema, permissões, dados, secrets ou deploy necessária.
+Aceite limitado à entrada e abertura do painel dessa conta; H01–H03 permanecem
+parciais. [Evidência](../../evidence/neon-auth-recovery-acceptance-2026-10-23.json).
+O checkpoint inicial abaixo antecede essa confirmação.
+
 Após relato de falha de login para todos os usuários e autorização expressa,
 restaurados `DATABASE_URL` como secret e o apontamento de `NEON_AUTH_BASE_URL`
 para o endpoint atual da branch de identidades `g1-auth-hml`. Banco operacional
