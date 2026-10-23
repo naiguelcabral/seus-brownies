@@ -97,6 +97,10 @@
 - Eventos posteriores pertencem à data em que ocorreram; erros corrigem o
   período original com fato compensatório, sem apagar o original.
 - Somente Dono pode registrar correção em período fechado.
+- Dia e mês operacionais seguem `America/Sao_Paulo` em todas as telas:
+  filtros por data de vendas, estoque e relatórios começam à meia-noite de
+  Brasília, como a competência do financeiro. Uma venda às 22h do último dia
+  pertence a esse mês, não ao seguinte (decisão de 22/10/2026).
 
 ## Metas e cenários
 
