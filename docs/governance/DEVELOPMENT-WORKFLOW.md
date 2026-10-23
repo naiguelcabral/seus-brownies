@@ -159,6 +159,10 @@ independente, recuperação e autorização específica. Detalhes no
 - Registrar impacto.
 - Não aplicar automaticamente em ambiente com dados relevantes se houver qualquer risco de transformação destrutiva.
 - Evitar `db:push` como substituto de migration auditável.
+- `npm run db:generate` e `npm run db:push` são bloqueados por
+  `scripts/drizzle-kit-guard.mjs`: a cadeia ativa `drizzle/` termina em 0028
+  enquanto o schema reflete 0029–0033, então gerar ali duplicaria colunas
+  aplicadas. Novas migrations partem de `npm run db:prepare`.
 
 ## Commits
 
