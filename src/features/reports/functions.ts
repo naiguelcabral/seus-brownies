@@ -53,34 +53,23 @@ import { reconcileInventoryLedger } from '#/features/reports/inventory-reconcili
 import type { ReconciliationDivergence } from '#/features/reports/inventory-reconciliation'
 import { reconcileOperationalIntegrity } from '#/features/reports/integrity-reconciliation'
 import { summarizeSalesMetrics } from '#/features/reports/sales-metrics'
+import {
+  businessDayEnd,
+  businessDayStart,
+  businessMonth,
+} from '#/lib/business-date'
 
 const periodValues = z.object({
   start: z.string().date().optional(),
   end: z.string().date().optional(),
 })
 
-function defaultPeriod() {
-  const today = new Date()
-  const start = new Date(today.getFullYear(), today.getMonth(), 1)
-  const end = new Date(today.getFullYear(), today.getMonth() + 1, 0)
-  return {
-    start: start.toISOString().slice(0, 10),
-    end: end.toISOString().slice(0, 10),
-  }
-}
-
-function endExclusive(end: string) {
-  const date = new Date(`${end}T00:00:00.000Z`)
-  date.setUTCDate(date.getUTCDate() + 1)
-  return date
-}
-
 /** All report calculations run on the server; the browser receives aggregates only. */
 export const getOperationalReports = createServerFn({ method: 'GET' })
   .middleware([requireServerFunctionPermission('getOperationalReports')])
   .validator(periodValues)
   .handler(async ({ data }) => {
-    const fallback = defaultPeriod()
+    const fallback = businessMonth()
     const period = {
       start: data.start ?? fallback.start,
       end: data.end ?? fallback.end,
@@ -90,10 +79,10 @@ export const getOperationalReports = createServerFn({ method: 'GET' })
 
     const { getDb } = await import('#/db/index')
     const database = getDb()
-    const startAt = new Date(`${period.start}T00:00:00.000Z`)
-    const until = endExclusive(period.end)
+    const startAt = businessDayStart(period.start)
+    const until = businessDayEnd(period.end)
     const previousPeriod = previousEqualLengthPeriod(period.start, period.end)
-    const previousStartAt = new Date(`${previousPeriod.start}T00:00:00.000Z`)
+    const previousStartAt = businessDayStart(previousPeriod.start)
     const completedSale = inArray(sales.status, ['confirmed', 'paid'])
 
     const [

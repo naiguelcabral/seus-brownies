@@ -1,3 +1,5 @@
+import { businessDayEnd } from '../../lib/business-date'
+
 export const saleStatuses = ['draft', 'confirmed', 'paid', 'cancelled'] as const
 export type SaleStatus = (typeof saleStatuses)[number]
 
@@ -15,7 +17,5 @@ export function calculateSaleHistoryPage(requestedPage: number, total: number) {
 }
 
 export function endOfSaleHistoryDay(dateValue: string) {
-  const date = new Date(`${dateValue}T00:00:00.000Z`)
-  date.setUTCDate(date.getUTCDate() + 1)
-  return date
+  return businessDayEnd(dateValue)
 }

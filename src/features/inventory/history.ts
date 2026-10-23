@@ -1,3 +1,5 @@
+import { businessDayEnd } from '../../lib/business-date'
+
 export const inventoryProductTypes = [
   'ingredient',
   'packaging',
@@ -38,7 +40,5 @@ export function calculateInventoryPage(
 }
 
 export function endOfInventoryDay(value: string) {
-  const end = new Date(`${value}T00:00:00.000Z`)
-  end.setUTCDate(end.getUTCDate() + 1)
-  return end
+  return businessDayEnd(value)
 }
