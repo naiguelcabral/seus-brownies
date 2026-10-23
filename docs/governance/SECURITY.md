@@ -15,6 +15,27 @@ Definir controles obrigatórios para desenvolvimento humano e por agentes.
 - alterar secrets de produção sem aprovação humana explícita.
 
 Arquivos de exemplo podem conter apenas nomes de variáveis e valores fictícios.
+`scripts/git-sensitive-paths.py` bloqueia, no checkpoint local e nos scripts
+isolados de CI, credencial real no `.env.example` e formato de senha/chave
+Neon em qualquer arquivo versionado.
+
+### Identificadores públicos — decisão de 22/10/2026
+
+O repositório é público e permanece assim.
+
+- **IDs de endpoint e hostnames Neon** são a parte roteável de uma conexão e
+  passam a ser versionados só como hash: SHA-256 no mapa de destinos HML e
+  `ep-[redacted:<8 hex>]` em documentos e evidências. Os gates comparam
+  hashes, e nenhuma evidência nova deve gravar o valor em texto puro.
+- **IDs de projeto/branch/conta** só funcionam com uma chave da API e ficam
+  como referência de auditoria. A **URL do HML** é o próprio site público.
+- **SQL de importação com receitas e preços** continua como evidência
+  histórica; novas evidências não devem incluir dados comerciais
+  dispensáveis ao gate.
+- Os valores originais continuam no histórico do Git. A proteção real é a
+  credencial: qualquer credencial que chegue ao repositório deve ser
+  rotacionada imediatamente, e a reescrita de histórico só deve ser feita
+  por decisão própria.
 
 ## Banco de dados
 

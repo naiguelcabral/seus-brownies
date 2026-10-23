@@ -23,3 +23,12 @@ test('local backup rejects another database, pooler, endpoint and routing overri
   ])
     assert.throws(() => backupPostgresEnvironment(input))
 })
+test('local backup reports a missing Neon CLI separately from missing operator auth', async () => {
+  const { readFile } = await import('node:fs/promises')
+  const source = await readFile(new URL(modulePath, import.meta.url), 'utf8')
+  assert.match(
+    source,
+    /credential\.error\?\.code === 'ENOENT'\)\s+throw new Error\('BACKUP_NEON_CLI_MISSING'\)/,
+  )
+  assert.match(source, /allowed = new Set\(\[[^\]]*'BACKUP_NEON_CLI_MISSING'/)
+})
