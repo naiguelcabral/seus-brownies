@@ -8,7 +8,7 @@ aprovados. Backup `br-morning-star-ac9j0kkh`, sem compute, e snapshot anterior
 preservados; cópia `br-misty-surf-acbrzli5` mantida com compute suspenso/idle.
 
 Preflight revalidou a original `br-lingering-wind-acwh5wap` como `production`,
-primary/default, endpoint `ep-late-water-acahd1z1`, baseline exata de 17 recibos
+primary/default, endpoint `ep-[redacted:26398d41]`, baseline exata de 17 recibos
 e ausência de aplicação parcial. Lote ensaiado aplicado em transação única:
 102 instruções principais mais locks e verificações de preservação/ORM,
 148 instruções no total. SHA-256 do lote verificado:
@@ -46,7 +46,7 @@ Após apresentação do SQL e dos quatro ensaios, usuário autorizou explicitame
 criar na original somente os vínculos Dono e Gerente das duas contas indicadas.
 Preflight revalidou as duas identidades verificadas e os mesmos papéis ativos
 em G1; original `br-lingering-wind-acwh5wap`, endpoint
-`ep-late-water-acahd1z1`, `neondb`, tinha zero vínculos e 17 migrations.
+`ep-[redacted:26398d41]`, `neondb`, tinha zero vínculos e 17 migrations.
 
 Plano `SQL-ACCESS-RECONCILIATION-2026-10-17.sql` executado via MCP numa única
 transação. SHA-256 do SQL: `91403fbb43dcb8ec130a64cd9a0bce5864297dc1c7fe219dab36bd3a2684775d`.

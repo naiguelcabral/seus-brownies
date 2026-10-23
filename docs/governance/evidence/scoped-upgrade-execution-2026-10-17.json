@@ -2,7 +2,7 @@
   "status": "original-upgraded-through-0028",
   "project_id": "steep-brook-51659857",
   "original_branch_id": "br-lingering-wind-acwh5wap",
-  "original_endpoint_id": "ep-late-water-acahd1z1",
+  "original_endpoint_id": "ep-[redacted:26398d41]",
   "original_history_count": 31,
   "snapshot_creation": {
     "status": "refused",
@@ -19,7 +19,7 @@
   },
   "trial": {
     "branch_id": "br-misty-surf-acbrzli5",
-    "endpoint_id": "ep-bold-smoke-acrcoktt",
+    "endpoint_id": "ep-[redacted:05df6f45]",
     "history_count": 31,
     "orm_shape_checks": 38,
     "all_zero_rows": true,
@@ -55,7 +55,7 @@
   "backup_method_acceptance": "user_authorized_in_conversation",
   "original": {
     "branch_id": "br-lingering-wind-acwh5wap",
-    "endpoint_id": "ep-late-water-acahd1z1",
+    "endpoint_id": "ep-[redacted:26398d41]",
     "verification_at": "2026-10-17T19:43:46.671Z",
     "history": [
       {

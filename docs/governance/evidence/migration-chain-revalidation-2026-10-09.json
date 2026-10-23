@@ -46,7 +46,7 @@
       ],
       "endpoints": [
         {
-          "id": "ep-raspy-resonance-ac4rhkwk",
+          "id": "ep-[redacted:de391793]",
           "type": "read_write",
           "current_state": "idle"
         }
@@ -75,7 +75,7 @@
       ],
       "endpoints": [
         {
-          "id": "ep-young-cloud-acftfl9s",
+          "id": "ep-[redacted:98ec77d0]",
           "type": "read_write",
           "current_state": "idle"
         }
@@ -104,7 +104,7 @@
       ],
       "endpoints": [
         {
-          "id": "ep-late-water-acahd1z1",
+          "id": "ep-[redacted:26398d41]",
           "type": "read_write",
           "current_state": "idle"
         }
@@ -133,7 +133,7 @@
       ],
       "endpoints": [
         {
-          "id": "ep-tiny-night-ac0pjhlr",
+          "id": "ep-[redacted:4f8d290f]",
           "type": "read_write",
           "current_state": "idle"
         }
@@ -162,7 +162,7 @@
       ],
       "endpoints": [
         {
-          "id": "ep-old-sound-acmcy3e9",
+          "id": "ep-[redacted:d0e61006]",
           "type": "read_write",
           "current_state": "idle"
         }
