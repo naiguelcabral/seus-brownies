@@ -98,6 +98,7 @@ import {
   saleHistoryPageSize,
   saleStatuses,
 } from '#/features/operations/sale-history'
+import { businessDayStart } from '#/lib/business-date'
 
 const quantityPattern = /^\d+(?:[,.]\d{1,3})?$/
 const moneyPattern = /^\d+(?:[,.]\d{1,2})?$/
@@ -522,9 +523,7 @@ export const listInventory = createServerFn({ method: 'GET' })
         : undefined,
       data.type ? eq(products.type, data.type) : undefined,
     )
-    const startAt = data.start
-      ? new Date(`${data.start}T00:00:00.000Z`)
-      : undefined
+    const startAt = data.start ? businessDayStart(data.start) : undefined
     const endAt = data.end ? endOfInventoryDay(data.end) : undefined
     const movementFilters = and(
       data.movementQuery
@@ -1062,9 +1061,7 @@ export const listSales = createServerFn({ method: 'GET' })
     }
     const { getDb } = await import('#/db/index')
     const database = getDb()
-    const startAt = data.start
-      ? new Date(`${data.start}T00:00:00.000Z`)
-      : undefined
+    const startAt = data.start ? businessDayStart(data.start) : undefined
     const endAt = data.end ? endOfSaleHistoryDay(data.end) : undefined
     const filters = and(
       data.query ? ilike(sales.customerName, `%${data.query}%`) : undefined,

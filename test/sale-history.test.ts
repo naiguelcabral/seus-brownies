@@ -24,10 +24,10 @@ test('paginação de vendas limita o tamanho e ajusta páginas fora do intervalo
   })
 })
 
-test('filtro final de vendas inclui o dia todo em UTC', () => {
+test('filtro final de vendas inclui o dia todo em Brasília', () => {
   assert.equal(
     endOfSaleHistoryDay('2026-02-28').toISOString(),
-    '2026-03-01T00:00:00.000Z',
+    '2026-03-01T03:00:00.000Z',
   )
   assert.deepEqual(saleStatuses, ['draft', 'confirmed', 'paid', 'cancelled'])
 })
