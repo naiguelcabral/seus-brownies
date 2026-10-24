@@ -5,6 +5,35 @@ atual de tarefas, prioridades e critérios de conclusão. Os checkpoints de
 publicação abaixo preservam o estado comprovado de cada entrega; suas
 próximas etapas históricas não substituem o roadmap atualizado.
 
+## Revisão e fila de remediação — 23/10/2026
+
+Os achados A01–A12 da [revisão de segurança](../reviews/SENIOR-REVIEW-2026-10-23.md)
+foram incorporados ao [roadmap único](ROADMAP-CODEX.md), com ordem, critérios
+de aceite e gates. Prioridades: comprovar revogação histórica, corrigir Zod,
+redigir query strings de logs e revisar o guard Drizzle; depois recuperação,
+autoria Auth, conexões e homologação real. Produção permanece sem liberação.
+
+GitHub reconferido: #55/#59/#60 integradas, main bb122d8; #61–#63 abertas.
+Branch de trabalho codex/audit-remediation-20261023 alinhada à main por merge
+local 7480257, preservando os dois recibos de recuperação. A main não foi
+alterada. A revisão registra 574 testes locais e 16 direcionados na main;
+esses resultados não são nova validação do merge local. O pacote desta rodada
+é documental: oito links locais, JSON do inventário e git diff --check
+aprovados, sem execução adicional das suítes.
+
+Grafo Zod reconferido no lockfile: 4.5.4 na raiz, 4.1.12 no SDK Neon e
+4.6.7 no Knip; correção A02 ainda não implementada. O advisory atual define
+4.6.6 como primeira versão corrigida. Auditoria npm zero é evidência antiga.
+Backup diário 03h também é planejamento histórico: a revisão observou regra
+semanal quinta 00:15, fuso a reconfirmar, e janela Neon de seis horas.
+I02/I03 permanecem parciais; restore externo histórico preservado.
+
+Janela do Codex atingiu 5% restante; implementação interrompida antes de
+alterar dependências. Próximo passo e verificações em
+[handoff](AUTONOMY-HANDOFF.md). Sem nova PR, integração remota, deploy, SQL,
+rotação ou mudança de configuração nesta rodada. Os checkpoints abaixo são
+históricos; #55 já foi integrada, embora seu registro inicial diga pendente.
+
 ## Recuperação da conexão Neon e do login HML — 22/10/2026
 
 Seguimento de 23/10: usuário confirmou **“Abriu normal”** após o roteiro de

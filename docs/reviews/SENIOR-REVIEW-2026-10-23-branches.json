@@ -1,0 +1,1017 @@
+{
+  "review_date": "2026-10-23",
+  "main_sha": "bb122d82a75de7b1105c5aa8ecc78743f6ea0213",
+  "local_head": "3af1af55a771f43b50c54be5e5f84341561268d5",
+  "remote_heads_confirmed": true,
+  "note": "Ancestralidade não substitui análise de squash, cherry-pick ou supersessão. Nenhuma branch removida ou mesclada.",
+  "branches": [
+    {
+      "branch": "codex/audit-remediation",
+      "sha": "241099a",
+      "upstream": "origin/codex/audit-remediation",
+      "merged": true,
+      "behind_main": 342,
+      "ahead_main": 0
+    },
+    {
+      "branch": "codex/auto-a13-fifo-diagnostics",
+      "sha": "36b2fef",
+      "upstream": "origin/codex/auto-a13-fifo-diagnostics",
+      "merged": true,
+      "behind_main": 277,
+      "ahead_main": 0
+    },
+    {
+      "branch": "codex/auto-a14-operational-trends",
+      "sha": "677bccd",
+      "upstream": "origin/codex/auto-a14-operational-trends",
+      "merged": true,
+      "behind_main": 278,
+      "ahead_main": 0
+    },
+    {
+      "branch": "codex/auto-a15-top-products",
+      "sha": "9afe969",
+      "upstream": "origin/codex/auto-a15-top-products",
+      "merged": true,
+      "behind_main": 278,
+      "ahead_main": 0
+    },
+    {
+      "branch": "codex/auto-a16-production-outcomes",
+      "sha": "40f433b",
+      "upstream": "origin/codex/auto-a16-production-outcomes",
+      "merged": true,
+      "behind_main": 278,
+      "ahead_main": 0
+    },
+    {
+      "branch": "codex/auto-a17-batch-yield",
+      "sha": "a576b4c",
+      "upstream": "origin/codex/auto-a17-batch-yield",
+      "merged": true,
+      "behind_main": 278,
+      "ahead_main": 0
+    },
+    {
+      "branch": "codex/auto-a18-ingredient-shortfalls",
+      "sha": "b90a36b",
+      "upstream": "origin/codex/auto-a18-ingredient-shortfalls",
+      "merged": true,
+      "behind_main": 278,
+      "ahead_main": 0
+    },
+    {
+      "branch": "codex/auto-a19-sanitized-telemetry",
+      "sha": "413633d",
+      "upstream": "origin/codex/auto-a19-sanitized-telemetry",
+      "merged": true,
+      "behind_main": 278,
+      "ahead_main": 0
+    },
+    {
+      "branch": "codex/auto-a20-continue-after-gates",
+      "sha": "3419f05",
+      "upstream": "origin/codex/auto-a20-continue-after-gates",
+      "merged": true,
+      "behind_main": 278,
+      "ahead_main": 0
+    },
+    {
+      "branch": "codex/auto-a21-memory-concurrency",
+      "sha": "398998f",
+      "upstream": "origin/codex/auto-a21-memory-concurrency",
+      "merged": true,
+      "behind_main": 278,
+      "ahead_main": 0
+    },
+    {
+      "branch": "codex/auto-a22-production-readiness",
+      "sha": "6f6dcee",
+      "upstream": "origin/codex/auto-a22-production-readiness",
+      "merged": true,
+      "behind_main": 278,
+      "ahead_main": 0
+    },
+    {
+      "branch": "codex/auto-a23-environment-evidence",
+      "sha": "ecdd3a9",
+      "upstream": "origin/codex/auto-a23-environment-evidence",
+      "merged": true,
+      "behind_main": 278,
+      "ahead_main": 0
+    },
+    {
+      "branch": "codex/auto-a24-production-cost-reconciliation",
+      "sha": "c4a5ba4",
+      "upstream": "origin/codex/auto-a24-production-cost-reconciliation",
+      "merged": true,
+      "behind_main": 278,
+      "ahead_main": 0
+    },
+    {
+      "branch": "codex/auto-a25-production-transaction-tests",
+      "sha": "394947a",
+      "upstream": "origin/codex/auto-a25-production-transaction-tests",
+      "merged": true,
+      "behind_main": 278,
+      "ahead_main": 0
+    },
+    {
+      "branch": "codex/auto-a26-local-operational-signals",
+      "sha": "9a8e7ea",
+      "upstream": "origin/codex/auto-a26-local-operational-signals",
+      "merged": true,
+      "behind_main": 278,
+      "ahead_main": 0
+    },
+    {
+      "branch": "codex/auto-a27-isolated-public-smoke",
+      "sha": "bed1afe",
+      "upstream": "origin/codex/auto-a27-isolated-public-smoke",
+      "merged": true,
+      "behind_main": 278,
+      "ahead_main": 0
+    },
+    {
+      "branch": "codex/auto-a28-delivery-fifo-coverage",
+      "sha": "c24f5f4",
+      "upstream": "origin/codex/auto-a28-delivery-fifo-coverage",
+      "merged": true,
+      "behind_main": 278,
+      "ahead_main": 0
+    },
+    {
+      "branch": "codex/auto-q1-reconcile-queue",
+      "sha": "58824df",
+      "upstream": "origin/codex/auto-q1-reconcile-queue",
+      "merged": true,
+      "behind_main": 277,
+      "ahead_main": 0
+    },
+    {
+      "branch": "codex/automatic-readiness-20261021",
+      "sha": "32a0b11",
+      "upstream": "origin/codex/automatic-readiness-20261021",
+      "merged": true,
+      "behind_main": 39,
+      "ahead_main": 0
+    },
+    {
+      "branch": "codex/autonomy-runner",
+      "sha": "40bb2af",
+      "upstream": "origin/codex/autonomy-runner",
+      "merged": true,
+      "behind_main": 377,
+      "ahead_main": 0
+    },
+    {
+      "branch": "codex/business-day-bounds-20261022",
+      "sha": "bd8b903",
+      "upstream": "origin/codex/business-day-bounds-20261022",
+      "merged": true,
+      "behind_main": 12,
+      "ahead_main": 0
+    },
+    {
+      "branch": "codex/ci-main-isolated-build",
+      "sha": "087710f",
+      "upstream": "origin/codex/ci-main-isolated-build",
+      "merged": false,
+      "behind_main": 331,
+      "ahead_main": 2
+    },
+    {
+      "branch": "codex/codeql-production-hardening",
+      "sha": "7ac8008",
+      "upstream": "origin/codex/codeql-production-hardening",
+      "merged": true,
+      "behind_main": 21,
+      "ahead_main": 0
+    },
+    {
+      "branch": "codex/drizzle-kit-guard-20261022",
+      "sha": "dc5659c",
+      "upstream": "origin/codex/drizzle-kit-guard-20261022",
+      "merged": false,
+      "behind_main": 8,
+      "ahead_main": 1
+    },
+    {
+      "branch": "codex/g3-supervised-project-sync",
+      "sha": "1c92cff",
+      "upstream": "origin/codex/g3-supervised-project-sync",
+      "merged": true,
+      "behind_main": 219,
+      "ahead_main": 0
+    },
+    {
+      "branch": "codex/generic-migration-path",
+      "sha": "b3e595b",
+      "upstream": "origin/codex/generic-migration-path",
+      "merged": true,
+      "behind_main": 76,
+      "ahead_main": 0
+    },
+    {
+      "branch": "codex/github-mcp-persistent-auth",
+      "sha": "1922bae",
+      "upstream": "",
+      "merged": true,
+      "behind_main": 278,
+      "ahead_main": 0
+    },
+    {
+      "branch": "codex/hml-migration-evidence-gates",
+      "sha": "3299f85",
+      "upstream": "origin/codex/hml-migration-evidence-gates",
+      "merged": true,
+      "behind_main": 219,
+      "ahead_main": 0
+    },
+    {
+      "branch": "codex/hml-migration-readiness",
+      "sha": "637d9ea",
+      "upstream": "origin/codex/hml-migration-readiness",
+      "merged": true,
+      "behind_main": 227,
+      "ahead_main": 0
+    },
+    {
+      "branch": "codex/integrated-validation-gates",
+      "sha": "50aff95",
+      "upstream": "origin/codex/integrated-validation-gates",
+      "merged": true,
+      "behind_main": 48,
+      "ahead_main": 0
+    },
+    {
+      "branch": "codex/integration-platform-governance",
+      "sha": "0eec640",
+      "upstream": "origin/codex/integration-platform-governance",
+      "merged": true,
+      "behind_main": 233,
+      "ahead_main": 0
+    },
+    {
+      "branch": "codex/integration-production-readiness",
+      "sha": "3d87796",
+      "upstream": "origin/codex/integration-production-readiness",
+      "merged": true,
+      "behind_main": 266,
+      "ahead_main": 0
+    },
+    {
+      "branch": "codex/integration-reports-finance",
+      "sha": "1733573",
+      "upstream": "origin/codex/integration-reports-finance",
+      "merged": true,
+      "behind_main": 265,
+      "ahead_main": 0
+    },
+    {
+      "branch": "codex/joint-hml-publication-20261021",
+      "sha": "fe27a21",
+      "upstream": "origin/codex/joint-hml-publication-20261021",
+      "merged": true,
+      "behind_main": 24,
+      "ahead_main": 0
+    },
+    {
+      "branch": "codex/m43-migration-readonly-audit",
+      "sha": "8bf4d7e",
+      "upstream": "origin/codex/m43-migration-readonly-audit",
+      "merged": false,
+      "behind_main": 194,
+      "ahead_main": 1
+    },
+    {
+      "branch": "codex/m44-readonly-audit-readiness",
+      "sha": "3e19a24",
+      "upstream": "origin/codex/m44-readonly-audit-readiness",
+      "merged": true,
+      "behind_main": 191,
+      "ahead_main": 0
+    },
+    {
+      "branch": "codex/m45-external-audit-gates",
+      "sha": "c1579ab",
+      "upstream": "origin/codex/m45-external-audit-gates",
+      "merged": true,
+      "behind_main": 187,
+      "ahead_main": 0
+    },
+    {
+      "branch": "codex/mcp-preflight-validation",
+      "sha": "fd62de7",
+      "upstream": "",
+      "merged": false,
+      "behind_main": 3,
+      "ahead_main": 3
+    },
+    {
+      "branch": "codex/migration-0017-isolated-repair",
+      "sha": "340f4b2",
+      "upstream": "",
+      "merged": true,
+      "behind_main": 180,
+      "ahead_main": 0
+    },
+    {
+      "branch": "codex/migration-chain-remediation",
+      "sha": "823e5d2",
+      "upstream": "origin/codex/migration-chain-remediation",
+      "merged": true,
+      "behind_main": 201,
+      "ahead_main": 0
+    },
+    {
+      "branch": "codex/migration-chain-repair-candidates",
+      "sha": "0725b38",
+      "upstream": "origin/codex/migration-chain-repair-candidates",
+      "merged": true,
+      "behind_main": 218,
+      "ahead_main": 0
+    },
+    {
+      "branch": "codex/migration-external-evidence",
+      "sha": "47def4a",
+      "upstream": "origin/codex/migration-external-evidence",
+      "merged": true,
+      "behind_main": 195,
+      "ahead_main": 0
+    },
+    {
+      "branch": "codex/post-integration-reconciliation",
+      "sha": "0694bab",
+      "upstream": "origin/codex/post-integration-reconciliation",
+      "merged": true,
+      "behind_main": 229,
+      "ahead_main": 0
+    },
+    {
+      "branch": "codex/pr2-memory-hardening",
+      "sha": "8c68000",
+      "upstream": "",
+      "merged": true,
+      "behind_main": 396,
+      "ahead_main": 0
+    },
+    {
+      "branch": "codex/pr3-main-reconciliation",
+      "sha": "c694766",
+      "upstream": "origin/codex/pr3-main-reconciliation",
+      "merged": true,
+      "behind_main": 333,
+      "ahead_main": 0
+    },
+    {
+      "branch": "codex/reconcile-pr13",
+      "sha": "9591ee6",
+      "upstream": "origin/codex/github-mcp-persistent-auth",
+      "merged": true,
+      "behind_main": 201,
+      "ahead_main": 0
+    },
+    {
+      "branch": "codex/reconcile-pr38",
+      "sha": "50a0b4a",
+      "upstream": "origin/codex/migration-chain-repair-candidates",
+      "merged": true,
+      "behind_main": 212,
+      "ahead_main": 0
+    },
+    {
+      "branch": "codex/reconcile-pr39",
+      "sha": "13b4818",
+      "upstream": "origin/codex/hml-migration-evidence-gates",
+      "merged": true,
+      "behind_main": 205,
+      "ahead_main": 0
+    },
+    {
+      "branch": "codex/repo-hygiene-v2-20261022",
+      "sha": "4b70d58",
+      "upstream": "origin/codex/repo-hygiene-v2-20261022",
+      "merged": false,
+      "behind_main": 3,
+      "ahead_main": 6
+    },
+    {
+      "branch": "codex/sanitize-neon-endpoints-20261022",
+      "sha": "2b67ce1",
+      "upstream": "origin/codex/sanitize-neon-endpoints-20261022",
+      "merged": false,
+      "behind_main": 3,
+      "ahead_main": 2
+    },
+    {
+      "branch": "codex/security-env-example-20261022",
+      "sha": "1718a5e",
+      "upstream": "origin/codex/security-env-example-20261022",
+      "merged": true,
+      "behind_main": 17,
+      "ahead_main": 0
+    },
+    {
+      "branch": "codex/security-quality-followup",
+      "sha": "dfd00eb",
+      "upstream": "origin/codex/security-quality-followup",
+      "merged": true,
+      "behind_main": 327,
+      "ahead_main": 0
+    },
+    {
+      "branch": "codex/typed-finance-transactions-20261021",
+      "sha": "b83812c",
+      "upstream": "origin/codex/typed-finance-transactions-20261021",
+      "merged": true,
+      "behind_main": 38,
+      "ahead_main": 0
+    },
+    {
+      "branch": "codex/typed-scenarios-20261021",
+      "sha": "0442563",
+      "upstream": "origin/codex/typed-scenarios-20261021",
+      "merged": false,
+      "behind_main": 28,
+      "ahead_main": 1
+    },
+    {
+      "branch": "codex/typescript-7-upgrade",
+      "sha": "6e3493e",
+      "upstream": "",
+      "merged": true,
+      "behind_main": 183,
+      "ahead_main": 0
+    },
+    {
+      "branch": "codex/workbook-parity",
+      "sha": "e53d42d",
+      "upstream": "origin/codex/workbook-parity",
+      "merged": true,
+      "behind_main": 317,
+      "ahead_main": 0
+    },
+    {
+      "branch": "codex/workbook-parity-main-reconciliation",
+      "sha": "249bdd9",
+      "upstream": "origin/codex/workbook-parity-main-reconciliation",
+      "merged": true,
+      "behind_main": 294,
+      "ahead_main": 0
+    },
+    {
+      "branch": "codex/worker-sql-connection-check",
+      "sha": "b86f589",
+      "upstream": "origin/codex/worker-sql-connection-check",
+      "merged": true,
+      "behind_main": 142,
+      "ahead_main": 0
+    },
+    {
+      "branch": "codex/worker-sql-probe-release-20261017",
+      "sha": "a9a5bb0",
+      "upstream": "origin/codex/worker-sql-probe-release-20261017",
+      "merged": true,
+      "behind_main": 153,
+      "ahead_main": 0
+    },
+    {
+      "branch": "codex/wp-d-main-reconciliation",
+      "sha": "9881cfe",
+      "upstream": "origin/codex/wp-d-main-reconciliation",
+      "merged": true,
+      "behind_main": 281,
+      "ahead_main": 0
+    },
+    {
+      "branch": "codex/wp-d-scenarios",
+      "sha": "c54f65b",
+      "upstream": "origin/codex/wp-d-scenarios",
+      "merged": true,
+      "behind_main": 310,
+      "ahead_main": 0
+    },
+    {
+      "branch": "dependabot/github_actions/actions/checkout-7",
+      "sha": "89fa67a",
+      "upstream": "origin/dependabot/github_actions/actions/checkout-7",
+      "merged": true,
+      "behind_main": 18,
+      "ahead_main": 0
+    },
+    {
+      "branch": "dependabot/github_actions/actions/setup-node-7",
+      "sha": "f9d6b53",
+      "upstream": "origin/dependabot/github_actions/actions/setup-node-7",
+      "merged": true,
+      "behind_main": 18,
+      "ahead_main": 0
+    },
+    {
+      "branch": "docs/roadmap-readme-20261021",
+      "sha": "c83df84",
+      "upstream": "",
+      "merged": true,
+      "behind_main": 44,
+      "ahead_main": 0
+    },
+    {
+      "branch": "feat/codex-conversation-memory",
+      "sha": "8916636",
+      "upstream": "origin/feat/codex-conversation-memory",
+      "merged": true,
+      "behind_main": 395,
+      "ahead_main": 0
+    },
+    {
+      "branch": "feat/input-catalog-kg-purchases",
+      "sha": "55950fa",
+      "upstream": "origin/feat/input-catalog-kg-purchases",
+      "merged": true,
+      "behind_main": 81,
+      "ahead_main": 0
+    },
+    {
+      "branch": "fix/fifo-report-origin",
+      "sha": "2ce3566",
+      "upstream": "",
+      "merged": false,
+      "behind_main": 445,
+      "ahead_main": 1
+    },
+    {
+      "branch": "fix/neon-auth-recovery-20261022",
+      "sha": "3af1af5",
+      "upstream": "",
+      "merged": false,
+      "behind_main": 3,
+      "ahead_main": 2
+    },
+    {
+      "branch": "g1-auth-adr",
+      "sha": "33d37ab",
+      "upstream": "origin/g1-auth-adr",
+      "merged": true,
+      "behind_main": 392,
+      "ahead_main": 0
+    },
+    {
+      "branch": "main",
+      "sha": "fda8471",
+      "upstream": "origin/main",
+      "merged": true,
+      "behind_main": 3,
+      "ahead_main": 0
+    },
+    {
+      "branch": "origin",
+      "sha": "bb122d8",
+      "upstream": "",
+      "merged": true,
+      "behind_main": 0,
+      "ahead_main": 0
+    },
+    {
+      "branch": "origin/codex/audit-remediation",
+      "sha": "c1487f3",
+      "upstream": "",
+      "merged": true,
+      "behind_main": 332,
+      "ahead_main": 0
+    },
+    {
+      "branch": "origin/codex/auto-a13-fifo-diagnostics",
+      "sha": "36b2fef",
+      "upstream": "",
+      "merged": true,
+      "behind_main": 277,
+      "ahead_main": 0
+    },
+    {
+      "branch": "origin/codex/auto-a14-operational-trends",
+      "sha": "677bccd",
+      "upstream": "",
+      "merged": true,
+      "behind_main": 278,
+      "ahead_main": 0
+    },
+    {
+      "branch": "origin/codex/auto-a15-top-products",
+      "sha": "9afe969",
+      "upstream": "",
+      "merged": true,
+      "behind_main": 278,
+      "ahead_main": 0
+    },
+    {
+      "branch": "origin/codex/auto-a16-production-outcomes",
+      "sha": "40f433b",
+      "upstream": "",
+      "merged": true,
+      "behind_main": 278,
+      "ahead_main": 0
+    },
+    {
+      "branch": "origin/codex/auto-a17-batch-yield",
+      "sha": "a576b4c",
+      "upstream": "",
+      "merged": true,
+      "behind_main": 278,
+      "ahead_main": 0
+    },
+    {
+      "branch": "origin/codex/auto-a18-ingredient-shortfalls",
+      "sha": "b90a36b",
+      "upstream": "",
+      "merged": true,
+      "behind_main": 278,
+      "ahead_main": 0
+    },
+    {
+      "branch": "origin/codex/auto-a19-sanitized-telemetry",
+      "sha": "413633d",
+      "upstream": "",
+      "merged": true,
+      "behind_main": 278,
+      "ahead_main": 0
+    },
+    {
+      "branch": "origin/codex/auto-a20-continue-after-gates",
+      "sha": "3419f05",
+      "upstream": "",
+      "merged": true,
+      "behind_main": 278,
+      "ahead_main": 0
+    },
+    {
+      "branch": "origin/codex/auto-a21-memory-concurrency",
+      "sha": "398998f",
+      "upstream": "",
+      "merged": true,
+      "behind_main": 278,
+      "ahead_main": 0
+    },
+    {
+      "branch": "origin/codex/auto-a22-production-readiness",
+      "sha": "6f6dcee",
+      "upstream": "",
+      "merged": true,
+      "behind_main": 278,
+      "ahead_main": 0
+    },
+    {
+      "branch": "origin/codex/auto-a23-environment-evidence",
+      "sha": "ecdd3a9",
+      "upstream": "",
+      "merged": true,
+      "behind_main": 278,
+      "ahead_main": 0
+    },
+    {
+      "branch": "origin/codex/auto-a24-production-cost-reconciliation",
+      "sha": "c4a5ba4",
+      "upstream": "",
+      "merged": true,
+      "behind_main": 278,
+      "ahead_main": 0
+    },
+    {
+      "branch": "origin/codex/auto-a25-production-transaction-tests",
+      "sha": "394947a",
+      "upstream": "",
+      "merged": true,
+      "behind_main": 278,
+      "ahead_main": 0
+    },
+    {
+      "branch": "origin/codex/auto-a26-local-operational-signals",
+      "sha": "9a8e7ea",
+      "upstream": "",
+      "merged": true,
+      "behind_main": 278,
+      "ahead_main": 0
+    },
+    {
+      "branch": "origin/codex/auto-a27-isolated-public-smoke",
+      "sha": "bed1afe",
+      "upstream": "",
+      "merged": true,
+      "behind_main": 278,
+      "ahead_main": 0
+    },
+    {
+      "branch": "origin/codex/auto-a28-delivery-fifo-coverage",
+      "sha": "c24f5f4",
+      "upstream": "",
+      "merged": true,
+      "behind_main": 278,
+      "ahead_main": 0
+    },
+    {
+      "branch": "origin/codex/auto-q1-reconcile-queue",
+      "sha": "58824df",
+      "upstream": "",
+      "merged": true,
+      "behind_main": 277,
+      "ahead_main": 0
+    },
+    {
+      "branch": "origin/codex/autonomy-runner",
+      "sha": "40bb2af",
+      "upstream": "",
+      "merged": true,
+      "behind_main": 377,
+      "ahead_main": 0
+    },
+    {
+      "branch": "origin/codex/business-day-bounds-20261022",
+      "sha": "1af2022",
+      "upstream": "",
+      "merged": true,
+      "behind_main": 1,
+      "ahead_main": 0
+    },
+    {
+      "branch": "origin/codex/ci-main-isolated-build",
+      "sha": "087710f",
+      "upstream": "",
+      "merged": false,
+      "behind_main": 331,
+      "ahead_main": 2
+    },
+    {
+      "branch": "origin/codex/drizzle-kit-guard-20261022",
+      "sha": "eb62e51",
+      "upstream": "",
+      "merged": false,
+      "behind_main": 0,
+      "ahead_main": 3
+    },
+    {
+      "branch": "origin/codex/g3-supervised-project-sync",
+      "sha": "1c92cff",
+      "upstream": "",
+      "merged": true,
+      "behind_main": 219,
+      "ahead_main": 0
+    },
+    {
+      "branch": "origin/codex/github-mcp-persistent-auth",
+      "sha": "9591ee6",
+      "upstream": "",
+      "merged": true,
+      "behind_main": 201,
+      "ahead_main": 0
+    },
+    {
+      "branch": "origin/codex/governanca-agente",
+      "sha": "cc5d577",
+      "upstream": "",
+      "merged": false,
+      "behind_main": 445,
+      "ahead_main": 19
+    },
+    {
+      "branch": "origin/codex/hml-migration-evidence-gates",
+      "sha": "13b4818",
+      "upstream": "",
+      "merged": true,
+      "behind_main": 205,
+      "ahead_main": 0
+    },
+    {
+      "branch": "origin/codex/hml-migration-readiness",
+      "sha": "10e62c2",
+      "upstream": "",
+      "merged": true,
+      "behind_main": 226,
+      "ahead_main": 0
+    },
+    {
+      "branch": "origin/codex/integration-platform-governance",
+      "sha": "0eec640",
+      "upstream": "",
+      "merged": true,
+      "behind_main": 233,
+      "ahead_main": 0
+    },
+    {
+      "branch": "origin/codex/integration-production-readiness",
+      "sha": "1fb3c4c",
+      "upstream": "",
+      "merged": true,
+      "behind_main": 250,
+      "ahead_main": 0
+    },
+    {
+      "branch": "origin/codex/integration-reports-finance",
+      "sha": "1733573",
+      "upstream": "",
+      "merged": true,
+      "behind_main": 265,
+      "ahead_main": 0
+    },
+    {
+      "branch": "origin/codex/m43-migration-readonly-audit",
+      "sha": "8bf4d7e",
+      "upstream": "",
+      "merged": false,
+      "behind_main": 194,
+      "ahead_main": 1
+    },
+    {
+      "branch": "origin/codex/m44-readonly-audit-readiness",
+      "sha": "3e19a24",
+      "upstream": "",
+      "merged": true,
+      "behind_main": 191,
+      "ahead_main": 0
+    },
+    {
+      "branch": "origin/codex/m45-external-audit-gates",
+      "sha": "c1579ab",
+      "upstream": "",
+      "merged": true,
+      "behind_main": 187,
+      "ahead_main": 0
+    },
+    {
+      "branch": "origin/codex/migration-chain-remediation",
+      "sha": "823e5d2",
+      "upstream": "",
+      "merged": true,
+      "behind_main": 201,
+      "ahead_main": 0
+    },
+    {
+      "branch": "origin/codex/migration-chain-repair-candidates",
+      "sha": "50a0b4a",
+      "upstream": "",
+      "merged": true,
+      "behind_main": 212,
+      "ahead_main": 0
+    },
+    {
+      "branch": "origin/codex/migration-external-evidence",
+      "sha": "47def4a",
+      "upstream": "",
+      "merged": true,
+      "behind_main": 195,
+      "ahead_main": 0
+    },
+    {
+      "branch": "origin/codex/post-integration-reconciliation",
+      "sha": "0694bab",
+      "upstream": "",
+      "merged": true,
+      "behind_main": 229,
+      "ahead_main": 0
+    },
+    {
+      "branch": "origin/codex/pr2-memory-hardening",
+      "sha": "8c68000",
+      "upstream": "",
+      "merged": true,
+      "behind_main": 396,
+      "ahead_main": 0
+    },
+    {
+      "branch": "origin/codex/pr3-main-reconciliation",
+      "sha": "c694766",
+      "upstream": "",
+      "merged": true,
+      "behind_main": 333,
+      "ahead_main": 0
+    },
+    {
+      "branch": "origin/codex/readiness-integration-record",
+      "sha": "ad51470",
+      "upstream": "",
+      "merged": true,
+      "behind_main": 224,
+      "ahead_main": 0
+    },
+    {
+      "branch": "origin/codex/repo-hygiene-v2-20261022",
+      "sha": "1b04194",
+      "upstream": "",
+      "merged": false,
+      "behind_main": 0,
+      "ahead_main": 7
+    },
+    {
+      "branch": "origin/codex/sanitize-neon-endpoints-20261022",
+      "sha": "4eec2c8",
+      "upstream": "",
+      "merged": false,
+      "behind_main": 0,
+      "ahead_main": 3
+    },
+    {
+      "branch": "origin/codex/security-env-example-20261022",
+      "sha": "1718a5e",
+      "upstream": "",
+      "merged": true,
+      "behind_main": 17,
+      "ahead_main": 0
+    },
+    {
+      "branch": "origin/codex/security-quality-followup",
+      "sha": "dfd00eb",
+      "upstream": "",
+      "merged": true,
+      "behind_main": 327,
+      "ahead_main": 0
+    },
+    {
+      "branch": "origin/codex/tooling-oxlint-oxfmt-knip-codeql-20261017",
+      "sha": "2fa511b",
+      "upstream": "",
+      "merged": true,
+      "behind_main": 187,
+      "ahead_main": 0
+    },
+    {
+      "branch": "origin/codex/typed-scenarios-20261021",
+      "sha": "eee45ed",
+      "upstream": "",
+      "merged": false,
+      "behind_main": 28,
+      "ahead_main": 2
+    },
+    {
+      "branch": "origin/codex/workbook-parity",
+      "sha": "e53d42d",
+      "upstream": "",
+      "merged": true,
+      "behind_main": 317,
+      "ahead_main": 0
+    },
+    {
+      "branch": "origin/codex/workbook-parity-main-reconciliation",
+      "sha": "249bdd9",
+      "upstream": "",
+      "merged": true,
+      "behind_main": 294,
+      "ahead_main": 0
+    },
+    {
+      "branch": "origin/codex/worker-sql-probe-release-20261017",
+      "sha": "a9a5bb0",
+      "upstream": "",
+      "merged": true,
+      "behind_main": 153,
+      "ahead_main": 0
+    },
+    {
+      "branch": "origin/codex/wp-d-main-reconciliation",
+      "sha": "9881cfe",
+      "upstream": "",
+      "merged": true,
+      "behind_main": 281,
+      "ahead_main": 0
+    },
+    {
+      "branch": "origin/codex/wp-d-scenarios",
+      "sha": "c54f65b",
+      "upstream": "",
+      "merged": true,
+      "behind_main": 310,
+      "ahead_main": 0
+    },
+    {
+      "branch": "origin/feat/codex-conversation-memory",
+      "sha": "8916636",
+      "upstream": "",
+      "merged": true,
+      "behind_main": 395,
+      "ahead_main": 0
+    },
+    {
+      "branch": "origin/g1-auth-adr",
+      "sha": "33d37ab",
+      "upstream": "",
+      "merged": true,
+      "behind_main": 392,
+      "ahead_main": 0
+    },
+    {
+      "branch": "origin/main",
+      "sha": "bb122d8",
+      "upstream": "",
+      "merged": true,
+      "behind_main": 0,
+      "ahead_main": 0
+    },
+    {
+      "branch": "origin/revert-31-codex/integration-reports-finance",
+      "sha": "8a90c7a",
+      "upstream": "",
+      "merged": false,
+      "behind_main": 264,
+      "ahead_main": 1
+    }
+  ]
+}
