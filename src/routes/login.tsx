@@ -22,10 +22,12 @@ import {
 } from '#/features/auth/login-actions'
 import { getSessionStatus } from '#/features/auth/session-status.functions'
 import { TurnstileChallenge } from '#/features/auth/turnstile-challenge'
+import { sensitiveAuthPageHeaders } from '#/features/auth/page-headers'
 
 const turnstileSiteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY
 
 export const Route = createFileRoute('/login')({
+  headers: () => sensitiveAuthPageHeaders,
   validateSearch: (search) => ({
     token: typeof search.token === 'string' ? search.token : undefined,
   }),

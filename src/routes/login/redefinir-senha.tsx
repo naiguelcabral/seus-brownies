@@ -4,10 +4,12 @@ import { useServerFn } from '@tanstack/react-start'
 
 import { resetPasswordWithTokenFn } from '#/features/auth/functions'
 import { TurnstileChallenge } from '#/features/auth/turnstile-challenge'
+import { sensitiveAuthPageHeaders } from '#/features/auth/page-headers'
 
 const turnstileSiteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY
 
 export const Route = createFileRoute('/login/redefinir-senha')({
+  headers: () => sensitiveAuthPageHeaders,
   validateSearch: (search) => ({
     // Keep an absent token absent. Serializing it as an empty string causes
     // the router to canonicalize the public route to `?token=` repeatedly.
