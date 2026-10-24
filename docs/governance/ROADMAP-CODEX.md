@@ -3,7 +3,7 @@
 Atualizado em **23/10/2026**, reconciliando a
 [revisão técnica e de segurança](../reviews/SENIOR-REVIEW-2026-10-23.md).
 GitHub reconferido nesta rodada: #55 e #59–#60 integradas, `main` em
-`bb122d8`; #61–#63 abertas. Último checkpoint HML: versão `997f47bb`,
+`bb122d8`; #61–#64 abertas. Último checkpoint HML: versão `997f47bb`,
 em 100% após restaurar os bindings de conexão/autenticação. Não há recibo
 que comprove publicação da correção de datas #60 nessa versão.
 Este é o **único arquivo de planejamento e acompanhamento de pendências**.
@@ -48,28 +48,50 @@ Dono/administrador nas decisões e operações externas sujeitas a gate.
 
 | Ordem / achado | Estado | Entrega e critério de aceite | Gate / dependência |
 | --- | --- | --- | --- |
-| Imediato — A01 | Pendente de comprovação | Evidência sanitizada de invalidação da credencial histórica, funcionamento dos destinos atuais e revisão de acessos do período. #59 corrige o template; #63 relata rotação, mas nenhum desses fatos, isoladamente, comprova invalidação. Não testar nem reproduzir o valor antigo. | Dono/administrador confirma no provedor; rotação/configuração exige autorização específica. Reescrita do histórico é decisão separada. |
-| 1 — A02 / S03 | Diagnóstico confirmado; correção pendente | Zod 4.5.4 na raiz e 4.1.12 no SDK Neon; Knip usa 4.6.7. Preparar correção compatível de todas as cópias para versão corrigida (mínimo 4.6.6), sem atualização ampla; regressão do grafo, npm audit, Auth e contratos. Completar limites de corpo/cardinalidade e casos de excesso antes de encerrar A02. | Implementação/testes locais autorizados. Sem audit fix --force; integração depende de revisão e CI. [Advisory](https://github.com/advisories/GHSA-mrhx-c7xc-m3w5). |
-| 1 — A05 | Pendente | Redação explícita das query strings em logs; marcador sintético e Cache-Control no-store no reset. Validar configuração/captura no destino autorizado, sem consultar tokens reais. | Preparar localmente; publicação e leitura remota conforme autorização concreta. Persistência de token real não foi comprovada. |
+| Imediato — A01 | Comprovação técnica parcial em 23/10 | Hash da credencial de `48b101d` comparado, sem exibir valores, com a senha atual do `neondb_owner` em cada branch: `production`, `g1-auth-hml` e `Development` divergem; as três branches de backup não têm endpoint e não aceitam conexão; o projeto arquivado `cool-base` foi apagado. Falta revisar acessos do período 17–22/10: `pg_stat_statements` está desligado e a CLI não expõe conexões; no Auth, 21 sessões vieram de dois IPs. Registrar evidência sanitizada e apagar `.env.local.bak` local. | Dono pede logs de conexão ao suporte Neon, se necessário. Reescrita do histórico é decisão separada. Não testar nem reproduzir o valor antigo. |
+| 1 — A02 / S03 | Dependência corrigida na PR #64; limites pendentes | PR #64: `zod ^4.6.7` com override `$zod`, uma única cópia 4.6.7 na árvore; `undici` do `miniflare` em 7.30.1; `npm audit` zerado; 578 testes. Pendente: limites de corpo/cardinalidade (`production/functions.ts:106`, compras e vendas) e casos de excesso, em PR próprio. | Integração depende de revisão e CI; integrar #64 por último entre #61–#64, regenerando o lockfile. [Advisory](https://github.com/advisories/GHSA-mrhx-c7xc-m3w5). |
+| 1 — A05 | Candidata na PR #64 | `env.hml.observability.redact_query_string: true`; `/login` e `/login/redefinir-senha` com `Cache-Control: no-store` e `Referrer-Policy: no-referrer` pela opção `headers` da rota, conferidos em requisição local. Falta deploy HML e captura com marcador sintético. | Publicação e leitura remota conforme autorização concreta; não consultar tokens reais. |
 | 1 — A06 / T02 | Candidata na PR #61 | Revisar eb62e51 e checks do SHA atual; bloquear db:generate/db:push, preservando preparo/revisão offline e recibos. | Merge humano; nenhum SQL compartilhado. Não duplicar a implementação da PR. |
 | 2 — A03 / I02 / I03 | Divergência documentada; política pendente | Revisão observou histórico Neon de seis horas, branches sem proteção e automação semanal quinta 00:15, divergindo do diário 03h documentado. Reconfirmar fuso/configuração; acordar RPO/RTO, retenção, responsáveis e Auth; comprovar sequência de uploads, restore externo e alerta de falha. | Restore de 21/10 permanece válido historicamente. Mudança de frequência/infraestrutura/proteção exige decisão aplicável; não apagar backups. |
 | 2 — A04 / S01 | Pendente no fluxo Auth | Associar eventos futuros à identidade retornada/validada no servidor; ator nas concessões futuras e bootstrap explícito. Para tentativas/reset, aprovar correlação opaca; testes sem e-mail/senha/token nos eventos. | Preservar autoria histórica desconhecida; não fazer backfill inventado. Auditoria operacional S01 continua entregue. |
 | 2 — A07 | Pendente | Definir ownership/lifecycle de conexão compatível com Workers, limites e timeout; provar fechamento, falhas e transações em isolamento. | Preservar stack; mudança arquitetural requer ADR/decisão. Não atribuir os 429 a pools sem evidência. |
 | 3 — A08 / H01 / H02 | Pendente | Orçamentos complementares por origem confiável/agregado, limites de payload, hostname/action e timeout de Turnstile; testes com múltiplas identidades. Completar provedor/desafio reais e correlação dos 429. | Preservar limite de cinco falhas e fail-closed. Ensaios de abuso isolados; homologação publicada assistida. |
 | 3 — A09 / F03 | Pendente | Explicar origens FIFO sem lote (compra/ajuste), reconciliando detalhe e total com custos racionais exatos e regressões. | Reimplementar a intenção de 2ce3566 sobre a base atual; não mesclar o patch antigo. Sem mudar custo/fatos. |
-| 3 — A10 / H06 | Pendente | Política HTTP de cache/referrer/MIME/enquadramento e CSP compatível com hidratação/Turnstile; validar login/reset e celular físico por perfil. | Preparação local e ensaio HML conforme gate; meta HTML não equivale a header. |
+| 3 — A10 / H06 | Parcial via #64; global pendente | Nenhum cabeçalho de segurança global em `src/` (CSP, `frame-ancestors`/`X-Frame-Options`, `nosniff`, HSTS, `Permissions-Policy`): telas autenticadas podem ser enquadradas. Middleware global, CSP inicialmente report-only compatível com hidratação/Turnstile; validar login/reset e celular físico por perfil. | Preparação local e ensaio HML conforme gate; meta HTML não equivale a header. |
 | Transversal — A11 / G01 / T01 | Reconciliação local preparada | Branch codex/audit-remediation-20261023 alinhada a origin/main bb122d8, preservando 7eb15f2/3af1af5 e a revisão. Roadmap/status/espelho atualizados; futuro recibo deve ligar SHA, build, Worker e configuração. | Integração e publicação separadas. Nenhum deploy novo nesta rodada. |
 | Posterior — A12 / S04 / R07 | Pendente / condicional | Revisar escopo mínimo de conectores; avaliar fd62de7; classificar branches antes de arquivar. Extrações graduais e compatibility date somente após segurança/aceite. | Não alterar permissões, excluir branches nem delegar automaticamente. |
 
+### Lacunas complementares de 23/10/2026
+
+Levantamento posterior à revisão, com evidência no código e nos provedores.
+Itens já cobertos por A01–A12 foram anotados nas linhas correspondentes acima;
+os IDs abaixo cobrem apenas o que não tinha fila própria.
+
+| ID | Prioridade | Lacuna e evidência | Solução e critério de aceite | Gate / dependência |
+| --- | --- | --- | --- | --- |
+| L01 | Antes de I04 | Configuração do Worker de produção incompleta: o topo de `wrangler.jsonc` não tem binding `AUTH_RATE_LIMITER`, `AUTH_RATE_LIMITER_REQUIRED`, lista de secrets nem redação de logs. Sem a flag, `auth-rate-limit.server.ts:96` usa só o limitador local do isolate, sem aviso. | Espelhar em produção as garantias do HML; teste estrutural que falhe se a flag, o binding, os secrets obrigatórios ou a redação faltarem. | Implementação local; secrets/deploy de produção exigem autorização. |
+| L02 | Antes do piloto | Worker conecta como `neondb_owner`, dono do banco; o guard do npm (A06) só evita acidente. | Papel de aplicação sem DDL nem propriedade, com privilégios mínimos por tabela; plano, ensaio isolado e troca do `DATABASE_URL` registrada. | SQL compartilhado e secret exigem autorização específica. |
+| L03 | Antes do piloto | Sem trilha de consultas: `pg_stat_statements` desligado em todas as branches, o que impediu auditar A01. Neon sem IP allowlist e sem branch protegida. | Ativar `pg_stat_statements` na `production`; decidir custo de branch protegida e allowlist; registrar política de revisão periódica. | Extensão/plano Neon exigem decisão do Dono. |
+| L04 | Antes do piloto | Ambientes embaralhados: HML usa os dados da `production`; Auth e `.env.local` usam `g1-auth-hml` (schema 0016); `Development` está em 0014. O `.env.local` local ainda tem senhas inválidas. | Branch de desenvolvimento derivada da `production`, com schema atual e dados sanitizados; separar HML de produção antes de I04; atualizar `ENVIRONMENT-MATRIX` e o `.env.local`. | Criação de branch e secrets exigem autorização; não copiar dados pessoais sem sanitização. |
+| L05 | Antes do piloto | Falhas invisíveis: traces/Issues do Worker desligados, nenhuma ferramenta de erros, monitor só com GETs públicos e Server Functions devolvendo erro com status 200. | Ativar Issues/alertas, endpoint de saúde protegido que teste banco e Auth, registro estruturado de falhas sem dados pessoais e alerta independente do computador local (complementa I03). | Configuração do Worker conforme gate; segredos do endpoint pelo Dono. |
+| L06 | Antes do piloto com clientes reais | Dados pessoais sem política: `sales.customer_name`, `sales.customer_phone` e, no futuro WhatsApp, `sender_phone`. Não há base legal, retenção, exclusão nem controle de acesso documentados. | Inventário de dados pessoais, prazo de retenção, anonimização auditada, mínimo necessário em CSV e logs, e registro LGPD aprovado. | Política e prazos são decisão do Dono; anonimização segue lifecycle auditável. |
+| L07 | Antes de I04 | Sem medição de cobertura: os testes não indicam o que fica descoberto. | Cobertura nativa do Node na CI, com limite mínimo em dinheiro, estoque, FIFO e Auth; sem enfraquecer testes existentes. | Implementação local e CI. |
+| L08 | Contínuo | SDK de autenticação em beta: `@neondatabase/neon-js` 0.8.0-beta, que fixa Zod antigo (contido pelo override da #64). | Acompanhar versões, testes de contrato do adapter e plano de contingência documentado. | Troca de SDK de autenticação exige ADR. |
+| L09 | Imediato | Duas sessões de agente usaram a mesma pasta de trabalho: a pasta principal ficou na branch desta remediação enquanto outra sessão preparava PRs. | Cada agente trabalha em worktree própria e não troca a branch da pasta principal; registrar a regra no `AGENTS.md`. | Mudança de `AGENTS.md` exige revisão humana. |
+
 Ordem de integração proposta: revisar #61; revisar #63; atualizar e revisar
-#62 após #63, pelos arquivos comuns; preservar os recibos locais de recuperação
-em PR documental; revisar fd62de7 separadamente. Reconferir diff, SHA e checks
+#62 após #63, pelos arquivos comuns; integrar #64 por último, regenerando o
+lockfile para preservar `drizzle-kit` como dependência de desenvolvimento;
+preservar os recibos locais de recuperação em PR documental; revisar fd62de7
+separadamente. A simulação dos quatro merges sobre `bb122d8` não teve
+conflito e passou com 585 testes e audit zerado. Reconferir diff, SHA e checks
 antes de cada decisão humana. Nenhuma PR foi mesclada nesta rodada.
 
-Próximo passo exato: após renovação confirmada da franquia, retomar nesta
-branch e preparar **A02**, começando pelo grafo de dependências. Handoff em
-[AUTONOMY-HANDOFF.md](AUTONOMY-HANDOFF.md). A01 continua prioridade externa
-imediata; não é necessário aguardar sua decisão para preparar testes locais.
+Próximo passo exato: **não refazer A02/A05**, já preparados na PR #64.
+Depois das decisões humanas sobre #61–#64, preparar A04, A07 e L01 em
+worktrees próprias, um PR por item. Handoff em
+[AUTONOMY-HANDOFF.md](AUTONOMY-HANDOFF.md). A01 depende apenas do registro
+da evidência sanitizada e da decisão sobre logs do provedor.
 
 PRs #44–#53 mescladas, incluindo tipagem de Cenários/finanças/lifecycle,
 patch launch-editor 2.14.2, ordem do menu do Funcionário e coleta do aceite.
@@ -245,7 +267,7 @@ sintético foi gravado no HML.
 | I05 | Pendente / operação autorizada | Após os aceites e a recuperação, conduzir piloto com a operadora e fatos reais expressamente autorizados: compra, produção, venda, recebimento, entrega e conferência de lucro/estoque. Registrar problemas e decisão de aceite; não criar demonstrações fictícias no HML nem iniciar compras/produção sem previsão real. |
 
 Checkpoint GitHub de 21/10: PRs #44–#53 mescladas e issue #36 encerrada.
-Consulta nova de 23/10 confirma #55/#59/#60 integradas e #61–#63 abertas.
+Consulta nova de 23/10 confirma #55/#59/#60 integradas e #61–#64 abertas.
 Atualização documental não habilita o migrador nem altera proteções.
 
 ## Ajustes operacionais e evoluções de produto
