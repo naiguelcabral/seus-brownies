@@ -1,5 +1,27 @@
 # Ações que exigem aprovação humana — Cacau v1
 
+## Recuperação de banco e usuários — 22/10/2026
+
+Usuário pediu verificar as conexões Neon/banco/usuários e refazer o necessário
+para voltar a funcionar; depois autorizou expressamente os procedimentos de
+reconstrução da correção e informou que todos estavam sem conseguir logar.
+Aplicado reparo necessário somente no `cacau-v1-hml`: converter a variável
+`DATABASE_URL` em secret mantendo o destino e reconstruir `NEON_AUTH_BASE_URL`
+a partir da branch de identidades confirmada no Neon. Demais bindings,
+segredos, contas e papéis preservados. Leituras sanitizadas e testes de sessão
+conferidos; login com senha real ainda aguarda relato do usuário.
+
+Essa autorização foi usada para a correção concreta de configuração HML;
+não houve recriação de usuários, troca de senha/papel, SQL de escrita,
+migration, alteração de produção principal ou dispensa dos gates existentes.
+[Registro](NEON-AUTH-RECOVERY-2026-10-22.md).
+
+Seguimento em 23/10: usuário pediu continuar as correções necessárias e
+confirmou **“Abriu normal”** após o roteiro de nova entrada da Gerente em
+janela privativa. Aceite limitado à entrada e abertura do painel dessa conta;
+nenhuma nova alteração de schema, fonte, credencial, papel ou configuração foi
+necessária. O relato não libera produção nem conclui toda a matriz H01–H03.
+
 ## Publicação conjunta executada — 21/10/2026
 
 Aplicada a autorização de continuidade abaixo após o aceite guiado dos três

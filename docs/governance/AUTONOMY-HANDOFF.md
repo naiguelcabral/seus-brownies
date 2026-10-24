@@ -1,5 +1,53 @@
 # Handoff de autonomia — Cacau v1
 
+## Remediação da revisão — fechamento por reserva em 23/10/2026
+
+Tarefa: organizar as próximas etapas com base na última revisão/auditoria e
+seguir dentro dos gates. Branch: codex/audit-remediation-20261023; base local
+74802578d37f39ad458dd8c61df3acf31b6b67a2, merge de origin/main bb122d8 sobre
+3af1af5. Os recibos 7eb15f2/3af1af5 foram preservados; nenhuma integração
+remota foi executada. A pasta docs/reviews/ já existia sem rastreamento no
+início e contém o relatório/inventário usados como fonte, preservados sem edição.
+
+Concluído nesta rodada: governança lida; Git/branch conferidos; GitHub plugin
+reconferiu #55/#59/#60 integradas e #61–#63 abertas. Roadmap recebeu A01–A12,
+critérios, ordem e gates; status e espelho reconciliados. Leitura do lockfile
+confirmou Zod 4.5.4 na raiz, 4.1.12 no SDK Neon e 4.6.7 no Knip. Advisory
+GHSA-mrhx-c7xc-m3w5 reconferido: corrigido a partir de 4.6.6. Dependências não
+foram alteradas. Não há nova prova de revogação histórica, rotina de backup,
+publicação de #60 ou homologação real; não marcar esses itens concluídos.
+
+Arquivos desta rodada: ROADMAP-CODEX.md, PROJECT-STATUS.md,
+AUTONOMY-QUEUE.md e este AUTONOMY-HANDOFF.md; relatório/inventário em
+docs/reviews/ preservados para versionamento junto ao checkpoint. Validação:
+oito links locais sem ausências, JSON do inventário válido e git diff --check
+aprovados antes do salvamento. Testes, lint,
+tipos, audit e build não repetidos, pois a alteração própria é documental.
+As suítes históricas de 574/16 testes pertencem à revisão, não a este merge.
+
+Próximo passo exato, após renovação confirmada: consultar uso, executar
+./LIGARTUDO conforme política, confirmar esta branch e status; atualizar por
+fast-forward apenas se limpo e com upstream existente. Reler roadmap/handoff
+e preparar A02: corrigir o grafo Zod com mudança compatível mínima, incluindo
+a cópia fixada do Neon; adicionar regressão de todas as cópias e verificar
+com npm ci, npm audit, Auth/contratos, suíte, lint/tipos/check/Knip e build
+isolado do HEAD versionado. Definir/testar limites de corpo/cardinalidade como
+parte separável de A02, sem declarar o achado encerrado só pela versão.
+Em paralelo lógico, A01 exige evidência sanitizada do responsável; nunca ler
+ou testar a credencial histórica. Não iniciar agentes paralelos.
+
+Pendências/gates: merge humano de candidatas revisadas e checks do SHA atual;
+rotação/secrets/configuração/SQL compartilhado/produção exigem autorização
+específica. Preparar A05, revisar #61 e #63, depois #62 atualizada sobre #63;
+seguir demais etapas do roadmap. Nenhum novo deploy ou dado sintético no HML.
+
+Uso oficial no fechamento: 95% consumido / **5% restante** na janela de cinco
+horas; semanal 85% restante. Reset: **24/10/2026 01:18:27 America/Sao_Paulo**
+(2026-10-24 04:18:27 UTC, epoch 1792815507). Estado: encerrando por reserva.
+Não iniciar implementação adicional. ./DESLIGARTUDO deve executar após este
+handoff, fora da main; verificar commit/push e registrar eventual falha.
+Não há retomada desta tarefa agendada por esta rodada.
+
 ## Validação automática autorizada — 21/10/2026
 
 Branch codex/automatic-readiness-20261021; incremento 2bcb597: patch isolado

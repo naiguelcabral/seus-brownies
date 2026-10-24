@@ -1,5 +1,22 @@
 # Ambientes e evidência somente leitura — Cacau v1
 
+## Recuperação HML — 22/10/2026
+
+Leituras atuais confirmam o banco operacional em
+`steep-brook-51659857/br-lingering-wind-acwh5wap/neondb` e as identidades em
+`br-patient-lake-ac2t0cvq` (`g1-auth-hml`). Os três computes estão ativos.
+O destino SQL foi confrontado em memória com a variável então visível no
+Worker, sem emitir credenciais: corresponde à original, com pooling. A
+classificação de produção dessa base é preservada; não é laboratório.
+
+Após autorização de reparo, `DATABASE_URL` voltou a `secret_text` e
+`NEON_AUTH_BASE_URL` foi reconstruído da branch de identidades. Demais
+bindings/observabilidade preservados. HML agora está em `997f47bb`, 100%;
+raiz307/login200, sessão inválida recuperada de500 para200. Os quatro acessos
+correspondem a identidades verificadas; entrada com senha real ainda sem
+confirmação neste checkpoint. [Registro](NEON-AUTH-RECOVERY-2026-10-22.md).
+Esta seção prevalece sobre os retratos históricos abaixo.
+
 ## Reconciliação atual — 21/10/2026
 
 Main `b82e044`; último HML registrado `bb76764`/`22733c04`. O
