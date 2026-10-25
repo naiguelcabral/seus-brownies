@@ -101,9 +101,11 @@ test('security headers preserve redirects, cookies and streaming bodies', async 
     secured.headers.get('permissions-policy'),
     'camera=(), microphone=(), geolocation=()',
   )
-  assert.match(
-    headers['Content-Security-Policy-Report-Only'] ?? '',
-    /https:\/\/challenges.cloudflare.com/,
+  assert.equal(
+    (headers['Content-Security-Policy-Report-Only'] ?? '')
+      .split('; ')
+      .find((directive) => directive.startsWith('frame-src ')),
+    'frame-src https://challenges.cloudflare.com',
   )
   assert.equal(secured.headers.get('content-security-policy'), null)
   assert.equal(
