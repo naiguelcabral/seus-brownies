@@ -3,6 +3,7 @@ import { readFileSync } from 'node:fs'
 import { createRequire } from 'node:module'
 import test from 'node:test'
 import { compileFunction } from 'node:vm'
+import { z } from 'zod'
 
 const require = createRequire(import.meta.url)
 
@@ -86,12 +87,10 @@ test('the typography plugin resolves the patched selector parser and preserves s
 })
 
 test('application and Neon use patched Zod and reject oversized arrays before parsing their entries', () => {
-  const application = require('zod') as typeof import('zod')
   const neonRequire = createRequire(require.resolve('@neondatabase/neon-js'))
-  const neon = neonRequire('zod') as typeof import('zod')
   assert.equal(neonRequire.resolve('zod'), require.resolve('zod'))
 
-  for (const { z } of [application, neon]) {
+  {
     const schema = z.array(z.object({ productId: z.number().int() })).max(2)
     assert.equal(schema.safeParse([{ productId: 1 }]).success, true)
     assert.equal(schema.safeParse([{ productId: null }]).success, false)
@@ -99,7 +98,6 @@ test('application and Neon use patched Zod and reject oversized arrays before pa
       Array.from({ length: 1_000 }, () => ({ productId: null })),
     )
     assert.equal(excess.success, false)
-    if (excess.success) assert.fail('Oversized input must be rejected')
     assert.equal(excess.error.issues.length, 1)
     assert.equal(excess.error.issues[0]?.code, 'too_big')
   }
