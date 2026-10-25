@@ -159,5 +159,60 @@
     "historical_auth_backfill": false,
     "financial_rule_changed": false,
     "dependency_versions_changed": false
-  }
+  },
+  "integration_authorization": {
+    "source": "human-user-in-current-conversation",
+    "quote": "Pode seguir",
+    "context": "continuation after PR 72 was presented ready for review with passing checks and explicit remaining gates",
+    "pr": 72,
+    "merge": true,
+    "merge_method": "merge",
+    "deployment": false,
+    "shared_sql": false,
+    "secrets": false,
+    "other_prs": false
+  },
+  "code_review_security": {
+    "checked_at_utc": "2026-10-25T20:20:27.724277+00:00",
+    "pr": 72,
+    "head": "cc44af7207973f62d646040f771422808bef624d",
+    "main": {
+      "protected": true,
+      "sha": "53d6379d1fb79a7b93194b7b4e07c837459bac3c"
+    },
+    "merge_candidate": "281dcf3e11b60aa9464c08983136f89634e64b72",
+    "parents": [
+      "53d6379d1fb79a7b93194b7b4e07c837459bac3c",
+      "cc44af7207973f62d646040f771422808bef624d"
+    ],
+    "codeql": [
+      {
+        "category": "/language:javascript-typescript",
+        "error": "",
+        "ref": "refs/pull/72/merge",
+        "results": 0,
+        "sha": "281dcf3e11b60aa9464c08983136f89634e64b72",
+        "warning": ""
+      },
+      {
+        "category": "/language:python",
+        "error": "",
+        "ref": "refs/pull/72/merge",
+        "results": 0,
+        "sha": "281dcf3e11b60aa9464c08983136f89634e64b72",
+        "warning": ""
+      },
+      {
+        "category": "/language:actions",
+        "error": "",
+        "ref": "refs/pull/72/merge",
+        "results": 0,
+        "sha": "281dcf3e11b60aa9464c08983136f89634e64b72",
+        "warning": ""
+      }
+    ],
+    "open_alerts": [],
+    "merged": false
+  },
+  "integration_result_source": "GitHub PR 72 after merge; documentary authorization head and final main CI are checked before closing the task"
 }

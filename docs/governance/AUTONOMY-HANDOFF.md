@@ -1,5 +1,20 @@
 # Handoff de autonomia — Cacau v1
 
+## Integração da PR #72 autorizada — 25/10/2026
+
+Após a entrega da PR #72 pronta para revisão, usuário respondeu “Pode seguir”.
+Integrar somente essa PR por merge commit, após nova conferência do SHA e
+gates; conferir também a main resultante. Código revisado cc44af7, base53d6379,
+todos os checks aprovados e três análises CodeQL sem resultados/erros/avisos.
+Este fechamento muda apenas documentação/evidência e precisa de novos checks.
+
+Roadmap/status/espelho/aprovação reconciliados. A58 done identifica o pacote
+de código entregue; A04/A07/A08 e os gates externos continuam no roadmap.
+Resultado de merge e CI final na própria PR, sem autoatribuir o SHA futuro.
+Preservar pasta principal e worktree própria; não repetir os cinco merges
+anteriores. Sem deploy, SQL compartilhado, secrets, RBAC ou outras PRs.
+O registro de preparação abaixo precede esta autorização.
+
 ## Pacote local de pré-publicação — 25/10/2026
 
 Usuário pediu os ajustes pequenos anteriores à publicação em uma única PR.

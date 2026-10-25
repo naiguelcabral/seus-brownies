@@ -1,5 +1,26 @@
 # Roadmap único — Cacau v1
 
+## Entrega e integração autorizada — PR #72
+
+Usuário autorizou a continuidade após a apresentação do pacote validado.
+Esta entrega reúne A02, parte de A04/A08, A09/A10 e as preparações
+L01/L07/L08/L09 na [PR #72](https://github.com/naiguelcabral/seus-brownies/pull/72).
+Código operacional revisado: `cc44af7`, com todos os checks concluídos e
+três análises CodeQL sem resultados/erros/avisos, zero alertas abertos.
+O fechamento desta autorização altera somente documentação/evidência.
+
+A58 refere-se ao pacote de código entregue e validado; não encerra publicação,
+recuperação, privilégio mínimo nem aceites reais. A02 tem os limites na entrega;
+A04 mantém correlação de tentativas/reset e autoria de concessões/bootstrap;
+A07 mantém lifecycle de conexões; A08 mantém origem/agregado e hostname/action.
+A05/A10 ainda exigem publicação HML e prova/observação no ambiente real.
+L07 conserva revisão das lacunas e baseline justificada.
+
+O resultado final da integração e o CI da main são lidos no estado da PR;
+o recibo versionado preserva os SHAs realmente testados e não inventa o SHA
+do próprio merge. Nenhum deploy, SQL compartilhado ou secret nesta entrega.
+Os registros de preparação abaixo são históricos.
+
 ## Pacote local de pré-publicação — candidata de 25/10/2026
 
 Base integrada `53d6379`; #61 → #63 → #62 → #64 → #65 concluídas com
@@ -41,7 +62,7 @@ justificada seguem L07. [Recibo](../../evidence/prepublication-small-fixes-2026-
 
 Continuam A07 (lifecycle exige trabalho próprio), partes restantes de A04/A08,
 A01/A03/L02–L06 e os aceites publicados. Nenhum deploy, SQL compartilhado,
-migration, mudança de secrets/RBAC ou merge desta candidata autorizado.
+migration ou mudança de secrets/RBAC autorizados. A integração deste pacote foi autorizada na continuidade registrada acima.
 
 Atualizado em **25/10/2026**, após a autorização do Dono e a integração
 sequencial das correções: **#61 → #63 → #62 → #64**. Código operacional
@@ -117,15 +138,15 @@ Dono/administrador nas decisões e operações externas sujeitas a gate.
 | Ordem / achado | Estado | Entrega e critério de aceite | Gate / dependência |
 | --- | --- | --- | --- |
 | Imediato — A01 | Comprovação técnica parcial em 23/10 | Relato de coleta incorporado por #65/9a4b276: hash da credencial de `48b101d` comparado, sem exibir valores, com a senha atual do `neondb_owner` em cada branch: `production`, `g1-auth-hml` e `Development` divergem; as três branches de backup não têm endpoint e não aceitam conexão; o projeto arquivado `cool-base` foi apagado. Falta revisar acessos do período 17–22/10: `pg_stat_statements` está desligado e a CLI não expõe conexões; no Auth, 21 sessões vieram de dois IPs. Falta recibo sanitizado que permita revisar método, UTC e abrangência dessa coleta; ela não foi repetida nesta rodada. Eventuais cópias locais de credenciais ficam sob responsabilidade privada do operador, sem leitura ou exclusão pelo agente. | Dono pede logs de conexão ao suporte Neon, se necessário. Reescrita do histórico é decisão separada. Não testar nem reproduzir o valor antigo. |
-| 1 — A02 / S03 | Dependências integradas; limites preparados nesta candidata | Corpo de até 1 MiB, até 100 itens/saídas/perdas e strings numéricas até 32 caracteres; schemas usados pelos handlers e testes de fronteira, excesso e idempotência. 601 testes Node e laboratório conectado aprovados. | Revisão/CI/merge e confirmação HML pendentes; não refazer a atualização Zod/Undici. |
+| 1 — A02 / S03 | Dependências integradas; limites entregues na PR #72 | Corpo de até 1 MiB, até 100 itens/saídas/perdas e strings numéricas até 32 caracteres; schemas usados pelos handlers e testes de fronteira, excesso e idempotência. 601 testes Node e laboratório conectado aprovados. | Integração autorizada conforme PR #72; publicação/aceite HML pendentes. Não refazer a atualização Zod/Undici. |
 | 1 — A05 | Código integrado; confirmação HML pendente | #64 integrou redact_query_string:true no HML e no-store/no-referrer no login/reset; headers comprovados por HTTP no laboratório. Falta publicação HML autorizada e captura com marcador sintético. | Não atribuir a configuração nova ao Worker publicado antes de deploy/readback. Não consultar tokens reais. |
 | 1 — A06 / T02 | Concluído na main | #61 integrada em 1536920; db:generate e db:push bloqueados offline, sem conexão ou SQL. Preparação/revisão auditável, cadeia e recibos preservados. | T02 permanece parcial para planos por alvo; não reaplicar migrations ou usar o guard como controle de acesso administrativo. |
 | 2 — A03 / I02 / I03 | Divergência documentada; política pendente | Revisão observou histórico Neon de seis horas, branches sem proteção e automação semanal quinta 00:15, divergindo do diário 03h documentado. Reconfirmar fuso/configuração; acordar RPO/RTO, retenção, responsáveis e Auth; comprovar sequência de uploads, restore externo e alerta de falha. | Restore de 21/10 permanece válido historicamente. Mudança de frequência/infraestrutura/proteção exige decisão aplicável; não apagar backups. |
-| 2 — A04 / S01 | Parcial preparada nesta candidata | Login/verificação bem-sucedidos usam ID do provedor; logout usa ator da sessão validada, sem alvo de sessão inventado. Contrato do SDK e testes de privacidade aprovados. | Restam autoria de concessões futuras/bootstrap e correlação opaca aprovada de tentativas/reset; nenhum backfill histórico. |
+| 2 — A04 / S01 | Parcial entregue na PR #72 | Login/verificação bem-sucedidos usam ID do provedor; logout usa ator da sessão validada, sem alvo de sessão inventado. Contrato do SDK e testes de privacidade aprovados. | Restam autoria de concessões futuras/bootstrap e correlação opaca aprovada de tentativas/reset; nenhum backfill histórico. |
 | 2 — A07 | Pendente | Definir ownership/lifecycle de conexão compatível com Workers, limites e timeout; provar fechamento, falhas e transações em isolamento. | Preservar stack; mudança arquitetural requer ADR/decisão. Não atribuir os 429 a pools sem evidência. |
-| 3 — A08 / H01 / H02 | Timeout preparado; demais controles pendentes | Siteverify aborta após 10 s; regressão do abort e fail-closed preservado. Limites de payload em A02. | Restam orçamento agregado/origem confiável, hostname/action e prova do provedor/desafio reais. Preservar cinco falhas e não atribuir 429 a pools sem prova. |
-| 3 — A09 / F03 | Correção preparada nesta candidata | Novo detalhe por origem FIFO e CSV incluem produção, compra, ajuste e ausência explícita; custos/reversões racionais e totais preservados. 601 testes e laboratório conectado aprovados. | Revisão/CI/integração e confirmação publicada pendentes; patch antigo não foi mesclado. Sem mudar custos/fatos. |
-| 3 — A10 / H06 | Middleware preparado nesta candidata | Headers globais, HSTS somente HTTPS e CSP report-only compatível com Turnstile; cookies/status/body preservados, imports server-only nos callbacks. Smoke HTTP local aprovado. | Publicação HML, observação da CSP/hidratação por perfil e celular físico pendentes. CSP ainda não é política de bloqueio nem há coletor remoto novo. |
+| 3 — A08 / H01 / H02 | Timeout entregue na PR #72; demais controles pendentes | Siteverify aborta após 10 s; regressão do abort e fail-closed preservado. Limites de payload em A02. | Restam orçamento agregado/origem confiável, hostname/action e prova do provedor/desafio reais. Preservar cinco falhas e não atribuir 429 a pools sem prova. |
+| 3 — A09 / F03 | Correção entregue na PR #72 | Novo detalhe por origem FIFO e CSV incluem produção, compra, ajuste e ausência explícita; custos/reversões racionais e totais preservados. 601 testes e laboratório conectado aprovados. | Integração autorizada conforme PR #72; confirmação publicada pendente. Patch antigo não foi mesclado. Sem mudar custos/fatos. |
+| 3 — A10 / H06 | Middleware entregue na PR #72; confirmação HML pendente | Headers globais, HSTS somente HTTPS e CSP report-only compatível com Turnstile; cookies/status/body preservados, imports server-only nos callbacks. Smoke HTTP local aprovado. | Publicação HML, observação da CSP/hidratação por perfil e celular físico pendentes. CSP ainda não é política de bloqueio nem há coletor remoto novo. |
 | Transversal — A11 / G01 / T01 | Correções integradas; registro documental #65 | #61/#63/#62/#64 integradas sequencialmente; #65 preserva revisão, recibos Neon/Auth e este fechamento. Código operacional 79634e6; evidência da integração e critérios do roadmap reconciliados. | A publicação HML ainda precisa ligar SHA, build, Worker e configuração. Nenhum deploy nesta rodada. |
 | Posterior — A12 / S04 / R07 | Pendente / condicional | Revisar escopo mínimo de conectores; avaliar fd62de7; classificar branches antes de arquivar. Extrações graduais e compatibility date somente após segurança/aceite. | Não alterar permissões, excluir branches nem delegar automaticamente. |
 
@@ -145,10 +166,10 @@ os IDs abaixo cobrem apenas o que não tinha fila própria.
 | L06 | Antes do piloto com clientes reais | Dados pessoais sem política: `sales.customer_name`, `sales.customer_phone` e, no futuro WhatsApp, `sender_phone`. RBAC e matriz de autorização já existem; não foi localizada política específica de minimização, retenção e tratamento dos dados nos documentos revisados. Validar requisitos aplicáveis com o responsável, sem declarar uma infração por ausência de documento. | Inventário de dados pessoais, prazo de retenção, anonimização auditada, mínimo necessário em CSV e logs, e registro LGPD aprovado. | Política e prazos são decisão do Dono; anonimização segue lifecycle auditável. |
 | L07 | Antes de I04 | Medição preparada nesta candidata: LCOV Node, resumo e 53 fontes não medidas explicitamente listadas; não inclui execução de navegador/banco. | Conferir o artefato Node da CI e revisar lacunas de dinheiro, estoque, FIFO e Auth; definir baseline e limites justificados após a medição, sem confundir percentual com correção nem enfraquecer testes. | Implementação local e CI. |
 | L08 | Contínuo | SDK de autenticação em beta: `@neondatabase/neon-js` 0.8.0-beta, que fixa Zod antigo (contido pelo override da #64). | Acompanhar versões, testes de contrato do adapter e plano de contingência documentado. | Atualizações compatíveis do SDK exigem revisão/testes Auth; troca da estratégia de autenticação exige ADR e aprovação. |
-| L09 | Imediato | Duas sessões de agente usaram a mesma pasta de trabalho: a pasta principal ficou na branch desta remediação enquanto outra sessão preparava PRs. | Regra preparada nesta candidata em AGENTS.md: worktree própria e nenhuma troca de branch da pasta principal. Revisão pendente. | Mudança de `AGENTS.md` exige revisão humana. |
+| L09 | Imediato | Duas sessões de agente usaram a mesma pasta de trabalho: a pasta principal ficou na branch desta remediação enquanto outra sessão preparava PRs. | Regra em AGENTS.md na PR #72: worktree própria e nenhuma troca de branch da pasta principal. Integração autorizada pelo Dono. | Mudança de `AGENTS.md` exige revisão humana. |
 
 A autorização humana para esta integração foi recebida e aplicada na ordem
-acima. **Próximo trabalho: revisar o pacote local, depois completar A04/A07/A08**,
+acima. **Próximo trabalho após esta integração: completar A04/A07/A08**,
 em incrementos pequenos com testes, conforme a etapa 2. Publicação e prova
 de redação de logs em HML continuam com gate próprio. Não refazer as quatro
 correções integradas, os recibos de recuperação ou importações históricas.

@@ -9,7 +9,7 @@ As tabelas antigas foram substituídas; seu histórico completo permanece no Git
 
 | ID | Pacote | Tipo | Estado | Resultado e dependência canônica |
 | --- | --- | --- | --- | --- |
-| A58 | Ajustes locais de pré-publicação | codigo | review-ready | Candidata única solicitada pelo usuário: A02, partes de A04/A08, A09/A10 e preparações L01/L07/L08/L09. 601 testes Node, 12 conectados, 40 fixtures e gates locais aprovados; revisão/CI/merge e publicação continuam separados. Ver seção atual do roadmap. |
+| A58 | Ajustes locais de pré-publicação | codigo | done | Pacote de código entregue na PR #72 e integração autorizada na continuidade: A02, partes de A04/A08, A09/A10 e preparações L01/L07/L08/L09. 601 testes Node, 12 conectados, 40 fixtures e gates locais aprovados; checks do código e CodeQL aprovados. Resultado de merge/CI final na PR; publicação e pendências maiores continuam separadas. Ver seção atual do roadmap. |
 | A50 | Segurança e dependências | codigo | done | Pacote versionado entregue na main por #61/#63/#62/#64; auditoria zerada e gates reconferidos. #65 consolida o recibo. Limites A02, redação publicada A05 e headers globais A10 continuam pendências próprias; não refazer a atualização. |
 | A51 | Recuperação externa | auditoria-leitura | done | I02: dump efetivamente baixado do Drive, SHA-256/manifesto conferidos, restore PostgreSQL 17 sem rede, 38 tabelas/36 recibos exatos e catálogo independente. Retenção/RPO/RTO/responsáveis e Auth continuam separados. |
 | A52 | Aplicação futura de migrations | auditoria-leitura | needs-human | T02: preparo/revisão offline entregues; original continua production. Exige alvo/role read-only/vínculo Worker, coleta atual e plano/autorização específicos. Não reaplicar 36 recibos. |

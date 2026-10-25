@@ -1,5 +1,26 @@
 # Estado canônico do projeto — Cacau v1
 
+## Entrega e integração autorizada — PR #72
+
+Usuário autorizou a continuidade após a apresentação do pacote validado.
+Esta entrega reúne A02, parte de A04/A08, A09/A10 e as preparações
+L01/L07/L08/L09 na [PR #72](https://github.com/naiguelcabral/seus-brownies/pull/72).
+Código operacional revisado: `cc44af7`, com todos os checks concluídos e
+três análises CodeQL sem resultados/erros/avisos, zero alertas abertos.
+O fechamento desta autorização altera somente documentação/evidência.
+
+A58 refere-se ao pacote de código entregue e validado; não encerra publicação,
+recuperação, privilégio mínimo nem aceites reais. A02 tem os limites na entrega;
+A04 mantém correlação de tentativas/reset e autoria de concessões/bootstrap;
+A07 mantém lifecycle de conexões; A08 mantém origem/agregado e hostname/action.
+A05/A10 ainda exigem publicação HML e prova/observação no ambiente real.
+L07 conserva revisão das lacunas e baseline justificada.
+
+O resultado final da integração e o CI da main são lidos no estado da PR;
+o recibo versionado preserva os SHAs realmente testados e não inventa o SHA
+do próprio merge. Nenhum deploy, SQL compartilhado ou secret nesta entrega.
+Os registros de preparação abaixo são históricos.
+
 ## Pacote local de pré-publicação — candidata de 25/10/2026
 
 Base integrada `53d6379`; #61 → #63 → #62 → #64 → #65 concluídas com
@@ -41,7 +62,7 @@ justificada seguem L07. [Recibo](../../evidence/prepublication-small-fixes-2026-
 
 Continuam A07 (lifecycle exige trabalho próprio), partes restantes de A04/A08,
 A01/A03/L02–L06 e os aceites publicados. Nenhum deploy, SQL compartilhado,
-migration, mudança de secrets/RBAC ou merge desta candidata autorizado.
+migration ou mudança de secrets/RBAC autorizados. A integração deste pacote foi autorizada na continuidade registrada acima.
 
 O [roadmap único](ROADMAP-CODEX.md) foi consolidado em 19/10/2026 e é a fonte
 atual de tarefas, prioridades e critérios de conclusão. Os checkpoints de
