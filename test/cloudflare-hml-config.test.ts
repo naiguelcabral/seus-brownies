@@ -12,6 +12,10 @@ type WranglerConfig = {
     hml: {
       name: string
       workers_dev: boolean
+      observability: {
+        redact_query_string: boolean
+        logs: { persist: boolean }
+      }
       vars: {
         AUTH_RATE_LIMITER_REQUIRED: string
         PASSWORD_RESET_REDIRECT_ORIGIN?: string
@@ -43,6 +47,9 @@ test('Worker HML é separado e preserva a compatibilidade do Worker principal', 
   assert.deepEqual(config.compatibility_flags, ['nodejs_compat'])
   assert.equal(config.env.hml.name, 'cacau-v1-hml')
   assert.equal(config.env.hml.workers_dev, true)
+  // Persisted logs must never keep reset tokens or filter values from URLs.
+  assert.equal(config.env.hml.observability.logs.persist, true)
+  assert.equal(config.env.hml.observability.redact_query_string, true)
   assert.deepEqual(config.env.hml.vars, {
     AUTH_RATE_LIMITER_REQUIRED: 'true',
     PASSWORD_RESET_REDIRECT_ORIGIN:

@@ -57,11 +57,11 @@ Responsáveis necessários: operador Neon, operador Cloudflare e Dono dos dados.
 
 | Projeto                | Branch/identificador                        | Endpoint                      | Ambiente alegado           | Relação documentada com HML                                                | Classificação              |
 | ---------------------- | ------------------------------------------- | ----------------------------- | -------------------------- | -------------------------------------------------------------------------- | -------------------------- |
-| `cool-base-25902164`   | `production` / `br-empty-frog-acy6xycn`     | `ep-raspy-resonance-ac4rhkwk` | produção pelo nome/default | pai do development; não prova uso operacional                              | `production-do-not-access` |
-| `cool-base-25902164`   | `development` / `br-lively-term-ac9i0mvr`   | `ep-young-cloud-acftfl9s`     | development                | ENVIRONMENT-MATRIX aponta este alvo; histórico alerta ausência de relações | `candidate-hml`            |
-| `steep-brook-51659857` | `production` / `br-lingering-wind-acwh5wap` | `ep-late-water-acahd1z1`      | produção pelo nome/default | ancestral do branch histórico de auth                                      | `production-do-not-access` |
-| `steep-brook-51659857` | `Development` / `br-bitter-dew-ac31uci9`    | `ep-tiny-night-ac0pjhlr`      | desenvolvimento alegado    | pai de g1-auth-hml; não atesta vínculo Worker                              | `insufficient-evidence`    |
-| `steep-brook-51659857` | `g1-auth-hml` / `br-patient-lake-ac2t0cvq`  | `ep-old-sound-acmcy3e9`       | HML histórico alegado      | documentação G1 histórica, sem binding atual comprovado                    | `candidate-hml`            |
+| `cool-base-25902164`   | `production` / `br-empty-frog-acy6xycn`     | `ep-[redacted:de391793]` | produção pelo nome/default | pai do development; não prova uso operacional                              | `production-do-not-access` |
+| `cool-base-25902164`   | `development` / `br-lively-term-ac9i0mvr`   | `ep-[redacted:98ec77d0]`     | development                | ENVIRONMENT-MATRIX aponta este alvo; histórico alerta ausência de relações | `candidate-hml`            |
+| `steep-brook-51659857` | `production` / `br-lingering-wind-acwh5wap` | `ep-[redacted:26398d41]`      | produção pelo nome/default | ancestral do branch histórico de auth                                      | `production-do-not-access` |
+| `steep-brook-51659857` | `Development` / `br-bitter-dew-ac31uci9`    | `ep-[redacted:4f8d290f]`      | desenvolvimento alegado    | pai de g1-auth-hml; não atesta vínculo Worker                              | `insufficient-evidence`    |
+| `steep-brook-51659857` | `g1-auth-hml` / `br-patient-lake-ac2t0cvq`  | `ep-[redacted:d0e61006]`       | HML histórico alegado      | documentação G1 histórica, sem binding atual comprovado                    | `candidate-hml`            |
 
 Não houve SQL externo. `archived`/`idle`, nome de branch, ausência de journal
 ou tamanho não comprovam ausência de migrations. `read_write` identifica a

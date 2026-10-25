@@ -11,9 +11,9 @@ Recibo: `evidence/scoped-upgrade-execution-2026-10-17.json`.
 
 Backup atual `br-morning-star-ac9j0kkh`, sem compute, LSN `0/1EA56F0`, foi
 explicitamente aceito após quota de snapshots. Snapshot antigo preservado.
-Cópia ensaiada `br-misty-surf-acbrzli5` / `ep-bold-smoke-acrcoktt`, compute idle.
-Original conserva nome/primary/default e endpoint `ep-late-water-acahd1z1`;
-Auth G1 continua em `ep-old-sound-acmcy3e9`. Worker HML `1ea59a90` a 100%,
+Cópia ensaiada `br-misty-surf-acbrzli5` / `ep-[redacted:05df6f45]`, compute idle.
+Original conserva nome/primary/default e endpoint `ep-[redacted:26398d41]`;
+Auth G1 continua em `ep-[redacted:d0e61006]`. Worker HML `1ea59a90` a 100%,
 flags diagnósticos desligados. Não reaplicar o lote nem apagar backups.
 
 ## Próximo passo
