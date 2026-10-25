@@ -91,11 +91,11 @@ Cloudflare/Neon está disponível nesta execução para conferir o Worker.
 
 | Projeto              | Branch                                  | Endpoint                    | Estado do gate                    |
 | -------------------- | --------------------------------------- | --------------------------- | --------------------------------- |
-| cool-base-25902164   | br-empty-frog-acy6xycn / production     | ep-raspy-resonance-ac4rhkwk | Sem papel não gravável comprovado |
-| cool-base-25902164   | br-lively-term-ac9i0mvr / development   | ep-young-cloud-acftfl9s     | Sem papel não gravável comprovado |
-| steep-brook-51659857 | br-lingering-wind-acwh5wap / production | ep-late-water-acahd1z1      | Sem papel não gravável comprovado |
-| steep-brook-51659857 | br-bitter-dew-ac31uci9 / Development    | ep-tiny-night-ac0pjhlr      | Sem papel não gravável comprovado |
-| steep-brook-51659857 | br-patient-lake-ac2t0cvq / g1-auth-hml  | ep-old-sound-acmcy3e9       | Sem papel não gravável comprovado |
+| cool-base-25902164   | br-empty-frog-acy6xycn / production     | ep-[redacted:de391793] | Sem papel não gravável comprovado |
+| cool-base-25902164   | br-lively-term-ac9i0mvr / development   | ep-[redacted:98ec77d0]     | Sem papel não gravável comprovado |
+| steep-brook-51659857 | br-lingering-wind-acwh5wap / production | ep-[redacted:26398d41]      | Sem papel não gravável comprovado |
+| steep-brook-51659857 | br-bitter-dew-ac31uci9 / Development    | ep-[redacted:4f8d290f]      | Sem papel não gravável comprovado |
+| steep-brook-51659857 | br-patient-lake-ac2t0cvq / g1-auth-hml  | ep-[redacted:d0e61006]       | Sem papel não gravável comprovado |
 
 `read_write` descreve o endpoint e não as ACLs do usuário. Um endpoint desse tipo
 pode receber um leitor autorizado; o nome do endpoint ou da role não é prova de

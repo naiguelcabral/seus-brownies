@@ -53,7 +53,7 @@ compartilhado foi consultado nesta reconciliação.
   explícita `logs.enabled:true`. Traces/issues estão desabilitados; alertas e
   resposta a incidentes seguem como trabalho próprio em I03.
 - Projeto `steep-brook-51659857`: a original `br-lingering-wind-acwh5wap` está
-  `production`, primary/default, endpoint `ep-late-water-acahd1z1`. O histórico
+  `production`, primary/default, endpoint `ep-[redacted:26398d41]`. O histórico
   de reparo/HML usou essa original sob autorizações específicas; isso não
   muda sua classificação nem autoriza testes sintéticos ou migrador genérico.
 - `Development` agora corresponde a `br-bitter-dew-ac31uci9`; `g1-auth-hml` a
@@ -62,6 +62,22 @@ compartilhado foi consultado nesta reconciliação.
   validação existentes foram preservadas, sem promoção, reset ou remoção.
 - Projeto `cool-base-25902164`: `production/br-empty-frog-acy6xycn` e
   `development/br-lively-term-ac9i0mvr` estão arquivadas. Não foram reativadas.
+- **Atualização de 22/10/2026 (resposta a incidente de credencial):**
+  - a senha do `neondb_owner` da `production` foi rotacionada pelo Dono;
+    `g1-auth-hml` e `Development` usam senha diferente da exposta;
+  - as branches de validação `cacau-baseline-0016-validation-20261017`,
+    `cacau-baseline-endpoint-parking-20261017`,
+    `cacau-upgrade-0028-validation-20261017` e
+    `cacau-exact-costs-validation-20261018` foram removidas pelo Dono;
+  - as branches de backup `cacau-pre-upgrade-0028-backup-20261017`,
+    `cacau-exact-costs-backup-20261018` e `backup-technical-catalog-2026-10-18`
+    seguem preservadas e **sem compute**, portanto inacessíveis por conexão.
+    Ao criar compute para restaurar uma delas, resetar a senha do
+    `neondb_owner` antes de qualquer uso;
+  - o projeto `cool-base-25902164` (arquivado) foi apagado; o operacional é
+    só `steep-brook-51659857`;
+  - IDs de endpoint e hostnames Neon passaram a ser versionados só como hash
+    (`ep-[redacted:<8 hex>]` = início do SHA-256 do ID original).
 - A identidade atual Worker → banco não é comprovada por um binding secreto
   chamado `DATABASE_URL`. A revisão genérica continua bloqueando a original
   conhecida como produção; falta evidência independente do destino para
