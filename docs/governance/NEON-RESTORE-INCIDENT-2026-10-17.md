@@ -3,14 +3,14 @@
 ## Recuperação concluída após aprovação específica
 
 Usuário aprovou as realocações corretivas depois da rejeição automática.
-Executadas em sequência: `ep-holy-grass-acgby01h` para estacionamento,
-`ep-late-water-acahd1z1` para original, `ep-holy-grass-acgby01h` para cópia.
+Executadas em sequência: `ep-[redacted:67a3843e]` para estacionamento,
+`ep-[redacted:26398d41]` para original, `ep-[redacted:67a3843e]` para cópia.
 Renomeações e default/primary da original reconfirmados. Estado final:
 
 - Original `br-lingering-wind-acwh5wap`: `production`, default/primary,
-  endpoint `ep-late-water-acahd1z1`.
+  endpoint `ep-[redacted:26398d41]`.
 - Cópia `br-super-waterfall-ac0mxtnt`: `cacau-baseline-0016-validation-20261017`,
-  endpoint `ep-holy-grass-acgby01h`, isolada do Worker.
+  endpoint `ep-[redacted:67a3843e]`, isolada do Worker.
 - Estacionamento `br-dawn-salad-acxz7vha`: sem endpoint, preservado.
 - Auth original e JWKS reconfirmados com o endpoint original; origens de
   localhost e HML preservadas. Não foi necessário alterar secrets do Worker.
@@ -50,9 +50,9 @@ mas o wrapper MCP declara outro default. Não confundir os contratos.
 | --- | --- |
 | Branch original `br-lingering-wind-acwh5wap` | preservada, nome `cacau-baseline-0016-validation-20261017 (1)`, não default/primary |
 | Cópia `br-super-waterfall-ac0mxtnt` | nome `production`, default/primary, restore finalized |
-| Endpoint original `ep-late-water-acahd1z1` | associado à cópia `br-super-waterfall-ac0mxtnt` |
-| Endpoint `ep-holy-grass-acgby01h` | associado à branch original |
-| Auth da branch original | integração Better Auth preservada; base URL acompanha `ep-holy-grass-acgby01h` |
+| Endpoint original `ep-[redacted:26398d41]` | associado à cópia `br-super-waterfall-ac0mxtnt` |
+| Endpoint `ep-[redacted:67a3843e]` | associado à branch original |
+| Auth da branch original | integração Better Auth preservada; base URL acompanha `ep-[redacted:67a3843e]` |
 | Auth da cópia | não retornou integração configurada |
 
 Portanto, o endpoint originalmente usado pelo Worker está na cópia e a
@@ -66,23 +66,23 @@ sem compute `br-dawn-salad-acxz7vha`, nome
 `cacau-baseline-endpoint-parking-20261017`, parent original. Nenhum SQL nela.
 Sem remoção de dados, branches, snapshots ou endpoints.
 
-Tentativa de mover `ep-holy-grass-acgby01h` para essa branch foi **rejeitada
+Tentativa de mover `ep-[redacted:67a3843e]` para essa branch foi **rejeitada
 pela revisão automática**, que apontou risco de interrupção do Worker/Neon
 Auth e falta de autorização explícita para realocação corretiva. A chamada
 não efetivou a realocação; não repetir nem contornar a rejeição sem aprovação.
 
 ## Recuperação corretiva proposta — aprovação específica pendente
 
-1. Mover `ep-holy-grass-acgby01h` da original para estacionamento
+1. Mover `ep-[redacted:67a3843e]` da original para estacionamento
    `br-dawn-salad-acxz7vha`.
-2. Mover `ep-late-water-acahd1z1` da cópia para a original
+2. Mover `ep-[redacted:26398d41]` da cópia para a original
    `br-lingering-wind-acwh5wap`.
-3. Mover `ep-holy-grass-acgby01h` do estacionamento para a cópia
+3. Mover `ep-[redacted:67a3843e]` do estacionamento para a cópia
    `br-super-waterfall-ac0mxtnt`.
 4. Renomear cópia para `cacau-baseline-0016-validation-20261017`; original
    para `production`; definir a original como default/primary novamente.
 5. Conferir endpoints e integração Auth da original: devem voltar ao endpoint
-   `ep-late-water-acahd1z1`. Conferir configurações públicas de callback/origem.
+   `ep-[redacted:26398d41]`. Conferir configurações públicas de callback/origem.
    Nenhuma mudança de secret, senha, DNS, RBAC ou dados é proposta.
 
 A troca reinicia computes e pode interromper conexões brevemente. A API

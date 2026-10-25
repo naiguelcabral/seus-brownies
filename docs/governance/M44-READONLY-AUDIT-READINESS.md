@@ -31,11 +31,11 @@ propriedade, acesso externo, uso pelo Worker nem segurança de uma credencial.
 
 | Projeto                | Branch / parent                              | Estado atual | Banco / owner nominal     | Roles listadas | Endpoint / estado                                   | Classificação atual           |
 | ---------------------- | -------------------------------------------- | ------------ | ------------------------- | -------------- | --------------------------------------------------- | ----------------------------- |
-| `cool-base-25902164`   | `production` / —                             | `archived`   | `neondb` / `neondb_owner` | `neondb_owner` | `ep-raspy-resonance-ac4rhkwk`, `read_write`, `idle` | produção — não acessar        |
-| `cool-base-25902164`   | `development` / `br-empty-frog-acy6xycn`     | `archived`   | `neondb` / `neondb_owner` | `neondb_owner` | `ep-young-cloud-acftfl9s`, `read_write`, `idle`     | candidata HML, não comprovada |
-| `steep-brook-51659857` | `production` / —                             | `ready`      | `neondb` / `neondb_owner` | `neondb_owner` | `ep-late-water-acahd1z1`, `read_write`, `idle`      | produção — não acessar        |
-| `steep-brook-51659857` | `Development` / `br-lingering-wind-acwh5wap` | `ready`      | `neondb` / `neondb_owner` | `neondb_owner` | `ep-tiny-night-ac0pjhlr`, `read_write`, `idle`      | evidência insuficiente        |
-| `steep-brook-51659857` | `g1-auth-hml` / `br-bitter-dew-ac31uci9`     | `ready`      | `neondb` / `neondb_owner` | `neondb_owner` | `ep-old-sound-acmcy3e9`, `read_write`, `idle`       | candidata HML, não comprovada |
+| `cool-base-25902164`   | `production` / —                             | `archived`   | `neondb` / `neondb_owner` | `neondb_owner` | `ep-[redacted:de391793]`, `read_write`, `idle` | produção — não acessar        |
+| `cool-base-25902164`   | `development` / `br-empty-frog-acy6xycn`     | `archived`   | `neondb` / `neondb_owner` | `neondb_owner` | `ep-[redacted:98ec77d0]`, `read_write`, `idle`     | candidata HML, não comprovada |
+| `steep-brook-51659857` | `production` / —                             | `ready`      | `neondb` / `neondb_owner` | `neondb_owner` | `ep-[redacted:26398d41]`, `read_write`, `idle`      | produção — não acessar        |
+| `steep-brook-51659857` | `Development` / `br-lingering-wind-acwh5wap` | `ready`      | `neondb` / `neondb_owner` | `neondb_owner` | `ep-[redacted:4f8d290f]`, `read_write`, `idle`      | evidência insuficiente        |
+| `steep-brook-51659857` | `g1-auth-hml` / `br-bitter-dew-ac31uci9`     | `ready`      | `neondb` / `neondb_owner` | `neondb_owner` | `ep-[redacted:d0e61006]`, `read_write`, `idle`       | candidata HML, não comprovada |
 
 As três branches de `steep-brook-51659857` mudaram de `archived` (M42) para
 `ready`. `ready` descreve somente o estado de controle do Neon: não comprova

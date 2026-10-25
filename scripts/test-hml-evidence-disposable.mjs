@@ -1,6 +1,7 @@
 // Only the dedicated PostgreSQL 17 GitHub Actions service. No configurable DSN.
 import assert from 'node:assert/strict'
 import pg from 'pg'
+import { createHash } from 'node:crypto'
 import { readFileSync } from 'node:fs'
 import {
   verifyEvidence,
@@ -97,16 +98,23 @@ try {
     new URL('./hml-evidence-catalog.sql', import.meta.url),
     'utf8',
   )
-  const matrix = JSON.parse(
-    readFileSync(
-      new URL(
-        '../docs/governance/evidence/hml-evidence-targets.json',
-        import.meta.url,
-      ),
-      'utf8',
-    ),
-  ).databases
-  const db = matrix[1]
+  // Synthetic hashed row with the versioned map's shape; never a real host.
+  const sha256 = (value) => createHash('sha256').update(value).digest('hex')
+  const syntheticEndpoint = 'ep-synthetic-hml-cccc0003'
+  const syntheticHost = `${syntheticEndpoint}.sa-east-1.aws.neon.tech`
+  const matrix = [
+    {
+      project: 'fixture-project-00000003',
+      branch: 'br-fixture-hml-cccc0003',
+      name: 'development',
+      database: 'neondb',
+      endpoint_sha256: sha256(syntheticEndpoint),
+      host_sha256: sha256(syntheticHost),
+      destination_fingerprint: sha256(`${syntheticHost}:5432/neondb`),
+      classification: 'candidate-hml',
+    },
+  ]
+  const db = { ...matrix[0], endpoint: syntheticEndpoint }
   const target = {
     ...db,
     environment: 'hml',
@@ -117,7 +125,7 @@ try {
     approvedRole: 'fixture_audit',
     expiresAt: new Date(Date.now() + 60 * 60 * 1000).toISOString(),
     destinationFingerprint: sanitizeDestination(
-      `postgresql://synthetic:password@${db.host}/neondb`,
+      `postgresql://synthetic:password@${syntheticHost}/neondb`,
       matrix,
     ).fingerprint,
   }
@@ -129,10 +137,11 @@ try {
   )
   const catalog = (await reader.query(catalogSql)).rows[0].catalog
   await reader.query('ROLLBACK')
-  const evidence = await verifyEvidence(reader, {
-    ...target,
-    referenceCatalogDigest: digest(catalog),
-  })
+  const evidence = await verifyEvidence(
+    reader,
+    { ...target, referenceCatalogDigest: digest(catalog) },
+    matrix,
+  )
   assert.equal(evidence.counts.sales, '1')
   assert.equal(evidence.counts.management_scenario_mix, '1')
   assert.equal(evidence.drift, false)
@@ -160,10 +169,11 @@ try {
     'GRANT EXECUTE ON FUNCTION pg_catalog.lo_create(oid) TO fixture_audit',
   )
   await assert.rejects(
-    verifyEvidence(reader, {
-      ...target,
-      referenceCatalogDigest: digest(catalog),
-    }),
+    verifyEvidence(
+      reader,
+      { ...target, referenceCatalogDigest: digest(catalog) },
+      matrix,
+    ),
     /BLOCKED_READONLY_AUDIT/,
   )
   await admin.query(
@@ -184,10 +194,11 @@ try {
   await reader.query('ROLLBACK')
   await admin.query('GRANT UPDATE(id) ON public.sales TO fixture_audit')
   await assert.rejects(
-    verifyEvidence(reader, {
-      ...target,
-      referenceCatalogDigest: digest(catalog),
-    }),
+    verifyEvidence(
+      reader,
+      { ...target, referenceCatalogDigest: digest(catalog) },
+      matrix,
+    ),
     /BLOCKED_READONLY_AUDIT/,
   )
   await admin.query(
@@ -195,10 +206,11 @@ try {
   )
   assert.equal(
     (
-      await verifyEvidence(reader, {
-        ...target,
-        referenceCatalogDigest: digest(catalog),
-      })
+      await verifyEvidence(
+        reader,
+        { ...target, referenceCatalogDigest: digest(catalog) },
+        matrix,
+      )
     ).drift,
     true,
   )
@@ -206,10 +218,11 @@ try {
     'CREATE ROLE fixture_owner NOLOGIN; GRANT fixture_owner TO fixture_audit WITH INHERIT FALSE, SET TRUE',
   )
   await assert.rejects(
-    verifyEvidence(reader, {
-      ...target,
-      referenceCatalogDigest: digest(catalog),
-    }),
+    verifyEvidence(
+      reader,
+      { ...target, referenceCatalogDigest: digest(catalog) },
+      matrix,
+    ),
     /BLOCKED_READONLY_AUDIT/,
   )
   console.log(

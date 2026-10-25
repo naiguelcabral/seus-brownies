@@ -4,7 +4,9 @@ import { readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { resolve } from 'node:path'
 
-export const SANITIZER_VERSION = 'm45-1'
+export const SANITIZER_VERSION = 'm45-2'
+
+const sha256 = (value) => createHash('sha256').update(value).digest('hex')
 
 export function sanitizeDestination(
   raw,
@@ -49,9 +51,11 @@ export function sanitizeDestination(
     ]
       .map((x) => decodeURIComponent(x))
       .filter(Boolean)
-    // No inference from credentials or query parameters. Only exact metadata mapping.
+    // No inference from credentials or query parameters. Only exact metadata
+    // mapping, by hash: the versioned matrix never stores plain hosts.
+    const hostSha256 = sha256(host)
     const matches = matrix.filter(
-      (r) => r.host === host && r.database === database,
+      (r) => r.host_sha256 === hostSha256 && r.database === database,
     )
     const expected = matches.length === 1 ? matches[0] : null
     if (
@@ -62,13 +66,11 @@ export function sanitizeDestination(
     const result = {
       sanitizer_version: SANITIZER_VERSION,
       observed_at_utc: observedAtUtc,
-      host_sanitized: host,
+      host_sha256: hostSha256,
       database,
       project: expected?.project ?? null,
       branch: expected?.branch ?? null,
-      fingerprint: createHash('sha256')
-        .update(`${host}:5432/${database}`)
-        .digest('hex'),
+      fingerprint: sha256(`${host}:5432/${database}`),
       match: expected ? 'exact-metadata-match-not-hml-proof' : 'unmatched',
     }
     const output = JSON.stringify(result)

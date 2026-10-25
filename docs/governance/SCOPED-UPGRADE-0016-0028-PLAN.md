@@ -8,7 +8,7 @@ aprovados. Backup `br-morning-star-ac9j0kkh`, sem compute, e snapshot anterior
 preservados; cópia `br-misty-surf-acbrzli5` mantida com compute suspenso/idle.
 
 Preflight revalidou a original `br-lingering-wind-acwh5wap` como `production`,
-primary/default, endpoint `ep-late-water-acahd1z1`, baseline exata de 17 recibos
+primary/default, endpoint `ep-[redacted:26398d41]`, baseline exata de 17 recibos
 e ausência de aplicação parcial. Lote ensaiado aplicado em transação única:
 102 instruções principais mais locks e verificações de preservação/ORM,
 148 instruções no total. SHA-256 do lote verificado:
@@ -50,7 +50,7 @@ Snapshot antigo `snap-withered-poetry-achs77uu` permanece intocado.
 Preparação reversível alternativa concluída, sem DDL na original: backup
 `br-morning-star-ac9j0kkh`, sem compute, ancorado na original em LSN `0/1EA56F0`,
 `2026-10-17T19:36:11Z`. Cópia privada derivada `br-misty-surf-acbrzli5`,
-endpoint próprio `ep-bold-smoke-acrcoktt`, recebeu o lote de 102 instruções,
+endpoint próprio `ep-[redacted:05df6f45]`, recebeu o lote de 102 instruções,
 com locks e guards adicionais de preservação na mesma transação. São 148
 instruções incluindo conferências; o SQL principal aprovado permanece idêntico.
 
@@ -83,7 +83,7 @@ Não autoriza, por inferência, novos parâmetros financeiros ou DDL na principa
 
 Worker HML `cacau-v1-hml` autentica em G1 e consulta o banco original
 `steep-brook-51659857` / `br-lingering-wind-acwh5wap` / `neondb`, endpoint
-`ep-late-water-acahd1z1`. O alvo SQL chama-se `production` e é principal/default;
+`ep-[redacted:26398d41]`. O alvo SQL chama-se `production` e é principal/default;
 nunca classificá-lo como HML para passar em guardas. Auth de G1 fica preservado.
 
 A original foi inicializada até `0016`, com 17 recibos conferidos, e recebeu

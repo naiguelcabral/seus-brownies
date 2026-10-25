@@ -1219,7 +1219,7 @@ aprovados. Backup `br-morning-star-ac9j0kkh`, sem compute, e snapshot anterior
 preservados; cópia `br-misty-surf-acbrzli5` mantida com compute suspenso/idle.
 
 Preflight revalidou a original `br-lingering-wind-acwh5wap` como `production`,
-primary/default, endpoint `ep-late-water-acahd1z1`, baseline exata de 17 recibos
+primary/default, endpoint `ep-[redacted:26398d41]`, baseline exata de 17 recibos
 e ausência de aplicação parcial. Lote ensaiado aplicado em transação única:
 102 instruções principais mais locks e verificações de preservação/ORM,
 148 instruções no total. SHA-256 do lote verificado:
@@ -1261,7 +1261,7 @@ Snapshot antigo `snap-withered-poetry-achs77uu` permanece intocado.
 Preparação reversível alternativa concluída, sem DDL na original: backup
 `br-morning-star-ac9j0kkh`, sem compute, ancorado na original em LSN `0/1EA56F0`,
 `2026-10-17T19:36:11Z`. Cópia privada derivada `br-misty-surf-acbrzli5`,
-endpoint próprio `ep-bold-smoke-acrcoktt`, recebeu o lote de 102 instruções,
+endpoint próprio `ep-[redacted:05df6f45]`, recebeu o lote de 102 instruções,
 com locks e guards adicionais de preservação na mesma transação. São 148
 instruções incluindo conferências; o SQL principal aprovado permanece idêntico.
 
@@ -1314,7 +1314,7 @@ Após apresentação do SQL e dos quatro ensaios, usuário autorizou explicitame
 criar na original somente os vínculos Dono e Gerente das duas contas indicadas.
 Preflight revalidou as duas identidades verificadas e os mesmos papéis ativos
 em G1; original `br-lingering-wind-acwh5wap`, endpoint
-`ep-late-water-acahd1z1`, `neondb`, tinha zero vínculos e 17 migrations.
+`ep-[redacted:26398d41]`, `neondb`, tinha zero vínculos e 17 migrations.
 
 Plano `SQL-ACCESS-RECONCILIATION-2026-10-17.sql` executado via MCP numa única
 transação. SHA-256 do SQL: `91403fbb43dcb8ec130a64cd9a0bce5864297dc1c7fe219dab36bd3a2684775d`.
@@ -1458,7 +1458,7 @@ credencial alterada ou evento de concessão gravado.
 
 Usuário confirmou recebimento do e-mail e troca da senha e solicitou papel
 Gerente para sua conta. Consulta direcionada READ ONLY em `neondb`, branch
-`br-lingering-wind-acwh5wap`, endpoint `ep-late-water-acahd1z1`, não encontrou
+`br-lingering-wind-acwh5wap`, endpoint `ep-[redacted:26398d41]`, não encontrou
 a identidade pelo e-mail informado, inclusive após normalizar espaços/caixa.
 Contagem de vínculos da aplicação permanece zero. Nenhum vínculo ou evento de
 concessão foi gravado. Aguardando confirmação do e-mail usado e da página de
