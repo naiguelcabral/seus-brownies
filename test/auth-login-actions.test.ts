@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict'
+import { readAuthAuditUserId } from '../src/features/auth/audit-identity'
 import test from 'node:test'
 
 import {
@@ -450,5 +451,19 @@ test('rejected provider data cannot invent an actor; logout uses a server-resolv
   })
   assert.equal(events[0]?.actorAuthUserId, undefined)
   assert.equal(events[1]?.actorAuthUserId, 'validated-session-user')
-  assert.equal(events[1].targetId, 'validated-session-user')
+  assert.equal(events[1].targetId, undefined)
+})
+
+test('malformed or personal identifiers never become an authentication audit actor', () => {
+  for (const data of [
+    null,
+    {},
+    { user: null },
+    { user: { id: 'private@example.test' } },
+    { user: { id: 'with whitespace' } },
+    { user: { id: 'x'.repeat(192) } },
+    { user: { id: 123 } },
+  ]) {
+    assert.equal(readAuthAuditUserId(data), undefined)
+  }
 })

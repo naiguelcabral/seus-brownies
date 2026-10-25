@@ -86,7 +86,12 @@ async function recordAuthAction(
         targetType,
         requestId: audit.requestId,
         ...(actorAuthUserId
-          ? { actorAuthUserId, targetId: actorAuthUserId }
+          ? {
+              actorAuthUserId,
+              ...(targetType === 'identity'
+                ? { targetId: actorAuthUserId }
+                : {}),
+            }
           : {}),
         ...(reasonCode ? { metadata: { reasonCode } } : {}),
       }),
