@@ -1,5 +1,45 @@
 # Handoff de autonomia — Cacau v1
 
+## Integração da PR #72 autorizada — 25/10/2026
+
+Após a entrega da PR #72 pronta para revisão, usuário respondeu “Pode seguir”.
+Integrar somente essa PR por merge commit, após nova conferência do SHA e
+gates; conferir também a main resultante. Código revisado cc44af7, base53d6379,
+todos os checks aprovados e três análises CodeQL sem resultados/erros/avisos.
+Este fechamento muda apenas documentação/evidência e precisa de novos checks.
+
+Roadmap/status/espelho/aprovação reconciliados. A58 done identifica o pacote
+de código entregue; A04/A07/A08 e os gates externos continuam no roadmap.
+Resultado de merge e CI final na própria PR, sem autoatribuir o SHA futuro.
+Preservar pasta principal e worktree própria; não repetir os cinco merges
+anteriores. Sem deploy, SQL compartilhado, secrets, RBAC ou outras PRs.
+O registro de preparação abaixo precede esta autorização.
+
+## Pacote local de pré-publicação — 25/10/2026
+
+Usuário pediu os ajustes pequenos anteriores à publicação em uma única PR.
+Branch codex/prepublish-small-fixes-20261025 na worktree própria já anexada;
+base main53d6379, pasta principal preservada. Código da candidata: limites,
+autoria Auth parcial, timeout Turnstile, origens FIFO/CSV, headers, configuração
+versionada, cobertura e regra de worktree para revisão. Sem mudança de versões,
+schema, RBAC, custos ou histórico.
+
+601 testes Node, build isolado e dois smokes públicos no código desta candidata;
+12 conectados PostgreSQL17 e40 fixtures em4907b24. Depois, somente a guarda
+de comprimento numérico e a restrição localhost da sonda mudaram; CI repete os
+casos no SHA publicado. Lint/tipos/formato/Knip e audit0;
+recibo evidence/prepublication-small-fixes-2026-10-25.json fixa a abrangência.
+Cobertura Node explicita53 fontes não medidas; não extrapolar85,83% das linhas
+medidas para o sistema inteiro. O build inicial apontou import server-only no
+entry isomórfico; corrigido com imports nos callbacks de servidor, mantendo
+proteção de importação. O contrato de idempotência mantém as três chaves e
+agora lê também o módulo de schemas.
+
+Próximo passo desta entrega: conferir diff/links/guards, publicar a branch,
+abrir/anexar uma única PR e conferir CI/CodeQL do SHA final. Não integrar ou
+publicar sem autorização aplicável. Depois, A04/A07/A08 restantes e decisões
+de sustentação conforme roadmap. Nenhum teste/fato sintético no HML.
+
 ## Integração autorizada — 25/10/2026
 
 Usuário autorizou explicitamente a sequência #61 → #63 → #62 → #64 → #65.

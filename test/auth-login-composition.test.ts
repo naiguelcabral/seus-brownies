@@ -1,5 +1,6 @@
 import { requireDefined } from '../src/lib/required-value'
 import assert from 'node:assert/strict'
+import { readAuthAuditUserId } from '../src/features/auth/audit-identity'
 import { readFileSync } from 'node:fs'
 import test from 'node:test'
 import { compileFunction } from 'node:vm'
@@ -376,6 +377,7 @@ test('adaptador Neon encaminha o cookie do provedor antes de a chamada de login 
   })
 
   assert.equal(result.error, null)
+  assert.equal(readAuthAuditUserId(result.data), 'synthetic-user')
   assert.equal(cookies.length, 1)
   assert.match(requireDefined(cookies[0]), /neon-auth-session=opaque-synthetic/)
   assert.match(requireDefined(cookies[0]), /HttpOnly/i)

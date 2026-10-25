@@ -1,5 +1,28 @@
 # Ações que exigem aprovação humana — Cacau v1
 
+## Continuidade e integração da PR #72 — 25/10/2026
+
+Após apresentação da PR #72 pronta para revisão, com o escopo, os testes e
+os gates restantes, usuário respondeu **“Pode seguir”**. A continuidade
+autoriza integrar esse pacote concreto após reconferir diff, SHA, CI e
+CodeQL, preservando os commits e as regras da main. Abrange também a regra
+de worktree própria proposta em AGENTS.md nessa PR.
+
+Sem autorização adicional para deploy, SQL compartilhado, migrations,
+secrets, DNS, RBAC, políticas externas ou outras PRs. O registro de preparação
+abaixo antecede esta autorização. O resultado do merge e do CI pós-merge é
+conferido no [estado da PR #72](https://github.com/naiguelcabral/seus-brownies/pull/72).
+
+## PR única de ajustes antes da publicação — 25/10/2026
+
+Usuário autorizou: “Tudo que for pequeno e que pode ser feito antes do
+ambiente publicado vamos fazer e juntar em uma pr”. Escopo: implementar e
+testar ajustes locais pequenos, preparar configuração versionada, atualizar
+documentação e abrir uma única PR. Inclui proposta da regra de worktree para
+revisão humana. Não autoriza merge desta nova PR, deploy, SQL compartilhado,
+secrets, RBAC, mudança arquitetural ou política externa. A autorização anterior
+dos cinco merges já foi consumida na sequência #61/#63/#62/#64/#65.
+
 ## Integração do lote #61–#65 — autorização de 25/10/2026
 
 Após apresentação da sequência e da validação conjunta, usuário autorizou:

@@ -24,6 +24,7 @@ import {
 } from 'drizzle-orm'
 import { alias } from 'drizzle-orm/pg-core'
 import { z } from 'zod'
+import { batchInput, lossInput } from './input'
 
 import type { getDb } from '#/db/index'
 
@@ -79,39 +80,6 @@ import { reconcileProductionCosts } from '#/features/production/cost-reconciliat
 import { isMissingOptionalSchemaError } from '#/features/reports/optional-schema'
 
 const inputRecoveryWeight = (value: string | undefined) => value ?? null
-
-const quantityInput = z
-  .string()
-  .trim()
-  .refine(
-    (value) => (quantityToThousandths(value) ?? 0n) > 0n,
-    'Informe uma quantidade positiva com até três casas decimais.',
-  )
-
-const outputInput = z.object({
-  productId: z.number().int().positive(),
-  quantity: quantityInput,
-})
-
-const lossInput = z.object({
-  productId: z.number().int().positive(),
-  quantity: quantityInput,
-  reason: z.string().trim().min(3, 'Informe o motivo da perda.').max(240),
-})
-
-const batchInput = z.object({
-  recipeVersionId: z.number().int().positive(),
-  productionDate: z.string().date(),
-  recipeMultiplier: quantityInput,
-  outputs: z.array(outputInput).min(1, 'Inclua ao menos um produto final.'),
-  bordinhasQuantity: z.string().trim().optional(),
-  bordinhasWeightGrams: z.string().trim().optional(),
-  operationalAmounts: z
-    .object({ energy: z.string().trim(), labor: z.string().trim() })
-    .optional(),
-  losses: z.array(lossInput).default([]),
-  notes: z.string().trim().max(1_000).optional(),
-})
 
 const productionHistoryValues = z
   .object({

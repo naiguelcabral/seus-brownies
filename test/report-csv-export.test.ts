@@ -87,3 +87,64 @@ test('exporta valores financeiros e quantidades sem conversão de precisão', ()
   assert.match(document, /"'=Canal externo"/)
   assert.match(document, /-0\.0833/)
 })
+
+test('CSV explains non-production FIFO origins without substituting a fictitious batch', () => {
+  const document = createOperationalReportCsv({
+    period: { start: '2026-10-01', end: '2026-10-25' },
+    revenueTotal: '0.00',
+    expensesTotal: '0.00',
+    inventoryTotal: '0.00',
+    revenue: [],
+    expensesByCategory: [],
+    inventory: [],
+    salesByProduct: [],
+    salesMetrics: {
+      total: {
+        events: 0,
+        units: '0.000',
+        revenue: '0.00',
+        ticketAverage: null,
+        averageUnitPrice: null,
+        audit: {
+          auditedEvents: 0,
+          reported: null,
+          calculated: null,
+          difference: null,
+          differenceRate: null,
+          normal: 0,
+          attention: 0,
+          critical: 0,
+        },
+      },
+      byLocation: [],
+    },
+    fifo: {
+      netRevenue: '12.00',
+      cogs: '2.00',
+      grossMargin: '10.00',
+      byProduct: [],
+      byBatch: [],
+      inventory: [],
+      byOrigin: [
+        {
+          originLabel: 'Compra · movimento #31',
+          revenue: '6.00',
+          cogs: '1.00',
+          grossMargin: '5.00',
+        },
+        {
+          originLabel: 'Ajuste · movimento #32',
+          revenue: '6.00',
+          cogs: '1.00',
+          grossMargin: '5.00',
+        },
+      ],
+    },
+    production: null,
+    integrity: null,
+  })
+  assert.match(document, /Margem FIFO por origem/)
+  assert.match(document, /Compra · movimento #31/)
+  assert.match(document, /Ajuste · movimento #32/)
+  assert.doesNotMatch(document, /Lote #null/)
+})

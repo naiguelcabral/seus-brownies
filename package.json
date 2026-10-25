@@ -49,7 +49,8 @@
     "lint:fix": "npm run lint -- --fix",
     "knip:audit": "knip --config knip.json --no-progress",
     "knip:report": "knip --config knip.json --no-progress --reporter json",
-    "knip:check": "node scripts/check-knip.mjs"
+    "knip:check": "node scripts/check-knip.mjs",
+    "test:coverage": "mkdir -p coverage && node --import tsx --experimental-test-coverage --test-coverage-include='src/**/*.ts' --test-coverage-include='src/**/*.tsx' --test-reporter=spec --test-reporter-destination=stdout --test-reporter=lcov --test-reporter-destination=coverage/node.lcov --test test/**/*.test.ts && node scripts/summarize-node-coverage.mjs"
   },
   "engines": {
     "node": ">=22.12.0 <23"

@@ -1,5 +1,69 @@
 # Estado canônico do projeto — Cacau v1
 
+## Entrega e integração autorizada — PR #72
+
+Usuário autorizou a continuidade após a apresentação do pacote validado.
+Esta entrega reúne A02, parte de A04/A08, A09/A10 e as preparações
+L01/L07/L08/L09 na [PR #72](https://github.com/naiguelcabral/seus-brownies/pull/72).
+Código operacional revisado: `cc44af7`, com todos os checks concluídos e
+três análises CodeQL sem resultados/erros/avisos, zero alertas abertos.
+O fechamento desta autorização altera somente documentação/evidência.
+
+A58 refere-se ao pacote de código entregue e validado; não encerra publicação,
+recuperação, privilégio mínimo nem aceites reais. A02 tem os limites na entrega;
+A04 mantém correlação de tentativas/reset e autoria de concessões/bootstrap;
+A07 mantém lifecycle de conexões; A08 mantém origem/agregado e hostname/action.
+A05/A10 ainda exigem publicação HML e prova/observação no ambiente real.
+L07 conserva revisão das lacunas e baseline justificada.
+
+O resultado final da integração e o CI da main são lidos no estado da PR;
+o recibo versionado preserva os SHAs realmente testados e não inventa o SHA
+do próprio merge. Nenhum deploy, SQL compartilhado ou secret nesta entrega.
+Os registros de preparação abaixo são históricos.
+
+## Pacote local de pré-publicação — candidata de 25/10/2026
+
+Base integrada `53d6379`; #61 → #63 → #62 → #64 → #65 concluídas com
+CI/CodeQL aprovados. Usuário autorizou reunir os ajustes pequenos anteriores
+à publicação em **uma única PR**. Esta candidata implementa A02 (limites),
+parte de A04/A08, A09/A10 e preparações L01/L07/L08/L09. Isso não conclui
+publicação, política de dados/recuperação nem aceite operacional.
+
+- Entradas: 1 MiB por corpo, contando bytes inclusive sem Content-Length;
+  até 100 itens de compra/venda e saídas/perdas de produção; strings numéricas
+  até 32 caracteres antes da aritmética. Orçamentos técnicos reversíveis,
+  acima do catálogo atual; nenhum truncamento ou gravação parcial no excesso.
+- Auth: ator/alvo de identidade somente do resultado bem-sucedido do provedor;
+  logout usa ator da sessão validada, sem chamar o ID do usuário de ID da
+  sessão. Histórico permanece intacto. Timeout Turnstile de 10 s.
+- Relatórios: origens produção/compra/ajuste/ausência explícita no detalhe
+  FIFO e CSV; frações exatas preservadas. Totais arredondam depois da soma;
+  parcelas exibidas podem divergir um centavo por arredondamento independente.
+- HTTP: no-store, no-referrer, DENY, nosniff, Permissions-Policy e HSTS
+  somente HTTPS; CSP **report-only**, incluindo Turnstile, sem coletor remoto
+  novo. Imports de servidor ficam nos callbacks de middleware.
+- Preparação: binding/flag/secrets obrigatórios/redação no arquivo do Worker
+  principal, namespace distinto do HML; nenhuma alteração remota. Callback,
+  secrets e publicação reais de produção continuam pendentes de revisão.
+- Qualidade: cobertura nativa Node com LCOV e inventário explícito das fontes
+  não medidas na CI; contrato de identidade/cookie do SDK instalado; proposta
+  da regra de worktree própria em AGENTS.md, sujeita à revisão desta PR.
+
+Validação local: **601 testes Node**, build isolado e dois smokes HTTP
+(headers/hidratação/413) no código desta candidata; **12 conectados
+PostgreSQL 17 e 40 fixtures** em `4907b24`. Depois desse checkpoint,
+apenas o curto-circuito da validação numérica excessiva e a trava localhost
+da sonda HTTP mudaram; a CI repete negócio/browser no SHA publicado.
+Lint/tipos/formato/Knip aprovados e audit zero.
+Cobertura mede 98 de 151 arquivos, com 53 não medidos
+explicitamente listados; 85,83% das linhas **medidas**, sem limiar arbitrário
+ou equivalência com cobertura de navegador/PostgreSQL. Lacunas e baseline
+justificada seguem L07. [Recibo](../../evidence/prepublication-small-fixes-2026-10-25.json).
+
+Continuam A07 (lifecycle exige trabalho próprio), partes restantes de A04/A08,
+A01/A03/L02–L06 e os aceites publicados. Nenhum deploy, SQL compartilhado,
+migration ou mudança de secrets/RBAC autorizados. A integração deste pacote foi autorizada na continuidade registrada acima.
+
 O [roadmap único](ROADMAP-CODEX.md) foi consolidado em 19/10/2026 e é a fonte
 atual de tarefas, prioridades e critérios de conclusão. Os checkpoints de
 publicação abaixo preservam o estado comprovado de cada entrega; suas

@@ -1,4 +1,5 @@
 import { createAuthAuditEvent } from './audit'
+import { readAuthAuditUserId } from './audit-identity'
 import type { AuthAuditAction, AuthAuditWriter } from './audit'
 import type { AuthAuditTelemetry } from './auth-audit-telemetry.server'
 
@@ -26,7 +27,7 @@ export const passwordResetRequestMessage =
 export const invalidPasswordResetMessage =
   'Não foi possível redefinir a senha. Solicite um novo link e tente novamente.'
 
-type NeonAuthResult = Promise<{ error: unknown | null }>
+type NeonAuthResult = Promise<{ error: unknown | null; data?: unknown }>
 
 export type NeonAuthCredentialsClient = {
   signIn: {
@@ -62,6 +63,7 @@ export type NeonAuthPasswordResetClient = {
 
 export type AuthActionAuditContext = {
   requestId: string
+  actorAuthUserId?: string
   writer: AuthAuditWriter
   telemetry?: AuthAuditTelemetry
 }
@@ -72,6 +74,7 @@ async function recordAuthAction(
   outcome: 'success' | 'failure',
   targetType: 'identity' | 'session',
   reasonCode?: 'provider_rejected' | 'provider_unavailable',
+  actorAuthUserId?: string,
 ) {
   if (!audit) return
 
@@ -82,6 +85,14 @@ async function recordAuthAction(
         outcome,
         targetType,
         requestId: audit.requestId,
+        ...(actorAuthUserId
+          ? {
+              actorAuthUserId,
+              ...(targetType === 'identity'
+                ? { targetId: actorAuthUserId }
+                : {}),
+            }
+          : {}),
         ...(reasonCode ? { metadata: { reasonCode } } : {}),
       }),
     )
@@ -114,7 +125,14 @@ export async function signInWithEmailPassword(
       )
       return { ok: false, message: invalidLoginMessage }
     }
-    await recordAuthAction(audit, 'login', 'success', 'identity')
+    await recordAuthAction(
+      audit,
+      'login',
+      'success',
+      'identity',
+      undefined,
+      readAuthAuditUserId(result.data),
+    )
     return { ok: true }
   } catch {
     await recordAuthAction(
@@ -184,7 +202,14 @@ export async function verifyEmailVerificationOtp(
       )
       return { ok: false, message: invalidOtpMessage }
     }
-    await recordAuthAction(audit, 'email_verification', 'success', 'identity')
+    await recordAuthAction(
+      audit,
+      'email_verification',
+      'success',
+      'identity',
+      undefined,
+      readAuthAuditUserId(result.data),
+    )
     return { ok: true }
   } catch {
     await recordAuthAction(
@@ -214,7 +239,14 @@ export async function signOutCurrentSession(
       )
       return { ok: false, message: unavailableLoginMessage }
     }
-    await recordAuthAction(audit, 'logout', 'success', 'session')
+    await recordAuthAction(
+      audit,
+      'logout',
+      'success',
+      'session',
+      undefined,
+      audit?.actorAuthUserId,
+    )
     return { ok: true }
   } catch {
     await recordAuthAction(

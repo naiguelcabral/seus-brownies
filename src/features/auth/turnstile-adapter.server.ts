@@ -3,6 +3,7 @@ import type { TurnstileVerifier } from './external-contracts'
 export type TurnstileAdapterConfig = {
   secretKey: string
   fetch?: typeof fetch
+  timeoutMs?: number
 }
 
 type TurnstileResponse = {
@@ -29,7 +30,11 @@ export function createCloudflareTurnstileVerifier(
 
       const response = await request(
         'https://challenges.cloudflare.com/turnstile/v0/siteverify',
-        { method: 'POST', body },
+        {
+          method: 'POST',
+          body,
+          signal: AbortSignal.timeout(config.timeoutMs ?? 10_000),
+        },
       )
       if (!response.ok) {
         return { success: false, reasonCode: 'provider_http_error' }

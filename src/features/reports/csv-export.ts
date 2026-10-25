@@ -55,6 +55,12 @@ export type OperationalReportExport = {
       cogs: string
       grossMargin: string
     }>
+    byOrigin?: Array<{
+      originLabel: string
+      revenue: string
+      cogs: string
+      grossMargin: string
+    }>
     byBatch: Array<{
       productionBatchId: number
       revenue: string
@@ -334,9 +340,15 @@ export function createOperationalReportCsv(
         item.grossMargin,
         '',
       ]),
-      ...report.fifo.byBatch.map((item): ExportRow => [
-        'Margem FIFO por lote',
-        `Lote #${item.productionBatchId}`,
+      ...(
+        report.fifo.byOrigin ??
+        report.fifo.byBatch.map((item) => ({
+          ...item,
+          originLabel: `Lote #${item.productionBatchId}`,
+        }))
+      ).map((item): ExportRow => [
+        'Margem FIFO por origem',
+        item.originLabel,
         '',
         '',
         item.revenue,

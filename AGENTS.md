@@ -50,6 +50,8 @@ Não trocar framework, ORM, banco, hospedagem ou estratégia principal de autent
 
 ## Fluxo de execução
 
+Cada agente usa worktree própria. Não trocar a branch da pasta principal nem compartilhar o checkout com outra sessão ativa.
+
 Para cada tarefa:
 
 1. verificar `git status`;

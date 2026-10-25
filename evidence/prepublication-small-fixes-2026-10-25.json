@@ -1,0 +1,218 @@
+{
+  "schema": "cacau-prepublication-small-fixes/v1",
+  "recorded_at_utc": "2026-10-25T19:57:04.969513+00:00",
+  "authorization": {
+    "source": "human-user-in-current-conversation",
+    "quote": "Tudo que for pequeno e que pode ser feito antes do ambiente publicado vamos fazer e juntar em uma pr",
+    "single_pr": true,
+    "merge": false,
+    "deployment": false,
+    "shared_sql": false
+  },
+  "base_main": "53d6379d1fb79a7b93194b7b4e07c837459bac3c",
+  "tested_code": "11d5f44ae1ea81fa79f22df24a39ceaeebde2996",
+  "validation": {
+    "node_tests": {
+      "passed": 601,
+      "failed": 0,
+      "command": "npm run test:coverage",
+      "head": "11d5f44ae1ea81fa79f22df24a39ceaeebde2996"
+    },
+    "coverage": {
+      "scope": "Node unit tests only; unmeasured sources are explicitly listed, not counted as covered",
+      "sourceFiles": 151,
+      "measuredFiles": 98,
+      "unmeasuredFiles": [
+        "src/components/EditorDialog.tsx",
+        "src/components/ManagementLayout.tsx",
+        "src/components/OperationDialog.tsx",
+        "src/components/PaymentFeeCalculator.tsx",
+        "src/components/ProfitSummary.tsx",
+        "src/components/PurchaseSummary.tsx",
+        "src/components/ScenarioPixTarget.tsx",
+        "src/components/SettlementPreview.tsx",
+        "src/db/contracts.ts",
+        "src/features/action-plans/functions.ts",
+        "src/features/auth/audit-writer.server.ts",
+        "src/features/auth/configured-neon-auth.server.ts",
+        "src/features/auth/functions.ts",
+        "src/features/auth/principal-resolver.server.ts",
+        "src/features/auth/session-status.functions.ts",
+        "src/features/auth/turnstile-challenge.tsx",
+        "src/features/catalog/CategoryEditor.tsx",
+        "src/features/catalog/ProductEditor.tsx",
+        "src/features/catalog/functions.ts",
+        "src/features/dashboard/DashboardOverview.tsx",
+        "src/features/diagnostics/connection-probe.server.ts",
+        "src/features/diagnostics/functions.ts",
+        "src/features/locations/LocationEditor.tsx",
+        "src/features/locations/classifications.ts",
+        "src/features/locations/functions.ts",
+        "src/features/management/functions.ts",
+        "src/features/operations/functions.ts",
+        "src/features/reports/functions.ts",
+        "src/features/scenarios/ScenarioActionDialog.tsx",
+        "src/features/scenarios/ScenarioEditor.tsx",
+        "src/features/scenarios/ScenarioSummary.tsx",
+        "src/routeTree.gen.ts",
+        "src/router.tsx",
+        "src/routes/__root.tsx",
+        "src/routes/categorias.tsx",
+        "src/routes/cenarios.tsx",
+        "src/routes/compras.tsx",
+        "src/routes/despesas.tsx",
+        "src/routes/diagnostico-conexao.tsx",
+        "src/routes/estoque.tsx",
+        "src/routes/fifo-migration-audit.tsx",
+        "src/routes/financeiro.tsx",
+        "src/routes/index.tsx",
+        "src/routes/locais.tsx",
+        "src/routes/login.tsx",
+        "src/routes/login/redefinir-senha.tsx",
+        "src/routes/parametros.tsx",
+        "src/routes/plano-de-acao.tsx",
+        "src/routes/producao.tsx",
+        "src/routes/produtos.tsx",
+        "src/routes/relatorios.tsx",
+        "src/routes/vendas.tsx",
+        "src/start.ts"
+      ],
+      "measuredTotals": {
+        "LF": 13675,
+        "LH": 11737,
+        "FNF": 883,
+        "FNH": 721,
+        "BRF": 2135,
+        "BRH": 1790
+      }
+    },
+    "connected_postgres17": {
+      "passed": 12,
+      "head": "4907b2461cd7f400947d81bfbe2ef3fb772d493e"
+    },
+    "ui_fixtures": {
+      "passed": 40,
+      "head": "4907b2461cd7f400947d81bfbe2ef3fb772d493e"
+    },
+    "public_http_smoke": {
+      "passed": 2,
+      "head": "11d5f44ae1ea81fa79f22df24a39ceaeebde2996",
+      "scope": "global headers, hydration and HTTP 413; oversized request is restricted to exact isolated localhost"
+    },
+    "isolated_ci_build": {
+      "status": "passed",
+      "head": "11d5f44ae1ea81fa79f22df24a39ceaeebde2996"
+    },
+    "lint": "passed",
+    "typecheck": "passed",
+    "format": "passed",
+    "knip": {
+      "known": 4,
+      "new": 0,
+      "resolved": 0
+    },
+    "npm_audit": {
+      "info": 0,
+      "low": 0,
+      "moderate": 0,
+      "high": 0,
+      "critical": 0,
+      "total": 0
+    },
+    "remote_checks": "read on final documentary head after push; recorded on PR"
+  },
+  "budgets": {
+    "request_body_bytes": 1048576,
+    "operation_items": 100,
+    "numeric_string_length": 32,
+    "turnstile_timeout_ms": 10000
+  },
+  "scope": [
+    "A02 input budgets",
+    "A04 successful provider identity and validated logout actor",
+    "A08 verifier timeout only",
+    "A09 FIFO origin explanation",
+    "A10 HTTP headers and report-only CSP",
+    "L01 versioned production parity only",
+    "L07 coverage measurement and explicit blind spots",
+    "L08 installed SDK result/cookie contract",
+    "L09 worktree isolation rule proposed for review"
+  ],
+  "remaining": [
+    "A01 revocation evidence",
+    "A03 recovery policy and continuity",
+    "A04 attempted/reset opaque correlation and future grants/bootstrap",
+    "A07 database ownership/lifecycle",
+    "A08 trusted origin/aggregate budgets and hostname/action",
+    "A05/A10 published HML marker and real-profile/mobile acceptance",
+    "L01 actual production callback/bindings/secrets/deployment review",
+    "L02-L06 external evidence and decisions",
+    "L07 justified baseline and critical-path gap review",
+    "production acceptance"
+  ],
+  "effects": {
+    "main_merge": false,
+    "deployment": false,
+    "shared_sql": false,
+    "migrations": false,
+    "secrets_changed": false,
+    "historical_auth_backfill": false,
+    "financial_rule_changed": false,
+    "dependency_versions_changed": false
+  },
+  "integration_authorization": {
+    "source": "human-user-in-current-conversation",
+    "quote": "Pode seguir",
+    "context": "continuation after PR 72 was presented ready for review with passing checks and explicit remaining gates",
+    "pr": 72,
+    "merge": true,
+    "merge_method": "merge",
+    "deployment": false,
+    "shared_sql": false,
+    "secrets": false,
+    "other_prs": false
+  },
+  "code_review_security": {
+    "checked_at_utc": "2026-10-25T20:20:27.724277+00:00",
+    "pr": 72,
+    "head": "cc44af7207973f62d646040f771422808bef624d",
+    "main": {
+      "protected": true,
+      "sha": "53d6379d1fb79a7b93194b7b4e07c837459bac3c"
+    },
+    "merge_candidate": "281dcf3e11b60aa9464c08983136f89634e64b72",
+    "parents": [
+      "53d6379d1fb79a7b93194b7b4e07c837459bac3c",
+      "cc44af7207973f62d646040f771422808bef624d"
+    ],
+    "codeql": [
+      {
+        "category": "/language:javascript-typescript",
+        "error": "",
+        "ref": "refs/pull/72/merge",
+        "results": 0,
+        "sha": "281dcf3e11b60aa9464c08983136f89634e64b72",
+        "warning": ""
+      },
+      {
+        "category": "/language:python",
+        "error": "",
+        "ref": "refs/pull/72/merge",
+        "results": 0,
+        "sha": "281dcf3e11b60aa9464c08983136f89634e64b72",
+        "warning": ""
+      },
+      {
+        "category": "/language:actions",
+        "error": "",
+        "ref": "refs/pull/72/merge",
+        "results": 0,
+        "sha": "281dcf3e11b60aa9464c08983136f89634e64b72",
+        "warning": ""
+      }
+    ],
+    "open_alerts": [],
+    "merged": false
+  },
+  "integration_result_source": "GitHub PR 72 after merge; documentary authorization head and final main CI are checked before closing the task"
+}
