@@ -9,7 +9,7 @@ As tabelas antigas foram substituídas; seu histórico completo permanece no Git
 
 | ID | Pacote | Tipo | Estado | Resultado e dependência canônica |
 | --- | --- | --- | --- | --- |
-| A50 | Segurança e dependências | codigo | review-ready | S03 anterior integrado, incluindo #55. A02 (Zod) e A05 (redação de logs e no-store) preparados na PR #64, reforçada em 601f138; conjunto das cinco PRs validado, aguardando integração humana. Não refazer. Restam limites de cardinalidade de A02 e cabeçalhos globais de A10, em PRs próprias. |
+| A50 | Segurança e dependências | codigo | done | Pacote versionado entregue na main por #61/#63/#62/#64; auditoria zerada e gates reconferidos. #65 consolida o recibo. Limites A02, redação publicada A05 e headers globais A10 continuam pendências próprias; não refazer a atualização. |
 | A51 | Recuperação externa | auditoria-leitura | done | I02: dump efetivamente baixado do Drive, SHA-256/manifesto conferidos, restore PostgreSQL 17 sem rede, 38 tabelas/36 recibos exatos e catálogo independente. Retenção/RPO/RTO/responsáveis e Auth continuam separados. |
 | A52 | Aplicação futura de migrations | auditoria-leitura | needs-human | T02: preparo/revisão offline entregues; original continua production. Exige alvo/role read-only/vínculo Worker, coleta atual e plano/autorização específicos. Não reaplicar 36 recibos. |
 | A53 | Autenticação e perfis reais | auditoria-leitura | needs-human | H01–H03: laboratório sintético aprovado; faltam Neon Auth/Turnstile reais e matriz por identidade autorizada. |
@@ -25,7 +25,7 @@ Codex, delegação, cron ou recorrência.
 
 Sequência e responsáveis estão exclusivamente na tabela executável do
 roadmap. L09 aplicado nesta execução por worktree isolada; formalização
-permanece proposta. A50 não encerra limites de payload ou redação remota.
+permanece proposta. A50 done refere-se ao pacote integrado; não encerra limites de payload ou redação remota.
 Não promover A50/A57 a ready nem iniciar novas recorrências/delegação.
 
 ## Seleção e validação

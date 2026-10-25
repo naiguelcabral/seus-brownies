@@ -1,11 +1,12 @@
 # Roadmap único — Cacau v1
 
-Atualizado em **25/10/2026**, após revisão conjunta das candidatas e da
-[revisão técnica e de segurança](../reviews/SENIOR-REVIEW-2026-10-23.md).
-GitHub reconferido nesta rodada: #55 e #59–#60 integradas, `main` em
-`bb122d8`; #61–#65 abertas. Nenhuma delas foi integrada nesta rodada. Último checkpoint HML: versão `997f47bb`,
-em 100% após restaurar os bindings de conexão/autenticação. Não há recibo
-que comprove publicação da correção de datas #60 nessa versão.
+Atualizado em **25/10/2026**, após a autorização do Dono e a integração
+sequencial das correções: **#61 → #63 → #62 → #64**. Código operacional
+integrado em `79634e6`; a entrega documental **#65** consolida o fechamento
+desta sequência. O SHA final dessa entrega é conferido no
+[estado da PR #65](https://github.com/naiguelcabral/seus-brownies/pull/65).
+Último checkpoint HML continua `997f47bb`; nenhum deploy nesta integração.
+Não há novo recibo de publicação da correção de datas ou deste lote no HML.
 Este é o **único arquivo de planejamento e acompanhamento de pendências**.
 Relatórios datados, recibos, matrizes e runbooks preservam evidências e
 procedimentos; suas listas antigas não são filas adicionais de execução.
@@ -32,8 +33,9 @@ do Neon Auth/Turnstile reais e dos perfis no ambiente publicado continua
 separado. Primeiro acesso e ordenação da razão de Relatórios já foram
 corrigidos e publicados no HML. Não refazer esses incrementos.
 
-Priorizar a comprovação de revogação A01 e as correções A02/A05/A06;
-depois recuperação A03/I02/I03, autoria A04 e conexões A07. Preparação local
+Priorizar a comprovação de revogação A01, os limites restantes de A02 e
+a confirmação publicada de A05; seguir recuperação A03/I02/I03, autoria
+A04 e conexões A07. A06 e a correção do grafo de dependências estão integrados. Preparação local
 independente pode avançar enquanto decisões externas permanecem pendentes.
 Seguem homologação real H01–H03, antiabuso A08, FIFO A09, cabeçalhos A10 e
 uso diário H06; só então piloto I05 e aceite I04. WhatsApp/OCR e extrações
@@ -43,7 +45,7 @@ maiores vêm depois. A PR #55 já está integrada; não reapresentar seu merge.
 
 | Etapa | Escopo | Responsável e resultado para avançar |
 | --- | --- | --- |
-| 1. Integrar as candidatas revisadas | **#61 → #63 → #62 → #64 → #65**: guard Drizzle, destinos por hash, higiene/CI, Zod/logs/headers e documentação. | Agente prepara e reconfere o SHA/checks a cada avanço; **Dono autoriza o merge**. Atualizar branches sobre a main entre integrações; conferir o lockfile combinado e Drizzle Kit em devDependencies. Ensaio local aprovado não dispensa os gates da main. |
+| 1. Integração do lote revisado | **#61 → #63 → #62 → #64**, integradas; fechamento documental na **#65**. Guard Drizzle, destinos por hash, higiene/CI, Zod/logs/headers e documentação. | Autorização do Dono recebida e aplicada. Branches atualizadas e checks/CodeQL reconferidos entre os merges; código operacional em 79634e6. Drizzle Kit em devDependencies e lockfile preservado. Os gates de publicação e aceite real continuam separados. |
 | 2. Completar segurança e disponibilidade | A02 (corpo/cardinalidade), A04 (ator Auth), A07 (conexões), A08 (antiabuso), A09 (origem FIFO), A10 (headers globais); L01/L08. | Agente pode preparar mudanças pequenas, testes negativos e PRs separados. Preservar regras financeiras, precisão, RBAC, sessão e fail-closed. Limites da aplicação ainda não foram implementados; o teste do Zod é uma regressão da biblioteca. L01 prepara produção, sem publicar. |
 | 3. Fechar sustentação e dados | A01/A03, T02/G02/I01/I02/I03 e L02–L06: evidência de credencial, recuperação/Auth, frequência/fuso, ambientes, privilégio mínimo, observabilidade e dados pessoais. | Agente prepara inventários/planos e ensaios isolados. Dono decide RPO/RTO, retenção, responsáveis, ambientes e política de dados; autoriza cada mudança remota aplicável. Não repetir restore/importação/recibos já consumidos. Preparação independente pode avançar junto da etapa 2. |
 | 4. Aceitar operação | H01–H03/H06, L07, I05 → I04: provedor/desafio reais, permissões, celular, medição da cobertura, piloto e aceite de produção. | Operadora/Dono executam os roteiros reais com fatos expressamente autorizados; agente registra evidência e corrige falhas. CI/laboratório sintético não encerram esses aceites. Publicação HML deve ter recibo SHA/build/Worker/configuração e confirmação de redação por marcador sintético. |
@@ -53,13 +55,14 @@ maiores vêm depois. A PR #55 já está integrada; não reapresentar seu merge.
 a pasta principal permaneceu na branch anterior. A formalização em AGENTS.md
 continua proposta para revisão, sem alteração automática das regras.
 
-**Estado da etapa 1:** combinação das cinco PRs sem conflitos, npm ci com
-audit zero, 586 testes Node, 40 casos de interface e 12 conectados aprovados;
-ensaios PostgreSQL de custos e do fluxo operacional, lint/tipos/formato/Knip
-e build isolado aprovados. A #64 recebeu regressões adicionais em 601f138.
-SHAs, limitações e prova de equivalência em
-[revisão de integração](../reviews/INTEGRATION-REVIEW-2026-10-25.md).
-Checks remotos novos e main atual devem ser relidos antes de cada merge.
+**Estado da etapa 1:** código integrado em `79634e6`, semanticamente
+idêntico ao ensaio `0bfc9b8` fora de documentação/evidências. Todos os checks
+das quatro PRs atualizadas passaram; três análises CodeQL sem resultados,
+erros ou avisos e zero alertas abertos em cada referência de merge. Auditoria
+nova: zero vulnerabilidades. Lockfile não precisou ser regenerado.
+[Recibo da sequência](../../evidence/pr-sequential-integration-2026-10-25.json).
+O CI final da main e o estado documental #65 são conferidos antes do
+encerramento; o recibo preserva o estado observado durante sua preparação.
 
 ## Remediação da revisão de 23/10/2026
 
@@ -71,16 +74,16 @@ Dono/administrador nas decisões e operações externas sujeitas a gate.
 | Ordem / achado | Estado | Entrega e critério de aceite | Gate / dependência |
 | --- | --- | --- | --- |
 | Imediato — A01 | Comprovação técnica parcial em 23/10 | Relato de coleta incorporado por #65/9a4b276: hash da credencial de `48b101d` comparado, sem exibir valores, com a senha atual do `neondb_owner` em cada branch: `production`, `g1-auth-hml` e `Development` divergem; as três branches de backup não têm endpoint e não aceitam conexão; o projeto arquivado `cool-base` foi apagado. Falta revisar acessos do período 17–22/10: `pg_stat_statements` está desligado e a CLI não expõe conexões; no Auth, 21 sessões vieram de dois IPs. Falta recibo sanitizado que permita revisar método, UTC e abrangência dessa coleta; ela não foi repetida nesta rodada. Eventuais cópias locais de credenciais ficam sob responsabilidade privada do operador, sem leitura ou exclusão pelo agente. | Dono pede logs de conexão ao suporte Neon, se necessário. Reescrita do histórico é decisão separada. Não testar nem reproduzir o valor antigo. |
-| 1 — A02 / S03 | Dependência corrigida na PR #64; limites pendentes | PR #64: `zod ^4.6.7` com override `$zod`, uma única cópia 4.6.7 na árvore; `undici` do `miniflare` em 7.30.1; `npm audit` zerado na candidata. Seguimento 25/10: regressão de todas as cópias do lockfile, runtime comum ao SDK Neon e rejeição antecipada de array excessivo, em 601f138; conjunto com 586 testes aprovado. Pendente: limites de corpo/cardinalidade (`production/functions.ts:106`, compras e vendas) e casos de excesso, em PR próprio. | Integração depende de revisão e CI; integrar #64 por último entre #61–#64, regenerando o lockfile. [Advisory](https://github.com/advisories/GHSA-mrhx-c7xc-m3w5). |
-| 1 — A05 | Candidata na PR #64 | `env.hml.observability.redact_query_string: true`; `/login` e `/login/redefinir-senha` com `Cache-Control: no-store` e `Referrer-Policy: no-referrer` pela opção `headers` da rota; smoke de navegador de 25/10 confere ambos os headers por HTTP nas duas páginas. Falta deploy HML e captura com marcador sintético. | Publicação e leitura remota conforme autorização concreta; não consultar tokens reais. |
-| 1 — A06 / T02 | Candidata na PR #61 | Revisar eb62e51 e checks do SHA atual; bloquear db:generate/db:push, preservando preparo/revisão offline e recibos. | Merge humano; nenhum SQL compartilhado. Não duplicar a implementação da PR. |
+| 1 — A02 / S03 | Grafo corrigido e integrado; limites pendentes | #64 integrada em 79634e6, após atualização e gates de e2a1d38. Zod 4.6.7 único, inclusive no SDK Neon; Undici 7.30.1; regressões de versão/runtime/coleção e auditoria nova zerada. Drizzle Kit permanece em desenvolvimento. Pendente: limites de corpo/cardinalidade das entradas da aplicação e casos de excesso. | Não refazer a atualização. Limites seguem em PR própria e não estão encerrados pelo teste da biblioteca. [Advisory](https://github.com/advisories/GHSA-mrhx-c7xc-m3w5). |
+| 1 — A05 | Código integrado; confirmação HML pendente | #64 integrou redact_query_string:true no HML e no-store/no-referrer no login/reset; headers comprovados por HTTP no laboratório. Falta publicação HML autorizada e captura com marcador sintético. | Não atribuir a configuração nova ao Worker publicado antes de deploy/readback. Não consultar tokens reais. |
+| 1 — A06 / T02 | Concluído na main | #61 integrada em 1536920; db:generate e db:push bloqueados offline, sem conexão ou SQL. Preparação/revisão auditável, cadeia e recibos preservados. | T02 permanece parcial para planos por alvo; não reaplicar migrations ou usar o guard como controle de acesso administrativo. |
 | 2 — A03 / I02 / I03 | Divergência documentada; política pendente | Revisão observou histórico Neon de seis horas, branches sem proteção e automação semanal quinta 00:15, divergindo do diário 03h documentado. Reconfirmar fuso/configuração; acordar RPO/RTO, retenção, responsáveis e Auth; comprovar sequência de uploads, restore externo e alerta de falha. | Restore de 21/10 permanece válido historicamente. Mudança de frequência/infraestrutura/proteção exige decisão aplicável; não apagar backups. |
 | 2 — A04 / S01 | Pendente no fluxo Auth | Associar eventos futuros à identidade retornada/validada no servidor; ator nas concessões futuras e bootstrap explícito. Para tentativas/reset, aprovar correlação opaca; testes sem e-mail/senha/token nos eventos. | Preservar autoria histórica desconhecida; não fazer backfill inventado. Auditoria operacional S01 continua entregue. |
 | 2 — A07 | Pendente | Definir ownership/lifecycle de conexão compatível com Workers, limites e timeout; provar fechamento, falhas e transações em isolamento. | Preservar stack; mudança arquitetural requer ADR/decisão. Não atribuir os 429 a pools sem evidência. |
 | 3 — A08 / H01 / H02 | Pendente | Orçamentos complementares por origem confiável/agregado, limites de payload, hostname/action e timeout de Turnstile; testes com múltiplas identidades. Completar provedor/desafio reais e correlação dos 429. | Preservar limite de cinco falhas e fail-closed. Ensaios de abuso isolados; homologação publicada assistida. |
 | 3 — A09 / F03 | Pendente | Explicar origens FIFO sem lote (compra/ajuste), reconciliando detalhe e total com custos racionais exatos e regressões. | Reimplementar a intenção de 2ce3566 sobre a base atual; não mesclar o patch antigo. Sem mudar custo/fatos. |
 | 3 — A10 / H06 | Parcial via #64; global pendente | Nenhum cabeçalho de segurança global em `src/` (CSP, `frame-ancestors`/`X-Frame-Options`, `nosniff`, HSTS, `Permissions-Policy`): telas autenticadas podem ser enquadradas. Middleware global, CSP inicialmente report-only compatível com hidratação/Turnstile; validar login/reset e celular físico por perfil. | Preparação local e ensaio HML conforme gate; meta HTML não equivale a header. |
-| Transversal — A11 / G01 / T01 | Reconciliação local preparada | Branch codex/audit-remediation-20261023 alinhada a origin/main bb122d8, preservando 7eb15f2/3af1af5 e a revisão. Roadmap/status/espelho atualizados; futuro recibo deve ligar SHA, build, Worker e configuração. | Integração e publicação separadas. Nenhum deploy novo nesta rodada. |
+| Transversal — A11 / G01 / T01 | Correções integradas; registro documental #65 | #61/#63/#62/#64 integradas sequencialmente; #65 preserva revisão, recibos Neon/Auth e este fechamento. Código operacional 79634e6; evidência da integração e critérios do roadmap reconciliados. | A publicação HML ainda precisa ligar SHA, build, Worker e configuração. Nenhum deploy nesta rodada. |
 | Posterior — A12 / S04 / R07 | Pendente / condicional | Revisar escopo mínimo de conectores; avaliar fd62de7; classificar branches antes de arquivar. Extrações graduais e compatibility date somente após segurança/aceite. | Não alterar permissões, excluir branches nem delegar automaticamente. |
 
 ### Lacunas complementares de 23/10/2026
@@ -101,13 +104,12 @@ os IDs abaixo cobrem apenas o que não tinha fila própria.
 | L08 | Contínuo | SDK de autenticação em beta: `@neondatabase/neon-js` 0.8.0-beta, que fixa Zod antigo (contido pelo override da #64). | Acompanhar versões, testes de contrato do adapter e plano de contingência documentado. | Atualizações compatíveis do SDK exigem revisão/testes Auth; troca da estratégia de autenticação exige ADR e aprovação. |
 | L09 | Imediato | Duas sessões de agente usaram a mesma pasta de trabalho: a pasta principal ficou na branch desta remediação enquanto outra sessão preparava PRs. | Cada agente trabalha em worktree própria e não troca a branch da pasta principal; registrar a regra no `AGENTS.md`. | Mudança de `AGENTS.md` exige revisão humana. |
 
-A sequência de integração e as próximas frentes estão na tabela executável
-acima. **Próximo gate concreto: autorização do Dono para #61 → #63 → #62 →
-#64 → #65**, reconferindo o diff e todos os checks dos SHAs atualizados.
-A simulação não alterou main/HML. Não refazer A02/A05 nem os recibos de
-recuperação já preparados; A02 ainda tem limites da aplicação pendentes.
-Depois, seguir A04/A07 e as demais frentes locais da etapa 2, com um PR por
-incremento e worktree própria. [Handoff](AUTONOMY-HANDOFF.md).
+A autorização humana para esta integração foi recebida e aplicada na ordem
+acima. **Próximo trabalho local: limites de A02, autoria A04 e conexões A07**,
+em incrementos pequenos com testes, conforme a etapa 2. Publicação e prova
+de redação de logs em HML continuam com gate próprio. Não refazer as quatro
+correções integradas, os recibos de recuperação ou importações históricas.
+[Handoff](AUTONOMY-HANDOFF.md).
 
 PRs #44–#53 mescladas, incluindo tipagem de Cenários/finanças/lifecycle,
 patch launch-editor 2.14.2, ordem do menu do Funcionário e coleta do aceite.
@@ -161,14 +163,14 @@ reduz automaticamente o esforço estimado nem autoriza novas ações externas.
 | Área | Situação atual |
 | --- | --- |
 | HML | Publicação de aplicação anterior `91658ed`; versão atual de configuração `997f47bb-6be0-4a78-b1fe-f46ea1fef512`, 100%. Conexão/Auth reparados em 22/10: raiz307/login200, sessão inválida500→200. Em 23/10, usuário confirmou entrada real da Gerente e abertura normal do painel; demais aceites H01–H03 continuam parciais. [Reparo e aceite](NEON-AUTH-RECOVERY-2026-10-22.md). |
-| Trabalho versionado | PRs #44–#53 e #55–#60 integradas conforme os registros; GitHub reconferiu #55 e #59–#60, main `bb122d8`. #61–#65 abertas. Recibos locais de recuperação preservados na branch de remediação. Integração não comprova publicação HML ou aceite de produção. |
+| Trabalho versionado | #61 → #63 → #62 → #64 integradas; código operacional da main 79634e6. Esta entrega documental #65 consolida revisão, recuperação, roadmap e recibo da sequência. Integração não é publicação HML nem aceite de produção. |
 | Banco usado no HML | Atualizações específicas até `0033`, 36 recibos. A original conserva classificação `production`; seu uso histórico autorizado não a torna laboratório. Migrador genérico continua bloqueante. |
 | Catálogo e produção | 38 produtos; duas versões de receita e 34 perfis contando os históricos; receita 2 ativa com 17 perfis completos e 31 componentes |
 | Cenários | Cenário 2/v2/rev2 ativo, 16 produtos orientativos em 100%; cenário 1 e seu histórico preservados |
 | Meta | R$ 10.000 de lucro mensal após os custos de **todas as vendas**, inclusive Bordinhas realizadas; sem cotas obrigatórias por produto |
 | Operação real | Sem compras ou produção previstas; nenhum fato fictício criado no HML para testar as entregas |
 | Última validação histórica de código | Revisão de 23/10: 574 testes no HEAD local 3af1af5 e 16 direcionados em snapshot de origin/main; lint/tipos/formato/Knip/build isolado aprovados no HEAD local. Runs da main bb122d8 aprovados conforme relatório, sem contagem extraída. Não repetir nem atribuir esses resultados ao merge local 7480257 sem execução. |
-| Segurança | #55 integrada; revisão de 23/10 retornou zero alertas CodeQL e quatro pacotes altos com causa raiz Zod. A candidata #64 e o conjunto de 25/10 têm audit zero; isso ainda não descreve main/HML; A01/A02/A04/A05/A07/A08/A10 permanecem abertos. |
+| Segurança | #55, launch-editor 2.14.2, hashes de destinos e grafo Zod/Undici integrados. Auditoria nova do conjunto em 25/10: zero vulnerabilidades; três análises CodeQL sem resultados/erros/avisos em cada candidata atualizada. A01 e os controles restantes continuam no roadmap; não extrapolar esse resultado para o HML ainda não publicado. |
 | Proteção de integração | `main.protected:true`; ruleset ativa `main-production-integration` (ID 25611109), sem bypass. Exige PR atualizado, conversas resolvidas, sete checks e CodeQL com bloqueio de segurança alta/crítica. Ver G03. |
 | Recuperação e alertas | Restore externo de 21/10 comprovado: 38 tabelas/36 recibos exatos. Auth excluído. Revisão de 23/10 observou backup semanal quinta 00:15, divergente do diário 03h planejado, e histórico Neon de seis horas. Reconfirmar fuso, rotina, retenção/responsáveis/RPO/RTO/Auth em A03; continuidade não atestada. |
 | Preservação | 21 tabelas tiveram contagens/digests idênticos no checkpoint anterior. A publicação de 21/10 não executou SQL/migrations ou salvou operações; não coletou novo digest operacional. |
@@ -267,7 +269,7 @@ sintético foi gravado no HML.
 | H03 | Parcial; roteiro dos perfis ativos aceito | Laboratório aprovou quatro perfis, matriz negativa das 55 políticas, ausência de escrita na negação e revogação na próxima chamada. No tablet, usuário confirmou employee/manager/owner, Dashboard negado ao Funcionário e permitido aos demais, Parâmetros negado a Funcionário/Gerente e permitido ao Dono; interface/controles conforme roteiro, sem salvar. Após publicação, Dono confirmou Cenários/Financeiro. [Aceite manual](AUTH-HML-PERMISSIONS-MANUAL-2026-10-21.md). Repetição automática com identidades sintéticas isoladas, não com sessões reais no HML. Falta cobertura ampliada real e estabilidade; não conceder papéis para contornar testes. |
 | H06 | Parcial; QA automático ampliado | 40 casos de fixtures aprovados, incluindo Enter/Shift+Tab/Escape, foco e ausência de overflow em 320px com redução de movimento. Relatório/CSV e 390px já comprovados no laboratório conectado. Falta aceite no ambiente publicado por perfil, celular físico, acessibilidade/uso diário pela operadora; não equivale a auditoria WCAG completa. |
 | T04 | Concluído | Oxfmt alinhado; 21 testes do controlador simulado, Oxc1.64.1 conferida e Python3.12 validada. ActionsNode24 revisadas, Ubuntu24.04 fixado; CI sem avisos de runtime. |
-| S03 | Hardening integrado; nova vulnerabilidade em A02 | launch-editor 2.14.2 e #55 entregues; configuração CodeQL legada reconciliada. Audit zero é histórico: revisão de 23/10 encontrou Zod vulnerável no grafo, a corrigir em A02 com regressão/audit/compatibilidade. |
+| S03 | Correções de dependências e hardening integrados | #55 e lote #61/#63/#62/#64 integrados. Audit novo zerado e CodeQL sem resultados nas candidatas atualizadas; A02 mantém limites das entradas como pendência distinta. |
 
 ## Preparação e liberação da operação
 
@@ -283,7 +285,9 @@ sintético foi gravado no HML.
 | I05 | Pendente / operação autorizada | Após os aceites e a recuperação, conduzir piloto com a operadora e fatos reais expressamente autorizados: compra, produção, venda, recebimento, entrega e conferência de lucro/estoque. Registrar problemas e decisão de aceite; não criar demonstrações fictícias no HML nem iniciar compras/produção sem previsão real. |
 
 Checkpoint GitHub de 21/10: PRs #44–#53 mescladas e issue #36 encerrada.
-Consulta de 25/10 confirma #55/#59/#60 integradas e #61–#65 abertas.
+Consulta de 25/10 confirma #55/#59/#60 e as correções #61/#63/#62/#64
+integradas; a entrega documental #65 fecha este registro. Outras PRs não
+pertencem à autorização deste lote.
 Atualização documental não habilita o migrador nem altera proteções.
 
 ## Ajustes operacionais e evoluções de produto

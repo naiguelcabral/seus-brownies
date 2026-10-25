@@ -1,5 +1,35 @@
 # Handoff de autonomia — Cacau v1
 
+## Integração autorizada — 25/10/2026
+
+Usuário autorizou explicitamente a sequência #61 → #63 → #62 → #64 → #65.
+As quatro correções de código foram integradas após atualização da branch e
+checks/CodeQL de cada novo SHA; esta entrega documental #65 fecha o registro.
+Main do código operacional: 79634e6. Merges 1536920, f5f6f93, 6dd8655 e
+79634e6. Recibo evidence/pr-sequential-integration-2026-10-25.json.
+
+Worktree própria preservada em /home/naiguel/.codex/worktrees/audit-review-20261025/seus-brownies,
+branch codex/integrate-pr65-20261025; pasta principal não foi trocada.
+Árvore operacional idêntica a 0bfc9b8, antes validada com 586 testes Node,
+40 fixtures, 12 conectados e dois ensaios PostgreSQL. Checks das candidatas
+atualizadas passaram. Nova auditoria: zero vulnerabilidades. Zod 4.6.7 único,
+Undici 7.30.1 e Drizzle Kit em desenvolvimento; lockfile preservado.
+
+Roadmap/status/espelho e aprovação humana atualizados. Antes de encerrar,
+confirmar merge da #65, CI/CodeQL da main final e equivalência operacional;
+o SHA do próprio fechamento fica no estado da PR no GitHub. Não repetir
+merges já confirmados. Nenhum deploy, SQL compartilhado, .env, segredo,
+credencial histórica, mudança de papel ou nova automação nesta integração.
+
+Próximo passo: preparar os incrementos locais restantes de A02/A04/A07,
+respeitando o roadmap; publicação HML e comprovação por marcador dependem
+de seu gate. Não confundir código integrado com HML publicado/aceito.
+Outras PRs seguem revisão própria. Sem gatilho de reserva nesta rodada;
+DESLIGARTUDO não é procedimento de trabalho normal.
+
+Os checkpoints abaixo registram a preparação histórica: a autorização de
+merge antes pendente foi recebida e aplicada nesta execução.
+
 ## Organização retomada — 25/10/2026
 
 Uso oficial renovado em 100% nas duas janelas; LIGARTUDO --prepare-only e

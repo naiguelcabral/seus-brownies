@@ -5,6 +5,41 @@ atual de tarefas, prioridades e critérios de conclusão. Os checkpoints de
 publicação abaixo preservam o estado comprovado de cada entrega; suas
 próximas etapas históricas não substituem o roadmap atualizado.
 
+## Integração sequencial autorizada — 25/10/2026
+
+Após aprovação expressa do Dono, integradas **#61 → #63 → #62 → #64**,
+preservando histórico por merge commits. Cada candidata posterior recebeu a
+main atualizada e passou novamente os checks; triagem por referência de
+merge confirmou três análises CodeQL sem resultados/erros/avisos e zero
+alertas abertos. Código operacional integrado em `79634e6`; CI, validação isolada de
+negócio/navegador e CodeQL dessa main concluídos com sucesso. Três
+análises da main também sem resultados/erros/avisos e zero alertas abertos.
+
+| PR | Head revisado após atualização | Merge na main |
+| --- | --- | --- |
+| #61 | `eb62e51d` | `15369207` |
+| #63 | `d1cae673` | `f5f6f939` |
+| #62 | `8a254b8b` | `6dd8655c` |
+| #64 | `e2a1d38b` | `79634e6a` |
+
+A #65 é a entrega documental que consolida estes recibos, a recuperação
+Neon/Auth já comprovada, o roadmap e o handoff. Seu SHA final e o CI após
+integração são conferidos no GitHub antes do encerramento. O
+[recibo sanitizado](../../evidence/pr-sequential-integration-2026-10-25.json)
+fixa os quatro merges e o estado dos gates durante esta preparação.
+
+Árvore operacional idêntica à combinação antes validada com 586 testes Node,
+40 casos de interface, 12 conectados e ensaios PostgreSQL; os novos checks
+remotos também passaram nas candidatas. Drizzle Kit em devDependencies,
+Zod 4.6.7 único e Undici 7.30.1; nova auditoria npm zerada. Lockfile combinado
+consistente, sem regeneração ou alteração adicional de versões.
+
+Sem deploy, SQL compartilhado, migrations, importações, mudança de secrets,
+papéis ou política de autenticação. HML conserva apenas seu último checkpoint
+documentado; A05 precisa de publicação autorizada e prova por marcador.
+A02 mantém limites da aplicação pendentes; A01/recuperação/aceites reais
+permanecem separados. Os checkpoints anteriores abaixo são históricos.
+
 ## Organização e revisão conjunta — 25/10/2026
 
 GitHub/main reconferidos: bb122d8, PRs #61–#65 abertas. Combinação local

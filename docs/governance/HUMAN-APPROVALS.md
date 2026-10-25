@@ -1,5 +1,20 @@
 # Ações que exigem aprovação humana — Cacau v1
 
+## Integração do lote #61–#65 — autorização de 25/10/2026
+
+Após apresentação da sequência e da validação conjunta, usuário autorizou:
+**“Pode seguir com a integração das prs na sequência correta”**.
+Escopo: integrar #61 → #63 → #62 → #64 → #65, atualizando branches,
+resolvendo eventuais conflitos com preservação dos diffs e reconferindo
+SHA/checks/CodeQL entre cada merge. Histórico preservado por merge commits;
+sem bypass das regras da main ou force push.
+
+#61/#63/#62/#64 já integradas em 1536920/f5f6f93/6dd8655/79634e6;
+esta entrega documental #65 consolida os recibos. O resultado final da PR é
+conferido no GitHub. A autorização não inclui deploy, SQL/migration
+compartilhados, secrets, RBAC, limpeza HML ou outras PRs. Publicação HML e
+liberação de produção conservam seus gates próprios.
+
 ## Recuperação de banco e usuários — 22/10/2026
 
 Usuário pediu verificar as conexões Neon/banco/usuários e refazer o necessário

@@ -61,3 +61,14 @@ Fontes técnicas consultadas: [advisory Zod](https://github.com/advisories/GHSA-
 [Workers Logs](https://developers.cloudflare.com/workers/observability/logs/workers-logs/)
 e schema do Wrangler instalado para redact_query_string. A implementação
 existente do runtime foi consultada para diagnosticar o smoke, sem modificá-la.
+
+## Seguimento autorizado
+
+O Dono autorizou a integração após esta revisão. #61 → #63 → #62 → #64
+foram integradas sequencialmente com atualização das candidatas e gates
+aprovados; a #65 entrega o fechamento documental. Código na main 79634e6,
+idêntico ao ensaio fora de documentação/evidências. Auditoria nova zerada e
+lockfile preservado. Merges e triagens de segurança fixados no
+[recibo sequencial](../../evidence/pr-sequential-integration-2026-10-25.json).
+O SHA final da própria #65 e o CI pós-merge são confirmados no GitHub ao
+encerrar. Nenhum deploy, SQL compartilhado ou secret alterado.
