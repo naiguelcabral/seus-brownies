@@ -1,0 +1,56 @@
+{
+  "scope": "hml-neon-auth-configuration-recovery",
+  "local_date": "2026-10-22",
+  "worker": "cacau-v1-hml",
+  "project_id": "steep-brook-51659857",
+  "operational_branch_id": "br-lingering-wind-acwh5wap",
+  "auth_branch_id": "br-patient-lake-ac2t0cvq",
+  "database_name": "neondb",
+  "database_probe": {
+    "select_one": true,
+    "public_tables": 38,
+    "migration_receipts": 36,
+    "active_login_cooldowns": 0
+  },
+  "identities": {
+    "total": 5,
+    "verified": 4,
+    "banned": 0,
+    "credential_accounts": 5,
+    "active_access_links": 4,
+    "matched_verified_unbanned_credentials": 4,
+    "roles": { "owner": 1, "manager": 2, "employee": 1 }
+  },
+  "changes": {
+    "database_binding_type": "secret_text",
+    "database_destination_preserved": true,
+    "auth_endpoint_rebuilt_from_explicit_neon_branch": true,
+    "other_bindings_inherited": true,
+    "observability_preserved": true,
+    "application_source_modified": false,
+    "database_writes_executed": false,
+    "users_or_passwords_or_roles_modified": false,
+    "primary_worker_modified": false
+  },
+  "deployment": {
+    "id": "41ec1f4b-91be-4be6-947e-b5979b697d99",
+    "version_id": "997f47bb-6be0-4a78-b1fe-f46ea1fef512",
+    "created_at_utc": "2026-10-23T00:36:05.52882Z",
+    "percentage": 100
+  },
+  "verification": {
+    "provider_ok_status": 200,
+    "provider_anonymous_session_status": 200,
+    "invalid_session_before_status": 500,
+    "invalid_session_after_status": 200,
+    "public_root_status": 307,
+    "public_login_status": 200,
+    "node_tests_passed": 25,
+    "node_tests_failed": 0,
+    "real_password_login_confirmed": false,
+    "all_profiles_accepted": false,
+    "full_auth_acceptance_complete": false
+  },
+  "secret_values_included": false,
+  "personal_identifiers_included": false
+}

@@ -1,0 +1,50 @@
+{
+  "scope": "hml-manager-login-acceptance-after-neon-auth-recovery",
+  "local_date": "2026-10-23",
+  "recorded_at_utc": "2026-10-23T11:46:04Z",
+  "worker": "cacau-v1-hml",
+  "version_id": "997f47bb-6be0-4a78-b1fe-f46ea1fef512",
+  "traffic_percentage": 100,
+  "human_acceptance": {
+    "source": "user-report-in-conversation",
+    "requested_flow": "single-fresh-login-in-private-window",
+    "reported_result": "Abriu normal",
+    "real_login_and_panel_opening_confirmed": true,
+    "canonical_access_role_checked_in_database": "manager",
+    "browser_role_independently_observed": false,
+    "all_profiles_accepted": false,
+    "full_auth_acceptance_complete": false
+  },
+  "readonly_checks": {
+    "identity_email_verified": true,
+    "identity_banned": false,
+    "credential_present": true,
+    "manager_access_active": true,
+    "active_login_cooldowns": 0,
+    "hml_origin_trusted": true,
+    "required_secret_bindings_present": true,
+    "login_form_visible_in_browser": true
+  },
+  "verification": {
+    "node_tests_passed": 32,
+    "node_tests_failed": 0,
+    "public_root_status": 307,
+    "public_login_status": 200,
+    "public_login_form_rendered": true,
+    "anonymous_inventory_status": 307,
+    "anonymous_finance_status": 307,
+    "invalid_synthetic_session_login_status": 200,
+    "initial_http_probe_sandbox_dns_blocked": true,
+    "http_probe_repeated_on_host_successfully": true
+  },
+  "changes_in_this_followup": {
+    "application_source": false,
+    "schema_or_migration": false,
+    "shared_database_writes": false,
+    "users_passwords_roles_or_sessions": false,
+    "secrets_or_deployment": false,
+    "documentation_and_sanitized_evidence_only": true
+  },
+  "secret_values_included": false,
+  "personal_identifiers_included": false
+}

@@ -5,6 +5,125 @@ atual de tarefas, prioridades e critérios de conclusão. Os checkpoints de
 publicação abaixo preservam o estado comprovado de cada entrega; suas
 próximas etapas históricas não substituem o roadmap atualizado.
 
+## Integração sequencial autorizada — 25/10/2026
+
+Após aprovação expressa do Dono, integradas **#61 → #63 → #62 → #64**,
+preservando histórico por merge commits. Cada candidata posterior recebeu a
+main atualizada e passou novamente os checks; triagem por referência de
+merge confirmou três análises CodeQL sem resultados/erros/avisos e zero
+alertas abertos. Código operacional integrado em `79634e6`; CI, validação isolada de
+negócio/navegador e CodeQL dessa main concluídos com sucesso. Três
+análises da main também sem resultados/erros/avisos e zero alertas abertos.
+
+| PR | Head revisado após atualização | Merge na main |
+| --- | --- | --- |
+| #61 | `eb62e51d` | `15369207` |
+| #63 | `d1cae673` | `f5f6f939` |
+| #62 | `8a254b8b` | `6dd8655c` |
+| #64 | `e2a1d38b` | `79634e6a` |
+
+A #65 é a entrega documental que consolida estes recibos, a recuperação
+Neon/Auth já comprovada, o roadmap e o handoff. Seu SHA final e o CI após
+integração são conferidos no GitHub antes do encerramento. O
+[recibo sanitizado](../../evidence/pr-sequential-integration-2026-10-25.json)
+fixa os quatro merges e o estado dos gates durante esta preparação.
+
+Árvore operacional idêntica à combinação antes validada com 586 testes Node,
+40 casos de interface, 12 conectados e ensaios PostgreSQL; os novos checks
+remotos também passaram nas candidatas. Drizzle Kit em devDependencies,
+Zod 4.6.7 único e Undici 7.30.1; nova auditoria npm zerada. Lockfile combinado
+consistente, sem regeneração ou alteração adicional de versões.
+
+Sem deploy, SQL compartilhado, migrations, importações, mudança de secrets,
+papéis ou política de autenticação. HML conserva apenas seu último checkpoint
+documentado; A05 precisa de publicação autorizada e prova por marcador.
+A02 mantém limites da aplicação pendentes; A01/recuperação/aceites reais
+permanecem separados. Os checkpoints anteriores abaixo são históricos.
+
+## Organização e revisão conjunta — 25/10/2026
+
+GitHub/main reconferidos: bb122d8, PRs #61–#65 abertas. Combinação local
+preparada em worktree própria, preservando a pasta principal. Ordem proposta:
+#61 → #63 → #62 → #64 → #65. Sem conflitos no ensaio; nenhuma integração à
+main ou publicação HML nesta rodada. O [roadmap único](ROADMAP-CODEX.md)
+agora distingue entrega preparada, prova pendente e decisão humana.
+
+Instalação limpa com audit zero e Zod 4.6.7 único, inclusive no SDK Neon;
+Drizzle Kit preservado em devDependencies. Passaram 586 testes Node, 40 de
+interface, 12 conectados PostgreSQL 17, dois ensaios de negócio, lint/tipos/
+formato/Knip e build isolado. A #64 recebeu em 601f138 os testes de versões
+corrigidas, rejeição antecipada de coleção excessiva e headers por HTTP.
+Resultados detalhados por SHA em [revisão da rodada](../reviews/INTEGRATION-REVIEW-2026-10-25.md).
+
+Smoke público: houve falha de clique durante execução concorrente; cópia
+instrumentada e repetição serial passaram sem mudança das asserções.
+Causa não comprovada; não inferir estabilidade do HML. A01 permanece relato
+parcial de coleta, sem recibo independente revisado nesta rodada; nenhuma
+credencial histórica foi lida/testada. Dados privados locais não foram lidos.
+Conexão efetiva/privilégios do Worker, backups e ambientes continuam exigindo
+provas próprias. pg_stat_statements não substitui logs nem auditoria por evento.
+
+Containers descartáveis encerrados. Merge do pacote, publicação/marker HML,
+políticas de recuperação/dados e aceite operacional conservam seus gates.
+Os checkpoints abaixo permanecem históricos; os resultados desta candidata
+não devem ser atribuídos ao ambiente publicado.
+
+## Revisão e fila de remediação — 23/10/2026
+
+Os achados A01–A12 da [revisão de segurança](../reviews/SENIOR-REVIEW-2026-10-23.md)
+foram incorporados ao [roadmap único](ROADMAP-CODEX.md), com ordem, critérios
+de aceite e gates. Prioridades: comprovar revogação histórica, corrigir Zod,
+redigir query strings de logs e revisar o guard Drizzle; depois recuperação,
+autoria Auth, conexões e homologação real. Produção permanece sem liberação.
+
+GitHub reconferido: #55/#59/#60 integradas, main bb122d8; #61–#63 abertas.
+Branch de trabalho codex/audit-remediation-20261023 alinhada à main por merge
+local 7480257, preservando os dois recibos de recuperação. A main não foi
+alterada. A revisão registra 574 testes locais e 16 direcionados na main;
+esses resultados não são nova validação do merge local. O pacote desta rodada
+é documental: oito links locais, JSON do inventário e git diff --check
+aprovados, sem execução adicional das suítes.
+
+Grafo Zod reconferido no lockfile: 4.5.4 na raiz, 4.1.12 no SDK Neon e
+4.6.7 no Knip; correção A02 ainda não implementada. O advisory atual define
+4.6.6 como primeira versão corrigida. Auditoria npm zero é evidência antiga.
+Backup diário 03h também é planejamento histórico: a revisão observou regra
+semanal quinta 00:15, fuso a reconfirmar, e janela Neon de seis horas.
+I02/I03 permanecem parciais; restore externo histórico preservado.
+
+Janela do Codex atingiu 5% restante; implementação interrompida antes de
+alterar dependências. Próximo passo e verificações em
+[handoff](AUTONOMY-HANDOFF.md). Sem nova PR, integração remota, deploy, SQL,
+rotação ou mudança de configuração nesta rodada. Os checkpoints abaixo são
+históricos; #55 já foi integrada, embora seu registro inicial diga pendente.
+
+## Recuperação da conexão Neon e do login HML — 22/10/2026
+
+Seguimento de 23/10: usuário confirmou **“Abriu normal”** após o roteiro de
+nova entrada da Gerente em janela privativa. E-mail, identidade não banida,
+credencial e vínculo `manager` ativo reconferidos; nenhum cooldown ativo.
+Versão `997f47bb` ainda em 100%, tela de login renderizada, smoke público e
+sessão inválida aprovados; 32 testes Node direcionados passaram. Nenhuma
+alteração adicional de schema, permissões, dados, secrets ou deploy necessária.
+Aceite limitado à entrada e abertura do painel dessa conta; H01–H03 permanecem
+parciais. [Evidência](../../evidence/neon-auth-recovery-acceptance-2026-10-23.json).
+O checkpoint inicial abaixo antecede essa confirmação.
+
+Após relato de falha de login para todos os usuários e autorização expressa,
+restaurados `DATABASE_URL` como secret e o apontamento de `NEON_AUTH_BASE_URL`
+para o endpoint atual da branch de identidades `g1-auth-hml`. Banco operacional
+preservado: SELECT 1 aprovado, 38 tabelas/36 recibos, nenhum cooldown ativo.
+Os quatro vínculos ativos (Dono, dois Gerentes e Funcionário) correspondem
+exatamente a identidades verificadas, não banidas e com credencial presente.
+
+Versão HML `997f47bb-6be0-4a78-b1fe-f46ea1fef512`, 100% desde
+23/10/2026 00:36:05 UTC (22/10, 21:36 Brasília). Teste de sessão inválida
+passou de HTTP 500 para 200 após corrigir Auth; raiz307/login200 e 25 testes
+Node aprovados. Sem alteração de fonte, banco, usuários, senhas, papéis ou
+Worker principal. Entrada real foi solicitada ao usuário e permanece sem
+confirmação neste checkpoint; H01–H03 seguem parciais. Detalhes e limites em
+[recuperação Neon/Auth](NEON-AUTH-RECOVERY-2026-10-22.md).
+
 ## Correção de segurança e proteção de integração — 22/10/2026
 
 Por autorização do Dono, a ruleset ativa `main-production-integration` (ID

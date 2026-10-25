@@ -1,0 +1,630 @@
+{
+  "schema": "cacau-sequential-pr-integration/v1",
+  "recorded_at_utc": "2026-10-25T18:38:34.746908+00:00",
+  "authorization": {
+    "source": "human-user-in-current-conversation",
+    "quote": "Pode seguir com a integração das prs na sequência correta",
+    "order": [
+      61,
+      63,
+      62,
+      64,
+      65
+    ],
+    "merge": true,
+    "deploy": false,
+    "shared_sql": false,
+    "secrets": false
+  },
+  "initial_main": "bb122d82a75de7b1105c5aa8ecc78743f6ea0213",
+  "code_main": "79634e6ad5c98f256dc04bd23db443e73bf63291",
+  "merged_code_prs": [
+    {
+      "pr": 61,
+      "url": "https://github.com/naiguelcabral/seus-brownies/pull/61",
+      "reviewed_head": "eb62e51d1a8852425f47df8eee377d3bbf41820d",
+      "base_before_merge": "bb122d82a75de7b1105c5aa8ecc78743f6ea0213",
+      "merge": {
+        "sha": "153692074de5d4e93dc9f7ab84794d35b904fe2c",
+        "merged": true,
+        "message": "Pull Request successfully merged"
+      },
+      "checks": [
+        {
+          "name": "CodeQL",
+          "head": "eb62e51d1a8852425f47df8eee377d3bbf41820d",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Analyze (python)",
+          "head": "eb62e51d1a8852425f47df8eee377d3bbf41820d",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Analyze (actions)",
+          "head": "eb62e51d1a8852425f47df8eee377d3bbf41820d",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Analyze (javascript-typescript)",
+          "head": "eb62e51d1a8852425f47df8eee377d3bbf41820d",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "business-postgres",
+          "head": "eb62e51d1a8852425f47df8eee377d3bbf41820d",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "browser-fixtures",
+          "head": "eb62e51d1a8852425f47df8eee377d3bbf41820d",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "connected-postgres-browser",
+          "head": "eb62e51d1a8852425f47df8eee377d3bbf41820d",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "verify",
+          "head": "eb62e51d1a8852425f47df8eee377d3bbf41820d",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "business-postgres",
+          "head": "eb62e51d1a8852425f47df8eee377d3bbf41820d",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "connected-postgres-browser",
+          "head": "eb62e51d1a8852425f47df8eee377d3bbf41820d",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "verify",
+          "head": "eb62e51d1a8852425f47df8eee377d3bbf41820d",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "browser-fixtures",
+          "head": "eb62e51d1a8852425f47df8eee377d3bbf41820d",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ],
+      "has_more": false,
+      "premerge_security": {
+        "codeql": [
+          {
+            "category": "/language:javascript-typescript",
+            "error": "",
+            "ref": "refs/pull/61/merge",
+            "result_count": 0,
+            "sha": "e1a97770c5dc137cb37ae69dc6d4d26f2e024bb9",
+            "warning": ""
+          },
+          {
+            "category": "/language:python",
+            "error": "",
+            "ref": "refs/pull/61/merge",
+            "result_count": 0,
+            "sha": "e1a97770c5dc137cb37ae69dc6d4d26f2e024bb9",
+            "warning": ""
+          },
+          {
+            "category": "/language:actions",
+            "error": "",
+            "ref": "refs/pull/61/merge",
+            "result_count": 0,
+            "sha": "e1a97770c5dc137cb37ae69dc6d4d26f2e024bb9",
+            "warning": ""
+          }
+        ],
+        "open_alerts": []
+      }
+    },
+    {
+      "pr": 63,
+      "url": "https://github.com/naiguelcabral/seus-brownies/pull/63",
+      "reviewed_head": "d1cae6736b7c3f8afdd758f2b7f38e284c7fbe0e",
+      "base_before_merge": "153692074de5d4e93dc9f7ab84794d35b904fe2c",
+      "merge": {
+        "sha": "f5f6f939fe340c75e9883188c6b8a732b0458c9b",
+        "merged": true,
+        "message": "Pull Request successfully merged"
+      },
+      "checks": [
+        {
+          "name": "CodeQL",
+          "head": "d1cae6736b7c3f8afdd758f2b7f38e284c7fbe0e",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Analyze (javascript-typescript)",
+          "head": "d1cae6736b7c3f8afdd758f2b7f38e284c7fbe0e",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Analyze (actions)",
+          "head": "d1cae6736b7c3f8afdd758f2b7f38e284c7fbe0e",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Analyze (python)",
+          "head": "d1cae6736b7c3f8afdd758f2b7f38e284c7fbe0e",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "verify",
+          "head": "d1cae6736b7c3f8afdd758f2b7f38e284c7fbe0e",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "connected-postgres-browser",
+          "head": "d1cae6736b7c3f8afdd758f2b7f38e284c7fbe0e",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "verify",
+          "head": "d1cae6736b7c3f8afdd758f2b7f38e284c7fbe0e",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "business-postgres",
+          "head": "d1cae6736b7c3f8afdd758f2b7f38e284c7fbe0e",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "browser-fixtures",
+          "head": "d1cae6736b7c3f8afdd758f2b7f38e284c7fbe0e",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "verify",
+          "head": "d1cae6736b7c3f8afdd758f2b7f38e284c7fbe0e",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "browser-fixtures",
+          "head": "d1cae6736b7c3f8afdd758f2b7f38e284c7fbe0e",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "connected-postgres-browser",
+          "head": "d1cae6736b7c3f8afdd758f2b7f38e284c7fbe0e",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "business-postgres",
+          "head": "d1cae6736b7c3f8afdd758f2b7f38e284c7fbe0e",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ],
+      "has_more": false,
+      "premerge_security": {
+        "pr": 63,
+        "checked_at_utc": "2026-10-25T17:28:24.114012+00:00",
+        "main": "153692074de5d4e93dc9f7ab84794d35b904fe2c",
+        "head": "d1cae6736b7c3f8afdd758f2b7f38e284c7fbe0e",
+        "merge_candidate": "df3586f421a5e7a15f125fa34d10a57c9a53566e",
+        "parents": [
+          "153692074de5d4e93dc9f7ab84794d35b904fe2c",
+          "d1cae6736b7c3f8afdd758f2b7f38e284c7fbe0e"
+        ],
+        "codeql": [
+          {
+            "category": "/language:javascript-typescript",
+            "error": "",
+            "ref": "refs/pull/63/merge",
+            "results": 0,
+            "sha": "df3586f421a5e7a15f125fa34d10a57c9a53566e",
+            "warning": ""
+          },
+          {
+            "category": "/language:python",
+            "error": "",
+            "ref": "refs/pull/63/merge",
+            "results": 0,
+            "sha": "df3586f421a5e7a15f125fa34d10a57c9a53566e",
+            "warning": ""
+          },
+          {
+            "category": "/language:actions",
+            "error": "",
+            "ref": "refs/pull/63/merge",
+            "results": 0,
+            "sha": "df3586f421a5e7a15f125fa34d10a57c9a53566e",
+            "warning": ""
+          }
+        ],
+        "open_alerts": []
+      }
+    },
+    {
+      "pr": 62,
+      "url": "https://github.com/naiguelcabral/seus-brownies/pull/62",
+      "reviewed_head": "8a254b8b3a065b65e1210debed313e95aef8a022",
+      "base_before_merge": "f5f6f939fe340c75e9883188c6b8a732b0458c9b",
+      "merge": {
+        "sha": "6dd8655c2da22b94fd5613c42385064d312cdc16",
+        "merged": true,
+        "message": "Pull Request successfully merged"
+      },
+      "checks": [
+        {
+          "name": "CodeQL",
+          "head": "8a254b8b3a065b65e1210debed313e95aef8a022",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "browser-fixtures",
+          "head": "8a254b8b3a065b65e1210debed313e95aef8a022",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "business-postgres",
+          "head": "8a254b8b3a065b65e1210debed313e95aef8a022",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "connected-postgres-browser",
+          "head": "8a254b8b3a065b65e1210debed313e95aef8a022",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Analyze (python)",
+          "head": "8a254b8b3a065b65e1210debed313e95aef8a022",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Analyze (javascript-typescript)",
+          "head": "8a254b8b3a065b65e1210debed313e95aef8a022",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Analyze (actions)",
+          "head": "8a254b8b3a065b65e1210debed313e95aef8a022",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "disposable-postgres",
+          "head": "8a254b8b3a065b65e1210debed313e95aef8a022",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "verify",
+          "head": "8a254b8b3a065b65e1210debed313e95aef8a022",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "verify",
+          "head": "8a254b8b3a065b65e1210debed313e95aef8a022",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "business-postgres",
+          "head": "8a254b8b3a065b65e1210debed313e95aef8a022",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "verify",
+          "head": "8a254b8b3a065b65e1210debed313e95aef8a022",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "browser-fixtures",
+          "head": "8a254b8b3a065b65e1210debed313e95aef8a022",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "connected-postgres-browser",
+          "head": "8a254b8b3a065b65e1210debed313e95aef8a022",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ],
+      "has_more": false,
+      "premerge_security": {
+        "pr": 62,
+        "checked_at_utc": "2026-10-25T18:00:28.913312+00:00",
+        "main": "f5f6f939fe340c75e9883188c6b8a732b0458c9b",
+        "head": "8a254b8b3a065b65e1210debed313e95aef8a022",
+        "merge_candidate": "dddb8f33d84dfa0794eee5cc2ac3e1319d1ba87b",
+        "parents": [
+          "f5f6f939fe340c75e9883188c6b8a732b0458c9b",
+          "8a254b8b3a065b65e1210debed313e95aef8a022"
+        ],
+        "codeql": [
+          {
+            "category": "/language:javascript-typescript",
+            "error": "",
+            "ref": "refs/pull/62/merge",
+            "results": 0,
+            "sha": "dddb8f33d84dfa0794eee5cc2ac3e1319d1ba87b",
+            "warning": ""
+          },
+          {
+            "category": "/language:python",
+            "error": "",
+            "ref": "refs/pull/62/merge",
+            "results": 0,
+            "sha": "dddb8f33d84dfa0794eee5cc2ac3e1319d1ba87b",
+            "warning": ""
+          },
+          {
+            "category": "/language:actions",
+            "error": "",
+            "ref": "refs/pull/62/merge",
+            "results": 0,
+            "sha": "dddb8f33d84dfa0794eee5cc2ac3e1319d1ba87b",
+            "warning": ""
+          }
+        ],
+        "open_alerts": []
+      }
+    },
+    {
+      "pr": 64,
+      "url": "https://github.com/naiguelcabral/seus-brownies/pull/64",
+      "reviewed_head": "e2a1d38b5d96e2a7b126f428c2920938790f66d1",
+      "base_before_merge": "6dd8655c2da22b94fd5613c42385064d312cdc16",
+      "merge": {
+        "sha": "79634e6ad5c98f256dc04bd23db443e73bf63291",
+        "merged": true,
+        "message": "Pull Request successfully merged"
+      },
+      "checks": [
+        {
+          "name": "CodeQL",
+          "head": "e2a1d38b5d96e2a7b126f428c2920938790f66d1",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Analyze (actions)",
+          "head": "e2a1d38b5d96e2a7b126f428c2920938790f66d1",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Analyze (python)",
+          "head": "e2a1d38b5d96e2a7b126f428c2920938790f66d1",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Analyze (javascript-typescript)",
+          "head": "e2a1d38b5d96e2a7b126f428c2920938790f66d1",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "business-postgres",
+          "head": "e2a1d38b5d96e2a7b126f428c2920938790f66d1",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "connected-postgres-browser",
+          "head": "e2a1d38b5d96e2a7b126f428c2920938790f66d1",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "verify",
+          "head": "e2a1d38b5d96e2a7b126f428c2920938790f66d1",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "browser-fixtures",
+          "head": "e2a1d38b5d96e2a7b126f428c2920938790f66d1",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": ".github/dependabot.yml",
+          "head": "e2a1d38b5d96e2a7b126f428c2920938790f66d1",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "connected-postgres-browser",
+          "head": "e2a1d38b5d96e2a7b126f428c2920938790f66d1",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "browser-fixtures",
+          "head": "e2a1d38b5d96e2a7b126f428c2920938790f66d1",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "verify",
+          "head": "e2a1d38b5d96e2a7b126f428c2920938790f66d1",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "business-postgres",
+          "head": "e2a1d38b5d96e2a7b126f428c2920938790f66d1",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ],
+      "has_more": false,
+      "premerge_security": {
+        "pr": 64,
+        "checked_at_utc": "2026-10-25T18:31:11.330787+00:00",
+        "main": "6dd8655c2da22b94fd5613c42385064d312cdc16",
+        "head": "e2a1d38b5d96e2a7b126f428c2920938790f66d1",
+        "merge_candidate": "67ace2b9a7199ec9fa56439e1e1214d4d8c53673",
+        "parents": [
+          "6dd8655c2da22b94fd5613c42385064d312cdc16",
+          "e2a1d38b5d96e2a7b126f428c2920938790f66d1"
+        ],
+        "codeql": [
+          {
+            "category": "/language:javascript-typescript",
+            "error": "",
+            "ref": "refs/pull/64/merge",
+            "results": 0,
+            "sha": "67ace2b9a7199ec9fa56439e1e1214d4d8c53673",
+            "warning": ""
+          },
+          {
+            "category": "/language:python",
+            "error": "",
+            "ref": "refs/pull/64/merge",
+            "results": 0,
+            "sha": "67ace2b9a7199ec9fa56439e1e1214d4d8c53673",
+            "warning": ""
+          },
+          {
+            "category": "/language:actions",
+            "error": "",
+            "ref": "refs/pull/64/merge",
+            "results": 0,
+            "sha": "67ace2b9a7199ec9fa56439e1e1214d4d8c53673",
+            "warning": ""
+          }
+        ],
+        "open_alerts": []
+      }
+    }
+  ],
+  "documentary_closure": {
+    "pr": 65,
+    "url": "https://github.com/naiguelcabral/seus-brownies/pull/65",
+    "role": "this documentary delivery consolidates the authorized sequence",
+    "final_merge_sha_source": "GitHub PR state after merging this document; no self-referential SHA"
+  },
+  "verification": {
+    "operational_tree_matches_review": "0bfc9b8549c395c534a7b615f971090c88d6ad43",
+    "only_documentary_diff": [
+      "docs/governance/AUTONOMY-HANDOFF.md",
+      "docs/governance/AUTONOMY-QUEUE.md",
+      "docs/governance/HUMAN-APPROVALS.md",
+      "docs/governance/PROJECT-STATUS.md",
+      "docs/governance/ROADMAP-CODEX.md",
+      "docs/reviews/INTEGRATION-REVIEW-2026-10-25.md",
+      "evidence/pr-integration-review-2026-10-25.json",
+      "evidence/pr-sequential-integration-2026-10-25.json"
+    ],
+    "audit": {
+      "info": 0,
+      "low": 0,
+      "moderate": 0,
+      "high": 0,
+      "critical": 0,
+      "total": 0
+    },
+    "lockfile_regeneration_needed": false,
+    "drizzle_kit": "devDependencies",
+    "zod": [
+      "4.6.7"
+    ],
+    "code_main_ci_snapshot": [
+      {
+        "databaseId": 40221656567,
+        "name": "CI",
+        "headSha": "79634e6ad5c98f256dc04bd23db443e73bf63291",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "databaseId": 40221656710,
+        "name": "CodeQL",
+        "headSha": "79634e6ad5c98f256dc04bd23db443e73bf63291",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "databaseId": 40221656551,
+        "name": "Isolated business and browser validation",
+        "headSha": "79634e6ad5c98f256dc04bd23db443e73bf63291",
+        "status": "completed",
+        "conclusion": "success"
+      }
+    ],
+    "code_main_security": {
+      "codeql": [
+        {
+          "sha": "79634e6ad5c98f256dc04bd23db443e73bf63291",
+          "ref": "refs/heads/main",
+          "category": "/language:javascript-typescript",
+          "results": 0,
+          "error": "",
+          "warning": ""
+        },
+        {
+          "sha": "79634e6ad5c98f256dc04bd23db443e73bf63291",
+          "ref": "refs/heads/main",
+          "category": "/language:python",
+          "results": 0,
+          "error": "",
+          "warning": ""
+        },
+        {
+          "sha": "79634e6ad5c98f256dc04bd23db443e73bf63291",
+          "ref": "refs/heads/main",
+          "category": "/language:actions",
+          "results": 0,
+          "error": "",
+          "warning": ""
+        }
+      ],
+      "open_alerts": []
+    },
+    "comparison_subject": "documentary candidate working tree before closure commit"
+  },
+  "effects": {
+    "main_merges": true,
+    "merge_method": "merge",
+    "force_push": false,
+    "branch_deletion_by_agent": false,
+    "deployment": false,
+    "shared_sql": false,
+    "managed_auth_changes": false,
+    "environment_files_read": false,
+    "secrets_changed": false
+  }
+}

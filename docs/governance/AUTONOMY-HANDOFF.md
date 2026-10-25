@@ -1,5 +1,129 @@
 # Handoff de autonomia — Cacau v1
 
+## Integração autorizada — 25/10/2026
+
+Usuário autorizou explicitamente a sequência #61 → #63 → #62 → #64 → #65.
+As quatro correções de código foram integradas após atualização da branch e
+checks/CodeQL de cada novo SHA; esta entrega documental #65 fecha o registro.
+Main do código operacional: 79634e6. Merges 1536920, f5f6f93, 6dd8655 e
+79634e6. Recibo evidence/pr-sequential-integration-2026-10-25.json.
+
+Worktree própria preservada em /home/naiguel/.codex/worktrees/audit-review-20261025/seus-brownies,
+branch codex/integrate-pr65-20261025; pasta principal não foi trocada.
+Árvore operacional idêntica a 0bfc9b8, antes validada com 586 testes Node,
+40 fixtures, 12 conectados e dois ensaios PostgreSQL. Checks das candidatas
+atualizadas passaram. Nova auditoria: zero vulnerabilidades. Zod 4.6.7 único,
+Undici 7.30.1 e Drizzle Kit em desenvolvimento; lockfile preservado.
+
+Roadmap/status/espelho e aprovação humana atualizados. Antes de encerrar,
+confirmar merge da #65, CI/CodeQL da main final e equivalência operacional;
+o SHA do próprio fechamento fica no estado da PR no GitHub. Não repetir
+merges já confirmados. Nenhum deploy, SQL compartilhado, .env, segredo,
+credencial histórica, mudança de papel ou nova automação nesta integração.
+
+Próximo passo: preparar os incrementos locais restantes de A02/A04/A07,
+respeitando o roadmap; publicação HML e comprovação por marcador dependem
+de seu gate. Não confundir código integrado com HML publicado/aceito.
+Outras PRs seguem revisão própria. Sem gatilho de reserva nesta rodada;
+DESLIGARTUDO não é procedimento de trabalho normal.
+
+Os checkpoints abaixo registram a preparação histórica: a autorização de
+merge antes pendente foi recebida e aplicada nesta execução.
+
+## Organização retomada — 25/10/2026
+
+Uso oficial renovado em 100% nas duas janelas; LIGARTUDO --prepare-only e
+fast-forward da branch limpa concluídos. Keyring do GitHub CLI não confirmado
+pelo preflight; plugin GitHub e Git por origin funcionaram. Isso não constitui
+validação de handshake de outro MCP. Sem leitura de credenciais privadas.
+
+Pasta principal preservada em codex/audit-remediation-20261023/febef1d.
+Worktree gerenciada de revisão: /home/naiguel/.codex/worktrees/audit-review-20261025/seus-brownies.
+Branch do ensaio codex/review-audit-integration-20261025, HEAD 0bfc9b8;
+branch documental codex/organization-followup-20261025 atualiza a PR #65.
+PR #64 recebeu testes em 601f138 e seus novos checks passaram; três análises
+CodeQL da referência de merge eb037429 sem resultados/erros/avisos e zero
+alertas abertos. #65 mantém a fila canônica e os recibos.
+
+Concluído: leitura dos diffs de #61–#65, checks dos SHAs iniciais aprovados,
+composição local sem conflitos, instalação limpa audit zero, 586 testes Node,
+40 de interface, 12 conectados, dois ensaios PostgreSQL, build isolado e
+lint/tipos/formato/Knip aprovados. Smoke público passou após diagnóstico e
+repetição serial; houve falha de clique em execução concorrente, sem causa
+comprovada e sem asserções removidas. Quatro testes focados da regressão
+final passaram. Containers desta execução encerrados. Detalhes por SHA em
+../reviews/INTEGRATION-REVIEW-2026-10-25.md e evidence/pr-integration-review-2026-10-25.json.
+
+Roadmap/status/espelho atualizados com etapas, responsáveis e critérios.
+Relato de A01 foi preservado como parcial sem fingir nova coleta; role do
+Worker requer confirmação; estatística de consulta não é trilha auditável.
+Nenhum .env, credencial histórica ou secret lido, SQL externo, merge na main,
+deploy, alteração de política/permissão ou automação realizado nesta rodada.
+
+Próximo passo exato: obter autorização humana para #61 → #63 → #62 → #64 →
+#65, reler main/SHA/diff/checks entre merges e tratar conflitos sem descartar
+provas. Conferir lockfile e Drizzle Kit em devDependencies na composição final.
+Publicação HML exige seu gate e recibo; confirmar redação por marcador
+sintético. Não promover produção. Enquanto aguarda, frentes locais da etapa
+2 podem ser preparadas em PRs pequenas, sem aguardar autorização externa
+desnecessária. A02/A05 já preparados; limites de payload e aceite real pendentes.
+
+Uso oficial no checkpoint: 79% restante na janela de cinco horas e 97%
+semanal; não é fechamento por reserva.
+
+Estado: organização e revisão entregues; aguardando gate de integração.
+Sem pausa por reserva e sem nova retomada agendada. Não executar DESLIGARTUDO
+em trabalho normal. A referência de 5% abaixo é histórica e foi superada
+pela renovação confirmada de 25/10.
+
+## Remediação da revisão — fechamento por reserva em 23/10/2026
+
+Tarefa: organizar as próximas etapas com base na última revisão/auditoria e
+seguir dentro dos gates. Branch: codex/audit-remediation-20261023; base local
+74802578d37f39ad458dd8c61df3acf31b6b67a2, merge de origin/main bb122d8 sobre
+3af1af5. Os recibos 7eb15f2/3af1af5 foram preservados; nenhuma integração
+remota foi executada. A pasta docs/reviews/ já existia sem rastreamento no
+início e contém o relatório/inventário usados como fonte, preservados sem edição.
+
+Concluído nesta rodada: governança lida; Git/branch conferidos; GitHub plugin
+reconferiu #55/#59/#60 integradas e #61–#63 abertas. Roadmap recebeu A01–A12,
+critérios, ordem e gates; status e espelho reconciliados. Leitura do lockfile
+confirmou Zod 4.5.4 na raiz, 4.1.12 no SDK Neon e 4.6.7 no Knip. Advisory
+GHSA-mrhx-c7xc-m3w5 reconferido: corrigido a partir de 4.6.6. Dependências não
+foram alteradas. Não há nova prova de revogação histórica, rotina de backup,
+publicação de #60 ou homologação real; não marcar esses itens concluídos.
+
+Arquivos desta rodada: ROADMAP-CODEX.md, PROJECT-STATUS.md,
+AUTONOMY-QUEUE.md e este AUTONOMY-HANDOFF.md; relatório/inventário em
+docs/reviews/ preservados para versionamento junto ao checkpoint. Validação:
+oito links locais sem ausências, JSON do inventário válido e git diff --check
+aprovados antes do salvamento. Testes, lint,
+tipos, audit e build não repetidos, pois a alteração própria é documental.
+As suítes históricas de 574/16 testes pertencem à revisão, não a este merge.
+
+Próximo passo exato, após renovação confirmada: consultar uso, executar
+./LIGARTUDO conforme política, confirmar esta branch e status; atualizar por
+fast-forward apenas se limpo e com upstream existente. Reler roadmap/handoff
+e preparar A02: corrigir o grafo Zod com mudança compatível mínima, incluindo
+a cópia fixada do Neon; adicionar regressão de todas as cópias e verificar
+com npm ci, npm audit, Auth/contratos, suíte, lint/tipos/check/Knip e build
+isolado do HEAD versionado. Definir/testar limites de corpo/cardinalidade como
+parte separável de A02, sem declarar o achado encerrado só pela versão.
+Em paralelo lógico, A01 exige evidência sanitizada do responsável; nunca ler
+ou testar a credencial histórica. Não iniciar agentes paralelos.
+
+Pendências/gates: merge humano de candidatas revisadas e checks do SHA atual;
+rotação/secrets/configuração/SQL compartilhado/produção exigem autorização
+específica. Preparar A05, revisar #61 e #63, depois #62 atualizada sobre #63;
+seguir demais etapas do roadmap. Nenhum novo deploy ou dado sintético no HML.
+
+Uso oficial no fechamento: 95% consumido / **5% restante** na janela de cinco
+horas; semanal 85% restante. Reset: **24/10/2026 01:18:27 America/Sao_Paulo**
+(2026-10-24 04:18:27 UTC, epoch 1792815507). Estado: encerrando por reserva.
+Não iniciar implementação adicional. ./DESLIGARTUDO deve executar após este
+handoff, fora da main; verificar commit/push e registrar eventual falha.
+Não há retomada desta tarefa agendada por esta rodada.
+
 ## Validação automática autorizada — 21/10/2026
 
 Branch codex/automatic-readiness-20261021; incremento 2bcb597: patch isolado
