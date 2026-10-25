@@ -14,7 +14,8 @@ test('the lockfile excludes the vulnerable dependency versions identified in the
     'shell-quote': '1.11.0',
     'postcss-selector-parser': '7.1.6',
     esbuild: '0.25.0',
-    undici: '7.29.1',
+    undici: '7.30.1',
+    zod: '4.6.6',
     'js-yaml': '4.3.2',
     sharp: '0.35.5',
     'source-map-js': '1.2.2',
@@ -34,8 +35,8 @@ test('the lockfile excludes the vulnerable dependency versions identified in the
     )
     // Removing a transitive dependency also removes its vulnerability. The
     // framework packages are required, so their absence must still fail.
-    if (name.startsWith('@tanstack/'))
-      assert.ok(matches.length > 0, `Missing framework dependency: ${name}`)
+    if (name.startsWith('@tanstack/') || name === 'zod')
+      assert.ok(matches.length > 0, `Missing required dependency: ${name}`)
     for (const [path, entry] of matches) {
       const [major = 0, minor = 0, patch = 0] = (entry.version ?? '')
         .split('.')
@@ -82,4 +83,24 @@ test('the typography plugin resolves the patched selector parser and preserves s
   }
   const selector = '.prose :where(h1, h2):not(:where(.not-prose *))'
   assert.equal(parser().processSync(selector), selector)
+})
+
+test('application and Neon use patched Zod and reject oversized arrays before parsing their entries', () => {
+  const application = require('zod') as typeof import('zod')
+  const neonRequire = createRequire(require.resolve('@neondatabase/neon-js'))
+  const neon = neonRequire('zod') as typeof import('zod')
+  assert.equal(neonRequire.resolve('zod'), require.resolve('zod'))
+
+  for (const { z } of [application, neon]) {
+    const schema = z.array(z.object({ productId: z.number().int() })).max(2)
+    assert.equal(schema.safeParse([{ productId: 1 }]).success, true)
+    assert.equal(schema.safeParse([{ productId: null }]).success, false)
+    const excess = schema.safeParse(
+      Array.from({ length: 1_000 }, () => ({ productId: null })),
+    )
+    assert.equal(excess.success, false)
+    if (excess.success) assert.fail('Oversized input must be rejected')
+    assert.equal(excess.error.issues.length, 1)
+    assert.equal(excess.error.issues[0]?.code, 'too_big')
+  }
 })
