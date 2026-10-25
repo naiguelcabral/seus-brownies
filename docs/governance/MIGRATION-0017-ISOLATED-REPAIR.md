@@ -8,7 +8,7 @@ aprovados. Backup `br-morning-star-ac9j0kkh`, sem compute, e snapshot anterior
 preservados; cópia `br-misty-surf-acbrzli5` mantida com compute suspenso/idle.
 
 Preflight revalidou a original `br-lingering-wind-acwh5wap` como `production`,
-primary/default, endpoint `ep-late-water-acahd1z1`, baseline exata de 17 recibos
+primary/default, endpoint `ep-[redacted:26398d41]`, baseline exata de 17 recibos
 e ausência de aplicação parcial. Lote ensaiado aplicado em transação única:
 102 instruções principais mais locks e verificações de preservação/ORM,
 148 instruções no total. SHA-256 do lote verificado:
@@ -169,7 +169,7 @@ Nenhum SQL externo foi executado; Worker → banco continua sem nova atestação
 
 O usuário informou nesta conversa que o Worker acessa o projeto
 `steep-brook-51659857`, branch `br-lingering-wind-acwh5wap`, e forneceu a URL
-JWKS pública do endpoint `ep-late-water-acahd1z1`. Essa declaração identifica
+JWKS pública do endpoint `ep-[redacted:26398d41]`. Essa declaração identifica
 o alvo informado; não é autorização de escrita nem leitura do secret.
 
 Os metadados MCP confirmaram independentemente:
