@@ -16,7 +16,9 @@ test.beforeEach(async ({ context, baseURL }) => {
 test('visitante é redirecionado ao login e as rotas públicas de auth carregam', async ({
   page,
 }) => {
-  await page.goto('/', { waitUntil: 'networkidle' })
+  const loginResponse = await page.goto('/', { waitUntil: 'networkidle' })
+  expect(loginResponse?.headers()['cache-control']).toBe('no-store')
+  expect(loginResponse?.headers()['referrer-policy']).toBe('no-referrer')
   await expect(page).toHaveURL(/\/login$/)
   await expect(
     page.getByRole('heading', { name: 'Entrar no Cacau', exact: true }),
@@ -33,7 +35,11 @@ test('visitante é redirecionado ao login e as rotas públicas de auth carregam'
   ).toBeVisible()
   await expect(page.getByLabel('E-mail')).toBeVisible()
 
-  await page.goto('/login/redefinir-senha', { waitUntil: 'networkidle' })
+  const resetResponse = await page.goto('/login/redefinir-senha', {
+    waitUntil: 'networkidle',
+  })
+  expect(resetResponse?.headers()['cache-control']).toBe('no-store')
+  expect(resetResponse?.headers()['referrer-policy']).toBe('no-referrer')
   await expect(page).toHaveURL(/\/login\/redefinir-senha$/)
   await expect(
     page.getByRole('heading', { name: 'Redefinir senha', exact: true }),

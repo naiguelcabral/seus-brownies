@@ -37,6 +37,7 @@ test('a rota de recuperação é pública, remove token da URL e não o persiste
   assert.match(source, /search: \{ token: undefined \}/)
   assert.match(source, /replace: true/)
   assert.match(source, /name: 'referrer', content: 'no-referrer'/)
+  assert.match(source, /headers: \(\) => sensitiveAuthPageHeaders/)
   assert.doesNotMatch(source, /console\.(log|info|warn|error)/)
   assert.doesNotMatch(source, /localStorage|sessionStorage/)
 })
@@ -48,6 +49,7 @@ test('a rota de login é pública e não carrega dados operacionais', async () =
   )
 
   assert.match(source, /createFileRoute\('\/login'\)/)
+  assert.match(source, /headers: \(\) => sensitiveAuthPageHeaders/)
   assert.match(source, /function LoginRoute\(\)/)
   assert.match(source, /pathname === '\/login' \? <LoginPage \/> : <Outlet \/>/)
   assert.doesNotMatch(source, /loader:/)
@@ -63,4 +65,13 @@ test('a rota de login é pública e não carrega dados operacionais', async () =
   assert.match(source, /await getSessionStatus\(\)/)
   assert.match(source, /session\.sessionPresent && !session\.emailVerified/)
   assert.match(source, /redirect\(\{ to: '\/', throw: true \}\)/)
+})
+
+test('páginas com token de redefinição não são cacheadas nem vazam a URL', async () => {
+  const { sensitiveAuthPageHeaders } =
+    await import('../src/features/auth/page-headers')
+  assert.deepEqual(sensitiveAuthPageHeaders, {
+    'Cache-Control': 'no-store',
+    'Referrer-Policy': 'no-referrer',
+  })
 })
