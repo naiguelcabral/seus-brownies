@@ -1,5 +1,15 @@
 # Ações que exigem aprovação humana — Cacau v1
 
+## PR única de ajustes antes da publicação — 25/10/2026
+
+Usuário autorizou: “Tudo que for pequeno e que pode ser feito antes do
+ambiente publicado vamos fazer e juntar em uma pr”. Escopo: implementar e
+testar ajustes locais pequenos, preparar configuração versionada, atualizar
+documentação e abrir uma única PR. Inclui proposta da regra de worktree para
+revisão humana. Não autoriza merge desta nova PR, deploy, SQL compartilhado,
+secrets, RBAC, mudança arquitetural ou política externa. A autorização anterior
+dos cinco merges já foi consumida na sequência #61/#63/#62/#64/#65.
+
 ## Integração do lote #61–#65 — autorização de 25/10/2026
 
 Após apresentação da sequência e da validação conjunta, usuário autorizou:

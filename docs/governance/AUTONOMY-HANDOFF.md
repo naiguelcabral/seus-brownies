@@ -1,5 +1,30 @@
 # Handoff de autonomia — Cacau v1
 
+## Pacote local de pré-publicação — 25/10/2026
+
+Usuário pediu os ajustes pequenos anteriores à publicação em uma única PR.
+Branch codex/prepublish-small-fixes-20261025 na worktree própria já anexada;
+base main53d6379, pasta principal preservada. Código da candidata: limites,
+autoria Auth parcial, timeout Turnstile, origens FIFO/CSV, headers, configuração
+versionada, cobertura e regra de worktree para revisão. Sem mudança de versões,
+schema, RBAC, custos ou histórico.
+
+601 testes Node, build isolado e dois smokes públicos no código desta candidata;
+12 conectados PostgreSQL17 e40 fixtures em4907b24. Depois, somente a guarda
+de comprimento numérico e a restrição localhost da sonda mudaram; CI repete os
+casos no SHA publicado. Lint/tipos/formato/Knip e audit0;
+recibo evidence/prepublication-small-fixes-2026-10-25.json fixa a abrangência.
+Cobertura Node explicita53 fontes não medidas; não extrapolar85,83% das linhas
+medidas para o sistema inteiro. O build inicial apontou import server-only no
+entry isomórfico; corrigido com imports nos callbacks de servidor, mantendo
+proteção de importação. O contrato de idempotência mantém as três chaves e
+agora lê também o módulo de schemas.
+
+Próximo passo desta entrega: conferir diff/links/guards, publicar a branch,
+abrir/anexar uma única PR e conferir CI/CodeQL do SHA final. Não integrar ou
+publicar sem autorização aplicável. Depois, A04/A07/A08 restantes e decisões
+de sustentação conforme roadmap. Nenhum teste/fato sintético no HML.
+
 ## Integração autorizada — 25/10/2026
 
 Usuário autorizou explicitamente a sequência #61 → #63 → #62 → #64 → #65.
