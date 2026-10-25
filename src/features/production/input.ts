@@ -7,7 +7,9 @@ const quantityInput = z
   .trim()
   .max(maxNumericInputLength)
   .refine(
-    (value) => (quantityToThousandths(value) ?? 0n) > 0n,
+    (value) =>
+      value.length <= maxNumericInputLength &&
+      (quantityToThousandths(value) ?? 0n) > 0n,
     'Informe uma quantidade positiva com até três casas decimais.',
   )
 

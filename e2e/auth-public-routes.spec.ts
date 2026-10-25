@@ -57,10 +57,18 @@ test('excessive request body is rejected by global middleware before routing', a
   request,
   baseURL,
 }) => {
+  if (
+    process.env.CACAU_PUBLIC_SMOKE_ISOLATED !== '1' ||
+    baseURL !== 'http://127.0.0.1:3459'
+  ) {
+    throw new Error(
+      'Oversized-payload probe requires the isolated local smoke runner.',
+    )
+  }
   const response = await request.post('/login', {
     data: 'x'.repeat(1024 * 1024 + 1),
     headers: {
-      origin: baseURL ?? '',
+      origin: baseURL,
       'sec-fetch-site': 'same-origin',
       'content-type': 'text/plain',
     },
