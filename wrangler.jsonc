@@ -2,7 +2,9 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "cacau-v1",
   "compatibility_date": "2025-09-02",
-  "compatibility_flags": ["nodejs_compat"],
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
   "main": "@tanstack/react-start/server-entry",
   "env": {
     "hml": {
@@ -16,20 +18,20 @@
           "enabled": true,
           "head_sampling_rate": 1,
           "persist": true,
-          "invocation_logs": true,
+          "invocation_logs": true
         },
         "traces": {
           "enabled": false,
           "persist": true,
-          "head_sampling_rate": 1,
+          "head_sampling_rate": 1
         },
         "issues": {
-          "enabled": false,
-        },
+          "enabled": false
+        }
       },
       "vars": {
         "AUTH_RATE_LIMITER_REQUIRED": "true",
-        "PASSWORD_RESET_REDIRECT_ORIGIN": "https://cacau-v1-hml.naiguelcabral.workers.dev",
+        "PASSWORD_RESET_REDIRECT_ORIGIN": "https://cacau-v1-hml.naiguelcabral.workers.dev"
       },
       "ratelimits": [
         {
@@ -37,9 +39,9 @@
           "namespace_id": "2026091001",
           "simple": {
             "limit": 20,
-            "period": 60,
-          },
-        },
+            "period": 60
+          }
+        }
       ],
       "secrets": {
         "required": [
@@ -47,9 +49,41 @@
           "NEON_AUTH_BASE_URL",
           "NEON_AUTH_COOKIE_SECRET",
           "TURNSTILE_SECRET_KEY",
-          "AUTH_LOGIN_HASH_PEPPER",
-        ],
-      },
-    },
+          "AUTH_LOGIN_HASH_PEPPER"
+        ]
+      }
+    }
   },
+  "vars": {
+    "AUTH_RATE_LIMITER_REQUIRED": "true"
+  },
+  "ratelimits": [
+    {
+      "name": "AUTH_RATE_LIMITER",
+      "namespace_id": "2026102501",
+      "simple": {
+        "limit": 20,
+        "period": 60
+      }
+    }
+  ],
+  "secrets": {
+    "required": [
+      "DATABASE_URL",
+      "NEON_AUTH_BASE_URL",
+      "NEON_AUTH_COOKIE_SECRET",
+      "TURNSTILE_SECRET_KEY",
+      "AUTH_LOGIN_HASH_PEPPER"
+    ]
+  },
+  "observability": {
+    "enabled": false,
+    "redact_query_string": true,
+    "logs": {
+      "enabled": true,
+      "head_sampling_rate": 1,
+      "persist": true,
+      "invocation_logs": true
+    }
+  }
 }

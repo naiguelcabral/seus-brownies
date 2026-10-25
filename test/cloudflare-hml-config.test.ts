@@ -28,6 +28,10 @@ type WranglerConfig = {
       secrets: { required: string[] }
     }
   }
+  vars: { AUTH_RATE_LIMITER_REQUIRED: string }
+  ratelimits: WranglerConfig['env']['hml']['ratelimits']
+  secrets: { required: string[] }
+  observability: { redact_query_string: boolean }
   routes?: unknown
 }
 
@@ -99,4 +103,22 @@ test('build HML isolado só repassa a site key pública de Turnstile', async () 
     /Build HML exige VITE_TURNSTILE_SITE_KEY pública explícita/,
   )
   assert.doesNotMatch(script, /TURNSTILE_SECRET_KEY=/)
+})
+
+test('production candidate fails closed with a distinct limiter and required secret names', async () => {
+  const config = parseJsonc(
+    await readFile(new URL('../wrangler.jsonc', import.meta.url), 'utf8'),
+  )
+  assert.equal(config.vars.AUTH_RATE_LIMITER_REQUIRED, 'true')
+  assert.equal(config.ratelimits[0]?.name, 'AUTH_RATE_LIMITER')
+  assert.notEqual(
+    config.ratelimits[0].namespace_id,
+    config.env.hml.ratelimits[0]?.namespace_id,
+  )
+  assert.deepEqual(
+    config.ratelimits[0].simple,
+    config.env.hml.ratelimits[0]?.simple,
+  )
+  assert.deepEqual(config.secrets.required, config.env.hml.secrets.required)
+  assert.equal(config.observability.redact_query_string, true)
 })

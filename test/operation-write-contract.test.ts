@@ -24,8 +24,20 @@ test('criações reservam a chave antes dos efeitos e registram o ator do servid
     'utf8',
   )
 
+  const inputSource = await readFile(
+    new URL('../src/features/operations/input.ts', import.meta.url),
+    'utf8',
+  )
+  assert.match(source, /const purchaseValues = purchaseInput/)
+  assert.match(source, /const saleValues = saleInput/)
+  assert.match(source, /\.validator\(purchaseValues\)/)
+  assert.match(source, /\.validator\(saleValues\)/)
   assert.equal(
-    (source.match(/idempotencyKey: z\.string\(\)\.uuid\(\)/g) ?? []).length,
+    (
+      (source + inputSource).match(
+        /idempotencyKey: z\.string\(\)\.uuid\(\)/g,
+      ) ?? []
+    ).length,
     3,
   )
   assert.equal((source.match(/\.onConflictDoNothing\(/g) ?? []).length, 3)

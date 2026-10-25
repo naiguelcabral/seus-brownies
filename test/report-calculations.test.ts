@@ -1,3 +1,4 @@
+import { sumCosts } from '../src/lib/exact-cost'
 import { requireFirst } from '../src/lib/required-value'
 import assert from 'node:assert/strict'
 import test from 'node:test'
@@ -441,4 +442,57 @@ test('valoriza estoque FIFO pelas camadas remanescentes e não por custo médio'
       },
     ],
   )
+})
+
+test('FIFO origin detail includes purchases, adjustments and unknown history with exact reversals', () => {
+  const row = {
+    saleItemId: 1,
+    productId: 1,
+    productName: 'Brownie',
+    productionBatchId: null,
+    quantity: '1.000',
+    allocatedCost: '1.00',
+    exactCost: { numerator: '1', denominator: '3' },
+    saleItemRevenue: '12.00',
+  }
+  const report = summarizeFifoMargins([
+    { ...row, allocationId: 1, productionBatchId: 9 },
+    { ...row, allocationId: 2, origin: 'purchase', sourceStockMovementId: 31 },
+    {
+      ...row,
+      allocationId: 3,
+      origin: 'adjustment',
+      sourceStockMovementId: 32,
+      exactReversedCost: { numerator: '1', denominator: '6' },
+    },
+    { ...row, allocationId: 4 },
+  ])
+  assert.equal(report.netRevenue, '12.00')
+  assert.equal(report.cogs, '1.17')
+  assert.deepEqual(
+    sumCosts(report.byOrigin.map((item) => item.exactCogs)),
+    report.exactCogs,
+  )
+  assert.equal(report.grossMargin, '10.83')
+  assert.deepEqual(
+    report.byOrigin.map((item) => item.originLabel),
+    [
+      'Lote #9',
+      'Compra · movimento #31',
+      'Ajuste · movimento #32',
+      'Origem não identificada',
+    ],
+  )
+  assert.equal(
+    report.byOrigin.reduce((total, item) => total + Number(item.revenue), 0),
+    12,
+  )
+  assert.deepEqual(report.byBatch, [
+    {
+      productionBatchId: 9,
+      revenue: '3.00',
+      cogs: '0.33',
+      grossMargin: '2.67',
+    },
+  ])
 })

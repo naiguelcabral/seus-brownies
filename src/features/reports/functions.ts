@@ -417,6 +417,12 @@ export const getOperationalReports = createServerFn({ method: 'GET' })
         cogs: string
         grossMargin: string
       }>
+      byOrigin: Array<{
+        originLabel: string
+        revenue: string
+        cogs: string
+        grossMargin: string
+      }>
       byBatch: Array<{
         productionBatchId: number
         revenue: string
@@ -457,6 +463,8 @@ export const getOperationalReports = createServerFn({ method: 'GET' })
             productId: products.id,
             productName: products.name,
             productionBatchId: productionBatchOutputs.productionBatchId,
+            origin: inventoryCostLayers.origin,
+            sourceStockMovementId: inventoryCostLayers.sourceStockMovementId,
             quantity: inventoryCostAllocations.quantity,
             allocatedCost: inventoryCostAllocations.allocatedCost,
             exactCost: inventoryCostAllocations.exactCost,

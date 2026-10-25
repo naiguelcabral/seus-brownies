@@ -47,3 +47,30 @@ test('Turnstile falha fechado quando a resposta do provedor não é JSON', async
     reasonCode: 'provider_invalid_response',
   })
 })
+
+test('Turnstile request carries a bounded abort signal', async () => {
+  const verifier = createCloudflareTurnstileVerifier({
+    secretKey: 'test-secret',
+    timeoutMs: 20,
+    fetch: async (_input, init) => {
+      const signal = init?.signal
+      assert.ok(signal)
+      await new Promise<void>((resolve) => {
+        const timer = setTimeout(resolve, 1000)
+        signal.addEventListener(
+          'abort',
+          () => {
+            clearTimeout(timer)
+            resolve()
+          },
+          { once: true },
+        )
+      })
+      signal.throwIfAborted()
+      return Response.json({ success: true })
+    },
+  })
+  await assert.rejects(verifier.verify({ token: 'browser-token' }), {
+    name: 'TimeoutError',
+  })
+})

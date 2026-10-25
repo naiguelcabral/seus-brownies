@@ -1,6 +1,7 @@
 import { createServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
 
+import { readAuthAuditUserId } from './audit-identity'
 import { createConfiguredNeonAuthServer } from './configured-neon-auth.server'
 import {
   hashAuthIdentity,
@@ -33,7 +34,10 @@ import {
 } from './password-reset-audit'
 import { createAuthAuditTelemetry } from './auth-audit-telemetry.server'
 import { createPasswordResetTelemetry } from './password-reset-telemetry.server'
-import { requestTanStackNeonPasswordReset } from './neon-tanstack-adapter.server'
+import {
+  requestTanStackNeonPasswordReset,
+  readTanStackNeonSession,
+} from './neon-tanstack-adapter.server'
 import {
   readNeonAuthRuntimeConfig,
   readPasswordResetRedirectTo,
@@ -89,13 +93,14 @@ async function getAuthAuditWriter() {
   }
 }
 
-async function getAuthActionAuditContext(): Promise<
-  AuthActionAuditContext | undefined
-> {
+async function getAuthActionAuditContext(
+  actorAuthUserId?: string,
+): Promise<AuthActionAuditContext | undefined> {
   const writer = await getAuthAuditWriter()
   return writer
     ? {
         writer,
+        ...(actorAuthUserId ? { actorAuthUserId } : {}),
         requestId: crypto.randomUUID(),
         telemetry: createAuthAuditTelemetry(),
       }
@@ -362,5 +367,15 @@ export const resetPasswordWithTokenFn = createServerFn({ method: 'POST' })
 export const logout = createServerFn({ method: 'POST' }).handler(async () => {
   const auth = createConfiguredNeonAuthServer(process.env)
   if (!auth) return { ok: true }
-  return signOutCurrentSession(auth, await getAuthActionAuditContext())
+  let actorAuthUserId: string | undefined
+  try {
+    const session = await readTanStackNeonSession(auth)
+    if (!session.error) actorAuthUserId = readAuthAuditUserId(session.data)
+  } catch {
+    // Failure to read an identity must never prevent clearing a session.
+  }
+  return signOutCurrentSession(
+    auth,
+    await getAuthActionAuditContext(actorAuthUserId),
+  )
 })

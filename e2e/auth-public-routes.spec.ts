@@ -40,8 +40,32 @@ test('visitante é redirecionado ao login e as rotas públicas de auth carregam'
   })
   expect(resetResponse?.headers()['cache-control']).toBe('no-store')
   expect(resetResponse?.headers()['referrer-policy']).toBe('no-referrer')
+  for (const response of [loginResponse, resetResponse]) {
+    expect(response?.headers()['x-frame-options']).toBe('DENY')
+    expect(response?.headers()['x-content-type-options']).toBe('nosniff')
+    expect(
+      response?.headers()['content-security-policy-report-only'],
+    ).toContain('https://challenges.cloudflare.com')
+  }
   await expect(page).toHaveURL(/\/login\/redefinir-senha$/)
   await expect(
     page.getByRole('heading', { name: 'Redefinir senha', exact: true }),
   ).toBeVisible()
+})
+
+test('excessive request body is rejected by global middleware before routing', async ({
+  request,
+  baseURL,
+}) => {
+  const response = await request.post('/login', {
+    data: 'x'.repeat(1024 * 1024 + 1),
+    headers: {
+      origin: baseURL ?? '',
+      'sec-fetch-site': 'same-origin',
+      'content-type': 'text/plain',
+    },
+  })
+  expect(response.status()).toBe(413)
+  expect(await response.json()).toEqual({ error: 'payload_too_large' })
+  expect(response.headers()['x-frame-options']).toBe('DENY')
 })

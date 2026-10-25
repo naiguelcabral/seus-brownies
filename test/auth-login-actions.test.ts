@@ -390,3 +390,65 @@ test('conclusão delega token e senha sem expor detalhes do provedor', async () 
     { ok: false, message: invalidPasswordResetMessage },
   )
 })
+
+test('successful login and verification attribute only provider-returned opaque IDs', async () => {
+  const events: Array<AuthAuditInput> = []
+  const provider = {
+    error: null,
+    data: {
+      user: { id: 'provider-user-1', email: 'private@example.test' },
+      token: 'private-token',
+    },
+  }
+  const auth = {
+    ...createAuthClient(),
+    signIn: { email: async () => provider },
+    emailOtp: {
+      ...createAuthClient().emailOtp,
+      verifyEmail: async () => provider,
+    },
+  }
+  await signInWithEmailPassword(
+    auth,
+    { email: 'claimed@example.test', password: 'private-password' },
+    createAuditContext(events),
+  )
+  await verifyEmailVerificationOtp(
+    auth,
+    { email: 'claimed@example.test', otp: '123456' },
+    createAuditContext(events),
+  )
+  for (const event of events) {
+    assert.equal(event.actorAuthUserId, 'provider-user-1')
+    assert.equal(event.targetId, 'provider-user-1')
+  }
+  assert.equal(events.length, 2)
+  assert.doesNotMatch(
+    JSON.stringify(events),
+    /private@example|claimed@example|private-token|private-password|123456/,
+  )
+})
+
+test('rejected provider data cannot invent an actor; logout uses a server-resolved session ID', async () => {
+  const events: Array<AuthAuditInput> = []
+  await signInWithEmailPassword(
+    {
+      ...createAuthClient(),
+      signIn: {
+        email: async () => ({
+          error: { status: 401 },
+          data: { user: { id: 'untrusted-failure' } },
+        }),
+      },
+    },
+    { email: 'claimed@example.test', password: 'private' },
+    createAuditContext(events),
+  )
+  await signOutCurrentSession(createAuthClient(), {
+    ...createAuditContext(events),
+    actorAuthUserId: 'validated-session-user',
+  })
+  assert.equal(events[0]?.actorAuthUserId, undefined)
+  assert.equal(events[1]?.actorAuthUserId, 'validated-session-user')
+  assert.equal(events[1].targetId, 'validated-session-user')
+})

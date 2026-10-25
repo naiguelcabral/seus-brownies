@@ -160,6 +160,8 @@ export type FifoMarginRow = {
   productId: number
   productName: string
   productionBatchId: number | null
+  origin?: 'production' | 'purchase' | 'adjustment'
+  sourceStockMovementId?: number
   quantity: string
   allocatedCost: string
   exactCost?: ExactCost | null
@@ -263,7 +265,21 @@ export function summarizeFifoMargins(rows: FifoMarginRow[]) {
       ),
     }))
 
+  const originLabel = (row: FifoMarginRow) => {
+    if (row.productionBatchId !== null) return `Lote #${row.productionBatchId}`
+    const kind =
+      row.origin === 'purchase'
+        ? 'Compra'
+        : row.origin === 'adjustment'
+          ? 'Ajuste'
+          : 'Origem não identificada'
+    return row.sourceStockMovementId === undefined
+      ? kind
+      : `${kind} · movimento #${row.sourceStockMovementId}`
+  }
+  const origins = group(originLabel)
   return {
+    exactCogs: totals.cogs,
     netRevenue: centsToMoney(totals.revenue),
     cogs: displayCostMoney(totals.cogs),
     grossMargin: displayCostMoney(
@@ -275,6 +291,11 @@ export function summarizeFifoMargins(rows: FifoMarginRow[]) {
         ...item,
       }),
     ),
+    byOrigin: asMargin(origins).map(({ key, ...item }) => ({
+      originLabel: key,
+      exactCogs: requireDefined(origins.get(key)).cogs,
+      ...item,
+    })),
     byBatch: asMargin(group((row) => row.productionBatchId)).map(
       ({ key, ...item }) => ({
         productionBatchId: key,

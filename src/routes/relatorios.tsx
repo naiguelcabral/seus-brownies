@@ -362,9 +362,9 @@ function ReportsPage() {
               empty="Não há alocações FIFO no período."
             />
             <List
-              title="Margem por lote"
-              rows={report.fifo.byBatch.map((item) => [
-                `Lote #${item.productionBatchId}`,
+              title="Margem por origem FIFO"
+              rows={report.fifo.byOrigin.map((item) => [
+                item.originLabel,
                 formatBrlMoney(item.grossMargin),
               ])}
               empty="Não há alocações FIFO no período."
