@@ -115,6 +115,9 @@ async function createLocalBackup() {
       },
     },
   )
+  // The CLI is an operator prerequisite (docs/governance/KNIP-CODEQL.md), not an npm dependency.
+  if (credential.error?.code === 'ENOENT')
+    throw new Error('BACKUP_NEON_CLI_MISSING')
   if (credential.error || credential.status !== 0)
     throw new Error('BACKUP_OPERATOR_AUTH_UNAVAILABLE')
   const environment = backupPostgresEnvironment(credential.stdout)
@@ -224,6 +227,7 @@ if (
       'BACKUP_ACK_REQUIRED',
       'BACKUP_IGNORE_REQUIRED',
       'BACKUP_DIRECTORY_NOT_PRIVATE',
+      'BACKUP_NEON_CLI_MISSING',
       'BACKUP_OPERATOR_AUTH_UNAVAILABLE',
       'BACKUP_SOURCE_MISMATCH',
       'BACKUP_DUMP_FAILED',
