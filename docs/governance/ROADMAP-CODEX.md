@@ -1,9 +1,9 @@
 # Roadmap único — Cacau v1
 
-Atualizado em **23/10/2026**, reconciliando a
+Atualizado em **25/10/2026**, após revisão conjunta das candidatas e da
 [revisão técnica e de segurança](../reviews/SENIOR-REVIEW-2026-10-23.md).
 GitHub reconferido nesta rodada: #55 e #59–#60 integradas, `main` em
-`bb122d8`; #61–#64 abertas. Último checkpoint HML: versão `997f47bb`,
+`bb122d8`; #61–#65 abertas. Nenhuma delas foi integrada nesta rodada. Último checkpoint HML: versão `997f47bb`,
 em 100% após restaurar os bindings de conexão/autenticação. Não há recibo
 que comprove publicação da correção de datas #60 nessa versão.
 Este é o **único arquivo de planejamento e acompanhamento de pendências**.
@@ -39,6 +39,28 @@ Seguem homologação real H01–H03, antiabuso A08, FIFO A09, cabeçalhos A10 e
 uso diário H06; só então piloto I05 e aceite I04. WhatsApp/OCR e extrações
 maiores vêm depois. A PR #55 já está integrada; não reapresentar seu merge.
 
+## Sequência executável — 25/10/2026
+
+| Etapa | Escopo | Responsável e resultado para avançar |
+| --- | --- | --- |
+| 1. Integrar as candidatas revisadas | **#61 → #63 → #62 → #64 → #65**: guard Drizzle, destinos por hash, higiene/CI, Zod/logs/headers e documentação. | Agente prepara e reconfere o SHA/checks a cada avanço; **Dono autoriza o merge**. Atualizar branches sobre a main entre integrações; conferir o lockfile combinado e Drizzle Kit em devDependencies. Ensaio local aprovado não dispensa os gates da main. |
+| 2. Completar segurança e disponibilidade | A02 (corpo/cardinalidade), A04 (ator Auth), A07 (conexões), A08 (antiabuso), A09 (origem FIFO), A10 (headers globais); L01/L08. | Agente pode preparar mudanças pequenas, testes negativos e PRs separados. Preservar regras financeiras, precisão, RBAC, sessão e fail-closed. Limites da aplicação ainda não foram implementados; o teste do Zod é uma regressão da biblioteca. L01 prepara produção, sem publicar. |
+| 3. Fechar sustentação e dados | A01/A03, T02/G02/I01/I02/I03 e L02–L06: evidência de credencial, recuperação/Auth, frequência/fuso, ambientes, privilégio mínimo, observabilidade e dados pessoais. | Agente prepara inventários/planos e ensaios isolados. Dono decide RPO/RTO, retenção, responsáveis, ambientes e política de dados; autoriza cada mudança remota aplicável. Não repetir restore/importação/recibos já consumidos. Preparação independente pode avançar junto da etapa 2. |
+| 4. Aceitar operação | H01–H03/H06, L07, I05 → I04: provedor/desafio reais, permissões, celular, medição da cobertura, piloto e aceite de produção. | Operadora/Dono executam os roteiros reais com fatos expressamente autorizados; agente registra evidência e corrige falhas. CI/laboratório sintético não encerram esses aceites. Publicação HML deve ter recibo SHA/build/Worker/configuração e confirmação de redação por marcador sintético. |
+| Após estabilidade | A12/S04 e R01/R02; demais evoluções condicionais. | Revisar permissões dos conectores e extrações graduais; WhatsApp/OCR somente após os gates do núcleo. Não ampliar autonomia nem delegar automaticamente. |
+
+**L09 é transversal e imediato:** esta rodada trabalha em worktree própria;
+a pasta principal permaneceu na branch anterior. A formalização em AGENTS.md
+continua proposta para revisão, sem alteração automática das regras.
+
+**Estado da etapa 1:** combinação das cinco PRs sem conflitos, npm ci com
+audit zero, 586 testes Node, 40 casos de interface e 12 conectados aprovados;
+ensaios PostgreSQL de custos e do fluxo operacional, lint/tipos/formato/Knip
+e build isolado aprovados. A #64 recebeu regressões adicionais em 601f138.
+SHAs, limitações e prova de equivalência em
+[revisão de integração](../reviews/INTEGRATION-REVIEW-2026-10-25.md).
+Checks remotos novos e main atual devem ser relidos antes de cada merge.
+
 ## Remediação da revisão de 23/10/2026
 
 Os identificadores A01–A12 abaixo correspondem aos achados do relatório
@@ -48,9 +70,9 @@ Dono/administrador nas decisões e operações externas sujeitas a gate.
 
 | Ordem / achado | Estado | Entrega e critério de aceite | Gate / dependência |
 | --- | --- | --- | --- |
-| Imediato — A01 | Comprovação técnica parcial em 23/10 | Hash da credencial de `48b101d` comparado, sem exibir valores, com a senha atual do `neondb_owner` em cada branch: `production`, `g1-auth-hml` e `Development` divergem; as três branches de backup não têm endpoint e não aceitam conexão; o projeto arquivado `cool-base` foi apagado. Falta revisar acessos do período 17–22/10: `pg_stat_statements` está desligado e a CLI não expõe conexões; no Auth, 21 sessões vieram de dois IPs. Registrar evidência sanitizada e apagar `.env.local.bak` local. | Dono pede logs de conexão ao suporte Neon, se necessário. Reescrita do histórico é decisão separada. Não testar nem reproduzir o valor antigo. |
-| 1 — A02 / S03 | Dependência corrigida na PR #64; limites pendentes | PR #64: `zod ^4.6.7` com override `$zod`, uma única cópia 4.6.7 na árvore; `undici` do `miniflare` em 7.30.1; `npm audit` zerado; 578 testes. Pendente: limites de corpo/cardinalidade (`production/functions.ts:106`, compras e vendas) e casos de excesso, em PR próprio. | Integração depende de revisão e CI; integrar #64 por último entre #61–#64, regenerando o lockfile. [Advisory](https://github.com/advisories/GHSA-mrhx-c7xc-m3w5). |
-| 1 — A05 | Candidata na PR #64 | `env.hml.observability.redact_query_string: true`; `/login` e `/login/redefinir-senha` com `Cache-Control: no-store` e `Referrer-Policy: no-referrer` pela opção `headers` da rota, conferidos em requisição local. Falta deploy HML e captura com marcador sintético. | Publicação e leitura remota conforme autorização concreta; não consultar tokens reais. |
+| Imediato — A01 | Comprovação técnica parcial em 23/10 | Relato de coleta incorporado por #65/9a4b276: hash da credencial de `48b101d` comparado, sem exibir valores, com a senha atual do `neondb_owner` em cada branch: `production`, `g1-auth-hml` e `Development` divergem; as três branches de backup não têm endpoint e não aceitam conexão; o projeto arquivado `cool-base` foi apagado. Falta revisar acessos do período 17–22/10: `pg_stat_statements` está desligado e a CLI não expõe conexões; no Auth, 21 sessões vieram de dois IPs. Falta recibo sanitizado que permita revisar método, UTC e abrangência dessa coleta; ela não foi repetida nesta rodada. Eventuais cópias locais de credenciais ficam sob responsabilidade privada do operador, sem leitura ou exclusão pelo agente. | Dono pede logs de conexão ao suporte Neon, se necessário. Reescrita do histórico é decisão separada. Não testar nem reproduzir o valor antigo. |
+| 1 — A02 / S03 | Dependência corrigida na PR #64; limites pendentes | PR #64: `zod ^4.6.7` com override `$zod`, uma única cópia 4.6.7 na árvore; `undici` do `miniflare` em 7.30.1; `npm audit` zerado na candidata. Seguimento 25/10: regressão de todas as cópias do lockfile, runtime comum ao SDK Neon e rejeição antecipada de array excessivo, em 601f138; conjunto com 586 testes aprovado. Pendente: limites de corpo/cardinalidade (`production/functions.ts:106`, compras e vendas) e casos de excesso, em PR próprio. | Integração depende de revisão e CI; integrar #64 por último entre #61–#64, regenerando o lockfile. [Advisory](https://github.com/advisories/GHSA-mrhx-c7xc-m3w5). |
+| 1 — A05 | Candidata na PR #64 | `env.hml.observability.redact_query_string: true`; `/login` e `/login/redefinir-senha` com `Cache-Control: no-store` e `Referrer-Policy: no-referrer` pela opção `headers` da rota; smoke de navegador de 25/10 confere ambos os headers por HTTP nas duas páginas. Falta deploy HML e captura com marcador sintético. | Publicação e leitura remota conforme autorização concreta; não consultar tokens reais. |
 | 1 — A06 / T02 | Candidata na PR #61 | Revisar eb62e51 e checks do SHA atual; bloquear db:generate/db:push, preservando preparo/revisão offline e recibos. | Merge humano; nenhum SQL compartilhado. Não duplicar a implementação da PR. |
 | 2 — A03 / I02 / I03 | Divergência documentada; política pendente | Revisão observou histórico Neon de seis horas, branches sem proteção e automação semanal quinta 00:15, divergindo do diário 03h documentado. Reconfirmar fuso/configuração; acordar RPO/RTO, retenção, responsáveis e Auth; comprovar sequência de uploads, restore externo e alerta de falha. | Restore de 21/10 permanece válido historicamente. Mudança de frequência/infraestrutura/proteção exige decisão aplicável; não apagar backups. |
 | 2 — A04 / S01 | Pendente no fluxo Auth | Associar eventos futuros à identidade retornada/validada no servidor; ator nas concessões futuras e bootstrap explícito. Para tentativas/reset, aprovar correlação opaca; testes sem e-mail/senha/token nos eventos. | Preservar autoria histórica desconhecida; não fazer backfill inventado. Auditoria operacional S01 continua entregue. |
@@ -70,28 +92,22 @@ os IDs abaixo cobrem apenas o que não tinha fila própria.
 | ID | Prioridade | Lacuna e evidência | Solução e critério de aceite | Gate / dependência |
 | --- | --- | --- | --- | --- |
 | L01 | Antes de I04 | Configuração do Worker de produção incompleta: o topo de `wrangler.jsonc` não tem binding `AUTH_RATE_LIMITER`, `AUTH_RATE_LIMITER_REQUIRED`, lista de secrets nem redação de logs. Sem a flag, `auth-rate-limit.server.ts:96` usa só o limitador local do isolate, sem aviso. | Espelhar em produção as garantias do HML; teste estrutural que falhe se a flag, o binding, os secrets obrigatórios ou a redação faltarem. | Implementação local; secrets/deploy de produção exigem autorização. |
-| L02 | Antes do piloto | Worker conecta como `neondb_owner`, dono do banco; o guard do npm (A06) só evita acidente. | Papel de aplicação sem DDL nem propriedade, com privilégios mínimos por tabela; plano, ensaio isolado e troca do `DATABASE_URL` registrada. | SQL compartilhado e secret exigem autorização específica. |
-| L03 | Antes do piloto | Sem trilha de consultas: `pg_stat_statements` desligado em todas as branches, o que impediu auditar A01. Neon sem IP allowlist e sem branch protegida. | Ativar `pg_stat_statements` na `production`; decidir custo de branch protegida e allowlist; registrar política de revisão periódica. | Extensão/plano Neon exigem decisão do Dono. |
-| L04 | Antes do piloto | Ambientes embaralhados: HML usa os dados da `production`; Auth e `.env.local` usam `g1-auth-hml` (schema 0016); `Development` está em 0014. O `.env.local` local ainda tem senhas inválidas. | Branch de desenvolvimento derivada da `production`, com schema atual e dados sanitizados; separar HML de produção antes de I04; atualizar `ENVIRONMENT-MATRIX` e o `.env.local`. | Criação de branch e secrets exigem autorização; não copiar dados pessoais sem sanitização. |
-| L05 | Antes do piloto | Falhas invisíveis: traces/Issues do Worker desligados, nenhuma ferramenta de erros, monitor só com GETs públicos e Server Functions devolvendo erro com status 200. | Ativar Issues/alertas, endpoint de saúde protegido que teste banco e Auth, registro estruturado de falhas sem dados pessoais e alerta independente do computador local (complementa I03). | Configuração do Worker conforme gate; segredos do endpoint pelo Dono. |
-| L06 | Antes do piloto com clientes reais | Dados pessoais sem política: `sales.customer_name`, `sales.customer_phone` e, no futuro WhatsApp, `sender_phone`. Não há base legal, retenção, exclusão nem controle de acesso documentados. | Inventário de dados pessoais, prazo de retenção, anonimização auditada, mínimo necessário em CSV e logs, e registro LGPD aprovado. | Política e prazos são decisão do Dono; anonimização segue lifecycle auditável. |
-| L07 | Antes de I04 | Sem medição de cobertura: os testes não indicam o que fica descoberto. | Cobertura nativa do Node na CI, com limite mínimo em dinheiro, estoque, FIFO e Auth; sem enfraquecer testes existentes. | Implementação local e CI. |
-| L08 | Contínuo | SDK de autenticação em beta: `@neondatabase/neon-js` 0.8.0-beta, que fixa Zod antigo (contido pelo override da #64). | Acompanhar versões, testes de contrato do adapter e plano de contingência documentado. | Troca de SDK de autenticação exige ADR. |
+| L02 | Antes do piloto | O levantamento complementar relata uso de neondb_owner; a revisão anterior não comprovou a role efetiva do Worker. Confirmar por identidade da sessão em probe autorizado e sanitizado; o guard npm (A06) só evita acidente. | Papel de aplicação sem DDL nem propriedade, com privilégios mínimos por tabela; plano, ensaio isolado e troca do `DATABASE_URL` registrada. | SQL compartilhado e secret exigem autorização específica. |
+| L03 | Antes do piloto | Levantamento relata pg_stat_statements desligado e ausência de allowlist/proteção de branches. Estatísticas agregadas não substituem logs de conexão nem trilha auditável por evento; a revisão de acessos de A01 continua separada. | Decidir observabilidade de consultas, logs de conexão, proteção de branches e allowlist após verificar suporte, custo e recuperação. Se adotar pg_stat_statements, documentar seus limites e não apresentá-lo como auditoria completa. Registrar revisão periódica. | Extensão/plano Neon exigem decisão do Dono. |
+| L04 | Antes do piloto | O levantamento complementar relata HML sobre a base original production e divergência de schema nas branches de identidade/desenvolvimento. Configurações locais privadas não foram lidas nesta rodada; o estado atual deve ser confirmado por metadados autorizados antes de qualquer mudança. | Branch de desenvolvimento derivada da `production`, com schema atual e dados sanitizados; separar HML de produção antes de I04; atualizar ENVIRONMENT-MATRIX; configuração privada local é tratada pelo operador, sem leitura pelo agente. | Criação de branch e secrets exigem autorização; não copiar dados pessoais sem sanitização. |
+| L05 | Antes do piloto | O levantamento relata traces/Issues desligados e monitor restrito a GETs públicos. Uma resposta HTTP 200 pode carregar erro de aplicação; confirmar quais falhas os logs e alertas atuais já capturam antes de ampliar a instrumentação. | Ativar Issues/alertas, endpoint de saúde protegido que teste banco e Auth, registro estruturado de falhas sem dados pessoais e alerta independente do computador local (complementa I03). | Configuração do Worker conforme gate; segredos do endpoint pelo Dono. |
+| L06 | Antes do piloto com clientes reais | Dados pessoais sem política: `sales.customer_name`, `sales.customer_phone` e, no futuro WhatsApp, `sender_phone`. RBAC e matriz de autorização já existem; não foi localizada política específica de minimização, retenção e tratamento dos dados nos documentos revisados. Validar requisitos aplicáveis com o responsável, sem declarar uma infração por ausência de documento. | Inventário de dados pessoais, prazo de retenção, anonimização auditada, mínimo necessário em CSV e logs, e registro LGPD aprovado. | Política e prazos são decisão do Dono; anonimização segue lifecycle auditável. |
+| L07 | Antes de I04 | Sem medição de cobertura: os testes não indicam o que fica descoberto. | Medir cobertura nativa do Node na CI e revisar lacunas de dinheiro, estoque, FIFO e Auth; definir baseline e limites justificados após a medição, sem confundir percentual com correção nem enfraquecer testes. | Implementação local e CI. |
+| L08 | Contínuo | SDK de autenticação em beta: `@neondatabase/neon-js` 0.8.0-beta, que fixa Zod antigo (contido pelo override da #64). | Acompanhar versões, testes de contrato do adapter e plano de contingência documentado. | Atualizações compatíveis do SDK exigem revisão/testes Auth; troca da estratégia de autenticação exige ADR e aprovação. |
 | L09 | Imediato | Duas sessões de agente usaram a mesma pasta de trabalho: a pasta principal ficou na branch desta remediação enquanto outra sessão preparava PRs. | Cada agente trabalha em worktree própria e não troca a branch da pasta principal; registrar a regra no `AGENTS.md`. | Mudança de `AGENTS.md` exige revisão humana. |
 
-Ordem de integração proposta: revisar #61; revisar #63; atualizar e revisar
-#62 após #63, pelos arquivos comuns; integrar #64 por último, regenerando o
-lockfile para preservar `drizzle-kit` como dependência de desenvolvimento;
-preservar os recibos locais de recuperação em PR documental; revisar fd62de7
-separadamente. A simulação dos quatro merges sobre `bb122d8` não teve
-conflito e passou com 585 testes e audit zerado. Reconferir diff, SHA e checks
-antes de cada decisão humana. Nenhuma PR foi mesclada nesta rodada.
-
-Próximo passo exato: **não refazer A02/A05**, já preparados na PR #64.
-Depois das decisões humanas sobre #61–#64, preparar A04, A07 e L01 em
-worktrees próprias, um PR por item. Handoff em
-[AUTONOMY-HANDOFF.md](AUTONOMY-HANDOFF.md). A01 depende apenas do registro
-da evidência sanitizada e da decisão sobre logs do provedor.
+A sequência de integração e as próximas frentes estão na tabela executável
+acima. **Próximo gate concreto: autorização do Dono para #61 → #63 → #62 →
+#64 → #65**, reconferindo o diff e todos os checks dos SHAs atualizados.
+A simulação não alterou main/HML. Não refazer A02/A05 nem os recibos de
+recuperação já preparados; A02 ainda tem limites da aplicação pendentes.
+Depois, seguir A04/A07 e as demais frentes locais da etapa 2, com um PR por
+incremento e worktree própria. [Handoff](AUTONOMY-HANDOFF.md).
 
 PRs #44–#53 mescladas, incluindo tipagem de Cenários/finanças/lifecycle,
 patch launch-editor 2.14.2, ordem do menu do Funcionário e coleta do aceite.
@@ -145,14 +161,14 @@ reduz automaticamente o esforço estimado nem autoriza novas ações externas.
 | Área | Situação atual |
 | --- | --- |
 | HML | Publicação de aplicação anterior `91658ed`; versão atual de configuração `997f47bb-6be0-4a78-b1fe-f46ea1fef512`, 100%. Conexão/Auth reparados em 22/10: raiz307/login200, sessão inválida500→200. Em 23/10, usuário confirmou entrada real da Gerente e abertura normal do painel; demais aceites H01–H03 continuam parciais. [Reparo e aceite](NEON-AUTH-RECOVERY-2026-10-22.md). |
-| Trabalho versionado | PRs #44–#53 e #55–#60 integradas conforme os registros; GitHub reconferiu #55 e #59–#60, main `bb122d8`. #61–#63 abertas. Recibos locais de recuperação preservados na branch de remediação. Integração não comprova publicação HML ou aceite de produção. |
+| Trabalho versionado | PRs #44–#53 e #55–#60 integradas conforme os registros; GitHub reconferiu #55 e #59–#60, main `bb122d8`. #61–#65 abertas. Recibos locais de recuperação preservados na branch de remediação. Integração não comprova publicação HML ou aceite de produção. |
 | Banco usado no HML | Atualizações específicas até `0033`, 36 recibos. A original conserva classificação `production`; seu uso histórico autorizado não a torna laboratório. Migrador genérico continua bloqueante. |
 | Catálogo e produção | 38 produtos; duas versões de receita e 34 perfis contando os históricos; receita 2 ativa com 17 perfis completos e 31 componentes |
 | Cenários | Cenário 2/v2/rev2 ativo, 16 produtos orientativos em 100%; cenário 1 e seu histórico preservados |
 | Meta | R$ 10.000 de lucro mensal após os custos de **todas as vendas**, inclusive Bordinhas realizadas; sem cotas obrigatórias por produto |
 | Operação real | Sem compras ou produção previstas; nenhum fato fictício criado no HML para testar as entregas |
-| Última validação de código | Revisão de 23/10: 574 testes no HEAD local 3af1af5 e 16 direcionados em snapshot de origin/main; lint/tipos/formato/Knip/build isolado aprovados no HEAD local. Runs da main bb122d8 aprovados conforme relatório, sem contagem extraída. Não repetir nem atribuir esses resultados ao merge local 7480257 sem execução. |
-| Segurança | #55 integrada; revisão de 23/10 retornou zero alertas CodeQL e quatro pacotes altos com causa raiz Zod. Resultado histórico npm audit zero foi superado; A01/A02/A04/A05/A07/A08/A10 permanecem abertos. |
+| Última validação histórica de código | Revisão de 23/10: 574 testes no HEAD local 3af1af5 e 16 direcionados em snapshot de origin/main; lint/tipos/formato/Knip/build isolado aprovados no HEAD local. Runs da main bb122d8 aprovados conforme relatório, sem contagem extraída. Não repetir nem atribuir esses resultados ao merge local 7480257 sem execução. |
+| Segurança | #55 integrada; revisão de 23/10 retornou zero alertas CodeQL e quatro pacotes altos com causa raiz Zod. A candidata #64 e o conjunto de 25/10 têm audit zero; isso ainda não descreve main/HML; A01/A02/A04/A05/A07/A08/A10 permanecem abertos. |
 | Proteção de integração | `main.protected:true`; ruleset ativa `main-production-integration` (ID 25611109), sem bypass. Exige PR atualizado, conversas resolvidas, sete checks e CodeQL com bloqueio de segurança alta/crítica. Ver G03. |
 | Recuperação e alertas | Restore externo de 21/10 comprovado: 38 tabelas/36 recibos exatos. Auth excluído. Revisão de 23/10 observou backup semanal quinta 00:15, divergente do diário 03h planejado, e histórico Neon de seis horas. Reconfirmar fuso, rotina, retenção/responsáveis/RPO/RTO/Auth em A03; continuidade não atestada. |
 | Preservação | 21 tabelas tiveram contagens/digests idênticos no checkpoint anterior. A publicação de 21/10 não executou SQL/migrations ou salvou operações; não coletou novo digest operacional. |
@@ -267,7 +283,7 @@ sintético foi gravado no HML.
 | I05 | Pendente / operação autorizada | Após os aceites e a recuperação, conduzir piloto com a operadora e fatos reais expressamente autorizados: compra, produção, venda, recebimento, entrega e conferência de lucro/estoque. Registrar problemas e decisão de aceite; não criar demonstrações fictícias no HML nem iniciar compras/produção sem previsão real. |
 
 Checkpoint GitHub de 21/10: PRs #44–#53 mescladas e issue #36 encerrada.
-Consulta nova de 23/10 confirma #55/#59/#60 integradas e #61–#64 abertas.
+Consulta de 25/10 confirma #55/#59/#60 integradas e #61–#65 abertas.
 Atualização documental não habilita o migrador nem altera proteções.
 
 ## Ajustes operacionais e evoluções de produto

@@ -5,6 +5,34 @@ atual de tarefas, prioridades e critérios de conclusão. Os checkpoints de
 publicação abaixo preservam o estado comprovado de cada entrega; suas
 próximas etapas históricas não substituem o roadmap atualizado.
 
+## Organização e revisão conjunta — 25/10/2026
+
+GitHub/main reconferidos: bb122d8, PRs #61–#65 abertas. Combinação local
+preparada em worktree própria, preservando a pasta principal. Ordem proposta:
+#61 → #63 → #62 → #64 → #65. Sem conflitos no ensaio; nenhuma integração à
+main ou publicação HML nesta rodada. O [roadmap único](ROADMAP-CODEX.md)
+agora distingue entrega preparada, prova pendente e decisão humana.
+
+Instalação limpa com audit zero e Zod 4.6.7 único, inclusive no SDK Neon;
+Drizzle Kit preservado em devDependencies. Passaram 586 testes Node, 40 de
+interface, 12 conectados PostgreSQL 17, dois ensaios de negócio, lint/tipos/
+formato/Knip e build isolado. A #64 recebeu em 601f138 os testes de versões
+corrigidas, rejeição antecipada de coleção excessiva e headers por HTTP.
+Resultados detalhados por SHA em [revisão da rodada](../reviews/INTEGRATION-REVIEW-2026-10-25.md).
+
+Smoke público: houve falha de clique durante execução concorrente; cópia
+instrumentada e repetição serial passaram sem mudança das asserções.
+Causa não comprovada; não inferir estabilidade do HML. A01 permanece relato
+parcial de coleta, sem recibo independente revisado nesta rodada; nenhuma
+credencial histórica foi lida/testada. Dados privados locais não foram lidos.
+Conexão efetiva/privilégios do Worker, backups e ambientes continuam exigindo
+provas próprias. pg_stat_statements não substitui logs nem auditoria por evento.
+
+Containers descartáveis encerrados. Merge do pacote, publicação/marker HML,
+políticas de recuperação/dados e aceite operacional conservam seus gates.
+Os checkpoints abaixo permanecem históricos; os resultados desta candidata
+não devem ser atribuídos ao ambiente publicado.
+
 ## Revisão e fila de remediação — 23/10/2026
 
 Os achados A01–A12 da [revisão de segurança](../reviews/SENIOR-REVIEW-2026-10-23.md)

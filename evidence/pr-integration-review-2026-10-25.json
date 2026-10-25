@@ -1,0 +1,239 @@
+{
+  "schema": "cacau-pr-integration-review/v1",
+  "date": "2026-10-25",
+  "main": "bb122d82a75de7b1105c5aa8ecc78743f6ea0213",
+  "integration": "0bfc9b8549c395c534a7b615f971090c88d6ad43",
+  "inputs": [
+    {
+      "pr": 61,
+      "head": "eb62e51d1a8852425f47df8eee377d3bbf41820d"
+    },
+    {
+      "pr": 63,
+      "head": "4eec2c8fcfd31701f444a211367bfacce4994ea6"
+    },
+    {
+      "pr": 62,
+      "head": "1b04194b2bb4618cf8bad73a47f8c43eff0408e6"
+    },
+    {
+      "pr": 64,
+      "initial_head": "83b3fb34ff322716cac38d0edda39e8748c4bbb2",
+      "reviewed_followup": "601f1387da1ddd3124927261faaa4437fb077ebd"
+    },
+    {
+      "pr": 65,
+      "initial_head": "9a4b276c5864e1afdc6076f26acad6bb3bb66c78"
+    }
+  ],
+  "verification": {
+    "install": {
+      "command": "npm ci",
+      "audit_vulnerabilities": 0,
+      "node": "22.23.2",
+      "dependency_head": "9eb19930e38c734f8f4203837f742d818be7314c"
+    },
+    "lock_graph": {
+      "zod": [
+        "4.6.7"
+      ],
+      "neon_resolves_application_zod": true,
+      "undici": "7.30.1",
+      "drizzle_kit": "devDependencies"
+    },
+    "node_full": {
+      "head": "7c8af45ea967df250fbbd3cc4e471e0a099146f6",
+      "passed": 586,
+      "failed": 0,
+      "skipped": 0
+    },
+    "final_security_regression": {
+      "head": "0bfc9b8549c395c534a7b615f971090c88d6ad43",
+      "passed": 4,
+      "failed": 0
+    },
+    "ui_fixtures": {
+      "head": "984de61ab5eca876b2529e179251260536ed1454",
+      "passed": 40
+    },
+    "connected_postgres_browser": {
+      "head": "7c8af45ea967df250fbbd3cc4e471e0a099146f6",
+      "passed": 12,
+      "identity": "synthetic",
+      "database": "local-disposable-postgresql17"
+    },
+    "business_postgres": {
+      "head": "7c8af45ea967df250fbbd3cc4e471e0a099146f6",
+      "exact_costs": "passed",
+      "recovery_production_sale_profit": "passed"
+    },
+    "build": {
+      "head": "984de61ab5eca876b2529e179251260536ed1454",
+      "command": "build:ci-isolated",
+      "result": "passed",
+      "public_test_key": true,
+      "deployed": false
+    },
+    "final_checks": {
+      "head": "0bfc9b8549c395c534a7b615f971090c88d6ad43",
+      "lint": "passed",
+      "types": "passed",
+      "format": "passed",
+      "knip": {
+        "result": "passed",
+        "current": 4,
+        "new": 0,
+        "resolved": 0,
+        "head": "9eb19930e38c734f8f4203837f742d818be7314c"
+      }
+    },
+    "public_smoke": {
+      "head": "0bfc9b8549c395c534a7b615f971090c88d6ad43",
+      "passed": 1,
+      "http_headers": [
+        "Cache-Control:no-store",
+        "Referrer-Policy:no-referrer"
+      ],
+      "routes": [
+        "/login",
+        "/login/redefinir-senha"
+      ],
+      "earlier_concurrent_click_failure": true,
+      "instrumented_probe": "passed",
+      "serial_rerun": "passed",
+      "cause": "unproven"
+    },
+    "operational_sources_unchanged_between_build_and_final_tests": true,
+    "pr64_followup_test_blobs_identical_to_integration": true
+  },
+  "remote_checks": {
+    "initial_61_62_63_64_65": "success at their initial heads",
+    "updated_64_65": "must be refreshed before merge",
+    "updated_pr64": {
+      "head": "601f1387da1ddd3124927261faaa4437fb077ebd",
+      "checks": [
+        {
+          "name": "CodeQL",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Analyze (actions)",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Analyze (javascript-typescript)",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "connected-postgres-browser",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "business-postgres",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "verify",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Analyze (python)",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "browser-fixtures",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "browser-fixtures",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "connected-postgres-browser",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "verify",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "business-postgres",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ],
+      "has_more": false
+    },
+    "pr64_codeql": {
+      "head": "601f1387da1ddd3124927261faaa4437fb077ebd",
+      "merge": {
+        "parents": [
+          "bb122d82a75de7b1105c5aa8ecc78743f6ea0213",
+          "601f1387da1ddd3124927261faaa4437fb077ebd"
+        ],
+        "sha": "eb03742989ed4e0394156cc5393988ccd23d6820"
+      },
+      "analyses": [
+        {
+          "category": "/language:javascript-typescript",
+          "created_at": "2026-10-25T15:54:11Z",
+          "error": "",
+          "ref": "refs/pull/64/merge",
+          "result_count": 0,
+          "sha": "eb03742989ed4e0394156cc5393988ccd23d6820",
+          "warning": ""
+        },
+        {
+          "category": "/language:python",
+          "created_at": "2026-10-25T15:53:44Z",
+          "error": "",
+          "ref": "refs/pull/64/merge",
+          "result_count": 0,
+          "sha": "eb03742989ed4e0394156cc5393988ccd23d6820",
+          "warning": ""
+        },
+        {
+          "category": "/language:actions",
+          "created_at": "2026-10-25T15:53:36Z",
+          "error": "",
+          "ref": "refs/pull/64/merge",
+          "result_count": 0,
+          "sha": "eb03742989ed4e0394156cc5393988ccd23d6820",
+          "warning": ""
+        }
+      ],
+      "open_alerts": []
+    },
+    "updated_pr65": "pending final documentary commit; refresh before merge"
+  },
+  "a01": {
+    "source": "reported collection in PR65/9a4b276",
+    "repeated_here": false,
+    "independent_receipt_reviewed_here": false,
+    "status": "partial"
+  },
+  "side_effects": {
+    "temporary_containers_stopped": true,
+    "shared_sql": false,
+    "main_merge": false,
+    "deployment": false,
+    "secrets_changed": false,
+    "environment_files_read": false
+  },
+  "authorization": {
+    "merge": false,
+    "production": false,
+    "shared_migration": false
+  }
+}

@@ -1,5 +1,51 @@
 # Handoff de autonomia — Cacau v1
 
+## Organização retomada — 25/10/2026
+
+Uso oficial renovado em 100% nas duas janelas; LIGARTUDO --prepare-only e
+fast-forward da branch limpa concluídos. Keyring do GitHub CLI não confirmado
+pelo preflight; plugin GitHub e Git por origin funcionaram. Isso não constitui
+validação de handshake de outro MCP. Sem leitura de credenciais privadas.
+
+Pasta principal preservada em codex/audit-remediation-20261023/febef1d.
+Worktree gerenciada de revisão: /home/naiguel/.codex/worktrees/audit-review-20261025/seus-brownies.
+Branch do ensaio codex/review-audit-integration-20261025, HEAD 0bfc9b8;
+branch documental codex/organization-followup-20261025 atualiza a PR #65.
+PR #64 recebeu testes em 601f138 e seus novos checks passaram; três análises
+CodeQL da referência de merge eb037429 sem resultados/erros/avisos e zero
+alertas abertos. #65 mantém a fila canônica e os recibos.
+
+Concluído: leitura dos diffs de #61–#65, checks dos SHAs iniciais aprovados,
+composição local sem conflitos, instalação limpa audit zero, 586 testes Node,
+40 de interface, 12 conectados, dois ensaios PostgreSQL, build isolado e
+lint/tipos/formato/Knip aprovados. Smoke público passou após diagnóstico e
+repetição serial; houve falha de clique em execução concorrente, sem causa
+comprovada e sem asserções removidas. Quatro testes focados da regressão
+final passaram. Containers desta execução encerrados. Detalhes por SHA em
+../reviews/INTEGRATION-REVIEW-2026-10-25.md e evidence/pr-integration-review-2026-10-25.json.
+
+Roadmap/status/espelho atualizados com etapas, responsáveis e critérios.
+Relato de A01 foi preservado como parcial sem fingir nova coleta; role do
+Worker requer confirmação; estatística de consulta não é trilha auditável.
+Nenhum .env, credencial histórica ou secret lido, SQL externo, merge na main,
+deploy, alteração de política/permissão ou automação realizado nesta rodada.
+
+Próximo passo exato: obter autorização humana para #61 → #63 → #62 → #64 →
+#65, reler main/SHA/diff/checks entre merges e tratar conflitos sem descartar
+provas. Conferir lockfile e Drizzle Kit em devDependencies na composição final.
+Publicação HML exige seu gate e recibo; confirmar redação por marcador
+sintético. Não promover produção. Enquanto aguarda, frentes locais da etapa
+2 podem ser preparadas em PRs pequenas, sem aguardar autorização externa
+desnecessária. A02/A05 já preparados; limites de payload e aceite real pendentes.
+
+Uso oficial no checkpoint: 79% restante na janela de cinco horas e 97%
+semanal; não é fechamento por reserva.
+
+Estado: organização e revisão entregues; aguardando gate de integração.
+Sem pausa por reserva e sem nova retomada agendada. Não executar DESLIGARTUDO
+em trabalho normal. A referência de 5% abaixo é histórica e foi superada
+pela renovação confirmada de 25/10.
+
 ## Remediação da revisão — fechamento por reserva em 23/10/2026
 
 Tarefa: organizar as próximas etapas com base na última revisão/auditoria e
