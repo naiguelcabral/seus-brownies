@@ -31,11 +31,11 @@ listados são zero. A conexão MCP está conectada com privilégio administrativ
 
 | Projeto                | Branch / parent                              | Estado     | Endpoint                      |
 | ---------------------- | -------------------------------------------- | ---------- | ----------------------------- |
-| `cool-base-25902164`   | `production` / —                             | `archived` | `ep-raspy-resonance-ac4rhkwk` |
-| `cool-base-25902164`   | `development` / `br-empty-frog-acy6xycn`     | `archived` | `ep-young-cloud-acftfl9s`     |
-| `steep-brook-51659857` | `production` / —                             | `ready`    | `ep-late-water-acahd1z1`      |
-| `steep-brook-51659857` | `Development` / `br-lingering-wind-acwh5wap` | `ready`    | `ep-tiny-night-ac0pjhlr`      |
-| `steep-brook-51659857` | `g1-auth-hml` / `br-bitter-dew-ac31uci9`     | `ready`    | `ep-old-sound-acmcy3e9`       |
+| `cool-base-25902164`   | `production` / —                             | `archived` | `ep-[redacted:de391793]` |
+| `cool-base-25902164`   | `development` / `br-empty-frog-acy6xycn`     | `archived` | `ep-[redacted:98ec77d0]`     |
+| `steep-brook-51659857` | `production` / —                             | `ready`    | `ep-[redacted:26398d41]`      |
+| `steep-brook-51659857` | `Development` / `br-lingering-wind-acwh5wap` | `ready`    | `ep-[redacted:4f8d290f]`      |
+| `steep-brook-51659857` | `g1-auth-hml` / `br-bitter-dew-ac31uci9`     | `ready`    | `ep-[redacted:d0e61006]`       |
 
 As três branches `steep-brook` continuam `ready`; esse estado de control plane
 não prova HML, conteúdo, backup, vínculo com Worker ou autorização de auditoria.

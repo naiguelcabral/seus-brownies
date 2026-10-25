@@ -18,17 +18,49 @@ const {
   compareHistory,
   accessIsSafe,
 } = await import(verifierModule)
-const matrix = JSON.parse(
-  readFileSync(
-    new URL(
-      '../docs/governance/evidence/hml-evidence-targets.json',
-      import.meta.url,
-    ),
-    'utf8',
-  ),
-).databases
-const db = matrix[1]
-const url = `postgresql://synthetic-user:synthetic-password@${db.host}/neondb?sslmode=require&token=synthetic-token`
+const sha256 = (value: string) =>
+  createHash('sha256').update(value).digest('hex')
+// Same shape as the versioned map, which stores only hashes of real hosts.
+function syntheticTarget(row: {
+  project: string
+  branch: string
+  name: string
+  endpoint: string
+  classification: string
+}) {
+  const host = `${row.endpoint}.sa-east-1.aws.neon.tech`
+  return {
+    plain: { ...row, host, database: 'neondb' },
+    row: {
+      project: row.project,
+      branch: row.branch,
+      name: row.name,
+      database: 'neondb',
+      endpoint_sha256: sha256(row.endpoint),
+      host_sha256: sha256(host),
+      destination_fingerprint: sha256(`${host}:5432/neondb`),
+      classification: row.classification,
+    },
+  }
+}
+const production = syntheticTarget({
+  project: 'synthetic-project-00000001',
+  branch: 'br-synthetic-main-aaaa0001',
+  name: 'production',
+  endpoint: 'ep-synthetic-main-aaaa0001',
+  classification: 'production-do-not-access',
+})
+const candidate = syntheticTarget({
+  project: 'synthetic-project-00000001',
+  branch: 'br-synthetic-hml-bbbb0002',
+  name: 'development',
+  endpoint: 'ep-synthetic-hml-bbbb0002',
+  classification: 'candidate-hml',
+})
+const matrix = [production.row, candidate.row]
+const db = { ...candidate.row, endpoint: candidate.plain.endpoint }
+const dbHost = candidate.plain.host
+const url = `postgresql://synthetic-user:synthetic-password@${dbHost}/neondb?sslmode=require&token=synthetic-token`
 const catalog: {
   relations: Array<Array<string | boolean>>
   columns: Array<unknown>
@@ -101,7 +133,7 @@ test('destination discards credentials and parameters and matches metadata only'
   const observedAtUtc = '2026-10-16T00:00:00.000Z'
   const a = sanitizeDestination(url, matrix, observedAtUtc)
   const b = sanitizeDestination(
-    `postgres://different:another@${db.host.replace('.', '-pooler.')}:5432/neondb`,
+    `postgres://different:another@${dbHost.replace('.', '-pooler.')}:5432/neondb`,
     matrix,
     observedAtUtc,
   )
@@ -127,7 +159,7 @@ test('destination refuses unsafe protocols, production, ambiguous or leaking fie
     url + '#fragment',
     url.replace('/neondb', '/neondb/extra'),
     url.replace('synthetic-password', 'neondb'),
-    `postgresql://x:y@${matrix[0].host}/neondb`,
+    `postgresql://x:y@${production.plain.host}/neondb`,
   ])
     assert.throws(
       () => sanitizeDestination(bad, matrix),
@@ -189,12 +221,16 @@ test('unapproved, expired, wrong fingerprint and known production abort before S
     { expiresAt: '2000-01-01T00:00:00Z' },
     { destinationFingerprint: 'a'.repeat(64) },
     { approvedRole: 'neondb_owner' },
-    { ...requireDefined(matrix[0]), classification: 'confirmed-hml' },
+    {
+      ...production.row,
+      endpoint: production.plain.endpoint,
+      classification: 'confirmed-hml',
+    },
     { name: 'production' },
   ]) {
     const c = fake()
     await assert.rejects(
-      verifyEvidence(c, { ...target(), ...change }),
+      verifyEvidence(c, { ...target(), ...change }, matrix),
       /BLOCKED_TARGET/,
     )
     assert.equal(c.calls.length, 0)
@@ -208,7 +244,10 @@ test('access failure never inspects catalog or history, rollback always runs', a
     { session_role: 'owner' },
   ]) {
     const c = fake({ ...access(), ...change })
-    await assert.rejects(verifyEvidence(c, target()), /BLOCKED_READONLY_AUDIT/)
+    await assert.rejects(
+      verifyEvidence(c, target(), matrix),
+      /BLOCKED_READONLY_AUDIT/,
+    )
     assert.ok(
       !c.calls.some(
         (q) => q.includes('jsonb_build_object') || q.startsWith('SELECT hash,'),
@@ -219,7 +258,7 @@ test('access failure never inspects catalog or history, rollback always runs', a
 })
 test('collector emits only digests and aggregates, never grants application approval', async () => {
   const c = fake()
-  const evidence = await verifyEvidence(c, target())
+  const evidence = await verifyEvidence(c, target(), matrix)
   assert.equal(evidence.history_state, 'verified-through-0016')
   assert.equal(evidence.drift, false)
   assert.equal(evidence.application_authorized, false)
@@ -246,6 +285,7 @@ test('missing journal, altered hash, duplicate, later migration and drift remain
   const result = await verifyEvidence(
     fake(access(), { ...catalog, columns: ['synthetic-drift'] }),
     target(),
+    matrix,
   )
   assert.equal(result.state, 'blocked')
   assert.equal(result.drift, true)
@@ -261,7 +301,10 @@ test('views, foreign tables, temporary tables and RLS never get business reads',
       ...catalog,
       relations: [...catalog.relations, rel],
     })
-    await assert.rejects(verifyEvidence(c, target()), /BLOCKED_READONLY_AUDIT/)
+    await assert.rejects(
+      verifyEvidence(c, target(), matrix),
+      /BLOCKED_READONLY_AUDIT/,
+    )
     assert.ok(!c.calls.some((q) => q.startsWith('SELECT count(*)')))
   }
 })
@@ -272,7 +315,7 @@ test('driver errors never leak credentials or business rows', async () => {
     },
   }
   await assert.rejects(
-    verifyEvidence(c, target()),
+    verifyEvidence(c, target(), matrix),
     /^Error: BLOCKED_READONLY_AUDIT$/,
   )
 })
@@ -325,4 +368,37 @@ test('all published SQL, snapshots and journal retain their pinned hashes', () =
       entry.path,
     )
   }
+})
+
+test('versioned HML target map stores only hashes of Neon hosts and endpoints', () => {
+  const text = readFileSync(
+    new URL(
+      '../docs/governance/evidence/hml-evidence-targets.json',
+      import.meta.url,
+    ),
+    'utf8',
+  )
+  assert.doesNotMatch(text, /ep-[a-z]+-[a-z]+-[a-z0-9]{8}|neon\.tech/)
+  const rows = JSON.parse(text).databases as Array<Record<string, unknown>>
+  assert.equal(rows.length, 5)
+  for (const row of rows) {
+    for (const key of [
+      'endpoint_sha256',
+      'host_sha256',
+      'destination_fingerprint',
+    ])
+      assert.match(String(row[key]), /^[a-f0-9]{64}$/, key)
+    assert.equal(row.endpoint, undefined)
+    assert.equal(row.host, undefined)
+  }
+  assert.ok(
+    rows.some((row) => row.classification === 'production-do-not-access'),
+  )
+})
+
+test('destination output carries only the host hash', () => {
+  const result = sanitizeDestination(url, matrix, '2026-10-22T00:00:00.000Z')
+  assert.equal(result.host_sha256, sha256(dbHost))
+  assert.equal(result.match, 'exact-metadata-match-not-hml-proof')
+  assert.ok(!JSON.stringify(result).includes(dbHost))
 })

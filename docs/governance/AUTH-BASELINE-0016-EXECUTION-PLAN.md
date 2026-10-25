@@ -7,7 +7,7 @@ específica em [NEON-RESTORE-INCIDENT-2026-10-17.md](NEON-RESTORE-INCIDENT-2026-
 
 Snapshot `snap-withered-poetry-achs77uu` preservado até
 `2026-10-24T18:30:00Z`. Cópia privada `br-super-waterfall-ac0mxtnt`, endpoint
-`ep-holy-grass-acgby01h`, isolada após recuperação do incidente. Catálogo
+`ep-[redacted:67a3843e]`, isolada após recuperação do incidente. Catálogo
 prévio confirmou zero relações/enums de aplicação; digest do catálogo do
 schema gerenciado era `bcb4fd4408ebb95ee07cda6b3495acac` (30 relações).
 
@@ -27,7 +27,7 @@ auditoria validada com referência **consumida apenas na cópia**
 sem chamar provedor nem enviar e-mail. Não repetir essa referência.
 
 Original `br-lingering-wind-acwh5wap`, nome `production`, default/primary e
-endpoint `ep-late-water-acahd1z1` revalidados. Antes do DDL, zero relações e
+endpoint `ep-[redacted:26398d41]` revalidados. Antes do DDL, zero relações e
 enums de aplicação, digest gerenciado idêntico à cópia. Mesmo lote aplicado
 sob a aprovação condicional; verificações posteriores confirmaram os mesmos
 17 recibos até `0016`, três tabelas auth, 60 relações/15 enums e digest

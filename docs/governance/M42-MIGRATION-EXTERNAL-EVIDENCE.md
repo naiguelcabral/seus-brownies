@@ -20,11 +20,11 @@ restore, criação de branch Neon, alteração de Worker ou deploy foi feito.
 
 | Projeto                | Branch        | Estado   | Endpoint                                 | Role disponível | Classificação              | Histórico/schema/backup/restore/Worker |
 | ---------------------- | ------------- | -------- | ---------------------------------------- | --------------- | -------------------------- | -------------------------------------- |
-| `cool-base-25902164`   | `production`  | archived | `ep-raspy-resonance-ac4rhkwk` read_write | `neondb_owner`  | `production-do-not-access` | unverified                             |
-| `cool-base-25902164`   | `development` | archived | `ep-young-cloud-acftfl9s` read_write     | `neondb_owner`  | `candidate-hml`            | unverified                             |
-| `steep-brook-51659857` | `production`  | archived | `ep-late-water-acahd1z1` read_write      | `neondb_owner`  | `production-do-not-access` | unverified                             |
-| `steep-brook-51659857` | `Development` | archived | `ep-tiny-night-ac0pjhlr` read_write      | `neondb_owner`  | `insufficient-evidence`    | unverified                             |
-| `steep-brook-51659857` | `g1-auth-hml` | archived | `ep-old-sound-acmcy3e9` read_write       | `neondb_owner`  | `candidate-hml`            | unverified                             |
+| `cool-base-25902164`   | `production`  | archived | `ep-[redacted:de391793]` read_write | `neondb_owner`  | `production-do-not-access` | unverified                             |
+| `cool-base-25902164`   | `development` | archived | `ep-[redacted:98ec77d0]` read_write     | `neondb_owner`  | `candidate-hml`            | unverified                             |
+| `steep-brook-51659857` | `production`  | archived | `ep-[redacted:26398d41]` read_write      | `neondb_owner`  | `production-do-not-access` | unverified                             |
+| `steep-brook-51659857` | `Development` | archived | `ep-[redacted:4f8d290f]` read_write      | `neondb_owner`  | `insufficient-evidence`    | unverified                             |
+| `steep-brook-51659857` | `g1-auth-hml` | archived | `ep-[redacted:d0e61006]` read_write       | `neondb_owner`  | `candidate-hml`            | unverified                             |
 
 Cada branch expõe apenas `neondb`. A API de snapshots retornou nenhuma entrada;
 isso não demonstra ausência de backup, PITR ou restauração. `archived`, nome,
