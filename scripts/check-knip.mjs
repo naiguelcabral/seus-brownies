@@ -51,7 +51,7 @@ function findingKey(finding) {
 export function compareKnipBaseline(findings, baseline) {
   if (
     baseline?.version !== 1 ||
-    baseline.knipVersion !== '6.41.0' ||
+    baseline.knipVersion !== '6.42.1' ||
     !Array.isArray(baseline.findings) ||
     baseline.findings.some(
       (item) =>
@@ -80,7 +80,7 @@ function main() {
     'package.json',
   )
   const { version } = JSON.parse(readFileSync(packagePath, 'utf8'))
-  if (version !== '6.41.0') throw new Error('Unexpected Knip version')
+  if (version !== '6.42.1') throw new Error('Unexpected Knip version')
   const result = spawnSync(
     process.execPath,
     [

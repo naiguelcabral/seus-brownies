@@ -26,6 +26,30 @@ Este incremento é documental: S02 não está entregue e A04 continua parcial,
 inclusive na conclusão de reset com identidade confiável. Publicação/homologação
 HML e decisões de infraestrutura mantêm seus escopos separados.
 
+## Continuidade após corrigir a CI da PR #73 — 26/10/2026
+
+Correção preparada para Playwright 1.64.1 e revisão da baseline Knip 6.42.1,
+sem dispensar execução de testes nem aceitar novos achados. 616 testes locais,
+lint, tipos, formato e Knip aprovados; confirmar build isolado e CI/CodeQL do
+HEAD publicado antes da revisão das dependências.
+
+Sequência restante:
+
+1. Revisar a [PR #73](https://github.com/naiguelcabral/seus-brownies/pull/73)
+   e o recibo da [PR #76](https://github.com/naiguelcabral/seus-brownies/pull/76)
+   para integração. HML da PR #75 já publicado; correção da CI não exige deploy.
+2. Implementar S02/A04 conforme o escopo acima e completar autoria confiável
+   na conclusão do reset, com auditoria e testes negativos/concorrentes.
+3. Validar Auth/Turnstile, conexões, replay, revogação/perfis e rede móvel no
+   HML; completar prova de redação dos logs e observação da CSP.
+4. Fechar A01/A03 e decisões L02–L06: credenciais/acessos, privilégio mínimo,
+   separação de ambientes, monitoramento, backups/recuperação e retenção.
+5. Concluir aceites funcionais por perfil, revisão de cobertura L07 e piloto
+   I05; produção depende do aceite I04.
+
+Integração dessas PRs, nova publicação e operações compartilhadas continuam
+com seus gates próprios; esta tarefa autoriza a correção e validação da CI.
+
 ## Integração autorizada da PR #74 — 26/10/2026
 
 Após a apresentação da PR #74 validada e da sequência restante, usuário
