@@ -1,5 +1,19 @@
 # Ações que exigem aprovação humana — Cacau v1
 
+## Integração e publicação HML da PR #75 — 26/10/2026
+
+Após a apresentação da CI aprovada e da PR pronta para integração, usuário
+autorizou **“Pode seguir com a atualização e publicação”**. Aplicado ao pacote
+concreto: merge da PR #75 e publicação da main aprovada somente em
+`cacau-v1-hml`, com a configuração versionada e a chave pública já publicada.
+
+Executado: merge `82eebfc`, três workflows da main e CodeQL aprovados,
+versão HML `42da8a96` em 100%, smoke público desktop/móvel aprovado.
+[Recibo e limites](HML-PUBLICATION-2026-10-26.md). Autorização consumida nesse
+escopo. Não inclui produção, SQL/migrations compartilhados, secrets/DNS,
+concessões de contas ou integração de PRs de dependências. S02/A04 segue com
+implementação local autorizada e pendente; não repetir o deploy como tarefa nova.
+
 ## Dono e aprovação de cadastros por Gerente — 26/10/2026
 
 Após a apresentação das pendências A04 e das fases seguintes, o usuário definiu:

@@ -1,0 +1,315 @@
+{
+  "authorization": {
+    "date": "2026-10-26",
+    "user_statement": "Pode seguir com a atualização e publicação",
+    "scope": "Merge PR #75 and publish approved main to cacau-v1-hml"
+  },
+  "code": {
+    "pull_request": "https://github.com/naiguelcabral/seus-brownies/pull/75",
+    "head": "82629b0e5cbc8fbea1475655939b1f90282005c7",
+    "main": "82eebfcd4c9b7737e1ac857da61e7d9c7626679f"
+  },
+  "main_verification": {
+    "checked_at_utc": "2026-10-26T14:03:27.595660+00:00",
+    "pr": 75,
+    "head": "82629b0e5cbc8fbea1475655939b1f90282005c7",
+    "base": "9426316ca0d358e6bf8d4d5b964aff7db9d93621",
+    "main": {
+      "protected": true,
+      "sha": "82eebfcd4c9b7737e1ac857da61e7d9c7626679f"
+    },
+    "parents": [
+      "9426316ca0d358e6bf8d4d5b964aff7db9d93621",
+      "82629b0e5cbc8fbea1475655939b1f90282005c7"
+    ],
+    "workflows": [
+      {
+        "conclusion": "success",
+        "databaseId": 40331179301,
+        "headSha": "82eebfcd4c9b7737e1ac857da61e7d9c7626679f",
+        "name": "CI",
+        "status": "completed",
+        "url": "https://github.com/naiguelcabral/seus-brownies/actions/runs/40331179301"
+      },
+      {
+        "conclusion": "success",
+        "databaseId": 40331172870,
+        "headSha": "82eebfcd4c9b7737e1ac857da61e7d9c7626679f",
+        "name": "CodeQL",
+        "status": "completed",
+        "url": "https://github.com/naiguelcabral/seus-brownies/actions/runs/40331172870"
+      },
+      {
+        "conclusion": "success",
+        "databaseId": 40331172866,
+        "headSha": "82eebfcd4c9b7737e1ac857da61e7d9c7626679f",
+        "name": "Isolated business and browser validation",
+        "status": "completed",
+        "url": "https://github.com/naiguelcabral/seus-brownies/actions/runs/40331172866"
+      }
+    ],
+    "codeql": [
+      {
+        "category": "/language:javascript-typescript",
+        "error": "",
+        "ref": "refs/heads/main",
+        "results": 0,
+        "sha": "82eebfcd4c9b7737e1ac857da61e7d9c7626679f",
+        "warning": ""
+      },
+      {
+        "category": "/language:python",
+        "error": "",
+        "ref": "refs/heads/main",
+        "results": 0,
+        "sha": "82eebfcd4c9b7737e1ac857da61e7d9c7626679f",
+        "warning": ""
+      },
+      {
+        "category": "/language:actions",
+        "error": "",
+        "ref": "refs/heads/main",
+        "results": 0,
+        "sha": "82eebfcd4c9b7737e1ac857da61e7d9c7626679f",
+        "warning": ""
+      }
+    ],
+    "open_alerts": [],
+    "merge_tree_matches_approved_head": true,
+    "primary_checkout_preserved": true
+  },
+  "previous_hml": {
+    "worker": "cacau-v1-hml",
+    "account_id": "7cfc884f81d5b5e519a78407465a6e8f",
+    "deployment": [
+      {
+        "id": "41ec1f4b-91be-4be6-947e-b5979b697d99",
+        "created_on": "2026-10-23T00:36:05.52882Z",
+        "versions": [
+          {
+            "version_id": "997f47bb-6be0-4a78-b1fe-f46ea1fef512",
+            "percentage": 100
+          }
+        ]
+      }
+    ],
+    "settings": {
+      "compatibility_date": "2025-09-02",
+      "compatibility_flags": [
+        "nodejs_compat"
+      ],
+      "observability": {
+        "enabled": false,
+        "head_sampling_rate": 1,
+        "redact_query_string": false,
+        "logs": {
+          "enabled": true,
+          "head_sampling_rate": 1,
+          "persist": true,
+          "invocation_logs": true
+        },
+        "traces": {
+          "enabled": false,
+          "persist": true,
+          "head_sampling_rate": 1
+        },
+        "issues": {
+          "enabled": false
+        }
+      },
+      "bindings": [
+        {
+          "name": "AUTH_LOGIN_HASH_PEPPER",
+          "type": "secret_text"
+        },
+        {
+          "name": "AUTH_RATE_LIMITER",
+          "type": "ratelimit",
+          "namespace_id": "2026091001",
+          "simple": {
+            "limit": 20,
+            "period": 60
+          }
+        },
+        {
+          "name": "AUTH_RATE_LIMITER_REQUIRED",
+          "type": "plain_text",
+          "text": "true"
+        },
+        {
+          "name": "DATABASE_URL",
+          "type": "secret_text"
+        },
+        {
+          "name": "NEON_AUTH_BASE_URL",
+          "type": "secret_text"
+        },
+        {
+          "name": "NEON_AUTH_COOKIE_SECRET",
+          "type": "secret_text"
+        },
+        {
+          "name": "PASSWORD_RESET_REDIRECT_ORIGIN",
+          "type": "plain_text",
+          "text": "https://cacau-v1-hml.naiguelcabral.workers.dev"
+        },
+        {
+          "name": "TURNSTILE_SECRET_KEY",
+          "type": "secret_text"
+        }
+      ]
+    }
+  },
+  "published_hml": {
+    "worker": "cacau-v1-hml",
+    "deployment": {
+      "id": "5db64ef3-0fb4-482b-8539-87d722abef81",
+      "created_on": "2026-10-26T14:13:17.863618Z",
+      "versions": [
+        {
+          "version_id": "42da8a96-c5ed-4573-9d58-c5c8030f0df7",
+          "percentage": 100
+        }
+      ]
+    },
+    "compatibility_date": "2025-09-02",
+    "compatibility_flags": [
+      "nodejs_compat"
+    ],
+    "secret_binding_names": [
+      "AUTH_LOGIN_HASH_PEPPER",
+      "DATABASE_URL",
+      "NEON_AUTH_BASE_URL",
+      "NEON_AUTH_COOKIE_SECRET",
+      "TURNSTILE_SECRET_KEY"
+    ],
+    "rate_limits": [
+      {
+        "name": "AUTH_AGGREGATE_RATE_LIMITER",
+        "namespace_id": "2026102505",
+        "simple": {
+          "limit": 600,
+          "period": 60
+        }
+      },
+      {
+        "name": "AUTH_ORIGIN_RATE_LIMITER",
+        "namespace_id": "2026102504",
+        "simple": {
+          "limit": 60,
+          "period": 60
+        }
+      },
+      {
+        "name": "AUTH_RATE_LIMITER",
+        "namespace_id": "2026091001",
+        "simple": {
+          "limit": 20,
+          "period": 60
+        }
+      }
+    ],
+    "vars": [
+      {
+        "name": "AUTH_RATE_LIMITER_REQUIRED",
+        "text": "true"
+      },
+      {
+        "name": "PASSWORD_RESET_REDIRECT_ORIGIN",
+        "text": "https://cacau-v1-hml.naiguelcabral.workers.dev"
+      }
+    ],
+    "observability": {
+      "enabled": false,
+      "head_sampling_rate": 1,
+      "redact_query_string": true,
+      "logs": {
+        "enabled": true,
+        "head_sampling_rate": 1,
+        "persist": true,
+        "invocation_logs": true
+      },
+      "traces": {
+        "enabled": false,
+        "persist": true,
+        "head_sampling_rate": 1
+      },
+      "issues": {
+        "enabled": false
+      }
+    }
+  },
+  "published_site_key_metadata": {
+    "origin": "https://cacau-v1-hml.naiguelcabral.workers.dev",
+    "source_asset": "/assets/login-DfkQTqEj.js",
+    "site_key_sha256": "19754fef3ca9e573ae4442989d7b0909fda8f0819574a0dbb0bac03e1c4b9ece",
+    "assets_checked": 1
+  },
+  "public_smoke": {
+    "checked_at_utc": "2026-10-26T14:15:20.994Z",
+    "origin": "https://cacau-v1-hml.naiguelcabral.workers.dev",
+    "http": [
+      {
+        "path": "/",
+        "status": 307,
+        "headers_passed": true
+      },
+      {
+        "path": "/login",
+        "status": 200,
+        "headers_passed": true
+      },
+      {
+        "path": "/login/redefinir-senha",
+        "status": 200,
+        "headers_passed": true
+      }
+    ],
+    "ui": [
+      {
+        "width": 1280,
+        "separate_rows": true,
+        "no_horizontal_overflow": true,
+        "forgot_password_opens": true,
+        "first_access_opens": true
+      },
+      {
+        "width": 375,
+        "separate_rows": true,
+        "no_horizontal_overflow": true,
+        "forgot_password_opens": true,
+        "first_access_opens": true
+      },
+      {
+        "width": 320,
+        "separate_rows": true,
+        "no_horizontal_overflow": true,
+        "forgot_password_opens": true,
+        "first_access_opens": true
+      }
+    ],
+    "page_errors": 0,
+    "mutating_requests": 0,
+    "credentials_used": false,
+    "real_authentication_validated": false
+  },
+  "ci_retry": {
+    "run_id": 40331172866,
+    "initial_job": 121600670781,
+    "reason": "15-minute job timeout after slow Chromium installation; tests started but were canceled",
+    "retried_job": 121616524950,
+    "conclusion": "success",
+    "code_changed": false,
+    "tests_weakened": false
+  },
+  "limits": {
+    "real_authentication_validated": false,
+    "physical_mobile_validated": false,
+    "query_redaction_marker_log_validated": false,
+    "manager_approval_implemented": false,
+    "production_deployed": false,
+    "shared_sql_commands_executed": false,
+    "secrets_commands_executed": false,
+    "dns_changes": false
+  }
+}
