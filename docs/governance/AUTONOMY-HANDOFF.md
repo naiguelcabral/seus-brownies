@@ -1,5 +1,30 @@
 # Handoff de autonomia — Cacau v1
 
+## Continuidade local A59 — 26/10/2026
+
+Código b4ae5cb, branch `codex/auth-hardening-next-20261025`, worktree
+`/tmp/cacau-auth-hardening-20261025`. A PR #72 continua integrada em f2a7fc7;
+nenhum novo merge/deploy/SQL compartilhado. Novo pacote local pronto para PR;
+614 Node, typecheck/lint/formato/Knip, build isolado e 12 conectados aprovados,
+incluindo timeouts/rollback e zero conexões remanescentes. Container encerrado.
+
+Próximo passo: conferir CI/CodeQL do HEAD publicado e entregar a PR concreta.
+Integração/publicação não devem ser inferidas de A59. Restam A04 concessões/
+bootstrap e conclusão do reset com identidade confiável, prova HML A07/A08,
+A01/A03 e decisões L02–L06. Detalhes em
+[desenho e evidências](AUTH-CONNECTION-HARDENING-2026-10-26.md).
+
+A pasta principal ficou limpa na branch codex/audit-remediation-20261023,
+HEAD febef1d. Edições iniciais ficaram preservadas na worktree managed
+`audit-review-20261025`; a candidata atual e seus commits são a fonte da
+continuidade, pois a primeira pasta fora da área gravável exigia permissões
+repetidas. Nenhum arquivo privado foi copiado para /tmp; só diff versionado,
+os oito fontes/testes novos e link das dependências existentes.
+
+Uso oficial no checkpoint: 99% restante, reserva 5%, reset exibido 26/10/2026 11:56:18 -03.
+Janela renovada durante a continuidade; não houve pausa por reserva nem
+execução automática de LIGARTUDO/DESLIGARTUDO nesta rodada.
+
 ## Integração da PR #72 autorizada — 25/10/2026
 
 Após a entrega da PR #72 pronta para revisão, usuário respondeu “Pode seguir”.

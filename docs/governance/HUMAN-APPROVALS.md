@@ -1,5 +1,19 @@
 # Ações que exigem aprovação humana — Cacau v1
 
+## Continuidade local após a PR #72 — 25–26/10/2026
+
+Após o relato da integração #72 e da sequência A04/A07/A08, evidências e
+homologação, usuário respondeu **“Pode seguir”**. Autoriza avançar a preparação
+local dessas frentes, testes isolados, documentação, commit e PR de revisão.
+Esta candidata mantém a stack e os controles existentes; o pseudônimo de
+correlação, os timeouts e os orçamentos técnicos integram sua revisão concreta.
+Não concede papéis nem executa mudança de política ou infraestrutura remota.
+
+A integração anterior foi consumida em #72. Esta continuidade não presume
+aprovação do novo diff para merge, deploy, SQL compartilhado, secrets, DNS,
+RBAC ou produção. Provedor real, sustentação e aceites mantêm seus gates.
+[Escopo e evidência](AUTH-CONNECTION-HARDENING-2026-10-26.md).
+
 ## Continuidade e integração da PR #72 — 25/10/2026
 
 Após apresentação da PR #72 pronta para revisão, com o escopo, os testes e

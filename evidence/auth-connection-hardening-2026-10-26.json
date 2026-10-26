@@ -1,0 +1,72 @@
+{
+  "recorded_at_utc": "2026-10-26T09:58:57.912119+00:00",
+  "base_commit": "f2a7fc7f2f6676b9077e0d2af87c5e45f1e9984c",
+  "code_commit": "b4ae5cbd354534b4b757ba4f6c544bd0345d0187",
+  "branch": "codex/auth-hardening-next-20261025",
+  "scope": [
+    "A04 partial: HMAC subjects and blocked login events",
+    "A07: scoped pg pools and explicit cleanup",
+    "A08: pre-handler budgets and exact Turnstile context"
+  ],
+  "authorization": {
+    "local_code_tests_docs_pr": true,
+    "merge": false,
+    "deploy": false,
+    "shared_sql": false,
+    "secrets_dns_rbac": false
+  },
+  "validation": {
+    "node": {
+      "tests": 614,
+      "passed": 614,
+      "failed": 0
+    },
+    "typecheck": "passed",
+    "lint": "passed",
+    "format": "passed",
+    "knip": {
+      "current_contextual": 4,
+      "new": 0,
+      "baseline_changed": false
+    },
+    "build_ci_isolated": {
+      "passed": true,
+      "public_test_key_only": true
+    },
+    "connected_postgres17": {
+      "tests": 12,
+      "passed": 12,
+      "failed": 0,
+      "real_connection_factory": true,
+      "max_connections_per_operation": 2,
+      "transaction_settings_verified": true,
+      "timeout_rollback_verified": true,
+      "no_operation_connections_after_http_ui": true,
+      "container_stopped": true
+    },
+    "remote_ci_codeql": "verify exact published HEAD through PR; this receipt does not attest a future run"
+  },
+  "limits": {
+    "connection_ms": 5000,
+    "client_query_ms": 20000,
+    "transaction_statement_ms": 15000,
+    "transaction_idle_ms": 15000,
+    "origin_calls_per_minute_per_location": 60,
+    "aggregate_calls_per_minute_per_location": 600,
+    "binding_counts": "approximate and eventually consistent, not a strict global quota"
+  },
+  "remaining": [
+    "A04 future grants/bootstrap actors and trusted reset-completion identity",
+    "HML real Workers/Neon/Turnstile and mobile-network verification",
+    "A01/A03 and L02-L06 external decisions/evidence"
+  ],
+  "effects": {
+    "historical_events_modified": false,
+    "historical_backfill_executed": false,
+    "shared_sql": false,
+    "deploy": false,
+    "secrets_changed": false,
+    "role_grants": false,
+    "dependency_versions_changed": false
+  }
+}

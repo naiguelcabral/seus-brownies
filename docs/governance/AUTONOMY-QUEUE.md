@@ -1,6 +1,6 @@
 # Espelho de execução do roadmap — Cacau v1
 
-Atualizado em 25/10/2026. O [ROADMAP-CODEX.md](ROADMAP-CODEX.md) é a única
+Atualizado em 26/10/2026. O [ROADMAP-CODEX.md](ROADMAP-CODEX.md) é a única
 fonte de tarefas e prioridades. Este arquivo apenas adapta seus estados ao
 controlador conservador; não cria autorização, dependência ou fila paralela.
 As tabelas antigas foram substituídas; seu histórico completo permanece no Git.
@@ -9,6 +9,7 @@ As tabelas antigas foram substituídas; seu histórico completo permanece no Git
 
 | ID | Pacote | Tipo | Estado | Resultado e dependência canônica |
 | --- | --- | --- | --- | --- |
+| A59 | Continuidade local de Auth e conexões | codigo | review-ready | Candidata b4ae5cb sobre f2a7fc7: lifecycle por Server Function, correlação HMAC, limites por origem/localidade e hostname/action. 614 Node, gates de qualidade, build e 12 conectados aprovados; CI/CodeQL e revisão por SHA na PR. A04 parcial e prova HML/gates externos pendentes. Sem autorização consumida para merge/publicação desta candidata. |
 | A58 | Ajustes locais de pré-publicação | codigo | done | Pacote de código entregue na PR #72 e integração autorizada na continuidade: A02, partes de A04/A08, A09/A10 e preparações L01/L07/L08/L09. 601 testes Node, 12 conectados, 40 fixtures e gates locais aprovados; checks do código e CodeQL aprovados. Resultado de merge/CI final na PR; publicação e pendências maiores continuam separadas. Ver seção atual do roadmap. |
 | A50 | Segurança e dependências | codigo | done | Pacote versionado entregue na main por #61/#63/#62/#64; auditoria zerada e gates reconferidos. #65 consolida o recibo. Limites A02, redação publicada A05 e headers globais A10 continuam pendências próprias; não refazer a atualização. |
 | A51 | Recuperação externa | auditoria-leitura | done | I02: dump efetivamente baixado do Drive, SHA-256/manifesto conferidos, restore PostgreSQL 17 sem rede, 38 tabelas/36 recibos exatos e catálogo independente. Retenção/RPO/RTO/responsáveis e Auth continuam separados. |
