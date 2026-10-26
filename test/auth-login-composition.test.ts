@@ -1,5 +1,6 @@
 import { requireDefined } from '../src/lib/required-value'
 import assert from 'node:assert/strict'
+import { hashAuthAuditSubject } from '../src/features/auth/audit-subject.server'
 import { readAuthAuditUserId } from '../src/features/auth/audit-identity'
 import { readFileSync } from 'node:fs'
 import test from 'node:test'
@@ -16,6 +17,7 @@ import { evaluateLoginAttempt } from '../src/features/auth/login-attempts.server
 import { decideLoginAttempt } from '../src/features/auth/login-security'
 import {
   invalidLoginMessage,
+  recordBlockedLogin,
   signInWithEmailPassword,
   unavailableLoginMessage,
 } from '../src/features/auth/login-actions'
@@ -136,6 +138,8 @@ function harness(options: {
     },
     createDatabaseLoginAttemptStore: () => store,
     hashAuthIdentity,
+    hashAuthAuditSubject,
+    recordBlockedLogin,
     evaluateLoginAttempt: (value: LoginAttemptStore, identity: string) =>
       evaluateLoginAttempt(value, identity, now),
     decideLoginAttempt,
@@ -164,7 +168,11 @@ function harness(options: {
     },
     createConfiguredNeonAuthServer: () => auth,
     signInWithEmailPassword,
-    getAuthActionAuditContext: async () => ({
+    getAuthActionAuditContext: async (
+      _actor: undefined,
+      subjectHash: string,
+    ) => ({
+      subjectHash,
       requestId: 'synthetic-request',
       writer: {
         append: async (event: AuthAuditInput) => {
@@ -209,7 +217,13 @@ test('composição: cooldown ativo e leitura em falha não chegam à proteção 
     message: invalidLoginMessage,
     requiresChallenge: true,
   })
-  assert.deepEqual(locked.calls, ['read'])
+  assert.deepEqual(locked.calls, ['read', 'audit'])
+  const blockedEvent = requireDefined(locked.events[0])
+  assert.equal(blockedEvent.outcome, 'blocked')
+  assert.equal(
+    blockedEvent.metadata?.subjectHash,
+    await hashAuthAuditSubject(input.email, environment.AUTH_LOGIN_HASH_PEPPER),
+  )
   const failed = harness({ readFails: true })
   await assert.rejects(failed.run(), (error) => error === storageFailure)
   assert.deepEqual(failed.calls, ['read'])
@@ -269,7 +283,7 @@ test('composição: cooldown expirado verifica token antes de chamar provedor', 
       fixture.calls,
       validToken
         ? ['read', 'protection', 'verify', 'provider', 'audit', 'record']
-        : ['read', 'protection', 'verify'],
+        : ['read', 'protection', 'verify', 'audit'],
     )
     assert.equal(fixture.session.issued, validToken)
   }

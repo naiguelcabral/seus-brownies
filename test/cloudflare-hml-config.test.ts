@@ -65,6 +65,16 @@ test('Worker HML é separado e preserva a compatibilidade do Worker principal', 
       namespace_id: '2026091001',
       simple: { limit: 20, period: 60 },
     },
+    {
+      name: 'AUTH_ORIGIN_RATE_LIMITER',
+      namespace_id: '2026102504',
+      simple: { limit: 60, period: 60 },
+    },
+    {
+      name: 'AUTH_AGGREGATE_RATE_LIMITER',
+      namespace_id: '2026102505',
+      simple: { limit: 600, period: 60 },
+    },
   ])
   assert.equal(config.routes, undefined)
   assert.deepEqual(config.env.hml.secrets.required, [

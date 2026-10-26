@@ -64,6 +64,7 @@ export type NeonAuthPasswordResetClient = {
 export type AuthActionAuditContext = {
   requestId: string
   actorAuthUserId?: string
+  subjectHash?: string | undefined
   writer: AuthAuditWriter
   telemetry?: AuthAuditTelemetry
 }
@@ -71,9 +72,13 @@ export type AuthActionAuditContext = {
 async function recordAuthAction(
   audit: AuthActionAuditContext | undefined,
   action: Extract<AuthAuditAction, 'login' | 'logout' | 'email_verification'>,
-  outcome: 'success' | 'failure',
+  outcome: 'success' | 'failure' | 'blocked',
   targetType: 'identity' | 'session',
-  reasonCode?: 'provider_rejected' | 'provider_unavailable',
+  reasonCode?:
+    | 'provider_rejected'
+    | 'provider_unavailable'
+    | 'login_cooldown'
+    | 'request_limit',
   actorAuthUserId?: string,
 ) {
   if (!audit) return
@@ -93,7 +98,16 @@ async function recordAuthAction(
                 : {}),
             }
           : {}),
-        ...(reasonCode ? { metadata: { reasonCode } } : {}),
+        ...(reasonCode || audit.subjectHash
+          ? {
+              metadata: {
+                ...(reasonCode ? { reasonCode } : {}),
+                ...(audit.subjectHash
+                  ? { subjectHash: audit.subjectHash }
+                  : {}),
+              },
+            }
+          : {}),
       }),
     )
   } catch {
@@ -106,6 +120,13 @@ async function recordAuthAction(
       stage: 'persistence_failed',
     })
   }
+}
+
+export function recordBlockedLogin(
+  audit: AuthActionAuditContext | undefined,
+  reason: 'login_cooldown' | 'request_limit',
+) {
+  return recordAuthAction(audit, 'login', 'blocked', 'identity', reason)
 }
 
 export async function signInWithEmailPassword(

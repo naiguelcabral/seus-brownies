@@ -1,12 +1,14 @@
 import { useEffect, useRef } from 'react'
 
 import { getTurnstileChallengeState } from './turnstile-client'
+import type { AuthRateLimitScope } from './auth-rate-limit'
 
 type TurnstileApi = {
   render: (
     container: HTMLElement,
     options: {
       sitekey: string
+      action: AuthRateLimitScope
       callback: (token: string) => void
       'error-callback': () => void
       'expired-callback': () => void
@@ -45,11 +47,13 @@ function loadTurnstileScript() {
 }
 
 export function TurnstileChallenge({
+  action,
   onToken,
   resetKey,
   requiresChallenge,
   siteKey,
 }: {
+  action: AuthRateLimitScope
   onToken: (token: string | null) => void
   resetKey?: number
   requiresChallenge: boolean
@@ -70,6 +74,7 @@ export function TurnstileChallenge({
         if (disposed || !container.current) return
         widgetId = turnstile.render(container.current, {
           sitekey: siteKey,
+          action,
           callback: (token) => onToken(token),
           'error-callback': () => onToken(null),
           'expired-callback': () => onToken(null),
@@ -81,7 +86,7 @@ export function TurnstileChallenge({
       disposed = true
       if (widgetId) window.turnstile?.remove?.(widgetId)
     }
-  }, [onToken, resetKey, siteKey, state.canRenderWidget])
+  }, [action, onToken, resetKey, siteKey, state.canRenderWidget])
 
   if (!state.requiresChallenge) return null
   if (!state.canRenderWidget) {

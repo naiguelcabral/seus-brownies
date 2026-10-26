@@ -144,6 +144,7 @@ function ResetPasswordPage() {
               </p>
             ) : null}
             <TurnstileChallenge
+              action="password-reset-completion"
               onToken={setTurnstileToken}
               resetKey={challengeAttempt}
               requiresChallenge={requiresChallenge}

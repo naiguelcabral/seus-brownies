@@ -4,7 +4,7 @@ import { telemetryRequestId } from './telemetry-request-id'
 type AuthAuditTelemetryEvent = {
   requestId: string
   action: Extract<AuthAuditAction, 'login' | 'logout' | 'email_verification'>
-  outcome: Extract<AuthAuditOutcome, 'success' | 'failure'>
+  outcome: AuthAuditOutcome
   stage: 'persistence_failed'
 }
 
@@ -22,7 +22,7 @@ export function createAuthAuditTelemetry(): AuthAuditTelemetry {
     emit: (event) => {
       if (
         !['login', 'logout', 'email_verification'].includes(event.action) ||
-        !['success', 'failure'].includes(event.outcome) ||
+        !['success', 'failure', 'blocked'].includes(event.outcome) ||
         !['persistence_failed'].includes(event.stage)
       )
         return

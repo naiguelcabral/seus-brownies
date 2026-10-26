@@ -111,6 +111,15 @@ function LoginPage() {
   function renderTurnstileChallenge() {
     return (
       <TurnstileChallenge
+        action={
+          mode === 'sign-in'
+            ? 'login'
+            : mode === 'sign-up'
+              ? 'sign-up'
+              : mode === 'verify-email'
+                ? 'verification-otp'
+                : 'password-reset'
+        }
         onToken={setTurnstileToken}
         resetKey={challengeAttempt}
         requiresChallenge={requiresChallenge}

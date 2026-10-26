@@ -1,7 +1,12 @@
 import assert from 'node:assert/strict'
 import { execFileSync, spawn } from 'node:child_process'
-import { getDb, pool } from '../e2e/connected/database.server'
+import {
+  getDb,
+  pool,
+  withDatabaseScope,
+} from '../e2e/connected/database.server'
 import * as schema from '../src/db/schema'
+import { sql } from 'drizzle-orm'
 
 assert.deepEqual(process.argv.slice(2), ['--ack-disposable-postgres17'])
 try {
@@ -29,111 +34,183 @@ try {
     { encoding: 'utf8', env: { PATH: process.env.PATH } },
   )
   await pool.query(ddl)
-  const db = getDb()
-  for (const role of ['owner', 'manager', 'production', 'employee'] as const) {
-    await db
-      .insert(schema.appUserAccess)
-      .values({ authUserId: `qa-${role}`, role })
+  const assertClosed = async () => {
+    for (let attempt = 0; attempt < 20; attempt++) {
+      const {
+        rows: [row],
+      } = await pool.query(
+        "select count(*)::int count from pg_stat_activity where application_name='cacau-operation' and datname=current_database()",
+      )
+      if (row.count === 0) return
+      await new Promise<void>((resolve) => setTimeout(resolve, 10))
+    }
+    assert.fail('Operation connections remained after scope completion.')
   }
-  await db.insert(schema.appUserAccess).values([
-    { authUserId: 'qa-inactive', role: 'owner', isActive: false },
-    { authUserId: 'qa-unverified', role: 'owner' },
-  ])
-  await db.insert(schema.products).values([
-    {
-      sku: 'QA-INPUT',
-      name: 'Ingrediente sintético',
-      type: 'ingredient',
+  await withDatabaseScope(async () => {
+    const db = getDb()
+    const rows = await Promise.all(
+      Array.from({ length: 6 }, () =>
+        db.execute(sql`select pg_backend_pid() pid, pg_sleep(0.01)`),
+      ),
+    )
+    assert.ok(rows.every((row) => typeof row.rows[0]?.pid === 'number'))
+    assert.ok(new Set(rows.map((row) => row.rows[0]?.pid)).size <= 2)
+    await db.transaction(async (tx) => {
+      const settings = await tx.execute(
+        sql`select current_setting('statement_timeout') statement_timeout, current_setting('idle_in_transaction_session_timeout') idle_timeout`,
+      )
+      const row = settings.rows[0]
+      assert.ok(row)
+      assert.equal(row.statement_timeout, '15s')
+      assert.equal(row.idle_timeout, '15s')
+    })
+  })
+  await assertClosed()
+  await assert.rejects(
+    withDatabaseScope(async () =>
+      getDb().transaction(async (tx) => {
+        await tx
+          .insert(schema.authLoginAttempts)
+          .values({ identityHash: 'f'.repeat(64) })
+        await tx.execute(sql`set local statement_timeout = '30ms'`)
+        await tx.execute(sql`select pg_sleep(1)`)
+      }),
+    ),
+    (error: unknown) =>
+      Boolean(
+        error &&
+        typeof error === 'object' &&
+        'cause' in error &&
+        error.cause &&
+        typeof error.cause === 'object' &&
+        'code' in error.cause &&
+        error.cause.code === '57014',
+      ),
+  )
+  const {
+    rows: [rolledBack],
+  } = await pool.query('select count(*)::int count from auth_login_attempts')
+  assert.equal(
+    rolledBack.count,
+    0,
+    'Timeout must roll back the whole transaction.',
+  )
+  await assertClosed()
+  console.log(
+    'PASS database scope: pool bound, server timeout, rollback and complete disconnect',
+  )
+  await withDatabaseScope(async () => {
+    const db = getDb()
+    for (const role of [
+      'owner',
+      'manager',
+      'production',
+      'employee',
+    ] as const) {
+      await db
+        .insert(schema.appUserAccess)
+        .values({ authUserId: `qa-${role}`, role })
+    }
+    await db.insert(schema.appUserAccess).values([
+      { authUserId: 'qa-inactive', role: 'owner', isActive: false },
+      { authUserId: 'qa-unverified', role: 'owner' },
+    ])
+    await db.insert(schema.products).values([
+      {
+        sku: 'QA-INPUT',
+        name: 'Ingrediente sintético',
+        type: 'ingredient',
+        unit: 'g',
+      },
+      {
+        sku: 'PROD003',
+        name: 'Brownie sintético',
+        type: 'finished_product',
+        unit: 'unit',
+        salePrice: '10.00',
+      },
+      {
+        sku: 'PROD002',
+        name: 'Bordinhas sintéticas',
+        type: 'finished_product',
+        unit: 'unit',
+        salePrice: '6.00',
+      },
+    ])
+    await db.insert(schema.recipeVersions).values({
+      sourceId: 'QA-RECIPE',
+      sourceHash: 'a'.repeat(64),
+      name: 'Receita sintética',
+      version: 1,
+      status: 'active',
+      sourcePayload: {},
+    })
+    await db.insert(schema.recipeItems).values({
+      sourceKey: 'QA-INGREDIENT',
+      sourceHash: 'b'.repeat(64),
+      recipeVersionId: 1,
+      productId: 1,
+      sourceName: 'Ingrediente sintético',
+      quantity: '250.000',
       unit: 'g',
-    },
-    {
-      sku: 'PROD003',
-      name: 'Brownie sintético',
-      type: 'finished_product',
-      unit: 'unit',
-      salePrice: '10.00',
-    },
-    {
-      sku: 'PROD002',
-      name: 'Bordinhas sintéticas',
-      type: 'finished_product',
-      unit: 'unit',
-      salePrice: '6.00',
-    },
-  ])
-  await db.insert(schema.recipeVersions).values({
-    sourceId: 'QA-RECIPE',
-    sourceHash: 'a'.repeat(64),
-    name: 'Receita sintética',
-    version: 1,
-    status: 'active',
-    sourcePayload: {},
-  })
-  await db.insert(schema.recipeItems).values({
-    sourceKey: 'QA-INGREDIENT',
-    sourceHash: 'b'.repeat(64),
-    recipeVersionId: 1,
-    productId: 1,
-    sourceName: 'Ingrediente sintético',
-    quantity: '250.000',
-    unit: 'g',
-    sourcePayload: {},
-  })
-  await db.insert(schema.productionProfiles).values([
-    {
-      sourceId: 'QA-PROFILE-MAIN',
-      sourceHash: 'c'.repeat(64),
-      recipeVersionId: 1,
-      productId: 2,
-      expectedYield: '12.000',
-      sourcePayload: {},
-    },
-    {
-      sourceId: 'QA-PROFILE-EDGE',
-      sourceHash: 'd'.repeat(64),
-      recipeVersionId: 1,
-      productId: 3,
-      expectedYield: '6.000',
-      sourcePayload: {},
-    },
-  ])
-  for (const type of ['energy', 'labor'] as const) {
-    await db.insert(schema.recipeOperationalRequirements).values({
-      sourceKey: `QA-${type}`,
-      sourceHash: (type === 'energy' ? '1' : '2').repeat(64),
-      recipeVersionId: 1,
-      type,
-      quantity: '1.000',
-      unit: type === 'energy' ? 'kwh' : 'hour',
       sourcePayload: {},
     })
-    await db.insert(schema.operationalCostRates).values({
-      sourceId: `QA-${type}`,
-      sourceHash: (type === 'energy' ? '3' : '4').repeat(64),
-      type,
-      unit: type === 'energy' ? 'kwh' : 'hour',
-      unitAmount: '0.00',
-      effectiveFrom: '2026-01-01',
-      sourcePayload: {},
+    await db.insert(schema.productionProfiles).values([
+      {
+        sourceId: 'QA-PROFILE-MAIN',
+        sourceHash: 'c'.repeat(64),
+        recipeVersionId: 1,
+        productId: 2,
+        expectedYield: '12.000',
+        sourcePayload: {},
+      },
+      {
+        sourceId: 'QA-PROFILE-EDGE',
+        sourceHash: 'd'.repeat(64),
+        recipeVersionId: 1,
+        productId: 3,
+        expectedYield: '6.000',
+        sourcePayload: {},
+      },
+    ])
+    for (const type of ['energy', 'labor'] as const) {
+      await db.insert(schema.recipeOperationalRequirements).values({
+        sourceKey: `QA-${type}`,
+        sourceHash: (type === 'energy' ? '1' : '2').repeat(64),
+        recipeVersionId: 1,
+        type,
+        quantity: '1.000',
+        unit: type === 'energy' ? 'kwh' : 'hour',
+        sourcePayload: {},
+      })
+      await db.insert(schema.operationalCostRates).values({
+        sourceId: `QA-${type}`,
+        sourceHash: (type === 'energy' ? '3' : '4').repeat(64),
+        type,
+        unit: type === 'energy' ? 'kwh' : 'hour',
+        unitAmount: '0.00',
+        effectiveFrom: '2026-01-01',
+        sourcePayload: {},
+      })
+    }
+    await db.insert(schema.salesLocations).values({ name: 'Balcão sintético' })
+    await db.insert(schema.managementSettings).values({
+      id: 1,
+      salesDaysPerMonth: 20,
+      weeksPerMonth: '4.00',
+      normalRevenueTolerance: '0.0300',
+      criticalRevenueTolerance: '0.0800',
+      minimumProductMargin: '0.7000',
+      feeTaxReserveRate: '0.0000',
+      fixedMonthlyCosts: '2288.00',
+      monthlyProfitGoal: '10000.00',
+      paymentFees: {
+        debitBps: 143,
+        creditBps: 336,
+        pixFixedCents: 49,
+        effectiveOn: '2026-10-18',
+      },
     })
-  }
-  await db.insert(schema.salesLocations).values({ name: 'Balcão sintético' })
-  await db.insert(schema.managementSettings).values({
-    id: 1,
-    salesDaysPerMonth: 20,
-    weeksPerMonth: '4.00',
-    normalRevenueTolerance: '0.0300',
-    criticalRevenueTolerance: '0.0800',
-    minimumProductMargin: '0.7000',
-    feeTaxReserveRate: '0.0000',
-    fixedMonthlyCosts: '2288.00',
-    monthlyProfitGoal: '10000.00',
-    paymentFees: {
-      debitBps: 143,
-      creditBps: 336,
-      pixFixedCents: 49,
-      effectiveOn: '2026-10-18',
-    },
   })
   const exitCode = await new Promise<number>((done, reject) => {
     const child = spawn(
@@ -150,6 +227,10 @@ try {
     child.once('exit', (code) => done(code ?? 1))
   })
   assert.equal(exitCode, 0, 'Connected Playwright validation failed.')
+  await assertClosed()
+  console.log(
+    'PASS database scope: no operation connection remained after HTTP/browser QA',
+  )
 } finally {
   await pool.end()
 }

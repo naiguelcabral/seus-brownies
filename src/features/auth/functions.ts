@@ -1,7 +1,9 @@
 import { createServerFn } from '@tanstack/react-start'
+import { publicAuthRequestBudget } from './public-request-middleware'
 import { z } from 'zod'
 
 import { readAuthAuditUserId } from './audit-identity'
+import { hashAuthAuditSubject } from './audit-subject.server'
 import { createConfiguredNeonAuthServer } from './configured-neon-auth.server'
 import {
   hashAuthIdentity,
@@ -15,6 +17,7 @@ import {
 import { decideLoginAttempt } from './login-security'
 import {
   invalidLoginMessage,
+  recordBlockedLogin,
   invalidOtpMessage,
   invalidPasswordResetMessage,
   otpSentMessage,
@@ -95,12 +98,14 @@ async function getAuthAuditWriter() {
 
 async function getAuthActionAuditContext(
   actorAuthUserId?: string,
+  subjectHash?: string,
 ): Promise<AuthActionAuditContext | undefined> {
   const writer = await getAuthAuditWriter()
   return writer
     ? {
         writer,
         ...(actorAuthUserId ? { actorAuthUserId } : {}),
+        ...(subjectHash ? { subjectHash } : {}),
         requestId: crypto.randomUUID(),
         telemetry: createAuthAuditTelemetry(),
       }
@@ -142,9 +147,14 @@ async function getPublicAuthProtectionForIdentifier(
 }
 
 export const loginWithEmailPassword = createServerFn({ method: 'POST' })
+  .middleware([publicAuthRequestBudget])
   .validator(loginWithProtectionInput)
   .handler(async ({ data }) => {
     const pepper = process.env.AUTH_LOGIN_HASH_PEPPER
+    const audit = await getAuthActionAuditContext(
+      undefined,
+      await hashAuthAuditSubject(data.email, pepper),
+    )
     const store = pepper ? createDatabaseLoginAttemptStore() : null
     const loginIdentity = pepper
       ? await hashAuthIdentity('login', data.email, pepper)
@@ -154,6 +164,7 @@ export const loginWithEmailPassword = createServerFn({ method: 'POST' })
         ? await evaluateLoginAttempt(store, loginIdentity)
         : null
     if (loginAttempt && !loginAttempt.decision.allowed) {
+      await recordBlockedLogin(audit, 'login_cooldown')
       return {
         ok: false,
         message: invalidLoginMessage,
@@ -164,6 +175,7 @@ export const loginWithEmailPassword = createServerFn({ method: 'POST' })
       forceChallenge: loginAttempt?.decision.requiresChallenge === true,
     })
     if (!protection.allowed) {
+      await recordBlockedLogin(audit, 'request_limit')
       return {
         ok: false,
         message: invalidLoginMessage,
@@ -178,7 +190,7 @@ export const loginWithEmailPassword = createServerFn({ method: 'POST' })
         email: data.email,
         password: data.password,
       },
-      await getAuthActionAuditContext(),
+      audit,
     )
     if (store && loginIdentity && result.message !== unavailableLoginMessage) {
       await store.record(loginIdentity, result.ok)
@@ -199,6 +211,7 @@ export const loginWithEmailPassword = createServerFn({ method: 'POST' })
   })
 
 export const signUpWithEmailPasswordFn = createServerFn({ method: 'POST' })
+  .middleware([publicAuthRequestBudget])
   .validator(signUpWithProtectionInput)
   .handler(async ({ data }) => {
     const protection = await getPublicAuthProtection('sign-up', data)
@@ -219,6 +232,7 @@ export const signUpWithEmailPasswordFn = createServerFn({ method: 'POST' })
   })
 
 export const resendEmailVerificationOtpFn = createServerFn({ method: 'POST' })
+  .middleware([publicAuthRequestBudget])
   .validator(emailWithProtectionInput)
   .handler(async ({ data }) => {
     const protection = await getPublicAuthProtection('verification-otp', data)
@@ -235,6 +249,7 @@ export const resendEmailVerificationOtpFn = createServerFn({ method: 'POST' })
   })
 
 export const verifyEmailVerificationOtpFn = createServerFn({ method: 'POST' })
+  .middleware([publicAuthRequestBudget])
   .validator(verifyOtpWithProtectionInput)
   .handler(async ({ data }) => {
     const protection = await getPublicAuthProtection('verification-otp', data)
@@ -253,11 +268,18 @@ export const verifyEmailVerificationOtpFn = createServerFn({ method: 'POST' })
         email: data.email,
         otp: data.otp,
       },
-      await getAuthActionAuditContext(),
+      await getAuthActionAuditContext(
+        undefined,
+        await hashAuthAuditSubject(
+          data.email,
+          process.env.AUTH_LOGIN_HASH_PEPPER,
+        ),
+      ),
     )
   })
 
 export const requestPasswordResetFn = createServerFn({ method: 'POST' })
+  .middleware([publicAuthRequestBudget])
   .validator(passwordResetWithProtectionInput)
   .handler(async ({ data }) => {
     const requestId = crypto.randomUUID()
@@ -305,6 +327,10 @@ export const requestPasswordResetFn = createServerFn({ method: 'POST' })
 
     const audit = await executeAuditedPasswordReset({
       action: 'password_reset_requested',
+      subjectHash: await hashAuthAuditSubject(
+        data.email,
+        process.env.AUTH_LOGIN_HASH_PEPPER,
+      ),
       requestId,
       telemetry,
       writer,
@@ -326,6 +352,7 @@ export const requestPasswordResetFn = createServerFn({ method: 'POST' })
   })
 
 export const resetPasswordWithTokenFn = createServerFn({ method: 'POST' })
+  .middleware([publicAuthRequestBudget])
   .validator(passwordResetCompletionInput)
   .handler(async ({ data }) => {
     const protection = await getPublicAuthProtectionForIdentifier(

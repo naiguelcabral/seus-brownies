@@ -1,3 +1,5 @@
+import { createAuthAuditEvent } from './audit'
+
 import type {
   AuthAuditAction,
   AuthAuditOutcome,
@@ -23,6 +25,7 @@ type PasswordResetAuditOperation<T> = {
     | 'provider_http_error'
     | undefined
   requestId?: string
+  subjectHash?: string | undefined
   telemetry?: PasswordResetTelemetry
   writer: AuthAuditWriter
 }
@@ -62,7 +65,16 @@ export async function executeAuditedPasswordReset<T>(
     action: operation.action,
     targetType: 'identity' as const,
     requestId,
-    metadata: { provider: 'neon-auth' as const },
+    metadata: createAuthAuditEvent({
+      action: operation.action,
+      outcome: 'blocked',
+      metadata: {
+        provider: 'neon-auth',
+        ...(operation.subjectHash
+          ? { subjectHash: operation.subjectHash }
+          : {}),
+      },
+    }).metadata,
   }
 
   try {
