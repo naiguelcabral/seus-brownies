@@ -1,5 +1,27 @@
 # Roadmap único — Cacau v1
 
+## Execução das cinco etapas — 26/10/2026
+
+1. **Integração concluída:** #73 → `233b3a4`, #76 → `4c8e8aa`. CI, laboratórios
+   e CodeQL da main aprovados após cada merge. Não repetir os merges ou deploy
+   da publicação anterior.
+2. **Candidata validada em laboratório:** aprovação inicial de Funcionário por Dono/Gerente,
+   consulta confiável, auditoria atômica, replay/concorrência e nova sessão.
+   Autoria do reset usa consulta restrita ao provedor. Configuração do novo
+   diretório ainda pendente; 12 checks da PR #77 em `e006d35` e três análises
+   CodeQL aprovados, zero alertas. Reconferir HEAD final; [escopo e implantação](REGISTRATION-APPROVAL-2026-10-26.md).
+3. **Homologação real pendente:** serviços Auth/Turnstile, revogação/perfis,
+   celular/rede móvel e CSP. A05 tem captura do marcador sintético nos logs
+   correlacionados: sem query/marcador armazenado. Laboratórios não substituem conta real.
+4. **Proposta e inventário:** usuário decidiu avaliar RPO/RTO/retenção depois.
+   Não mudar a agenda vigente por inferência. Seguem A01/A03/L02–L06.
+5. **Roteiro do ensaio preparado:** usuário fará o teste manual com notas de
+   compras reais de outros meses. Conferir duplicidade, data original e
+   unidades no destino isolado a preparar; não repetir compras na fonte
+   original. Demais fatos e I04 continuam pendentes de execução/aceite humano.
+
+[Proposta de recuperação, inventário e roteiro do piloto](RECOVERY-PILOT-PROPOSAL-2026-10-26.md).
+
 ## Publicação HML concluída — 26/10/2026
 
 PR #75 integrada em `82eebfc` e publicada por autorização específica. Três
@@ -252,7 +274,7 @@ Dono/administrador nas decisões e operações externas sujeitas a gate.
 | --- | --- | --- | --- |
 | Imediato — A01 | Comprovação técnica parcial em 23/10 | Relato de coleta incorporado por #65/9a4b276: hash da credencial de `48b101d` comparado, sem exibir valores, com a senha atual do `neondb_owner` em cada branch: `production`, `g1-auth-hml` e `Development` divergem; as três branches de backup não têm endpoint e não aceitam conexão; o projeto arquivado `cool-base` foi apagado. Falta revisar acessos do período 17–22/10: `pg_stat_statements` está desligado e a CLI não expõe conexões; no Auth, 21 sessões vieram de dois IPs. Falta recibo sanitizado que permita revisar método, UTC e abrangência dessa coleta; ela não foi repetida nesta rodada. Eventuais cópias locais de credenciais ficam sob responsabilidade privada do operador, sem leitura ou exclusão pelo agente. | Dono pede logs de conexão ao suporte Neon, se necessário. Reescrita do histórico é decisão separada. Não testar nem reproduzir o valor antigo. |
 | 1 — A02 / S03 | Dependências integradas; limites entregues na PR #72 | Corpo de até 1 MiB, até 100 itens/saídas/perdas e strings numéricas até 32 caracteres; schemas usados pelos handlers e testes de fronteira, excesso e idempotência. 601 testes Node e laboratório conectado aprovados. | Integração autorizada conforme PR #72; publicação/aceite HML pendentes. Não refazer a atualização Zod/Undici. |
-| 1 — A05 | Código integrado; confirmação HML pendente | #64 integrou redact_query_string:true no HML e no-store/no-referrer no login/reset; headers comprovados por HTTP no laboratório. Falta publicação HML autorizada e captura com marcador sintético. | Não atribuir a configuração nova ao Worker publicado antes de deploy/readback. Não consultar tokens reais. |
+| 1 — A05 | Publicado e comprovado no caminho Auth | HML 42da8a96 com redação relida. Em 26/10 17h07 UTC, cliente enviou marcador sintético na query final e evento pelo mesmo Ray ID/versão foi encontrado sem query nem marcador. HTTP200/no-store/no-referrer; recibo em HML-PUBLICATION-2026-10-26.md. | Não extrapolar a prova para todos os logs ou aceite de Auth/OTP reais; nenhum token real consultado. |
 | 1 — A06 / T02 | Concluído na main | #61 integrada em 1536920; db:generate e db:push bloqueados offline, sem conexão ou SQL. Preparação/revisão auditável, cadeia e recibos preservados. | T02 permanece parcial para planos por alvo; não reaplicar migrations ou usar o guard como controle de acesso administrativo. |
 | 2 — A03 / I02 / I03 | Divergência documentada; política pendente | Revisão observou histórico Neon de seis horas, branches sem proteção e automação semanal quinta 00:15, divergindo do diário 03h documentado. Reconfirmar fuso/configuração; acordar RPO/RTO, retenção, responsáveis e Auth; comprovar sequência de uploads, restore externo e alerta de falha. | Restore de 21/10 permanece válido historicamente. Mudança de frequência/infraestrutura/proteção exige decisão aplicável; não apagar backups. |
 | 2 — A04 / S01 | PR #72 integrada; candidata amplia correlação | Login/verificação bem-sucedidos usam ID do provedor; logout usa ator da sessão validada, sem alvo de sessão inventado. Contrato do SDK e testes de privacidade aprovados. | Candidata b4ae5cb correlaciona login/verificação/pedido de reset por HMAC e registra login bloqueado. Restam autoria de concessões futuras/bootstrap e conclusão de reset com identidade confiável; nenhum backfill histórico. |
@@ -477,7 +499,7 @@ Atualização documental não habilita o migrador nem altera proteções.
 | O11 | Condicional | Definir manutenção diária versionada de receitas/perfis/tarifas: procedimento controlado existente ou gestão pela interface, com auditoria. Não alterar versões usadas silenciosamente. |
 | F01 / F03 | Parcial | Lucro conjunto e recebimentos já estão entregues. Revisar somente indicadores/alertas adicionais ainda necessários, como contribuição, margem mínima realizada e comparação específica por canal. Ranking por sabor exige taxonomia; distinguir competência de caixa e não prometer conciliação bancária completa. |
 | F04 | Depende de histórico | Cobertura em dias e sugestão de reposição exigem consumo confiável, janela e regra aprovadas. Estoque vazio não é recomendação automática de compra. |
-| S02 | Política de aprovação aceita; implementação pendente | Decisão de 26/10: Dono com acesso completo e Gerente com primeira liberação de Funcionário validado, por permissão própria; promoção/reativação ficam com Dono. Preparar fluxo, auditoria atômica A04 e testes negativos/concorrência conforme SECURITY e matriz. Não há interface ou delegação executável entregue. Dupla aprovação não é controle já entregue. |
+| S02 | Candidata preparada; configuração e aceite pendentes | `/acessos` e `access:approve` para Dono/Gerente, primeira liberação de Funcionário com consulta confiável, auditoria atômica, replay/concorrência e nova sessão. SQL restrito do diretório e secret ainda não aplicados; conferir testes finais/CI, revisão e publicação conforme REGISTRATION-APPROVAL-2026-10-26.md. Promoção/reativação ficam com Dono, fora desse fluxo; dupla aprovação não foi entregue. |
 | R01 | Evolução futura | WhatsApp: ADR, webhook validado, evento persistido, idempotência/retry, interpretação sem bypass das regras, confirmação e auditoria. |
 | R02 | Evolução futura | Notas/OCR: armazenamento/upload seguro, extração candidata, validação, deduplicação, vínculo com compra e política de retenção. |
 | R03 | Evolução futura | Pagamentos parciais/mistos/parcelados, integrações de operadora, conciliação e logística ampliada conforme necessidade aprovada. Recebimento integral por meio já foi entregue. |

@@ -1,0 +1,63 @@
+{
+  "observed_at": "2026-10-26T16:38:57Z",
+  "repository": "naiguelcabral/seus-brownies",
+  "authorization": "Pode revisar e integrar e seguir com todas as 5 etapas",
+  "sequence": [
+    {
+      "pr": 73,
+      "reviewed_head": "db1d805a541903da452cbd54b123ff224ac5e747",
+      "approved_pr_checks": 8,
+      "merge": "233b3a4f1d9f2b5e08605a4c63534c57a8cb9d2a",
+      "method": "merge",
+      "main_workflows": [
+        { "id": 40350476410, "name": "CI", "conclusion": "success" },
+        { "id": 40350476550, "name": "Isolated business and browser validation", "conclusion": "success" },
+        { "id": 40350476840, "name": "CodeQL", "conclusion": "success" }
+      ],
+      "main_codeql": {
+        "ref": "refs/heads/main",
+        "sha": "233b3a4f1d9f2b5e08605a4c63534c57a8cb9d2a",
+        "categories": ["/language:javascript-typescript", "/language:python", "/language:actions"],
+        "results": 0,
+        "errors": 0,
+        "warnings": 0,
+        "open_alerts": 0
+      }
+    },
+    {
+      "pr": 76,
+      "original_head": "4659ed1eeb5651610492ff7d129a91599e74b7fa",
+      "updated_reviewed_head": "bb15186d2d3e7e76d6e2b43d3c0b5f11ada67d42",
+      "updated_from_main": "233b3a4f1d9f2b5e08605a4c63534c57a8cb9d2a",
+      "approved_pr_checks": 12,
+      "pr_codeql_merge_ref": "e336bbda544ec05302c1060c22012d954b85cd16",
+      "application_diff_empty": true,
+      "merge": "4c8e8aa2db97ca978bcd5a0f2f6639001193ac04",
+      "method": "merge",
+      "main_workflows": [
+        { "id": 40356992360, "name": "CI", "conclusion": "success" },
+        { "id": 40356992710, "name": "Isolated business and browser validation", "conclusion": "success" },
+        { "id": 40356992377, "name": "CodeQL", "conclusion": "success" }
+      ],
+      "main_codeql": {
+        "ref": "refs/heads/main",
+        "sha": "4c8e8aa2db97ca978bcd5a0f2f6639001193ac04",
+        "categories": ["/language:javascript-typescript", "/language:python", "/language:actions"],
+        "results": 0,
+        "errors": 0,
+        "warnings": 0,
+        "open_alerts": 0
+      }
+    }
+  ],
+  "scope": {
+    "production_deployed": false,
+    "hml_deployed": false,
+    "shared_sql_executed": false,
+    "secrets_changed": false,
+    "dns_changed": false,
+    "access_granted": false,
+    "force_push_or_rules_bypass": false
+  },
+  "next_phase": "S02/A04 candidate, real Auth acceptance, recovery proposal and owner-supplied pilot facts"
+}

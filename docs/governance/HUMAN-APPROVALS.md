@@ -1,5 +1,30 @@
 # Ações que exigem aprovação humana — Cacau v1
 
+## Integrações #73/#76 e cinco etapas — 26/10/2026
+
+Usuário autorizou **“Pode revisar e integrar e seguir com todas as 5 etapas”**,
+após a apresentação da correção da CI e da sequência. Abrange as duas PRs
+concretas, implementação/testes/PR da aprovação, homologação, preparação da
+segurança/recuperação e piloto com fatos reais a informar.
+
+#73 integrada em `233b3a4`; #76 atualizada sem conflito, validada e integrada em
+`4c8e8aa`. Três workflows de cada main aprovados e três análises CodeQL de cada
+merge sem resultados/erros/avisos, zero alertas abertos. Sem novo deploy.
+
+À pergunta sobre objetivos RPO/RTO/retenção, usuário escolheu **“Preparar a
+proposta e decidir depois”**. Não alterar a agenda ou tratar prazos propostos
+como aprovados. Para o piloto, primeiro informou que enviaria operadora/fatos;
+depois definiu **“Deixe tudo pronto, vou fazer o teste com notas de compras
+reais de outros meses”**. Preparar roteiro, conferência de duplicidade/data e
+recibo para esse teste manual. Não criar produção/venda presumida a partir
+da nota, repetir carga na fonte original ou inferir aceite operacional.
+
+A candidata S02/A04 e o novo diretório Auth precisam de revisão do resultado
+concreto antes das alterações compartilhadas descritas no
+[procedimento](REGISTRATION-APPROVAL-2026-10-26.md). Não há aceite de produção,
+concessão de contas, mudança de política de retenção ou SQL destrutivo nessa
+preparação. A fonte operacional original conserva sua classificação.
+
 ## Integração e publicação HML da PR #75 — 26/10/2026
 
 Após a apresentação da CI aprovada e da PR pronta para integração, usuário

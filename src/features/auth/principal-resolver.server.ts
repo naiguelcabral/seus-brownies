@@ -10,7 +10,11 @@ import { readTanStackNeonSession } from './neon-tanstack-adapter.server'
 
 async function readCacauAccess(authUserId: string) {
   const [access] = await getDb()
-    .select({ role: appUserAccess.role, isActive: appUserAccess.isActive })
+    .select({
+      role: appUserAccess.role,
+      isActive: appUserAccess.isActive,
+      roleUpdatedAt: appUserAccess.roleUpdatedAt,
+    })
     .from(appUserAccess)
     .where(eq(appUserAccess.authUserId, authUserId))
     .limit(1)
@@ -43,6 +47,9 @@ export function createConfiguredSessionResolver(
         return {
           error: result.error,
           data: {
+            ...(result.data?.session
+              ? { session: { createdAt: result.data.session.createdAt } }
+              : {}),
             user: {
               id: user.id,
               email: user.email,

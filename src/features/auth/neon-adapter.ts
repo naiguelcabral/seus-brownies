@@ -3,7 +3,10 @@ import type { AppPrincipal, AuthenticatedIdentity } from './principal'
 
 export type NeonAuthSessionClient = {
   getSession: () => Promise<{
-    data: { user: { id: string; email: string; emailVerified: boolean } } | null
+    data: {
+      user: { id: string; email: string; emailVerified: boolean }
+      session?: { createdAt: Date | string }
+    } | null
     error?: unknown
   }>
 }
@@ -11,7 +14,31 @@ export type NeonAuthSessionClient = {
 export type CacauAccessReader = (authUserId: string) => Promise<{
   role: unknown
   isActive: boolean
+  roleUpdatedAt?: Date
 } | null>
+
+export function readSessionCreatedAt(value: unknown): number | null {
+  const milliseconds =
+    value instanceof Date
+      ? value.getTime()
+      : typeof value === 'string'
+        ? Date.parse(value)
+        : Number.NaN
+  return Number.isFinite(milliseconds) ? milliseconds : null
+}
+
+export function sessionFollowsRoleChange(
+  sessionCreatedAt: number | null | undefined,
+  roleUpdatedAt: Date | undefined,
+) {
+  return (
+    roleUpdatedAt !== undefined &&
+    Number.isFinite(roleUpdatedAt.getTime()) &&
+    typeof sessionCreatedAt === 'number' &&
+    Number.isFinite(sessionCreatedAt) &&
+    sessionCreatedAt > roleUpdatedAt.getTime()
+  )
+}
 
 /** Provider failure must not masquerade as an expired or absent session. */
 export class AuthSessionUnavailableError extends Error {
@@ -53,9 +80,16 @@ export function createNeonSessionResolver(
     const { data } = result
     if (!data) return { user: null, principal: null }
     const access = await readAccess(data.user.id)
+    const sessionCreatedAt = readSessionCreatedAt(data.session?.createdAt)
     const principal =
-      access?.isActive && isAppRole(access.role)
-        ? { ...data.user, role: access.role }
+      access?.isActive &&
+      isAppRole(access.role) &&
+      sessionFollowsRoleChange(sessionCreatedAt, access.roleUpdatedAt)
+        ? {
+            ...data.user,
+            role: access.role,
+            ...(sessionCreatedAt === null ? {} : { sessionCreatedAt }),
+          }
         : null
     return { user: data.user, principal }
   }

@@ -1,8 +1,10 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
+import { requireDefined, requireFirst } from '../src/lib/required-value'
 
 import {
   executeAuditedPasswordReset,
+  executeIdentifiedPasswordReset,
   isAuditedPasswordResetSuccessful,
 } from '../src/features/auth/password-reset-audit'
 import type { PasswordResetTelemetryEvent } from '../src/features/auth/password-reset-telemetry.server'
@@ -10,6 +12,76 @@ import {
   passwordResetRequestMessage,
   requestPasswordReset,
 } from '../src/features/auth/login-actions'
+
+test('reset identifica alvo pelo provedor e atribui ator somente após sucesso', async () => {
+  const id = 'f60853ce-4dbd-4b14-a28e-1f874c0722b5'
+  const events: Array<Record<string, unknown>> = []
+  const result = await executeIdentifiedPasswordReset({
+    resolveSubject: async () => id,
+    writer: {
+      append: async (event) => {
+        events.push(event)
+      },
+    },
+    execute: async () => ({ ok: true }),
+    getOutcome: (providerResult) => (providerResult.ok ? 'success' : 'failure'),
+  })
+  assert.equal(result.auditComplete, true)
+  assert.equal(events.length, 2)
+  const pending = requireFirst(events)
+  const completed = requireDefined(events[1])
+  assert.equal(pending.targetId, id)
+  assert.equal(pending.actorAuthUserId, undefined)
+  assert.equal(completed.targetId, id)
+  assert.equal(completed.actorAuthUserId, id)
+})
+
+test('reset não modifica senha sem identidade confiável, inclusive em falha de consulta', async () => {
+  let calls = 0
+  for (const resolveSubject of [
+    async () => null,
+    async () => 'synthetic-token-is-not-an-actor',
+    async () => {
+      throw new Error('synthetic-private-directory-error')
+    },
+  ]) {
+    const result = await executeIdentifiedPasswordReset({
+      resolveSubject,
+      writer: {
+        append: async () => {
+          assert.fail('Sem identidade não gravar ator presumido')
+        },
+      },
+      execute: async () => {
+        calls++
+        return { ok: true }
+      },
+      getOutcome: (providerResult) =>
+        providerResult.ok ? 'success' : 'failure',
+    })
+    assert.deepEqual(result, { auditComplete: false, stage: 'before-provider' })
+  }
+  assert.equal(calls, 0)
+})
+
+test('reset rejeitado pelo provedor registra alvo conhecido sem inventar ator bem-sucedido', async () => {
+  const events: Array<Record<string, unknown>> = []
+  const id = 'f60853ce-4dbd-4b14-a28e-1f874c0722b5'
+  await executeIdentifiedPasswordReset({
+    resolveSubject: async () => id,
+    writer: {
+      append: async (event) => {
+        events.push(event)
+      },
+    },
+    execute: async () => ({ ok: false }),
+    getOutcome: (result) => (result.ok ? 'success' : 'failure'),
+  })
+  const completed = requireDefined(events[1])
+  assert.equal(completed.outcome, 'failure')
+  assert.equal(completed.targetId, id)
+  assert.equal(completed.actorAuthUserId, undefined)
+})
 
 test('reset só é considerado concluído após persistir intenção e resultado sanitizados', async () => {
   const events: Array<Record<string, unknown>> = []

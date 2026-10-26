@@ -1,5 +1,20 @@
 # Publicação HML — 26/10/2026
 
+## Complemento A05 — prova de redação em 26/10, 17h07 UTC
+
+GET público com marcador sintético em `token`, seguindo o redirecionamento
+legado até `/login/redefinir-senha`, retornou 200/no-store/no-referrer. O cliente
+confirmou o envio do marcador na query final. Consulta temporária aos logs
+encontrou exatamente o evento pelo Ray ID `a50b0f349f58b289`, na versão publicada
+`42da8a96`: URL armazenada sem query e marcador ausente do evento inteiro.
+Readback manteve redação habilitada, logs persistidos e 100% nessa versão.
+
+[Recibo sanitizado](../../evidence/hml-query-redaction-2026-10-26.json).
+Sem credenciais/tokens reais, chamadas mutáveis ou alteração remota. Fecha a
+prova de query strings de A05 nesse caminho Auth; não é aceite de serviços
+reais ou de todas as fontes de logging. A publicação original abaixo é
+histórica: a captura por marcador, então pendente, foi concluída aqui.
+
 ## Resultado e autorização
 
 Após a CI aprovada da PR #75, usuário autorizou: **“Pode seguir com a

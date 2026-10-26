@@ -86,8 +86,11 @@ Requisitos mínimos:
 O Dono conserva todas as permissões funcionais. O Gerente poderá aprovar
 cadastros validados por uma permissão específica de aprovação, separada de
 `access:manage`, que também protege configurações e diagnóstico administrativo.
-A implementação dessa delegação ainda está pendente em S02/A04; as permissões
-atuais do código continuam descritas em [AUTHORIZATION-MATRIX.md](AUTHORIZATION-MATRIX.md).
+A candidata S02/A04 implementa a primeira liberação de Funcionário, com
+consulta restrita à fonte do provedor, transação auditada e nova sessão após
+mudança de papel. Configuração, integração/publicação e aceite real permanecem
+separados; [procedimento](REGISTRATION-APPROVAL-2026-10-26.md) e permissões em
+[AUTHORIZATION-MATRIX.md](AUTHORIZATION-MATRIX.md).
 
 Para implementar a liberação com menor privilégio:
 

@@ -14,6 +14,7 @@ import {
   Tags,
   Target,
   Wallet,
+  UserCheck,
 } from 'lucide-react'
 import { Link, getRouteApi, useRouter } from '@tanstack/react-router'
 import { useServerFn } from '@tanstack/react-start'
@@ -104,6 +105,12 @@ const navigation = [
     label: 'Locais',
     icon: MapPin,
     permission: 'catalog:write',
+  },
+  {
+    to: '/acessos',
+    label: 'Aprovar cadastros',
+    icon: UserCheck,
+    permission: 'access:approve',
   },
   {
     to: '/parametros',

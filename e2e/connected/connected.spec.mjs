@@ -34,6 +34,13 @@ async function identity(page, role) {
         httpOnly: true,
         sameSite: 'Strict',
       },
+      {
+        name: 'cacau-connected-qa-issued-at',
+        value: new Date().toISOString(),
+        url: origin,
+        httpOnly: true,
+        sameSite: 'Strict',
+      },
     ])
   await page.goto('/login', { waitUntil: 'networkidle' })
 }
@@ -69,6 +76,8 @@ test('anonymous, inactive, unverified and missing access links cannot call prote
       'getDashboard',
       'createPurchase',
       'getOperationalReports',
+      'findRegistrationCandidate',
+      'approveRegistration',
     ]) {
       const result = await rpc(page, name)
       expect(result.ok, `${role}: ${name}`).toBe(false)
@@ -84,6 +93,7 @@ test('anonymous, inactive, unverified and missing access links cannot call prote
 const allowed = {
   owner: null,
   manager: [
+    'access:approve',
     'catalog:read',
     'catalog:write',
     'purchases:read',
@@ -117,7 +127,7 @@ for (const role of Object.keys(allowed)) {
       async () =>
         (await import('/e2e/connected/bridge.ts')).serverFunctionPolicies,
     )
-    expect(Object.keys(policies)).toHaveLength(55)
+    expect(Object.keys(policies)).toHaveLength(57)
     const before = await counters()
     for (const [name, permission] of Object.entries(policies)) {
       if (allowed[role] === null || allowed[role].includes(permission)) continue
@@ -760,5 +770,90 @@ test('all five scenario writers roll back scenario, mix, history and audit when 
         `alter table ${table} disable trigger qa_scenario_audit_failure`,
       )
     }
+  }
+})
+
+test('manager approves a verified registration through the real UI and requires a new target session', async ({
+  page,
+  browser,
+}) => {
+  const targetContext = await browser.newContext()
+  await targetContext.route('**/*', (route) =>
+    new URL(route.request().url()).origin === origin
+      ? route.continue()
+      : route.abort('blockedbyclient'),
+  )
+  await targetContext.routeWebSocket('**/*', (socket) => socket.close())
+  const target = await targetContext.newPage()
+  try {
+    await identity(target, 'approved-employee')
+    expect((await rpc(target, 'listPurchasableProducts')).ok).toBe(false)
+    await identity(page, 'manager')
+    await page.setViewportSize({ width: 320, height: 740 })
+    await page.goto('/acessos', { waitUntil: 'networkidle' })
+    await expect(
+      page.getByRole('heading', { name: 'Aprovar cadastros', exact: true }),
+    ).toBeVisible()
+    await page.getByLabel('E-mail do cadastro').fill('approved@example.test')
+    await page
+      .getByRole('button', { name: 'Verificar cadastro', exact: true })
+      .click()
+    await expect(
+      page.getByRole('heading', { name: 'Cadastro QA isolado' }),
+    ).toBeVisible()
+    await page
+      .getByLabel('Motivo da liberação')
+      .fill('Cadastro conferido no laboratório conectado')
+    await page
+      .getByRole('button', { name: 'Aprovar como Funcionário', exact: true })
+      .click()
+    await expect(page.getByRole('status')).toContainText(
+      'Acesso de Funcionário aprovado.',
+    )
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= window.innerWidth,
+      ),
+    ).toBe(true)
+    const access = (
+      await pool.query(
+        'SELECT id,role,is_active FROM app_user_access WHERE auth_user_id=$1',
+        ['b1f5fcd8-7d94-4c51-9856-128930a030e5'],
+      )
+    ).rows[0]
+    expect(access.role).toBe('employee')
+    expect(access.is_active).toBe(true)
+    const audits = (
+      await pool.query(
+        "SELECT actor_auth_user_id,metadata FROM auth_audit_events WHERE action='role_changed' AND target_type='access' AND target_id=$1",
+        [String(access.id)],
+      )
+    ).rows
+    expect(audits).toHaveLength(1)
+    expect(audits[0].actor_auth_user_id).toBe('qa-manager')
+    expect(audits[0].metadata.after).toEqual({
+      role: 'employee',
+      isActive: true,
+    })
+    // Existing provider cookie must not gain access merely because its link appeared.
+    expect((await rpc(target, 'listPurchasableProducts')).ok).toBe(false)
+    await identity(target, 'approved-employee')
+    expect((await rpc(target, 'listPurchasableProducts')).ok).toBe(true)
+    await page.reload({ waitUntil: 'networkidle' })
+    await page.getByLabel('E-mail do cadastro').fill('approved@example.test')
+    await page
+      .getByRole('button', { name: 'Verificar cadastro', exact: true })
+      .click()
+    await expect(page.getByRole('status')).toContainText('já possui um vínculo')
+    expect(
+      (
+        await pool.query(
+          "SELECT count(*)::int count FROM auth_audit_events WHERE action='role_changed' AND target_id=$1",
+          [String(access.id)],
+        )
+      ).rows[0].count,
+    ).toBe(1)
+  } finally {
+    await targetContext.close()
   }
 })

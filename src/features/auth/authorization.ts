@@ -37,6 +37,7 @@ const permissions = [
   'scenarios:read',
   'scenarios:write',
   'access:manage',
+  'access:approve',
 ] as const
 
 export type Permission = (typeof permissions)[number]
@@ -46,7 +47,8 @@ const legacyAdminPermissions = new Set<Permission>(
   permissions.filter(
     (permission) =>
       permission !== 'financial:period:correct' &&
-      permission !== 'scenarios:write',
+      permission !== 'scenarios:write' &&
+      permission !== 'access:approve',
   ),
 )
 
@@ -63,6 +65,7 @@ const rolePermissions: Readonly<Record<AppRole, ReadonlySet<Permission>>> = {
   // Compatibility for links created before the Owner role migration.
   admin: legacyAdminPermissions,
   manager: new Set([
+    'access:approve',
     'catalog:read',
     'catalog:write',
     'purchases:read',

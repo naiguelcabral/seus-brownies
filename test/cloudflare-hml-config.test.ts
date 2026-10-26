@@ -83,6 +83,7 @@ test('Worker HML é separado e preserva a compatibilidade do Worker principal', 
     'NEON_AUTH_COOKIE_SECRET',
     'TURNSTILE_SECRET_KEY',
     'AUTH_LOGIN_HASH_PEPPER',
+    'AUTH_DIRECTORY_DATABASE_URL',
   ])
 })
 

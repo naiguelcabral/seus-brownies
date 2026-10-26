@@ -164,8 +164,9 @@
   A liberação exige aprovação explícita de pessoa autorizada, com validação
   pelo servidor e auditoria transacional. Gerente não pode aprovar a si mesmo
   nem mudar um vínculo existente por esse fluxo.
-- Esta regra orienta S02/A04; a interface e a delegação ao Gerente ainda não
-  estão implementadas. A titularidade de Dono não dispensa integridade,
+- Esta regra orienta S02/A04; interface e delegação estão preparadas na
+  candidata de 26/10, com configuração e aceite real ainda pendentes. A
+  titularidade de Dono não dispensa integridade,
   validações, autoria ou preservação do histórico.
 - Nenhum usuário deve poder contornar regra de estoque ou produção apenas pela interface.
 - Regras críticas devem existir no servidor/domínio e possuir testes.

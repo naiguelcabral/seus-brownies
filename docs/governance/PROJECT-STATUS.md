@@ -1,5 +1,35 @@
 # Estado canônico do projeto — Cacau v1
 
+## Integrações concluídas e candidata S02/A04 — 26/10/2026
+
+Autorização para seguir as cinco etapas recebida. #73 integrada em `233b3a4`
+e #76 em `4c8e8aa`, com CI, laboratórios e CodeQL da main aprovados após cada
+merge. Nenhum novo deploy foi necessário.
+
+Preparação S02/A04: `/acessos`, permissão específica para Dono/Gerente,
+primeira liberação de Funcionário validado pelo servidor, concessão/auditoria
+atômica e nova sessão após mudança de papel. Reset passa a exigir identificação
+restrita pelo provedor e atribui ator somente no sucesso. 626 testes Node e
+19 cenários PostgreSQL e 13 conectados de interface/HTTP passaram, incluindo
+aprovação em 320px e nova sessão do destinatário. Build/lint/tipos/formato/Knip
+aprovados. Na PR #77, HEAD `e006d35`, os 12 checks passaram; três análises
+CodeQL da candidata de merge sem resultados/erros/avisos e zero alertas abertos.
+Conferir novamente o HEAD final antes de integrar.
+
+O [diretório Auth e seu SQL proposto](REGISTRATION-APPROVAL-2026-10-26.md) ainda
+não foram configurados no HML. Não publicar a candidata antes disso. Sem
+concessão real, SQL compartilhado ou alteração de secrets nesta preparação.
+RPO/RTO/retenção ficam propostos para decisão posterior. O usuário fará o teste
+manual com notas de compras reais de outros meses. Roteiro e recibo preparados,
+com conferência de duplicidade, data e unidades; falta preparar o destino
+isolado publicado e executar o ensaio. HML atual usa a fonte original auditada.
+
+A05: captura no HML correlacionada por Ray ID confirmou o marcador sintético
+enviado na query final e ausente do evento armazenado, cuja URL não tem query.
+[Prova](HML-PUBLICATION-2026-10-26.md). A configuração remota não mudou. A
+[proposta de recuperação e roteiro do piloto](RECOVERY-PILOT-PROPOSAL-2026-10-26.md)
+registra a agenda divergente, três pares externos privados e os gates restantes.
+
 ## PR #75 integrada e HML publicado — 26/10/2026
 
 Main `82eebfc` publicada no HML após autorização do usuário, três workflows
