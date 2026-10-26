@@ -7,40 +7,49 @@ import {
   createNeonSessionResolver,
 } from '../src/features/auth/neon-adapter'
 
+const roleUpdatedAt = new Date('2026-10-25T10:00:00Z')
+const session = { createdAt: '2026-10-26T10:00:00Z' }
+const sessionCreatedAt = Date.parse(session.createdAt)
+
 test('adapter Neon converte sessão e vínculo Cacau em principal', async () => {
   const resolvePrincipal = createNeonPrincipalResolver(
     {
       getSession: async () => ({
         data: {
+          session,
           user: { id: 'neon-1', email: 'a@example.test', emailVerified: true },
         },
       }),
     },
     async (id) =>
-      id === 'neon-1' ? { role: 'manager', isActive: true } : null,
+      id === 'neon-1'
+        ? { roleUpdatedAt, role: 'manager', isActive: true }
+        : null,
   )
   assert.deepEqual(await resolvePrincipal(), {
     id: 'neon-1',
     email: 'a@example.test',
     emailVerified: true,
     role: 'manager',
+    sessionCreatedAt,
   })
 })
 
 test('adapter Neon falha fechado sem sessão ou vínculo ativo', async () => {
   const noSession = createNeonPrincipalResolver(
     { getSession: async () => ({ data: null }) },
-    async () => ({ role: 'admin', isActive: true }),
+    async () => ({ roleUpdatedAt, role: 'admin', isActive: true }),
   )
   const inactive = createNeonPrincipalResolver(
     {
       getSession: async () => ({
         data: {
+          session,
           user: { id: 'neon-1', email: 'a@example.test', emailVerified: true },
         },
       }),
     },
-    async () => ({ role: 'admin', isActive: false }),
+    async () => ({ roleUpdatedAt, role: 'admin', isActive: false }),
   )
   assert.equal(await noSession(), null)
   assert.equal(await inactive(), null)
@@ -51,6 +60,7 @@ test('identidade Neon válida sem app_user_access não recebe principal', async 
     {
       getSession: async () => ({
         data: {
+          session,
           user: {
             id: 'neon-without-access',
             email: 'externo@example.test',
@@ -69,6 +79,7 @@ test('adapter Neon nega vínculo sem papel canônico válido', async () => {
     {
       getSession: async () => ({
         data: {
+          session,
           user: {
             id: 'neon-1',
             email: 'a@example.test',
@@ -77,7 +88,7 @@ test('adapter Neon nega vínculo sem papel canônico válido', async () => {
         },
       }),
     },
-    async () => ({ role: 'administrator', isActive: true }),
+    async () => ({ roleUpdatedAt, role: 'administrator', isActive: true }),
   )
   assert.equal(await resolvePrincipal(), null)
 })
@@ -89,14 +100,14 @@ test('status e principal usam a mesma leitura de sessão sem consulta duplicada'
     {
       getSession: async () => {
         calls += 1
-        return { data: { user }, error: null }
+        return { data: { user, session }, error: null }
       },
     },
-    async () => ({ role: 'manager', isActive: true }),
+    async () => ({ roleUpdatedAt, role: 'manager', isActive: true }),
   )
   assert.deepEqual(await resolveSession(), {
     user,
-    principal: { ...user, role: 'manager' },
+    principal: { ...user, role: 'manager', sessionCreatedAt },
   })
   assert.equal(calls, 1)
 })
@@ -108,7 +119,7 @@ for (const status of [429, 500, 503]) {
       { getSession: async () => ({ data: null, error: { status } }) },
       async () => {
         reads += 1
-        return { role: 'owner', isActive: true }
+        return { roleUpdatedAt, role: 'owner', isActive: true }
       },
     )
     await assert.rejects(resolvePrincipal, AuthSessionUnavailableError)
@@ -123,10 +134,10 @@ test('falha de rede é sanitizada e não impede recuperação na próxima leitur
     {
       getSession: async () => {
         if (++calls === 1) throw new Error('synthetic-private-provider-detail')
-        return { data: { user } }
+        return { data: { user, session } }
       },
     },
-    async () => ({ role: 'manager', isActive: true }),
+    async () => ({ roleUpdatedAt, role: 'manager', isActive: true }),
   )
   await assert.rejects(resolveSession, (error: unknown) => {
     assert.ok(error instanceof AuthSessionUnavailableError)
@@ -143,10 +154,13 @@ test('identidade e acesso são revalidados, sem cache global ou acesso revogado 
   const resolveSession = createNeonSessionResolver(
     {
       getSession: async () => ({
-        data: { user: { id, email: 'a@example.test', emailVerified: true } },
+        data: {
+          user: { id, email: 'a@example.test', emailVerified: true },
+          session,
+        },
       }),
     },
-    async () => ({ role: 'manager', isActive: active }),
+    async () => ({ roleUpdatedAt, role: 'manager', isActive: active }),
   )
   assert.equal((await resolveSession()).principal?.id, 'neon-1')
   id = 'neon-2'
@@ -162,12 +176,13 @@ test('resposta com erro e dados de usuário não autoriza o principal', async ()
     {
       getSession: async () => ({
         data: {
+          session,
           user: { id: 'neon-1', email: 'a@example.test', emailVerified: true },
         },
         error: { status: 429 },
       }),
     },
-    async () => ({ role: 'owner', isActive: true }),
+    async () => ({ roleUpdatedAt, role: 'owner', isActive: true }),
   )
   await assert.rejects(resolveSession, AuthSessionUnavailableError)
 })

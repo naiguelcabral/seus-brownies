@@ -1,4 +1,5 @@
 import { createAuthAuditEvent } from './audit'
+import { z } from 'zod'
 
 import type {
   AuthAuditAction,
@@ -26,6 +27,8 @@ type PasswordResetAuditOperation<T> = {
     | undefined
   requestId?: string
   subjectHash?: string | undefined
+  /** Resolved inside the trusted provider directory before consuming the token. */
+  trustedSubjectAuthUserId?: string
   telemetry?: PasswordResetTelemetry
   writer: AuthAuditWriter
 }
@@ -65,6 +68,9 @@ export async function executeAuditedPasswordReset<T>(
     action: operation.action,
     targetType: 'identity' as const,
     requestId,
+    ...(operation.trustedSubjectAuthUserId
+      ? { targetId: operation.trustedSubjectAuthUserId }
+      : {}),
     metadata: createAuthAuditEvent({
       action: operation.action,
       outcome: 'blocked',
@@ -107,6 +113,11 @@ export async function executeAuditedPasswordReset<T>(
     await operation.writer.append({
       ...baseEvent,
       outcome,
+      ...(operation.action === 'password_reset_completed' &&
+      outcome === 'success' &&
+      operation.trustedSubjectAuthUserId
+        ? { actorAuthUserId: operation.trustedSubjectAuthUserId }
+        : {}),
       metadata: failureReasonCode
         ? { ...baseEvent.metadata, reasonCode: failureReasonCode }
         : baseEvent.metadata,
@@ -117,6 +128,31 @@ export async function executeAuditedPasswordReset<T>(
     emit('final_audit_failed', undefined, readAuditErrorCode(error))
     return { auditComplete: false, result, stage: 'after-provider' }
   }
+}
+
+/** Missing/unavailable identity must stop before changing the provider password. */
+export async function executeIdentifiedPasswordReset<T>(
+  operation: Omit<
+    PasswordResetAuditOperation<T>,
+    'action' | 'trustedSubjectAuthUserId'
+  > & {
+    resolveSubject: () => Promise<string | null>
+  },
+): Promise<AuditedPasswordResetResult<T>> {
+  let subject: string | null
+  try {
+    subject = await operation.resolveSubject()
+  } catch {
+    return { auditComplete: false, stage: 'before-provider' }
+  }
+  const identity = z.string().uuid().safeParse(subject)
+  if (!identity.success)
+    return { auditComplete: false, stage: 'before-provider' }
+  return executeAuditedPasswordReset({
+    ...operation,
+    action: 'password_reset_completed',
+    trustedSubjectAuthUserId: identity.data,
+  })
 }
 
 export function isAuditedPasswordResetSuccessful(

@@ -19,14 +19,21 @@ export function createConfiguredSessionResolver() {
           'inactive',
           'unverified',
           'no-access',
+          'approved-employee',
         ]
         if (!token || !identities.includes(token)) return { data: null }
         return {
           data: {
             user: {
-              id: `qa-${token}`,
+              id:
+                token === 'approved-employee'
+                  ? 'b1f5fcd8-7d94-4c51-9856-128930a030e5'
+                  : `qa-${token}`,
               email: `${token}@example.test`,
               emailVerified: token !== 'unverified',
+            },
+            session: {
+              createdAt: getCookie('cacau-connected-qa-issued-at') ?? 'invalid',
             },
           },
         }
@@ -37,6 +44,7 @@ export function createConfiguredSessionResolver() {
         .select({
           role: appUserAccess.role,
           isActive: appUserAccess.isActive,
+          roleUpdatedAt: appUserAccess.roleUpdatedAt,
         })
         .from(appUserAccess)
         .where(eq(appUserAccess.authUserId, id))

@@ -6,6 +6,8 @@ import type { Permission } from './authorization'
  * public Worker is blocked at the edge and awaits a deploy of this source.
  */
 export const serverFunctionPolicies = {
+  findRegistrationCandidate: 'access:approve',
+  approveRegistration: 'access:approve',
   checkSqlConnection: 'access:manage',
   listCategories: 'catalog:read',
   createCategory: 'catalog:write',

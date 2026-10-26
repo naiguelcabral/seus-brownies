@@ -1,5 +1,22 @@
 # Roadmap único — Cacau v1
 
+## Execução das cinco etapas — 26/10/2026
+
+1. **Integração concluída:** #73 → `233b3a4`, #76 → `4c8e8aa`. CI, laboratórios
+   e CodeQL da main aprovados após cada merge. Não repetir os merges ou deploy
+   da publicação anterior.
+2. **Candidata em validação:** aprovação inicial de Funcionário por Dono/Gerente,
+   consulta confiável, auditoria atômica, replay/concorrência e nova sessão.
+   Autoria do reset usa consulta restrita ao provedor. Configuração do novo
+   diretório ainda pendente; [escopo e implantação](REGISTRATION-APPROVAL-2026-10-26.md).
+3. **Homologação real pendente:** serviços Auth/Turnstile, revogação/perfis,
+   celular/rede móvel, logs e CSP. Laboratórios não substituem conta real.
+4. **Proposta e inventário:** usuário decidiu avaliar RPO/RTO/retenção depois.
+   Não mudar a agenda vigente por inferência. Seguem A01/A03/L02–L06.
+5. **Piloto a preparar:** usuário informou que fornecerá operadora e fatos
+   reais previstos. Aguardar esses dados, preservando integridade e estoque;
+   I04 continua aceite humano de produção.
+
 ## Publicação HML concluída — 26/10/2026
 
 PR #75 integrada em `82eebfc` e publicada por autorização específica. Três
@@ -477,7 +494,7 @@ Atualização documental não habilita o migrador nem altera proteções.
 | O11 | Condicional | Definir manutenção diária versionada de receitas/perfis/tarifas: procedimento controlado existente ou gestão pela interface, com auditoria. Não alterar versões usadas silenciosamente. |
 | F01 / F03 | Parcial | Lucro conjunto e recebimentos já estão entregues. Revisar somente indicadores/alertas adicionais ainda necessários, como contribuição, margem mínima realizada e comparação específica por canal. Ranking por sabor exige taxonomia; distinguir competência de caixa e não prometer conciliação bancária completa. |
 | F04 | Depende de histórico | Cobertura em dias e sugestão de reposição exigem consumo confiável, janela e regra aprovadas. Estoque vazio não é recomendação automática de compra. |
-| S02 | Política de aprovação aceita; implementação pendente | Decisão de 26/10: Dono com acesso completo e Gerente com primeira liberação de Funcionário validado, por permissão própria; promoção/reativação ficam com Dono. Preparar fluxo, auditoria atômica A04 e testes negativos/concorrência conforme SECURITY e matriz. Não há interface ou delegação executável entregue. Dupla aprovação não é controle já entregue. |
+| S02 | Candidata preparada; configuração e aceite pendentes | `/acessos` e `access:approve` para Dono/Gerente, primeira liberação de Funcionário com consulta confiável, auditoria atômica, replay/concorrência e nova sessão. SQL restrito do diretório e secret ainda não aplicados; conferir testes finais/CI, revisão e publicação conforme REGISTRATION-APPROVAL-2026-10-26.md. Promoção/reativação ficam com Dono, fora desse fluxo; dupla aprovação não foi entregue. |
 | R01 | Evolução futura | WhatsApp: ADR, webhook validado, evento persistido, idempotência/retry, interpretação sem bypass das regras, confirmação e auditoria. |
 | R02 | Evolução futura | Notas/OCR: armazenamento/upload seguro, extração candidata, validação, deduplicação, vínculo com compra e política de retenção. |
 | R03 | Evolução futura | Pagamentos parciais/mistos/parcelados, integrações de operadora, conciliação e logística ampliada conforme necessidade aprovada. Recebimento integral por meio já foi entregue. |

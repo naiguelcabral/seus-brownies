@@ -45,6 +45,8 @@ jobs:
         run: env -i PATH="$PATH" node --throw-deprecation --import tsx scripts/test-exact-costs-disposable.ts --ack-disposable-postgres17
       - name: Purchase, production, sale, delivery, payment and profit
         run: env -i PATH="$PATH" node --throw-deprecation --import tsx scripts/test-recovery-production-disposable.ts --ack-disposable-postgres17
+      - name: Registration approval, least privilege and atomic audit
+        run: env -i PATH="$PATH" node --throw-deprecation --import tsx scripts/test-registration-approval-disposable.ts --ack-disposable-postgres17
 
   browser-fixtures:
     runs-on: ubuntu-24.04

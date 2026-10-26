@@ -4,6 +4,7 @@
     "e2e/connected/bridge.ts",
     "e2e/connected/cloudflare.server.ts",
     "e2e/connected/identity.server.ts",
+    "e2e/connected/registration-directory.server.ts",
     "e2e/connected/playwright.config.ts",
     "e2e/connected/vite.config.ts",
     "e2e/connected/connected.spec.mjs",

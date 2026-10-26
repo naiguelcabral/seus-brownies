@@ -65,7 +65,8 @@
           "NEON_AUTH_BASE_URL",
           "NEON_AUTH_COOKIE_SECRET",
           "TURNSTILE_SECRET_KEY",
-          "AUTH_LOGIN_HASH_PEPPER"
+          "AUTH_LOGIN_HASH_PEPPER",
+          "AUTH_DIRECTORY_DATABASE_URL"
         ]
       }
     }
@@ -105,7 +106,8 @@
       "NEON_AUTH_BASE_URL",
       "NEON_AUTH_COOKIE_SECRET",
       "TURNSTILE_SECRET_KEY",
-      "AUTH_LOGIN_HASH_PEPPER"
+      "AUTH_LOGIN_HASH_PEPPER",
+      "AUTH_DIRECTORY_DATABASE_URL"
     ]
   },
   "observability": {

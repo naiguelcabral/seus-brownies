@@ -71,10 +71,16 @@ import {
 } from '../../src/features/inventory/lifecycle-writers'
 import { getFifoMigrationAudit } from '../../src/features/inventory/fifo-migration-audit'
 import { checkSqlConnection } from '../../src/features/diagnostics/functions'
+import {
+  findRegistrationCandidate,
+  approveRegistration,
+} from '../../src/features/auth/registration-approval.functions'
 import { serverFunctionPolicies } from '../../src/features/auth/server-function-policy'
 
 // Imported explicitly by Playwright into the local Vite runtime only.
 export const functions = {
+  findRegistrationCandidate,
+  approveRegistration,
   listCategories,
   createCategory,
   updateCategory,

@@ -33,6 +33,7 @@ import {
 import type { AuthActionAuditContext } from './login-actions'
 import {
   executeAuditedPasswordReset,
+  executeIdentifiedPasswordReset,
   isAuditedPasswordResetSuccessful,
 } from './password-reset-audit'
 import { createAuthAuditTelemetry } from './auth-audit-telemetry.server'
@@ -375,8 +376,12 @@ export const resetPasswordWithTokenFn = createServerFn({ method: 'POST' })
     const writer = await getAuthAuditWriter()
     if (!writer) return { ok: false, message: invalidPasswordResetMessage }
 
-    const audit = await executeAuditedPasswordReset({
-      action: 'password_reset_completed',
+    const audit = await executeIdentifiedPasswordReset({
+      resolveSubject: async () => {
+        const { readPasswordResetSubject } =
+          await import('./registration-directory.server')
+        return readPasswordResetSubject(process.env, data.token)
+      },
       writer,
       execute: () =>
         resetPasswordWithToken(auth, {

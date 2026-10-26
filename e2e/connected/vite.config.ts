@@ -14,6 +14,10 @@ export default defineConfig({
     tsconfigPaths: true,
     alias: [
       {
+        find: /^(?:\.\/|.*\/)registration-directory\.server(?:\.ts)?$/,
+        replacement: resolve('e2e/connected/registration-directory.server.ts'),
+      },
+      {
         find: 'cloudflare:workers',
         replacement: resolve('e2e/connected/cloudflare.server.ts'),
       },

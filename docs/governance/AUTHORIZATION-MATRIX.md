@@ -2,14 +2,15 @@
 
 ## Estado e fontes
 
-Reconciliada em 21/10/2026 com `authorization.ts`, `ui-access.ts` e as 55
-políticas de `server-function-policy.ts`, em `src/features/auth/`. Esta revisão
-documenta as permissões existentes; não concede papéis nem altera RBAC.
+Reconciliada na candidata de 26/10/2026 com `authorization.ts`, `ui-access.ts`
+e as 57 políticas de `server-function-policy.ts`, em `src/features/auth/`.
+As duas novas políticas cobrem consulta/aprovação de cadastro. A candidata
+altera a permissão executável; publicação e concessões reais ainda não ocorreram.
 
 Em 26/10/2026, o usuário aprovou a delegação de liberação de cadastros ao
 Gerente. A seção seguinte define o escopo a implementar. As tabelas de
-permissões e rotas atuais continuam refletindo o código integrado em #74;
-o Gerente ainda não dispõe do fluxo de aprovação.
+permissões e rotas abaixo refletem a candidata S02/A04, cuja configuração e
+homologação real permanecem pendentes.
 
 Guards no servidor exigem identidade Neon verificada, vínculo ativo em
 `app_user_access` e permissão da operação. A interface também restringe rotas,
@@ -62,16 +63,17 @@ falha do provedor/auditoria, revogação do aprovador, repetição e concorrênc
 Proteger o último Dono ativo e cumprir a política de sessão em mudanças de
 privilégio. Não reatribuir autoria a concessões históricas.
 
-Esta é a política aprovada e seu detalhamento conservador para implementação;
-S02 e a autoria futura de A04 permanecem pendentes. Não há nova tela, endpoint,
-permissão executável, concessão real ou homologação entregue por este registro.
+Esta é a política aprovada e seu detalhamento conservador. A candidata entrega
+tela e endpoints para a primeira liberação de Funcionário; promoção/reativação
+ficam fora desse fluxo. [Controles e implantação](REGISTRATION-APPROVAL-2026-10-26.md).
+Configuração no provedor/HML, integração e homologação permanecem pendentes.
 
 ## Papéis canônicos
 
 | Papel | Finalidade |
 | --- | --- |
 | Dono (`owner`) | Toda a operação, configuração e administração de acessos. |
-| Gerente (`manager`) | Gestão diária e compensações autorizadas. No código atual, sem aprovação de acessos; delegação limitada de cadastros aprovada em S02. Sem fechar/corrigir períodos ou editar cenários. |
+| Gerente (`manager`) | Gestão diária, compensações autorizadas e primeira liberação de Funcionário validado. Sem administração geral de acessos, fechar/corrigir períodos ou editar cenários. |
 | Funcionário (`employee`) | Selecionar catálogo e registrar compras e vendas; sem leituras financeiras, dashboard ou histórico geral de compras/vendas. |
 
 `admin`, `production`, `sales` e `viewer` são compatibilidades legadas.
@@ -103,6 +105,7 @@ vínculo atual sem registrar dados pessoais no Git.
 | `scenarios:read` | sim | sim | não | `listScenarios` |
 | `scenarios:write` | sim | não | não | Criar, editar, versionar, ativar e arquivar cenários |
 | `access:manage` | sim | não | não | Configurações, diagnóstico SQL controlado e planos de ação |
+| `access:approve` | sim | sim | não | Verificar cadastro e aprovar primeiro acesso como Funcionário |
 
 A aprovação G2 permite compensações ao Gerente e correção de período fechado
 somente ao Dono. A implementação atual restringe também o fechamento ao Dono;
@@ -126,6 +129,7 @@ Funcionário. Não presumir que poder registrar implica poder listar.
 | `/cenarios` | `scenarios:read` |
 | `/parametros`, `/diagnostico-conexao`, `/plano-de-acao` | `access:manage` |
 | `/fifo-migration-audit` | `fifo:audit:read` |
+| `/acessos` | `access:approve` |
 
 `/login` e `/login/redefinir-senha` são públicas. Sem sessão autorizada, a
 navegação operacional volta a `/login`. Com sessão e papel insuficiente, a

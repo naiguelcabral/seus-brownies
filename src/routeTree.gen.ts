@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AcessosRouteImport } from './routes/acessos'
 import { Route as CategoriasRouteImport } from './routes/categorias'
 import { Route as CenariosRouteImport } from './routes/cenarios'
 import { Route as ComprasRouteImport } from './routes/compras'
@@ -31,6 +32,11 @@ import { Route as LoginRedefinirSenhaRouteImport } from './routes/login/redefini
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AcessosRoute = AcessosRouteImport.update({
+  id: '/acessos',
+  path: '/acessos',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CategoriasRoute = CategoriasRouteImport.update({
@@ -121,6 +127,7 @@ const LoginRedefinirSenhaRoute = LoginRedefinirSenhaRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/acessos': typeof AcessosRoute
   '/categorias': typeof CategoriasRoute
   '/cenarios': typeof CenariosRoute
   '/compras': typeof ComprasRoute
@@ -141,6 +148,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/acessos': typeof AcessosRoute
   '/categorias': typeof CategoriasRoute
   '/cenarios': typeof CenariosRoute
   '/compras': typeof ComprasRoute
@@ -162,6 +170,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/acessos': typeof AcessosRoute
   '/categorias': typeof CategoriasRoute
   '/cenarios': typeof CenariosRoute
   '/compras': typeof ComprasRoute
@@ -184,6 +193,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/acessos'
     | '/categorias'
     | '/cenarios'
     | '/compras'
@@ -204,6 +214,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/acessos'
     | '/categorias'
     | '/cenarios'
     | '/compras'
@@ -224,6 +235,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/acessos'
     | '/categorias'
     | '/cenarios'
     | '/compras'
@@ -245,6 +257,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AcessosRoute: typeof AcessosRoute
   CategoriasRoute: typeof CategoriasRoute
   CenariosRoute: typeof CenariosRoute
   ComprasRoute: typeof ComprasRoute
@@ -270,6 +283,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/acessos': {
+      id: '/acessos'
+      path: '/acessos'
+      fullPath: '/acessos'
+      preLoaderRoute: typeof AcessosRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/categorias': {
@@ -406,6 +426,7 @@ const LoginRouteWithChildren = LoginRoute._addFileChildren(LoginRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AcessosRoute: AcessosRoute,
   CategoriasRoute: CategoriasRoute,
   CenariosRoute: CenariosRoute,
   ComprasRoute: ComprasRoute,
@@ -426,13 +447,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

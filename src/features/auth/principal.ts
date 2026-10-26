@@ -9,6 +9,8 @@ export type AuthenticatedIdentity = {
 
 export type AppPrincipal = AuthenticatedIdentity & {
   role: AppRole
+  /** Provider session creation time; never supplied by an RPC caller. */
+  sessionCreatedAt?: number
 }
 
 export class AuthenticationRequiredError extends Error {

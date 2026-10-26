@@ -1,5 +1,24 @@
 # Estado canônico do projeto — Cacau v1
 
+## Integrações concluídas e candidata S02/A04 — 26/10/2026
+
+Autorização para seguir as cinco etapas recebida. #73 integrada em `233b3a4`
+e #76 em `4c8e8aa`, com CI, laboratórios e CodeQL da main aprovados após cada
+merge. Nenhum novo deploy foi necessário.
+
+Preparação S02/A04: `/acessos`, permissão específica para Dono/Gerente,
+primeira liberação de Funcionário validado pelo servidor, concessão/auditoria
+atômica e nova sessão após mudança de papel. Reset passa a exigir identificação
+restrita pelo provedor e atribui ator somente no sucesso. 626 testes Node e
+19 cenários PostgreSQL passaram na preparação; os ajustes finais, interface,
+build e CI/CodeQL serão reconferidos no HEAD publicado.
+
+O [diretório Auth e seu SQL proposto](REGISTRATION-APPROVAL-2026-10-26.md) ainda
+não foram configurados no HML. Não publicar a candidata antes disso. Sem
+concessão real, SQL compartilhado ou alteração de secrets nesta preparação.
+RPO/RTO/retenção serão propostos para decisão posterior; piloto aguarda a
+operadora e os fatos reais que o usuário informou que enviará.
+
 ## PR #75 integrada e HML publicado — 26/10/2026
 
 Main `82eebfc` publicada no HML após autorização do usuário, três workflows

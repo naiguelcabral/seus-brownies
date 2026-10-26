@@ -5,7 +5,12 @@ import test from 'node:test'
 import { serverFunctionPolicies } from '../src/features/auth/server-function-policy'
 
 test('toda Server Function operacional mapeada recebe uma permissão explícita', () => {
-  assert.equal(Object.keys(serverFunctionPolicies).length, 55)
+  assert.equal(Object.keys(serverFunctionPolicies).length, 57)
+  assert.equal(
+    serverFunctionPolicies.findRegistrationCandidate,
+    'access:approve',
+  )
+  assert.equal(serverFunctionPolicies.approveRegistration, 'access:approve')
   assert.equal(serverFunctionPolicies.checkSqlConnection, 'access:manage')
   assert.equal(serverFunctionPolicies.createSale, 'sales:write')
   assert.equal(
@@ -45,7 +50,7 @@ test('toda Server Function operacional mapeada recebe uma permissão explícita'
   assert.equal(serverFunctionPolicies.activateScenario, 'scenarios:write')
 })
 
-test('as 55 Server Functions inventariadas aplicam o middleware no servidor', async () => {
+test('as 57 Server Functions inventariadas aplicam o middleware no servidor', async () => {
   const source = await Promise.all(
     [
       'src/features/diagnostics/functions.ts',
@@ -60,6 +65,7 @@ test('as 55 Server Functions inventariadas aplicam o middleware no servidor', as
       'src/features/inventory/lifecycle-writers.ts',
       'src/features/finance/functions.ts',
       'src/features/scenarios/functions.ts',
+      'src/features/auth/registration-approval.functions.ts',
     ].map((file) => readFile(new URL(`../${file}`, import.meta.url), 'utf8')),
   )
   const combined = source.join('\n')
