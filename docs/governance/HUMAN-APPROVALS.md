@@ -1,5 +1,65 @@
 # Ações que exigem aprovação humana — Cacau v1
 
+## Dono e aprovação de cadastros por Gerente — 26/10/2026
+
+Após a apresentação das pendências A04 e das fases seguintes, o usuário definiu:
+
+> O dono pode ser tudo e os perfis de gerente podem incluir a liberação de usuários cadastrados que estejam validados devidamente no cadastro dentro dos parâmetros de segurança
+
+Decisão de produto aceita: Dono conserva acesso funcional completo; Gerente
+pode aprovar cadastros que passem pelas validações de segurança. Autoriza
+preparar a implementação local, os testes e a PR desse fluxo em S02/A04.
+
+O detalhamento inicial adota menor privilégio: Gerente libera somente primeiro
+acesso como Funcionário, com identidade/e-mail confirmados pelo provedor,
+sem autoaprovação, promoção ou reativação de vínculo inativo. Administração
+geral e concessão de Gerente/Dono ficam com o Dono. Esta delimitação operacional
+é a interpretação conservadora da delegação, não uma citação adicional do
+usuário. Controles completos em [SECURITY.md](SECURITY.md) e política na
+[matriz](AUTHORIZATION-MATRIX.md).
+
+Este incremento registra a decisão; não altera o RBAC executável nem concede
+papel a qualquer identidade. Implementação, auditoria transacional e testes
+ainda são trabalho de S02/A04. Bootstrap histórico não deve ser repetido.
+Não inclui merge de nova PR, deploy, SQL compartilhado, migrations aplicadas,
+secrets, DNS ou redução dos controles existentes.
+
+## Integração autorizada da PR #74 — 26/10/2026
+
+Após a apresentação da PR #74 validada e da sequência restante, usuário
+respondeu **“Pode seguir com a integração”**. Autoriza integrar somente esse
+pacote concreto, preservando commits e proteção da main, após reconferir o
+HEAD e todos os checks/resultados CodeQL. Não inclui deploy, SQL compartilhado,
+secrets, DNS, concessões de acesso ou outras PRs.
+
+O código revisado é b4ae5cb; a candidata documental 76fd7a5 teve todos os
+12 checks aprovados e três análises CodeQL sem resultados/erros/avisos,
+zero alertas abertos. Este fechamento altera só documentação/evidência.
+A árvore de código/testes/configuração permanece a mesma. Resultado do merge,
+SHA final e CI da main são conferidos no
+[estado da PR #74](https://github.com/naiguelcabral/seus-brownies/pull/74).
+
+A59 done identifica o pacote de código entregue e validado, não publicação
+nem encerramento integral de A04/A07/A08. Restam autoria de concessões futuras/
+bootstrap e conclusão de reset com identidade confiável, prova HML com serviços
+reais/rede móvel, A01/A03 e decisões L02–L06. A configuração versionada não é
+recibo de configuração remota aplicada. Registros de preparação abaixo são
+históricos; sua restrição de merge antecede esta autorização específica.
+
+## Continuidade local após a PR #72 — 25–26/10/2026
+
+Após o relato da integração #72 e da sequência A04/A07/A08, evidências e
+homologação, usuário respondeu **“Pode seguir”**. Autoriza avançar a preparação
+local dessas frentes, testes isolados, documentação, commit e PR de revisão.
+Esta candidata mantém a stack e os controles existentes; o pseudônimo de
+correlação, os timeouts e os orçamentos técnicos integram sua revisão concreta.
+Não concede papéis nem executa mudança de política ou infraestrutura remota.
+
+A integração anterior foi consumida em #72. Esta continuidade não presume
+aprovação do novo diff para merge, deploy, SQL compartilhado, secrets, DNS,
+RBAC ou produção. Provedor real, sustentação e aceites mantêm seus gates.
+[Escopo e evidência](AUTH-CONNECTION-HARDENING-2026-10-26.md).
+
 ## Continuidade e integração da PR #72 — 25/10/2026
 
 Após apresentação da PR #72 pronta para revisão, com o escopo, os testes e

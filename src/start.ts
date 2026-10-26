@@ -25,8 +25,16 @@ const requestBodyLimitMiddleware = createMiddleware().server(
   },
 )
 
+const databaseFunctionMiddleware = createMiddleware({
+  type: 'function',
+}).server(async ({ next }) => {
+  const { withDatabaseScope } = await import('#/db/index')
+  return withDatabaseScope(() => next())
+})
+
 /** Explicit CSRF protection, bounded input and response headers for server requests. */
 export const startInstance = createStart(() => ({
+  functionMiddleware: [databaseFunctionMiddleware],
   requestMiddleware: [
     securityHeadersMiddleware,
     createCsrfMiddleware({

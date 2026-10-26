@@ -155,6 +155,18 @@
 
 ## Segurança de negócio
 
+- Decisão de 26/10/2026: Dono tem todas as permissões funcionais e administra
+  acessos. Gerente pode liberar usuários cadastrados e devidamente validados,
+  respeitando os controles de [SECURITY.md](SECURITY.md). O escopo inicial de
+  menor privilégio é a primeira liberação como Funcionário; promoção para
+  Gerente/Dono e reativação de acesso inativo ficam com o Dono.
+- Cadastro e confirmação de e-mail não ativam acesso operacional automaticamente.
+  A liberação exige aprovação explícita de pessoa autorizada, com validação
+  pelo servidor e auditoria transacional. Gerente não pode aprovar a si mesmo
+  nem mudar um vínculo existente por esse fluxo.
+- Esta regra orienta S02/A04; a interface e a delegação ao Gerente ainda não
+  estão implementadas. A titularidade de Dono não dispensa integridade,
+  validações, autoria ou preservação do histórico.
 - Nenhum usuário deve poder contornar regra de estoque ou produção apenas pela interface.
 - Regras críticas devem existir no servidor/domínio e possuir testes.
 - Alterações retroativas de preço, estoque, custo ou produção exigem justificativa e auditoria.

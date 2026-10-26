@@ -1,5 +1,79 @@
 # Roadmap único — Cacau v1
 
+## Ajuste de interface do login — H06, 26/10/2026
+
+Pedido direto do usuário: ações “Esqueci a senha” e “Primeiro acesso” em
+linhas distintas. Implementação local na PR #75, sem mudar serviços de Auth
+ou concessões. Textos e seletores dos ensaios atualizados; 40 casos de navegador,
+incluindo disposição móvel, e gates de qualidade/build isolado aprovados.
+Publicação e aceite HML permanecem separados.
+Este ajuste não implementa a aprovação de cadastros de S02/A04.
+
+## Próximo incremento S02/A04 — decisão de 26/10/2026
+
+Após a integração da PR #74 em `9426316`, usuário definiu Dono com todas as
+permissões e aprovação de cadastros validados por Gerente. Decisão registrada
+na [matriz](AUTHORIZATION-MATRIX.md), em [SECURITY.md](SECURITY.md) e
+[HUMAN-APPROVALS.md](HUMAN-APPROVALS.md).
+
+Próximo trabalho de código: fluxo próprio de primeira liberação como
+Funcionário, com validação confiável do destinatário, permissão específica
+para aprovação, proteção contra autoaprovação/elevação e concessão/auditoria
+na mesma transação. Não delegar `access:manage` ao Gerente. Implementação e
+testes isolados autorizados; cadastro sem aprovação continua sem acesso.
+
+Este incremento é documental: S02 não está entregue e A04 continua parcial,
+inclusive na conclusão de reset com identidade confiável. Publicação/homologação
+HML e decisões de infraestrutura mantêm seus escopos separados.
+
+## Integração autorizada da PR #74 — 26/10/2026
+
+Após a apresentação da PR #74 validada e da sequência restante, usuário
+respondeu **“Pode seguir com a integração”**. Autoriza integrar somente esse
+pacote concreto, preservando commits e proteção da main, após reconferir o
+HEAD e todos os checks/resultados CodeQL. Não inclui deploy, SQL compartilhado,
+secrets, DNS, concessões de acesso ou outras PRs.
+
+O código revisado é b4ae5cb; a candidata documental 76fd7a5 teve todos os
+12 checks aprovados e três análises CodeQL sem resultados/erros/avisos,
+zero alertas abertos. Este fechamento altera só documentação/evidência.
+A árvore de código/testes/configuração permanece a mesma. Resultado do merge,
+SHA final e CI da main são conferidos no
+[estado da PR #74](https://github.com/naiguelcabral/seus-brownies/pull/74).
+
+A59 done identifica o pacote de código entregue e validado, não publicação
+nem encerramento integral de A04/A07/A08. Restam autoria de concessões futuras/
+bootstrap e conclusão de reset com identidade confiável, prova HML com serviços
+reais/rede móvel, A01/A03 e decisões L02–L06. A configuração versionada não é
+recibo de configuração remota aplicada. Registros de preparação abaixo são
+históricos; sua restrição de merge antecede esta autorização específica.
+
+## Continuidade A04/A07/A08 — candidata local de 26/10/2026
+
+Após a PR #72 integrada em `f2a7fc7`, usuário autorizou seguir as próximas
+fases. Pacote local em `codex/auth-hardening-next-20261025`, código `b4ae5cb`:
+contexto/pool por Server Function com fechamento aguardado; correlação HMAC
+sem ator presumido; orçamento anterior ao banco por origem/localidade e
+Turnstile com hostname/ação exatos. Preserva Drizzle/pg/Neon, RBAC, regras,
+custos, idempotência e histórico. Configuração remota não foi aplicada.
+
+614 testes Node, typecheck/lint/formato/Knip, build isolado e 12 cenários
+HTTP/UI/PostgreSQL 17 aprovados. Probes confirmam teto de conexões, timeouts
+transacionais, rollback e zero conexões da operação após o laboratório.
+A fábrica real de conexão também é usada no laboratório. Container encerrado.
+CI, CodeQL e resultado da revisão são conferidos por SHA no estado da nova PR.
+
+A04 continua parcial: concessões/bootstrap futuros e identidade confiável na
+conclusão do reset. A07/A08 têm implementação e evidência local; prova HML com
+Workers/Neon/Turnstile reais e rede móvel continua pendente. Orçamentos do binding
+são aproximados por localidade, não um teto mundial estrito. Política de dados,
+recuperação, privilégio mínimo e demais gates externos permanecem.
+
+[Desenho, limites e riscos](AUTH-CONNECTION-HARDENING-2026-10-26.md).
+[Recibo por escopo e SHA](../../evidence/auth-connection-hardening-2026-10-26.json).
+Sem merge desta candidata, deploy, SQL compartilhado, migrations, secrets,
+DNS ou concessões de acesso nesta rodada. Registros anteriores são históricos.
+
 ## Entrega e integração autorizada — PR #72
 
 Usuário autorizou a continuidade após a apresentação do pacote validado.
@@ -142,9 +216,9 @@ Dono/administrador nas decisões e operações externas sujeitas a gate.
 | 1 — A05 | Código integrado; confirmação HML pendente | #64 integrou redact_query_string:true no HML e no-store/no-referrer no login/reset; headers comprovados por HTTP no laboratório. Falta publicação HML autorizada e captura com marcador sintético. | Não atribuir a configuração nova ao Worker publicado antes de deploy/readback. Não consultar tokens reais. |
 | 1 — A06 / T02 | Concluído na main | #61 integrada em 1536920; db:generate e db:push bloqueados offline, sem conexão ou SQL. Preparação/revisão auditável, cadeia e recibos preservados. | T02 permanece parcial para planos por alvo; não reaplicar migrations ou usar o guard como controle de acesso administrativo. |
 | 2 — A03 / I02 / I03 | Divergência documentada; política pendente | Revisão observou histórico Neon de seis horas, branches sem proteção e automação semanal quinta 00:15, divergindo do diário 03h documentado. Reconfirmar fuso/configuração; acordar RPO/RTO, retenção, responsáveis e Auth; comprovar sequência de uploads, restore externo e alerta de falha. | Restore de 21/10 permanece válido historicamente. Mudança de frequência/infraestrutura/proteção exige decisão aplicável; não apagar backups. |
-| 2 — A04 / S01 | Parcial entregue na PR #72 | Login/verificação bem-sucedidos usam ID do provedor; logout usa ator da sessão validada, sem alvo de sessão inventado. Contrato do SDK e testes de privacidade aprovados. | Restam autoria de concessões futuras/bootstrap e correlação opaca aprovada de tentativas/reset; nenhum backfill histórico. |
-| 2 — A07 | Pendente | Definir ownership/lifecycle de conexão compatível com Workers, limites e timeout; provar fechamento, falhas e transações em isolamento. | Preservar stack; mudança arquitetural requer ADR/decisão. Não atribuir os 429 a pools sem evidência. |
-| 3 — A08 / H01 / H02 | Timeout entregue na PR #72; demais controles pendentes | Siteverify aborta após 10 s; regressão do abort e fail-closed preservado. Limites de payload em A02. | Restam orçamento agregado/origem confiável, hostname/action e prova do provedor/desafio reais. Preservar cinco falhas e não atribuir 429 a pools sem prova. |
+| 2 — A04 / S01 | PR #72 integrada; candidata amplia correlação | Login/verificação bem-sucedidos usam ID do provedor; logout usa ator da sessão validada, sem alvo de sessão inventado. Contrato do SDK e testes de privacidade aprovados. | Candidata b4ae5cb correlaciona login/verificação/pedido de reset por HMAC e registra login bloqueado. Restam autoria de concessões futuras/bootstrap e conclusão de reset com identidade confiável; nenhum backfill histórico. |
+| 2 — A07 | Implementação local em revisão | Candidata b4ae5cb: pool preguiçoso por Server Function, max 2, conexão 5 s, consulta cliente 20 s, limites transacionais SET LOCAL 15 s e fechamento aguardado. Unitários e PostgreSQL 17 comprovam isolamento, rollback e ausência de conexões após HTTP/UI. | Preservar stack; mudança arquitetural requer ADR/decisão. Não atribuir os 429 a pools sem evidência. |
+| 3 — A08 / H01 / H02 | PR #72 integrada; candidata amplia proteção | Siteverify aborta após 10 s; regressão do abort e fail-closed preservado. Limites de payload em A02. | Candidata b4ae5cb prepara orçamento antes do banco por origem confiável/localidade e hostname/action exatos. Bindings têm contagem aproximada por localidade, não quota mundial estrita; prova HML/provedor/desafio/rede móvel e configuração aplicada permanecem pendentes. Preservar cinco falhas e não atribuir 429 a pools sem prova. |
 | 3 — A09 / F03 | Correção entregue na PR #72 | Novo detalhe por origem FIFO e CSV incluem produção, compra, ajuste e ausência explícita; custos/reversões racionais e totais preservados. 601 testes e laboratório conectado aprovados. | Integração autorizada conforme PR #72; confirmação publicada pendente. Patch antigo não foi mesclado. Sem mudar custos/fatos. |
 | 3 — A10 / H06 | Middleware entregue na PR #72; confirmação HML pendente | Headers globais, HSTS somente HTTPS e CSP report-only compatível com Turnstile; cookies/status/body preservados, imports server-only nos callbacks. Smoke HTTP local aprovado. | Publicação HML, observação da CSP/hidratação por perfil e celular físico pendentes. CSP ainda não é política de bloqueio nem há coletor remoto novo. |
 | Transversal — A11 / G01 / T01 | Correções integradas; registro documental #65 | #61/#63/#62/#64 integradas sequencialmente; #65 preserva revisão, recibos Neon/Auth e este fechamento. Código operacional 79634e6; evidência da integração e critérios do roadmap reconciliados. | A publicação HML ainda precisa ligar SHA, build, Worker e configuração. Nenhum deploy nesta rodada. |
@@ -364,7 +438,7 @@ Atualização documental não habilita o migrador nem altera proteções.
 | O11 | Condicional | Definir manutenção diária versionada de receitas/perfis/tarifas: procedimento controlado existente ou gestão pela interface, com auditoria. Não alterar versões usadas silenciosamente. |
 | F01 / F03 | Parcial | Lucro conjunto e recebimentos já estão entregues. Revisar somente indicadores/alertas adicionais ainda necessários, como contribuição, margem mínima realizada e comparação específica por canal. Ranking por sabor exige taxonomia; distinguir competência de caixa e não prometer conciliação bancária completa. |
 | F04 | Depende de histórico | Cobertura em dias e sugestão de reposição exigem consumo confiável, janela e regra aprovadas. Estoque vazio não é recomendação automática de compra. |
-| S02 | Condicional | Definir gestão de concessão/revogação/troca de papel pela interface, preservando permissões e autoria. Dupla aprovação não é controle já entregue. |
+| S02 | Política de aprovação aceita; implementação pendente | Decisão de 26/10: Dono com acesso completo e Gerente com primeira liberação de Funcionário validado, por permissão própria; promoção/reativação ficam com Dono. Preparar fluxo, auditoria atômica A04 e testes negativos/concorrência conforme SECURITY e matriz. Não há interface ou delegação executável entregue. Dupla aprovação não é controle já entregue. |
 | R01 | Evolução futura | WhatsApp: ADR, webhook validado, evento persistido, idempotência/retry, interpretação sem bypass das regras, confirmação e auditoria. |
 | R02 | Evolução futura | Notas/OCR: armazenamento/upload seguro, extração candidata, validação, deduplicação, vínculo com compra e política de retenção. |
 | R03 | Evolução futura | Pagamentos parciais/mistos/parcelados, integrações de operadora, conciliação e logística ampliada conforme necessidade aprovada. Recebimento integral por meio já foi entregue. |

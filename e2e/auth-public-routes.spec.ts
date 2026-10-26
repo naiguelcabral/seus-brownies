@@ -23,9 +23,12 @@ test('visitante é redirecionado ao login e as rotas públicas de auth carregam'
   await expect(
     page.getByRole('heading', { name: 'Entrar no Cacau', exact: true }),
   ).toBeVisible()
+  await expect(
+    page.getByRole('button', { name: 'Primeiro acesso', exact: true }),
+  ).toBeVisible()
 
   await page
-    .getByRole('button', { name: 'Primeiro acesso ou esqueci minha senha' })
+    .getByRole('button', { name: 'Esqueci a senha', exact: true })
     .click()
   await expect(
     page.getByRole('heading', {

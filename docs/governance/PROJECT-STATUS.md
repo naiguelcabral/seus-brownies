@@ -1,5 +1,79 @@
 # Estado canônico do projeto — Cacau v1
 
+## Login com ações separadas — 26/10/2026
+
+Usuário pediu “Esqueci a senha” separado de “Primeiro acesso”, um em cada
+linha. Ajuste preparado na PR #75, também nas ações da verificação de e-mail,
+com textos de orientação atualizados. Os dois botões preservam o fluxo seguro
+existente para recuperar ou definir senha de conta preparada pela equipe.
+Typecheck, lint, formato, Knip, build isolado e 40 casos de navegador aprovados,
+incluindo os botões em linhas distintas em 375px e os dois acessos ao fluxo.
+Publicação pendente. A política S02/A04 abaixo continua documental.
+
+## Decisão de aprovação de cadastros — 26/10/2026
+
+PR #74 integrada na main em `9426316`. Na continuidade, o usuário definiu
+Dono com acesso funcional completo e Gerente podendo liberar cadastros
+devidamente validados. A política e o escopo conservador de implementação
+foram registrados em [AUTHORIZATION-MATRIX.md](AUTHORIZATION-MATRIX.md),
+[SECURITY.md](SECURITY.md), [BUSINESS-RULES.md](BUSINESS-RULES.md) e
+[HUMAN-APPROVALS.md](HUMAN-APPROVALS.md).
+
+Entrega desta rodada: decisão documental. O código atual continua sem fluxo
+de aprovação para Gerente. S02/A04 passam a ter escopo local definido: primeira
+liberação de Funcionário com validação pelo servidor, autoria e auditoria
+atômica, sem autoaprovação ou elevação. Promoções e reativações ficam com Dono;
+`access:manage` permanece restrita no perfil Gerente. Nenhuma concessão real,
+migration, publicação ou alteração remota executada. A04 continua parcial.
+
+## Integração autorizada da PR #74 — 26/10/2026
+
+Após a apresentação da PR #74 validada e da sequência restante, usuário
+respondeu **“Pode seguir com a integração”**. Autoriza integrar somente esse
+pacote concreto, preservando commits e proteção da main, após reconferir o
+HEAD e todos os checks/resultados CodeQL. Não inclui deploy, SQL compartilhado,
+secrets, DNS, concessões de acesso ou outras PRs.
+
+O código revisado é b4ae5cb; a candidata documental 76fd7a5 teve todos os
+12 checks aprovados e três análises CodeQL sem resultados/erros/avisos,
+zero alertas abertos. Este fechamento altera só documentação/evidência.
+A árvore de código/testes/configuração permanece a mesma. Resultado do merge,
+SHA final e CI da main são conferidos no
+[estado da PR #74](https://github.com/naiguelcabral/seus-brownies/pull/74).
+
+A59 done identifica o pacote de código entregue e validado, não publicação
+nem encerramento integral de A04/A07/A08. Restam autoria de concessões futuras/
+bootstrap e conclusão de reset com identidade confiável, prova HML com serviços
+reais/rede móvel, A01/A03 e decisões L02–L06. A configuração versionada não é
+recibo de configuração remota aplicada. Registros de preparação abaixo são
+históricos; sua restrição de merge antecede esta autorização específica.
+
+## Continuidade A04/A07/A08 — candidata local de 26/10/2026
+
+Após a PR #72 integrada em `f2a7fc7`, usuário autorizou seguir as próximas
+fases. Pacote local em `codex/auth-hardening-next-20261025`, código `b4ae5cb`:
+contexto/pool por Server Function com fechamento aguardado; correlação HMAC
+sem ator presumido; orçamento anterior ao banco por origem/localidade e
+Turnstile com hostname/ação exatos. Preserva Drizzle/pg/Neon, RBAC, regras,
+custos, idempotência e histórico. Configuração remota não foi aplicada.
+
+614 testes Node, typecheck/lint/formato/Knip, build isolado e 12 cenários
+HTTP/UI/PostgreSQL 17 aprovados. Probes confirmam teto de conexões, timeouts
+transacionais, rollback e zero conexões da operação após o laboratório.
+A fábrica real de conexão também é usada no laboratório. Container encerrado.
+CI, CodeQL e resultado da revisão são conferidos por SHA no estado da nova PR.
+
+A04 continua parcial: concessões/bootstrap futuros e identidade confiável na
+conclusão do reset. A07/A08 têm implementação e evidência local; prova HML com
+Workers/Neon/Turnstile reais e rede móvel continua pendente. Orçamentos do binding
+são aproximados por localidade, não um teto mundial estrito. Política de dados,
+recuperação, privilégio mínimo e demais gates externos permanecem.
+
+[Desenho, limites e riscos](AUTH-CONNECTION-HARDENING-2026-10-26.md).
+[Recibo por escopo e SHA](../../evidence/auth-connection-hardening-2026-10-26.json).
+Sem merge desta candidata, deploy, SQL compartilhado, migrations, secrets,
+DNS ou concessões de acesso nesta rodada. Registros anteriores são históricos.
+
 ## Entrega e integração autorizada — PR #72
 
 Usuário autorizou a continuidade após a apresentação do pacote validado.

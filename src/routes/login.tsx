@@ -111,6 +111,15 @@ function LoginPage() {
   function renderTurnstileChallenge() {
     return (
       <TurnstileChallenge
+        action={
+          mode === 'sign-in'
+            ? 'login'
+            : mode === 'sign-up'
+              ? 'sign-up'
+              : mode === 'verify-email'
+                ? 'verification-otp'
+                : 'password-reset'
+        }
         onToken={setTurnstileToken}
         resetKey={challengeAttempt}
         requiresChallenge={requiresChallenge}
@@ -195,7 +204,7 @@ function LoginPage() {
       if (result.ok) {
         changeMode('sign-in')
         setMessage(
-          'E-mail confirmado. Entre com sua senha. Se a conta já existia ou foi preparada pela equipe, use “Primeiro acesso ou esqueci minha senha” para definir outra.',
+          'E-mail confirmado. Entre com sua senha. Se a equipe preparou sua conta, use “Primeiro acesso”. Para recuperar uma senha esquecida, use “Esqueci a senha”.',
         )
         return
       }
@@ -311,12 +320,20 @@ function LoginPage() {
               Reenviar código
             </button>
             <button
-              className="w-full text-sm font-bold text-[#4a2114] underline"
+              className="block w-full text-sm font-bold text-[#4a2114] underline"
               type="button"
               onClick={() => changeMode('request-password-reset')}
               disabled={pending}
             >
-              Primeiro acesso ou esqueci minha senha
+              Esqueci a senha
+            </button>
+            <button
+              className="block w-full text-sm font-bold text-[#4a2114] underline"
+              type="button"
+              onClick={() => changeMode('request-password-reset')}
+              disabled={pending}
+            >
+              Primeiro acesso
             </button>
             <button
               className="w-full text-sm font-bold text-[#4a2114] underline"
@@ -375,8 +392,8 @@ function LoginPage() {
           <form className="mt-6 space-y-4" onSubmit={submitCredentials}>
             {mode === 'sign-up' ? (
               <p className="text-sm text-[#75411f]">
-                Se a equipe já preparou sua conta, use “Primeiro acesso ou
-                esqueci minha senha”. Cadastrar novamente não altera a senha
+                Se a equipe já preparou sua conta, use “Primeiro acesso” para
+                definir sua senha. Cadastrar novamente não altera a senha
                 existente.
               </p>
             ) : null}
@@ -447,12 +464,20 @@ function LoginPage() {
               {mode === 'sign-up' ? 'Já tenho uma conta' : 'Criar uma conta'}
             </button>
             <button
-              className="w-full text-sm font-bold text-[#4a2114] underline"
+              className="block w-full text-sm font-bold text-[#4a2114] underline"
               type="button"
               onClick={() => changeMode('request-password-reset')}
               disabled={pending}
             >
-              Primeiro acesso ou esqueci minha senha
+              Esqueci a senha
+            </button>
+            <button
+              className="block w-full text-sm font-bold text-[#4a2114] underline"
+              type="button"
+              onClick={() => changeMode('request-password-reset')}
+              disabled={pending}
+            >
+              Primeiro acesso
             </button>
           </form>
         )}
