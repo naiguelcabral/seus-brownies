@@ -3,8 +3,9 @@
 ## Decisão atual
 
 O Dono pediu seguir as cinco etapas. Para RPO/RTO/retenção escolheu preparar
-a proposta e decidir depois. Informou que enviará a operadora e os fatos reais
-do piloto. Este documento organiza essas duas decisões; não aprova prazos,
+a proposta e decidir depois. Depois definiu: **“Deixe tudo pronto, vou fazer
+o teste com notas de compras reais de outros meses”**. O roteiro abaixo prepara
+esse ensaio manual; operadora e janela serão definidas na execução. Não aprova prazos,
 altera agenda, cria fatos operacionais ou libera produção.
 
 ## Evidência atual
@@ -72,7 +73,8 @@ novo, porque a conclusão de reset passa a falhar fechado sem identidade confiá
 
 ## Entrada do piloto
 
-O usuário informou que enviará os dados abaixo. Não registrar nomes pessoais,
+O usuário fará o ensaio com notas históricas. Conferir os dados abaixo antes
+de gravar. Não registrar nomes pessoais,
 telefones ou valores comerciais dispensáveis no repositório público; os fatos
 definitivos pertencem à aplicação e à trilha de auditoria.
 
@@ -84,6 +86,75 @@ definitivos pertencem à aplicação e à trilha de auditoria.
 | Venda real | Produtos/quantidades/preços, canal/local, meio de pagamento e entrega prevista |
 | Conferência | Responsável por comparar estoque, FIFO/CMV, recebimento, receita e lucro com os documentos da operação |
 
+## Ensaio com notas de outros meses
+
+O HML publicado aponta para a fonte operacional original e contém fatos já
+auditados. O endereço conter “hml” não o torna uma área descartável. Preparar
+um destino isolado e identificar claramente sua versão e base antes de usar
+notas antigas como dados de teste. Esse destino ainda não foi provisionado;
+não inserir novamente as notas no HML atual para simular o ensaio. O roteiro
+não autoriza apagar dados depois nem repetir importações anteriores.
+
+1. Separar uma nota por vez e conferir fornecedor, número/série ou referência
+   do documento, data original, itens, quantidades, unidades, lotes/validade
+   quando disponíveis e total efetivo de cada item. Guardar o documento fora
+   do repositório público.
+2. Consultar Compras pelo fornecedor e intervalo da data, percorrendo as
+   páginas, e conferir também a origem/importação já auditada. Comparar itens,
+   quantidades e valores; número da nota sozinho não comprova ausência. Se a
+   compra já estiver representada, usar o registro existente para conferência.
+3. No destino isolado, anotar saldo/valor inicial dos itens antes de lançar.
+   Informar a data original da compra e a justificativa de ensaio com nota
+   histórica nas observações. Não trocar a data por hoje para contornar um
+   período fechado. Incluir uma referência privada rastreável ao documento.
+4. Para compras em kg, informar quantidade comprada em kg e **valor total do
+   item**. Conferir a conversão para a unidade do cadastro; o total da nota
+   não é preço unitário a multiplicar novamente. Não presumir tratamento de
+   frete, desconto, tributo ou rateio que o formulário não represente: se os
+   totais não reconciliam, registrar a dúvida e parar antes de salvar.
+5. Salvar uma vez e conferir histórico, itens, saldo, valor e autoria. Se a
+   resposta falhar ou demorar, consultar primeiro o histórico; não abrir nova
+   operação nem reenviar com referência nova sem reconciliar o resultado.
+6. Produção, venda, recebimento e entrega exigem seus próprios fatos/documentos
+   e sequência cronológica. Uma nota de compra não comprova esses eventos.
+   A compra isolada pode ter aceite próprio; o piloto completo continua
+   pendente até conferir também as demais etapas.
+
+### Limites conferidos no código atual
+
+- A proteção de repetição usa a chave da operação e o hash do conteúdo.
+  A “Referência futura da nota fiscal” é texto livre, sem unicidade fiscal
+  nem upload do documento. Uma nova operação com a mesma nota pode duplicar
+  estoque; a checagem documental acima continua necessária.
+- `purchasedAt` preserva a data informada. O movimento de entrada recebe o
+  instante de gravação; para produto acabado comprado, a camada FIFO usa
+  a data da compra às 12h UTC. Isso não reconstitui automaticamente saldos,
+  consumos e CMV dos meses anteriores nem recalcula fatos já auditados.
+- `persistPurchase` não consulta o fechamento financeiro. O bloqueio de
+  despesa/recebimento em período fechado não equivale a um bloqueio geral de
+  compras antigas. Conferir o período antes de qualquer lançamento definitivo;
+  correção histórica depende do Dono, justificativa e trilha própria.
+- Cadastrar a compra movimenta estoque; não comprova o pagamento ao fornecedor.
+  Conferir os efeitos financeiros existentes antes de registrar outro evento,
+  para evitar custo ou saída em duplicidade.
+
+Essas observações delimitam o ensaio; não mudam a regra de estoque, datas,
+FIFO ou fechamento. Diferença entre expectativa histórica e comportamento
+deve virar caso de revisão antes de qualquer correção na base original.
+
+### Recibo para preencher privadamente
+
+| Campo | Registrar durante o ensaio |
+| --- | --- |
+| Ambiente | URL de teste, versão publicada e confirmação do destino isolado |
+| Execução | Data/hora, perfil da operadora e janela acompanhada |
+| Fonte | Referência privada da nota, data original e resultado da busca de duplicidade |
+| Antes | Quantidade/unidade e valor de estoque por item |
+| Lançamento | ID exibido no histórico, referência da operação se disponível, quantidade e total por item |
+| Depois | Saldo esperado × observado, total esperado × observado e autoria conferida |
+| Resultado | Aprovado, divergência ou não executado; reprodução e evidência sem segredos |
+| Escopo restante | Produção, venda, recebimento e entrega: executado com fonte ou pendente |
+
 ## Roteiro executável após as confirmações
 
 1. Concluir configuração e homologação de Auth/Turnstile, sessão/revogação e
@@ -93,8 +164,9 @@ definitivos pertencem à aplicação e à trilha de auditoria.
 2. Conferir recuperação e os gates de sustentação acima. Registrar versão HML,
    configuração, responsáveis e referências novas; não repetir imports,
    bootstrap, homologações consumidas ou recibos de escrita anteriores.
-3. Registrar somente a compra real confirmada; conferir unidades/valor total
-   e entrada de estoque. Se faltar fonte ou saldo, interromper a sequência.
+3. Executar a compra confirmada conforme o roteiro de notas históricas acima,
+   no destino isolado de teste; conferir unidades/valor total e entrada de
+   estoque. Se faltar fonte ou saldo, interromper a sequência.
 4. Criar o lote previsto e concluir uma única vez após conferir consumo,
    materiais, rendimento e custos. A ação deve conservar estoque e FIFO.
 5. Registrar venda, recebimento e entrega reais na ordem correta; conferir
@@ -104,5 +176,7 @@ definitivos pertencem à aplicação e à trilha de auditoria.
 7. Consolidar recibo sanitizado e aceite da operadora/Dono. I04 continua uma
    decisão humana posterior; piloto ou CI aprovados não autorizam produção.
 
-Estado: roteiro preparado; operadora/fatos ainda não informados. Não houve
-compra, produção, venda ou outro fato real/fictício criado nesta preparação.
+Estado: roteiro e recibo preparados para o teste manual com notas de outros
+meses. Configuração do diretório Auth, ambiente isolado publicado e aceite dos
+serviços reais ainda pendentes. Não houve compra, produção, venda ou outro
+fato real/fictício criado na fonte compartilhada nesta preparação.

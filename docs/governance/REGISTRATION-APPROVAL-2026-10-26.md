@@ -86,8 +86,11 @@ aprovação pelo Gerente em 320px, vínculo/auditoria persistidos e nova sessão
 do destinatário. Build isolado, lint, tipos, formato e Knip aprovados; os
 quatro achados conhecidos permanecem sem novas tolerâncias. A suíte Node
 final também passou com todos os novos arquivos versionados: 626 testes.
-CI/CodeQL do HEAD publicado são a próxima conferência. Não confundir candidato local com entrega
-publicada ou aceite real. Nenhum acesso real foi concedido nesta preparação.
+Na PR #77, HEAD `e006d35`, os 12 checks passaram. Três análises CodeQL da
+candidata de merge `de76d675` não tiveram resultados, erros ou avisos; zero
+alertas abertos. Reconferir o HEAD final antes da integração. Não confundir
+candidata validada com entrega publicada ou aceite real. Nenhum acesso real
+foi concedido nesta preparação.
 
 Reversão de código: versão HML anterior validada; vínculos/eventos já gravados
 devem ser preservados. Desativar a nova role/binding exige procedimento próprio;

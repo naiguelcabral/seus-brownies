@@ -12,13 +12,17 @@ atômica e nova sessão após mudança de papel. Reset passa a exigir identifica
 restrita pelo provedor e atribui ator somente no sucesso. 626 testes Node e
 19 cenários PostgreSQL e 13 conectados de interface/HTTP passaram, incluindo
 aprovação em 320px e nova sessão do destinatário. Build/lint/tipos/formato/Knip
-aprovados; CI/CodeQL serão conferidos no HEAD publicado.
+aprovados. Na PR #77, HEAD `e006d35`, os 12 checks passaram; três análises
+CodeQL da candidata de merge sem resultados/erros/avisos e zero alertas abertos.
+Conferir novamente o HEAD final antes de integrar.
 
 O [diretório Auth e seu SQL proposto](REGISTRATION-APPROVAL-2026-10-26.md) ainda
 não foram configurados no HML. Não publicar a candidata antes disso. Sem
 concessão real, SQL compartilhado ou alteração de secrets nesta preparação.
-RPO/RTO/retenção serão propostos para decisão posterior; piloto aguarda a
-operadora e os fatos reais que o usuário informou que enviará.
+RPO/RTO/retenção ficam propostos para decisão posterior. O usuário fará o teste
+manual com notas de compras reais de outros meses. Roteiro e recibo preparados,
+com conferência de duplicidade, data e unidades; falta preparar o destino
+isolado publicado e executar o ensaio. HML atual usa a fonte original auditada.
 
 A05: captura no HML correlacionada por Ray ID confirmou o marcador sintético
 enviado na query final e ausente do evento armazenado, cuja URL não tem query.

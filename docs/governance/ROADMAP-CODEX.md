@@ -5,18 +5,20 @@
 1. **Integração concluída:** #73 → `233b3a4`, #76 → `4c8e8aa`. CI, laboratórios
    e CodeQL da main aprovados após cada merge. Não repetir os merges ou deploy
    da publicação anterior.
-2. **Candidata em validação:** aprovação inicial de Funcionário por Dono/Gerente,
+2. **Candidata validada em laboratório:** aprovação inicial de Funcionário por Dono/Gerente,
    consulta confiável, auditoria atômica, replay/concorrência e nova sessão.
    Autoria do reset usa consulta restrita ao provedor. Configuração do novo
-   diretório ainda pendente; [escopo e implantação](REGISTRATION-APPROVAL-2026-10-26.md).
+   diretório ainda pendente; 12 checks da PR #77 em `e006d35` e três análises
+   CodeQL aprovados, zero alertas. Reconferir HEAD final; [escopo e implantação](REGISTRATION-APPROVAL-2026-10-26.md).
 3. **Homologação real pendente:** serviços Auth/Turnstile, revogação/perfis,
    celular/rede móvel e CSP. A05 tem captura do marcador sintético nos logs
    correlacionados: sem query/marcador armazenado. Laboratórios não substituem conta real.
 4. **Proposta e inventário:** usuário decidiu avaliar RPO/RTO/retenção depois.
    Não mudar a agenda vigente por inferência. Seguem A01/A03/L02–L06.
-5. **Piloto a preparar:** usuário informou que fornecerá operadora e fatos
-   reais previstos. Aguardar esses dados, preservando integridade e estoque;
-   I04 continua aceite humano de produção.
+5. **Roteiro do ensaio preparado:** usuário fará o teste manual com notas de
+   compras reais de outros meses. Conferir duplicidade, data original e
+   unidades no destino isolado a preparar; não repetir compras na fonte
+   original. Demais fatos e I04 continuam pendentes de execução/aceite humano.
 
 [Proposta de recuperação, inventário e roteiro do piloto](RECOVERY-PILOT-PROPOSAL-2026-10-26.md).
 

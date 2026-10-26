@@ -13,8 +13,11 @@ merge sem resultados/erros/avisos, zero alertas abertos. Sem novo deploy.
 
 À pergunta sobre objetivos RPO/RTO/retenção, usuário escolheu **“Preparar a
 proposta e decidir depois”**. Não alterar a agenda ou tratar prazos propostos
-como aprovados. Para o piloto, respondeu **“Sim; vou informar a operadora e os
-fatos previstos”**; não criar fatos substitutos enquanto esses dados não chegam.
+como aprovados. Para o piloto, primeiro informou que enviaria operadora/fatos;
+depois definiu **“Deixe tudo pronto, vou fazer o teste com notas de compras
+reais de outros meses”**. Preparar roteiro, conferência de duplicidade/data e
+recibo para esse teste manual. Não criar produção/venda presumida a partir
+da nota, repetir carga na fonte original ou inferir aceite operacional.
 
 A candidata S02/A04 e o novo diretório Auth precisam de revisão do resultado
 concreto antes das alterações compartilhadas descritas no
