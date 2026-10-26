@@ -6,6 +6,11 @@ Reconciliada em 21/10/2026 com `authorization.ts`, `ui-access.ts` e as 55
 políticas de `server-function-policy.ts`, em `src/features/auth/`. Esta revisão
 documenta as permissões existentes; não concede papéis nem altera RBAC.
 
+Em 26/10/2026, o usuário aprovou a delegação de liberação de cadastros ao
+Gerente. A seção seguinte define o escopo a implementar. As tabelas de
+permissões e rotas atuais continuam refletindo o código integrado em #74;
+o Gerente ainda não dispõe do fluxo de aprovação.
+
 Guards no servidor exigem identidade Neon verificada, vínculo ativo em
 `app_user_access` e permissão da operação. A interface também restringe rotas,
 mas ocultar um menu ou redirecionar uma página não comprova a negação da
@@ -31,12 +36,42 @@ O diagnóstico de setembro em `G1-CLOUDFLARE-HML.md` é histórico.
   domínio e auditoria, além da permissão de entrada.
 - Mudanças de permissão dependem de `HUMAN-APPROVALS.md`.
 
+## Decisão de liberação de cadastros — S02/A04
+
+| Ação | Dono | Gerente | Funcionário |
+| --- | --- | --- | --- |
+| Aprovar primeiro acesso como Funcionário, após validação | permitir | permitir | negar |
+| Conceder ou alterar papel Gerente/Dono | permitir | negar | negar |
+| Reativar acesso inativo/revogado ou alterar vínculo existente | permitir | negar | negar |
+| Aprovar o próprio acesso por esse fluxo | negar | negar | negar |
+| Administrar configurações e diagnóstico com `access:manage` | permitir | negar | negar |
+
+A delegação ao Gerente deve usar permissão própria, prevista como
+`access:approve`, sem incluir `access:manage` no seu perfil. O Dono mantém
+todas as permissões funcionais. Não conceder papéis legados a novas contas.
+
+A validação deve confirmar cadastro conforme seus campos obrigatórios,
+identidade/e-mail verificado pelo provedor e ausência de vínculo preexistente
+para a primeira liberação. O servidor revalida o aprovador e o destinatário;
+dados recebidos do cliente não comprovam verificação nem autorizam promoção.
+Uma conta cadastrada sem aprovação permanece sem acesso operacional.
+
+Concessão e evento de auditoria devem ser atômicos, identificando aprovador,
+destinatário, mudança, motivo, UTC e referência de operação. Testar negações,
+falha do provedor/auditoria, revogação do aprovador, repetição e concorrência.
+Proteger o último Dono ativo e cumprir a política de sessão em mudanças de
+privilégio. Não reatribuir autoria a concessões históricas.
+
+Esta é a política aprovada e seu detalhamento conservador para implementação;
+S02 e a autoria futura de A04 permanecem pendentes. Não há nova tela, endpoint,
+permissão executável, concessão real ou homologação entregue por este registro.
+
 ## Papéis canônicos
 
 | Papel | Finalidade |
 | --- | --- |
 | Dono (`owner`) | Toda a operação, configuração e administração de acessos. |
-| Gerente (`manager`) | Gestão diária e compensações autorizadas; sem administrar acessos, fechar/corrigir períodos ou editar cenários. |
+| Gerente (`manager`) | Gestão diária e compensações autorizadas. No código atual, sem aprovação de acessos; delegação limitada de cadastros aprovada em S02. Sem fechar/corrigir períodos ou editar cenários. |
 | Funcionário (`employee`) | Selecionar catálogo e registrar compras e vendas; sem leituras financeiras, dashboard ou histórico geral de compras/vendas. |
 
 `admin`, `production`, `sales` e `viewer` são compatibilidades legadas.

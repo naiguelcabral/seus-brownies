@@ -1,5 +1,22 @@
 # Roadmap único — Cacau v1
 
+## Próximo incremento S02/A04 — decisão de 26/10/2026
+
+Após a integração da PR #74 em `9426316`, usuário definiu Dono com todas as
+permissões e aprovação de cadastros validados por Gerente. Decisão registrada
+na [matriz](AUTHORIZATION-MATRIX.md), em [SECURITY.md](SECURITY.md) e
+[HUMAN-APPROVALS.md](HUMAN-APPROVALS.md).
+
+Próximo trabalho de código: fluxo próprio de primeira liberação como
+Funcionário, com validação confiável do destinatário, permissão específica
+para aprovação, proteção contra autoaprovação/elevação e concessão/auditoria
+na mesma transação. Não delegar `access:manage` ao Gerente. Implementação e
+testes isolados autorizados; cadastro sem aprovação continua sem acesso.
+
+Este incremento é documental: S02 não está entregue e A04 continua parcial,
+inclusive na conclusão de reset com identidade confiável. Publicação/homologação
+HML e decisões de infraestrutura mantêm seus escopos separados.
+
 ## Integração autorizada da PR #74 — 26/10/2026
 
 Após a apresentação da PR #74 validada e da sequência restante, usuário
@@ -412,7 +429,7 @@ Atualização documental não habilita o migrador nem altera proteções.
 | O11 | Condicional | Definir manutenção diária versionada de receitas/perfis/tarifas: procedimento controlado existente ou gestão pela interface, com auditoria. Não alterar versões usadas silenciosamente. |
 | F01 / F03 | Parcial | Lucro conjunto e recebimentos já estão entregues. Revisar somente indicadores/alertas adicionais ainda necessários, como contribuição, margem mínima realizada e comparação específica por canal. Ranking por sabor exige taxonomia; distinguir competência de caixa e não prometer conciliação bancária completa. |
 | F04 | Depende de histórico | Cobertura em dias e sugestão de reposição exigem consumo confiável, janela e regra aprovadas. Estoque vazio não é recomendação automática de compra. |
-| S02 | Condicional | Definir gestão de concessão/revogação/troca de papel pela interface, preservando permissões e autoria. Dupla aprovação não é controle já entregue. |
+| S02 | Política de aprovação aceita; implementação pendente | Decisão de 26/10: Dono com acesso completo e Gerente com primeira liberação de Funcionário validado, por permissão própria; promoção/reativação ficam com Dono. Preparar fluxo, auditoria atômica A04 e testes negativos/concorrência conforme SECURITY e matriz. Não há interface ou delegação executável entregue. Dupla aprovação não é controle já entregue. |
 | R01 | Evolução futura | WhatsApp: ADR, webhook validado, evento persistido, idempotência/retry, interpretação sem bypass das regras, confirmação e auditoria. |
 | R02 | Evolução futura | Notas/OCR: armazenamento/upload seguro, extração candidata, validação, deduplicação, vínculo com compra e política de retenção. |
 | R03 | Evolução futura | Pagamentos parciais/mistos/parcelados, integrações de operadora, conciliação e logística ampliada conforme necessidade aprovada. Recebimento integral por meio já foi entregue. |

@@ -1,5 +1,21 @@
 # Estado canônico do projeto — Cacau v1
 
+## Decisão de aprovação de cadastros — 26/10/2026
+
+PR #74 integrada na main em `9426316`. Na continuidade, o usuário definiu
+Dono com acesso funcional completo e Gerente podendo liberar cadastros
+devidamente validados. A política e o escopo conservador de implementação
+foram registrados em [AUTHORIZATION-MATRIX.md](AUTHORIZATION-MATRIX.md),
+[SECURITY.md](SECURITY.md), [BUSINESS-RULES.md](BUSINESS-RULES.md) e
+[HUMAN-APPROVALS.md](HUMAN-APPROVALS.md).
+
+Entrega desta rodada: decisão documental. O código atual continua sem fluxo
+de aprovação para Gerente. S02/A04 passam a ter escopo local definido: primeira
+liberação de Funcionário com validação pelo servidor, autoria e auditoria
+atômica, sem autoaprovação ou elevação. Promoções e reativações ficam com Dono;
+`access:manage` permanece restrita no perfil Gerente. Nenhuma concessão real,
+migration, publicação ou alteração remota executada. A04 continua parcial.
+
 ## Integração autorizada da PR #74 — 26/10/2026
 
 Após a apresentação da PR #74 validada e da sequência restante, usuário
