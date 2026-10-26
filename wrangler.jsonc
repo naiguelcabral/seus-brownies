@@ -69,6 +69,69 @@
           "AUTH_DIRECTORY_DATABASE_URL"
         ]
       }
+    },
+    "pilot": {
+      "name": "cacau-v1-piloto",
+      "workers_dev": true,
+      "observability": {
+        "enabled": false,
+        "head_sampling_rate": 1,
+        "redact_query_string": true,
+        "logs": {
+          "enabled": true,
+          "head_sampling_rate": 1,
+          "persist": true,
+          "invocation_logs": true
+        },
+        "traces": {
+          "enabled": false,
+          "persist": true,
+          "head_sampling_rate": 1
+        },
+        "issues": {
+          "enabled": false
+        }
+      },
+      "vars": {
+        "AUTH_RATE_LIMITER_REQUIRED": "true",
+        "PASSWORD_RESET_REDIRECT_ORIGIN": "https://cacau-v1-piloto.naiguelcabral.workers.dev"
+      },
+      "ratelimits": [
+        {
+          "name": "AUTH_RATE_LIMITER",
+          "namespace_id": "2026102601",
+          "simple": {
+            "limit": 20,
+            "period": 60
+          }
+        },
+        {
+          "name": "AUTH_ORIGIN_RATE_LIMITER",
+          "namespace_id": "2026102602",
+          "simple": {
+            "limit": 60,
+            "period": 60
+          }
+        },
+        {
+          "name": "AUTH_AGGREGATE_RATE_LIMITER",
+          "namespace_id": "2026102603",
+          "simple": {
+            "limit": 600,
+            "period": 60
+          }
+        }
+      ],
+      "secrets": {
+        "required": [
+          "DATABASE_URL",
+          "NEON_AUTH_BASE_URL",
+          "NEON_AUTH_COOKIE_SECRET",
+          "TURNSTILE_SECRET_KEY",
+          "AUTH_LOGIN_HASH_PEPPER",
+          "AUTH_DIRECTORY_DATABASE_URL"
+        ]
+      }
     }
   },
   "vars": {

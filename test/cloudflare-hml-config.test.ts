@@ -9,6 +9,7 @@ type WranglerConfig = {
   compatibility_date: string
   compatibility_flags: string[]
   env: {
+    pilot: WranglerConfig['env']['hml']
     hml: {
       name: string
       workers_dev: boolean
@@ -132,4 +133,33 @@ test('production candidate fails closed with a distinct limiter and required sec
   )
   assert.deepEqual(config.secrets.required, config.env.hml.secrets.required)
   assert.equal(config.observability.redact_query_string, true)
+})
+
+test('pilot isolates callback, limiter namespaces and required secrets', async () => {
+  const config = parseJsonc(
+    await readFile(new URL('../wrangler.jsonc', import.meta.url), 'utf8'),
+  )
+  const pilot = config.env.pilot
+  assert.equal(pilot.name, 'cacau-v1-piloto')
+  assert.equal(
+    readPasswordResetRedirectTo(pilot.vars, { development: false }),
+    'https://cacau-v1-piloto.naiguelcabral.workers.dev/login/redefinir-senha',
+  )
+  const namespaces = [
+    ...config.ratelimits,
+    ...config.env.hml.ratelimits,
+    ...pilot.ratelimits,
+  ].map((item) => item.namespace_id)
+  assert.equal(new Set(namespaces).size, namespaces.length)
+  assert.deepEqual(pilot.secrets.required, config.env.hml.secrets.required)
+  assert.equal(pilot.observability.redact_query_string, true)
+  const script = await readFile(
+    new URL('../scripts/build-pilot-isolated.sh', import.meta.url),
+    'utf8',
+  )
+  assert.match(script, /CLOUDFLARE_ENV=pilot/)
+  assert.match(script, /VITE_PILOT_MODE=true/)
+  assert.match(script, /CLOUDFLARE_LOAD_DEV_VARS_FROM_DOT_ENV=false/)
+  assert.match(script, /wrangler deploy --env pilot/)
+  assert.doesNotMatch(script, /TURNSTILE_SECRET_KEY=/)
 })
