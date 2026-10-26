@@ -1,5 +1,31 @@
 # Estado canônico do projeto — Cacau v1
 
+## Login com ações separadas — 26/10/2026
+
+Usuário pediu “Esqueci a senha” separado de “Primeiro acesso”, um em cada
+linha. Ajuste preparado na PR #75, também nas ações da verificação de e-mail,
+com textos de orientação atualizados. Os dois botões preservam o fluxo seguro
+existente para recuperar ou definir senha de conta preparada pela equipe.
+Typecheck, lint, formato, Knip, build isolado e 40 casos de navegador aprovados,
+incluindo os botões em linhas distintas em 375px e os dois acessos ao fluxo.
+Publicação pendente. A política S02/A04 abaixo continua documental.
+
+## Decisão de aprovação de cadastros — 26/10/2026
+
+PR #74 integrada na main em `9426316`. Na continuidade, o usuário definiu
+Dono com acesso funcional completo e Gerente podendo liberar cadastros
+devidamente validados. A política e o escopo conservador de implementação
+foram registrados em [AUTHORIZATION-MATRIX.md](AUTHORIZATION-MATRIX.md),
+[SECURITY.md](SECURITY.md), [BUSINESS-RULES.md](BUSINESS-RULES.md) e
+[HUMAN-APPROVALS.md](HUMAN-APPROVALS.md).
+
+Entrega desta rodada: decisão documental. O código atual continua sem fluxo
+de aprovação para Gerente. S02/A04 passam a ter escopo local definido: primeira
+liberação de Funcionário com validação pelo servidor, autoria e auditoria
+atômica, sem autoaprovação ou elevação. Promoções e reativações ficam com Dono;
+`access:manage` permanece restrita no perfil Gerente. Nenhuma concessão real,
+migration, publicação ou alteração remota executada. A04 continua parcial.
+
 ## Integração autorizada da PR #74 — 26/10/2026
 
 Após a apresentação da PR #74 validada e da sequência restante, usuário

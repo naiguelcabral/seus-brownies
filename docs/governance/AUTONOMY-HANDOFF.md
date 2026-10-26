@@ -1,5 +1,41 @@
 # Handoff de autonomia — Cacau v1
 
+## Ajuste do login na PR #75 — 26/10/2026
+
+Na mesma branch de trabalho, usuário pediu separar “Esqueci a senha” de
+“Primeiro acesso”, um por linha. `src/routes/login.tsx` ajustado, incluindo
+orientação e verificação OTP; seletores dos dois ensaios existentes atualizados.
+Mesmo fluxo de recuperação/definição de senha; sem nova permissão ou escrita
+compartilhada. Código testado: `688d8c6`. Typecheck, lint, formato, Knip sem
+novos achados, build isolado e 40 casos de navegador aprovados. O ensaio usa
+Chromium instalado explicitamente; as tentativas iniciais foram bloqueadas
+pelo sandbox/cache temporário, sem exigir alteração dos testes ou do produto.
+
+Próximo passo: conferir CI/CodeQL da PR #75 no HEAD publicado e integrar
+somente quando autorizado. S02/A04 permanece com a decisão registrada abaixo
+e implementação pendente. Nenhum merge/deploy autorizado por este pedido visual.
+
+## Decisão S02/A04 registrada — 26/10/2026
+
+Base `9426316` (PR #74 integrada). Branch de trabalho
+`codex/validated-user-approval-policy-20261026`, na worktree
+`/tmp/cacau-auth-hardening-20261025`; pasta principal preservada. Registro
+somente documental da decisão de Dono com todas as permissões e Gerente com
+aprovação de cadastros validados. Matriz, segurança, regras, aprovação humana,
+roadmap e status reconciliados; RBAC executável e contas preservados.
+
+Verificação documental: sete arquivos revisados, 127 links locais válidos e
+`git diff --check` aprovado. Suíte, lint e build não repetidos: não houve
+alteração de código, contrato executável, dependência ou configuração.
+
+Próximo passo exato: implementar S02/A04 conforme a
+[matriz](AUTHORIZATION-MATRIX.md), com permissão própria de aprovação,
+validação confiável do destinatário, escopo inicial de Funcionário,
+auditoria transacional e testes de negação/concorrência. Não repetir bootstrap
+ou concessões históricas. A04/reset e prova HML continuam separados.
+Este registro não conclui S02/A04 nem autoriza nova integração/publicação,
+SQL compartilhado, migrations aplicadas, secrets ou concessões reais.
+
 ## Integração autorizada da PR #74 — 26/10/2026
 
 Após a apresentação da PR #74 validada e da sequência restante, usuário

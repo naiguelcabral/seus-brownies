@@ -81,6 +81,35 @@ Requisitos mínimos:
   autorização explícita na Server Function. Ausência, inativação ou papel
   inválido falham fechados.
 
+### Aprovação de cadastros — decisão de 26/10/2026
+
+O Dono conserva todas as permissões funcionais. O Gerente poderá aprovar
+cadastros validados por uma permissão específica de aprovação, separada de
+`access:manage`, que também protege configurações e diagnóstico administrativo.
+A implementação dessa delegação ainda está pendente em S02/A04; as permissões
+atuais do código continuam descritas em [AUTHORIZATION-MATRIX.md](AUTHORIZATION-MATRIX.md).
+
+Para implementar a liberação com menor privilégio:
+
+- exigir sessão verificada e vínculo ativo do aprovador, revalidando sua
+  autorização no servidor no momento da gravação;
+- confirmar a identidade e o e-mail verificado do destinatário em fonte
+  confiável do provedor e validar os campos obrigatórios do cadastro;
+  e-mail, papel ou indicador de validação enviados pelo navegador não bastam;
+- limitar o Gerente à primeira liberação como Funcionário (`employee`), sem
+  autoaprovação, promoção, alteração de vínculo existente ou reativação de
+  acesso revogado/inativo; concessões de Gerente/Dono ficam com o Dono;
+- aplicar autorização e proteção CSRF em toda chamada mutável, inclusive
+  chamada direta, sem conceder acesso pelo simples cadastro no provedor;
+- persistir concessão e auditoria na mesma transação, com ator e destinatário
+  confiáveis, estado anterior/posterior, motivo, UTC e referência inédita;
+  tratar repetição e concorrência sem ampliar ou duplicar a concessão;
+- preservar revogação/rotação de sessão nas mudanças de privilégio e impedir
+  remoção ou rebaixamento do último Dono ativo.
+
+Os controles de segurança, estoque e dinheiro também se aplicam ao Dono.
+Esta decisão não concede acesso a nenhuma conta nem autoriza SQL compartilhado.
+
 ## Auditoria
 
 Operações críticas devem permitir responder:
