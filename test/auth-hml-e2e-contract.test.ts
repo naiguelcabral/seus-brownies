@@ -40,22 +40,69 @@ test('spec HML de auth não registra credenciais nem coleta artefatos', async ()
 })
 
 const run = promisify(execFile)
+const collectedTest = z.object({
+  expectedStatus: z.string(),
+  annotations: z.array(z.object({ type: z.string() })),
+})
 const collectionReport = z.object({
   suites: z.array(
     z.object({
       specs: z.array(
         z.object({
           title: z.string(),
-          tests: z.array(
-            z.object({
-              expectedStatus: z.string(),
-              annotations: z.array(z.object({ type: z.string() })),
-            }),
-          ),
+          tests: z.array(collectedTest),
         }),
       ),
     }),
   ),
+})
+
+function assertExecutableCase(
+  result: z.infer<typeof collectedTest>,
+  title: string,
+) {
+  assert.equal(result.expectedStatus, 'passed', title)
+  // Playwright 1.64 reports suite scheduling as an inherited annotation.
+  // Only serial is neutral here: skip/fixme/fail and unknown types still fail.
+  assert.deepEqual(
+    result.annotations.filter(({ type }) => type !== 'serial'),
+    [],
+    title,
+  )
+}
+
+test('coleta aceita metadado serial sem dispensar execução', () => {
+  for (const annotations of [[], [{ type: 'serial' }]]) {
+    assertExecutableCase(
+      { expectedStatus: 'passed', annotations },
+      'synthetic-executable-case',
+    )
+  }
+})
+
+test('coleta rejeita dispensa de execução mesmo junto ao metadado serial', () => {
+  for (const type of ['skip', 'fixme', 'fail', 'slow', 'unexpected']) {
+    for (const annotations of [[{ type }], [{ type: 'serial' }, { type }]]) {
+      assert.throws(
+        () =>
+          assertExecutableCase(
+            { expectedStatus: 'passed', annotations },
+            'synthetic-executable-case',
+          ),
+        { code: 'ERR_ASSERTION' },
+      )
+    }
+  }
+  for (const expectedStatus of ['skipped', 'failed']) {
+    assert.throws(
+      () =>
+        assertExecutableCase(
+          { expectedStatus, annotations: [{ type: 'serial' }] },
+          'synthetic-executable-case',
+        ),
+      { code: 'ERR_ASSERTION' },
+    )
+  }
 })
 
 test('coleta offline mantém seis casos executáveis e quatro etapas humanas pendentes', async () => {
@@ -97,8 +144,7 @@ test('coleta offline mantém seis casos executáveis e quatro etapas humanas pen
   for (const spec of executable) {
     assert.equal(spec.tests.length, 1)
     for (const result of spec.tests) {
-      assert.equal(result.expectedStatus, 'passed', spec.title)
-      assert.deepEqual(result.annotations, [], spec.title)
+      assertExecutableCase(result, spec.title)
     }
   }
   const manual = suite.specs.slice(6)
