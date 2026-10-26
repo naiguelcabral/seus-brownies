@@ -4,8 +4,9 @@
 
 Pedido direto do usuário: ações “Esqueci a senha” e “Primeiro acesso” em
 linhas distintas. Implementação local na PR #75, sem mudar serviços de Auth
-ou concessões. Textos e seletores dos ensaios atualizados; validação móvel
-no laboratório em andamento. Publicação e aceite HML permanecem separados.
+ou concessões. Textos e seletores dos ensaios atualizados; 40 casos de navegador,
+incluindo disposição móvel, e gates de qualidade/build isolado aprovados.
+Publicação e aceite HML permanecem separados.
 Este ajuste não implementa a aprovação de cadastros de S02/A04.
 
 ## Próximo incremento S02/A04 — decisão de 26/10/2026

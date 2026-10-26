@@ -6,12 +6,14 @@ Na mesma branch de trabalho, usuário pediu separar “Esqueci a senha” de
 “Primeiro acesso”, um por linha. `src/routes/login.tsx` ajustado, incluindo
 orientação e verificação OTP; seletores dos dois ensaios existentes atualizados.
 Mesmo fluxo de recuperação/definição de senha; sem nova permissão ou escrita
-compartilhada. Typecheck, lint e formato aprovados.
+compartilhada. Código testado: `688d8c6`. Typecheck, lint, formato, Knip sem
+novos achados, build isolado e 40 casos de navegador aprovados. O ensaio usa
+Chromium instalado explicitamente; as tentativas iniciais foram bloqueadas
+pelo sandbox/cache temporário, sem exigir alteração dos testes ou do produto.
 
-Próximo passo: validar no laboratório isolado os botões e o build, atualizar
-a descrição da PR #75 com o escopo final. S02/A04 permanece com a decisão
-registrada abaixo e implementação pendente. Nenhum merge/deploy autorizado
-por este pedido visual.
+Próximo passo: conferir CI/CodeQL da PR #75 no HEAD publicado e integrar
+somente quando autorizado. S02/A04 permanece com a decisão registrada abaixo
+e implementação pendente. Nenhum merge/deploy autorizado por este pedido visual.
 
 ## Decisão S02/A04 registrada — 26/10/2026
 

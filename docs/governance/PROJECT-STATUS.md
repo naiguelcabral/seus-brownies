@@ -6,8 +6,9 @@ Usuário pediu “Esqueci a senha” separado de “Primeiro acesso”, um em ca
 linha. Ajuste preparado na PR #75, também nas ações da verificação de e-mail,
 com textos de orientação atualizados. Os dois botões preservam o fluxo seguro
 existente para recuperar ou definir senha de conta preparada pela equipe.
-Typecheck, lint e formato aprovados; validação isolada no navegador/build em
-andamento. Publicação pendente. A política S02/A04 abaixo continua documental.
+Typecheck, lint, formato, Knip, build isolado e 40 casos de navegador aprovados,
+incluindo os botões em linhas distintas em 375px e os dois acessos ao fluxo.
+Publicação pendente. A política S02/A04 abaixo continua documental.
 
 ## Decisão de aprovação de cadastros — 26/10/2026
 
