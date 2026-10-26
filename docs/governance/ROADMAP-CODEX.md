@@ -1,5 +1,9 @@
 # Roadmap único — Cacau v1
 
+## Configuração Auth e piloto — 26/10/2026
+
+Usuário autorizou “Pode configurar”. #77 integrada em `c6ff2b6`; diretórios restritos configurados no HML/Auth e no piloto, duas cópias Neon e seis secrets próprios do novo Worker preparados. Originais preservadas. Testes finais, publicação e aceite real pendentes. [Recibo e próximos passos](PILOT-CONFIGURATION-2026-10-26.md).
+
 ## Execução das cinco etapas — 26/10/2026
 
 1. **Integração concluída:** #73 → `233b3a4`, #76 → `4c8e8aa`. CI, laboratórios

@@ -70,6 +70,14 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <HeadContent />
       </head>
       <body className="font-sans antialiased [overflow-wrap:anywhere]">
+        {import.meta.env.VITE_PILOT_MODE === 'true' ? (
+          <div
+            role="status"
+            className="bg-amber-100 px-4 py-2 text-center text-sm font-bold text-amber-950"
+          >
+            Ambiente de teste · Piloto com notas históricas
+          </div>
+        ) : null}
         {children}
         <Scripts />
       </body>
