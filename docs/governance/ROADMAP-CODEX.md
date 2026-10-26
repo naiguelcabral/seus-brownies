@@ -1,5 +1,9 @@
 # Roadmap único — Cacau v1
 
+## Checkpoint de configuração — reserva de 5%, 26/10/2026
+
+#77 e #78 integradas; recursos Auth e piloto configurados, 627 testes locais e 12 checks da candidata #78 aprovados. Publicação do piloto ainda pendente; Worker reservado responde 503. [Handoff e próximo comando](HANDOFF-PILOT-CONFIGURATION-2026-10-26.md).
+
 ## Configuração Auth e piloto — 26/10/2026
 
 Usuário autorizou “Pode configurar”. #77 integrada em `c6ff2b6`; diretórios restritos configurados no HML/Auth e no piloto, duas cópias Neon e seis secrets próprios do novo Worker preparados. Originais preservadas. Testes finais, publicação e aceite real pendentes. [Recibo e próximos passos](PILOT-CONFIGURATION-2026-10-26.md).
