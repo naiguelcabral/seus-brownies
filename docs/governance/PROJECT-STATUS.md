@@ -4,9 +4,11 @@
 
 Usuário relatou recusa no login; cadastro e vínculo ativo conferidos por leitura.
 Destino Auth efetivo confirmado por diagnóstico booleano, já desativado.
-Preparado registro seguro do status HTTP de login, ausente no logger anterior;
-revisão/CI, publicação e nova tentativa real pendentes. A causa ainda não foi
-determinada. [Evidências e escopo](PILOT-LOGIN-INVESTIGATION-2026-10-26.md).
+Registro seguro do status HTTP de login integrado na PR #80 (`8261f5e`) e
+publicado somente no piloto, versão `62efd08b`, 100% às 20:32 Brasília.
+CI/CodeQL da PR e main aprovados, smoke público conferido. Nova tentativa real
+solicitada; a causa ainda não foi determinada.
+[Evidências e escopo](PILOT-LOGIN-INVESTIGATION-2026-10-26.md).
 
 ## Piloto publicado e conferido — 26/10/2026
 

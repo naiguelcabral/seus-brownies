@@ -1,0 +1,53 @@
+{
+  "scope": "safe password login provider telemetry; pilot only",
+  "pull_request": 80,
+  "head": "057bc9f24f5fd351b2718c9c5cf6371d672361ce",
+  "source_commit": "8261f5e01170c6f5ea3b8a94bdfccefd5776f040",
+  "local_validation": {
+    "node_tests_passed": 629,
+    "lint": "passed",
+    "typecheck": "passed",
+    "format": "passed",
+    "knip_known": 4,
+    "knip_new": 0,
+    "isolated_pilot_build": "passed"
+  },
+  "ci": {
+    "pull_request_checks_passed": 12,
+    "main_workflow_runs": [40420128028, 40420128020, 40420127998],
+    "main_workflows": "success",
+    "codeql_analyses_per_revision": 3,
+    "codeql_results": 0,
+    "codeql_errors": 0,
+    "codeql_warnings": 0,
+    "open_code_scanning_alerts": 0
+  },
+  "publication": {
+    "worker": "cacau-v1-piloto",
+    "created_on": "2026-10-26T23:32:35.32084Z",
+    "version_id": "62efd08b-496b-4868-abe1-9ec10513cfdb",
+    "deployment_id": "411c73d8-7f8b-49e9-b549-fd55e3c256dd",
+    "traffic_percent": 100,
+    "secret_names_count": 6,
+    "destination_diagnostic_bindings": 0,
+    "query_redaction": true
+  },
+  "public_smoke": {
+    "root": 307,
+    "login": 200,
+    "reset": 200,
+    "cache_control": "no-store",
+    "referrer_policy": "no-referrer",
+    "csp": "report-only",
+    "pilot_banner_on_auth_pages": true
+  },
+  "incident": {
+    "state": "awaiting real user retry and provider status correlation",
+    "root_cause": "not yet determined",
+    "authenticated_acceptance": false,
+    "password_reset_by_agent": false,
+    "role_change": false,
+    "business_write": false,
+    "migration": false
+  }
+}
