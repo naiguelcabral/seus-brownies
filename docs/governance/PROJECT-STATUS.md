@@ -1,5 +1,14 @@
 # Estado canônico do projeto — Cacau v1
 
+## Login com ações separadas — 26/10/2026
+
+Usuário pediu “Esqueci a senha” separado de “Primeiro acesso”, um em cada
+linha. Ajuste preparado na PR #75, também nas ações da verificação de e-mail,
+com textos de orientação atualizados. Os dois botões preservam o fluxo seguro
+existente para recuperar ou definir senha de conta preparada pela equipe.
+Typecheck, lint e formato aprovados; validação isolada no navegador/build em
+andamento. Publicação pendente. A política S02/A04 abaixo continua documental.
+
 ## Decisão de aprovação de cadastros — 26/10/2026
 
 PR #74 integrada na main em `9426316`. Na continuidade, o usuário definiu

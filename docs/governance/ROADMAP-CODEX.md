@@ -1,5 +1,13 @@
 # Roadmap único — Cacau v1
 
+## Ajuste de interface do login — H06, 26/10/2026
+
+Pedido direto do usuário: ações “Esqueci a senha” e “Primeiro acesso” em
+linhas distintas. Implementação local na PR #75, sem mudar serviços de Auth
+ou concessões. Textos e seletores dos ensaios atualizados; validação móvel
+no laboratório em andamento. Publicação e aceite HML permanecem separados.
+Este ajuste não implementa a aprovação de cadastros de S02/A04.
+
 ## Próximo incremento S02/A04 — decisão de 26/10/2026
 
 Após a integração da PR #74 em `9426316`, usuário definiu Dono com todas as

@@ -60,9 +60,26 @@ test('conta preparada tem primeiro acesso por recuperação sem recadastro e fun
 }) => {
   await page.setViewportSize({ width: 375, height: 812 })
   await page.getByLabel('E-mail', { exact: true }).fill('isolated@example.test')
-  await page
-    .getByRole('button', { name: 'Primeiro acesso ou esqueci minha senha' })
-    .click()
+  const forgotPassword = page.getByRole('button', {
+    name: 'Esqueci a senha',
+    exact: true,
+  })
+  const firstAccess = page.getByRole('button', {
+    name: 'Primeiro acesso',
+    exact: true,
+  })
+  await expect(forgotPassword).toBeVisible()
+  await expect(firstAccess).toBeVisible()
+  const forgotPasswordBox = await forgotPassword.boundingBox()
+  const firstAccessBox = await firstAccess.boundingBox()
+  expect(forgotPasswordBox).not.toBeNull()
+  expect(firstAccessBox).not.toBeNull()
+  if (forgotPasswordBox && firstAccessBox) {
+    expect(firstAccessBox.y).toBeGreaterThanOrEqual(
+      forgotPasswordBox.y + forgotPasswordBox.height,
+    )
+  }
+  await firstAccess.click()
   await expect(
     page.getByRole('heading', { name: 'Definir ou recuperar senha' }),
   ).toBeVisible()
@@ -107,7 +124,7 @@ test('recadastro confirma e-mail sem prometer troca de senha e oferece recupera�
     ),
   ).toBeVisible()
   await page
-    .getByRole('button', { name: 'Primeiro acesso ou esqueci minha senha' })
+    .getByRole('button', { name: 'Esqueci a senha', exact: true })
     .click()
   await page
     .getByRole('button', { name: 'Enviar instruções', exact: true })
@@ -149,7 +166,7 @@ test('OTP inválido permanece na verificação e permite voltar ou recuperar ace
     page.getByRole('heading', { name: 'Verifique seu e-mail' }),
   ).toBeVisible()
   await page
-    .getByRole('button', { name: 'Primeiro acesso ou esqueci minha senha' })
+    .getByRole('button', { name: 'Esqueci a senha', exact: true })
     .click()
   await expect(
     page.getByRole('heading', { name: 'Definir ou recuperar senha' }),

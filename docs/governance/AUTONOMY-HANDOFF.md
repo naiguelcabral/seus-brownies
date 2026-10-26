@@ -1,5 +1,18 @@
 # Handoff de autonomia — Cacau v1
 
+## Ajuste do login na PR #75 — 26/10/2026
+
+Na mesma branch de trabalho, usuário pediu separar “Esqueci a senha” de
+“Primeiro acesso”, um por linha. `src/routes/login.tsx` ajustado, incluindo
+orientação e verificação OTP; seletores dos dois ensaios existentes atualizados.
+Mesmo fluxo de recuperação/definição de senha; sem nova permissão ou escrita
+compartilhada. Typecheck, lint e formato aprovados.
+
+Próximo passo: validar no laboratório isolado os botões e o build, atualizar
+a descrição da PR #75 com o escopo final. S02/A04 permanece com a decisão
+registrada abaixo e implementação pendente. Nenhum merge/deploy autorizado
+por este pedido visual.
+
 ## Decisão S02/A04 registrada — 26/10/2026
 
 Base `9426316` (PR #74 integrada). Branch de trabalho
