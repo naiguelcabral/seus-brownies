@@ -29,9 +29,15 @@ ferramenta operacional manual, não dependência npm do aplicativo.
 
 ## Escopo e comandos
 
-Knip 6.41.0 é dependência de desenvolvimento fixada em `package.json` e
+Knip 6.42.1 é dependência de desenvolvimento fixada em `package.json` e
 `package-lock.json`. Use `npm ci`; não há download por `npm exec` durante a
 análise. As regras e versões atuais de TypeScript 7/Oxlint/Oxfmt são preservadas.
+
+Na correção da PR #73 em 26/10/2026, o relatório completo da versão 6.42.1
+foi comparado com a baseline anterior: os mesmos quatro achados, nenhum novo
+ou resolvido. Somente `knipVersion` foi atualizado na baseline; achados e
+justificativas permanecem intactos. Gate e fixture exigem a versão revisada e
+continuam recusando versão não revisada, novos achados e tolerâncias resolvidas.
 
 | Comando | Resultado |
 | --- | --- |

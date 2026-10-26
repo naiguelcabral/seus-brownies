@@ -19,7 +19,7 @@ import {
 
 const root = resolve(import.meta.dirname, '..')
 const finding = { file: 'src/orphan.ts', type: 'files', name: 'src/orphan.ts' }
-const baseline = { version: 1, knipVersion: '6.41.0', findings: [finding] }
+const baseline = { version: 1, knipVersion: '6.42.1', findings: [finding] }
 
 test('Knip gate blocks new findings and removes resolved allowances', () => {
   assert.deepEqual(compareKnipBaseline([finding], baseline), {
@@ -45,10 +45,12 @@ test('Knip gate refuses invalid or unsupported reports instead of approving them
       normalizeKnipReport({ issues: [{ file: 'src/a.ts', exports: [{}] }] }),
     /Invalid Knip finding/,
   )
-  assert.throws(
-    () => compareKnipBaseline([], { ...baseline, knipVersion: 'unreviewed' }),
-    /Invalid Knip baseline/,
-  )
+  for (const knipVersion of ['unreviewed', '6.41.0']) {
+    assert.throws(
+      () => compareKnipBaseline([], { ...baseline, knipVersion }),
+      /Invalid Knip baseline/,
+    )
+  }
 })
 
 test('Knip finds orphan files, missing imports and dependencies without executing configs', () => {

@@ -10,6 +10,22 @@ Typecheck, lint, formato, Knip, build isolado e 40 casos de navegador aprovados,
 incluindo os botões em linhas distintas em 375px e os dois acessos ao fluxo.
 Publicação pendente. A política S02/A04 abaixo continua documental.
 
+## Correção da CI da PR #73 — 26/10/2026
+
+Usuário autorizou corrigir a falha reproduzida após o rerun. Playwright 1.64.1
+inclui `serial` nas anotações coletadas: o contrato agora aceita somente esse
+metadado neutro, mantendo seis casos executáveis e quatro etapas humanas
+pendentes. Casos negativos continuam recusando skip/fixme/fail e estados sem
+execução. Knip 6.42.1 foi revisado com os mesmos quatro achados; apenas a versão
+da baseline mudou, sem novas tolerâncias. Detalhes em [KNIP-CODEQL.md](KNIP-CODEQL.md).
+
+Validação local: 616 testes aprovados, zero falhas/ignorados, lint, tipos,
+formato e Knip aprovados. Build isolado e CI/CodeQL devem ser conferidos no
+[HEAD da PR #73](https://github.com/naiguelcabral/seus-brownies/pull/73).
+Esta correção não integra a PR nem publica dependências no HML. A publicação
+anterior da PR #75 já ocorreu; seu recibo está na
+[PR #76](https://github.com/naiguelcabral/seus-brownies/pull/76).
+
 ## Decisão de aprovação de cadastros — 26/10/2026
 
 PR #74 integrada na main em `9426316`. Na continuidade, o usuário definiu
