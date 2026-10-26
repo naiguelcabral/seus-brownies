@@ -13,11 +13,16 @@ export function createSessionProviderLogger() {
   const record = (_message: string, metadata?: Record<string, unknown>) => {
     if (
       metadata?.component !== 'server-api' ||
-      typeof metadata.path !== 'string' ||
-      !metadata.path.endsWith('/get-session')
+      typeof metadata.path !== 'string'
     )
       return
 
+    const operation = metadata.path.endsWith('/get-session')
+      ? 'session'
+      : metadata.path.endsWith('/sign-in/email')
+        ? 'login'
+        : null
+    if (!operation) return
     const status =
       typeof metadata.status === 'number' &&
       Number.isInteger(metadata.status) &&
@@ -26,11 +31,11 @@ export function createSessionProviderLogger() {
         ? metadata.status
         : null
     // An explicitly rejected session is an ordinary anonymous request.
-    if (status === 401) return
+    if (operation === 'session' && status === 401) return
     const code = networkCodes.find((known) => known === metadata.code) ?? null
     console.warn(
       JSON.stringify({
-        event: 'auth.session.provider',
+        event: `auth.${operation}.provider`,
         stage: status ? 'http_error' : code ? 'transport_error' : 'unexpected',
         status,
         code,

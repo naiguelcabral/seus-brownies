@@ -1,5 +1,14 @@
 # Ações que exigem aprovação humana — Cacau v1
 
+## Continuidade: falha de login do piloto — 26/10/2026
+
+Usuário relatou erro no login e confirmou o uso da mesma conta do endereço
+anterior. O atendimento continua no piloto isolado já autorizado: investigação,
+correção e diagnóstico mínimo sem dados pessoais, seguindo revisão/CI antes
+da publicação. Não autoriza reset de senha por agente, concessão de perfil,
+afrouxamento de segurança ou alteração de HML anterior/produção.
+[Evidências e limites](PILOT-LOGIN-INVESTIGATION-2026-10-26.md).
+
 ## Publicação do piloto executada após retomada — 26/10/2026
 
 Usuário autorizou a configuração e depois a retomada do trabalho. Concluída a publicação do pacote já integrado das PRs #77/#78, somente em `cacau-v1-piloto`, com os recursos e a chave pública próprios preparados. Fonte `53e410e`, versão `d4138431`, 100%; CI/CodeQL e smoke público conferidos. [Recibo](PILOT-PUBLICATION-2026-10-26.md).

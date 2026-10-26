@@ -27,7 +27,7 @@ function fixture(cookie: string | (() => string)) {
     },
     bindings,
   )
-  return { getSession: () => readTanStackNeonSession(auth, bindings) }
+  return { auth, getSession: () => readTanStackNeonSession(auth, bindings) }
 }
 
 test('visitors without an exact nonempty token do not call Auth, even during an outage', async (t) => {
@@ -144,7 +144,7 @@ test('a token is checked upstream and an outage never becomes an anonymous or al
   assert.doesNotMatch(JSON.stringify(logged), /synthetic|example|token|Cookie/)
 })
 
-test('session logging excludes arbitrary metadata and unrelated auth operations', (t) => {
+test('provider logging excludes arbitrary metadata and unrelated auth operations', (t) => {
   const logged: unknown[][] = []
   t.mock.method(console, 'warn', (...args: unknown[]) => logged.push(args))
   const logger = createSessionProviderLogger()
@@ -165,7 +165,7 @@ test('session logging excludes arbitrary metadata and unrelated auth operations'
   })
   logger.info('synthetic-private-message', {
     ...metadata,
-    path: '/sign-in/email',
+    path: '/request-password-reset',
   })
   assert.deepEqual(
     logged.map((args) => JSON.parse(String(args[0]))),
@@ -185,4 +185,69 @@ test('session logging excludes arbitrary metadata and unrelated auth operations'
     ],
   )
   assert.doesNotMatch(JSON.stringify(logged), /synthetic|private|cookie|host/)
+})
+
+test('password sign-in reports provider HTTP status without response, identity or credential fields', async (t) => {
+  const logged: unknown[][] = []
+  t.mock.method(console, 'warn', (...args: unknown[]) => logged.push(args))
+  let status = 401
+  t.mock.method(globalThis, 'fetch', async () =>
+    Response.json(
+      {
+        message: 'synthetic-private-provider-detail',
+        email: 'synthetic@example.invalid',
+        token: 'synthetic-private-token',
+      },
+      { status },
+    ),
+  )
+  const { auth } = fixture('')
+  for (status of [401, 403, 429, 503]) {
+    const result = await auth.signIn.email({
+      email: 'synthetic@example.invalid',
+      password: 'synthetic-private-password',
+    })
+    assert.equal(result.error?.status, status)
+  }
+  assert.deepEqual(
+    logged.map((args) => JSON.parse(String(args[0]))),
+    [401, 403, 429, 503].map((providerStatus) => ({
+      event: 'auth.login.provider',
+      stage: 'http_error',
+      status: providerStatus,
+      code: null,
+    })),
+  )
+  assert.doesNotMatch(
+    JSON.stringify(logged),
+    /synthetic|private|example|password|token|cookie|host/,
+  )
+})
+
+test('password sign-in transport telemetry preserves only a known network code', async (t) => {
+  const logged: unknown[][] = []
+  t.mock.method(console, 'warn', (...args: unknown[]) => logged.push(args))
+  t.mock.method(globalThis, 'fetch', async () => {
+    throw new TypeError('fetch failed: synthetic-private-detail')
+  })
+  const result = await fixture('').auth.signIn.email({
+    email: 'synthetic@example.invalid',
+    password: 'synthetic-private-password',
+  })
+  assert.equal(result.error?.status, 502)
+  assert.deepEqual(
+    logged.map((args) => JSON.parse(String(args[0]))),
+    [
+      {
+        event: 'auth.login.provider',
+        stage: 'transport_error',
+        status: null,
+        code: 'NETWORK_ERROR',
+      },
+    ],
+  )
+  assert.doesNotMatch(
+    JSON.stringify(logged),
+    /synthetic|private|example|password|token|cookie|host/,
+  )
 })

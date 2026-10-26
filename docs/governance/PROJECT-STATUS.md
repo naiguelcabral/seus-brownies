@@ -1,5 +1,13 @@
 # Estado canônico do projeto — Cacau v1
 
+## Login do piloto em investigação — 26/10/2026
+
+Usuário relatou recusa no login; cadastro e vínculo ativo conferidos por leitura.
+Destino Auth efetivo confirmado por diagnóstico booleano, já desativado.
+Preparado registro seguro do status HTTP de login, ausente no logger anterior;
+revisão/CI, publicação e nova tentativa real pendentes. A causa ainda não foi
+determinada. [Evidências e escopo](PILOT-LOGIN-INVESTIGATION-2026-10-26.md).
+
 ## Piloto publicado e conferido — 26/10/2026
 
 [Entrar no piloto](https://cacau-v1-piloto.naiguelcabral.workers.dev/login). Código `53e410e`, versão `d4138431`, 100% às 18:39 Brasília. Três workflows da main e CodeQL real aprovados; seis secrets, limites e callback relidos. Smoke público em 1280/375/320px e prova de redação por marcador aprovados. [Recibo](PILOT-PUBLICATION-2026-10-26.md).
