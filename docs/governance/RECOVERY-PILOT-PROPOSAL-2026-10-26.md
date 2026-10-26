@@ -8,7 +8,7 @@ o teste com notas de compras reais de outros meses”**. O roteiro abaixo prepar
 esse ensaio manual; operadora e janela serão definidas na execução. Não aprova prazos,
 altera agenda, cria fatos operacionais ou libera produção.
 
-## Evidência atual
+## Evidência consultada na preparação
 
 - Integrações #73 e #76 concluídas, com CI/CodeQL de cada main aprovados.
 - HML relido na API: versão `42da8a96`, deployment `5db64ef3`, 100% do tráfego;
@@ -60,7 +60,7 @@ origem, as cópias existentes e os recibos anteriores.
 | --- | --- | --- |
 | A01 | Consolidar o recibo sanitizado da revisão de credenciais e acessos de 17–22/10, sem reutilizar/testar o valor antigo | Método, UTC e abrangência; logs de conexão do provedor quando disponíveis |
 | L02 | Confirmar a identidade SQL no contexto real do Worker, preparar a role operacional sem propriedade/DDL e ensaiar todos os writers antes da troca | Probe do Worker, matriz por tabela/sequência, testes de negação e readback do binding; o usuário SQL do MCP não prova a role do Worker |
-| S02/A04 | Preparar a role restrita do diretório na branch Auth, ativar credencial e binding somente após revisão do pacote concreto | SQL proposto, grants por coluna/função, ausência de leitura de credenciais, endpoint correto e secret por nome, sem expor valor |
+| S02/A04 | Configuração e publicação do piloto concluídas; validar concessão/sessão/reset reais com a pessoa | Grants/negações conferidos e recibos vinculados; aceite autenticado ainda pendente |
 | L03 | Reconfirmar histórico/PITR, proteção de branches e suporte de observabilidade de consultas/conexões | Configuração atual, custo/suporte e revisão periódica; estatísticas agregadas não equivalem a auditoria individual |
 | L04 | Definir separação de HML e produção antes de I04 | Mapa de destinos por hash, schema atual, política de sanitização e plano de troca; não reclassificar a base original por rótulo |
 | L05 | Validar falhas de aplicação, banco e Auth e desenhar monitor protegido independente do computador | Endpoint sem dados pessoais, timeouts, alerta confirmado e comportamento em indisponibilidade; HTTP 200 público sozinho não fecha esse gate |
@@ -88,12 +88,9 @@ definitivos pertencem à aplicação e à trilha de auditoria.
 
 ## Ensaio com notas de outros meses
 
-O HML publicado aponta para a fonte operacional original e contém fatos já
-auditados. O endereço conter “hml” não o torna uma área descartável. Preparar
-um destino isolado e identificar claramente sua versão e base antes de usar
-notas antigas como dados de teste. Esse destino ainda não foi provisionado;
-não inserir novamente as notas no HML atual para simular o ensaio. O roteiro
-não autoriza apagar dados depois nem repetir importações anteriores.
+Usar [Entrar no piloto](https://cacau-v1-piloto.naiguelcabral.workers.dev/login), versão `d4138431`, fonte `53e410e`, com a faixa “Ambiente de teste · Piloto com notas históricas”. Operação e Auth estão em cópias próprias, com um retrato dos fatos e identidades existentes. [Publicação conferida](PILOT-PUBLICATION-2026-10-26.md).
+
+O HML anterior continua sobre a fonte original auditada. O ensaio das notas é no endereço do piloto. As cópias contêm histórico: conferir duplicidade antes de lançar. O roteiro não autoriza apagar dados depois nem repetir importações anteriores.
 
 1. Separar uma nota por vez e conferir fornecedor, número/série ou referência
    do documento, data original, itens, quantidades, unidades, lotes/validade
@@ -176,7 +173,4 @@ deve virar caso de revisão antes de qualquer correção na base original.
 7. Consolidar recibo sanitizado e aceite da operadora/Dono. I04 continua uma
    decisão humana posterior; piloto ou CI aprovados não autorizam produção.
 
-Estado: roteiro e recibo preparados para o teste manual com notas de outros
-meses. Configuração do diretório Auth, ambiente isolado publicado e aceite dos
-serviços reais ainda pendentes. Não houve compra, produção, venda ou outro
-fato real/fictício criado na fonte compartilhada nesta preparação.
+Estado: diretório Auth configurado e ambiente isolado publicado, com smoke público e prova de redação aprovados. O próximo passo é a pessoa validar a própria entrada/perfil e realizar o ensaio das notas conforme este roteiro. Serviços reais, operação completa I05 e produção I04 continuam sem aceite. Nenhum novo fato de compra, produção ou venda foi criado pelo agente na retomada.

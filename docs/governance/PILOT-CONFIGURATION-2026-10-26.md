@@ -1,5 +1,7 @@
 # Configuração Auth e piloto — 26/10/2026
 
+Aplicação publicada às 18:39 Brasília em `d4138431`, fonte `53e410e`, 100%. Configuração e smoke público relidos; [recibo final](PILOT-PUBLICATION-2026-10-26.md). Os parágrafos de preparação abaixo registram o estado anterior à publicação.
+
 Usuário autorizou **“Pode configurar”**, após apresentação da candidata e da necessidade de Auth e ambiente isolado publicado. #77 integrada em `c6ff2b6` após reconferir 12 checks e CodeQL do HEAD `d668be7`. Não libera produção, expurgo, mudança de RPO/RTO/retenção ou fatos operacionais presumidos.
 
 Operacional do piloto: `cacau-pilot-operations-20261026/br-blue-shadow-ackpk8ex`, cópia de `br-lingering-wind-acwh5wap`. Auth: `cacau-pilot-auth-20261026/br-orange-shadow-acp4523g`, cópia de `br-patient-lake-ac2t0cvq`. As originais conservam sua classificação e fatos. Compute mínimo 0,25 CU; a conta recusou definir intervalo de suspensão e foi mantida a política padrão, sem mudança de plano. Sem expiração automática.

@@ -1,5 +1,11 @@
 # Ações que exigem aprovação humana — Cacau v1
 
+## Publicação do piloto executada após retomada — 26/10/2026
+
+Usuário autorizou a configuração e depois a retomada do trabalho. Concluída a publicação do pacote já integrado das PRs #77/#78, somente em `cacau-v1-piloto`, com os recursos e a chave pública próprios preparados. Fonte `53e410e`, versão `d4138431`, 100%; CI/CodeQL e smoke público conferidos. [Recibo](PILOT-PUBLICATION-2026-10-26.md).
+
+Esta continuidade abrange o fechamento documental dessa publicação. Não inclui aceite autenticado/operacional, concessões de contas, nova importação, expurgo, alteração de política de recuperação, publicação de HML anterior ou produção. O usuário realizará o ensaio com notas reais de outros meses.
+
 ## Configuração Auth e piloto — 26/10/2026
 
 Usuário autorizou “Pode configurar”. #77 integrada em `c6ff2b6`; diretórios restritos configurados no HML/Auth e no piloto, duas cópias Neon e seis secrets próprios do novo Worker preparados. Originais preservadas. Testes finais, publicação e aceite real pendentes. [Recibo e próximos passos](PILOT-CONFIGURATION-2026-10-26.md).

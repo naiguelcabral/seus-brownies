@@ -1,0 +1,250 @@
+{
+  "observed_at": "2026-10-26T21:54:16.177Z",
+  "worker": "cacau-v1-piloto",
+  "public_url": "https://cacau-v1-piloto.naiguelcabral.workers.dev",
+  "source": {
+    "git_head_at_build": "53e410e8d007787fd42d21ea6c215a5d965e10b7",
+    "pull_request": 78,
+    "reviewed_head": "69e2587f9b2348cf2094f1f4064a2524730b3ce2",
+    "isolated_archive_build": true,
+    "clean_tree_at_build": true,
+    "public_turnstile_sitekey": "0x4AAAAAAFm9r4Dfh7tXmljE"
+  },
+  "deployment": {
+    "id": "e80c16d8-4f70-44c0-9416-139c95288b0e",
+    "versions": [
+      {
+        "version_id": "d4138431-6f2e-47b7-8de4-c92379452227",
+        "percentage": 100
+      }
+    ],
+    "created_on": "2026-10-26T21:39:05.191344Z"
+  },
+  "validation": {
+    "main_workflows": [
+      {
+        "name": "CI",
+        "id": 40376184239,
+        "conclusion": "success"
+      },
+      {
+        "name": "Isolated business and browser validation",
+        "id": 40376184254,
+        "conclusion": "success"
+      },
+      {
+        "name": "CodeQL",
+        "id": 40376184401,
+        "conclusion": "success"
+      }
+    ],
+    "codeql": {
+      "commit": "53e410e8d007787fd42d21ea6c215a5d965e10b7",
+      "categories": [
+        "javascript-typescript",
+        "python",
+        "actions"
+      ],
+      "analyses": 3,
+      "results": 0,
+      "errors": 0,
+      "warnings": 0,
+      "open_alerts": 0
+    },
+    "local_preparation": {
+      "node_tests": 627,
+      "configuration_contracts": 5,
+      "build_pilot": "success",
+      "lint": "success",
+      "typecheck": "success",
+      "format": "success",
+      "knip_new_findings": 0,
+      "knip_known_findings": 4,
+      "record": "docs/governance/PILOT-CONFIGURATION-2026-10-26.md"
+    }
+  },
+  "remote_configuration": {
+    "bindings": [
+      {
+        "name": "AUTH_AGGREGATE_RATE_LIMITER",
+        "type": "ratelimit",
+        "namespace_id": "2026102603",
+        "simple": {
+          "limit": 600,
+          "period": 60
+        }
+      },
+      {
+        "name": "AUTH_DIRECTORY_DATABASE_URL",
+        "type": "secret_text"
+      },
+      {
+        "name": "AUTH_LOGIN_HASH_PEPPER",
+        "type": "secret_text"
+      },
+      {
+        "name": "AUTH_ORIGIN_RATE_LIMITER",
+        "type": "ratelimit",
+        "namespace_id": "2026102602",
+        "simple": {
+          "limit": 60,
+          "period": 60
+        }
+      },
+      {
+        "name": "AUTH_RATE_LIMITER",
+        "type": "ratelimit",
+        "namespace_id": "2026102601",
+        "simple": {
+          "limit": 20,
+          "period": 60
+        }
+      },
+      {
+        "name": "AUTH_RATE_LIMITER_REQUIRED",
+        "type": "plain_text",
+        "text": "true"
+      },
+      {
+        "name": "DATABASE_URL",
+        "type": "secret_text"
+      },
+      {
+        "name": "NEON_AUTH_BASE_URL",
+        "type": "secret_text"
+      },
+      {
+        "name": "NEON_AUTH_COOKIE_SECRET",
+        "type": "secret_text"
+      },
+      {
+        "name": "PASSWORD_RESET_REDIRECT_ORIGIN",
+        "type": "plain_text",
+        "text": "https://cacau-v1-piloto.naiguelcabral.workers.dev"
+      },
+      {
+        "name": "TURNSTILE_SECRET_KEY",
+        "type": "secret_text"
+      }
+    ],
+    "observability": {
+      "enabled": false,
+      "head_sampling_rate": 1,
+      "redact_query_string": true,
+      "logs": {
+        "enabled": true,
+        "head_sampling_rate": 1,
+        "persist": true,
+        "invocation_logs": true
+      },
+      "traces": {
+        "enabled": false,
+        "persist": true,
+        "head_sampling_rate": 1
+      },
+      "issues": {
+        "enabled": false
+      }
+    },
+    "secret_values_read": false
+  },
+  "public_smoke": {
+    "checked_at_utc": "2026-10-26T21:54:16.177Z",
+    "origin": "https://cacau-v1-piloto.naiguelcabral.workers.dev",
+    "http": [
+      {
+        "path": "/",
+        "status": 307,
+        "headers_passed": true
+      },
+      {
+        "path": "/login",
+        "status": 200,
+        "headers_passed": true
+      },
+      {
+        "path": "/login/redefinir-senha",
+        "status": 200,
+        "headers_passed": true
+      }
+    ],
+    "ui": [
+      {
+        "width": 1280,
+        "pilot_banner_visible": true,
+        "separate_rows": true,
+        "no_horizontal_overflow": true,
+        "forgot_password_opens": true,
+        "first_access_opens": true
+      },
+      {
+        "width": 375,
+        "pilot_banner_visible": true,
+        "separate_rows": true,
+        "no_horizontal_overflow": true,
+        "forgot_password_opens": true,
+        "first_access_opens": true
+      },
+      {
+        "width": 320,
+        "pilot_banner_visible": true,
+        "separate_rows": true,
+        "no_horizontal_overflow": true,
+        "forgot_password_opens": true,
+        "first_access_opens": true
+      }
+    ],
+    "page_errors": 0,
+    "mutating_requests": 0,
+    "credentials_used": false,
+    "real_authentication_validated": false,
+    "real_turnstile_validated": false,
+    "public_sitekey_verified": true,
+    "reset_banner_visible": true
+  },
+  "runtime_redaction": {
+    "observed_at": "2026-10-26T21:47:54.613688Z",
+    "ray_id": "a50ca98208afa5e7",
+    "synthetic_marker_sha256": "1f1eae802208187155b15ce2857e0030d486c13e98343c04a5b47d1815998f91",
+    "marker_sent_in_final_request_query": true,
+    "request_status": 200,
+    "events_in_window": 4,
+    "matching_event_count": 1,
+    "event_timestamp_ms": 1793051274592,
+    "version": "d4138431-6f2e-47b7-8de4-c92379452227",
+    "stored_path": "/login/redefinir-senha",
+    "stored_url_has_query": false,
+    "synthetic_marker_prefix_found_anywhere_in_event": false,
+    "query_dry": true,
+    "raw_event_or_headers_persisted": false
+  },
+  "isolation": {
+    "project_id": "steep-brook-51659857",
+    "operations_branch": "br-blue-shadow-ackpk8ex",
+    "auth_branch": "br-orange-shadow-acp4523g",
+    "source_operations_branch": "br-lingering-wind-acwh5wap",
+    "source_auth_branch": "br-patient-lake-ac2t0cvq",
+    "copy_contains_existing_history": true,
+    "new_business_facts_created": false
+  },
+  "hml_control": {
+    "worker": "cacau-v1-hml",
+    "deployment_before_and_after": {
+      "id": "0785e592-e769-450a-b569-68ba0391eed1",
+      "versions": [
+        {
+          "version_id": "8475bc61-c2c0-49f8-9fa6-de1785948ee0",
+          "percentage": 100
+        }
+      ],
+      "created_on": "2026-10-26T17:48:55.396313Z"
+    },
+    "changed_during_publication": false
+  },
+  "limits": [
+    "Public GET/UI verification used no credentials and blocked mutation requests.",
+    "Real authentication, reset, OTP, Turnstile redemption/replay and profile acceptance remain pending.",
+    "Copies contain existing history; no automatic invoice-number deduplication or historical cost reconstruction is claimed.",
+    "Production approval, backup policy and remaining roadmap gates are unchanged."
+  ]
+}

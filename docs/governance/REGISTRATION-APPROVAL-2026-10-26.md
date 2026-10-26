@@ -1,5 +1,9 @@
 # Aprovação de cadastros — candidata de 26/10/2026
 
+## Configuração e publicação executadas — 26/10/2026
+
+Diretórios restritos e bindings preparados nos alvos Auth do HML e do piloto, conforme [recibo de configuração](PILOT-CONFIGURATION-2026-10-26.md). #77/#78 integradas; o código descrito abaixo está publicado no piloto `d4138431`, fonte `53e410e`. A aplicação do HML anterior não foi republicada. [Publicação e limites de aceite](PILOT-PUBLICATION-2026-10-26.md). Não reaplicar a proposta SQL nem recriar roles/secrets já conferidos.
+
 ## Escopo
 
 Continuidade autorizada pelo Dono nas cinco etapas. Implementação preparada

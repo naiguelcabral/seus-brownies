@@ -1,5 +1,11 @@
 # Ambientes e evidência somente leitura — Cacau v1
 
+## Piloto publicado — 26/10/2026
+
+Worker `cacau-v1-piloto`: código `53e410e`, deployment `e80c16d8-4f70-44c0-9416-139c95288b0e`, versão `d4138431-6f2e-47b7-8de4-c92379452227`, 100%. Origem pública: [login do piloto](https://cacau-v1-piloto.naiguelcabral.workers.dev/login). Operação e Auth usam as cópias `br-blue-shadow-ackpk8ex` e `br-orange-shadow-acp4523g`. Seis nomes de secrets e configurações relidos; sem consulta de seus valores.
+
+HML anterior permaneceu no deployment `0785e592`, versão `8475bc61`, antes/depois. As cópias incluem o retrato do histórico e identidades; não são base vazia ou anonimizada. A separação definitiva de HML/produção, o probe autenticado do Worker e a matriz granular L02 continuam distintos. [Recibo e limites](PILOT-PUBLICATION-2026-10-26.md).
+
 ## Configuração Auth e piloto — 26/10/2026
 
 Usuário autorizou “Pode configurar”. #77 integrada em `c6ff2b6`; diretórios restritos configurados no HML/Auth e no piloto, duas cópias Neon e seis secrets próprios do novo Worker preparados. Originais preservadas. Testes finais, publicação e aceite real pendentes. [Recibo e próximos passos](PILOT-CONFIGURATION-2026-10-26.md).
