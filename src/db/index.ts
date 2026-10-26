@@ -1,16 +1,13 @@
-import { drizzle } from 'drizzle-orm/node-postgres'
-
-import * as schema from './schema.ts'
 import { requireDatabaseEnvironment } from '#/lib/env'
+import { createPostgresDatabaseScope } from './postgres-scope.server'
 
-/**
- * Opens the database only in a server operation that needs it. This keeps the
- * public storefront usable before local or Cloudflare secrets are configured.
- */
-export function getDb() {
+const scope = createPostgresDatabaseScope(() => {
   const { DATABASE_URL: connectionString } = requireDatabaseEnvironment(
     process.env,
   )
+  return { connectionString }
+})
 
-  return drizzle(connectionString, { schema })
-}
+/** Lazy, shared only inside the active Server Function or explicit script scope. */
+export const getDb = scope.getDb
+export const withDatabaseScope = scope.run

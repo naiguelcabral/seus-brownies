@@ -31,12 +31,23 @@ export type AuthAuditInput = {
     reasonCode?: string
     challengeRequired?: boolean
     provider?: 'neon-auth'
+    subjectHash?: string
   } | null
 }
 
 export function createAuthAuditEvent(input: AuthAuditInput) {
+  const { subjectHash, ...metadata } = input.metadata ?? {}
+  const validHash =
+    typeof subjectHash === 'string' &&
+    subjectHash.length === 64 &&
+    /^[a-f0-9]{64}$/.test(subjectHash)
   return {
     ...input,
-    metadata: input.metadata ?? null,
+    metadata: input.metadata
+      ? {
+          ...metadata,
+          ...(validHash ? { subjectHash } : {}),
+        }
+      : null,
   }
 }

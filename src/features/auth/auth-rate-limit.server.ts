@@ -1,4 +1,5 @@
 import { createCloudflareTurnstileVerifier } from './turnstile-adapter.server'
+import { readPasswordResetRedirectTo } from './runtime-config.server'
 import { createInMemoryAuthRateLimiter } from './auth-rate-limit'
 import type { AuthRateLimitScope } from './auth-rate-limit'
 import { getCloudflareAuthRateLimiter } from './cloudflare-rate-limit.server'
@@ -28,7 +29,7 @@ function isDevelopment() {
 }
 
 export async function hashAuthIdentity(
-  scope: AuthRateLimitScope,
+  scope: AuthRateLimitScope | 'audit-subject',
   email: string,
   pepper: string,
 ) {
@@ -148,7 +149,15 @@ export async function protectPublicAuthAction(
           token: input.turnstileToken,
         })
       : (
-          await createCloudflareTurnstileVerifier({ secretKey }).verify({
+          await createCloudflareTurnstileVerifier({
+            secretKey,
+            expectedHostname: new URL(
+              readPasswordResetRedirectTo(environment, {
+                development: dependencies.isDevelopment ?? isDevelopment(),
+              }),
+            ).hostname,
+            expectedAction: input.scope,
+          }).verify({
             token: input.turnstileToken,
           })
         ).success

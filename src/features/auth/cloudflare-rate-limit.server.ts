@@ -1,27 +1,37 @@
+/** Structural contract verified against Workers types 5.20261025.1. */
 export type CloudflareRateLimitBinding = {
   limit: (input: { key: string }) => Promise<{ success: boolean }>
 }
 
-type CloudflareAuthEnvironment = {
-  AUTH_RATE_LIMITER?: CloudflareRateLimitBinding
+function isRateLimiter(value: unknown): value is CloudflareRateLimitBinding {
+  return Boolean(
+    value &&
+    typeof value === 'object' &&
+    'limit' in value &&
+    typeof value.limit === 'function',
+  )
 }
 
-/**
- * Resolves the optional Workers binding without making it a requirement for
- * Node-only tests or local development. The binding method is called only
- * from a request handler.
- */
-export async function getCloudflareAuthRateLimiter(): Promise<
-  CloudflareRateLimitBinding | undefined
-> {
+async function readBinding(
+  name: string,
+): Promise<CloudflareRateLimitBinding | undefined> {
   try {
-    const { env } = (await import('cloudflare:workers')) as {
-      env: CloudflareAuthEnvironment
-    }
-    return typeof env.AUTH_RATE_LIMITER?.limit === 'function'
-      ? env.AUTH_RATE_LIMITER
-      : undefined
+    const { env } = await import('cloudflare:workers')
+    const value: unknown = Reflect.get(env, name)
+    return isRateLimiter(value) ? value : undefined
   } catch {
     return undefined
   }
+}
+
+export function getCloudflareAuthRateLimiter() {
+  return readBinding('AUTH_RATE_LIMITER')
+}
+
+export async function getCloudflareAuthBudgetLimiters() {
+  const [origin, aggregate] = await Promise.all([
+    readBinding('AUTH_ORIGIN_RATE_LIMITER'),
+    readBinding('AUTH_AGGREGATE_RATE_LIMITER'),
+  ])
+  return { ...(origin ? { origin } : {}), ...(aggregate ? { aggregate } : {}) }
 }
