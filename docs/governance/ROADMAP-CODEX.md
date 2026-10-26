@@ -1,5 +1,13 @@
 # Roadmap único — Cacau v1
 
+## Prioridade H01/I05: recusa no login do piloto — 26/10/2026
+
+Cadastro/vínculo ativo e destino Auth efetivo conferidos, sem alterar conta.
+Diagnóstico seguro do status HTTP de login preparado para revisão e publicação
+somente no piloto. Correlacionar nova tentativa real antes de atribuir causa ou
+declarar login corrigido. [Investigação](PILOT-LOGIN-INVESTIGATION-2026-10-26.md).
+O ensaio de notas históricas aguarda o acesso autenticado.
+
 ## Estado das cinco etapas após a publicação — 26/10/2026
 
 1. Integrações #73/#76/#77/#78 concluídas; código do piloto `53e410e`, com CI, laboratórios e CodeQL da main aprovados.
