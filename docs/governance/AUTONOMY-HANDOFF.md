@@ -1,5 +1,24 @@
 # Handoff de autonomia — Cacau v1
 
+## PR #75 integrada e publicação concluída — 26/10/2026
+
+Usuário autorizou “Pode seguir com a atualização e publicação”. PR #75
+integrada em `82eebfc`; três workflows main aprovados e CodeQL real zerado.
+Job conectado repetido no mesmo SHA após timeout de instalação; passou.
+Build/deploy isolado concluído somente no HML: versão `42da8a96`, 100%,
+deployment `5db64ef3-0fb4-482b-8539-87d722abef81`, 14:13:17 UTC.
+Readback de bindings/observabilidade e smoke público desktop/375/320px
+aprovados; botões separados e os dois fluxos abrem, zero requisições mutáveis.
+[Recibo](HML-PUBLICATION-2026-10-26.md) e evidência JSON sanitizada versionados.
+
+Branch documental `codex/hml-publication-20261026` na worktree
+`/tmp/cacau-auth-hardening-20261025`, baseada na main publicada. Este fechamento
+não muda código/configuração e não requer outro deploy. Pasta principal
+preservada em `codex/audit-remediation-20261023` / `febef1d`.
+Próximo passo: revisar o registro documental e seguir S02/A04 local e aceites
+reais remanescentes do roadmap, sem repetir publicação, bootstrap ou grants.
+PRs de dependências continuam separadas; esta rodada não as integra.
+
 ## Ajuste do login na PR #75 — 26/10/2026
 
 Na mesma branch de trabalho, usuário pediu separar “Esqueci a senha” de

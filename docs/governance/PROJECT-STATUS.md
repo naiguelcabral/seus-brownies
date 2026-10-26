@@ -1,5 +1,20 @@
 # Estado canônico do projeto — Cacau v1
 
+## PR #75 integrada e HML publicado — 26/10/2026
+
+Main `82eebfc` publicada no HML após autorização do usuário, três workflows
+aprovados e três análises CodeQL sem resultados/erros/avisos, zero alertas
+abertos. Versão `42da8a96-c5ed-4573-9d58-c5c8030f0df7` em 100%, deployment
+`5db64ef3-0fb4-482b-8539-87d722abef81`, às 14:13:17 UTC.
+
+Login publicado confirma botões separados em 1280/375/320px e os dois acessos
+ao fluxo, sem overflow ou erro de página. Raiz307/login200/reset200 e headers
+aprovados. Bindings de limite e redação de query confirmados na configuração
+remota; cinco nomes de secrets preservados. [Recibo](HML-PUBLICATION-2026-10-26.md).
+Prova de logs por marcador, serviços Auth reais, aceite físico/por perfil e
+demais gates do roadmap permanecem. S02/A04 continua documental. Sem produção,
+SQL/migrations compartilhados, alteração de secrets/DNS ou concessão de contas.
+
 ## Login com ações separadas — 26/10/2026
 
 Usuário pediu “Esqueci a senha” separado de “Primeiro acesso”, um em cada
@@ -8,7 +23,8 @@ com textos de orientação atualizados. Os dois botões preservam o fluxo seguro
 existente para recuperar ou definir senha de conta preparada pela equipe.
 Typecheck, lint, formato, Knip, build isolado e 40 casos de navegador aprovados,
 incluindo os botões em linhas distintas em 375px e os dois acessos ao fluxo.
-Publicação pendente. A política S02/A04 abaixo continua documental.
+Publicação concluída conforme recibo acima; aceite funcional ampliado pendente.
+A política S02/A04 abaixo continua documental.
 
 ## Correção da CI da PR #73 — 26/10/2026
 

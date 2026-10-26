@@ -1,12 +1,27 @@
 # Roadmap único — Cacau v1
 
+## Publicação HML concluída — 26/10/2026
+
+PR #75 integrada em `82eebfc` e publicada por autorização específica. Três
+workflows da main aprovados, CodeQL real sem resultados/erros/avisos e zero
+alertas. HML `42da8a96`, 100% de tráfego; [recibo](HML-PUBLICATION-2026-10-26.md).
+
+H06: botões separados e abertura de recuperação/primeiro acesso aprovados em
+1280/375/320px no site publicado. A05/A10: configuração de redação e headers
+publicados/conferidos; prova de logs por marcador e observação real da CSP
+continuam. A07/A08: código e bindings publicados; validação de conexões e
+Auth/Turnstile/replay reais ainda pendente. S02/A04 mantém implementação local
+de aprovação/auditoria e identidade confiável na conclusão de reset.
+Aceite físico/por perfil, A01/A03, L02–L06 e piloto permanecem. Não repetir este
+deploy nem inferir produção ou integração de dependências dessa autorização.
+
 ## Ajuste de interface do login — H06, 26/10/2026
 
 Pedido direto do usuário: ações “Esqueci a senha” e “Primeiro acesso” em
 linhas distintas. Implementação local na PR #75, sem mudar serviços de Auth
 ou concessões. Textos e seletores dos ensaios atualizados; 40 casos de navegador,
 incluindo disposição móvel, e gates de qualidade/build isolado aprovados.
-Publicação e aceite HML permanecem separados.
+Publicação concluída no recibo acima; aceite funcional ampliado permanece.
 Este ajuste não implementa a aprovação de cadastros de S02/A04.
 
 ## Próximo incremento S02/A04 — decisão de 26/10/2026

@@ -1,5 +1,19 @@
 # Ambientes e evidência somente leitura — Cacau v1
 
+## Publicação autorizada — 26/10/2026
+
+Somente Worker `cacau-v1-hml`: código integrado `82eebfc`, deployment
+`5db64ef3-0fb4-482b-8539-87d722abef81`, versão
+`42da8a96-c5ed-4573-9d58-c5c8030f0df7`, 100% às 14:13:17 UTC.
+[Recibo e readback](HML-PUBLICATION-2026-10-26.md). Três bindings de limite,
+origem confiável e redação de query confirmados; nomes/tipos dos cinco secrets
+mantidos, sem leitura/comparação de valores. Site key pública igual à anterior.
+
+Sem comandos SQL/migrations, mudança de secrets/DNS ou ambiente Neon. A
+classificação da original como production e os destinos históricos abaixo
+permanecem; publicar o Worker HML não cria laboratório nem autoriza dados
+sintéticos compartilhados. A versão de 22/10 abaixo passa a ser histórica.
+
 ## Recuperação HML — 22/10/2026
 
 Leituras atuais confirmam o banco operacional em
