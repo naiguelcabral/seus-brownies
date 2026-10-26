@@ -81,8 +81,12 @@ usa bancos separados para operação e diretório, role limitada por coluna,
 concorrência/replay, revogação do aprovador, negações e rollback tardio.
 Consulta de reset desconhecida/expirada/ambígua e tentativa de injeção também
 falham fechadas. A proposta SQL é exercitada com nomes de alvo/role sintéticos.
-Novos ajustes e o teste conectado de interface serão reconferidos no HEAD
-versionado, junto de build/CI/CodeQL. Não confundir candidato local com entrega
+O laboratório conectado aprovou 13 cenários de UI/HTTP/PostgreSQL, incluindo
+aprovação pelo Gerente em 320px, vínculo/auditoria persistidos e nova sessão
+do destinatário. Build isolado, lint, tipos, formato e Knip aprovados; os
+quatro achados conhecidos permanecem sem novas tolerâncias. A suíte Node
+final também passou com todos os novos arquivos versionados: 626 testes.
+CI/CodeQL do HEAD publicado são a próxima conferência. Não confundir candidato local com entrega
 publicada ou aceite real. Nenhum acesso real foi concedido nesta preparação.
 
 Reversão de código: versão HML anterior validada; vínculos/eventos já gravados

@@ -1,0 +1,41 @@
+{
+  "observed_at": "2026-10-26T17:07:48.658994Z",
+  "worker": "cacau-v1-hml",
+  "version": "42da8a96-c5ed-4573-9d58-c5c8030f0df7",
+  "deployment": "5db64ef3-0fb4-482b-8539-87d722abef81",
+  "traffic_percent": 100,
+  "request": {
+    "method": "GET",
+    "initial_path": "/login",
+    "final_path": "/login/redefinir-senha",
+    "synthetic_marker_sent_in_final_query": true,
+    "synthetic_marker_sha256": "b62e8afca230825a1f8b1351748262b704a77e6504aa973c7463e77657b93135",
+    "status": 200,
+    "ray_id": "a50b0f349f58b289",
+    "cache_control": "no-store",
+    "referrer_policy": "no-referrer",
+    "real_credentials_or_tokens_used": false,
+    "mutable_requests": 0
+  },
+  "observability": {
+    "redact_query_string": true,
+    "logs_enabled": true,
+    "invocation_logs": true,
+    "persist": true,
+    "matching_event_count": 1,
+    "event_timestamp_ms": 1793034468619,
+    "event_ray_id": "a50b0f349f58b289",
+    "event_version": "42da8a96-c5ed-4573-9d58-c5c8030f0df7",
+    "synthetic_marker_found_anywhere_in_event": false,
+    "request_url_field": "$workers.event.request.url",
+    "stored_path": "/login/redefinir-senha",
+    "stored_url_has_query": false,
+    "query_was_temporary_dry_read": true,
+    "raw_event_or_headers_persisted_in_repository": false
+  },
+  "limits": [
+    "Proves query-string removal for the correlated synthetic Auth request on the deployed version.",
+    "Does not certify real login, password reset, OTP, Turnstile, revocation, mobile acceptance or every logging source."
+  ],
+  "remote_configuration_changed": false
+}

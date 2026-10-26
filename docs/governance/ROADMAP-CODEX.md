@@ -10,12 +10,15 @@
    Autoria do reset usa consulta restrita ao provedor. Configuração do novo
    diretório ainda pendente; [escopo e implantação](REGISTRATION-APPROVAL-2026-10-26.md).
 3. **Homologação real pendente:** serviços Auth/Turnstile, revogação/perfis,
-   celular/rede móvel, logs e CSP. Laboratórios não substituem conta real.
+   celular/rede móvel e CSP. A05 tem captura do marcador sintético nos logs
+   correlacionados: sem query/marcador armazenado. Laboratórios não substituem conta real.
 4. **Proposta e inventário:** usuário decidiu avaliar RPO/RTO/retenção depois.
    Não mudar a agenda vigente por inferência. Seguem A01/A03/L02–L06.
 5. **Piloto a preparar:** usuário informou que fornecerá operadora e fatos
    reais previstos. Aguardar esses dados, preservando integridade e estoque;
    I04 continua aceite humano de produção.
+
+[Proposta de recuperação, inventário e roteiro do piloto](RECOVERY-PILOT-PROPOSAL-2026-10-26.md).
 
 ## Publicação HML concluída — 26/10/2026
 
@@ -269,7 +272,7 @@ Dono/administrador nas decisões e operações externas sujeitas a gate.
 | --- | --- | --- | --- |
 | Imediato — A01 | Comprovação técnica parcial em 23/10 | Relato de coleta incorporado por #65/9a4b276: hash da credencial de `48b101d` comparado, sem exibir valores, com a senha atual do `neondb_owner` em cada branch: `production`, `g1-auth-hml` e `Development` divergem; as três branches de backup não têm endpoint e não aceitam conexão; o projeto arquivado `cool-base` foi apagado. Falta revisar acessos do período 17–22/10: `pg_stat_statements` está desligado e a CLI não expõe conexões; no Auth, 21 sessões vieram de dois IPs. Falta recibo sanitizado que permita revisar método, UTC e abrangência dessa coleta; ela não foi repetida nesta rodada. Eventuais cópias locais de credenciais ficam sob responsabilidade privada do operador, sem leitura ou exclusão pelo agente. | Dono pede logs de conexão ao suporte Neon, se necessário. Reescrita do histórico é decisão separada. Não testar nem reproduzir o valor antigo. |
 | 1 — A02 / S03 | Dependências integradas; limites entregues na PR #72 | Corpo de até 1 MiB, até 100 itens/saídas/perdas e strings numéricas até 32 caracteres; schemas usados pelos handlers e testes de fronteira, excesso e idempotência. 601 testes Node e laboratório conectado aprovados. | Integração autorizada conforme PR #72; publicação/aceite HML pendentes. Não refazer a atualização Zod/Undici. |
-| 1 — A05 | Código integrado; confirmação HML pendente | #64 integrou redact_query_string:true no HML e no-store/no-referrer no login/reset; headers comprovados por HTTP no laboratório. Falta publicação HML autorizada e captura com marcador sintético. | Não atribuir a configuração nova ao Worker publicado antes de deploy/readback. Não consultar tokens reais. |
+| 1 — A05 | Publicado e comprovado no caminho Auth | HML 42da8a96 com redação relida. Em 26/10 17h07 UTC, cliente enviou marcador sintético na query final e evento pelo mesmo Ray ID/versão foi encontrado sem query nem marcador. HTTP200/no-store/no-referrer; recibo em HML-PUBLICATION-2026-10-26.md. | Não extrapolar a prova para todos os logs ou aceite de Auth/OTP reais; nenhum token real consultado. |
 | 1 — A06 / T02 | Concluído na main | #61 integrada em 1536920; db:generate e db:push bloqueados offline, sem conexão ou SQL. Preparação/revisão auditável, cadeia e recibos preservados. | T02 permanece parcial para planos por alvo; não reaplicar migrations ou usar o guard como controle de acesso administrativo. |
 | 2 — A03 / I02 / I03 | Divergência documentada; política pendente | Revisão observou histórico Neon de seis horas, branches sem proteção e automação semanal quinta 00:15, divergindo do diário 03h documentado. Reconfirmar fuso/configuração; acordar RPO/RTO, retenção, responsáveis e Auth; comprovar sequência de uploads, restore externo e alerta de falha. | Restore de 21/10 permanece válido historicamente. Mudança de frequência/infraestrutura/proteção exige decisão aplicável; não apagar backups. |
 | 2 — A04 / S01 | PR #72 integrada; candidata amplia correlação | Login/verificação bem-sucedidos usam ID do provedor; logout usa ator da sessão validada, sem alvo de sessão inventado. Contrato do SDK e testes de privacidade aprovados. | Candidata b4ae5cb correlaciona login/verificação/pedido de reset por HMAC e registra login bloqueado. Restam autoria de concessões futuras/bootstrap e conclusão de reset com identidade confiável; nenhum backfill histórico. |

@@ -10,14 +10,21 @@ Preparação S02/A04: `/acessos`, permissão específica para Dono/Gerente,
 primeira liberação de Funcionário validado pelo servidor, concessão/auditoria
 atômica e nova sessão após mudança de papel. Reset passa a exigir identificação
 restrita pelo provedor e atribui ator somente no sucesso. 626 testes Node e
-19 cenários PostgreSQL passaram na preparação; os ajustes finais, interface,
-build e CI/CodeQL serão reconferidos no HEAD publicado.
+19 cenários PostgreSQL e 13 conectados de interface/HTTP passaram, incluindo
+aprovação em 320px e nova sessão do destinatário. Build/lint/tipos/formato/Knip
+aprovados; CI/CodeQL serão conferidos no HEAD publicado.
 
 O [diretório Auth e seu SQL proposto](REGISTRATION-APPROVAL-2026-10-26.md) ainda
 não foram configurados no HML. Não publicar a candidata antes disso. Sem
 concessão real, SQL compartilhado ou alteração de secrets nesta preparação.
 RPO/RTO/retenção serão propostos para decisão posterior; piloto aguarda a
 operadora e os fatos reais que o usuário informou que enviará.
+
+A05: captura no HML correlacionada por Ray ID confirmou o marcador sintético
+enviado na query final e ausente do evento armazenado, cuja URL não tem query.
+[Prova](HML-PUBLICATION-2026-10-26.md). A configuração remota não mudou. A
+[proposta de recuperação e roteiro do piloto](RECOVERY-PILOT-PROPOSAL-2026-10-26.md)
+registra a agenda divergente, três pares externos privados e os gates restantes.
 
 ## PR #75 integrada e HML publicado — 26/10/2026
 

@@ -57,6 +57,7 @@ test('a present token still resolves identity and access afresh without retainin
   t.mock.method(globalThis, 'fetch', async () => {
     calls += 1
     return Response.json({
+      session: { createdAt: '2026-10-26T10:00:00Z' },
       user: {
         id: 'synthetic-user',
         email: 'synthetic@example.invalid',
@@ -68,7 +69,11 @@ test('a present token still resolves identity and access afresh without retainin
     fixture(() => cookie),
     async () => {
       reads += 1
-      return { role: 'manager', isActive: active }
+      return {
+        role: 'manager',
+        isActive: active,
+        roleUpdatedAt: new Date('2026-10-25T10:00:00Z'),
+      }
     },
   )
   assert.equal((await resolve()).principal?.role, 'manager')
