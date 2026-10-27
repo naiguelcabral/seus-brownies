@@ -2,12 +2,16 @@
 
 ## I05: alternativa autenticada pelo tablet — 27/10/2026
 
-Preparação de [importação assistida](PURCHASE-BATCH-IMPORT.md) para executar
+[Importação assistida](PURCHASE-BATCH-IMPORT.md) integrada pela PR #85 para executar
 as compras aprovadas na sessão do usuário, sem depender do navegador do
 computador. Conferência explícita, cadastro normal e transações individuais
 com UUIDs estáveis. Preservar exclusões e leitura independente antes/depois.
-Candidata ainda depende de validação, integração e publicação; nenhuma
-inclusão real decorre da preparação. I05 permanece parcial.
+Doze checks aprovados, CodeQL sem alertas e ensaio HTTP/UI/PostgreSQL 17
+incluindo retomada sem duplicação. Publicada no piloto na versão `0cdcdb1d`,
+100%, em 27/10 às 12:08 Brasília. Link do manifesto privado entregue ao
+usuário; leitura posterior à publicação permanece sem compras/itens/movimentos.
+Próximo passo: confirmação pela sessão do tablet e conferência independente
+de estoque, valores, autoria e auditoria. I05 permanece parcial.
 
 ## I05: dados aprovados, rotina validada e execução publicada pendente — 27/10/2026
 
