@@ -1,5 +1,30 @@
 # Investigação do login do piloto — 26/10/2026
 
+## Nova tentativa correlacionada — 21:21 Brasília
+
+O usuário relatou que o verificador apareceu, mas a entrada não foi concluída.
+Na versão publicada `62efd08b`, a telemetria capturou `auth.login.provider`,
+etapa `http_error`, HTTP **401**, às `2026-10-27T00:21:14.862Z`.
+A auditoria registrou `login/failure/provider_rejected` às 00:21:14.943Z
+e `login/blocked/login_cooldown` às 00:21:21.916Z.
+
+Leitura agregada confirmou um cooldown ativo, com término às
+`2026-10-27T00:36:15.010Z` (21:36:15 de 26/10 em Brasília). A política
+vigente bloqueia novas tentativas por 15 minutos após cinco falhas consecutivas.
+Esse bloqueio é avaliado antes do Siteverify: a presença do widget não comprova
+validação bem-sucedida nem replay do Turnstile nesta tentativa.
+
+Está comprovada a recusa HTTP do provedor seguida da proteção temporária.
+Não há base para atribuir a recusa a DNS, indisponibilidade ou ao widget, nem
+para afirmar qual diferença nas credenciais a causou. Nenhuma senha foi lida.
+
+Orientado o uso de **Esqueci a senha** pelo próprio usuário no piloto e uma
+tentativa após 21:37 Brasília, com a senha redefinida. As cópias Auth são
+independentes, conforme o [contrato de branching do Neon Auth](https://neon.com/docs/auth/branching-authentication);
+a recuperação do piloto não altera a senha no endereço anterior.
+Recebimento do e-mail, redefinição e login autenticado continuam pendentes.
+Nenhum reset foi disparado pelo agente, contador removido ou proteção afrouxada.
+
 ## Ocorrência e evidências
 
 Após a publicação, o usuário relatou a mensagem genérica de credenciais e

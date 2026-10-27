@@ -42,8 +42,25 @@
     "pilot_banner_on_auth_pages": true
   },
   "incident": {
-    "state": "awaiting real user retry and provider status correlation",
-    "root_cause": "not yet determined",
+    "state": "awaiting user password recovery and authenticated acceptance",
+    "root_cause": "provider HTTP 401 confirmed; exact credential rejection cause remains unverified",
+    "provider_rejection": {
+      "timestamp": "2026-10-27T00:21:14.862Z",
+      "event": "auth.login.provider",
+      "stage": "http_error",
+      "status": 401,
+      "audit_timestamp": "2026-10-27T00:21:14.943Z",
+      "audit_reason": "provider_rejected"
+    },
+    "subsequent_protection": {
+      "audit_timestamp": "2026-10-27T00:21:21.916Z",
+      "audit_reason": "login_cooldown",
+      "max_consecutive_failures": 5,
+      "cooldown_minutes": 15,
+      "cooldown_until": "2026-10-27T00:36:15.010Z",
+      "siteverify_before_cooldown_check": false,
+      "real_turnstile_acceptance": "not yet confirmed"
+    },
     "authenticated_acceptance": false,
     "password_reset_by_agent": false,
     "role_change": false,
