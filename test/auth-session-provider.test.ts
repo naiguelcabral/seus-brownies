@@ -6,7 +6,10 @@ import {
   createTanStackNeonAuthServer,
   readTanStackNeonSession,
 } from '../src/features/auth/neon-tanstack-adapter.server'
-import { createSessionProviderLogger } from '../src/features/auth/session-provider-telemetry.server'
+import {
+  createSessionProviderLogger,
+  reportLoginProviderRejection,
+} from '../src/features/auth/session-provider-telemetry.server'
 import {
   AuthSessionUnavailableError,
   createNeonSessionResolver,
@@ -29,6 +32,78 @@ function fixture(cookie: string | (() => string)) {
   )
   return { auth, getSession: () => readTanStackNeonSession(auth, bindings) }
 }
+
+test('login rejection telemetry preserves normalized SDK codes and discards private fields', (t) => {
+  const logged: unknown[][] = []
+  t.mock.method(console, 'warn', (...args: unknown[]) => logged.push(args))
+  for (const code of [
+    'invalid_credentials',
+    'bad_jwt',
+    'email_not_confirmed',
+  ]) {
+    reportLoginProviderRejection({
+      status: 401,
+      code,
+      message: 'synthetic-private-message',
+      password: 'synthetic-private-password',
+      cookie: 'synthetic-private-cookie',
+    })
+  }
+  reportLoginProviderRejection({
+    status: '401',
+    code: 'synthetic-private-code',
+  })
+  reportLoginProviderRejection(null)
+  assert.deepEqual(
+    logged.map((args) => JSON.parse(String(args[0]))),
+    [
+      ...['invalid_credentials', 'bad_jwt', 'email_not_confirmed'].map(
+        (code) => ({
+          event: 'auth.login.rejection',
+          status: 401,
+          code,
+        }),
+      ),
+      ...[1, 2].map(() => ({
+        event: 'auth.login.rejection',
+        status: null,
+        code: 'unclassified',
+      })),
+    ],
+  )
+  assert.doesNotMatch(
+    JSON.stringify(logged),
+    /synthetic|private|password|cookie/,
+  )
+})
+
+test('login rejection telemetry reads the SDK normalized credential error', async (t) => {
+  const logged: unknown[][] = []
+  t.mock.method(console, 'warn', (...args: unknown[]) => logged.push(args))
+  t.mock.method(globalThis, 'fetch', async () =>
+    Response.json(
+      {
+        code: 'INVALID_EMAIL_OR_PASSWORD',
+        message: 'synthetic-private-message',
+      },
+      { status: 401 },
+    ),
+  )
+  const result = await fixture('').auth.signIn.email({
+    email: 'synthetic@example.invalid',
+    password: 'synthetic-private-password',
+  })
+  reportLoginProviderRejection(result.error)
+  assert.deepEqual(JSON.parse(String(logged.at(-1)?.[0])), {
+    event: 'auth.login.rejection',
+    status: 401,
+    code: 'invalid_credentials',
+  })
+  assert.doesNotMatch(
+    JSON.stringify(logged),
+    /synthetic|private|password|cookie/,
+  )
+})
 
 test('visitors without an exact nonempty token do not call Auth, even during an outage', async (t) => {
   t.mock.method(globalThis, 'fetch', async () => {

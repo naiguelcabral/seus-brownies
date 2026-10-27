@@ -2,6 +2,12 @@
 
 ## Prioridade H01/I05: recusa no login do piloto — 26/10/2026
 
+Persistência às 21:47 após reset e primeiro cooldown: novo HTTP 401 do Auth,
+com senha digitada manualmente e identidade da recuperação conferida. Novo
+cooldown até 22:02:18 Brasília. Preparar/publicar o código normalizado da
+recusa em telemetria com lista fixa; correlacionar nova tentativa antes de
+alterar configuração ou declarar o acesso recuperado.
+
 Cadastro/vínculo ativo e destino Auth efetivo conferidos, sem alterar conta.
 Diagnóstico seguro do status HTTP de login integrado na PR #80 (`8261f5e`) e
 publicado somente no piloto em `62efd08b`, com CI/CodeQL aprovados.

@@ -5,6 +5,7 @@ import { z } from 'zod'
 import { readAuthAuditUserId } from './audit-identity'
 import { hashAuthAuditSubject } from './audit-subject.server'
 import { createConfiguredNeonAuthServer } from './configured-neon-auth.server'
+import { reportLoginProviderRejection } from './session-provider-telemetry.server'
 import {
   hashAuthIdentity,
   protectPublicAuthAction,
@@ -192,6 +193,7 @@ export const loginWithEmailPassword = createServerFn({ method: 'POST' })
         password: data.password,
       },
       audit,
+      reportLoginProviderRejection,
     )
     if (store && loginIdentity && result.message !== unavailableLoginMessage) {
       await store.record(loginIdentity, result.ok)

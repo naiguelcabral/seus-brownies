@@ -26,6 +26,7 @@ import type { LoginAttemptStore } from '../src/features/auth/login-attempts.serv
 import type { LoginAttemptState } from '../src/features/auth/login-security'
 import type { NeonAuthCredentialsClient } from '../src/features/auth/login-actions'
 import { createTanStackNeonAuthServer } from '../src/features/auth/neon-tanstack-adapter.server'
+import { reportLoginProviderRejection } from '../src/features/auth/session-provider-telemetry.server'
 
 // Execute the actual callback, without importing runtime configuration or
 // replacing its control flow. This is not a TanStack transport/cookie test.
@@ -168,6 +169,7 @@ function harness(options: {
     },
     createConfiguredNeonAuthServer: () => auth,
     signInWithEmailPassword,
+    reportLoginProviderRejection,
     getAuthActionAuditContext: async (
       _actor: undefined,
       subjectHash: string,

@@ -1,5 +1,31 @@
 # Investigação do login do piloto — 26/10/2026
 
+## Persistência após recuperação e fim do primeiro cooldown
+
+Às `2026-10-27T00:47:18.612Z` (21:47 Brasília), nova tentativa alcançou
+o Auth e recebeu HTTP 401. A auditoria registrou `provider_rejected` às
+00:47:18.626Z; outra tentativa às 00:47:32.405Z encontrou novo cooldown,
+até `2026-10-27T01:02:18.683Z` (22:02:18 Brasília).
+
+O usuário confirmou digitação manual da nova senha. Comparações somente de
+leitura confirmaram que a solicitação de recuperação e o login correspondem
+à mesma identidade, assim como o destinatário da conclusão e a conta informada.
+Há um único vínculo de credencial, vinculado corretamente, atualizado às
+00:25:03.404Z; senha definida, e-mail verificado e conta sem banimento.
+Foram consultados apenas indicadores de presença e correspondência, sem
+retornar senha ou hash de credencial. O Auth anterior mantém sua atualização
+de credencial em 22/10. A tentativa atingiu o provedor após o guard que exige
+Turnstile; replay real continua sem comprovação.
+
+Preparado complemento mínimo de telemetria para registrar somente o código
+normalizado do SDK dentro de uma lista fixa (`invalid_credentials`, `bad_jwt`
+e demais categorias previstas). Código desconhecido vira `unclassified`.
+Não registrar mensagem, resposta, identidade ou credencial. Falha desse
+diagnóstico não altera o resultado público nem a auditoria. Confirmar
+CI/CodeQL e publicação somente no piloto antes de solicitar nova tentativa.
+O incidente continua aberto; repetir reset ou conceder papel não é correção
+comprovada para a recusa persistente.
+
 ## Nova tentativa correlacionada — 21:21 Brasília
 
 O usuário relatou que o verificador apareceu, mas a entrada não foi concluída.
