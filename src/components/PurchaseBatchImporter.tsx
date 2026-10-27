@@ -190,7 +190,7 @@ export function PurchaseBatchImporter({
                     }}
                   />
                 </label>
-                <details open={!text}>
+                <details>
                   <summary className="cursor-pointer text-sm font-bold">
                     Ou cole os dados do lote
                   </summary>

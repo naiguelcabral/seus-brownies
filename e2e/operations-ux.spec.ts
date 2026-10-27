@@ -341,6 +341,7 @@ test('lote recusa ambiente divergente sem gravar e mantém sucesso após falha d
     .getByRole('button', { name: 'Importar lote de compras', exact: true })
     .click()
   const dialog = page.getByRole('dialog')
+  await dialog.getByText('Ou cole os dados do lote', { exact: true }).click()
   await dialog
     .getByLabel('Dados do lote', { exact: true })
     .fill(JSON.stringify(syntheticBatch('https://other.invalid')))
