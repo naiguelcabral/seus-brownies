@@ -12,6 +12,7 @@ test.beforeAll(async () => {
     '#/components/ManagementLayout': resolve(fixture, 'Layout.tsx'),
     '#/features/operations/functions': resolve(fixture, 'state.ts'),
     '#/features/production/functions': resolve(fixture, 'state.ts'),
+    '#/features/catalog/functions': resolve(fixture, 'state.ts'),
   })
 })
 test.afterAll(async () => {
@@ -244,4 +245,126 @@ test('compra e produção cabem no celular', async ({ page }) => {
   expect(await dialog.evaluate((el) => el.scrollWidth <= el.clientWidth)).toBe(
     true,
   )
+})
+
+function syntheticBatch(origin: string) {
+  return {
+    version: 1,
+    targetOrigin: origin,
+    products: [
+      {
+        kind: 'existing',
+        key: 'sugar',
+        id: 1,
+        sku: 'TEST-SUGAR',
+        name: 'Açúcar sintético',
+        type: 'ingredient',
+        unit: 'g',
+      },
+    ],
+    purchases: [
+      {
+        idempotencyKey: 'ba378861-5e55-463f-bbbc-a44db6c5bcf3',
+        supplierName: 'Fornecedor sintético',
+        purchasedAt: '2026-09-01',
+        invoiceFileReference: 'FIXTURE-ONLY',
+        notes: 'Ensaio local isolado',
+        items: [
+          {
+            productKey: 'sugar',
+            quantity: '1.5',
+            purchaseUnit: 'kg',
+            totalAmount: '7.31',
+          },
+        ],
+      },
+    ],
+  }
+}
+test('lote por link exige conferência e confirmação, mostra totais e cabe no tablet', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 768, height: 1024 })
+  const encoded = Buffer.from(
+    JSON.stringify(syntheticBatch(preview.url)),
+  ).toString('base64url')
+  await page.goto(`${preview.url}#lote=${encoded}`)
+  await page
+    .getByRole('button', { name: 'Importar lote de compras', exact: true })
+    .click()
+  const dialog = page.getByRole('dialog', {
+    name: 'Importar lote de compras',
+    exact: true,
+  })
+  await expect(page).toHaveURL(preview.url + '/')
+  await expect(page.getByLabel('Chamadas simuladas')).toHaveText('[]')
+  await dialog
+    .getByRole('button', { name: 'Conferir lote', exact: true })
+    .click()
+  await expect(
+    dialog.getByRole('region', { name: 'Conferência do lote' }),
+  ).toContainText('Açúcar sintético · 1,5 kg')
+  await expect(
+    dialog.getByRole('region', { name: 'Conferência do lote' }),
+  ).toContainText('Total: R$ 7,31')
+  await expect(page.getByLabel('Chamadas simuladas')).toHaveText('[]')
+  expect(
+    await dialog.evaluate(
+      (element) => element.scrollWidth <= element.clientWidth,
+    ),
+  ).toBe(true)
+  await dialog
+    .getByRole('button', { name: 'Confirmar e incluir compras', exact: true })
+    .click()
+  await expect(dialog.getByRole('status')).toContainText('Lote concluído')
+  await expect(dialog.getByLabel('Resultado da inclusão')).toContainText(
+    'Compra 1: #1 registrada',
+  )
+  const calls = JSON.parse(
+    await page.getByLabel('Chamadas simuladas').innerText(),
+  )
+  expect(calls).toHaveLength(1)
+  expect(calls[0].data.items).toEqual([
+    { productId: 1, quantity: '1.5', totalAmount: '7.31', purchaseUnit: 'kg' },
+  ])
+  await expect(
+    dialog.getByRole('button', {
+      name: 'Confirmar e incluir compras',
+      exact: true,
+    }),
+  ).toHaveCount(0)
+})
+test('lote recusa ambiente divergente sem gravar e mantém sucesso após falha do histórico', async ({
+  page,
+}) => {
+  await page
+    .getByRole('button', { name: 'Importar lote de compras', exact: true })
+    .click()
+  const dialog = page.getByRole('dialog')
+  await dialog
+    .getByLabel('Dados do lote', { exact: true })
+    .fill(JSON.stringify(syntheticBatch('https://other.invalid')))
+  await dialog
+    .getByRole('button', { name: 'Conferir lote', exact: true })
+    .click()
+  await expect(dialog.getByRole('alert')).toContainText('outro ambiente')
+  await expect(page.getByLabel('Chamadas simuladas')).toHaveText('[]')
+  await dialog
+    .getByLabel('Dados do lote', { exact: true })
+    .fill(JSON.stringify(syntheticBatch(preview.url)))
+  await dialog
+    .getByRole('button', { name: 'Conferir lote', exact: true })
+    .click()
+  await page.keyboard.press('Escape')
+  await page
+    .getByRole('button', { name: 'Falhar atualização', exact: true })
+    .click()
+  await page
+    .getByRole('button', { name: 'Importar lote de compras', exact: true })
+    .click()
+  await dialog
+    .getByRole('button', { name: 'Confirmar e incluir compras', exact: true })
+    .click()
+  await expect(dialog.getByRole('status')).toContainText('Lote concluído')
+  await expect(dialog.getByRole('status')).toContainText('Recarregue a página')
 })

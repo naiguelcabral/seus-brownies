@@ -1,4 +1,5 @@
 import { PurchaseSummary } from '#/components/PurchaseSummary'
+import { PurchaseBatchImporter } from '#/components/PurchaseBatchImporter'
 import { businessDate } from '#/lib/business-date'
 import { OperationDialog } from '#/components/OperationDialog'
 import { useState } from 'react'
@@ -40,6 +41,9 @@ export const Route = createFileRoute('/compras')({
         ? await listPurchases({ data: deps })
         : { purchases: [], total: 0, page: 1, pageSize: 20, totalPages: 1 },
       canReadHistory,
+      canCreateProducts: Boolean(
+        context.appRole && hasPermission(context.appRole, 'catalog:write'),
+      ),
     }
   },
   component: PurchasesPage,
@@ -66,7 +70,8 @@ const emptyItem = (): Item => ({
 })
 
 function PurchasesPage() {
-  const { products, history, canReadHistory } = Route.useLoaderData()
+  const { products, history, canReadHistory, canCreateProducts } =
+    Route.useLoaderData()
   const search = Route.useSearch()
   const router = useRouter()
   const navigate = useNavigate({ from: Route.fullPath })
@@ -163,6 +168,10 @@ function PurchasesPage() {
       >
         Registrar compra
       </button>
+      <PurchaseBatchImporter
+        disabled={saving || editorOpen}
+        canCreateProducts={canCreateProducts}
+      />
       {!editorOpen && message ? (
         <p role="status" className="mb-4 rounded-lg bg-[#fff5e7] p-3 text-sm">
           {message}

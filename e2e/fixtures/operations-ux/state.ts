@@ -29,6 +29,7 @@ export const purchaseData = {
   products,
   history: { purchases: [], total: 0, page: 1, pageSize: 20, totalPages: 1 },
   canReadHistory: true,
+  canCreateProducts: true,
 }
 export const workspace = {
   recipes: [
@@ -61,7 +62,7 @@ export const workspace = {
 export async function createPurchase({ data }: { data: unknown }) {
   record('purchase', data)
   if (mode === 'save') throw new Error('Falha sintética ao registrar compra')
-  return { id: 1 }
+  return { id: 1, replayed: false }
 }
 export async function createProductionBatch({ data }: { data: unknown }) {
   record('draft', data)
@@ -133,4 +134,27 @@ export async function listPurchasableProducts() {
 }
 export async function listPurchases() {
   return purchaseData.history
+}
+export async function listProducts() {
+  return {
+    products: [
+      {
+        id: 1,
+        name: 'Açúcar sintético',
+        sku: 'TEST-SUGAR',
+        type: 'ingredient',
+        unit: 'g',
+        isActive: true,
+        categoryId: 1,
+        description: null,
+      },
+    ],
+  }
+}
+export async function listCategories() {
+  return [{ id: 1, name: 'Insumos sintéticos', isActive: true }]
+}
+export async function createProduct({ data }: { data: unknown }) {
+  record('product', data)
+  return { id: 99 }
 }
