@@ -1,0 +1,59 @@
+{
+  "scope": "safe normalized provider rejection codes; isolated pilot only",
+  "resumption": { "date": "2026-10-27", "official_capacity_remaining_percent": 100 },
+  "pull_request": 82,
+  "reviewed_head": "eed552c5d8efe677779bb0df521026fea63cf4fe",
+  "source_commit": "1d0218e11b1b2e23d534b30eb83e70eaf96c11f0",
+  "validation": {
+    "node_tests_passed": 632,
+    "quality_and_isolated_pilot_build": "passed",
+    "pull_request_checks_passed": 12,
+    "main_workflow_runs": [40446153616, 40446153596, 40446153547],
+    "main_workflows": "success",
+    "codeql_analyses_per_revision": 3,
+    "codeql_results": 0,
+    "codeql_errors": 0,
+    "codeql_warnings": 0,
+    "open_code_scanning_alerts": 0
+  },
+  "publication": {
+    "worker": "cacau-v1-piloto",
+    "created_on": "2026-10-27T03:50:51.494365Z",
+    "version_id": "0814fb16-3da0-4f71-bcee-9ab746cb1eb0",
+    "deployment_id": "cac81a0b-cf7e-4c4a-8ba0-67ed4b08fe87",
+    "traffic_percent": 100,
+    "secret_names_count": 6,
+    "rate_limit_namespaces": ["2026102601", "2026102602", "2026102603"],
+    "query_redaction": true
+  },
+  "public_smoke": {
+    "root": 307,
+    "login": 200,
+    "reset": 200,
+    "cache_control": "no-store",
+    "referrer_policy": "no-referrer",
+    "csp": "report-only",
+    "pilot_banner_on_auth_pages": true
+  },
+  "incident": {
+    "state": "login restored in user-confirmed private-window test",
+    "authenticated_acceptance": true,
+    "accepted_scope": "single authenticated login; operational pilot and stability remain pending",
+    "audit_success_at": "2026-10-27T04:01:38.159Z",
+    "actor_present": true,
+    "matches_recovered_identity": true,
+    "login_attempt_state_after_success": {
+      "last_attempt_at": "2026-10-27T04:01:38.209Z",
+      "consecutive_failures": 0,
+      "cooldown_until": null,
+      "manual_counter_change": false
+    },
+    "root_cause_of_prior_rejections": "inconclusive",
+    "provider_rejection_events_in_correlated_success_window": 0,
+    "active_cooldowns_before_publication": 0,
+    "agent_password_reset": false,
+    "role_change": false,
+    "business_write": false,
+    "migration": false
+  }
+}

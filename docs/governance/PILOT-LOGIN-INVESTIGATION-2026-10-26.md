@@ -1,5 +1,52 @@
 # Investigação do login do piloto — 26/10/2026
 
+## Entrada confirmada — 27/10/2026, 01:01 Brasília
+
+Usuário informou “Agora funcionou” após a solicitação de tentativa privada.
+Auditoria registrou `login/success` às `2026-10-27T04:01:38.159Z`, com ator
+presente e correspondência ao sujeito da recuperação. Leitura do último
+registro de proteção às 04:01:38.209Z confirmou zero falhas consecutivas e
+cooldown nulo, atualizados pelo login normal, sem alteração manual de contador.
+
+Antes, às 04:01:24.843Z, o guard exigiu verificação (`request_limit`); a
+tentativa seguinte alcançou o provedor e teve sucesso. Na versão `0814fb16`,
+as chamadas da sessão continuaram com HTTP 200 e nenhum evento de recusa
+`auth.login.provider`, `auth.login.rejection` ou `auth.session.provider` foi
+encontrado na consulta correlacionada. Nenhum dado de sessão foi coletado.
+
+Aceite de entrada pontual confirmado. A causa das recusas anteriores continua
+inconclusiva: recuperação, expiração do cooldown e janela privada precederam o
+sucesso, enquanto a PR #82 acrescentou somente observabilidade. Não atribuir
+o resultado a uma correção funcional de senha ou cookies não implementada.
+Logout, revogação, replay e estabilidade continuam separados. Retomar o ensaio
+manual das notas históricas sem duplicar fatos já presentes na cópia.
+
+## Retomada e publicação do código da recusa — 27/10/2026
+
+Franquia oficial renovada a 100%, árvore limpa e HEAD final da PR #82
+`eed552c5d8efe677779bb0df521026fea63cf4fe` reconferido. Os 12 checks passaram;
+três análises CodeQL da candidata `2b9e9a896a5ada75d423951a15e3eff833c9f46e`
+sem resultados/erros/avisos, zero alertas e nenhuma thread de revisão.
+
+Integração em `1d0218e11b1b2e23d534b30eb83e70eaf96c11f0`. Os três workflows
+da main passaram: CI `40446153616`, CodeQL `40446153596`, negócio/navegador
+`40446153547`; três análises reais da main também sem resultados/erros/avisos,
+zero alertas. Qualidade/build isolado e 632 testes locais já aprovados.
+
+Publicação somente em `cacau-v1-piloto`, às
+`2026-10-27T03:50:51.494365Z` (00:50 Brasília), versão
+`0814fb16-3da0-4f71-bcee-9ab746cb1eb0`, deployment
+`cac81a0b-cf7e-4c4a-8ba0-67ed4b08fe87`, 100%. Os seis nomes de secrets,
+três limitadores e redação de query foram conferidos. Raiz307/login200/reset200,
+`no-store`, `no-referrer` e CSP report-only presentes; faixa do piloto nas
+páginas Auth. Nenhum novo reset ou alteração de perfil/banco.
+
+Não havia cooldown ativo na leitura anterior à publicação. Solicitada uma
+tentativa em janela privada com a última senha redefinida, concluída conforme
+o aceite acima. O diagnóstico publicado não comprova a causa nem resolve
+por si a recusa anterior.
+[Recibo estruturado](../../evidence/pilot-login-code-publication-2026-10-27.json).
+
 ## Persistência após recuperação e fim do primeiro cooldown
 
 Às `2026-10-27T00:47:18.612Z` (21:47 Brasília), nova tentativa alcançou

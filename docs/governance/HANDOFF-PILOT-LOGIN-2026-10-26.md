@@ -1,5 +1,10 @@
 # Handoff do login do piloto — 26/10/2026
 
+**Pausa encerrada em 27/10:** franquia renovada a 100%, PR #82 integrada e
+diagnóstico publicado no piloto. Este handoff preserva o checkpoint histórico;
+seguir o [estado atual](PROJECT-STATUS.md) e o
+[recibo](../../evidence/pilot-login-code-publication-2026-10-27.json).
+
 Pausa obrigatória por franquia oficial de **3% restante** na janela curta;
 reset exibido `1793068318` (27/10/2026 02:31:58 UTC; 26/10 23:31:58 Brasília).
 Retomar somente após o reset e confirmação da renovação, conforme

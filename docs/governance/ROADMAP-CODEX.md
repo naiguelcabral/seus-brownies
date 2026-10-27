@@ -1,11 +1,24 @@
 # Roadmap único — Cacau v1
 
-## Prioridade H01/I05: recusa no login do piloto — 26/10/2026
+## H01/I05: entrada recuperada e ensaio pendente — 27/10/2026
 
-PR #82 preparada e pausada por reserva oficial de 3%; 632 testes locais e
-build aprovados. CI ainda com dois instaladores Chromium pendentes no HEAD
-`71799f3`. Integração/publicação e nova correlação continuam pendentes.
-[Retomada exata](HANDOFF-PILOT-LOGIN-2026-10-26.md).
+Entrada confirmada pelo usuário e por `login/success` às 01:01 Brasília;
+identidade recuperada corresponde ao ator e contador zerado pelo fluxo normal.
+Aceite pontual na versão `0814fb16`; causa das recusas anteriores inconclusiva.
+Não repetir reset/configuração. Próxima etapa: ensaio manual de nota histórica
+no piloto, conferindo duplicidade, data original, unidades e saldos. Não criar
+fatos fictícios, repetir importação ou declarar I04 aprovado. H01/H02 mantêm
+logout/revogação/replay/estabilidade como pendências.
+[Recibo atualizado](../../evidence/pilot-login-code-publication-2026-10-27.json).
+
+## Histórico da investigação H01/I05 — 26–27/10/2026
+
+PR #82 integrada em `1d0218e` e publicada somente no piloto em `0814fb16`,
+após renovação oficial de 100% em 27/10. 632 testes locais/build, 12 checks da
+PR e três workflows da main aprovados; CodeQL real sem achados/alertas.
+Tentativa privada concluída com sucesso, conforme aceite acima. Ensaio ainda
+sem aceite. Não repetir reset como solução presumida.
+[Recibo](../../evidence/pilot-login-code-publication-2026-10-27.json).
 
 Persistência às 21:47 após reset e primeiro cooldown: novo HTTP 401 do Auth,
 com senha digitada manualmente e identidade da recuperação conferida. Novo
