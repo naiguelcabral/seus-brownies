@@ -79,6 +79,38 @@ test('login inválido produz mensagem controlada', async () => {
   )
 })
 
+test('diagnóstico de recusa recebe o erro sem alterar mensagem ou auditoria, mesmo se falhar', async () => {
+  for (const throws of [false, true]) {
+    const events: Array<AuthAuditInput> = []
+    const providerError = { status: 401, code: 'invalid_credentials' }
+    let observed = false
+    const result = await signInWithEmailPassword(
+      {
+        ...createAuthClient(),
+        signIn: { email: async () => ({ error: providerError }) },
+      },
+      {
+        email: 'synthetic@example.invalid',
+        password: 'synthetic-private-password',
+      },
+      createAuditContext(events),
+      (error) => {
+        assert.equal(error, providerError)
+        observed = true
+        if (throws) throw new Error('synthetic diagnostic unavailable')
+      },
+    )
+    assert.equal(observed, true)
+    assert.deepEqual(result, { ok: false, message: invalidLoginMessage })
+    assert.equal(events.length, 1)
+    assert.equal(events[0]?.metadata?.reasonCode, 'provider_rejected')
+    assert.doesNotMatch(
+      JSON.stringify(events),
+      /synthetic|private|invalid_credentials/,
+    )
+  }
+})
+
 test('login e logout bem-sucedidos não expõem dados de sessão', async () => {
   const auth = createAuthClient()
   const events: Array<AuthAuditInput> = []

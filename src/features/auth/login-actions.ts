@@ -133,10 +133,16 @@ export async function signInWithEmailPassword(
   auth: NeonAuthCredentialsClient,
   input: { email: string; password: string },
   audit?: AuthActionAuditContext,
+  onProviderRejection?: (error: unknown) => void,
 ) {
   try {
     const result = await auth.signIn.email(input)
     if (result.error) {
+      try {
+        onProviderRejection?.(result.error)
+      } catch {
+        // Diagnostic failure must not change the provider outcome or its audit.
+      }
       await recordAuthAction(
         audit,
         'login',

@@ -2,6 +2,19 @@
 
 ## Login do piloto em investigação — 26/10/2026
 
+Checkpoint de reserva: PR #82 preparada, 632 testes Node e qualidade/build
+isolado aprovados. CI do HEAD `71799f3`: 10/12 checks aprovados; dois jobs
+aguardam instalação do Chromium. CodeQL real da candidata: três análises sem
+resultados/erros/avisos, zero alertas. Não integrada nem publicada. Retomar
+após renovação da franquia, conforme [handoff](HANDOFF-PILOT-LOGIN-2026-10-26.md).
+
+Após redefinição confirmada e fim do primeiro cooldown, tentativa às 21:47
+alcançou o Auth e recebeu novo HTTP 401. Usuário digitou manualmente a senha;
+recuperação, destinatário e login correspondem à mesma conta. Novo bloqueio
+até 22:02:18 Brasília. Complemento seguro do código normalizado do SDK
+preparado para distinguir a categoria da recusa; CI/publicação pendentes.
+Login ainda sem aceite.
+
 Usuário relatou recusa no login; cadastro e vínculo ativo conferidos por leitura.
 Destino Auth efetivo confirmado por diagnóstico booleano, já desativado.
 Registro seguro do status HTTP de login integrado na PR #80 (`8261f5e`) e
