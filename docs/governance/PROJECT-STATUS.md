@@ -1,5 +1,21 @@
 # Estado canônico do projeto — Cacau v1
 
+## Notas reais: prévia aprovada e validação local — 27/10/2026
+
+Usuário validou embalagens e exclusões de consumo doméstico e autorizou o
+teste dos insumos selecionados. Três compras/sete linhas foram exercitadas
+pela rotina real de persistência em PostgreSQL 17 local descartável:
+conversões, datas, custo exato, três replays e três conflitos conferidos.
+O teste não cobre HTTP/Auth/UI publicados nem substitui a inclusão no piloto.
+
+O navegador controlável permanece sem sessão; o usuário está em outro
+dispositivo. Nenhuma entrada foi gravada por SQL, nenhum ator foi imitado e
+nenhuma proteção foi alterada. Releitura do piloto: zero compras, itens e
+movimentos de estoque. Plano comercial e relatório detalhado preservados
+privadamente; [recibo sanitizado](../../evidence/pilot-receipt-local-validation-2026-10-27.json).
+Próximo passo: autenticar a aba controlável, reconferir duplicidade e saldos,
+registrar pelo fluxo da aplicação e conferir autoria/estoque. I05 segue parcial.
+
 ## Entrada no piloto confirmada — 27/10/2026
 
 Usuário confirmou a entrada após a tentativa privada. Auditoria registrou

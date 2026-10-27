@@ -1,0 +1,46 @@
+{
+  "scope": "approved receipt subset validated against purchase persistence in disposable local PostgreSQL17",
+  "prepared_on": "2026-10-27",
+  "source_commit": "0830864059d12892f8bedcc9840aad398266567b",
+  "approved_plan_sha256": "e043c6007504335433c3b8a6f69abd56d5c7b2a8414ffad7f6557fad0fe8f01f",
+  "authorization": {
+    "user_approved_selected_ingredients": true,
+    "household_items_excluded": true,
+    "package_counts_confirmed": true,
+    "target": "isolated pilot"
+  },
+  "local_validation": {
+    "database": "disposable PostgreSQL17 bound to localhost",
+    "counts": {
+      "purchases": 3,
+      "items": 7,
+      "movements": 7,
+      "audits": 3,
+      "financial_events": 0
+    },
+    "date_preservation": true,
+    "exact_cost_reconciled": true,
+    "idempotent_replays_suppressed": 3,
+    "conflicting_replays_rejected": 3,
+    "synthetic_actor_only_in_local_fixture": true,
+    "container_stopped": true
+  },
+  "pilot_readback": {
+    "purchases": 0,
+    "purchase_items": 0,
+    "stock_movements": 0,
+    "proposed_cover_product_count": 0
+  },
+  "published_execution": {
+    "performed": false,
+    "reason": "No authenticated application session in the controllable browser; user is on another device",
+    "direct_sql_business_writes": false,
+    "auth_bypass": false
+  },
+  "limits": [
+    "Does not validate live HTTP/Auth/UI behavior",
+    "Does not register purchases in the pilot",
+    "Does not approve production, manufacture, sales or supplier payment"
+  ],
+  "next_step": "Authenticate the controllable pilot browser, recheck duplicates and balances, then register through the guarded application workflow and verify stock/audit. Keep commercial payload and receipt photos outside the public repository."
+}

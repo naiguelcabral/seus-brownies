@@ -1,5 +1,17 @@
 # Roadmap único — Cacau v1
 
+## I05: dados aprovados, rotina validada e execução publicada pendente — 27/10/2026
+
+Prévia de insumos das notas aprovada pelo usuário, com embalagens e exclusões
+confirmadas. Três compras/sete linhas validadas localmente em PostgreSQL 17
+descartável: quantidades/datas/custo exato e proteção contra repetição/conflito.
+O piloto permanece sem lançamentos; falta sessão autenticada na aba
+controlável. Não usar SQL para contornar RBAC nem atribuir ao agente a sessão
+do usuário em outro dispositivo. Reconferir catálogo, duplicidades e saldos
+antes de gravar pela aplicação. Cobertura Top Blend exige cadastro próprio;
+não alterar receitas por inferência. Produção/venda/pagamento não autorizados
+pela nota. [Evidência sanitizada](../../evidence/pilot-receipt-local-validation-2026-10-27.json).
+
 ## H01/I05: entrada recuperada e ensaio pendente — 27/10/2026
 
 Entrada confirmada pelo usuário e por `login/success` às 01:01 Brasília;
