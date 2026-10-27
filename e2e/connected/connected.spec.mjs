@@ -857,3 +857,110 @@ test('manager approves a verified registration through the real UI and requires 
     await targetContext.close()
   }
 })
+
+test('tablet batch uses guarded HTTP writes, persists exact totals and reopens without duplicates', async ({
+  page,
+}) => {
+  await identity(page, 'manager')
+  const category = await rpc(page, 'createCategory', { name: 'QA Batch only' })
+  expect(category.ok).toBe(true)
+  const manifest = {
+    version: 1,
+    targetOrigin: origin,
+    products: [
+      {
+        kind: 'new',
+        key: 'oil',
+        name: 'QA Batch oil',
+        sku: 'QA-BATCH-OIL',
+        type: 'ingredient',
+        unit: 'ml',
+        categoryId: category.value.id,
+        categoryName: 'QA Batch only',
+        description: 'Disposable connected fixture only',
+      },
+    ],
+    purchases: [
+      {
+        idempotencyKey: 'e90ec225-5ca6-4413-b0a4-194d6fe6f562',
+        supplierName: 'QA Batch supplier',
+        purchasedAt: '2026-09-02',
+        invoiceFileReference: 'QA-BATCH-ONLY-A',
+        notes: 'Local fixture only',
+        items: [{ productKey: 'oil', quantity: '900', totalAmount: '6.99' }],
+      },
+      {
+        idempotencyKey: 'c83c84de-3719-42e2-9586-2a81cce3a7b3',
+        supplierName: 'QA Batch supplier',
+        purchasedAt: '2026-09-03',
+        invoiceFileReference: 'QA-BATCH-ONLY-B',
+        notes: 'Local fixture only',
+        items: [{ productKey: 'oil', quantity: '1800', totalAmount: '13.98' }],
+      },
+    ],
+  }
+  const url =
+    '/compras#lote=' +
+    Buffer.from(JSON.stringify(manifest)).toString('base64url')
+  const before = await counters()
+  await page.setViewportSize({ width: 768, height: 1024 })
+  const preview = async () => {
+    await page.goto(url, { waitUntil: 'networkidle' })
+    await page
+      .getByRole('button', { name: 'Importar lote de compras', exact: true })
+      .click()
+    const dialog = page.getByRole('dialog', {
+      name: 'Importar lote de compras',
+      exact: true,
+    })
+    await dialog
+      .getByRole('button', { name: 'Conferir lote', exact: true })
+      .click()
+    await expect(
+      dialog.getByRole('region', { name: 'Conferência do lote' }),
+    ).toContainText('2 compras · Total: R$ 20,97')
+    return dialog
+  }
+  let dialog = await preview()
+  expect(await counters()).toEqual(before)
+  await dialog
+    .getByRole('button', { name: 'Confirmar e incluir compras', exact: true })
+    .click()
+  await expect(dialog.getByRole('status')).toContainText('Lote concluído')
+  expect(
+    await dialog.evaluate(
+      (element) => element.scrollWidth <= element.clientWidth,
+    ),
+  ).toBe(true)
+  const after = await counters()
+  expect(after.purchases - before.purchases).toBe(2)
+  expect(after.movements - before.movements).toBe(2)
+  expect(after.audit - before.audit).toBe(3)
+  expect(after.events).toBe(before.events)
+  const purchases = (
+    await pool.query(
+      'SELECT purchased_at::text day,total_amount::text total,created_by_auth_user_id actor FROM purchases WHERE idempotency_key=ANY($1::uuid[]) ORDER BY purchased_at',
+      [manifest.purchases.map((purchase) => purchase.idempotencyKey)],
+    )
+  ).rows
+  expect(purchases).toEqual([
+    { day: '2026-09-02', total: '6.99', actor: 'qa-manager' },
+    { day: '2026-09-03', total: '13.98', actor: 'qa-manager' },
+  ])
+  const stock = (
+    await pool.query(
+      "SELECT sum(m.quantity_delta)::text quantity,sum(m.allocated_cost)::text cost FROM stock_movements m JOIN products p ON p.id=m.product_id WHERE p.sku='QA-BATCH-OIL'",
+    )
+  ).rows[0]
+  expect(stock).toEqual({ quantity: '2700.000', cost: '20.97' })
+  await dialog.getByRole('button', { name: 'Fechar', exact: true }).click()
+  dialog = await preview()
+  await dialog
+    .getByRole('button', { name: 'Confirmar e incluir compras', exact: true })
+    .click()
+  await expect(dialog.getByRole('status')).toContainText('Lote concluído')
+  await expect(dialog.getByLabel('Resultado da inclusão')).toContainText(
+    'já registrada; sem duplicação',
+  )
+  expect(await counters()).toEqual(after)
+})
