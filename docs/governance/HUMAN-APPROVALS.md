@@ -1,5 +1,15 @@
 # Ações que exigem aprovação humana — Cacau v1
 
+## Automação na sessão do tablet — 27/10/2026
+
+Usuário pediu: “Esse registro de compras eu quero que você faça de forma
+automática” e informou não poder acessar o computador. Preparação do fluxo de
+importação assistida para usar a sessão autenticada do próprio tablet, com
+conferência e confirmação antes da inclusão. O escopo de dados aprovado
+abaixo permanece o mesmo. Não autoriza fabricar principal, conceder acesso,
+contornar autenticação, gravar por SQL ou incluir dados em outra cópia.
+Documentação: [contrato e retomada](PURCHASE-BATCH-IMPORT.md).
+
 ## Ensaio das notas filtradas — 27/10/2026
 
 Após prévia extraída de três imagens, o usuário confirmou embalagens,

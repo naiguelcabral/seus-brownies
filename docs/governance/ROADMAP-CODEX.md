@@ -1,5 +1,14 @@
 # Roadmap único — Cacau v1
 
+## I05: alternativa autenticada pelo tablet — 27/10/2026
+
+Preparação de [importação assistida](PURCHASE-BATCH-IMPORT.md) para executar
+as compras aprovadas na sessão do usuário, sem depender do navegador do
+computador. Conferência explícita, cadastro normal e transações individuais
+com UUIDs estáveis. Preservar exclusões e leitura independente antes/depois.
+Candidata ainda depende de validação, integração e publicação; nenhuma
+inclusão real decorre da preparação. I05 permanece parcial.
+
 ## I05: dados aprovados, rotina validada e execução publicada pendente — 27/10/2026
 
 Prévia de insumos das notas aprovada pelo usuário, com embalagens e exclusões

@@ -1,5 +1,15 @@
 # Estado canônico do projeto — Cacau v1
 
+## Importação pelo tablet em preparação — 27/10/2026
+
+Usuário solicitou lançamento automático e informou indisponibilidade do
+computador. Candidata acrescenta [importação assistida em lote](PURCHASE-BATCH-IMPORT.md)
+em Compras: conferência sem gravação, confirmação autenticada, cadastro
+explícito e compras sequenciais pelas operações existentes. Manifesto privado
+com referências estáveis permite retomada; não há transferência de sessão,
+SQL direto, nova API ou permissão. Validação/integração/publicação da candidata
+e inclusão real continuam pendentes. I05 permanece parcial.
+
 ## Notas reais: prévia aprovada e validação local — 27/10/2026
 
 Usuário validou embalagens e exclusões de consumo doméstico e autorizou o
@@ -13,8 +23,9 @@ dispositivo. Nenhuma entrada foi gravada por SQL, nenhum ator foi imitado e
 nenhuma proteção foi alterada. Releitura do piloto: zero compras, itens e
 movimentos de estoque. Plano comercial e relatório detalhado preservados
 privadamente; [recibo sanitizado](../../evidence/pilot-receipt-local-validation-2026-10-27.json).
-Próximo passo: autenticar a aba controlável, reconferir duplicidade e saldos,
-registrar pelo fluxo da aplicação e conferir autoria/estoque. I05 segue parcial.
+Próximo passo atualizado: disponibilizar o importador para a sessão própria
+do tablet, reconferir duplicidade e saldos, incluir e conferir autoria/estoque.
+I05 segue parcial.
 
 ## Entrada no piloto confirmada — 27/10/2026
 
