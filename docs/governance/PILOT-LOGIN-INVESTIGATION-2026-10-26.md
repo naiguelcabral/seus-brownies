@@ -1,5 +1,26 @@
 # Investigação do login do piloto — 26/10/2026
 
+## Entrada confirmada — 27/10/2026, 01:01 Brasília
+
+Usuário informou “Agora funcionou” após a solicitação de tentativa privada.
+Auditoria registrou `login/success` às `2026-10-27T04:01:38.159Z`, com ator
+presente e correspondência ao sujeito da recuperação. Leitura do último
+registro de proteção às 04:01:38.209Z confirmou zero falhas consecutivas e
+cooldown nulo, atualizados pelo login normal, sem alteração manual de contador.
+
+Antes, às 04:01:24.843Z, o guard exigiu verificação (`request_limit`); a
+tentativa seguinte alcançou o provedor e teve sucesso. Na versão `0814fb16`,
+as chamadas da sessão continuaram com HTTP 200 e nenhum evento de recusa
+`auth.login.provider`, `auth.login.rejection` ou `auth.session.provider` foi
+encontrado na consulta correlacionada. Nenhum dado de sessão foi coletado.
+
+Aceite de entrada pontual confirmado. A causa das recusas anteriores continua
+inconclusiva: recuperação, expiração do cooldown e janela privada precederam o
+sucesso, enquanto a PR #82 acrescentou somente observabilidade. Não atribuir
+o resultado a uma correção funcional de senha ou cookies não implementada.
+Logout, revogação, replay e estabilidade continuam separados. Retomar o ensaio
+manual das notas históricas sem duplicar fatos já presentes na cópia.
+
 ## Retomada e publicação do código da recusa — 27/10/2026
 
 Franquia oficial renovada a 100%, árvore limpa e HEAD final da PR #82
@@ -21,9 +42,9 @@ três limitadores e redação de query foram conferidos. Raiz307/login200/reset2
 páginas Auth. Nenhum novo reset ou alteração de perfil/banco.
 
 Não havia cooldown ativo na leitura anterior à publicação. Solicitada uma
-tentativa em janela privada com a última senha redefinida, seguida da
-correlação de `auth.login.rejection`. Login ainda sem aceite; o diagnóstico
-publicado não comprova a causa nem resolve por si a recusa.
+tentativa em janela privada com a última senha redefinida, concluída conforme
+o aceite acima. O diagnóstico publicado não comprova a causa nem resolve
+por si a recusa anterior.
 [Recibo estruturado](../../evidence/pilot-login-code-publication-2026-10-27.json).
 
 ## Persistência após recuperação e fim do primeiro cooldown

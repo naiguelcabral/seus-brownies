@@ -1,13 +1,24 @@
 # Estado canônico do projeto — Cacau v1
 
-## Login do piloto em investigação — 26/10/2026
+## Entrada no piloto confirmada — 27/10/2026
+
+Usuário confirmou a entrada após a tentativa privada. Auditoria registrou
+`login/success` às `2026-10-27T04:01:38.159Z` (01:01 Brasília), com ator
+identificado e correspondência à identidade recuperada. Contador zerado pelo
+fluxo normal, sem cooldown; versão publicada `0814fb16`.
+O acesso está recuperado neste teste. A causa exata das recusas anteriores
+permanece inconclusiva: o incremento de código foi de observabilidade.
+Logout, revogação, replay, estabilidade e ensaio de notas mantêm seus gates.
+[Evidência](../../evidence/pilot-login-code-publication-2026-10-27.json).
+
+## Histórico da investigação e publicação — 26–27/10/2026
 
 Retomada em 27/10 após renovação oficial de 100%. PR #82 integrada em
 `1d0218e`, com 12 checks e três análises CodeQL reais aprovados, zero alertas.
 Main: CI, negócio/navegador e CodeQL aprovados. Código publicado somente no
 piloto às 00:50 Brasília, versão `0814fb16`, 100%, com seis nomes de secrets e
-limites conferidos. Páginas públicas e headers aprovados. Nova tentativa em
-janela privada solicitada; login autenticado ainda sem aceite.
+limites conferidos. Páginas públicas e headers aprovados. A tentativa em
+janela privada foi confirmada conforme o aceite acima.
 [Recibo](../../evidence/pilot-login-code-publication-2026-10-27.json).
 
 Após redefinição confirmada e fim do primeiro cooldown, tentativa às 21:47

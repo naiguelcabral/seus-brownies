@@ -36,8 +36,20 @@
     "pilot_banner_on_auth_pages": true
   },
   "incident": {
-    "state": "awaiting private-window user retry and normalized code correlation",
-    "authenticated_acceptance": false,
+    "state": "login restored in user-confirmed private-window test",
+    "authenticated_acceptance": true,
+    "accepted_scope": "single authenticated login; operational pilot and stability remain pending",
+    "audit_success_at": "2026-10-27T04:01:38.159Z",
+    "actor_present": true,
+    "matches_recovered_identity": true,
+    "login_attempt_state_after_success": {
+      "last_attempt_at": "2026-10-27T04:01:38.209Z",
+      "consecutive_failures": 0,
+      "cooldown_until": null,
+      "manual_counter_change": false
+    },
+    "root_cause_of_prior_rejections": "inconclusive",
+    "provider_rejection_events_in_correlated_success_window": 0,
     "active_cooldowns_before_publication": 0,
     "agent_password_reset": false,
     "role_change": false,
