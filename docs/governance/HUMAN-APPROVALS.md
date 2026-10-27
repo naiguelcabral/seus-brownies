@@ -1,5 +1,20 @@
 # Ações que exigem aprovação humana — Cacau v1
 
+## Ensaio das notas filtradas — 27/10/2026
+
+Após prévia extraída de três imagens, o usuário confirmou embalagens,
+excluiu itens domésticos e autorizou: “O recheio está correto, é para o
+brownie. Pode seguir com o teste”. Escopo: os insumos selecionados, no piloto
+isolado, com data e valores originais, conferência de duplicidade e fluxo
+auditado. Não inclui os itens excluídos, produção/venda/pagamento presumidos,
+mudança de receita, concessão de acesso ou escrita na fonte original.
+
+Validação adicional da persistência realizada em laboratório local descartável.
+Inclusão publicada ainda pendente da sessão na aba controlável; não gravar
+diretamente por SQL nem fabricar principal para substituir a autenticação.
+Fotos e valores comerciais permanecem fora do repositório público.
+[Recibo sem dados comerciais](../../evidence/pilot-receipt-local-validation-2026-10-27.json).
+
 ## Continuidade: falha de login do piloto — 26/10/2026
 
 Usuário relatou erro no login e confirmou o uso da mesma conta do endereço
