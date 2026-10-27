@@ -1,5 +1,22 @@
 # Estado canônico do projeto — Cacau v1
 
+## Ensaio de compras confirmado e reconciliado — 27/10/2026
+
+Usuário confirmou “Deu certo” após a orientação de colagem do mesmo manifesto
+na sessão do tablet; o link por fragmento havia aberto o importador
+sem dados. Leitura independente do piloto confirmou três compras, sete itens,
+sete movimentos e seis insumos com quantidades, totais, datas originais e
+custos racionais exatamente iguais ao plano privado aprovado. Cadastro novo
+único e três compras têm as quatro auditorias esperadas, com o mesmo ator
+autenticado e acesso de gerente ativo. Nenhuma duplicação observada.
+
+Referências do manifesto consumidas; não gerar novas chaves para repetir
+essas notas. Dados comerciais e relatório detalhado ficam privados;
+[recibo sanitizado](../../evidence/pilot-receipt-purchase-acceptance-2026-10-27.json).
+Fase de compras concluída. I05 continua parcial: produção, venda e aceite
+operacional completo permanecem separados. Não houve pagamento, produção,
+venda, mudança de receita, SQL de escrita pelo agente ou nova publicação.
+
 ## Importação pelo tablet publicada — 27/10/2026
 
 Usuário solicitou lançamento automático e informou indisponibilidade do
@@ -13,7 +30,7 @@ aprovados. Fonte `2cd8ff6` publicada no piloto às 12:08 Brasília, versão
 `0cdcdb1d` em 100%; configurações preservadas. Login público renderizado e
 Compras continua exigindo sessão. Leitura posterior: zero compras/itens/movimentos.
 Link privado do lote entregue para conferência e confirmação pela sessão
-do tablet. Inclusão real e aceite I05 continuam pendentes.
+do tablet. A inclusão foi confirmada no checkpoint acima; I05 segue parcial.
 [Recibo sanitizado](../../evidence/pilot-purchase-batch-publication-2026-10-27.json).
 
 ## Notas reais: prévia aprovada e validação local — 27/10/2026
@@ -29,9 +46,8 @@ dispositivo. Nenhuma entrada foi gravada por SQL, nenhum ator foi imitado e
 nenhuma proteção foi alterada. Releitura do piloto: zero compras, itens e
 movimentos de estoque. Plano comercial e relatório detalhado preservados
 privadamente; [recibo sanitizado](../../evidence/pilot-receipt-local-validation-2026-10-27.json).
-Próximo passo atualizado: disponibilizar o importador para a sessão própria
-do tablet, reconferir duplicidade e saldos, incluir e conferir autoria/estoque.
-I05 segue parcial.
+Esse checkpoint local foi sucedido pela publicação e execução real descritas
+acima. O recibo local continua sendo evidência histórica; I05 segue parcial.
 
 ## Entrada no piloto confirmada — 27/10/2026
 

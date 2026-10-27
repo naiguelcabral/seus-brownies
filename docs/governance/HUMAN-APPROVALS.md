@@ -1,5 +1,17 @@
 # Ações que exigem aprovação humana — Cacau v1
 
+## Confirmação das compras na sessão do tablet — 27/10/2026
+
+Usuário informou “Deu certo” após a alternativa por colagem do lote já
+aprovado. Leitura independente confirmou três compras, sete itens/movimentos,
+seis saldos e um cadastro novo, com datas, quantidades e custos exatos iguais
+ao manifesto. Auditorias de cadastro e compras correspondem ao ator
+autenticado com perfil de gerente ativo; não houve fabricação de principal
+ou SQL de escrita pelo agente. Referências consumidas, não repetir as notas
+com novas chaves. Esse aceite encerra somente a fase de compras; não inclui
+produção, venda, pagamento ou aceite integral de I05/I04.
+[Recibo sem dados comerciais](../../evidence/pilot-receipt-purchase-acceptance-2026-10-27.json).
+
 ## Automação na sessão do tablet — 27/10/2026
 
 Usuário pediu: “Esse registro de compras eu quero que você faça de forma
@@ -26,8 +38,8 @@ auditado. Não inclui os itens excluídos, produção/venda/pagamento presumidos
 mudança de receita, concessão de acesso ou escrita na fonte original.
 
 Validação adicional da persistência realizada em laboratório local descartável.
-Inclusão publicada ainda pendente da confirmação na sessão do usuário; não gravar
-diretamente por SQL nem fabricar principal para substituir a autenticação.
+Inclusão publicada confirmada no checkpoint acima. Não gravar diretamente
+por SQL nem fabricar principal para substituir a autenticação.
 Fotos e valores comerciais permanecem fora do repositório público.
 [Recibo sem dados comerciais](../../evidence/pilot-receipt-local-validation-2026-10-27.json).
 

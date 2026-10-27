@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "scope": "Approved receipt purchase phase completed in isolated pilot; not complete operational pilot acceptance",
+  "collection_at": "2026-10-27T15:32:00.641Z",
+  "environment": {
+    "worker": "cacau-v1-piloto",
+    "version_id": "0cdcdb1d-3d89-4b0b-972c-51f79806c76f",
+    "project_id": "steep-brook-51659857",
+    "branch_id": "br-blue-shadow-ackpk8ex",
+    "database_name": "neondb"
+  },
+  "user_confirmation": "Deu certo",
+  "manifest_sha256": "a8019136594b4a679804beec82683bdb4780948656f6b1c5cdc359890d7fa00e",
+  "private_verification_report_sha256": "9dcf2f526b818139fa346b651298cc14588825a6669ec0c1183efac07e4910b4",
+  "verification": {
+    "purchases": 3,
+    "purchase_items": 7,
+    "stock_movements": 7,
+    "distinct_stock_products": 6,
+    "new_products": 1,
+    "purchase_audit_events": 3,
+    "product_audit_events": 1,
+    "quantities_match_approved_manifest": true,
+    "totals_match_approved_manifest": true,
+    "exact_costs_match_approved_manifest": true,
+    "original_purchase_dates_preserved": true,
+    "stock_balances_match_approved_manifest": true,
+    "no_duplicate_entries_observed": true,
+    "purchase_actor_matches_audit": true,
+    "actor_role": "manager",
+    "actor_access_active": true,
+    "reference_keys_consumed": true
+  },
+  "execution": {
+    "user_authenticated_tablet": true,
+    "user_success_after_paste_instructions": true,
+    "fragment_delivery_failed": true,
+    "sql_writes_by_agent": false,
+    "authentication_bypass": false,
+    "live_replay_exercised": false
+  },
+  "scope_limits": {
+    "financial_events": 0,
+    "production_batches": 0,
+    "sales": 0,
+    "recipe_changes": false,
+    "production_deployment": false,
+    "commercial_data_in_public_repository": false,
+    "complete_i05_acceptance": false
+  }
+}

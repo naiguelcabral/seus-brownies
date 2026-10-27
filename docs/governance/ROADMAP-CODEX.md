@@ -1,5 +1,19 @@
 # Roadmap único — Cacau v1
 
+## I05: fase de compras executada e conferida — 27/10/2026
+
+Após abertura sem dados pelo link e orientação de colagem do mesmo lote,
+usuário confirmou sucesso. Leitura independente reconciliou
+três compras/sete itens/sete movimentos/seis insumos com o plano aprovado:
+quantidades, totais, datas, custo exato, cadastro único e quatro auditorias com
+ator autenticado coerente. Sem duplicação observada; referências consumidas.
+[Recibo sanitizado](../../evidence/pilot-receipt-purchase-acceptance-2026-10-27.json).
+
+Fase de compras concluída; I05 permanece parcial para produção, venda e
+aceite completo. Próxima fase exige fatos operacionais próprios, sem inventar
+fornada/venda/pagamento ou repetir estas notas. Não alterar receitas por
+inferência. RPO/RTO e demais gates anteriores não são encerrados por este ensaio.
+
 ## I05: alternativa autenticada pelo tablet — 27/10/2026
 
 [Importação assistida](PURCHASE-BATCH-IMPORT.md) integrada pela PR #85 para executar
@@ -10,8 +24,8 @@ Doze checks aprovados, CodeQL sem alertas e ensaio HTTP/UI/PostgreSQL 17
 incluindo retomada sem duplicação. Publicada no piloto na versão `0cdcdb1d`,
 100%, em 27/10 às 12:08 Brasília. Link do manifesto privado entregue ao
 usuário; leitura posterior à publicação permanece sem compras/itens/movimentos.
-Próximo passo: confirmação pela sessão do tablet e conferência independente
-de estoque, valores, autoria e auditoria. I05 permanece parcial.
+A confirmação pela sessão do tablet e a conferência independente foram
+concluídas no checkpoint acima. I05 permanece parcial.
 
 ## I05: dados aprovados, rotina validada e execução publicada pendente — 27/10/2026
 
