@@ -3,9 +3,14 @@
 ## Prioridade H01/I05: recusa no login do piloto — 26/10/2026
 
 Cadastro/vínculo ativo e destino Auth efetivo conferidos, sem alterar conta.
-Diagnóstico seguro do status HTTP de login preparado para revisão e publicação
-somente no piloto. Correlacionar nova tentativa real antes de atribuir causa ou
-declarar login corrigido. [Investigação](PILOT-LOGIN-INVESTIGATION-2026-10-26.md).
+Diagnóstico seguro do status HTTP de login integrado na PR #80 (`8261f5e`) e
+publicado somente no piloto em `62efd08b`, com CI/CodeQL aprovados.
+Nova tentativa correlacionada: HTTP 401 do Auth, seguido de cooldown de 15
+minutos após cinco falhas, até 21:36 Brasília. Recuperação pelo próprio usuário
+concluída às 21:25; novas tentativas ainda barradas antes do provedor pelo
+cooldown. Confirmar entrada após 21:37, com a nova senha, antes de declarar login
+corrigido. A presença do widget não comprova Siteverify/replay.
+[Investigação](PILOT-LOGIN-INVESTIGATION-2026-10-26.md).
 O ensaio de notas históricas aguarda o acesso autenticado.
 
 ## Estado das cinco etapas após a publicação — 26/10/2026

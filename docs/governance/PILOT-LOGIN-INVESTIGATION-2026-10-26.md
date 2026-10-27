@@ -1,5 +1,35 @@
 # Investigação do login do piloto — 26/10/2026
 
+## Nova tentativa correlacionada — 21:21 Brasília
+
+O usuário relatou que o verificador apareceu, mas a entrada não foi concluída.
+Na versão publicada `62efd08b`, a telemetria capturou `auth.login.provider`,
+etapa `http_error`, HTTP **401**, às `2026-10-27T00:21:14.862Z`.
+A auditoria registrou `login/failure/provider_rejected` às 00:21:14.943Z
+e `login/blocked/login_cooldown` às 00:21:21.916Z.
+
+Leitura agregada confirmou um cooldown ativo, com término às
+`2026-10-27T00:36:15.010Z` (21:36:15 de 26/10 em Brasília). A política
+vigente bloqueia novas tentativas por 15 minutos após cinco falhas consecutivas.
+Esse bloqueio é avaliado antes do Siteverify: a presença do widget não comprova
+validação bem-sucedida nem replay do Turnstile nesta tentativa.
+
+Está comprovada a recusa HTTP do provedor seguida da proteção temporária.
+Não há base para atribuir a recusa a DNS, indisponibilidade ou ao widget, nem
+para afirmar qual diferença nas credenciais a causou. Nenhuma senha foi lida.
+
+Orientado o uso de **Esqueci a senha** pelo próprio usuário no piloto e uma
+tentativa após 21:37 Brasília, com a senha redefinida. As cópias Auth são
+independentes, conforme o [contrato de branching do Neon Auth](https://neon.com/docs/auth/branching-authentication);
+a recuperação do piloto não altera a senha no endereço anterior.
+O usuário confirmou recebimento e redefinição, com auditoria de solicitação
+bem-sucedida às `2026-10-27T00:24:29.544Z` e conclusão bem-sucedida às
+`2026-10-27T00:25:03.425Z`. Quatro tentativas seguintes, entre 00:25:20 e
+00:25:50Z, foram bloqueadas por `login_cooldown`, sem nova recusa do Auth:
+a nova senha ainda não chegou ao provedor para validação. Orientado aguardar
+21:37 Brasília antes de tentar uma vez. Login autenticado continua pendente.
+Nenhum reset foi disparado pelo agente, contador removido ou proteção afrouxada.
+
 ## Ocorrência e evidências
 
 Após a publicação, o usuário relatou a mensagem genérica de credenciais e
@@ -18,7 +48,7 @@ do piloto continua pendente; o smoke público não validou senha nem sessão rea
 - Os erros ociosos de pool observados não explicam por si sós a recusa do
   provedor; a causa do login ainda não foi determinada.
 
-## Diagnóstico mínimo preparado
+## Diagnóstico mínimo publicado
 
 O logger anterior observava somente `/get-session`; descartava o status do
 login por senha. A alteração estende a lista de operações permitidas para
@@ -31,12 +61,32 @@ metadados arbitrários. Nenhuma resposta bruta do provedor é registrada.
 
 A mudança preserva autenticação, perfis, mensagens públicas e limites. Não há
 migration, reset de senha, liberação de conta ou alteração de dados de negócio.
-Após revisão/CI e publicação somente no piloto, uma tentativa do usuário será
-necessária para correlacionar o status real e orientar a correção.
+Uma tentativa do usuário foi solicitada para correlacionar o status real e
+orientar a correção. A publicação do diagnóstico não encerra o incidente.
 
 Validação local: 629 testes Node aprovados, incluindo os sete casos do adaptador
 de sessão/provedor; lint, tipos e formato aprovados. Knip mantém quatro achados
-conhecidos, sem novo achado. Build isolado e CI/CodeQL ainda pendentes.
+conhecidos, sem novo achado. Build isolado do piloto aprovado.
+
+PR [#80](https://github.com/naiguelcabral/seus-brownies/pull/80), HEAD
+`057bc9f24f5fd351b2718c9c5cf6371d672361ce`, integrada em
+`8261f5e01170c6f5ea3b8a94bdfccefd5776f040` após 12 checks aprovados. As três
+análises CodeQL da PR e da main têm zero resultados/erros/avisos e nenhum
+alerta aberto. Os três workflows da main também passaram:
+
+- [CI](https://github.com/naiguelcabral/seus-brownies/actions/runs/40420128028).
+- [CodeQL](https://github.com/naiguelcabral/seus-brownies/actions/runs/40420128020).
+- [Negócio e navegador isolados](https://github.com/naiguelcabral/seus-brownies/actions/runs/40420127998).
+
+Publicação somente em `cacau-v1-piloto`, às `2026-10-26T23:32:35.32084Z`
+(20:32 Brasília), versão `62efd08b-496b-4868-abe1-9ec10513cfdb`, deployment
+`411c73d8-7f8b-49e9-b549-fd55e3c256dd`, 100%. Os seis nomes de secrets foram
+relidos e não há binding temporário de diagnóstico do destino. GETs públicos:
+raiz307, login200, redefinição200, `no-store` e `no-referrer`; páginas com faixa
+do piloto. CSP em report-only e demais headers de proteção presentes.
+Essas leituras não validam login autenticado.
+
+Fonte e resultados resumidos no [recibo](../../evidence/pilot-login-diagnostic-2026-10-26.json).
 
 ## Limpeza da configuração temporária
 
