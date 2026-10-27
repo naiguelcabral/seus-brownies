@@ -2,6 +2,11 @@
 
 ## Prioridade H01/I05: recusa no login do piloto — 26/10/2026
 
+PR #82 preparada e pausada por reserva oficial de 3%; 632 testes locais e
+build aprovados. CI ainda com dois instaladores Chromium pendentes no HEAD
+`71799f3`. Integração/publicação e nova correlação continuam pendentes.
+[Retomada exata](HANDOFF-PILOT-LOGIN-2026-10-26.md).
+
 Persistência às 21:47 após reset e primeiro cooldown: novo HTTP 401 do Auth,
 com senha digitada manualmente e identidade da recuperação conferida. Novo
 cooldown até 22:02:18 Brasília. Preparar/publicar o código normalizado da
