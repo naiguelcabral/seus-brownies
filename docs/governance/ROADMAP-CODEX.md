@@ -2,10 +2,12 @@
 
 ## Prioridade H01/I05: recusa no login do piloto — 26/10/2026
 
-PR #82 preparada e pausada por reserva oficial de 3%; 632 testes locais e
-build aprovados. CI ainda com dois instaladores Chromium pendentes no HEAD
-`71799f3`. Integração/publicação e nova correlação continuam pendentes.
-[Retomada exata](HANDOFF-PILOT-LOGIN-2026-10-26.md).
+PR #82 integrada em `1d0218e` e publicada somente no piloto em `0814fb16`,
+após renovação oficial de 100% em 27/10. 632 testes locais/build, 12 checks da
+PR e três workflows da main aprovados; CodeQL real sem achados/alertas.
+Nova tentativa privada solicitada para correlacionar `auth.login.rejection`.
+Login e ensaio continuam sem aceite. Não repetir reset como solução presumida.
+[Recibo](../../evidence/pilot-login-code-publication-2026-10-27.json).
 
 Persistência às 21:47 após reset e primeiro cooldown: novo HTTP 401 do Auth,
 com senha digitada manualmente e identidade da recuperação conferida. Novo

@@ -1,5 +1,31 @@
 # Investigação do login do piloto — 26/10/2026
 
+## Retomada e publicação do código da recusa — 27/10/2026
+
+Franquia oficial renovada a 100%, árvore limpa e HEAD final da PR #82
+`eed552c5d8efe677779bb0df521026fea63cf4fe` reconferido. Os 12 checks passaram;
+três análises CodeQL da candidata `2b9e9a896a5ada75d423951a15e3eff833c9f46e`
+sem resultados/erros/avisos, zero alertas e nenhuma thread de revisão.
+
+Integração em `1d0218e11b1b2e23d534b30eb83e70eaf96c11f0`. Os três workflows
+da main passaram: CI `40446153616`, CodeQL `40446153596`, negócio/navegador
+`40446153547`; três análises reais da main também sem resultados/erros/avisos,
+zero alertas. Qualidade/build isolado e 632 testes locais já aprovados.
+
+Publicação somente em `cacau-v1-piloto`, às
+`2026-10-27T03:50:51.494365Z` (00:50 Brasília), versão
+`0814fb16-3da0-4f71-bcee-9ab746cb1eb0`, deployment
+`cac81a0b-cf7e-4c4a-8ba0-67ed4b08fe87`, 100%. Os seis nomes de secrets,
+três limitadores e redação de query foram conferidos. Raiz307/login200/reset200,
+`no-store`, `no-referrer` e CSP report-only presentes; faixa do piloto nas
+páginas Auth. Nenhum novo reset ou alteração de perfil/banco.
+
+Não havia cooldown ativo na leitura anterior à publicação. Solicitada uma
+tentativa em janela privada com a última senha redefinida, seguida da
+correlação de `auth.login.rejection`. Login ainda sem aceite; o diagnóstico
+publicado não comprova a causa nem resolve por si a recusa.
+[Recibo estruturado](../../evidence/pilot-login-code-publication-2026-10-27.json).
+
 ## Persistência após recuperação e fim do primeiro cooldown
 
 Às `2026-10-27T00:47:18.612Z` (21:47 Brasília), nova tentativa alcançou
