@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useId, useRef, useState } from 'react'
 import { useServerFn } from '@tanstack/react-start'
 import { useRouter } from '@tanstack/react-router'
 import { OperationDialog } from './OperationDialog'
@@ -34,6 +34,7 @@ export function PurchaseBatchImporter({
   canCreateProducts: boolean
 }) {
   const router = useRouter()
+  const textId = useId()
   const find = useServerFn(listProducts)
   const categories = useServerFn(listCategories)
   const create = useServerFn(createProduct)
@@ -194,15 +195,16 @@ export function PurchaseBatchImporter({
                   <summary className="cursor-pointer text-sm font-bold">
                     Ou cole os dados do lote
                   </summary>
-                  <label className="mt-2 block text-sm">
-                    Dados do lote
+                  <div className="mt-2 text-sm">
+                    <label htmlFor={textId}>Dados do lote</label>
                     <textarea
+                      id={textId}
                       className="field mt-1 block min-h-32 w-full font-mono text-xs"
                       value={text}
                       maxLength={maxPurchaseBatchBytes}
                       onChange={(event) => changeText(event.target.value)}
                     />
-                  </label>
+                  </div>
                 </details>
                 {text ? (
                   <p className="text-sm">
