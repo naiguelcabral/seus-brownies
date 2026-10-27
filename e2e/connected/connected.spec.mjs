@@ -939,13 +939,13 @@ test('tablet batch uses guarded HTTP writes, persists exact totals and reopens w
   expect(after.events).toBe(before.events)
   const purchases = (
     await pool.query(
-      'SELECT purchased_at::text day,total_amount::text total,created_by_auth_user_id actor FROM purchases WHERE idempotency_key=ANY($1::uuid[]) ORDER BY purchased_at',
+      'SELECT purchased_at::text AS purchase_date,total_amount::text AS total,created_by_auth_user_id AS actor FROM purchases WHERE idempotency_key=ANY($1::uuid[]) ORDER BY purchased_at',
       [manifest.purchases.map((purchase) => purchase.idempotencyKey)],
     )
   ).rows
   expect(purchases).toEqual([
-    { day: '2026-09-02', total: '6.99', actor: 'qa-manager' },
-    { day: '2026-09-03', total: '13.98', actor: 'qa-manager' },
+    { purchase_date: '2026-09-02', total: '6.99', actor: 'qa-manager' },
+    { purchase_date: '2026-09-03', total: '13.98', actor: 'qa-manager' },
   ])
   const stock = (
     await pool.query(
