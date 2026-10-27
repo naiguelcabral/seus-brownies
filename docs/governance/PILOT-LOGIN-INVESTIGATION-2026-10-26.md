@@ -22,7 +22,12 @@ Orientado o uso de **Esqueci a senha** pelo próprio usuário no piloto e uma
 tentativa após 21:37 Brasília, com a senha redefinida. As cópias Auth são
 independentes, conforme o [contrato de branching do Neon Auth](https://neon.com/docs/auth/branching-authentication);
 a recuperação do piloto não altera a senha no endereço anterior.
-Recebimento do e-mail, redefinição e login autenticado continuam pendentes.
+O usuário confirmou recebimento e redefinição, com auditoria de solicitação
+bem-sucedida às `2026-10-27T00:24:29.544Z` e conclusão bem-sucedida às
+`2026-10-27T00:25:03.425Z`. Quatro tentativas seguintes, entre 00:25:20 e
+00:25:50Z, foram bloqueadas por `login_cooldown`, sem nova recusa do Auth:
+a nova senha ainda não chegou ao provedor para validação. Orientado aguardar
+21:37 Brasília antes de tentar uma vez. Login autenticado continua pendente.
 Nenhum reset foi disparado pelo agente, contador removido ou proteção afrouxada.
 
 ## Ocorrência e evidências

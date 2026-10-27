@@ -8,8 +8,9 @@ Registro seguro do status HTTP de login integrado na PR #80 (`8261f5e`) e
 publicado somente no piloto, versão `62efd08b`, 100% às 20:32 Brasília.
 CI/CodeQL da PR e main aprovados, smoke público conferido. Nova tentativa real
 capturou recusa HTTP 401 às 21:21 e cooldown de 15 minutos após cinco falhas,
-até 21:36 Brasília. Orientada recuperação pelo próprio usuário no piloto;
-recebimento, redefinição e acesso autenticado ainda pendentes. A validação real
+até 21:36 Brasília. Recuperação pelo próprio usuário concluída às 21:25;
+tentativas posteriores ainda bloqueadas antes do Auth. Aguardar 21:37 e
+confirmar acesso com a nova senha. A validação real
 do Turnstile não foi comprovada pela presença do widget.
 [Evidências e escopo](PILOT-LOGIN-INVESTIGATION-2026-10-26.md).
 

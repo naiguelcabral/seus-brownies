@@ -42,7 +42,7 @@
     "pilot_banner_on_auth_pages": true
   },
   "incident": {
-    "state": "awaiting user password recovery and authenticated acceptance",
+    "state": "password recovery succeeded; awaiting login after cooldown expiry",
     "root_cause": "provider HTTP 401 confirmed; exact credential rejection cause remains unverified",
     "provider_rejection": {
       "timestamp": "2026-10-27T00:21:14.862Z",
@@ -60,6 +60,13 @@
       "cooldown_until": "2026-10-27T00:36:15.010Z",
       "siteverify_before_cooldown_check": false,
       "real_turnstile_acceptance": "not yet confirmed"
+    },
+    "self_service_recovery": {
+      "requested_successfully_at": "2026-10-27T00:24:29.544Z",
+      "completed_successfully_at": "2026-10-27T00:25:03.425Z",
+      "post_reset_login_attempts": 4,
+      "post_reset_login_outcomes": "login_cooldown; new password not yet tested by provider",
+      "latest_blocked_login_at": "2026-10-27T00:25:50.243Z"
     },
     "authenticated_acceptance": false,
     "password_reset_by_agent": false,
