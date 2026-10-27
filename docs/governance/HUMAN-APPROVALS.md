@@ -26,7 +26,7 @@ auditado. Não inclui os itens excluídos, produção/venda/pagamento presumidos
 mudança de receita, concessão de acesso ou escrita na fonte original.
 
 Validação adicional da persistência realizada em laboratório local descartável.
-Inclusão publicada ainda pendente da sessão na aba controlável; não gravar
+Inclusão publicada ainda pendente da confirmação na sessão do usuário; não gravar
 diretamente por SQL nem fabricar principal para substituir a autenticação.
 Fotos e valores comerciais permanecem fora do repositório público.
 [Recibo sem dados comerciais](../../evidence/pilot-receipt-local-validation-2026-10-27.json).

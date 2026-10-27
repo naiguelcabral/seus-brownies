@@ -18,8 +18,9 @@ de estoque, valores, autoria e auditoria. I05 permanece parcial.
 Prévia de insumos das notas aprovada pelo usuário, com embalagens e exclusões
 confirmadas. Três compras/sete linhas validadas localmente em PostgreSQL 17
 descartável: quantidades/datas/custo exato e proteção contra repetição/conflito.
-O piloto permanece sem lançamentos; falta sessão autenticada na aba
-controlável. Não usar SQL para contornar RBAC nem atribuir ao agente a sessão
+Após a validação local, faltava sessão autenticada na aba controlável;
+a alternativa atual é o importador na sessão do tablet, publicado acima.
+Não usar SQL para contornar RBAC nem atribuir ao agente a sessão
 do usuário em outro dispositivo. Reconferir catálogo, duplicidades e saldos
 antes de gravar pela aplicação. Cobertura Top Blend exige cadastro próprio;
 não alterar receitas por inferência. Produção/venda/pagamento não autorizados
