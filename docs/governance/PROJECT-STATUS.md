@@ -1,14 +1,20 @@
 # Estado canônico do projeto — Cacau v1
 
-## Importação pelo tablet em preparação — 27/10/2026
+## Importação pelo tablet publicada — 27/10/2026
 
 Usuário solicitou lançamento automático e informou indisponibilidade do
-computador. Candidata acrescenta [importação assistida em lote](PURCHASE-BATCH-IMPORT.md)
+computador. A PR #85 acrescenta [importação assistida em lote](PURCHASE-BATCH-IMPORT.md)
 em Compras: conferência sem gravação, confirmação autenticada, cadastro
 explícito e compras sequenciais pelas operações existentes. Manifesto privado
 com referências estáveis permite retomada; não há transferência de sessão,
-SQL direto, nova API ou permissão. Validação/integração/publicação da candidata
-e inclusão real continuam pendentes. I05 permanece parcial.
+SQL direto, nova API ou permissão. Integrada em `c151fc4`, com 12 checks e
+CodeQL sem alertas; 638 testes, 42 fixtures e 14 cenários HTTP/UI/PostgreSQL 17
+aprovados. Fonte `2cd8ff6` publicada no piloto às 12:08 Brasília, versão
+`0cdcdb1d` em 100%; configurações preservadas. Login público renderizado e
+Compras continua exigindo sessão. Leitura posterior: zero compras/itens/movimentos.
+Link privado do lote entregue para conferência e confirmação pela sessão
+do tablet. Inclusão real e aceite I05 continuam pendentes.
+[Recibo sanitizado](../../evidence/pilot-purchase-batch-publication-2026-10-27.json).
 
 ## Notas reais: prévia aprovada e validação local — 27/10/2026
 

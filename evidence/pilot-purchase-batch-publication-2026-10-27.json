@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "scope": "Authenticated batch import published in isolated pilot; live receipt execution pending",
+  "source_commit": "2cd8ff6a0abcc32dd97aa2535e819f28ac05f161",
+  "main_merge_commit": "c151fc46e636d19aca321ddfcda7064fd3e97528",
+  "pull_request": "https://github.com/naiguelcabral/seus-brownies/pull/85",
+  "validation": {
+    "unit_tests": 638,
+    "browser_fixtures": 42,
+    "connected_http_ui_postgres17_tests": 14,
+    "typecheck_lint_format_knip_passed": true,
+    "isolated_build_passed": true,
+    "ci_checks_passed": 12,
+    "ci_checks_total": 12,
+    "codeql_categories": 3,
+    "codeql_open_alerts": 0,
+    "synthetic_merge_analyzed": "1fa1df61984c08f6eedd708d719317a1ee51f184",
+    "disposable_containers_stopped": true
+  },
+  "deployment": {
+    "worker": "cacau-v1-piloto",
+    "version_id": "0cdcdb1d-3d89-4b0b-972c-51f79806c76f",
+    "deployment_id": "ce3253c6-915f-4f5a-afdd-aa12506eb139",
+    "created_at": "2026-10-27T15:08:35.625252Z",
+    "percentage": 100,
+    "settings_unchanged": true,
+    "secret_binding_names_preserved_count": 6,
+    "browser_login_rendered": true,
+    "anonymous_purchases_redirects_to_login": true,
+    "authenticated_pilot_ui_acceptance": false
+  },
+  "private_manifest": {
+    "sha256": "a8019136594b4a679804beec82683bdb4780948656f6b1c5cdc359890d7fa00e",
+    "approved_source_plan_sha256": "e043c6007504335433c3b8a6f69abd56d5c7b2a8414ffad7f6557fad0fe8f01f",
+    "purchases": 3,
+    "item_rows": 7,
+    "distinct_products": 6,
+    "commercial_data_in_public_repository": false,
+    "user_confirmation_required_in_own_session": true
+  },
+  "post_deployment_readback": {
+    "purchases": 0,
+    "purchase_items": 0,
+    "stock_movements": 0,
+    "live_receipt_execution_completed": false,
+    "direct_sql_writes": false,
+    "authentication_bypass": false,
+    "i05_acceptance": "partial"
+  }
+}

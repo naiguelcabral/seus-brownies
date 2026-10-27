@@ -10,6 +10,12 @@ abaixo permanece o mesmo. Não autoriza fabricar principal, conceder acesso,
 contornar autenticação, gravar por SQL ou incluir dados em outra cópia.
 Documentação: [contrato e retomada](PURCHASE-BATCH-IMPORT.md).
 
+PR #85 integrada após 12 checks aprovados e resultados CodeQL conferidos.
+Importador publicado exclusivamente no piloto, versão `0cdcdb1d`, com as
+configurações preservadas; não houve inclusão operacional nessa publicação.
+Manifesto privado entregue ao usuário para confirmação na própria sessão.
+[Recibo da publicação](../../evidence/pilot-purchase-batch-publication-2026-10-27.json).
+
 ## Ensaio das notas filtradas — 27/10/2026
 
 Após prévia extraída de três imagens, o usuário confirmou embalagens,
@@ -20,7 +26,7 @@ auditado. Não inclui os itens excluídos, produção/venda/pagamento presumidos
 mudança de receita, concessão de acesso ou escrita na fonte original.
 
 Validação adicional da persistência realizada em laboratório local descartável.
-Inclusão publicada ainda pendente da sessão na aba controlável; não gravar
+Inclusão publicada ainda pendente da confirmação na sessão do usuário; não gravar
 diretamente por SQL nem fabricar principal para substituir a autenticação.
 Fotos e valores comerciais permanecem fora do repositório público.
 [Recibo sem dados comerciais](../../evidence/pilot-receipt-local-validation-2026-10-27.json).
