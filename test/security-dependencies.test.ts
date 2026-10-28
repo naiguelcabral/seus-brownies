@@ -4,6 +4,7 @@ import { createRequire } from 'node:module'
 import test from 'node:test'
 import { compileFunction } from 'node:vm'
 import { z } from 'zod'
+import { createElement } from 'react'
 
 const require = createRequire(import.meta.url)
 
@@ -22,6 +23,8 @@ test('the lockfile excludes the vulnerable dependency versions identified in the
     'source-map-js': '1.2.2',
     'fast-uri': '3.1.8',
     'launch-editor': '2.14.2',
+    'better-auth': '1.7.7',
+    '@better-auth/drizzle-adapter': '1.7.7',
   }
   const lock = JSON.parse(
     readFileSync(new URL('../package-lock.json', import.meta.url), 'utf8'),
@@ -53,6 +56,67 @@ test('the lockfile excludes the vulnerable dependency versions identified in the
       )
     }
   }
+})
+
+test('auth integrations resolve one patched release and email conversion excludes the unpatched deepmerge chain', () => {
+  const lock = JSON.parse(
+    readFileSync(new URL('../package-lock.json', import.meta.url), 'utf8'),
+  ) as { packages: Record<string, { version?: string }> }
+  const release = lock.packages['node_modules/better-auth']?.version
+  assert.ok(release, 'Missing Better Auth dependency')
+  const coordinatedPackages = new Set([
+    'better-auth',
+    '@better-auth/core',
+    '@better-auth/api-key',
+    '@better-auth/passkey',
+    '@better-auth/telemetry',
+    '@better-auth/drizzle-adapter',
+    '@better-auth/kysely-adapter',
+    '@better-auth/memory-adapter',
+    '@better-auth/mongo-adapter',
+    '@better-auth/prisma-adapter',
+  ])
+  for (const [path, entry] of Object.entries(lock.packages)) {
+    const name = path.split('node_modules/').at(-1)
+    if (name && coordinatedPackages.has(name))
+      assert.equal(entry.version, release, `Mismatched Auth release: ${path}`)
+    assert.notEqual(
+      name,
+      'deepmerge',
+      'Unpatched deepmerge must not return through the email renderer',
+    )
+  }
+})
+
+test('the patched email renderer preserves escaped HTML and readable plain text', async () => {
+  const neonRequire = createRequire(require.resolve('@neondatabase/neon-js'))
+  const authRequire = createRequire(neonRequire.resolve('@neondatabase/auth'))
+  const uiRequire = createRequire(authRequire.resolve('@neondatabase/auth-ui'))
+  const emailOwnerRequire = createRequire(
+    uiRequire.resolve('@daveyplate/better-auth-ui'),
+  )
+  const componentRequire = createRequire(
+    emailOwnerRequire.resolve('@react-email/components'),
+  )
+  const renderer = componentRequire('@react-email/render') as {
+    render: (
+      node: ReturnType<typeof createElement>,
+      options?: { plainText?: boolean },
+    ) => Promise<string>
+  }
+  const content = createElement(
+    'p',
+    null,
+    'Pedido <pendente> & revisão ',
+    createElement('a', { href: 'https://example.test/check' }, 'Conferir'),
+  )
+  const html = await renderer.render(content)
+  assert.ok(html.includes('&lt;pendente&gt; &amp; revisão'))
+  assert.ok(!html.includes('<pendente>'))
+  const text = await renderer.render(content, { plainText: true })
+  assert.ok(text.includes('Pedido <pendente> & revisão'))
+  assert.ok(text.includes('https://example.test/check'))
+  assert.ok(!text.includes('<a '))
 })
 
 test('the legacy Drizzle loader still transforms TypeScript with its patched esbuild', () => {

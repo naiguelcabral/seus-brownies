@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-28",
+  "scope": "Dependency security review and local patch candidate; no deployment or managed Auth change",
+  "base_revision": "7128edd",
+  "pilot_readback": {
+    "worker": "cacau-v1-piloto",
+    "deployment_id": "ce3253c6-915f-4f5a-afdd-aa12506eb139",
+    "version_id": "0cdcdb1d-3d89-4b0b-972c-51f79806c76f",
+    "traffic_percent": 100,
+    "source_revision": "2cd8ff6",
+    "patched_candidate_published": false
+  },
+  "provider_readback": {
+    "project_id": "steep-brook-51659857",
+    "pilot_auth_branch": "br-orange-shadow-acp4523g",
+    "hml_auth_branch": "br-patient-lake-ac2t0cvq",
+    "pilot_magic_link_enabled": false,
+    "hml_magic_link_enabled": false,
+    "social_provider_present": true,
+    "oauth_provider_plugin_enabled": false,
+    "oauth_proxy_internals_attested": false,
+    "managed_server_version_attested": false,
+    "secrets_read": false,
+    "configuration_changed": false
+  },
+  "advisories": [
+    "GHSA-965c-763c-88jm",
+    "GHSA-r4xp-prcw-77qf",
+    "GHSA-44jh-23m7-hpcf",
+    "GHSA-gcqx-w48m-w2h4"
+  ],
+  "audit_before": { "low": 9, "critical": 1, "total": 10 },
+  "audit_after": { "low": 0, "critical": 0, "total": 0 },
+  "patch": {
+    "neon_sdk_changed": false,
+    "better_auth_release": "1.7.10",
+    "email_renderer_release": "2.2.0",
+    "vulnerable_deepmerge_removed": true,
+    "inherited_ui_peer_warning_remains": true,
+    "knip_baseline_changed": false
+  },
+  "github": {
+    "open_codeql_alerts": 0,
+    "dependabot_alert_query_status": 403,
+    "dependabot_alert_query_message": "Dependabot alerts are disabled for this repository",
+    "repository_security_settings_changed": false
+  },
+  "validation": {
+    "lint": "passed",
+    "typecheck": "passed",
+    "format": "passed",
+    "knip_new_findings": 0,
+    "full_tests": "passed",
+    "node_tests_passed": 640,
+    "isolated_build": "pending",
+    "candidate_ci": "pending"
+  },
+  "scope_limits": {
+    "remote_business_writes": 0,
+    "auth_users_or_sessions_changed": false,
+    "schema_changed": false,
+    "deployment": false,
+    "merge": false,
+    "complete_i05_acceptance": false,
+    "production_release": false
+  }
+}

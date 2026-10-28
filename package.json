@@ -94,6 +94,14 @@
     "wrangler": "4.152.0"
   },
   "overrides": {
+    "better-auth": "1.7.10",
+    "@better-auth/core": "1.7.10",
+    "@better-auth/passkey": "1.7.10",
+    "@better-auth/api-key": "1.7.10",
+    "@neondatabase/auth-ui": {
+      "better-call": "1.4.2"
+    },
+    "@react-email/render": "2.2.0",
     "typescript": "7.0.2",
     "launch-editor": "2.14.2",
     "shell-quote": "1.12.0",
