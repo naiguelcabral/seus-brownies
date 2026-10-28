@@ -56,9 +56,16 @@ de teste para obter aprovação.
 ## Verificação e limites remanescentes
 
 Auditoria online da candidata: zero alertas. 640 testes Node passaram, sem
-falhas/ignorados; build isolado ainda deve ser aprovado antes da integração.
+falhas/ignorados. Build isolado do piloto aprovado em `949c35e`, com chave
+pública de teste, ambiente limpo e archive do HEAD, sem deploy. Os avisos de
+sourcemap CSS e tempos dos plugins continuam visíveis, sem erro de build.
 Checks de lint, tipos e formato já aprovados; Knip mantém quatro achados
 contextuais, zero novos. Não há alteração de lógica operacional.
+
+A execução de testes dentro da sandbox encontrou falhas nos contratos que
+iniciam subprocessos; a suíte integral foi repetida fora dela e passou. O
+teste novo usa a cadeia de resolução do pacote proprietário, sem incluir
+entrada nova na baseline para esconder dependência não listada.
 
 `npm ls` ainda acusa um peer transitivo herdado: a UI Daveyplate 3.4.0 traz
 `better-call@2.0.2`, enquanto seu plugin API Key pede 1.4.2. A candidata

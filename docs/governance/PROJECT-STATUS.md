@@ -5,7 +5,8 @@
 Auditoria online encontrou dez pacotes sinalizados por quatro advisories;
 candidata coordena Better Auth/core/plugins/adapters em 1.7.10 e atualiza o
 renderer 2.2.0, removendo deepmerge. SDK Neon e stack preservados; audit local
-online zerado. 640 testes e lint/tipos/formato/Knip aprovados; build/CI pendentes.
+online zerado. 640 testes, lint/tipos/formato/Knip e build isolado do piloto
+aprovados em `949c35e`; CI da PR pendente neste checkpoint.
 Um peer interno já herdado da UI continua registrado, sem downgrade forçado.
 
 Plugins relidos no piloto e no Auth do HML: Magic Link desativado, condição

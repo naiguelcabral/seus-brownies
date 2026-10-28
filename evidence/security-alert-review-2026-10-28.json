@@ -3,6 +3,10 @@
   "date": "2026-10-28",
   "scope": "Dependency security review and local patch candidate; no deployment or managed Auth change",
   "base_revision": "7128edd",
+  "validated_code_revision": "949c35e",
+  "lockfile_sha256": "dc6a3812865c1214b52a7f40ca109adce2b001c0328decb763da2c240aab72b1",
+  "audit_before_sha256": "927cb465f596b2982c6a71b78085f3c3a3297f7eed556ac1454bb74abbf69ba7",
+  "audit_after_sha256": "06fec917da212834e73258cf983fdfb010b559a930874589910cc7db733f8334",
   "pilot_readback": {
     "worker": "cacau-v1-piloto",
     "deployment_id": "ce3253c6-915f-4f5a-afdd-aa12506eb139",
@@ -53,7 +57,8 @@
     "knip_new_findings": 0,
     "full_tests": "passed",
     "node_tests_passed": 640,
-    "isolated_build": "pending",
+    "isolated_build": "passed",
+    "isolated_build_environment": "pilot",
     "candidate_ci": "pending"
   },
   "scope_limits": {
