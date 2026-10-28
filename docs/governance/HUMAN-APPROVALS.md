@@ -1,5 +1,18 @@
 # Ações que exigem aprovação humana — Cacau v1
 
+## Integração da correção de segurança — 28/10/2026
+
+Após apresentação da PR #89 validada, usuário respondeu “Pode seguir a
+próxima etapa”. Autorização aplicada à integração desse pacote concreto,
+com reconferência do HEAD `0d90bdb`, doze checks e resultados CodeQL, e ao
+respectivo fechamento documental. Merge normal em `4dc504b`, preservando
+commits e proteções; três workflows da main e suas análises reais aprovados.
+
+Não houve publicação, alteração de provedor/plugins/secrets/contas, escrita
+operacional ou mudança de produção. A integração não atualiza o servidor
+Neon gerenciado nem encerra I05/I04. Publicação no piloto permanece próxima
+etapa separada. [Recibo](SECURITY-ALERT-REVIEW-2026-10-28.md#integração-autorizada).
+
 ## Confirmação das compras na sessão do tablet — 27/10/2026
 
 Usuário informou “Deu certo” após a alternativa por colagem do lote já

@@ -1,5 +1,16 @@
 # Roadmap único — Cacau v1
 
+## S03: patch integrado; publicação pendente — 28/10/2026
+
+PR #89 integrada após autorização em `4dc504b`, com a árvore aprovada intacta.
+CI/build da main e laboratórios de negócio/navegador aprovados; três análises
+CodeQL do merge sem resultados/erros/avisos, zero alertas abertos na main.
+Correção do grafo entregue: dez alertas npm removidos na candidata, 640 testes
+e build isolado aprovados. Não houve deploy; publicação no piloto é próxima
+etapa separada. Peer herdado da UI, Dependabot alerts desativados e comprovação
+interna do servidor Auth permanecem nos limites S03; não liberam I04.
+[Recibo](SECURITY-ALERT-REVIEW-2026-10-28.md#integração-autorizada).
+
 ## S03: novos alertas verificados e candidata corrigida — 28/10/2026
 
 Quatro advisories geram dez registros npm. Candidata Better Auth 1.7.10 e
@@ -572,7 +583,7 @@ sintético foi gravado no HML.
 | H03 | Parcial; roteiro dos perfis ativos aceito | Laboratório aprovou quatro perfis, matriz negativa das 55 políticas, ausência de escrita na negação e revogação na próxima chamada. No tablet, usuário confirmou employee/manager/owner, Dashboard negado ao Funcionário e permitido aos demais, Parâmetros negado a Funcionário/Gerente e permitido ao Dono; interface/controles conforme roteiro, sem salvar. Após publicação, Dono confirmou Cenários/Financeiro. [Aceite manual](AUTH-HML-PERMISSIONS-MANUAL-2026-10-21.md). Repetição automática com identidades sintéticas isoladas, não com sessões reais no HML. Falta cobertura ampliada real e estabilidade; não conceder papéis para contornar testes. |
 | H06 | Parcial; smoke público do piloto aprovado | Fixtures e laboratório conectado permanecem como evidência. Piloto `d4138431`: faixa visível, botões separados e dois acessos ao fluxo em 1280/375/320px, sem overflow ou erro de página. Falta aceite autenticado por perfil, celular físico e uso diário; não equivale a auditoria WCAG completa. |
 | T04 | Concluído | Oxfmt alinhado; 21 testes do controlador simulado, Oxc1.64.1 conferida e Python3.12 validada. ActionsNode24 revisadas, Ubuntu24.04 fixado; CI sem avisos de runtime. |
-| S03 | Correções anteriores integradas; PR #89 validada para revisão | Revisão de 28/10 identificou quatro advisories/dez pacotes. Patch Better Auth 1.7.10 e renderer 2.2.0 com audit online zerado, 640 testes, qualidade e build isolado aprovados. Doze checks e três análises CodeQL sem resultados/erros/avisos em e07454c; conferir o recibo documental final antes de integrar/publicar. Magic Link desativado nos dois destinos, servidor gerenciado sem versão atestada; peer herdado da UI e Dependabot alerts desativados registrados. [Evidência e limites](SECURITY-ALERT-REVIEW-2026-10-28.md). |
+| S03 | Patch #89 integrado; publicação e limites restantes separados | Better Auth 1.7.10/renderer 2.2.0 integrados em 4dc504b; audit zero, 640 testes, qualidade e build isolado da candidata. CI/build/laboratórios e três análises CodeQL do merge aprovados, zero alertas abertos na main. Piloto ainda no checkpoint anterior. Magic Link desativado nos dois destinos; versão interna do Auth, peer herdado da UI e Dependabot alerts desativados continuam registrados. [Recibo e limites](SECURITY-ALERT-REVIEW-2026-10-28.md). |
 
 ## Preparação e liberação da operação
 

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "date": "2026-10-28",
-  "scope": "Dependency security review and local patch candidate; no deployment or managed Auth change",
+  "scope": "Dependency security review and verified integration; no deployment or managed Auth change",
   "base_revision": "7128edd",
   "validated_code_revision": "949c35e",
   "lockfile_sha256": "dc6a3812865c1214b52a7f40ca109adce2b001c0328decb763da2c240aab72b1",
@@ -76,12 +76,26 @@
     "codeql_analyses_without_results_errors_warnings": 3,
     "final_dependency_regressions_passed": 6
   },
+  "integration": {
+    "pull_request": 89,
+    "approved_head": "0d90bdb22b13b6f2257edfe38ded03098d67b238",
+    "merge_commit": "4dc504b89df847eaccb8e56159e70a8f64b49a05",
+    "merged_at": "2026-10-28T23:15:24Z",
+    "merged_tree_matches_approved_head": true,
+    "main_ci_run": 40786054761,
+    "main_business_browser_run": 40786054843,
+    "main_codeql_run": 40786054736,
+    "main_workflows_passed": true,
+    "main_codeql_analyses_without_results_errors_warnings": 3,
+    "main_open_codeql_alerts": 0,
+    "deployment": false
+  },
   "scope_limits": {
     "remote_business_writes": 0,
     "auth_users_or_sessions_changed": false,
     "schema_changed": false,
     "deployment": false,
-    "merge": false,
+    "merge": true,
     "complete_i05_acceptance": false,
     "production_release": false
   }

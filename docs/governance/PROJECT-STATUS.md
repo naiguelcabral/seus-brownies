@@ -1,5 +1,21 @@
 # Estado canônico do projeto — Cacau v1
 
+## Correção de segurança integrada — 28/10/2026
+
+Após autorização do usuário para a próxima etapa, PR #89 integrada em
+`4dc504b89df847eaccb8e56159e70a8f64b49a05`, às 23:15:24 UTC.
+Árvore da main idêntica ao HEAD aprovado `0d90bdb`; nenhuma alteração extra
+de código na integração. CI/build da main, laboratório de negócio/navegador
+e CodeQL passaram. Três análises reais do merge sem resultados/erros/avisos;
+zero alertas abertos na main. Audit zero e 640 testes da candidata preservados.
+
+Better Auth 1.7.10 e remoção de deepmerge estão integrados. Publicação segue
+separada: piloto permanece no último checkpoint `0cdcdb1d`. Nenhum deploy,
+SQL, mudança de configuração, secrets, contas ou fatos operacionais ocorreu.
+Peer herdado da UI, Dependabot alerts desativados e limites da versão do
+Auth gerenciado continuam registrados; I05/I04 não foram encerrados.
+[Recibo da integração](SECURITY-ALERT-REVIEW-2026-10-28.md#integração-autorizada).
+
 ## Alertas conferidos e patch local preparado — 28/10/2026
 
 Auditoria online encontrou dez pacotes sinalizados por quatro advisories;
