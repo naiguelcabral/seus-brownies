@@ -79,13 +79,17 @@ primeiro CI apontou o alerta 14, `js/incomplete-url-substring-sanitization`,
 na asserção do novo teste que procurava uma URL como substring. Esse código
 não sanitiza entrada de usuário: a fixture e a expectativa são constantes.
 A asserção foi tornada mais estrita, comparando o texto final inteiro,
-incluindo a URL. Nenhuma regra foi ignorada ou alerta dispensado; a nova
-análise precisa comprovar o fechamento. Os demais onze checks passaram no
-primeiro HEAD. A API de Dependabot respondeu
+incluindo a URL. Nenhuma regra foi ignorada ou alerta dispensado. Em
+`e07454c`, os doze checks passaram; as três análises da candidata de merge
+`221ad2ae` retornaram zero resultados/erros/avisos, e a consulta dos alertas
+abertos dessa PR retornou zero. As seis regressões de dependências passaram
+também após a asserção mais estrita. Os demais onze checks já tinham passado
+no primeiro HEAD. A API de Dependabot respondeu
 HTTP 403 informando alertas desativados; não foram ativados nem ampliados os
 escopos do token. Atualizações Dependabot existentes não provam que o serviço
 de alertas de vulnerabilidade esteja ativo. A auditoria npm online é evidência
-independente. CI/CodeQL da nova candidata continuam sujeitos ao SHA final.
+independente. Recibo documental posterior preserva a mesma árvore de código,
+dependências e testes; reconferir seus checks no [HEAD da PR #89](https://github.com/naiguelcabral/seus-brownies/pull/89).
 
 Gates restantes: revisão humana da correção concreta antes de merge e
 publicação; confirmar versão/configuração interna do Auth gerenciado quando

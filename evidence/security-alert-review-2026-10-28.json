@@ -52,7 +52,10 @@
       "path": "test/security-dependencies.test.ts",
       "remediation": "Compare the complete rendered plain text instead of URL substring membership",
       "dismissed": false,
-      "reanalysis": "pending"
+      "reanalysis": "passed",
+      "validated_head": "e07454c12ed065aba2caa84748c90a4beed87d90",
+      "merge_candidate": "221ad2ae92db89973e6c74fbd548ee08e0658b21",
+      "open_branch_alerts_after_reanalysis": 0
     },
     "dependabot_alert_query_status": 403,
     "dependabot_alert_query_message": "Dependabot alerts are disabled for this repository",
@@ -67,7 +70,11 @@
     "node_tests_passed": 640,
     "isolated_build": "passed",
     "isolated_build_environment": "pilot",
-    "candidate_ci": "pending"
+    "candidate_ci": "passed",
+    "validated_ci_revision": "e07454c12ed065aba2caa84748c90a4beed87d90",
+    "checks_passed": 12,
+    "codeql_analyses_without_results_errors_warnings": 3,
+    "final_dependency_regressions_passed": 6
   },
   "scope_limits": {
     "remote_business_writes": 0,

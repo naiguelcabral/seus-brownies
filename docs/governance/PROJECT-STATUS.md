@@ -6,13 +6,14 @@ Auditoria online encontrou dez pacotes sinalizados por quatro advisories;
 candidata coordena Better Auth/core/plugins/adapters em 1.7.10 e atualiza o
 renderer 2.2.0, removendo deepmerge. SDK Neon e stack preservados; audit local
 online zerado. 640 testes, lint/tipos/formato/Knip e build isolado do piloto
-aprovados em `949c35e`; CI da PR pendente neste checkpoint.
+aprovados em `949c35e`. PR #89: doze checks de `e07454c` aprovados, três
+análises CodeQL sem achados/erros/avisos e zero alertas abertos na candidata.
 Um peer interno já herdado da UI continua registrado, sem downgrade forçado.
 
 Plugins relidos no piloto e no Auth do HML: Magic Link desativado, condição
 necessária do ataque crítico ausente. Versão/configuração interna do servidor
 gerenciado não atestada; patch npm não o atualiza. Piloto continua em
-`0cdcdb1d`, 100%. CodeQL sem alertas abertos; API informa Dependabot alerts
+`0cdcdb1d`, 100%. API informa Dependabot alerts
 desativados. Sem mudança remota, credenciais, contas, dados, merge ou deploy.
 [Revisão e limites](SECURITY-ALERT-REVIEW-2026-10-28.md).
 
