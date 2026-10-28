@@ -115,7 +115,10 @@ test('the patched email renderer preserves escaped HTML and readable plain text'
   assert.ok(!html.includes('<pendente>'))
   const text = await renderer.render(content, { plainText: true })
   assert.ok(text.includes('Pedido <pendente> & revisão'))
-  assert.ok(text.includes('https://example.test/check'))
+  assert.equal(
+    text.trim(),
+    'Pedido <pendente> & revisão Conferir https://example.test/check',
+  )
   assert.ok(!text.includes('<a '))
 })
 

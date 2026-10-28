@@ -74,7 +74,14 @@ UI para esconder o conflito restante. Esse plugin não é importado pelo código
 da aplicação; a incompatibilidade de metadados permanece registrada para
 correção upstream. Não confundir auditoria zero com grafo sem avisos.
 
-GitHub CodeQL: zero alertas abertos na consulta. A API de Dependabot respondeu
+GitHub CodeQL: zero alertas abertos na consulta anterior à candidata. O
+primeiro CI apontou o alerta 14, `js/incomplete-url-substring-sanitization`,
+na asserção do novo teste que procurava uma URL como substring. Esse código
+não sanitiza entrada de usuário: a fixture e a expectativa são constantes.
+A asserção foi tornada mais estrita, comparando o texto final inteiro,
+incluindo a URL. Nenhuma regra foi ignorada ou alerta dispensado; a nova
+análise precisa comprovar o fechamento. Os demais onze checks passaram no
+primeiro HEAD. A API de Dependabot respondeu
 HTTP 403 informando alertas desativados; não foram ativados nem ampliados os
 escopos do token. Atualizações Dependabot existentes não provam que o serviço
 de alertas de vulnerabilidade esteja ativo. A auditoria npm online é evidência

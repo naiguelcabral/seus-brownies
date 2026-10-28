@@ -45,7 +45,15 @@
     "knip_baseline_changed": false
   },
   "github": {
-    "open_codeql_alerts": 0,
+    "open_codeql_alerts_before_candidate": 0,
+    "first_candidate_codeql_alert": {
+      "number": 14,
+      "rule": "js/incomplete-url-substring-sanitization",
+      "path": "test/security-dependencies.test.ts",
+      "remediation": "Compare the complete rendered plain text instead of URL substring membership",
+      "dismissed": false,
+      "reanalysis": "pending"
+    },
     "dependabot_alert_query_status": 403,
     "dependabot_alert_query_message": "Dependabot alerts are disabled for this repository",
     "repository_security_settings_changed": false
