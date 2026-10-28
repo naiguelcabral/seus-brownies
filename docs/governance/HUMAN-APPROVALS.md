@@ -1,5 +1,26 @@
 # Ações que exigem aprovação humana — Cacau v1
 
+## Custos do workbook e produção de teste — 28/10/2026
+
+Após escolher 24 brownies 5×5 de brigadeiro, o usuário pediu na sessão anterior:
+“Como é um ambiente de teste, leia esse workbook e use ele como base dos
+custos”. Nesta sessão autorizou executar as atualizações e seguir o piloto;
+em seguida delimitou “Preparar só a produção por enquanto” e informou
+“Vou entrar na aba do Codex”.
+
+Escopo vigente: quatro complementos de estoque como ajustes positivos de
+teste, com custo/origem auditáveis do workbook e referências inéditas
+estáveis; produção simulada do lote escolhido no piloto isolado, usando
+as referências de energia/mão de obra e sem alterar receita/perfil ou compras
+já registradas. Não equivale a compras históricas, contagem física ou
+produção física confirmadas. Não inclui venda/pagamento/entrega, produção
+definitiva, concessão de acesso, recebimento de credenciais, impersonação,
+SQL para contornar a aplicação ou mudança de política de recuperação.
+
+Laboratório local aprovado; aba controlável ainda sem sessão. A execução
+publicada aguarda a entrada da própria pessoa e mantém a autoria real.
+[Preparação e limites](PILOT-PRODUCTION-PREPARATION-2026-10-28.md).
+
 ## Confirmação das compras na sessão do tablet — 27/10/2026
 
 Usuário informou “Deu certo” após a alternativa por colagem do lote já

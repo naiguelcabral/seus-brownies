@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "scope": "Workbook-based pilot production preparation and local persistence rehearsal; live execution pending authentication",
+  "source_sha256": "add0174b9d8f7224e03f88f71d7f92c599fc998e502e2174e68f8d49854ebbeb",
+  "source_modified": false,
+  "code_revision": "7128edd",
+  "environment": {
+    "worker": "cacau-v1-piloto",
+    "project_id": "steep-brook-51659857",
+    "branch_id": "br-blue-shadow-ackpk8ex",
+    "database_name": "neondb"
+  },
+  "remote_readback": {
+    "collected_at": "2026-10-28T21:46:34.598848Z",
+    "purchases": 3,
+    "purchase_items": 7,
+    "stock_movements": 7,
+    "production_batches": 0,
+    "sales": 0,
+    "materials_without_stock": 4
+  },
+  "authorized_plan": {
+    "test_only": true,
+    "positive_stock_adjustments": 4,
+    "recipe_version_id": 2,
+    "profile_id": 33,
+    "product_id": 16,
+    "output_quantity": 24,
+    "operational_costs_from_workbook_reference": true,
+    "measured_physical_recovery": false,
+    "sales_deferred_by_user": true,
+    "existing_purchases_preserved": true
+  },
+  "local_verification": {
+    "collected_at": "2026-10-28T21:51:06.282Z",
+    "postgres_major": 17,
+    "persisted_adjustments": 4,
+    "insufficient_stock_rollback": true,
+    "adjustment_repeats_rejected": 4,
+    "production_completed": true,
+    "production_repeat_rejected": true,
+    "exact_cost_matches_independent_calculation": true,
+    "stock_nonnegative": true,
+    "fifo_layer_matches": true,
+    "targeted_node_tests_passed": 81,
+    "private_report_sha256": "a0423e29ba0a71957ac8d6d52b7511b957408b66c295ade88ef82709270a7fc4",
+    "private_adjustment_plan_sha256": "28d6509745bd73c2c6941a6944164c9818d31df8b0592bd38dc64b788df1e92f"
+  },
+  "dependency_audit": {
+    "source": "npm audit online",
+    "date": "2026-10-28",
+    "low": 9,
+    "critical": 1,
+    "managed_provider_applicability_confirmed": false,
+    "dependencies_changed": false
+  },
+  "scope_limits": {
+    "live_adjustments_written": 0,
+    "live_batches_written": 0,
+    "remote_sql_writes": 0,
+    "principal_impersonated": false,
+    "live_ui_auth_acceptance": false,
+    "code_changed": false,
+    "deployment": false,
+    "complete_i05_acceptance": false,
+    "production_release": false
+  }
+}

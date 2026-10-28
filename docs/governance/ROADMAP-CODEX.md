@@ -1,5 +1,24 @@
 # Roadmap único — Cacau v1
 
+## I05: produção de teste preparada; execução autenticada pendente — 28/10/2026
+
+Decisão vigente: usar o workbook para custos de referência dos materiais
+faltantes e preparar somente a produção de 24 brownies 5×5 de brigadeiro.
+Quatro ajustes positivos com origem/referências estáveis foram ensaiados em
+PostgreSQL 17; custo exato, saldo e camada de 24 unidades conferidos, falta de
+estoque sem efeitos, quatro replays recusados e conclusão duplicada recusada.
+81 testes Node direcionados passaram. Não houve escrita remota/deploy.
+Usuário informou que entrará na aba do Codex; executar pela aplicação após
+reconferir perfil/movimentos. Sem resposta certa do rascunho, consultar antes
+de repetir: sua criação não tem UUID idempotente. Compras anteriores
+preservadas; venda/recebimento/entrega adiados por decisão atual.
+[Plano e recibo](PILOT-PRODUCTION-PREPARATION-2026-10-28.md).
+
+S03 reaberto para auditoria online de 28/10: nove pacotes baixos e um crítico
+transitivo em `better-auth@1.7.6`. Rever grafo e aplicabilidade no provedor
+gerenciado antes de fechar segurança/I04; zero offline não substitui esse
+resultado. Não executar atualização major/forçada ou trocar Auth por inferência.
+
 ## I05: fase de compras executada e conferida — 27/10/2026
 
 Após abertura sem dados pelo link e orientação de colagem do mesmo lote,
@@ -559,7 +578,7 @@ sintético foi gravado no HML.
 | H03 | Parcial; roteiro dos perfis ativos aceito | Laboratório aprovou quatro perfis, matriz negativa das 55 políticas, ausência de escrita na negação e revogação na próxima chamada. No tablet, usuário confirmou employee/manager/owner, Dashboard negado ao Funcionário e permitido aos demais, Parâmetros negado a Funcionário/Gerente e permitido ao Dono; interface/controles conforme roteiro, sem salvar. Após publicação, Dono confirmou Cenários/Financeiro. [Aceite manual](AUTH-HML-PERMISSIONS-MANUAL-2026-10-21.md). Repetição automática com identidades sintéticas isoladas, não com sessões reais no HML. Falta cobertura ampliada real e estabilidade; não conceder papéis para contornar testes. |
 | H06 | Parcial; smoke público do piloto aprovado | Fixtures e laboratório conectado permanecem como evidência. Piloto `d4138431`: faixa visível, botões separados e dois acessos ao fluxo em 1280/375/320px, sem overflow ou erro de página. Falta aceite autenticado por perfil, celular físico e uso diário; não equivale a auditoria WCAG completa. |
 | T04 | Concluído | Oxfmt alinhado; 21 testes do controlador simulado, Oxc1.64.1 conferida e Python3.12 validada. ActionsNode24 revisadas, Ubuntu24.04 fixado; CI sem avisos de runtime. |
-| S03 | Correções de dependências e hardening integrados | #55 e lote #61/#63/#62/#64 integrados. Audit novo zerado e CodeQL sem resultados nas candidatas atualizadas; A02 mantém limites das entradas como pendência distinta. |
+| S03 | Correções anteriores integradas; nova auditoria pendente de correção/revisão | #55 e lote #61/#63/#62/#64 integrados. Auditoria online de 28/10 retornou nove pacotes baixos e um crítico transitivo em `better-auth@1.7.6`; o zero anterior é histórico. Rever grafo e aplicabilidade no provedor gerenciado, sem atualização forçada/major ou troca de Auth por inferência. [Achado e limites](PILOT-PRODUCTION-PREPARATION-2026-10-28.md#novo-resultado-de-dependências). |
 
 ## Preparação e liberação da operação
 
@@ -572,7 +591,7 @@ sintético foi gravado no HML.
 | I02 | Restore externo concluído; política parcial | Baixados dump/manifesto do Drive, conferidos SHA-256/tamanho e restaurados esses bytes em PostgreSQL 17 sem rede: 38 tabelas/36 recibos exatos e catálogo independente de 0033. Recibo evidence/offsite-restore-2026-10-21.json. Restam retenção, responsáveis, periodicidade, RPO/RTO e recuperação de Auth, excluído do dump public/drizzle. Não apagar backups para abrir quota. |
 | I03 | Parcial; frequência divergente em A03 | Diário 03h era o planejamento anterior; revisão observou regra semanal quinta 00:15, fuso a reconfirmar. Validar execução/upload/alerta de falha, completar logs/correlação e decidir disponibilidade independente do computador/app. E-mail de teste e restore históricos não comprovam continuidade. |
 | I04 | Pendente / gate humano | Liberação definitiva somente após revisão/integridade/QA, integração, plano de recuperação, configuração revisada dos ambientes e aceite humano. Configurações HML existentes não precisam ser refeitas; secrets/DNS/produção exigem autorização específica. |
-| I05 | Ambiente e roteiro prontos; ensaio manual pendente | Piloto isolado publicado em `d4138431`, com retrato do histórico existente. Usuário fará o teste com notas reais de outros meses: conferir duplicidade, data original, unidades e saldos antes/depois. Entrada/perfil e demais fatos de produção/venda/recebimento/entrega dependem de fontes e aceite. Não criar demonstrações fictícias ou limpar dados. [Roteiro](RECOVERY-PILOT-PROPOSAL-2026-10-26.md). |
+| I05 | Compras aceitas; produção de teste preparada, execução autenticada pendente | Piloto publicado em `0cdcdb1d`; três compras/sete itens já reconciliados. Usuário autorizou referências do workbook para quatro ajustes de teste e 24 brownies 5×5 de brigadeiro. Persistência ensaiada em PostgreSQL 17, 81 testes aprovados; aguarda entrada na aba do Codex para executar pela aplicação. Não representa operação física nem altera compras/receitas. Venda/recebimento/entrega adiados; referências de compras consumidas e histórico preservado. [Plano](PILOT-PRODUCTION-PREPARATION-2026-10-28.md). |
 
 Checkpoint GitHub de 21/10: PRs #44–#53 mescladas e issue #36 encerrada.
 Consulta de 25/10 confirma #55/#59/#60 e as correções #61/#63/#62/#64
