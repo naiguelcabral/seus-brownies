@@ -99,3 +99,24 @@ do piloto permanecem separados. As compras anteriores e a preparação da
 produção na PR #88 não foram alteradas.
 
 [Recibo sanitizado](../../evidence/security-alert-review-2026-10-28.json).
+
+## Integração autorizada
+
+Após apresentação da candidata validada, o usuário autorizou “Pode seguir
+a próxima etapa”. PR #89 reconferida em `0d90bdb`, com doze checks aprovados,
+três análises da candidata `e4bdb857` sem resultados/erros/avisos e zero
+alertas abertos na PR. Integração normal, sem bypass, às 23:15:24 UTC de
+28/10/2026: merge `4dc504b89df847eaccb8e56159e70a8f64b49a05`.
+
+O diff entre a árvore aprovada e a main integrada é vazio. Workflows do merge:
+
+- [CI e build isolado da main](https://github.com/naiguelcabral/seus-brownies/actions/runs/40786054761): sucesso.
+- [Negócio/navegador conectado](https://github.com/naiguelcabral/seus-brownies/actions/runs/40786054843): sucesso.
+- [CodeQL](https://github.com/naiguelcabral/seus-brownies/actions/runs/40786054736): sucesso; três análises reais desse merge com zero resultados/erros/avisos e consulta de alertas abertos da main retornando zero.
+
+Este fechamento documental não altera pacote, teste ou configuração; links,
+JSON e diff são as verificações locais aplicáveis. Audit zero e 640 testes
+continuam sendo evidência da candidata, com nova CI da main como validação
+do merge. Publicação no piloto ainda não executada; nenhuma escrita de
+negócio, alteração de Auth, secrets, DNS ou produção. Os limites do provedor,
+o peer herdado e o estado de Dependabot permanecem conforme a revisão acima.
