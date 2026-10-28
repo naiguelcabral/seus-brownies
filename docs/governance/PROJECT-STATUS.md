@@ -1,5 +1,27 @@
 # Estado canônico do projeto — Cacau v1
 
+## Produção com custos do workbook preparada — 28/10/2026
+
+Usuário autorizou usar o workbook como base no teste dos 24 brownies 5×5 de
+brigadeiro e executar a sequência; depois delimitou somente produção por
+enquanto. Quatro ajustes positivos de estoque preparados com origem e
+referências estáveis, sem inventar compras históricas. Receita/perfil e
+custos das compras existentes preservados. Simulação usa referências do
+workbook, sem alegar contagem ou produção física.
+
+PostgreSQL 17 local aprovou falta de estoque sem efeitos, quatro ajustes e
+suas recusas de repetição, conclusão única, custo racional exato, saldos não
+negativos e camada FIFO de 24 unidades. 81 testes direcionados passaram.
+Piloto relido: três compras/sete itens/sete movimentos, nenhum lote/venda.
+Aba controlável sem sessão; usuário informou que entrará no Codex. Nenhuma
+escrita remota, mudança de código ou deploy nesta preparação. I05 parcial.
+[Plano e limites](PILOT-PRODUCTION-PREPARATION-2026-10-28.md),
+[recibo](../../evidence/pilot-production-preparation-2026-10-28.json).
+
+Auditoria online nova: nove pacotes baixos e um crítico transitivo em
+`better-auth`; aplicabilidade no servidor Neon gerenciado não confirmada.
+S03 exige revisão/correção, sem declarar segurança encerrada ou I04 aprovado.
+
 ## Ensaio de compras confirmado e reconciliado — 27/10/2026
 
 Usuário confirmou “Deu certo” após a orientação de colagem do mesmo manifesto
