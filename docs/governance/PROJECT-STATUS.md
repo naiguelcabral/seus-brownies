@@ -1,5 +1,21 @@
 # Estado canônico do projeto — Cacau v1
 
+## Publicação do piloto retida por novo alerta Seroval — 28/10/2026
+
+Usuário autorizou publicar a versão atualizada no piloto. Antes do deploy,
+a auditoria online da main eaf677a detectou Seroval 1.6.9 com dois advisories
+moderados, atualizados em 28/10: GHSA-f86p-h4j2-7qgj e GHSA-9wx9-5pv9-3349.
+O zero da rodada anterior continua histórico; nenhuma publicação executada.
+
+Candidata aplica somente o patch Seroval 1.6.11 por override, preservando
+versões TanStack e demais dependências. Oito regressões direcionadas passaram,
+incluindo tipo real de array com constructor próprio e escape de RegExp com
+round-trip. Suíte completa, qualidade, build e CI seguem no recibo abaixo.
+Revisão/integração desse incremento novo precedem a publicação autorizada.
+Piloto continua em 0cdcdb1d; configuração, seis secrets, chave pública e
+namespaces foram relidos sem mudanças. Nenhuma escrita operacional.
+[Recibo](../../evidence/seroval-predeploy-review-2026-10-28.json).
+
 ## Correção de segurança integrada — 28/10/2026
 
 Após autorização do usuário para a próxima etapa, PR #89 integrada em

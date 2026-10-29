@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "base_commit": "eaf677a79e3776ab180cb534a072b419139fb9bd",
+  "scope": "New pre-deployment security finding and minimal local fix; pilot deployment not executed",
+  "advisories": [
+    "https://github.com/advisories/GHSA-f86p-h4j2-7qgj",
+    "https://github.com/advisories/GHSA-9wx9-5pv9-3349"
+  ],
+  "before": { "seroval": "1.6.9", "moderate_packages": 1, "advisories": 2 },
+  "candidate": {
+    "seroval": "1.6.11",
+    "tanstack_versions_changed": false,
+    "other_dependency_versions_changed": false,
+    "targeted_dependency_tests_passed": 8,
+    "typed_array_constructor_regression": true,
+    "regexp_script_output_regression": true
+  },
+  "validation": {
+    "full_tests": "passed",
+    "node_tests_passed": 642,
+    "quality": "passed",
+    "knip_new_findings": 0,
+    "audit": "passed_zero_vulnerabilities",
+    "isolated_build": "pending",
+    "ci": "pending"
+  },
+  "pilot": {
+    "worker": "cacau-v1-piloto",
+    "version_unchanged": "0cdcdb1d-3d89-4b0b-972c-51f79806c76f",
+    "real_public_sitekey_and_domain_verified": true,
+    "existing_secret_binding_names": 6,
+    "rate_limit_namespaces_preserved": true,
+    "configuration_changed": false,
+    "deployment_executed": false,
+    "business_writes": 0
+  }
+}

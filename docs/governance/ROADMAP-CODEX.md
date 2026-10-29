@@ -1,5 +1,15 @@
 # Roadmap único — Cacau v1
 
+## S03: novo alerta Seroval antes do deploy — 28/10/2026
+
+Publicação autorizada do piloto ainda não executada: auditoria online
+detectou dois advisories moderados em Seroval 1.6.9 após o fechamento #89/#90.
+Patch mínimo 1.6.11 preparado, sem atualizar TanStack; oito regressões
+direcionadas aprovadas. Conferir suíte/qualidade/build/CI, revisar e integrar
+esse incremento antes de publicar. A configuração remota permanece intacta;
+o checkpoint anterior de audit zero não representa essa nova consulta.
+[Recibo](../../evidence/seroval-predeploy-review-2026-10-28.json).
+
 ## S03: patch integrado; publicação pendente — 28/10/2026
 
 PR #89 integrada após autorização em `4dc504b`, com a árvore aprovada intacta.
