@@ -1,5 +1,13 @@
 # Estado canônico do projeto — Cacau v1
 
+## Reserva de capacidade antes da publicação — 28/10/2026
+
+Franquia oficial chegou a 5% restante; fechamento obrigatório aplicado antes
+de qualquer deploy. PR #91 preparada com 642 testes, qualidade, audit zero e
+build isolado aprovados; CI/CodeQL do HEAD final ainda a reconferir.
+Piloto permanece em 0cdcdb1d. Reset exibido: 28/10 às 23:18:28 Brasília.
+[Próximo passo e limites](AUTONOMY-HANDOFF.md#publicação-do-piloto-suspensa-na-reserva--28102026).
+
 ## Publicação do piloto retida por novo alerta Seroval — 28/10/2026
 
 Usuário autorizou publicar a versão atualizada no piloto. Antes do deploy,

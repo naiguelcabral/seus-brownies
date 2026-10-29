@@ -1,5 +1,13 @@
 # Roadmap único — Cacau v1
 
+## Checkpoint de reserva — 28/10/2026
+
+5% restante atingidos antes do deploy. PR #91 Seroval preparada e validada
+localmente; conferir CI/CodeQL e revisar/integrar o patch antes da publicação
+já autorizada no piloto. Reset 28/10 às 23:18:28 Brasília, retomada somente
+após renovação confirmada. Nenhuma publicação ou escrita operacional ocorreu.
+[Handoff](AUTONOMY-HANDOFF.md#publicação-do-piloto-suspensa-na-reserva--28102026).
+
 ## S03: novo alerta Seroval antes do deploy — 28/10/2026
 
 Publicação autorizada do piloto ainda não executada: auditoria online

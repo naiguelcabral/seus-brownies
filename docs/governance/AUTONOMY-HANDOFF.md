@@ -1,5 +1,51 @@
 # Handoff de autonomia — Cacau v1
 
+## Publicação do piloto suspensa na reserva — 28/10/2026
+
+Tarefa autorizada: publicar a versão atualizada somente no piloto. **Nenhum
+deploy foi executado.** PRs #89/#90 integradas na main eaf677a, com CI/build,
+negócio/navegador e três análises CodeQL sem resultados/erros/avisos.
+O preflight novo encontrou Seroval 1.6.9 com GHSA-f86p-h4j2-7qgj e
+GHSA-9wx9-5pv9-3349, um pacote moderado/dois advisories. Não publicar essa
+main ignorando a nova consulta; o zero anterior é histórico.
+
+Correção preparada na PR #91, branch `codex/seroval-security-pilot-20261028`,
+worktree `/tmp/cacau-security-alert-review-20261028`. Código 0a1ddba;
+HEAD antes deste fechamento 81d322d (somente recibo posterior).
+Override Seroval 1.6.11; nenhuma outra versão alterada no lockfile. Duas
+regressões cobrem constructor próprio de array tipado e escape de RegExp com
+round-trip. 642 testes Node, lint, tipos, formato, Knip (quatro contextuais,
+zero novos), auditoria online zero e build isolado do piloto aprovados.
+Nenhum teste foi removido/enfraquecido, nenhum arquivo de ambiente foi lido.
+
+Pendência da candidata: CI/CodeQL do HEAD final. A primeira consulta logo
+após push informou “no checks reported”; isso não é check aprovado nem falha
+confirmada. Reconferir no GitHub. A revisão/integração desse incremento novo
+precede o deploy; a autorização de publicação do usuário está registrada e
+não precisa ser pedida de novo para o mesmo piloto/pacote aprovado.
+
+Piloto ainda na versão 0cdcdb1d, deployment ce3253c6, 100%. Foram relidos
+seis nomes de secrets, namespaces 2026102601/2/3, logs com redação de query e
+a chave pública/domínio próprios. Não alterados secrets, configurações,
+Auth, dados ou HML anterior/produção. Reconsultar tudo antes de publicar.
+Entrada na aba controlável continua sem confirmação; não fabricar principal
+nem lançar complemento/produção por SQL. As três compras anteriores e suas
+referências consumidas permanecem preservadas.
+
+Arquivos da candidata: package.json, package-lock.json,
+test/security-dependencies.test.ts, PROJECT-STATUS.md, ROADMAP-CODEX.md e
+evidence/seroval-predeploy-review-2026-10-28.json. Este fechamento acrescenta
+o handoff e o estado de reserva; scripts/logs privados ficam em /tmp.
+
+Uso oficial: **5% restante**, reset **28/10/2026 23:18:28 America/Sao_Paulo**.
+Não iniciar novos trabalhos antes da renovação confirmada. Executar
+DESLIGARTUDO após este handoff, em branch de trabalho, e conferir o resultado.
+Retomada: consultar uso, confirmar renovação, executar LIGARTUDO conforme
+CODEX-USAGE-POLICY; atualizar esta branch sem descartar mudanças; conferir
+PR #91/CI/CodeQL e revisão do patch; integrar antes de build/deploy isolado
+autorizado somente em cacau-v1-piloto; reler versão 100%, bindings e smoke
+público, depois consolidar recibo. Não repetir imports ou criar vendas.
+
 ## PR #75 integrada e publicação concluída — 26/10/2026
 
 Usuário autorizou “Pode seguir com a atualização e publicação”. PR #75
