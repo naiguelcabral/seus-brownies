@@ -1,5 +1,15 @@
 # Handoff de autonomia — Cacau v1
 
+## I05: conferência única de complementos em preparação — 29/10/2026
+
+Usuário confirmou que o painel abriu no tablet e escolheu “Preparar uma conferência única no piloto, como fizemos com as compras”. A recuperação relatada supera a espera pendente do checkpoint anterior; não comprova solução permanente dos 429. Sessão do tablet permanece separada do navegador controlável.
+
+Candidata acrescenta conferência sem escrita e confirmação dos ajustes na sessão do próprio usuário. Usa o escritor transacional existente e referências estáveis; recibos coincidentes são preservados na retomada e divergências bloqueiam o fluxo. Não altera permissões, contas, secrets, Auth ou schema. 649 testes Node, lint/tipos/formato e Knip sem novos achados aprovados. Laboratório conectado, build, CI/CodeQL e publicação ainda pendentes neste checkpoint.
+
+Rascunho #1 preservado; três compras, sete movimentos e nenhum dos quatro complementos na última leitura independente. Nenhuma nova escrita operacional. I05 parcial e I04 mantidos. [Contrato e retomada](POSITIVE-ADJUSTMENT-BATCH.md).
+
+Uso oficial na retomada: 100% restante confirmado, LIGARTUDO --prepare-only concluído. Checkpoint durante a implementação: 73% da janela restante e 65% semanal; reserva 5%, trabalhando. Branch codex/pilot-adjustment-batch-20261029 na worktree /tmp/cacau-security-alert-review-20261028. Checkpoint abaixo é histórico e sua pausa foi superada pela renovação confirmada.
+
 ## Sessão do Dono: login aceito e consulta limitada pelo provedor — 29/10/2026
 
 Usuário tentou a conta Dono pelo tablet e informou a mensagem exata

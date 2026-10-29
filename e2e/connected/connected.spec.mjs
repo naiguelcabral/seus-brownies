@@ -32,6 +32,12 @@ test('inventory actions reflect each role before a user can fill a forbidden for
     ).toBeVisible()
     await expect(
       page.getByRole('button', {
+        name: 'Conferir lote de ajustes positivos',
+        exact: true,
+      }),
+    ).toHaveCount(canAdjust ? 1 : 0)
+    await expect(
+      page.getByRole('button', {
         name: 'Registrar ajuste positivo',
         exact: true,
       }),
@@ -125,6 +131,7 @@ test('anonymous, inactive, unverified and missing access links cannot call prote
       'getOperationalReports',
       'findRegistrationCandidate',
       'approveRegistration',
+      'checkPositiveAdjustmentBatch',
     ]) {
       const result = await rpc(page, name)
       expect(result.ok, `${role}: ${name}`).toBe(false)
@@ -174,7 +181,7 @@ for (const role of Object.keys(allowed)) {
       async () =>
         (await import('/e2e/connected/bridge.ts')).serverFunctionPolicies,
     )
-    expect(Object.keys(policies)).toHaveLength(57)
+    expect(Object.keys(policies)).toHaveLength(58)
     const before = await counters()
     for (const [name, permission] of Object.entries(policies)) {
       if (allowed[role] === null || allowed[role].includes(permission)) continue
@@ -1071,4 +1078,158 @@ test('owner sees a focused stock result and duplicate adjustment error without e
   await page.screenshot({
     path: testInfo.outputPath('inventory-feedback-mobile.png'),
   })
+})
+
+test('owner reviews four adjustments on tablet, confirms audited FIFO once and safely reopens the same manifest', async ({
+  page,
+}, testInfo) => {
+  const products = (
+    await pool.query(
+      "insert into products(sku,name,product_type,measurement_unit) values ('QA-ADJ-G','Farinha sintética em lote','ingredient','g'),('QA-ADJ-M','Papel sintético em lote','ingredient','m'),('QA-ADJ-U1','Adesivo sintético em lote','ingredient','unit'),('QA-ADJ-U2','Embalagem sintética em lote','ingredient','unit') returning id,sku,name,measurement_unit as unit",
+    )
+  ).rows
+  const manifest = {
+    version: 1,
+    targetOrigin: origin,
+    adjustments: products.map((product, index) => ({
+      productId: product.id,
+      sku: product.sku,
+      name: product.name,
+      unit: product.unit,
+      quantity: ['240', '0.8', '24', '24'][index],
+      totalCost: ['1.20', '0.40', '3.84', '3.60'][index],
+      reference: `QA-ADJUSTMENT-BATCH-${index}`,
+      reason: 'Fixture descartável; sem contagem física',
+      originReference: `Fonte sintética:${index}`,
+    })),
+  }
+  await identity(page, 'owner')
+  const before = await counters()
+  const wrongOrigin = await rpc(page, 'checkPositiveAdjustmentBatch', {
+    ...manifest,
+    targetOrigin: 'https://other.example.invalid',
+  })
+  expect(wrongOrigin.ok).toBe(false)
+  expect(wrongOrigin.message).toContain('outro ambiente')
+  await page.setViewportSize({ width: 375, height: 812 })
+  async function preview() {
+    await page.goto(
+      '/estoque#ajustes=' +
+        Buffer.from(JSON.stringify(manifest)).toString('base64url'),
+    )
+    await expect(page.getByTestId('fifo-lifecycle-client-ready')).toBeVisible()
+    await page
+      .getByRole('button', {
+        name: 'Conferir lote de ajustes positivos',
+        exact: true,
+      })
+      .click()
+    const dialog = page.getByRole('dialog', {
+      name: 'Conferir ajustes positivos',
+    })
+    await expect(dialog.getByLabel('Dados dos ajustes')).toHaveValue(
+      JSON.stringify(manifest),
+    )
+    expect(new URL(page.url()).hash).toBe('')
+    await dialog
+      .getByRole('button', { name: 'Conferir ajustes', exact: true })
+      .click()
+    await expect(dialog.getByLabel('Conferência dos ajustes')).toContainText(
+      '4 ajustes · Total: R$ 9,04',
+    )
+    await expect(
+      dialog.getByRole('button', {
+        name: 'Confirmar e incluir ajustes',
+        exact: true,
+      }),
+    ).toBeDisabled()
+    expect(
+      await dialog.evaluate(
+        (element) => element.scrollWidth <= element.clientWidth,
+      ),
+    ).toBe(true)
+    return dialog
+  }
+  let dialog = await preview()
+  expect(await counters()).toEqual(before)
+  await page.screenshot({
+    path: testInfo.outputPath('adjustment-batch-preview-mobile.png'),
+  })
+  await dialog.getByRole('checkbox').check()
+  await dialog
+    .getByRole('button', { name: 'Confirmar e incluir ajustes', exact: true })
+    .click()
+  await expect(dialog.getByRole('status')).toContainText('Ajustes concluídos')
+  const after = await counters()
+  expect(after).toEqual({
+    ...before,
+    movements: before.movements + 4,
+    audit: before.audit + 4,
+  })
+  const rows = (
+    await pool.query(
+      "select m.quantity_delta::text quantity,m.allocated_cost::text cost,m.exact_cost,l.original_quantity::text layer_quantity,l.original_cost::text layer_cost,a.actor_auth_user_id actor from stock_movements m join inventory_cost_layers l on l.source_stock_movement_id=m.id join operational_audit_events a on a.entity_type='stock_movement' and a.entity_id=m.id and a.action='inventory.adjustment_positive' where m.product_id=any($1::int[]) order by m.id",
+      [products.map((product) => product.id)],
+    )
+  ).rows
+  expect(rows).toEqual([
+    {
+      quantity: '240.000',
+      cost: '1.20',
+      exact_cost: { numerator: '6', denominator: '5' },
+      layer_quantity: '240.000',
+      layer_cost: '1.20',
+      actor: 'qa-owner',
+    },
+    {
+      quantity: '0.800',
+      cost: '0.40',
+      exact_cost: { numerator: '2', denominator: '5' },
+      layer_quantity: '0.800',
+      layer_cost: '0.40',
+      actor: 'qa-owner',
+    },
+    {
+      quantity: '24.000',
+      cost: '3.84',
+      exact_cost: { numerator: '96', denominator: '25' },
+      layer_quantity: '24.000',
+      layer_cost: '3.84',
+      actor: 'qa-owner',
+    },
+    {
+      quantity: '24.000',
+      cost: '3.60',
+      exact_cost: { numerator: '18', denominator: '5' },
+      layer_quantity: '24.000',
+      layer_cost: '3.60',
+      actor: 'qa-owner',
+    },
+  ])
+  await page.screenshot({
+    path: testInfo.outputPath('adjustment-batch-complete-mobile.png'),
+  })
+  await dialog.getByRole('button', { name: 'Fechar', exact: true }).click()
+  dialog = await preview()
+  await expect(dialog.getByLabel('Conferência dos ajustes')).toContainText(
+    'Já registrado',
+  )
+  await dialog.getByRole('checkbox').check()
+  await dialog
+    .getByRole('button', { name: 'Confirmar e incluir ajustes', exact: true })
+    .click()
+  await expect(dialog.getByRole('status')).toContainText('Ajustes concluídos')
+  await expect(
+    dialog.getByLabel('Resultado dos ajustes').getByRole('listitem'),
+  ).toHaveCount(4)
+  await expect(dialog.getByLabel('Resultado dos ajustes')).toContainText(
+    'já registrado; sem duplicação',
+  )
+  expect(await counters()).toEqual(after)
+  const conflict = structuredClone(manifest)
+  conflict.adjustments[0].quantity = '241'
+  const result = await rpc(page, 'checkPositiveAdjustmentBatch', conflict)
+  expect(result.ok).toBe(false)
+  expect(result.message).toContain('dados diferentes')
+  expect(await counters()).toEqual(after)
 })
