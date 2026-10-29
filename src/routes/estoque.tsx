@@ -640,8 +640,8 @@ function LifecycleActions({
     <section className="mt-6 rounded-2xl border border-[#ecdfd4] bg-white p-5">
       <h2 className="font-bold">Ciclo de vida e ajustes</h2>
       <p className="mt-1 text-xs text-[#896d5b]">
-        Ajustes de estoque exigem a migration 0013. Compensações pós-entrega
-        exigem as migrations 0023 a 0026 e não devolvem alimento ao estoque.
+        Ajustes exigem motivo, referência e confirmação. Compensações
+        pós-entrega não devolvem alimento ao estoque vendável.
       </p>
       {!canAdjust ? (
         <p role="note" className="mt-3 text-sm text-[#75411f]">

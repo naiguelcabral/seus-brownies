@@ -1018,6 +1018,7 @@ test('owner sees a focused stock result and duplicate adjustment error without e
   await identity(page, 'owner')
   await page.setViewportSize({ width: 375, height: 812 })
   await page.goto('/estoque')
+  await expect(page.getByTestId('fifo-lifecycle-client-ready')).toBeVisible()
   const form = page.locator('form').filter({ hasText: 'Ajuste positivo' })
   await form
     .getByRole('combobox', { name: 'Produto', exact: true })
