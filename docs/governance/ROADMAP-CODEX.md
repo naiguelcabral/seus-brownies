@@ -1,5 +1,19 @@
 # Roadmap único — Cacau v1
 
+## S03: atualização publicada no piloto — 29/10/2026
+
+PR #91 integrada em `91299ef` após revisão/checks; três workflows da main
+aprovados e CodeQL real zerado. Audit online repetido com zero; candidata
+validada com 642 testes e build isolado. Publicação autorizada concluída:
+versão `16a49edf`, 100%, somente no piloto. Configuração e contagens
+operacionais preservadas, smoke público aprovado e painel autenticado aberto.
+
+Pendência de deploy e suspensão por reserva abaixo são históricas e superadas.
+Prosseguir com preparação dos 24 brownies de brigadeiro na sessão do usuário,
+sem inventar venda ou repetir compras. I05 parcial e I04, peer herdado da UI,
+Dependabot alerts desativados e limites do servidor Auth continuam abertos.
+[Recibo](PILOT-SECURITY-PUBLICATION-2026-10-29.md).
+
 ## Checkpoint de reserva — 28/10/2026
 
 5% restante atingidos antes do deploy. PR #91 Seroval preparada e validada

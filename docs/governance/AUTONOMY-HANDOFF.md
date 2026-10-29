@@ -1,5 +1,27 @@
 # Handoff de autonomia — Cacau v1
 
+## Publicação de segurança concluída após retomada — 29/10/2026
+
+Suspensão abaixo superada: renovação confirmada com 99% restante e
+LIGARTUDO --prepare-only concluído. PR #91 final e main conferidas; merge
+normal `91299ef`, CI/build, negócio/navegador e CodeQL aprovados, análises
+reais zeradas. Audit online repetido sem vulnerabilidades.
+
+Publicado somente no piloto pelo build/deploy isolado: versão
+`16a49edf-073c-4613-a995-d07a8542040f`, 100%, deployment
+`adb8bdfb-354c-4d0a-9adb-b36147e43d4c`, às 08:28:02 UTC.
+Metadata remota preservada; smoke HTTP passou. Navegador já contém sessão
+autenticada do usuário; painel abriu sem erros de console. Nenhuma escrita
+operacional foi feita. Contagens: 3 compras, 7 itens, 7 movimentos, zero
+produção/vendas/eventos financeiros antes e depois.
+
+[Recibo](PILOT-SECURITY-PUBLICATION-2026-10-29.md). Próximo passo funcional:
+retomar a preparação dos 24 brownies de brigadeiro conforme o workbook e a
+PR #88 draft, conferindo estado/receitas e referências estáveis antes de
+qualquer inclusão autenticada. Não registrar venda ou conclusão física por
+inferência. Não repetir compras consumidas nem este deploy; I05/I04,
+RPO/RTO/retenção e limites do Auth gerenciado continuam pendentes.
+
 ## Publicação do piloto suspensa na reserva — 28/10/2026
 
 Tarefa autorizada: publicar a versão atualizada somente no piloto. **Nenhum
