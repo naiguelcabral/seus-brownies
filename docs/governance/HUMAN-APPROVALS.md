@@ -1,5 +1,9 @@
 # Ações que exigem aprovação humana — Cacau v1
 
+## Conferência única publicada no piloto — 29/10/2026
+
+Autorização de conferência/publicação aplicada à PR #95 após revisão e checks normais. Piloto f27304c7, 100%, fonte 24c9dc1. Nenhuma inclusão operacional; usuário deve confirmar o manifesto privado na própria sessão do tablet. Compras e rascunho #1 preservados. [Recibo](../../evidence/pilot-adjustment-batch-publication-2026-10-29.json).
+
 ## Conferência única dos complementos no tablet — 29/10/2026
 
 Usuário confirmou “O painel abriu” e escolheu “Preparar uma conferência única no piloto, como fizemos com as compras”. Continuidade da autorização de atualizar/publicar o piloto; preparar, validar, revisar e integrar normalmente o fluxo de conferência para confirmação na sessão do próprio usuário. Sem novas permissões ou autoria fabricada. As quatro referências existentes e o rascunho #1 devem ser preservados. Publicar a interface não constitui inclusão operacional nem aceite I05/I04. [Contrato](POSITIVE-ADJUSTMENT-BATCH.md).

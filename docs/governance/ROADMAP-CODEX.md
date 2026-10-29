@@ -1,5 +1,13 @@
 # Roadmap único — Cacau v1
 
+## I05: conferência única publicada; confirmação no tablet pendente — 29/10/2026
+
+PR #95 integrada em 24c9dc1, árvore igual ao HEAD aprovado 242d2f6. Doze checks finais passaram; três workflows da main e suas análises CodeQL reais sem achados, erros ou avisos. 649 testes Node, 17 casos conectados, qualidade, Knip sem novos achados, audit zero e build isolado aprovados. O ensaio de push encontrou espera indevida por networkidle na abertura de login; trocada por prontidão do documento, conservando as asserções de UI/RPC e segurança. Versão final de push/PR e main aprovadas.
+
+Publicado somente no piloto às 15:08:40 UTC: versão f27304c7-aa80-4619-b549-3072be85c512, 100%, fonte 24c9dc1. Configuração, seis nomes de secrets e limites preservados; dez GETs de smoke público aprovados. Leitura independente às 16:11:54 UTC: três compras, sete itens/movimentos, um rascunho e zero ajustes/conclusão/venda/eventos financeiros.
+
+Manifesto privado dos quatro complementos preparado com cadastro e referências originais conferidos; confirmação deve ocorrer na sessão Dono/Administrador do tablet. Publicação não inclui ajustes operacionais. Depois conferir movimentos, camadas, custo e autoria por leitura independente e retomar o rascunho #1 dos 24 brigadeiros. Não repetir compras, criar outro rascunho ou inferir produção física. I05 parcial e I04 mantidos. Recuperação de sessão relatada pelo usuário não atesta solução permanente dos 429. [Contrato](POSITIVE-ADJUSTMENT-BATCH.md) e [recibo](../../evidence/pilot-adjustment-batch-publication-2026-10-29.json).
+
 ## I05: conferência única de complementos em preparação — 29/10/2026
 
 Usuário confirmou que o painel abriu no tablet e escolheu “Preparar uma conferência única no piloto, como fizemos com as compras”. A recuperação relatada supera a espera pendente do checkpoint anterior; não comprova solução permanente dos 429. Sessão do tablet permanece separada do navegador controlável.
