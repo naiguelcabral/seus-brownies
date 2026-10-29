@@ -1049,12 +1049,12 @@ test('owner sees a focused stock result and duplicate adjustment error without e
   const success = page
     .getByRole('status')
     .filter({ hasText: 'Evento FIFO registrado.' })
-  const after = await counters()
+  await expect(success).toBeFocused()
   await expect(
     page.getByRole('navigation', { name: 'Paginação do razão de estoque' }),
-  ).toContainText(`${after.movements} movimentações`)
-  await expect(success).toBeFocused()
+  ).toContainText(`${before.movements + 1} movimentações`)
   await expect(success).toBeInViewport()
+  const after = await counters()
   expect(after).toEqual({
     ...before,
     movements: before.movements + 1,
