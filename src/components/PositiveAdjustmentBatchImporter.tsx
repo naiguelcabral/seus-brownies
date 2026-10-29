@@ -216,7 +216,9 @@ export function PositiveAdjustmentBatchImporter() {
                         Origem: {item.originReference}
                       </p>
                       <p>{item.reason}</p>
-                      {preview?.items[index]?.movementId != null ? (
+                      {results.some((result) => result.index === index) ? (
+                        <p>Registrado; movimento na lista de resultados.</p>
+                      ) : preview?.items[index]?.movementId != null ? (
                         <p>Já registrado; será preservado sem nova entrada.</p>
                       ) : (
                         <p>Ajuste pendente.</p>

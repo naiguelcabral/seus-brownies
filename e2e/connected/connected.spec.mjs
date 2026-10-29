@@ -1160,6 +1160,9 @@ test('owner reviews four adjustments on tablet, confirms audited FIFO once and s
     .getByRole('button', { name: 'Confirmar e incluir ajustes', exact: true })
     .click()
   await expect(dialog.getByRole('status')).toContainText('Ajustes concluídos')
+  await expect(dialog.getByLabel('Conferência dos ajustes')).not.toContainText(
+    'Ajuste pendente.',
+  )
   const after = await counters()
   expect(after).toEqual({
     ...before,
