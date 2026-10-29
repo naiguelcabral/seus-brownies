@@ -1,5 +1,19 @@
 # Ações que exigem aprovação humana — Cacau v1
 
+## Publicação da atualização de segurança no piloto — 29/10/2026
+
+Usuário autorizou “Pode publicar a versão atualizada no piloto” e depois
+“Vamos seguir”. Aplicado ao pacote revisado: integração normal da PR #91 em
+`91299ef`, checks da main aprovados, build/deploy isolado somente em
+`cacau-v1-piloto` e fechamento documental. Versão `16a49edf`, 100%, com
+configuração preservada. Nenhuma mudança em contas, secrets, Auth gerenciado,
+HML anterior ou produção; nenhuma escrita operacional nesta publicação.
+
+Sessão autenticada já existente observada no navegador controlável. Usuário
+escolheu preparar somente a produção; não há venda autorizada para registro
+por inferência. Aceite completo I05/I04 permanece separado.
+[Recibo](PILOT-SECURITY-PUBLICATION-2026-10-29.md).
+
 ## Integração da correção de segurança — 28/10/2026
 
 Após apresentação da PR #89 validada, usuário respondeu “Pode seguir a

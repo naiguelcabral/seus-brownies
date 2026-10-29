@@ -1,5 +1,23 @@
 # Estado canônico do projeto — Cacau v1
 
+## Atualização de segurança publicada no piloto — 29/10/2026
+
+Retomada após renovação confirmada (99% restante) e LIGARTUDO. PR #91
+integrada normalmente em `91299ef`; CI/build, negócio/navegador e três
+análises CodeQL da main aprovados, zero resultados/erros/avisos/alertas.
+Auditoria online repetida com zero vulnerabilidades. Validação da candidata:
+642 testes, qualidade e build isolado aprovados.
+
+Build/deploy isolado da main concluído somente em `cacau-v1-piloto` às
+08:28:02 UTC: versão `16a49edf-073c-4613-a995-d07a8542040f`, 100%.
+Seis nomes de secrets, limites e configuração preservados; smoke público
+passou. Painel abriu na sessão autenticada já existente, sem erros de console.
+Contagens antes/depois: 3 compras/7 itens/7 movimentos, zero produção/vendas/
+eventos financeiros. Sem escrita operacional, migration ou mudança no HML
+anterior/produção. I05/I04 e limites do Auth gerenciado continuam pendentes.
+Este checkpoint supera a suspensão e a pendência de deploy registradas abaixo.
+[Recibo e continuidade](PILOT-SECURITY-PUBLICATION-2026-10-29.md).
+
 ## Reserva de capacidade antes da publicação — 28/10/2026
 
 Franquia oficial chegou a 5% restante; fechamento obrigatório aplicado antes
