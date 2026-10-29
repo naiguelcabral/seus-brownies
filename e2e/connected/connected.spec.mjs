@@ -95,7 +95,9 @@ async function identity(page, role) {
         sameSite: 'Strict',
       },
     ])
-  await page.goto('/login', { waitUntil: 'networkidle' })
+  // Vite's development connection can stay active after the document is ready.
+  // Each test waits for its actual UI or RPC result instead of network silence.
+  await page.goto('/login', { waitUntil: 'domcontentloaded' })
 }
 async function rpc(page, functionName, inputData = {}) {
   return page.evaluate(
