@@ -12,7 +12,7 @@ test('the lockfile excludes the vulnerable dependency versions identified in the
   const minimums: Record<string, string> = {
     '@tanstack/react-start': '1.168.60',
     '@tanstack/start-server-core': '1.169.39',
-    seroval: '1.6.7',
+    seroval: '1.6.11',
     'shell-quote': '1.11.0',
     'postcss-selector-parser': '7.1.6',
     esbuild: '0.25.0',
@@ -120,6 +120,45 @@ test('the patched email renderer preserves escaped HTML and readable plain text'
     'Pedido <pendente> & revisão Conferir https://example.test/check',
   )
   assert.ok(!text.includes('<a '))
+})
+
+test('Seroval uses the real typed array type when data overrides its constructor property', () => {
+  const routerRequire = createRequire(require.resolve('@tanstack/react-router'))
+  const coreRequire = createRequire(
+    routerRequire.resolve('@tanstack/router-core'),
+  )
+  const seroval = coreRequire('seroval') as {
+    serialize: (value: unknown) => string
+    deserialize: (source: string) => unknown
+  }
+  const value = new Uint8Array([3, 5, 8])
+  Object.defineProperty(value, 'constructor', {
+    value: { name: 'UntrustedArrayConstructor' },
+  })
+  const encoded = seroval.serialize(value)
+  assert.ok(!encoded.includes('UntrustedArrayConstructor'))
+  const restored = seroval.deserialize(encoded)
+  assert.ok(restored instanceof Uint8Array)
+  assert.deepEqual(Array.from(restored), [3, 5, 8])
+})
+
+test('Seroval escapes RegExp sources in script output and preserves their syntax', () => {
+  const routerRequire = createRequire(require.resolve('@tanstack/react-router'))
+  const coreRequire = createRequire(
+    routerRequire.resolve('@tanstack/router-core'),
+  )
+  const seroval = coreRequire('seroval') as {
+    serialize: (value: unknown) => string
+    deserialize: (source: string) => unknown
+  }
+  const pattern = new RegExp('(?<value>a<b)', 'gi')
+  const encoded = seroval.serialize(pattern)
+  assert.doesNotMatch(encoded, /</)
+  const restored = seroval.deserialize(encoded)
+  assert.ok(restored instanceof RegExp)
+  assert.equal(restored.source, pattern.source)
+  assert.equal(restored.flags, pattern.flags)
+  assert.equal(restored.exec('a<b')?.groups?.value, 'a<b')
 })
 
 test('the legacy Drizzle loader still transforms TypeScript with its patched esbuild', () => {

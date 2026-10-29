@@ -1,5 +1,30 @@
 # Estado canônico do projeto — Cacau v1
 
+## Reserva de capacidade antes da publicação — 28/10/2026
+
+Franquia oficial chegou a 5% restante; fechamento obrigatório aplicado antes
+de qualquer deploy. PR #91 preparada com 642 testes, qualidade, audit zero e
+build isolado aprovados; CI/CodeQL do HEAD final ainda a reconferir.
+Piloto permanece em 0cdcdb1d. Reset exibido: 28/10 às 23:18:28 Brasília.
+[Próximo passo e limites](AUTONOMY-HANDOFF.md#publicação-do-piloto-suspensa-na-reserva--28102026).
+
+## Publicação do piloto retida por novo alerta Seroval — 28/10/2026
+
+Usuário autorizou publicar a versão atualizada no piloto. Antes do deploy,
+a auditoria online da main eaf677a detectou Seroval 1.6.9 com dois advisories
+moderados, atualizados em 28/10: GHSA-f86p-h4j2-7qgj e GHSA-9wx9-5pv9-3349.
+O zero da rodada anterior continua histórico; nenhuma publicação executada.
+
+Candidata da PR #91 aplica somente o patch Seroval 1.6.11 por override, preservando
+versões TanStack e demais dependências. Oito regressões direcionadas passaram,
+incluindo tipo real de array com constructor próprio e escape de RegExp com
+round-trip. 642 testes, qualidade, audit zero e build isolado em 0a1ddba
+aprovados; conferir CI/CodeQL no HEAD da PR #91.
+Revisão/integração desse incremento novo precedem a publicação autorizada.
+Piloto continua em 0cdcdb1d; configuração, seis secrets, chave pública e
+namespaces foram relidos sem mudanças. Nenhuma escrita operacional.
+[Recibo](../../evidence/seroval-predeploy-review-2026-10-28.json).
+
 ## Correção de segurança integrada — 28/10/2026
 
 Após autorização do usuário para a próxima etapa, PR #89 integrada em
