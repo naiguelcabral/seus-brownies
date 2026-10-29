@@ -1014,7 +1014,7 @@ test('tablet batch uses guarded HTTP writes, persists exact totals and reopens w
 
 test('owner sees a focused stock result and duplicate adjustment error without extra writes', async ({
   page,
-}) => {
+}, testInfo) => {
   await pool.query(
     "insert into products(sku,name,product_type,measurement_unit) values ('QA-FEEDBACK','Insumo de retorno sintético','ingredient','g')",
   )
@@ -1049,9 +1049,12 @@ test('owner sees a focused stock result and duplicate adjustment error without e
   const success = page
     .getByRole('status')
     .filter({ hasText: 'Evento FIFO registrado.' })
+  const after = await counters()
+  await expect(
+    page.getByRole('navigation', { name: 'Paginação do razão de estoque' }),
+  ).toContainText(`${after.movements} movimentações`)
   await expect(success).toBeFocused()
   await expect(success).toBeInViewport()
-  const after = await counters()
   expect(after).toEqual({
     ...before,
     movements: before.movements + 1,
@@ -1065,4 +1068,7 @@ test('owner sees a focused stock result and duplicate adjustment error without e
   await expect(error).toBeInViewport()
   await expect(error).not.toBeEmpty()
   expect(await counters()).toEqual(after)
+  await page.screenshot({
+    path: testInfo.outputPath('inventory-feedback-mobile.png'),
+  })
 })

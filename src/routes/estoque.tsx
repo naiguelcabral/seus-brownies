@@ -675,7 +675,7 @@ function LifecycleActions({
           ref={messageRef}
           tabIndex={-1}
           role={message.kind === 'error' ? 'alert' : 'status'}
-          className="mt-3 rounded-lg bg-[#fff5e7] p-3 text-sm text-[#75411f]"
+          className="sticky top-4 z-10 mt-3 rounded-lg bg-[#fff5e7] p-3 text-sm text-[#75411f]"
         >
           {message.text}
         </p>
