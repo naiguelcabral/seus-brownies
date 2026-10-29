@@ -1,5 +1,11 @@
 # Handoff de autonomia — Cacau v1
 
+## I05: apresentação do rendimento no rascunho — 29/10/2026
+
+Usuário relatou que o rascunho #1 parecia indicar 24 mil unidades. Leitura independente às 16:27:03 UTC confirmou saída planejada `24.000` no decimal canônico do PostgreSQL (24 unidades), realizado nulo e status draft. A auditoria da interface interpolava o decimal sem formatação brasileira. Candidata apresenta `24 un.` e conserva frações com vírgula, milhares, diferenças negativas e ausência de realizado. Nenhuma alteração do lote, banco ou cálculos.
+
+Regressões cobrem 24 versus 24 mil, frações, valores acima da precisão Number, rascunho sem produção e tela em 375/768px sem chamadas de escrita. Validação, integração e publicação em andamento. I05 parcial e I04 mantidos; conservar compras, referências dos complementos e rascunho #1.
+
 ## I05: conferência única publicada; confirmação no tablet pendente — 29/10/2026
 
 PR #95 integrada em 24c9dc1, árvore igual ao HEAD aprovado 242d2f6. Doze checks finais passaram; três workflows da main e suas análises CodeQL reais sem achados, erros ou avisos. 649 testes Node, 17 casos conectados, qualidade, Knip sem novos achados, audit zero e build isolado aprovados. O ensaio de push encontrou espera indevida por networkidle na abertura de login; trocada por prontidão do documento, conservando as asserções de UI/RPC e segurança. Versão final de push/PR e main aprovadas.

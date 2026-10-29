@@ -247,6 +247,37 @@ test('compra e produção cabem no celular', async ({ page }) => {
   )
 })
 
+test('rascunho exibe 24 unidades sem confundir decimal do banco com milhares', async ({
+  page,
+}, testInfo) => {
+  await page.setViewportSize({ width: 375, height: 812 })
+  await page
+    .getByRole('button', { name: 'Ensaio Produção', exact: true })
+    .click()
+  await page.getByRole('button', { name: 'Ver lote #1', exact: true }).click()
+  const dialog = page.getByRole('dialog', { name: 'Lote #1', exact: true })
+  await expect(dialog).toContainText('planejado: 24 un.')
+  await expect(dialog).toContainText('realizado: não informado')
+  await expect(dialog).toContainText('diferença: não informada')
+  await expect(dialog).not.toContainText('24.000')
+  await expect(page.getByLabel('Chamadas simuladas')).toHaveText('[]')
+  expect(
+    await dialog.evaluate(
+      (element) => element.scrollWidth <= element.clientWidth,
+    ),
+  ).toBe(true)
+  await page.screenshot({
+    path: testInfo.outputPath('production-draft-24-units-mobile.png'),
+  })
+  await page.setViewportSize({ width: 768, height: 1024 })
+  await expect(dialog).toContainText('planejado: 24 un.')
+  expect(
+    await dialog.evaluate(
+      (element) => element.scrollWidth <= element.clientWidth,
+    ),
+  ).toBe(true)
+})
+
 function syntheticBatch(origin: string) {
   return {
     version: 1,

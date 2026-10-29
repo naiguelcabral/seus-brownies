@@ -7,7 +7,7 @@ import { useServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
 
 import { ManagementLayout } from '#/components/ManagementLayout'
-import { compareOutputYield } from '#/features/production/output-yield'
+import { formatOutputYield } from '#/features/production/output-yield'
 import { formatBrlMoney } from '#/lib/format-money'
 import { ingredientShortfalls } from '#/features/production/ingredient-shortfalls'
 import { productionCostDivergenceMessages } from '#/features/production/cost-reconciliation'
@@ -1061,12 +1061,12 @@ function Details({
         <AuditList
           title="Rendimento e custo alocado por saída"
           rows={details.outputs.map((item) => {
-            const yieldFacts = compareOutputYield(
+            const yieldFacts = formatOutputYield(
               item.plannedQuantity,
               item.actualQuantity,
+              item.unit ?? 'unit',
             )
-            const unit = item.unit ?? 'unit'
-            return `${item.productName}${item.role === 'co_product' ? ' · coproduto' : ''} · planejado: ${yieldFacts.planned ?? 'não informado'} ${unit} · realizado: ${yieldFacts.actual ?? 'não informado'} ${unit} · diferença: ${yieldFacts.difference ?? 'não informada'} ${unit} · custo alocado: ${item.allocatedCost === null ? 'não informado' : formatBrlMoney(item.allocatedCost)}`
+            return `${item.productName}${item.role === 'co_product' ? ' · coproduto' : ''} · planejado: ${yieldFacts.planned ?? 'não informado'} · realizado: ${yieldFacts.actual ?? 'não informado'} · diferença: ${yieldFacts.difference ?? 'não informada'} · custo alocado: ${item.allocatedCost === null ? 'não informado' : formatBrlMoney(item.allocatedCost)}`
           })}
         />
         <AuditList
