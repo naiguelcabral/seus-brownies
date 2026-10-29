@@ -4,8 +4,8 @@
 
 Publicação autorizada do piloto ainda não executada: auditoria online
 detectou dois advisories moderados em Seroval 1.6.9 após o fechamento #89/#90.
-Patch mínimo 1.6.11 preparado, sem atualizar TanStack; oito regressões
-direcionadas aprovadas. Conferir suíte/qualidade/build/CI, revisar e integrar
+Patch mínimo 1.6.11 na PR #91, sem atualizar TanStack; oito regressões,
+642 testes, qualidade, audit zero e build isolado aprovados. Conferir CI/CodeQL, revisar e integrar
 esse incremento antes de publicar. A configuração remota permanece intacta;
 o checkpoint anterior de audit zero não representa essa nova consulta.
 [Recibo](../../evidence/seroval-predeploy-review-2026-10-28.json).

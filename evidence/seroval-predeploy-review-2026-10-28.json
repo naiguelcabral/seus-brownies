@@ -21,8 +21,9 @@
     "quality": "passed",
     "knip_new_findings": 0,
     "audit": "passed_zero_vulnerabilities",
-    "isolated_build": "pending",
-    "ci": "pending"
+    "isolated_build": "passed",
+    "validated_build_revision": "0a1ddba",
+    "ci": "See final HEAD checks on PR 91"
   },
   "pilot": {
     "worker": "cacau-v1-piloto",

@@ -7,10 +7,11 @@ a auditoria online da main eaf677a detectou Seroval 1.6.9 com dois advisories
 moderados, atualizados em 28/10: GHSA-f86p-h4j2-7qgj e GHSA-9wx9-5pv9-3349.
 O zero da rodada anterior continua histórico; nenhuma publicação executada.
 
-Candidata aplica somente o patch Seroval 1.6.11 por override, preservando
+Candidata da PR #91 aplica somente o patch Seroval 1.6.11 por override, preservando
 versões TanStack e demais dependências. Oito regressões direcionadas passaram,
 incluindo tipo real de array com constructor próprio e escape de RegExp com
-round-trip. Suíte completa, qualidade, build e CI seguem no recibo abaixo.
+round-trip. 642 testes, qualidade, audit zero e build isolado em 0a1ddba
+aprovados; conferir CI/CodeQL no HEAD da PR #91.
 Revisão/integração desse incremento novo precedem a publicação autorizada.
 Piloto continua em 0cdcdb1d; configuração, seis secrets, chave pública e
 namespaces foram relidos sem mudanças. Nenhuma escrita operacional.
