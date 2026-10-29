@@ -14,6 +14,25 @@ test.describe.configure({ mode: 'serial' })
 test.afterAll(async () => {
   await pool.end()
 })
+
+test('inventory actions reflect each role before a user can fill a forbidden form', async ({ page }) => {
+  for (const [role, canAdjust, canCompensate] of [
+    ['manager', false, true],
+    ['production', false, false],
+    ['owner', true, true],
+  ]) {
+    await identity(page, role)
+    const before = await counters()
+    await page.goto('/estoque')
+    await expect(page.getByTestId('fifo-lifecycle-client-ready')).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Registrar ajuste positivo', exact: true })).toHaveCount(canAdjust ? 1 : 0)
+    await expect(page.getByRole('button', { name: 'Registrar ajuste negativo', exact: true })).toHaveCount(canAdjust ? 1 : 0)
+    await expect(page.getByRole('button', { name: 'Registrar perda de estoque', exact: true })).toHaveCount(canAdjust ? 1 : 0)
+    await expect(page.getByRole('button', { name: 'Registrar compensação', exact: true })).toHaveCount(canCompensate ? 1 : 0)
+    if (!canAdjust) await expect(page.getByText('Ajustes e perdas de estoque exigem perfil Dono ou Administrador.', { exact: true })).toBeVisible()
+    expect(await counters()).toEqual(before)
+  }
+})
 test.beforeEach(async ({ context }) => {
   await context.route('**/*', (route) =>
     new URL(route.request().url()).origin === origin
