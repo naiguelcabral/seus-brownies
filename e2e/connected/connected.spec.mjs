@@ -1168,7 +1168,7 @@ test('owner reviews four adjustments on tablet, confirms audited FIFO once and s
   })
   const rows = (
     await pool.query(
-      "select m.quantity_delta::text quantity,m.allocated_cost::text cost,m.exact_cost,l.original_quantity::text layer_quantity,l.original_cost::text layer_cost,a.actor_auth_user_id actor from stock_movements m join inventory_cost_layers l on l.source_stock_movement_id=m.id join operational_audit_events a on a.entity_type='stock_movement' and a.entity_id=m.id and a.action='inventory.adjustment_positive' where m.product_id=any($1::int[]) order by m.id",
+      "select m.quantity_delta::text quantity,m.allocated_cost::text cost,m.exact_cost,l.original_quantity::text layer_quantity,l.original_cost::text layer_cost,a.actor_auth_user_id actor from stock_movements m join inventory_cost_layers l on l.source_stock_movement_id=m.id join operational_audit_events a on a.entity_type='stock_movement' and a.entity_id=m.id::text and a.action='inventory.adjustment_positive' where m.product_id=any($1::int[]) order by m.id",
       [products.map((product) => product.id)],
     )
   ).rows
