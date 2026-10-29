@@ -1013,7 +1013,7 @@ test('owner sees a focused stock result and duplicate adjustment error without e
   page,
 }) => {
   await pool.query(
-    "insert into products(sku,name,type,unit) values ('QA-FEEDBACK','Insumo de retorno sintético','ingredient','g')",
+    "insert into products(sku,name,product_type,measurement_unit) values ('QA-FEEDBACK','Insumo de retorno sintético','ingredient','g')",
   )
   await identity(page, 'owner')
   await page.setViewportSize({ width: 375, height: 812 })
