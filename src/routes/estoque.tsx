@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import {
   createFileRoute,
   useHydrated,
@@ -8,6 +8,8 @@ import {
 import { useServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
 
+import { hasPermission } from '#/features/auth/authorization'
+import type { AppRole } from '#/features/auth/authorization'
 import { ManagementLayout } from '#/components/ManagementLayout'
 import { listInventory } from '#/features/operations/functions'
 import {
@@ -75,6 +77,7 @@ function InventoryPage() {
   const { balances, movements, actionProducts } = Route.useLoaderData()
   const search = Route.useSearch()
   const navigate = useNavigate({ from: Route.fullPath })
+  const { appRole } = Route.useRouteContext()
   const clientReady = useHydrated()
   return (
     <ManagementLayout
@@ -239,7 +242,16 @@ function InventoryPage() {
           }
         />
       </section>
-      <LifecycleActions products={actionProducts} />
+      <LifecycleActions
+        products={actionProducts}
+        role={appRole}
+        canAdjust={Boolean(
+          appRole && hasPermission(appRole, 'fifo:lifecycle:write'),
+        )}
+        canCompensate={Boolean(
+          appRole && hasPermission(appRole, 'financial:compensation:write'),
+        )}
+      />
       <section className="mt-6 overflow-hidden rounded-2xl border border-[#ecdfd4] bg-white">
         <div className="border-b border-[#f0e5dc] px-5 py-4">
           <h2 className="font-bold">Histórico de movimentações</h2>
@@ -483,10 +495,26 @@ function InventoryError({ error }: { error: unknown }) {
   )
 }
 
+const inventoryRoleLabels: Record<AppRole, string> = {
+  owner: 'Dono',
+  admin: 'Administrador',
+  manager: 'Gerente',
+  production: 'Produção',
+  employee: 'Funcionário',
+  sales: 'Vendas',
+  viewer: 'Consulta',
+}
+
 function LifecycleActions({
   products,
+  role,
+  canAdjust,
+  canCompensate,
 }: {
   products: Array<{ id: number; name: string; sku: string }>
+  role: AppRole | null
+  canAdjust: boolean
+  canCompensate: boolean
 }) {
   const router = useRouter()
   const recordReturn = useServerFn(returnSaleLifecycle)
@@ -494,7 +522,14 @@ function LifecycleActions({
   const recordNegative = useServerFn(recordNegativeAdjustmentLifecycle)
   const recordPositive = useServerFn(recordPositiveAdjustmentLifecycle)
   const [pending, setPending] = useState(false)
-  const [message, setMessage] = useState<string | null>(null)
+  const [message, setMessage] = useState<{
+    kind: 'success' | 'error'
+    text: string
+  } | null>(null)
+  const messageRef = useRef<HTMLParagraphElement>(null)
+  useEffect(() => {
+    if (message) messageRef.current?.focus()
+  }, [message])
   const [returnValues, setReturnValues] = useState(() => ({
     saleItemId: '',
     quantity: '',
@@ -532,13 +567,17 @@ function LifecycleActions({
         : { productId: Number(values.productId) }),
     }
     if ((kind === 'loss' || kind === 'negative') && !confirmed) {
-      setMessage('Confirme a saída de estoque antes de continuar.')
+      setMessage({
+        kind: 'error',
+        text: 'Confirme a saída de estoque antes de continuar.',
+      })
       return
     }
     if (kind === 'positive' && !confirmed) {
-      setMessage(
-        'Confirme o impacto do ajuste positivo no estoque e na camada FIFO antes de continuar.',
-      )
+      setMessage({
+        kind: 'error',
+        text: 'Confirme o impacto do ajuste positivo no estoque e na camada FIFO antes de continuar.',
+      })
       return
     }
     setPending(true)
@@ -564,14 +603,16 @@ function LifecycleActions({
         if (!validation.ok) throw new Error(validation.message)
         await recordPositive({ data: validation.data })
       }
-      setMessage(
-        kind === 'return'
-          ? 'Compensação registrada sem retorno ao estoque vendável.'
-          : 'Evento FIFO registrado.',
-      )
+      setMessage({
+        kind: 'success',
+        text:
+          kind === 'return'
+            ? 'Compensação registrada sem retorno ao estoque vendável.'
+            : 'Evento FIFO registrado.',
+      })
       await router.invalidate()
     } catch (error) {
-      setMessage(lifecycleErrorMessage(error))
+      setMessage({ kind: 'error', text: lifecycleErrorMessage(error) })
     } finally {
       setPending(false)
     }
@@ -612,104 +653,128 @@ function LifecycleActions({
   return (
     <section className="mt-6 rounded-2xl border border-[#ecdfd4] bg-white p-5">
       <h2 className="font-bold">Ciclo de vida e ajustes</h2>
-      <p className="mt-1 text-xs text-[#896d5b]">
-        Ajustes de estoque exigem a migration 0013. Compensações pós-entrega
-        exigem as migrations 0023 a 0026 e não devolvem alimento ao estoque.
+      <p className="mt-2 text-sm font-bold text-[#75411f]">
+        Perfil atual: {role ? inventoryRoleLabels[role] : 'Sem acesso'}
       </p>
+      <p className="mt-1 text-xs text-[#896d5b]">
+        Ajustes exigem motivo, referência e confirmação. Compensações
+        pós-entrega não devolvem alimento ao estoque vendável.
+      </p>
+      {!canAdjust ? (
+        <p role="note" className="mt-3 text-sm text-[#75411f]">
+          Ajustes e perdas de estoque exigem perfil Dono ou Administrador.
+        </p>
+      ) : null}
+      {!canCompensate ? (
+        <p role="note" className="mt-3 text-sm text-[#75411f]">
+          Compensações pós-entrega exigem perfil Dono, Administrador ou Gerente.
+        </p>
+      ) : null}
       {message ? (
-        <p className="mt-3 rounded-lg bg-[#fff5e7] p-3 text-sm text-[#75411f]">
-          {message}
+        <p
+          ref={messageRef}
+          tabIndex={-1}
+          role={message.kind === 'error' ? 'alert' : 'status'}
+          className="sticky top-4 z-10 mt-3 rounded-lg bg-[#fff5e7] p-3 text-sm text-[#75411f]"
+        >
+          {message.text}
         </p>
       ) : null}
       <div className="mt-4 grid gap-4 lg:grid-cols-2">
-        <form
-          className="rounded-xl border border-[#ead9ca] p-3 space-y-2"
-          onSubmit={(event) => {
-            event.preventDefault()
-            void run('return', returnValues)
-          }}
-        >
-          <strong>Compensação pós-entrega</strong>
-          {field('ID do item da venda', returnValues.saleItemId, (value) =>
-            setReturnValues({ ...returnValues, saleItemId: value }),
-          )}
-          {field(
-            'Quantidade',
-            returnValues.quantity,
-            (value) => setReturnValues({ ...returnValues, quantity: value }),
-            '1,000',
-          )}
-          <label className="block text-xs font-bold">
-            Decisão
-            <select
-              className="field mt-1"
-              value={returnValues.settlement}
-              onChange={(event) =>
-                setReturnValues({
-                  ...returnValues,
-                  settlement: event.target.value,
-                })
-              }
-            >
-              <option value="refund">Reembolso</option>
-              <option value="store_credit">Crédito futuro</option>
-            </select>
-          </label>
-          <label className="block text-xs font-bold">
-            Data do evento
-            <input
-              className="field mt-1"
-              type="date"
-              value={returnValues.occurredOn}
-              onChange={(event) =>
-                setReturnValues({
-                  ...returnValues,
-                  occurredOn: event.target.value,
-                })
+        {canCompensate ? (
+          <form
+            className="rounded-xl border border-[#ead9ca] p-3 space-y-2"
+            onSubmit={(event) => {
+              event.preventDefault()
+              void run('return', returnValues)
+            }}
+          >
+            <strong>Compensação pós-entrega</strong>
+            {field('ID do item da venda', returnValues.saleItemId, (value) =>
+              setReturnValues({ ...returnValues, saleItemId: value }),
+            )}
+            {field(
+              'Quantidade',
+              returnValues.quantity,
+              (value) => setReturnValues({ ...returnValues, quantity: value }),
+              '1,000',
+            )}
+            <label className="block text-xs font-bold">
+              Decisão
+              <select
+                className="field mt-1"
+                value={returnValues.settlement}
+                onChange={(event) =>
+                  setReturnValues({
+                    ...returnValues,
+                    settlement: event.target.value,
+                  })
+                }
+              >
+                <option value="refund">Reembolso</option>
+                <option value="store_credit">Crédito futuro</option>
+              </select>
+            </label>
+            <label className="block text-xs font-bold">
+              Data do evento
+              <input
+                className="field mt-1"
+                type="date"
+                value={returnValues.occurredOn}
+                onChange={(event) =>
+                  setReturnValues({
+                    ...returnValues,
+                    occurredOn: event.target.value,
+                  })
+                }
+              />
+            </label>
+            {field('Motivo', returnValues.reason, (value) =>
+              setReturnValues({ ...returnValues, reason: value }),
+            )}
+            {field('Referência', returnValues.reference, (value) =>
+              setReturnValues({ ...returnValues, reference: value }),
+            )}
+            <button disabled={pending} className="action-button">
+              Registrar compensação
+            </button>
+          </form>
+        ) : null}
+        {canAdjust ? (
+          <>
+            <NegativeForm
+              title="Perda de estoque"
+              values={lossValues}
+              setValues={setLossValues}
+              product={product}
+              field={field}
+              pending={pending}
+              onSubmit={(confirmed) => run('loss', lossValues, confirmed)}
+            />
+            <NegativeForm
+              title="Ajuste negativo"
+              values={negativeAdjustmentValues}
+              setValues={setNegativeAdjustmentValues}
+              product={product}
+              field={field}
+              pending={pending}
+              onSubmit={(confirmed) =>
+                run('negative', negativeAdjustmentValues, confirmed)
               }
             />
-          </label>
-          {field('Motivo', returnValues.reason, (value) =>
-            setReturnValues({ ...returnValues, reason: value }),
-          )}
-          {field('Referência', returnValues.reference, (value) =>
-            setReturnValues({ ...returnValues, reference: value }),
-          )}
-          <button disabled={pending} className="action-button">
-            Registrar compensação
-          </button>
-        </form>
-        <NegativeForm
-          title="Perda de estoque"
-          values={lossValues}
-          setValues={setLossValues}
-          product={product}
-          field={field}
-          pending={pending}
-          onSubmit={(confirmed) => run('loss', lossValues, confirmed)}
-        />
-        <NegativeForm
-          title="Ajuste negativo"
-          values={negativeAdjustmentValues}
-          setValues={setNegativeAdjustmentValues}
-          product={product}
-          field={field}
-          pending={pending}
-          onSubmit={(confirmed) =>
-            run('negative', negativeAdjustmentValues, confirmed)
-          }
-        />
-        <PositiveAdjustmentForm
-          products={products}
-          values={positiveValues}
-          setValues={setPositiveValues}
-          pending={pending}
-          confirmed={positiveConfirmed}
-          setConfirmed={setPositiveConfirmed}
-          onSubmit={() => {
-            void run('positive', positiveValues, positiveConfirmed)
-          }}
-        />
+            <PositiveAdjustmentForm
+              products={products}
+              values={positiveValues}
+              setValues={setPositiveValues}
+              pending={pending}
+              confirmed={positiveConfirmed}
+              setConfirmed={setPositiveConfirmed}
+              onSubmit={() => {
+                void run('positive', positiveValues, positiveConfirmed)
+              }}
+            />
+          </>
+        ) : null}
       </div>
     </section>
   )

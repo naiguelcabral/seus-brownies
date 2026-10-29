@@ -1,5 +1,27 @@
 # Handoff de autonomia — Cacau v1
 
+## Continuidade após publicação: estoque e rascunho #1 — 29/10/2026
+
+Publicação de segurança/recibo #92 concluídos; main documental `337a16c`,
+três workflows aprovados e análises CodeQL reais zeradas. Correção nova na
+branch `codex/inventory-permission-feedback-20261029`, mesma worktree de
+segurança. Não muda matriz: esconde formulários sem permissão, explica
+restrição e foca retorno. 642 testes, qualidade, Knip e build isolado
+aprovados; conferir laboratório final/CI/CodeQL, revisar/integrar/publicar.
+
+Rascunho #1 já criado uma vez pela aplicação, receita 2 e saída planejada de
+24 brigadeiros. Primeira tentativa de sessão falhou; ausência confirmada
+antes do reenvio único. Sete movimentos de estoque preservados, nenhum
+ajuste/conclusão/venda/pagamento. Referência do lote e quatro ajustes no
+[recibo](PILOT-INVENTORY-PERMISSION-FEEDBACK-2026-10-29.md), planos comerciais
+privados em /tmp. Não recriar lote ou trocar referências.
+
+Usuário indicou aba 2 do navegador Codex e três identidades. Consulta privada
+confirmou um Dono e dois Gerentes, ativos/verificados. Conta correta foi
+informada apenas na conversa para entrada pelo usuário; aguardar/conferir
+principal antes dos complementos. Nenhum perfil alterado; nunca usar SQL de
+escrita para substituir RBAC. PR #88 segue draft/histórica.
+
 ## Publicação de segurança concluída após retomada — 29/10/2026
 
 Suspensão abaixo superada: renovação confirmada com 99% restante e

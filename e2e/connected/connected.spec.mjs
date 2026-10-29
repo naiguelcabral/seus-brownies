@@ -14,6 +14,53 @@ test.describe.configure({ mode: 'serial' })
 test.afterAll(async () => {
   await pool.end()
 })
+
+test('inventory actions reflect each role before a user can fill a forbidden form', async ({
+  page,
+}) => {
+  for (const [role, label, canAdjust, canCompensate] of [
+    ['manager', 'Gerente', false, true],
+    ['production', 'Produção', false, false],
+    ['owner', 'Dono', true, true],
+  ]) {
+    await identity(page, role)
+    const before = await counters()
+    await page.goto('/estoque')
+    await expect(page.getByTestId('fifo-lifecycle-client-ready')).toBeVisible()
+    await expect(
+      page.getByText(`Perfil atual: ${label}`, { exact: true }),
+    ).toBeVisible()
+    await expect(
+      page.getByRole('button', {
+        name: 'Registrar ajuste positivo',
+        exact: true,
+      }),
+    ).toHaveCount(canAdjust ? 1 : 0)
+    await expect(
+      page.getByRole('button', {
+        name: 'Registrar ajuste negativo',
+        exact: true,
+      }),
+    ).toHaveCount(canAdjust ? 1 : 0)
+    await expect(
+      page.getByRole('button', {
+        name: 'Registrar perda de estoque',
+        exact: true,
+      }),
+    ).toHaveCount(canAdjust ? 1 : 0)
+    await expect(
+      page.getByRole('button', { name: 'Registrar compensação', exact: true }),
+    ).toHaveCount(canCompensate ? 1 : 0)
+    if (!canAdjust)
+      await expect(
+        page.getByText(
+          'Ajustes e perdas de estoque exigem perfil Dono ou Administrador.',
+          { exact: true },
+        ),
+      ).toBeVisible()
+    expect(await counters()).toEqual(before)
+  }
+})
 test.beforeEach(async ({ context }) => {
   await context.route('**/*', (route) =>
     new URL(route.request().url()).origin === origin
@@ -963,4 +1010,65 @@ test('tablet batch uses guarded HTTP writes, persists exact totals and reopens w
     'já registrada; sem duplicação',
   )
   expect(await counters()).toEqual(after)
+})
+
+test('owner sees a focused stock result and duplicate adjustment error without extra writes', async ({
+  page,
+}, testInfo) => {
+  await pool.query(
+    "insert into products(sku,name,product_type,measurement_unit) values ('QA-FEEDBACK','Insumo de retorno sintético','ingredient','g')",
+  )
+  await identity(page, 'owner')
+  await page.setViewportSize({ width: 375, height: 812 })
+  await page.goto('/estoque')
+  await expect(page.getByTestId('fifo-lifecycle-client-ready')).toBeVisible()
+  const form = page.locator('form').filter({ hasText: 'Ajuste positivo' })
+  await form
+    .getByRole('combobox', { name: 'Produto', exact: true })
+    .selectOption({ label: 'Insumo de retorno sintético · QA-FEEDBACK' })
+  await form
+    .getByRole('textbox', { name: 'Quantidade', exact: true })
+    .fill('1,250')
+  await form
+    .getByRole('textbox', { name: 'Custo total', exact: true })
+    .fill('1,11')
+  await form
+    .getByRole('textbox', { name: 'Origem do custo', exact: true })
+    .fill('Fonte sintética descartável')
+  await form
+    .getByRole('textbox', { name: 'Motivo', exact: true })
+    .fill('Ajuste de teste local descartável')
+  await form
+    .getByRole('textbox', { name: 'Referência', exact: true })
+    .fill('QA-FEEDBACK-001')
+  await form.getByRole('checkbox').check()
+  const before = await counters()
+  await form
+    .getByRole('button', { name: 'Registrar ajuste positivo', exact: true })
+    .click()
+  const success = page
+    .getByRole('status')
+    .filter({ hasText: 'Evento FIFO registrado.' })
+  await expect(success).toBeFocused()
+  await expect(
+    page.getByRole('navigation', { name: 'Paginação do razão de estoque' }),
+  ).toContainText(`${before.movements + 1} movimentações`)
+  await expect(success).toBeInViewport()
+  const after = await counters()
+  expect(after).toEqual({
+    ...before,
+    movements: before.movements + 1,
+    audit: before.audit + 1,
+  })
+  await form
+    .getByRole('button', { name: 'Registrar ajuste positivo', exact: true })
+    .click()
+  const error = page.getByRole('alert')
+  await expect(error).toBeFocused()
+  await expect(error).toBeInViewport()
+  await expect(error).not.toBeEmpty()
+  expect(await counters()).toEqual(after)
+  await page.screenshot({
+    path: testInfo.outputPath('inventory-feedback-mobile.png'),
+  })
 })

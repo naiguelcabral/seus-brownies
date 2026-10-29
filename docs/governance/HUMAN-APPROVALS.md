@@ -1,5 +1,15 @@
 # Ações que exigem aprovação humana — Cacau v1
 
+## Continuidade do lote e correção de feedback — 29/10/2026
+
+Usuário confirmou que o botão também não respondia e indicou a sessão e
+três contas para conferir o perfil Dono. Consulta privada apenas de leitura
+identificou o vínculo correto; nenhuma concessão/alteração de acesso.
+A regra FIFO permanece restrita; corrigida somente a apresentação das ações
+e mensagens. O rascunho #1 dos 24 brigadeiros foi salvo pela aplicação sob a
+autorização anterior de preparar a produção. Sem conclusão/venda/pagamento;
+ajustes pendentes da sessão com permissão. [Recibo](PILOT-INVENTORY-PERMISSION-FEEDBACK-2026-10-29.md).
+
 ## Publicação da atualização de segurança no piloto — 29/10/2026
 
 Usuário autorizou “Pode publicar a versão atualizada no piloto” e depois

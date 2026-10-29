@@ -1,5 +1,15 @@
 # Roadmap único — Cacau v1
 
+## I05: rascunho #1 e correção de retorno/permissões — 29/10/2026
+
+Preparação do lote de 24 brigadeiros salva como rascunho #1, sem movimento de
+estoque. Complementos aguardam sessão Dono já existente; Gerente não pode
+ajustar FIFO. Candidata elimina formulários indevidos e torna a mensagem
+visível, preservando a matriz/servidor. Validação local aprovada; conferir
+CI/CodeQL e integrar/publicar a correção antes de declarar a UX resolvida.
+Não repetir compras ou criar outro rascunho. I05 parcial e I04 mantidos.
+[Recibo](PILOT-INVENTORY-PERMISSION-FEEDBACK-2026-10-29.md).
+
 ## S03: atualização publicada no piloto — 29/10/2026
 
 PR #91 integrada em `91299ef` após revisão/checks; três workflows da main
