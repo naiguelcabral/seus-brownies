@@ -18,15 +18,18 @@ test.afterAll(async () => {
 test('inventory actions reflect each role before a user can fill a forbidden form', async ({
   page,
 }) => {
-  for (const [role, canAdjust, canCompensate] of [
-    ['manager', false, true],
-    ['production', false, false],
-    ['owner', true, true],
+  for (const [role, label, canAdjust, canCompensate] of [
+    ['manager', 'Gerente', false, true],
+    ['production', 'Produção', false, false],
+    ['owner', 'Dono', true, true],
   ]) {
     await identity(page, role)
     const before = await counters()
     await page.goto('/estoque')
     await expect(page.getByTestId('fifo-lifecycle-client-ready')).toBeVisible()
+    await expect(
+      page.getByText(`Perfil atual: ${label}`, { exact: true }),
+    ).toBeVisible()
     await expect(
       page.getByRole('button', {
         name: 'Registrar ajuste positivo',

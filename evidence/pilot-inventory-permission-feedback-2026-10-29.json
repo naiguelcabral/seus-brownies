@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 1,
+  "scope": "pilot-inventory-permission-feedback-and-production-draft",
+  "reproduction": {
+    "sourceCommit": "cf833b1",
+    "role": "manager",
+    "expectedAdjustmentButtons": 0,
+    "observedPositiveAdjustmentButtons": 1,
+    "serverDeniedMutation": true,
+    "errorAboveVisibleForm": true,
+    "remoteStockWrites": 0
+  },
+  "correction": {
+    "usesExistingPermissions": true,
+    "authorizationMatrixChanged": false,
+    "serverWritersChanged": false,
+    "showsCurrentRole": true,
+    "focusesFeedback": true,
+    "rolesCovered": ["owner", "manager", "production"]
+  },
+  "validation": {
+    "nodeTestsPassed": 642,
+    "connectedPostgresBrowserTestsPassed": 16,
+    "connectedTestedCommit": "994659c",
+    "laterChange": "Displays current role; corresponding connected assertions added for CI.",
+    "lintPassed": true,
+    "typecheckPassed": true,
+    "formatPassed": true,
+    "knipContextualFindings": 4,
+    "knipNewFindings": 0,
+    "isolatedPilotBuildPassed": true,
+    "isolatedBuildCommit": "b099d3a",
+    "auditVulnerabilities": 0,
+    "testAssertionsWeakened": false
+  },
+  "pilotDraft": {
+    "id": 1,
+    "status": "draft",
+    "recipeVersionId": 2,
+    "recipeMultiplier": "1.000",
+    "outputProductId": 16,
+    "plannedOutputQuantity": "24.000",
+    "actualOutputQuantity": null,
+    "completedAt": null,
+    "reference": "PILOT-WB-20261028-PROD003-24",
+    "simulationIdentifiedInNotes": true,
+    "referenceCostsIdentifiedInNotes": true,
+    "firstAttempt": "Session verification failed; independent read confirmed zero batches before retry.",
+    "secondAttempt": "One authenticated draft created.",
+    "actorRole": "manager",
+    "actorMatchesPreviousPurchases": true,
+    "auditAction": "production_batch.create"
+  },
+  "pilotCountsAfterDraft": {
+    "purchases": 3,
+    "purchaseItems": 7,
+    "stockMovements": 7,
+    "productionBatches": 1,
+    "completedBatches": 0,
+    "sales": 0,
+    "financialEvents": 0
+  },
+  "pendingAdjustmentReferences": [
+    "PILOT-WB-20261028-INS004",
+    "PILOT-WB-20261028-INS005",
+    "PILOT-WB-20261028-INS006",
+    "PILOT-WB-20261028-INS009"
+  ],
+  "identityRead": {
+    "userSuppliedCandidates": 3,
+    "activeVerifiedOwners": 1,
+    "activeVerifiedManagers": 2,
+    "emailsOrIdentifiersVersioned": false,
+    "accessChanges": 0,
+    "ownerSessionAcceptance": "pending"
+  },
+  "publicationOfUiCorrection": "pending",
+  "productionOrOriginalHmlChanged": false,
+  "fullPilotAcceptance": false
+}

@@ -9,6 +9,7 @@ import { useServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
 
 import { hasPermission } from '#/features/auth/authorization'
+import type { AppRole } from '#/features/auth/authorization'
 import { ManagementLayout } from '#/components/ManagementLayout'
 import { listInventory } from '#/features/operations/functions'
 import {
@@ -243,6 +244,7 @@ function InventoryPage() {
       </section>
       <LifecycleActions
         products={actionProducts}
+        role={appRole}
         canAdjust={Boolean(
           appRole && hasPermission(appRole, 'fifo:lifecycle:write'),
         )}
@@ -493,12 +495,24 @@ function InventoryError({ error }: { error: unknown }) {
   )
 }
 
+const inventoryRoleLabels: Record<AppRole, string> = {
+  owner: 'Dono',
+  admin: 'Administrador',
+  manager: 'Gerente',
+  production: 'Produção',
+  employee: 'Funcionário',
+  sales: 'Vendas',
+  viewer: 'Consulta',
+}
+
 function LifecycleActions({
   products,
+  role,
   canAdjust,
   canCompensate,
 }: {
   products: Array<{ id: number; name: string; sku: string }>
+  role: AppRole | null
   canAdjust: boolean
   canCompensate: boolean
 }) {
@@ -639,6 +653,9 @@ function LifecycleActions({
   return (
     <section className="mt-6 rounded-2xl border border-[#ecdfd4] bg-white p-5">
       <h2 className="font-bold">Ciclo de vida e ajustes</h2>
+      <p className="mt-2 text-sm font-bold text-[#75411f]">
+        Perfil atual: {role ? inventoryRoleLabels[role] : 'Sem acesso'}
+      </p>
       <p className="mt-1 text-xs text-[#896d5b]">
         Ajustes exigem motivo, referência e confirmação. Compensações
         pós-entrega não devolvem alimento ao estoque vendável.

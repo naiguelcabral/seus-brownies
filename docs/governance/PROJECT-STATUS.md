@@ -1,5 +1,20 @@
 # Estado canônico do projeto — Cacau v1
 
+## Correção da interface de estoque e rascunho #1 — 29/10/2026
+
+O botão de ajuste respondia com recusa de permissão, fora da área visível:
+Gerente não tem `fifo:lifecycle:write`. Candidata respeita a matriz existente
+na exibição dos formulários e dá foco ao resultado, sem mudar permissões.
+642 testes Node, qualidade, Knip sem novos achados e build isolado aprovados;
+integração/publicação do ajuste de interface ainda pendentes.
+
+Lote #1 salvo uma vez como rascunho pela aplicação: receita versão 2, saída
+planejada de 24 brownies de brigadeiro. Ator autenticado Gerente corresponde
+às compras anteriores. Estoque segue com sete movimentos; quatro ajustes
+pendentes, zero conclusão/venda/pagamento. Conta Dono identificada em consulta
+privada para entrada na aba; nenhum acesso alterado. Não criar outro lote.
+[Validação e retomada](PILOT-INVENTORY-PERMISSION-FEEDBACK-2026-10-29.md).
+
 ## Atualização de segurança publicada no piloto — 29/10/2026
 
 Retomada após renovação confirmada (99% restante) e LIGARTUDO. PR #91
