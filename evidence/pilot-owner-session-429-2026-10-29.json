@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "scope": "pilot-owner-session-diagnostic-read-only",
+  "userReportedMessage": "Não foi possível verificar a sessão",
+  "audit": {
+    "action": "login",
+    "outcome": "success",
+    "matchesKnownActiveVerifiedOwner": true,
+    "occurredAt": "2026-10-29T13:06:48.591Z",
+    "identityOrEmailVersioned": false
+  },
+  "providerTelemetry": {
+    "event": "auth.session.provider",
+    "stage": "http_error",
+    "status": 429,
+    "code": null,
+    "matchingFieldLastSeenAt": "2026-10-29T13:06:49.337Z",
+    "dryQuery": true,
+    "limit": 30,
+    "requestIdCorrelation": false,
+    "association": "temporal"
+  },
+  "mitigationSuggested": "Wait two minutes and reopen once; no success yet confirmed.",
+  "changes": {
+    "code": false,
+    "configuration": false,
+    "accounts": false,
+    "secrets": false,
+    "operationalWrites": false
+  },
+  "pilotVersion": "48b34e2d-bf1b-40a4-b2d3-9a15c392bc90",
+  "draftId": 1,
+  "adjustmentReferencesStillPending": true,
+  "capacity": {
+    "remainingPercent": 5,
+    "resetUnix": 1793280112,
+    "resetSaoPaulo": "2026-10-29T10:21:52-03:00"
+  },
+  "status": "diagnosed; root-cause remediation and authenticated acceptance pending"
+}

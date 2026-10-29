@@ -1,5 +1,24 @@
 # Roadmap único — Cacau v1
 
+## Sessão do Dono: login aceito e consulta limitada pelo provedor — 29/10/2026
+
+Usuário tentou a conta Dono pelo tablet e informou a mensagem exata
+“Não foi possível verificar a sessão”. Leitura restrita da auditoria do piloto
+confirmou login aceito da identidade Dono às 13:06:48.591 UTC. Consulta seca
+à observabilidade encontrou `auth.session.provider`, stage `http_error`,
+status 429 e code nulo no piloto; campos desse evento vistos às
+13:06:49.337 UTC. Associação temporal compatível com a falha relatada,
+sem correlação por Ray/request ID. Não inferir senha incorreta nem alterar
+perfil, secrets ou limites de proteção. Pedido para aguardar dois minutos e
+reabrir o piloto uma vez foi orientação de recuperação, sem sucesso ainda
+confirmado pelo usuário.
+
+Nenhuma alteração de código/configuração/contas ou escrita operacional nesta
+investigação. Piloto continua 48b34e2d (fonte 844f425), com recibo #94 já
+integrado na main de38496. Rascunho #1 preservado, quatro complementos ainda
+pendentes; não criar outro lote, repetir compras ou trocar referências.
+[Recibo sanitizado](../../evidence/pilot-owner-session-429-2026-10-29.json).
+
 ## I05: correção de permissões/retorno publicada — 29/10/2026
 
 PR #93 integrada em `844f425`; main com CI/build, negócio/navegador e CodeQL
