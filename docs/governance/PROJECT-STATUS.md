@@ -1,5 +1,22 @@
 # Estado canônico do projeto — Cacau v1
 
+## Feedback de estoque publicado; lote #1 em rascunho — 29/10/2026
+
+PR #93 integrada em `844f425`, árvore aprovada intacta; CI/build,
+negócio/navegador e CodeQL da main aprovados, três análises reais zeradas.
+Candidata final também passou localmente em 16 testes conectados; 642 testes
+Node e audit zero preservados. Correção publicada somente no piloto às
+12:55:24 UTC: versão `48b34e2d`, 100%. Configuração e seis bindings de secrets
+preservados; smoke público aprovado. Mostra perfil/permissões existentes e
+mantém retorno visível após atualizar histórico, sem mudar RBAC.
+
+Rascunho #1 de 24 brigadeiros permanece salvo; sete movimentos preservados,
+nenhum complemento/conclusão/venda/pagamento. Sessão anterior encerrada na
+interface para entrada com a conta Dono já identificada privadamente;
+confirmação dessa sessão e aceite autenticado da nova UI pendentes. Não
+recriar lote, repetir compras ou trocar referências. I05/I04 continuam abertos.
+[Recibo e retomada](PILOT-INVENTORY-PERMISSION-FEEDBACK-2026-10-29.md).
+
 ## Correção da interface de estoque e rascunho #1 — 29/10/2026
 
 O botão de ajuste respondia com recusa de permissão, fora da área visível:

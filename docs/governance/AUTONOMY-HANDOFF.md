@@ -1,5 +1,33 @@
 # Handoff de autonomia — Cacau v1
 
+## Feedback publicado; retomar somente o rascunho #1 — 29/10/2026
+
+PR #93 integrada em `844f425`, CI/build, negócio/navegador e três análises
+CodeQL da main aprovados/zerados. Código publicado somente no piloto:
+versão `48b34e2d-bf1b-40a4-b2d3-9a15c392bc90`, deployment
+`dc9aaf8a-d236-4f24-88b6-37d88d30bb31`, 100%, 12:55:24 UTC.
+Configuração preservada e smoke público aprovado. [Recibo](PILOT-INVENTORY-PERMISSION-FEEDBACK-2026-10-29.md).
+
+Lote #1 já salvo e auditado, receita 2, uma receita, saída planejada de 24
+unidades de brigadeiro (produto 16), sem produção real declarada. Três
+compras/sete itens/sete movimentos, zero complementos/conclusão/venda/eventos
+financeiros no último readback. Não criar outro lote ou repetir compras.
+Quatro referências não consumidas: PILOT-WB-20261028-INS004/005/006/009.
+Plano e valores comerciais privados permanecem em /tmp.
+
+A matriz não mudou: Gerente não ajusta FIFO. Uma das identidades indicadas
+pelo usuário é Dono ativo/verificado; endereço informado somente na conversa.
+Novo login informado ainda teve recusa na sessão controlada. O agente saiu
+pela UI da aba 2 e confirmou /login; pergunta de entrada correta está pendente.
+Navegador agent-created também redireciona ao login. Não considerar sessão
+Dono confirmada nem contornar o servidor. Após entrada, conferir perfil na
+nova UI e referências antes de completar o plano autorizado. Não concluir
+fato físico por inferência; I05/I04 permanecem pendentes. PR #88 segue draft.
+
+Worktree /tmp/cacau-security-alert-review-20261028, branch documental
+codex/inventory-feedback-publication-20261029. Sem mudanças no checkout
+original, HML anterior, produção, contas, secrets ou políticas do Auth.
+
 ## Continuidade após publicação: estoque e rascunho #1 — 29/10/2026
 
 Publicação de segurança/recibo #92 concluídos; main documental `337a16c`,

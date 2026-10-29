@@ -1,5 +1,19 @@
 # Ações que exigem aprovação humana — Cacau v1
 
+## Correção do fluxo do piloto publicada — 29/10/2026
+
+Continuidade do pedido de atualização/publicação do piloto e do relato do
+botão: PR #93 revisada e integrada normalmente em `844f425`, com os checks e
+as análises reais aprovados. Build/deploy isolado somente no piloto: versão
+`48b34e2d`, 100%. Sem concessões, mudança de matriz ou SQL de escrita.
+
+Usuário indicou contas para conferir o Dono e informou novo login. A sessão
+controlável ainda recebeu recusa; o agente encerrou essa sessão pela UI e
+deixou a aba em login para entrada na identidade correta, sem receber senha
+ou código. Complementos continuam pendentes. Rascunho #1 já salvo sob a
+autorização de preparação; nenhuma conclusão/venda/pagamento.
+[Recibo](PILOT-INVENTORY-PERMISSION-FEEDBACK-2026-10-29.md).
+
 ## Continuidade do lote e correção de feedback — 29/10/2026
 
 Usuário confirmou que o botão também não respondia e indicou a sessão e
