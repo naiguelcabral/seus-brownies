@@ -16,7 +16,12 @@
     "serverWritersChanged": false,
     "showsCurrentRole": true,
     "focusesFeedback": true,
-    "rolesCovered": ["owner", "manager", "production"]
+    "rolesCovered": [
+      "owner",
+      "manager",
+      "production"
+    ],
+    "keepsFeedbackVisibleAfterHistoryRefresh": true
   },
   "validation": {
     "nodeTestsPassed": 642,
@@ -31,7 +36,14 @@
     "isolatedPilotBuildPassed": true,
     "isolatedBuildCommit": "b099d3a",
     "auditVulnerabilities": 0,
-    "testAssertionsWeakened": false
+    "testAssertionsWeakened": false,
+    "ciDiscoveredRegression": {
+      "commit": "f693fc8",
+      "failure": "Focused success outside viewport after history refresh",
+      "fixedIn": "fbc7310",
+      "assertionStrengthened": true,
+      "finalCi": "pending"
+    }
   },
   "pilotDraft": {
     "id": 1,

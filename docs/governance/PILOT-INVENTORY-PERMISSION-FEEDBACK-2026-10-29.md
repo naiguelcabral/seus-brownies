@@ -12,7 +12,8 @@ A candidata passa a usar as permissões já existentes para apresentar ações:
 Dono e Administrador mantêm ajustes/perdas; Gerente mantém compensações
 pós-entrega; Produção consulta o estoque sem esses formulários. Avisos
 explicam o perfil necessário antes de qualquer preenchimento. O perfil atual aparece na própria seção. O resultado
-recebe foco e semântica de alerta/status, ficando visível também no celular.
+recebe foco e semântica de alerta/status e permanece fixo dentro da seção
+durante a rolagem, ficando visível também no celular após atualizar o histórico.
 Orientações internas de migrations saem do texto normal da tela.
 
 Não muda a matriz de acesso, o writer, a precisão, a idempotência ou a
@@ -24,7 +25,7 @@ substituir a verificação de cada requisição.
 Teste isolado anterior à correção reproduziu Gerente vendo um botão de
 ajuste que deveria estar ausente. Candidata com 642 testes Node,
 lint/tipos/formato, Knip (quatro contextuais e zero novos) e build isolado do
-piloto aprovados. Os 16 testes conectados do laboratório PostgreSQL 17/navegador cobre perfis,
+piloto aprovados. Os 16 testes conectados do laboratório PostgreSQL 17/navegador cobrem perfis,
 ausência de efeitos nas leituras, inclusão permitida uma vez e erro de
 repetição com foco/visibilidade no celular, sem nova escrita.
 
@@ -32,6 +33,12 @@ Na montagem local, o primeiro runner estava sem navegador configurado;
 depois foram corrigidos nomes de colunas e espera de hidratação da fixture.
 Uma inicialização do PostgreSQL não estava pronta; nenhuma dessas falhas
 autoriza relaxar as asserções ou modificar dados do piloto.
+A CI de push de f693fc8 detectou mensagem focada fora do viewport após
+a atualização do histórico, embora a execução da PR tivesse passado. A
+correção posterior mantém o retorno visível na seção e reforça a asserção
+para esperar o histórico atualizado antes de conferir foco/viewport. Não
+se tratou de falha descartada por repetição.
+
 Integração, CI/CodeQL final e publicação desta correção de interface ainda
 pendentes neste checkpoint. A atualização de segurança já publicada segue
 no [recibo próprio](PILOT-SECURITY-PUBLICATION-2026-10-29.md).
