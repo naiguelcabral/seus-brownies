@@ -63,6 +63,7 @@ export const serverFunctionPolicies = {
   recordLossLifecycle: 'fifo:lifecycle:write',
   recordNegativeAdjustmentLifecycle: 'fifo:lifecycle:write',
   recordPositiveAdjustmentLifecycle: 'fifo:lifecycle:write',
+  checkPositiveAdjustmentBatch: 'fifo:lifecycle:write',
 } as const satisfies Record<string, Permission>
 
 export type ProtectedServerFunction = keyof typeof serverFunctionPolicies

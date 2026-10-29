@@ -1,5 +1,55 @@
 # Handoff de autonomia — Cacau v1
 
+## I05: conferência única de complementos em preparação — 29/10/2026
+
+Usuário confirmou que o painel abriu no tablet e escolheu “Preparar uma conferência única no piloto, como fizemos com as compras”. A recuperação relatada supera a espera pendente do checkpoint anterior; não comprova solução permanente dos 429. Sessão do tablet permanece separada do navegador controlável.
+
+Candidata acrescenta conferência sem escrita e confirmação dos ajustes na sessão do próprio usuário. Usa o escritor transacional existente e referências estáveis; recibos coincidentes são preservados na retomada e divergências bloqueiam o fluxo. Não altera permissões, contas, secrets, Auth ou schema. 649 testes Node, lint/tipos/formato, Knip sem novos achados e build isolado aprovados. Laboratório conectado passou em 17/17 casos; a consulta de auditoria do próprio teste recebeu correção de tipo. Revisão visual acrescenta atualização dos cartões após confirmação; repetir laboratório e conferir CI/CodeQL no HEAD final antes da publicação.
+
+Rascunho #1 preservado; três compras, sete movimentos e nenhum dos quatro complementos na última leitura independente. Nenhuma nova escrita operacional. I05 parcial e I04 mantidos. [Contrato e retomada](POSITIVE-ADJUSTMENT-BATCH.md).
+
+Uso oficial na retomada: 100% restante confirmado, LIGARTUDO --prepare-only concluído. Checkpoint durante a implementação: 73% da janela restante e 65% semanal; reserva 5%, trabalhando. Branch codex/pilot-adjustment-batch-20261029 na worktree /tmp/cacau-security-alert-review-20261028. Checkpoint abaixo é histórico e sua pausa foi superada pela renovação confirmada.
+
+## Sessão do Dono: login aceito e consulta limitada pelo provedor — 29/10/2026
+
+Usuário tentou a conta Dono pelo tablet e informou a mensagem exata
+“Não foi possível verificar a sessão”. Leitura restrita da auditoria do piloto
+confirmou login aceito da identidade Dono às 13:06:48.591 UTC. Consulta seca
+à observabilidade encontrou `auth.session.provider`, stage `http_error`,
+status 429 e code nulo no piloto; campos desse evento vistos às
+13:06:49.337 UTC. Associação temporal compatível com a falha relatada,
+sem correlação por Ray/request ID. Não inferir senha incorreta nem alterar
+perfil, secrets ou limites de proteção. Pedido para aguardar dois minutos e
+reabrir o piloto uma vez foi orientação de recuperação, sem sucesso ainda
+confirmado pelo usuário.
+
+Nenhuma alteração de código/configuração/contas ou escrita operacional nesta
+investigação. Piloto continua 48b34e2d (fonte 844f425), com recibo #94 já
+integrado na main de38496. Rascunho #1 preservado, quatro complementos ainda
+pendentes; não criar outro lote, repetir compras ou trocar referências.
+[Recibo sanitizado](../../evidence/pilot-owner-session-429-2026-10-29.json).
+
+Capacidade oficial: **5% restante**, reset **29/10/2026 10:21:52 Brasília**
+(1793280112). Fechar somente este checkpoint e executar DESLIGARTUDO em
+branch de trabalho; não implementar nem publicar sob a reserva. Branch
+codex/pilot-session-429-20261029, worktree
+/tmp/cacau-security-alert-review-20261028. Fontes/planos comerciais privados
+anteriores permanecem em /tmp; identidades/e-mails não vão para Git.
+
+Retomada após renovação confirmada: LIGARTUDO --prepare-only, atualizar a
+branch por fast-forward e reler governança. Primeiro conferir se a sessão do
+tablet abriu após a espera, sem pedir nova senha/reset por inferência.
+Investigar 429 no get-session do Neon Auth usando apenas telemetria
+normalizada; avaliar consultas repetidas e tratamento de indisponibilidade,
+sem cache compartilhado de identidade nem redução de RBAC/limites. Não
+prometer que esperar uma janela resolve definitivamente. Qualquer correção
+exige regressão isolada, CI/CodeQL e fluxo normal antes do deploy piloto.
+
+O estado operacional não muda pela aceitação de login: complementar somente
+na sessão correta e com referências estáveis, revalidando banco; depois usar
+o mesmo lote #1. Nada de SQL de escrita, migração, venda ou produção física
+presumida. Este checkpoint não encerra I05/I04.
+
 ## Feedback publicado; retomar somente o rascunho #1 — 29/10/2026
 
 PR #93 integrada em `844f425`, CI/build, negócio/navegador e três análises

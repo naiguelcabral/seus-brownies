@@ -29,6 +29,7 @@ import type {
 } from '#/features/inventory/lifecycle-contracts'
 import {
   assertPositiveAdjustment,
+  inventoryEventSourceKey as sourceKey,
   planNegativeInventoryEvent,
   planRemainingReversalQuantities,
   planStockRestoration,
@@ -81,8 +82,6 @@ const quantity = (value: bigint) =>
   `${value / 1_000n}.${String(value % 1_000n).padStart(3, '0')}`
 const money = (value: bigint) =>
   `${value / 100n}.${String(value % 100n).padStart(2, '0')}`
-const sourceKey = (event: string, id: number, ref: string) =>
-  `fifo-lifecycle:${event}:${id}:${ref}`
 
 /** First statement in each transaction. It is read-only and fails closed. */
 async function requireLifecycleSchema(tx: DatabaseTransaction) {

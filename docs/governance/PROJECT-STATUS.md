@@ -1,5 +1,32 @@
 # Estado canônico do projeto — Cacau v1
 
+## I05: conferência única de complementos em preparação — 29/10/2026
+
+Usuário confirmou que o painel abriu no tablet e escolheu “Preparar uma conferência única no piloto, como fizemos com as compras”. A recuperação relatada supera a espera pendente do checkpoint anterior; não comprova solução permanente dos 429. Sessão do tablet permanece separada do navegador controlável.
+
+Candidata acrescenta conferência sem escrita e confirmação dos ajustes na sessão do próprio usuário. Usa o escritor transacional existente e referências estáveis; recibos coincidentes são preservados na retomada e divergências bloqueiam o fluxo. Não altera permissões, contas, secrets, Auth ou schema. 649 testes Node, lint/tipos/formato, Knip sem novos achados e build isolado aprovados. Laboratório conectado passou em 17/17 casos; a consulta de auditoria do próprio teste recebeu correção de tipo. Revisão visual acrescenta atualização dos cartões após confirmação; repetir laboratório e conferir CI/CodeQL no HEAD final antes da publicação.
+
+Rascunho #1 preservado; três compras, sete movimentos e nenhum dos quatro complementos na última leitura independente. Nenhuma nova escrita operacional. I05 parcial e I04 mantidos. [Contrato e retomada](POSITIVE-ADJUSTMENT-BATCH.md).
+
+## Sessão do Dono: login aceito e consulta limitada pelo provedor — 29/10/2026
+
+Usuário tentou a conta Dono pelo tablet e informou a mensagem exata
+“Não foi possível verificar a sessão”. Leitura restrita da auditoria do piloto
+confirmou login aceito da identidade Dono às 13:06:48.591 UTC. Consulta seca
+à observabilidade encontrou `auth.session.provider`, stage `http_error`,
+status 429 e code nulo no piloto; campos desse evento vistos às
+13:06:49.337 UTC. Associação temporal compatível com a falha relatada,
+sem correlação por Ray/request ID. Não inferir senha incorreta nem alterar
+perfil, secrets ou limites de proteção. Pedido para aguardar dois minutos e
+reabrir o piloto uma vez foi orientação de recuperação, sem sucesso ainda
+confirmado pelo usuário.
+
+Nenhuma alteração de código/configuração/contas ou escrita operacional nesta
+investigação. Piloto continua 48b34e2d (fonte 844f425), com recibo #94 já
+integrado na main de38496. Rascunho #1 preservado, quatro complementos ainda
+pendentes; não criar outro lote, repetir compras ou trocar referências.
+[Recibo sanitizado](../../evidence/pilot-owner-session-429-2026-10-29.json).
+
 ## Feedback de estoque publicado; lote #1 em rascunho — 29/10/2026
 
 PR #93 integrada em `844f425`, árvore aprovada intacta; CI/build,

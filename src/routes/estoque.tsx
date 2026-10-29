@@ -11,6 +11,7 @@ import { z } from 'zod'
 import { hasPermission } from '#/features/auth/authorization'
 import type { AppRole } from '#/features/auth/authorization'
 import { ManagementLayout } from '#/components/ManagementLayout'
+import { PositiveAdjustmentBatchImporter } from '#/components/PositiveAdjustmentBatchImporter'
 import { listInventory } from '#/features/operations/functions'
 import {
   recordLossLifecycle,
@@ -665,6 +666,7 @@ function LifecycleActions({
           Ajustes e perdas de estoque exigem perfil Dono ou Administrador.
         </p>
       ) : null}
+      {canAdjust ? <PositiveAdjustmentBatchImporter /> : null}
       {!canCompensate ? (
         <p role="note" className="mt-3 text-sm text-[#75411f]">
           Compensações pós-entrega exigem perfil Dono, Administrador ou Gerente.

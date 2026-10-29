@@ -1,3 +1,4 @@
+import { checkPositiveAdjustmentBatch } from '../../src/features/inventory/positive-adjustment-batch.functions'
 import {
   listCategories,
   createCategory,
@@ -79,6 +80,7 @@ import { serverFunctionPolicies } from '../../src/features/auth/server-function-
 
 // Imported explicitly by Playwright into the local Vite runtime only.
 export const functions = {
+  checkPositiveAdjustmentBatch,
   findRegistrationCandidate,
   approveRegistration,
   listCategories,

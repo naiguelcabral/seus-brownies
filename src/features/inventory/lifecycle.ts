@@ -7,6 +7,15 @@ import type {
   ReversibleFifoAllocation,
 } from '#/features/inventory/fifo'
 
+/** Stable audit/idempotency format, including references already consumed. */
+export function inventoryEventSourceKey(
+  event: string,
+  id: number,
+  reference: string,
+) {
+  return `fifo-lifecycle:${event}:${id}:${reference}`
+}
+
 /** Only a pre-delivery cancellation can restore vendable stock and FIFO cost. */
 export function planStockRestoration(input: {
   event: 'sale_cancellation'
