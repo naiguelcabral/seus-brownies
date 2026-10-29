@@ -1,5 +1,40 @@
 # Permissões visíveis no estoque e rascunho do piloto — 29/10/2026
 
+## Correção integrada e publicada — 29/10/2026
+
+PR #93 integrada normalmente em `844f425891bc8f264648361cb6c8bbfee5fb7c05`,
+com árvore idêntica ao HEAD aprovado `08436e5`. Duas execuções finais da PR
+passaram em todos os checks; três análises CodeQL do candidato `71e707c`
+sem resultados/erros/avisos. Teste local final de 08436e5: 16/16 aprovados,
+incluindo contagens após confirmação/refresh, foco/viewport e repetição sem
+efeitos. A leitura antecipada de contadores encontrada na CI foi corrigida
+no teste, sem retirar as asserções.
+
+Main publicada com [CI](https://github.com/naiguelcabral/seus-brownies/actions/runs/40876652353),
+[negócio/navegador](https://github.com/naiguelcabral/seus-brownies/actions/runs/40876652351)
+e [CodeQL](https://github.com/naiguelcabral/seus-brownies/actions/runs/40876652256)
+aprovados; três análises reais de 844f425 zeradas. Build/deploy isolado do
+piloto concluído às 12:55:24 UTC (09:55:24 Brasília), versão
+`48b34e2d-bf1b-40a4-b2d3-9a15c392bc90`, **100%**, deployment
+`dc9aaf8a-d236-4f24-88b6-37d88d30bb31`. Substitui 16a49edf; mantém os
+patches de segurança publicados anteriormente.
+
+Leitura remota confirmou metadata, seis nomes de secrets, flags, limites e
+observabilidade iguais. Smoke público às 12:55:43 UTC passou em oito GETs,
+sem credenciais ou escrita. A rota protegida no navegador levou ao login:
+a sessão anterior foi encerrada pela interface para entrada com a conta
+Dono já identificada. Aceite autenticado da nova UI e complementos ainda
+aguardam essa sessão; não confundir código publicado com execução do lote.
+
+Contagens antes/depois do deploy preservadas: 3 compras, 7 itens, 7 movimentos,
+1 rascunho, zero lotes concluídos, ajustes do workbook, vendas ou eventos
+financeiros. Rascunho #1 permanece a retomar, sem criar outro. Nenhuma mudança
+em contas/permissões, Auth gerenciado, HML anterior ou produção.
+
+[Recibo da publicação](../../evidence/pilot-inventory-feedback-publication-2026-10-29.json)
+e [smoke](../../evidence/pilot-inventory-feedback-http-smoke-2026-10-29.json).
+Os estados de candidata/publicação pendente abaixo são históricos e superados.
+
 ## Problema e correção
 
 Ao retomar o complemento autorizado do workbook, o ajuste positivo foi

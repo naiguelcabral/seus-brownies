@@ -1,5 +1,17 @@
 # Roadmap único — Cacau v1
 
+## I05: correção de permissões/retorno publicada — 29/10/2026
+
+PR #93 integrada em `844f425`; main com CI/build, negócio/navegador e CodeQL
+aprovados e análises reais zeradas. Versão `48b34e2d`, 100% no piloto,
+configuração/contagens preservadas e smoke público aprovado. Matriz de acesso
+não mudou. Pendências de integração/deploy abaixo são históricas e superadas.
+
+Lote #1 continua rascunho de 24 brigadeiros; quatro complementos aguardam
+sessão Dono. Login foi aberto após encerrar a sessão Gerente. Não recriar
+lote, concluir produção física por inferência ou registrar venda. I05 parcial,
+I04 e demais gates mantidos. [Recibo](PILOT-INVENTORY-PERMISSION-FEEDBACK-2026-10-29.md).
+
 ## I05: rascunho #1 e correção de retorno/permissões — 29/10/2026
 
 Preparação do lote de 24 brigadeiros salva como rascunho #1, sem movimento de

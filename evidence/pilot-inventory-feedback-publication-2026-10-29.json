@@ -1,0 +1,202 @@
+{
+  "schemaVersion": 1,
+  "scope": "pilot-only-inventory-feedback-publication",
+  "source": {
+    "commit": "844f425891bc8f264648361cb6c8bbfee5fb7c05",
+    "pullRequest": 93,
+    "approvedHead": "08436e5614da6e8c462d959256deae5f5272d092",
+    "mergeCandidateCodeqlCommit": "71e707cd4b4b187457ba31c1531a6e87c82118d1",
+    "mergedAt": "2026-10-29T12:50:39Z",
+    "approvedTreeMatchesMerge": true
+  },
+  "target": {
+    "worker": "cacau-v1-piloto",
+    "origin": "https://cacau-v1-piloto.naiguelcabral.workers.dev"
+  },
+  "deployment": {
+    "before": {
+      "id": "adb8bdfb-354c-4d0a-9adb-b36147e43d4c",
+      "created_on": "2026-10-29T08:28:02.647744Z",
+      "versions": [
+        {
+          "version_id": "16a49edf-073c-4613-a995-d07a8542040f",
+          "percentage": 100
+        }
+      ]
+    },
+    "after": {
+      "id": "dc9aaf8a-d236-4f24-88b6-37d88d30bb31",
+      "created_on": "2026-10-29T12:55:24.837236Z",
+      "versions": [
+        {
+          "version_id": "48b34e2d-bf1b-40a4-b2d3-9a15c392bc90",
+          "percentage": 100
+        }
+      ]
+    },
+    "isolatedBuild": true
+  },
+  "configuration": {
+    "unchanged": true,
+    "secretValuesRead": false,
+    "secretBindingCount": 6,
+    "bindings": [
+      {
+        "name": "AUTH_AGGREGATE_RATE_LIMITER",
+        "type": "ratelimit",
+        "namespace_id": "2026102603",
+        "simple": {
+          "limit": 600,
+          "period": 60
+        }
+      },
+      {
+        "name": "AUTH_DIRECTORY_DATABASE_URL",
+        "type": "secret_text"
+      },
+      {
+        "name": "AUTH_LOGIN_HASH_PEPPER",
+        "type": "secret_text"
+      },
+      {
+        "name": "AUTH_ORIGIN_RATE_LIMITER",
+        "type": "ratelimit",
+        "namespace_id": "2026102602",
+        "simple": {
+          "limit": 60,
+          "period": 60
+        }
+      },
+      {
+        "name": "AUTH_RATE_LIMITER",
+        "type": "ratelimit",
+        "namespace_id": "2026102601",
+        "simple": {
+          "limit": 20,
+          "period": 60
+        }
+      },
+      {
+        "name": "AUTH_RATE_LIMITER_REQUIRED",
+        "type": "plain_text",
+        "text": "true"
+      },
+      {
+        "name": "DATABASE_URL",
+        "type": "secret_text"
+      },
+      {
+        "name": "NEON_AUTH_BASE_URL",
+        "type": "secret_text"
+      },
+      {
+        "name": "NEON_AUTH_COOKIE_SECRET",
+        "type": "secret_text"
+      },
+      {
+        "name": "PASSWORD_RESET_REDIRECT_ORIGIN",
+        "type": "plain_text",
+        "text": "https://cacau-v1-piloto.naiguelcabral.workers.dev"
+      },
+      {
+        "name": "TURNSTILE_SECRET_KEY",
+        "type": "secret_text"
+      }
+    ],
+    "compatibility_date": "2025-09-02",
+    "compatibility_flags": [
+      "nodejs_compat"
+    ],
+    "observability": {
+      "enabled": false,
+      "head_sampling_rate": 1,
+      "redact_query_string": true,
+      "logs": {
+        "enabled": true,
+        "head_sampling_rate": 1,
+        "persist": true,
+        "invocation_logs": true
+      },
+      "traces": {
+        "enabled": false,
+        "persist": true,
+        "head_sampling_rate": 1
+      },
+      "issues": {
+        "enabled": false
+      }
+    }
+  },
+  "verification": {
+    "nodeTests": 642,
+    "connectedBrowserTests": 16,
+    "localFinalCommit": "08436e5614da6e8c462d959256deae5f5272d092",
+    "mainWorkflows": {
+      "ci": 40876652353,
+      "businessAndBrowser": 40876652351,
+      "codeql": 40876652256,
+      "allPassed": true
+    },
+    "codeql": {
+      "analyses": 3,
+      "results": 0,
+      "errors": 0,
+      "warnings": 0
+    },
+    "auditVulnerabilities": 0,
+    "publicHttpSmoke": {
+      "passed": true,
+      "requests": 8,
+      "mutatingRequests": 0,
+      "report": "pilot-inventory-feedback-http-smoke-2026-10-29.json"
+    },
+    "liveBrowser": {
+      "protectedRouteRedirectedToLogin": true,
+      "authenticatedFeedbackAcceptance": false,
+      "ownerSessionPending": true
+    }
+  },
+  "businessCounts": {
+    "before": {
+      "checked_at": "2026-10-29T12:34:35.513485+00:00",
+      "purchases": 3,
+      "purchase_items": 7,
+      "movements": 7,
+      "batches": 1,
+      "completed_batches": 0,
+      "matching_adjustments": 0,
+      "sales": 0,
+      "financial_events": 0
+    },
+    "after": {
+      "checked_at": "2026-10-29T12:55:42.439915+00:00",
+      "purchases": 3,
+      "purchase_items": 7,
+      "movements": 7,
+      "batches": 1,
+      "completed_batches": 0,
+      "matching_adjustments": 0,
+      "sales": 0,
+      "financial_events": 0
+    },
+    "unchanged": true,
+    "limitation": "Counts do not attest identity of every field."
+  },
+  "productionDraft": {
+    "id": 1,
+    "status": "draft",
+    "productId": 16,
+    "plannedOutputQuantity": "24.000",
+    "completed": false,
+    "adjustmentsApplied": 0,
+    "stableReferencesMustBePreserved": true
+  },
+  "limits": {
+    "serverPermissionsChanged": false,
+    "accountsChanged": false,
+    "sqlMutationsUsed": false,
+    "originalHmlOrProductionChanged": false,
+    "fullPilotAcceptance": false,
+    "managedAuthVersionAttested": false
+  }
+}
