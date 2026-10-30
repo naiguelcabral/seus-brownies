@@ -1,10 +1,14 @@
 # Roadmap único — Cacau v1
 
-## I05: simulação do lote e proteção do saldo em preparação — 30/10/2026
+## I05: proteção do saldo publicada; conclusão simulada no tablet pendente — 30/10/2026
 
-Usuário aceitou o padrão visual e confirmou a próxima etapa como “Simulação no piloto, sem produção física”. Conservar o rascunho #1 de 24 unidades, compras e quatro complementos já registrados; nenhum fato de venda/pagamento autorizado. Prévia privada por leitura confirmou estoque suficiente e custos de referência, sem escrita operacional.
+Usuário aceitou o padrão visual e confirmou “Simulação no piloto, sem produção física” para o rascunho #1 dos 24 brigadeiros. Prévia privada confirmou insumos suficientes e custos de referência, preservando compras e quatro complementos já registrados.
 
-Regressões locais identificaram que perda/ajuste negativo confiavam somente nas camadas, embora o consumo de insumos pela produção use o ledger e possa deixar camadas de entrada residuais. Candidata revalida a soma de stock_movements sob o lock de produto já existente, antes da alocação FIFO e de qualquer escrita. Preserva custo/plano FIFO, autoria, referência, transação e regras de produção. Testes, revisão e publicação em andamento; não concluir o rascunho antes desses gates. Não reconcilia camadas legadas de insumos nem amplia a cobertura FIFO parcial; I05 parcial/I04 mantidos.
+Regressão em PostgreSQL/HTTP local reproduziu uma perda após produção levando o insumo a −1, pois uma camada de ajuste positivo residual ainda permitia alocação. PR #105 revalida a soma de stock_movements sob o lock de produto existente, antes do plano FIFO e de qualquer escrita. Bloqueia saldo insuficiente/inválido; mantém custos, autoria, referências, transação e regras de produção. Não reconcilia camadas residuais de insumos nem amplia sua cobertura FIFO parcial.
+
+661 testes Node, 18 ensaios conectados, lint/tipos/formato, Knip sem novos achados e build isolado aprovados. Doze checks finais e três workflows da main aprovados; três análises CodeQL reais sem achados/erros/avisos. Integração normal em 2fb5613, árvore igual ao HEAD aprovado dc4a19a. Publicado somente no piloto às 10:14:50 UTC (07:14:50 Brasília), versão b3f972f2-bc71-436c-9c30-fb654570bd9c a 100%. Configuração e seis nomes de secrets preservados; dez GETs públicos aprovados.
+
+Leitura pós-publicação às 10:15:18 UTC mantém três compras/sete itens/onze movimentos, um rascunho com 24 unidades planejadas e realizado nulo, zero conclusão/venda/eventos financeiros. Nenhuma escrita operacional pelo agente. Aba controlável permanece em login; sessão do tablet não é compartilhada. Usuário orientado a atualizar a página e usar Produção → Ver lote #1 → Concluir lote e atualizar estoque na própria sessão. Usuário informou “Lote concluído”, mas duas leituras independentes, a última às 10:18:27 UTC, ainda mostram draft, onze movimentos e zero auditoria de conclusão. Solicitado status após atualizar a página e texto exato de eventual mensagem; aguardar esse retorno e investigar a divergência antes de repetir. Se houver conclusão confirmada, conferir saída 24, nove consumos/uma entrada, dois custos, custo exato e autoria/auditoria. Não repetir compras/complementos, criar outro lote, inventar produção física ou registrar venda/pagamento. I05 parcial/I04 mantidos. [Recibo](../../evidence/pilot-production-ledger-guard-publication-2026-10-30.json).
 
 ## I05: fonte e ícones padronizados e publicados — 30/10/2026
 
