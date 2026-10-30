@@ -1,5 +1,9 @@
 # Ações que exigem aprovação humana — Cacau v1
 
+## Janelas das ações publicadas e complementos conferidos — 29/10/2026
+
+Pedido de quatro botões/janelas aplicado à PR #101, integrada após checks/revisão e publicada somente no piloto, versão 05356941 a 100%. Sem mudança de permissões ou escrita operacional pelo agente. Usuário informou conferência dos complementos; leitura independente confirmou quatro movimentos/camadas/auditorias com valores esperados e ator autorizado. Rascunho #1 permanece sem produção realizada. [Recibo](../../evidence/pilot-inventory-dialogs-publication-2026-10-29.json).
+
 ## Organização das ações de estoque em janelas — 29/10/2026
 
 Usuário pediu quatro botões dentro de Ciclo de vida e ajustes, cada um abrindo janela flutuante para preencher e registrar: compensação pós-entrega, perda, ajuste positivo e negativo. Alteração de UX dentro da continuidade de atualização/publicação do piloto; manter perfis, validações, autoria, referências e escritores atuais. Não autoriza registrar novos fatos, concluir produção por inferência ou alterar permissões.

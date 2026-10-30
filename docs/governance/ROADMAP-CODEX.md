@@ -1,5 +1,13 @@
 # Roadmap único — Cacau v1
 
+## I05: ações em janelas publicadas — 29/10/2026
+
+PR #101 integrada normalmente em ed0b060, árvore igual ao HEAD aprovado 945ba74. Doze checks finais e os três workflows da main aprovados; CodeQL real com três análises sem achados/erros/avisos. 651 testes Node, 17 casos conectados, qualidade, Knip sem novos achados, audit zero e build/deploy isolado aprovados. Publicado somente no piloto às 00:46:17 UTC de 30/10 (21:46:17 Brasília de 29/10): versão 05356941-6c4a-4a42-a8f0-5b1ac5be5ad3, 100%. Configuração e seis bindings de secrets preservados; dez GETs públicos aprovados.
+
+Compensação pós-entrega, perda de estoque e ajustes positivo/negativo agora são botões em Ciclo de vida e ajustes; cada ação abre somente seu formulário em janela. Campos preservados ao reabrir, confirmação renovada, foco/retorno visíveis e edição/fechamento/reenvio bloqueados enquanto registra. Perfis, escritores, payloads e auditoria preservados. A seleção ambígua da captura foi resolvida com região acessível nomeada; o ensaio de rede lenta foi corrigido para encaminhar uma vez cada requisição, sem retirar as asserções ou a restrição de origem local.
+
+Complementos do workbook aceitos pelo usuário e conferidos independentemente: quatro movimentos/camadas/auditorias, valores esperados e ator autorizado. Contagens antes/depois da publicação: três compras, sete itens, onze movimentos, um rascunho, zero conclusão/venda/eventos financeiros. Lote #1 conserva 24 unidades planejadas, realizado nulo. Nenhuma escrita operacional pelo agente nesta entrega. Aceite visual no tablet ainda separado; retomar somente a preparação do mesmo lote, sem inferir produção física. I05 parcial e I04 mantidos. [Recibo](../../evidence/pilot-inventory-dialogs-publication-2026-10-29.json).
+
 ## I05: ações de estoque em janelas — 29/10/2026
 
 Usuário pediu botões para compensação pós-entrega, perda de estoque, ajuste positivo e ajuste negativo dentro de Ciclo de vida e ajustes. Candidata abre somente o formulário escolhido em OperationDialog, com foco/fechamento, campos preservados ao reabrir e confirmação renovada. Bloqueia edição/fechamento/reenvio durante a gravação e mantém retorno dentro da janela; falha de atualização do histórico não transforma uma gravação confirmada em falha. Permissões, validações e escritores existentes preservados, sem schema ou API novos.
