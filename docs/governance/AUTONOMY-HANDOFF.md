@@ -1,5 +1,15 @@
 # Handoff de autonomia — Cacau v1
 
+## Fechamento na reserva após publicar custos do workbook — 30/10/2026
+
+Uso oficial: **5% restante** na janela, 41% semanal; reset exibido **30/10/2026 11:00:42 Brasília** (1793368842). Aplicar a reserva obrigatória e DESLIGARTUDO nesta branch documental; não iniciar implementação ou novo deploy.
+
+Entrega operacional de código concluída: PR #107 integrada em dc847998; todos os checks/main e CodeQL real zerados. Piloto publicado e conferido: versão 5c132f2e-8e57-4f96-97c0-68773ba96329, 100%, manifesto privado com 40 custos, mesma fonte SHA add0174b..., configuração anterior/seis secrets preservados, dez GETs sem escrita aprovados. Produção, perdas e ajustes negativos no piloto aceitam saldo negativo e usam referência do workbook. Histórico automático mantido; usuário dispensou conferência manual. Sem escrita operacional remota pelo agente. Não pedir novamente prova de conclusão do lote, repetir compras/complementos ou concluir física/venda por inferência.
+
+Recibos e atualização canônica salvos/push em 1de0d4f, branch codex/pilot-workbook-publication-receipt-20261030, worktree /tmp/cacau-security-alert-review-20261028. Tentativa inicial de abrir PR documental falhou na conexão do sandbox; repetição durante fechamento criou a PR #108 (https://github.com/naiguelcabral/seus-brownies/pull/108), anexada à tarefa. Revisão/integração do PR do recibo permanece pendente; nenhum novo deploy é necessário para documentos. Próxima retomada: confirmar renovação, LIGARTUDO conforme política, conferir branch/status, localizar PR pelo head e revisar seus checks/CodeQL antes do merge normal. Publicação do piloto já está ativa e não deve ser repetida.
+
+Manifesto privado preservado em /tmp/cacau-workbook-costs-20261030/manifest.private.json (4687 bytes), original de endereços completos em manifest-full.private.json. Não versionar valores comerciais; fonte original anexada não foi alterada. Endereços abreviados 02/03 mapeados no recibo. Vendas/cancelamentos mantêm FIFO, cobertura sem camada permanece explicitamente incompleta e I05 parcial/I04 abertos. Não promover simulações como operação real.
+
 ## I05: custos do workbook publicados no piloto — 30/10/2026
 
 PR #107 integrada em dc847998, árvore igual ao HEAD aprovado 79017a8. Doze checks e três workflows da main aprovados; três análises CodeQL reais sem resultados/erros/avisos. O alerta de corrida na leitura do manifesto foi corrigido usando o mesmo descritor para validar e ler. 664 testes Node, qualidade, Knip sem novos achados, build isolado, laboratório PostgreSQL normal/piloto e 18 cenários HTTP/navegador aprovados.
