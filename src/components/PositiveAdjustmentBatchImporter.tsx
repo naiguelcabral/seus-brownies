@@ -1,4 +1,5 @@
 import { useId, useRef, useState } from 'react'
+import { ClipboardCheck } from 'lucide-react'
 import { useServerFn } from '@tanstack/react-start'
 import { useRouter } from '@tanstack/react-router'
 import { OperationDialog } from './OperationDialog'
@@ -126,8 +127,9 @@ export function PositiveAdjustmentBatchImporter() {
       <button
         type="button"
         onClick={show}
-        className="mt-4 rounded-lg border border-[#4a2114] px-4 py-2.5 font-bold text-[#4a2114]"
+        className="mt-4 inline-flex min-h-11 items-center gap-2 rounded-lg border border-[#d9c3b4] bg-white px-3 py-2 font-sans text-sm font-bold text-[#725443] transition hover:bg-[#f5e9df]"
       >
+        <ClipboardCheck size={16} aria-hidden="true" className="shrink-0" />
         Conferir lote de ajustes positivos
       </button>
       {open ? (

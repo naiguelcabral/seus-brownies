@@ -7,6 +7,7 @@ import {
 } from '@tanstack/react-router'
 import { useServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
+import { CircleMinus, CirclePlus, HandCoins, PackageX } from 'lucide-react'
 
 import { hasPermission } from '#/features/auth/authorization'
 import type { AppRole } from '#/features/auth/authorization'
@@ -515,6 +516,12 @@ const lifecycleActionTitles = {
 } as const
 type LifecycleAction = keyof typeof lifecycleActionTitles
 const lifecycleActionKinds = ['return', 'loss', 'positive', 'negative'] as const
+const lifecycleActionIcons = {
+  return: HandCoins,
+  loss: PackageX,
+  positive: CirclePlus,
+  negative: CircleMinus,
+} as const
 
 function LifecycleActions({
   products,
@@ -723,18 +730,22 @@ function LifecycleActions({
       <div className="mt-4 grid gap-3 sm:grid-cols-2">
         {lifecycleActionKinds
           .filter((kind) => (kind === 'return' ? canCompensate : canAdjust))
-          .map((kind) => (
-            <button
-              key={kind}
-              type="button"
-              aria-haspopup="dialog"
-              disabled={pending}
-              onClick={() => openAction(kind)}
-              className="min-h-11 rounded-lg border border-[#d9c3b4] px-4 py-3 text-left text-sm font-bold text-[#6c3e28]"
-            >
-              {lifecycleActionTitles[kind]}
-            </button>
-          ))}
+          .map((kind) => {
+            const Icon = lifecycleActionIcons[kind]
+            return (
+              <button
+                key={kind}
+                type="button"
+                aria-haspopup="dialog"
+                disabled={pending}
+                onClick={() => openAction(kind)}
+                className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-[#d9c3b4] bg-white px-3 py-2 text-left font-sans text-sm font-bold text-[#725443] transition hover:bg-[#f5e9df] disabled:opacity-60"
+              >
+                <Icon size={16} aria-hidden="true" className="shrink-0" />
+                {lifecycleActionTitles[kind]}
+              </button>
+            )
+          })}
       </div>
       {activeAction ? (
         <OperationDialog
