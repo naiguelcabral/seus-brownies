@@ -1,5 +1,9 @@
 # Ações que exigem aprovação humana — Cacau v1
 
+## Organização das ações de estoque em janelas — 29/10/2026
+
+Usuário pediu quatro botões dentro de Ciclo de vida e ajustes, cada um abrindo janela flutuante para preencher e registrar: compensação pós-entrega, perda, ajuste positivo e negativo. Alteração de UX dentro da continuidade de atualização/publicação do piloto; manter perfis, validações, autoria, referências e escritores atuais. Não autoriza registrar novos fatos, concluir produção por inferência ou alterar permissões.
+
 ## Correção da apresentação de 24 unidades — 29/10/2026
 
 Usuário relatou 24 mil na tela e confirmou a intenção de somente 24 unidades. O banco já conservava 24; corrigida apenas a apresentação, testada e integrada normalmente pela PR #97. Continuidade da publicação autorizada do piloto aplicada à versão b3688e0d, sem escrita operacional, mudança de contas ou novo lote. [Recibo](../../evidence/pilot-production-quantity-publication-2026-10-29.json).

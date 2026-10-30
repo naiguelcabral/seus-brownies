@@ -17,7 +17,7 @@ test.afterAll(async () => {
 
 test('inventory actions reflect each role before a user can fill a forbidden form', async ({
   page,
-}) => {
+}, testInfo) => {
   for (const [role, label, canAdjust, canCompensate] of [
     ['manager', 'Gerente', false, true],
     ['production', 'Produção', false, false],
@@ -36,27 +36,77 @@ test('inventory actions reflect each role before a user can fill a forbidden for
         exact: true,
       }),
     ).toHaveCount(canAdjust ? 1 : 0)
-    await expect(
-      page.getByRole('button', {
-        name: 'Registrar ajuste positivo',
+    if (role === 'owner') {
+      await page.setViewportSize({ width: 375, height: 812 })
+      await page
+        .locator('section')
+        .filter({
+          has: page.getByRole('heading', {
+            name: 'Ciclo de vida e ajustes',
+            exact: true,
+          }),
+        })
+        .screenshot({
+          path: testInfo.outputPath('inventory-lifecycle-actions-mobile.png'),
+        })
+    }
+    for (const [index, [title, submit, permitted]] of [
+      ['Compensação pós-entrega', 'Registrar compensação', canCompensate],
+      ['Perda de estoque', 'Registrar perda de estoque', canAdjust],
+      ['Ajuste positivo', 'Registrar ajuste positivo', canAdjust],
+      ['Ajuste negativo', 'Registrar ajuste negativo', canAdjust],
+    ].entries()) {
+      const launcher = page.getByRole('button', { name: title, exact: true })
+      await expect(launcher).toHaveCount(permitted ? 1 : 0)
+      await expect(
+        page.getByRole('button', { name: submit, exact: true }),
+      ).toHaveCount(0)
+      if (!permitted) continue
+      await launcher.click()
+      const dialog = page.getByRole('dialog', { name: title, exact: true })
+      await expect(dialog).toBeVisible()
+      await expect(dialog.locator('form')).toHaveCount(1)
+      await expect(
+        dialog.getByRole('button', { name: submit, exact: true }),
+      ).toBeVisible()
+      expect(
+        await dialog.evaluate(
+          (element) => element.scrollWidth <= element.clientWidth,
+        ),
+      ).toBe(true)
+      const quantity = dialog.getByRole('textbox', {
+        name: 'Quantidade',
         exact: true,
-      }),
-    ).toHaveCount(canAdjust ? 1 : 0)
-    await expect(
-      page.getByRole('button', {
-        name: 'Registrar ajuste negativo',
-        exact: true,
-      }),
-    ).toHaveCount(canAdjust ? 1 : 0)
-    await expect(
-      page.getByRole('button', {
-        name: 'Registrar perda de estoque',
-        exact: true,
-      }),
-    ).toHaveCount(canAdjust ? 1 : 0)
-    await expect(
-      page.getByRole('button', { name: 'Registrar compensação', exact: true }),
-    ).toHaveCount(canCompensate ? 1 : 0)
+      })
+      await quantity.fill(String(index + 1))
+      if (title === 'Compensação pós-entrega') {
+        await dialog.getByRole('button', { name: submit, exact: true }).click()
+        await expect(dialog.getByRole('alert')).toBeFocused()
+        await expect(dialog.getByRole('alert')).toBeInViewport()
+        await expect(quantity).toHaveValue(String(index + 1))
+      }
+      if (title !== 'Compensação pós-entrega') {
+        await expect(
+          dialog.getByRole('button', { name: submit, exact: true }),
+        ).toBeDisabled()
+        await dialog.getByRole('checkbox').check()
+      }
+      await page.keyboard.press('Escape')
+      await expect(dialog).toHaveCount(0)
+      await expect(launcher).toBeFocused()
+      await launcher.click()
+      await expect(quantity).toHaveValue(String(index + 1))
+      if (title !== 'Compensação pós-entrega')
+        await expect(dialog.getByRole('checkbox')).not.toBeChecked()
+      if (role === 'owner')
+        await page.screenshot({
+          path: testInfo.outputPath(`inventory-lifecycle-${index}-mobile.png`),
+        })
+      await dialog.getByRole('button', { name: 'Fechar', exact: true }).click()
+      await expect(dialog).toHaveCount(0)
+      await expect(launcher).toBeFocused()
+      expect(await counters()).toEqual(before)
+    }
     if (!canAdjust)
       await expect(
         page.getByText(
@@ -1031,6 +1081,13 @@ test('owner sees a focused stock result and duplicate adjustment error without e
   await page.setViewportSize({ width: 375, height: 812 })
   await page.goto('/estoque')
   await expect(page.getByTestId('fifo-lifecycle-client-ready')).toBeVisible()
+  await page
+    .getByRole('button', { name: 'Ajuste positivo', exact: true })
+    .click()
+  const dialog = page.getByRole('dialog', {
+    name: 'Ajuste positivo',
+    exact: true,
+  })
   const form = page.locator('form').filter({ hasText: 'Ajuste positivo' })
   await form
     .getByRole('combobox', { name: 'Produto', exact: true })
@@ -1052,9 +1109,38 @@ test('owner sees a focused stock result and duplicate adjustment error without e
     .fill('QA-FEEDBACK-001')
   await form.getByRole('checkbox').check()
   const before = await counters()
-  await form
-    .getByRole('button', { name: 'Registrar ajuste positivo', exact: true })
-    .click()
+  let releasePost = () => {}
+  const gate = new Promise((resolve) => {
+    releasePost = resolve
+  })
+  let blockedPosts = 0
+  const holdPost = async (route) => {
+    if (route.request().method() === 'POST') {
+      blockedPosts++
+      await gate
+    }
+    await route.fallback()
+  }
+  await page.route('**/*', holdPost)
+  try {
+    await form
+      .getByRole('button', { name: 'Registrar ajuste positivo', exact: true })
+      .click()
+    await expect(
+      dialog.getByRole('button', { name: 'Fechar', exact: true }),
+    ).toBeDisabled()
+    await expect(
+      form.getByRole('textbox', { name: 'Quantidade', exact: true }),
+    ).toBeDisabled()
+    await page.keyboard.press('Escape')
+    await expect(dialog).toBeVisible()
+    await form.evaluate((element) => element.requestSubmit())
+    await expect.poll(() => blockedPosts).toBe(1)
+    expect(await counters()).toEqual(before)
+  } finally {
+    releasePost()
+    await page.unroute('**/*', holdPost)
+  }
   const success = page
     .getByRole('status')
     .filter({ hasText: 'Evento FIFO registrado.' })

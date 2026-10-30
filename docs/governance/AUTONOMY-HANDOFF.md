@@ -1,5 +1,11 @@
 # Handoff de autonomia — Cacau v1
 
+## I05: ações de estoque em janelas — 29/10/2026
+
+Usuário pediu botões para compensação pós-entrega, perda de estoque, ajuste positivo e ajuste negativo dentro de Ciclo de vida e ajustes. Candidata abre somente o formulário escolhido em OperationDialog, com foco/fechamento, campos preservados ao reabrir e confirmação renovada. Bloqueia edição/fechamento/reenvio durante a gravação e mantém retorno dentro da janela; falha de atualização do histórico não transforma uma gravação confirmada em falha. Permissões, validações e escritores existentes preservados, sem schema ou API novos.
+
+651 testes Node, lint/tipos/formato e Knip sem novos achados aprovados; laboratório conectado, build e publicação pendentes neste checkpoint. Leitura independente dos complementos confirmou quatro movimentos/camadas/auditorias com quantidades e custos exatos esperados e ator autorizado. Lote #1 permanece rascunho; I05 parcial/I04 mantidos, sem conclusão física presumida.
+
 ## I05: rendimento corrigido e publicado — 29/10/2026
 
 PR #97 integrada em fb314fd, árvore igual ao HEAD aprovado dc2a9a6. Doze checks finais e os três workflows da main aprovados; análises CodeQL reais com zero achados/erros/avisos. 651 testes Node, 43 ensaios locais de navegador, qualidade, Knip sem novos achados, build isolado e auditoria zero aprovados. Publicado somente no piloto às 21:10:41 UTC: versão b3688e0d-d389-4cac-821a-2a3d5cdc2e13, 100%. Configuração e seis bindings de secrets preservados; dez GETs públicos aprovados.
