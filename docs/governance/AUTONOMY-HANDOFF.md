@@ -1,5 +1,13 @@
 # Handoff de autonomia — Cacau v1
 
+## I05: custos do workbook publicados no piloto — 30/10/2026
+
+PR #107 integrada em dc847998, árvore igual ao HEAD aprovado 79017a8. Doze checks e três workflows da main aprovados; três análises CodeQL reais sem resultados/erros/avisos. O alerta de corrida na leitura do manifesto foi corrigido usando o mesmo descritor para validar e ler. 664 testes Node, qualidade, Knip sem novos achados, build isolado, laboratório PostgreSQL normal/piloto e 18 cenários HTTP/navegador aprovados.
+
+Publicado somente no piloto às 12:07:56 UTC (09:07:56 Brasília), versão 5c132f2e-8e57-4f96-97c0-68773ba96329 a 100%. Manifesto privado com 40 referências do workbook carregado; validação e nomes dos seis secrets preservados. A primeira tentativa foi recusada pelo limite de tamanho de binding; abreviados somente os endereços de fonte para 02/03, com legenda no recibo, reduzindo o manifesto a 4687 bytes sem alterar valores/unidades. Dez GETs públicos aprovados.
+
+Produção simulada usa custos do workbook, inclusive energia/MO sem entrada manual; produção, perdas e ajustes negativos permitem saldo negativo somente com política válida no servidor do piloto. Posição de estoque do relatório inclui negativos por referência. Histórico automático, autoria, idempotência e transações mantidos; conferência manual após cada etapa dispensada pelo usuário. Não reprecificar fatos anteriores, repetir compras/complementos ou criar outro lote por inferência. Vendas/cancelamentos conservam FIFO e não recebem disponibilidade fictícia. Sem escrita operacional remota pelo agente, nem nova conferência manual do lote. I05 parcial/I04 mantidos. [Recibo](../../evidence/pilot-workbook-costs-publication-2026-10-30.json) e [ADR-0003](../ADR-0003-CUSTOS-WORKBOOK-NO-PILOTO.md).
+
 ## I05: custos do workbook e saldo negativo no piloto em validação — 30/10/2026
 
 Usuário dispensou a conferência manual após cada etapa, mantendo histórico automático, e autorizou saldo negativo no teste. Depois definiu o workbook anexado como fonte de todos os insumos, embalagens e demais situações nele listadas. Essa resposta resolve a escolha de custo pendente abaixo. Não pedir novamente auditoria manual nem substituir ausência de referência por zero.

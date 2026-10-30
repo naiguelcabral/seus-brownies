@@ -1,0 +1,149 @@
+{
+  "schemaVersion": 1,
+  "scope": "pilot-workbook-reference-costs-and-stock-deficits",
+  "source": {
+    "pr": 107,
+    "head": "79017a85959e2d795a772b4d77437b02b2f10421",
+    "candidate": "ab394793b86f3ec78a43a9436cfd30becacf4ac8",
+    "prChecksPassed": 12,
+    "nodeTests": 664,
+    "connectedTests": 18,
+    "browserTests": 43,
+    "prCodeql": [
+      {
+        "id": 2061954971,
+        "category": "/language:javascript-typescript",
+        "commit_sha": "ab394793b86f3ec78a43a9436cfd30becacf4ac8",
+        "results_count": 0,
+        "error": "",
+        "warning": ""
+      },
+      {
+        "id": 2061951788,
+        "category": "/language:python",
+        "commit_sha": "ab394793b86f3ec78a43a9436cfd30becacf4ac8",
+        "results_count": 0,
+        "error": "",
+        "warning": ""
+      },
+      {
+        "id": 2061951353,
+        "category": "/language:actions",
+        "commit_sha": "ab394793b86f3ec78a43a9436cfd30becacf4ac8",
+        "results_count": 0,
+        "error": "",
+        "warning": ""
+      }
+    ],
+    "merge": "dc847998e6e8a8685e002b48b66484fe086be142",
+    "treeMatchesApproved": true,
+    "mainWorkflows": [
+      {
+        "databaseId": 41051833950,
+        "name": "CodeQL",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "databaseId": 41051834161,
+        "name": "CI",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "databaseId": 41051834013,
+        "name": "Isolated business and browser validation",
+        "status": "completed",
+        "conclusion": "success"
+      }
+    ],
+    "mainCodeql": [
+      {
+        "id": 2061968440,
+        "category": "/language:javascript-typescript",
+        "commit_sha": "dc847998e6e8a8685e002b48b66484fe086be142",
+        "results_count": 0,
+        "error": "",
+        "warning": ""
+      },
+      {
+        "id": 2061967301,
+        "category": "/language:python",
+        "commit_sha": "dc847998e6e8a8685e002b48b66484fe086be142",
+        "results_count": 0,
+        "error": "",
+        "warning": ""
+      },
+      {
+        "id": 2061966565,
+        "category": "/language:actions",
+        "commit_sha": "dc847998e6e8a8685e002b48b66484fe086be142",
+        "results_count": 0,
+        "error": "",
+        "warning": ""
+      }
+    ]
+  },
+  "workbook": {
+    "sha256": "add0174b9d8f7224e03f88f71d7f92c599fc998e502e2174e68f8d49854ebbeb",
+    "costEntries": 40,
+    "commercialValuesVersioned": false,
+    "manifestBytes": 4687,
+    "sourceAliases": {
+      "03": "03_Cadastro_Insumos",
+      "02": "02_Cadastro_Produtos"
+    },
+    "valuesAndUnitsPreservedDuringAddressAbbreviation": true
+  },
+  "deployment": {
+    "before": {
+      "id": "cb42911d-3456-4613-b763-abe79848ccfc",
+      "created_on": "2026-10-30T10:14:50.861325Z",
+      "versions": [
+        {
+          "version_id": "b3f972f2-bc71-436c-9c30-fb654570bd9c",
+          "percentage": 100
+        }
+      ]
+    },
+    "after": {
+      "id": "2a63516d-e6de-4498-ac0a-4502949ad82f",
+      "created_on": "2026-10-30T12:07:56.668505Z",
+      "versions": [
+        {
+          "version_id": "5c132f2e-8e57-4f96-97c0-68773ba96329",
+          "percentage": 100
+        }
+      ]
+    }
+  },
+  "configuration": {
+    "previousSettingsPreserved": true,
+    "secretBindingCount": 6,
+    "secretValuesRead": false,
+    "newPilotBindings": [
+      "PILOT_STOCK_POLICY",
+      "PILOT_WORKBOOK_COSTS"
+    ]
+  },
+  "validation": {
+    "nodeTests": 664,
+    "connectedBrowserTests": 18,
+    "isolatedPostgresPilotAndNormalPassed": true,
+    "localQualityPassed": true,
+    "knipNewFindings": 0,
+    "isolatedBuildPassed": true,
+    "publicHttpSmoke": "pilot-workbook-costs-http-smoke-2026-10-30.json"
+  },
+  "operations": {
+    "remoteOperationalWrites": 0,
+    "manualPostStepAuditWaived": true,
+    "automaticAuditPreserved": true
+  },
+  "limits": [
+    "Somente produção, perdas e ajustes negativos do piloto recebem a exceção de saldo.",
+    "Vendas/cancelamentos mantêm FIFO; quantidade sem camada não ganha origem fictícia.",
+    "Custos de referência não reprecificam compras ou fatos anteriores; não atestam resultado real.",
+    "I05 parcial e I04 sem aceite."
+  ]
+}
