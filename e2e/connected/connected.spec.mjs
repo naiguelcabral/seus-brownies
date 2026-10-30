@@ -1347,6 +1347,10 @@ test('an input consumed by production cannot be lost or adjusted out again throu
     "insert into production_profiles(source_id,source_hash,recipe_version_id,product_id,expected_yield,source_payload) values ('QA-CONSUMED-PROFILE','QA-CONSUMED-PROFILE-HASH',$1,$2,'1','{}'),('QA-CONSUMED-EDGE','QA-CONSUMED-EDGE-HASH',$1,3,'1','{}')",
     [recipe.id, output.id],
   )
+  await pool.query(
+    "insert into recipe_operational_requirements(source_key,source_hash,recipe_version_id,type,quantity,unit,source_payload) values ('QA-CONSUMED-ENERGY','QA-CONSUMED-ENERGY-HASH',$1,'energy','1','kwh','{}'),('QA-CONSUMED-LABOR','QA-CONSUMED-LABOR-HASH',$1,'labor','1','hour','{}')",
+    [recipe.id],
+  )
   await identity(page, 'owner')
   const incoming = await rpc(page, 'recordPositiveAdjustmentLifecycle', {
     productId: input.id,
