@@ -294,7 +294,11 @@ function ProductionPage() {
   return (
     <ManagementLayout
       title="Produção"
-      description="Crie rascunhos, confira a capacidade e conclua lotes reais. Os planejamentos históricos permanecem apenas como referência e nunca movimentam estoque."
+      description={
+        workspace.pilotSimulation
+          ? 'Simulação do piloto: custos de referência do workbook, estoque negativo permitido e histórico automático.'
+          : 'Crie rascunhos, confira a capacidade e conclua lotes reais. Os planejamentos históricos permanecem apenas como referência e nunca movimentam estoque.'
+      }
     >
       <button
         type="button"

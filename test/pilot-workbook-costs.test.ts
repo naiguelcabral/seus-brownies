@@ -116,9 +116,11 @@ test('package price and quantity retain the exact fraction for repeated consumpt
     ],
     parsed,
   )
-  assert.equal(position[0]?.balance, '-900.000')
-  assert.equal(position[0]?.value, '-7.00')
-  assert.deepEqual(position[0]?.exactValue, {
+  const first = position[0]
+  assert.ok(first)
+  assert.equal(first.balance, '-900.000')
+  assert.equal(first.value, '-7.00')
+  assert.deepEqual(first.exactValue, {
     numerator: '-7',
     denominator: '1',
   })

@@ -839,6 +839,7 @@ export const getProductionWorkspace = createServerFn({ method: 'GET' })
       .limit(productionHistoryPageSize)
       .offset(pagination.offset)
     return {
+      pilotSimulation: readPilotWorkbookCosts(process.env) !== null,
       recipes: recipes.map((recipe) => ({
         id: recipe.id,
         name: recipe.name,
