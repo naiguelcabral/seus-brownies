@@ -1,4 +1,11 @@
-import { readFileSync, realpathSync, statSync } from 'node:fs'
+import {
+  readFileSync,
+  realpathSync,
+  openSync,
+  closeSync,
+  fstatSync,
+  constants,
+} from 'node:fs'
 import { basename } from 'node:path'
 import { execFileSync } from 'node:child_process'
 import { readPilotWorkbookCosts } from '../src/features/production/pilot-workbook-costs'
@@ -9,16 +16,25 @@ const path = validationOnly ? args[1] : args[0]
 if (!path || args.length !== (validationOnly ? 2 : 1))
   throw new Error('Informe o manifesto privado de custos do workbook.')
 const resolved = realpathSync(path)
-if (
-  /^\.env(?:\.|$)/i.test(basename(resolved)) ||
-  statSync(resolved).size > 64_000
-)
+if (/^\.env(?:\.|$)/i.test(basename(resolved)))
   throw new Error('Arquivo de referência não permitido.')
+const descriptor = openSync(resolved, constants.O_RDONLY | constants.O_NOFOLLOW)
+let contents: string
+try {
+  const metadata = fstatSync(descriptor)
+  if (!metadata.isFile() || metadata.size > 64_000)
+    throw new Error('Arquivo de referência não permitido.')
+  contents = readFileSync(descriptor, 'utf8')
+  if (Buffer.byteLength(contents, 'utf8') > 64_000)
+    throw new Error('Arquivo de referência não permitido.')
+} finally {
+  closeSync(descriptor)
+}
 const policy = readPilotWorkbookCosts({
   PILOT_STOCK_POLICY: 'workbook_negative',
   PASSWORD_RESET_REDIRECT_ORIGIN:
     'https://cacau-v1-piloto.naiguelcabral.workers.dev',
-  PILOT_WORKBOOK_COSTS: readFileSync(resolved, 'utf8'),
+  PILOT_WORKBOOK_COSTS: contents,
 })
 if (!policy) throw new Error('Referências do workbook não configuradas.')
 console.log(
