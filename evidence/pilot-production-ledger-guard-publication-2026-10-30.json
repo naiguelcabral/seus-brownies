@@ -127,7 +127,16 @@
     "agentOperationalWrites": 0,
     "physicalProductionDeclared": false,
     "simulationAuthorized": true,
-    "tabletCompletionPending": true
+    "tabletCompletionPending": true,
+    "reportedCompletionRecheck": {
+      "userReportedComplete": true,
+      "confirmedComplete": false,
+      "checkedAt": "2026-10-30T10:18:27.613Z",
+      "batchStatus": "draft",
+      "completedAt": null,
+      "stockMovements": "11",
+      "completionAudits": "0"
+    }
   },
   "limits": [
     "Preserva o custo médio dos insumos e a alocação FIFO existente.",
