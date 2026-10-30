@@ -50,6 +50,7 @@ import {
   summarizeDeclaredLosses,
 } from '#/features/reports/production-outcomes'
 import { reconcileInventoryLedger } from '#/features/reports/inventory-reconciliation'
+import { readPilotWorkbookCosts } from '#/features/production/pilot-workbook-costs'
 import type { ReconciliationDivergence } from '#/features/reports/inventory-reconciliation'
 import { reconcileOperationalIntegrity } from '#/features/reports/integrity-reconciliation'
 import { summarizeSalesMetrics } from '#/features/reports/sales-metrics'
@@ -139,6 +140,7 @@ export const getOperationalReports = createServerFn({ method: 'GET' })
           productName: products.name,
           unit: products.unit,
           quantityDelta: stockMovements.quantityDelta,
+          sku: products.sku,
           unitCost: stockMovements.unitCost,
           allocatedCost: stockMovements.allocatedCost,
           exactCost: stockMovements.exactCost,
@@ -765,7 +767,10 @@ export const getOperationalReports = createServerFn({ method: 'GET' })
       ),
     }
     const expensesByCategory = groupExpensesByCategory(expenseRows)
-    const inventory = valueInventory(movementRows)
+    const inventory = valueInventory(
+      movementRows,
+      readPilotWorkbookCosts(process.env),
+    )
     return {
       period,
       revenue,

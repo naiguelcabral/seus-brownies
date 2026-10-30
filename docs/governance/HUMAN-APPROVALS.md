@@ -1,5 +1,13 @@
 # Ações que exigem aprovação humana — Cacau v1
 
+## Fonte de custo definida pelo usuário — 30/10/2026
+
+Usuário anexou novamente o workbook e orientou usar seu custo para todos os insumos, embalagens e demais situações nele listadas, resolvendo a pergunta anterior. Continuidade da exceção do piloto: custo de referência identificado, histórico automático preservado e conferência manual dispensada. Cadastro mestre e quantidades da ficha orientam a preparação; não reprecificar fatos anteriores, inventar custo para item ausente ou aplicar a outros ambientes. Implementação/revisão/publicação em andamento, sem nova escrita operacional. [ADR-0003](../ADR-0003-CUSTOS-WORKBOOK-NO-PILOTO.md).
+
+## Exceção de estoque no piloto e dispensa da conferência manual — 30/10/2026
+
+Usuário autorizou “podendo negativar o estoque” no ambiente de teste e esclareceu que “sem auditoria” significa “Pular a conferência manual; manter o histórico”. Autoriza preparar a exceção isolada do piloto, com histórico automático, autoria e idempotência preservados. Não autoriza apagar histórico, afrouxar autenticação ou mudar produção/HML anterior. Escolha do custo da quantidade faltante perguntada e ainda pendente; implementação/publicação não executadas neste checkpoint.
+
 ## Proteção do saldo publicada antes da simulação — 30/10/2026
 
 Continuidade autorizada aplicada à PR #105, integrada após revisão/checks e publicada somente no piloto, versão b3f972f2 a 100%. Sem escrita operacional pelo agente ou mudança de acesso/custo/schema. Conclusão simulada do rascunho #1 ainda depende da sessão do tablet; não representa produção física ou aceite integral I05/I04. [Recibo](../../evidence/pilot-production-ledger-guard-publication-2026-10-30.json).

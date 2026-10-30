@@ -1,5 +1,23 @@
 # Handoff de autonomia — Cacau v1
 
+## I05: custos do workbook e saldo negativo no piloto em validação — 30/10/2026
+
+Usuário dispensou a conferência manual após cada etapa, mantendo histórico automático, e autorizou saldo negativo no teste. Depois definiu o workbook anexado como fonte de todos os insumos, embalagens e demais situações nele listadas. Essa resposta resolve a escolha de custo pendente abaixo. Não pedir novamente auditoria manual nem substituir ausência de referência por zero.
+
+Fonte reconferida: SHA add0174b9d8f7224e03f88f71d7f92c599fc998e502e2174e68f8d49854ebbeb. Leitura com ferramenta de planilhas e extração exata prepararam manifesto privado com 40 referências e energia/MO por receita. Cadastro mestre define tarifas; ficha define consumos e ovos; custos históricos dos produtos acabados e identidade própria do saquinho mantêm origem explícita. Valores comerciais permanecem fora do Git público. Compras e fatos anteriores não são reprecificados, nem despesas históricas viram novos lançamentos.
+
+Candidata usa manifesto privado e flag no servidor, somente com origem exata do piloto. Produção calcula material/energia/MO por referência e permite saldo negativo; perdas/ajustes negativos registram custo de referência e quantidade sem camada, sem criar estoque ou origem FIFO fictícia. A posição de estoque do relatório inclui negativos pelo mesmo custo de referência. Modo normal conserva seus bloqueios; vendas/cancelamentos conservam FIFO existente. Histórico, autoria, referências e transações mantidos. [Decisão e limites](../ADR-0003-CUSTOS-WORKBOOK-NO-PILOTO.md).
+
+664 testes Node passaram, além de laboratório PostgreSQL 17 com produção repetida em saldo negativo, perdas/ajustes, auditoria, repetição recusada e rollback por custo ausente; cobertura parcial de camada acrescentada ao mesmo ensaio. Qualidade, build, CI/revisão e publicação ainda em andamento. Nenhuma escrita operacional remota. Piloto continua b3f972f2 até a publicação validada; não declarar exceção ativa. I05 parcial/I04 mantidos. Uso oficial durante implementação: 31% da janela e 45% semanal restantes, reserva 5%.
+
+## I05: conferência manual dispensada e estoque negativo autorizado no piloto — 30/10/2026
+
+Usuário pediu continuar os testes podendo negativar estoque e esclareceu “Pular a conferência manual; manter o histórico”. Essa decisão dispensa a conferência manual após cada etapa, não o histórico automático, autoria, transações ou idempotência. Autoriza uma exceção restrita ao piloto para saldo negativo; a regra normal permanece nos demais ambientes.
+
+A implementação ainda não foi alterada ou publicada. Permitir a saída sem saldo também exige custo para a parte faltante: perguntado se deve usar o último custo de entrada (zero provisório somente quando não existir) ou sempre zero provisório. Aguardar essa decisão antes de alterar o custo, os escritores e seus testes; não desativar a auditoria nem remover apenas a checagem física deixando a alocação FIFO/custo inconsistente. Nenhuma escrita operacional nesta preparação, nenhum lote adicional ou repetição de referências. Piloto continua b3f972f2; a conclusão antes relatada não foi confirmada no último checkpoint. A investigação dessa conclusão não deve virar nova rodada obrigatória de conferência manual para o usuário.
+
+Uso oficial nesta retomada: 48% restante na janela e 48% semanal; reserva de 5% não atingida. Próximo passo: incorporar a escolha de custo, isolar a exceção no servidor do piloto, cobrir saldo insuficiente, repetição, restauração e ambientes normais, revisar/integrar/publicar pelo fluxo habitual. Não declarar a exceção já ativa.
+
 ## I05: proteção do saldo publicada; conclusão simulada no tablet pendente — 30/10/2026
 
 Usuário aceitou o padrão visual e confirmou “Simulação no piloto, sem produção física” para o rascunho #1 dos 24 brigadeiros. Prévia privada confirmou insumos suficientes e custos de referência, preservando compras e quatro complementos já registrados.
