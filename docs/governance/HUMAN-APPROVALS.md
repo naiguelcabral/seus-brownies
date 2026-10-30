@@ -1,5 +1,9 @@
 # Ações que exigem aprovação humana — Cacau v1
 
+## Fonte e ícones das ações — 30/10/2026
+
+Usuário pediu o padrão das abas superiores nos botões recém-criados. Ajuste visual integrado pela PR #103 após checks/revisão e publicado somente no piloto, versão ab3d9fa2 a 100%, dentro da continuidade já autorizada. Sem alteração de permissões, dados ou regras operacionais. [Recibo](../../evidence/pilot-inventory-navigation-style-publication-2026-10-30.json).
+
 ## Janelas das ações publicadas e complementos conferidos — 29/10/2026
 
 Pedido de quatro botões/janelas aplicado à PR #101, integrada após checks/revisão e publicada somente no piloto, versão 05356941 a 100%. Sem mudança de permissões ou escrita operacional pelo agente. Usuário informou conferência dos complementos; leitura independente confirmou quatro movimentos/camadas/auditorias com valores esperados e ator autorizado. Rascunho #1 permanece sem produção realizada. [Recibo](../../evidence/pilot-inventory-dialogs-publication-2026-10-29.json).
