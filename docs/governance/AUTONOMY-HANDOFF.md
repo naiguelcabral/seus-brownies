@@ -1,5 +1,9 @@
 # Handoff de autonomia — Cacau v1
 
+## I05: fonte e ícones das ações alinhados à navegação — 30/10/2026
+
+Usuário pediu o mesmo padrão das abas superiores nos botões recém-criados. Candidata adota fonte sans de 14px/negrito, cores/espaçamento da navegação e ícones Lucide de 16px para compensação, perda e ajustes positivo/negativo. O atalho de conferência em lote recebe o mesmo padrão. Ícones decorativos ficam ocultos da árvore acessível; rótulos e comportamento mantidos. Mudança somente visual, sem alterar formulários, permissões, escritores ou dados. Qualidade, ensaio visual e publicação em andamento. I05 parcial e I04 mantidos.
+
 ## I05: ações em janelas publicadas — 29/10/2026
 
 PR #101 integrada normalmente em ed0b060, árvore igual ao HEAD aprovado 945ba74. Doze checks finais e os três workflows da main aprovados; CodeQL real com três análises sem achados/erros/avisos. 651 testes Node, 17 casos conectados, qualidade, Knip sem novos achados, audit zero e build/deploy isolado aprovados. Publicado somente no piloto às 00:46:17 UTC de 30/10 (21:46:17 Brasília de 29/10): versão 05356941-6c4a-4a42-a8f0-5b1ac5be5ad3, 100%. Configuração e seis bindings de secrets preservados; dez GETs públicos aprovados.
