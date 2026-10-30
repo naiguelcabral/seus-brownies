@@ -74,6 +74,7 @@ run_isolated() {
       XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}" \
       XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-}" \
       DBUS_SESSION_BUS_ADDRESS="${DBUS_SESSION_BUS_ADDRESS:-}" \
-      npx wrangler deploy --env pilot
+      bash -c 'if [[ -n "$1" ]]; then node --import tsx scripts/deploy-pilot-workbook.ts "$1"; else npx wrangler deploy --env pilot --keep-vars; fi' \
+      pilot-deploy "${PILOT_WORKBOOK_COSTS_FILE:-}"
   fi
 )

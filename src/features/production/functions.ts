@@ -78,6 +78,11 @@ import {
 } from './recovery'
 import { reconcileProductionCosts } from '#/features/production/cost-reconciliation'
 import { isMissingOptionalSchemaError } from '#/features/reports/optional-schema'
+import {
+  readPilotWorkbookCosts,
+  pilotMaterialCost,
+  pilotCostProvenance,
+} from './pilot-workbook-costs'
 
 const inputRecoveryWeight = (value: string | undefined) => value ?? null
 
@@ -147,6 +152,7 @@ function addConsumption(
 }
 
 async function loadPlan(tx: Transaction, input: BatchInput) {
+  const pilotCosts = readPilotWorkbookCosts(process.env)
   const recipe = requireFirst(
     await tx
       .select({
@@ -439,6 +445,23 @@ async function loadPlan(tx: Transaction, input: BatchInput) {
   for (const rate of rateRows)
     if (!rateByType.has(rate.type)) rateByType.set(rate.type, rate)
   const operational = requirements.map((requirement) => {
+    if (pilotCosts) {
+      const reference = pilotCosts.operationalPerRecipe[requirement.type]
+      const cost = scaleCost(reference.unitCost, multiplier, 1_000n)
+      return {
+        requirement: { ...requirement, unit: 'batch' },
+        rate: {
+          id: null,
+          type: requirement.type,
+          unitAmount: displayCostMoney(reference.unitCost),
+          effectiveFrom: input.productionDate,
+        },
+        quantity: multiplier,
+        amountCents: displayCostCents(cost),
+        exactCost: cost,
+        explicit: true,
+      }
+    }
     if (recoveryConfig?.operationalInput === 'batch_totals') {
       const amount = input.operationalAmounts?.[requirement.type]
       const parsed = amount === undefined ? null : moneyToCents(amount)
@@ -557,6 +580,7 @@ async function enrichCosts(
   tx: Transaction,
   plan: Awaited<ReturnType<typeof loadPlan>>,
 ) {
+  const pilotCosts = readPilotWorkbookCosts(process.env)
   const ids = consumptionProductIds(plan.consumptions)
   const movements = ids.length
     ? await tx
@@ -578,14 +602,21 @@ async function enrichCosts(
     movementsByProduct.set(movement.productId, group)
   }
   const costs = plan.consumptions.map((consumption) => {
-    const unitCost = calculateWeightedAverageCost(
-      movementsByProduct.get(consumption.id) ?? [],
-    )
-    const state = calculateExactInventoryState(
-      movementsByProduct.get(consumption.id) ?? [],
-    )
-    const consumedCost =
-      state.quantity > 0n
+    const productMovements = movementsByProduct.get(consumption.id) ?? []
+    const unitCost = pilotCosts
+      ? 0n
+      : calculateWeightedAverageCost(productMovements)
+    const state = pilotCosts
+      ? null
+      : calculateExactInventoryState(productMovements)
+    const consumedCost = pilotCosts
+      ? pilotMaterialCost(
+          pilotCosts,
+          consumption.sku,
+          consumption.unit,
+          consumption.quantity,
+        )
+      : state && state.quantity > 0n
         ? scaleCost(state.value, consumption.quantity, state.quantity)
         : exactCost(0n)
     return {
@@ -596,7 +627,11 @@ async function enrichCosts(
           sum + (quantityToThousandths(movement.quantityDelta) ?? 0n),
         0n,
       ),
-      unitCost,
+      unitCost: pilotCosts
+        ? displayCostCents(
+            scaleCost(consumedCost, 10_000n, consumption.quantity),
+          )
+        : unitCost,
       totalCost: displayCostCents(consumedCost),
     }
   })
@@ -674,6 +709,7 @@ function previewFromPlan(
   costs: Awaited<ReturnType<typeof enrichCosts>>,
 ) {
   return {
+    pilotSimulation: readPilotWorkbookCosts(process.env) !== null,
     recipe: {
       id: plan.recipe.id,
       name: plan.recipe.name,
@@ -1127,13 +1163,15 @@ export async function persistProductionBatchCompletion(
       )
     }
     const costs = await enrichCosts(tx, plan)
-    assertSufficientStock(
-      costs.costs.map((cost) => ({
-        name: cost.name,
-        available: cost.available,
-        required: cost.quantity,
-      })),
-    )
+    const pilotCosts = readPilotWorkbookCosts(process.env)
+    if (!pilotCosts)
+      assertSufficientStock(
+        costs.costs.map((cost) => ({
+          name: cost.name,
+          available: cost.available,
+          required: cost.quantity,
+        })),
+      )
     const completedAt = new Date()
     const commonDenominator = [...costs.outputExactCosts.values()].reduce(
       (product, cost) => product * BigInt(cost.denominator),
@@ -1175,6 +1213,9 @@ export async function persistProductionBatchCompletion(
         sourcePayload: {
           origin: 'manual_production_completion',
           components: cost.source,
+          ...(pilotCosts
+            ? { simulation: pilotCostProvenance(pilotCosts) }
+            : {}),
         },
       })),
     )
@@ -1206,9 +1247,11 @@ export async function persistProductionBatchCompletion(
         amount: displayCostMoney(item.exactCost),
         exactCost: item.exactCost,
         occurredAt: productionDate,
-        notes: item.explicit
-          ? 'Valor total real informado para este lote, sem conversão em horas ou kWh.'
-          : 'Tarifa vigente efetivamente aplicada ao lote.',
+        notes: pilotCosts
+          ? `Simulação do piloto: custo do workbook ${pilotCosts.workbookSha256}.`
+          : item.explicit
+            ? 'Valor total real informado para este lote, sem conversão em horas ou kWh.'
+            : 'Tarifa vigente efetivamente aplicada ao lote.',
       })),
     )
     const outputMovements = await tx
@@ -1339,7 +1382,15 @@ export async function persistProductionBatchCompletion(
           ),
           completedAt,
           completionPayload: {
-            costMethod: 'perpetual_weighted_average',
+            costMethod: pilotCosts
+              ? 'pilot_workbook_reference'
+              : 'perpetual_weighted_average',
+            ...(pilotCosts
+              ? {
+                  simulation: pilotCostProvenance(pilotCosts),
+                  negativeStockAllowed: true,
+                }
+              : {}),
             completedAt: completedAt.toISOString(),
             capacity: plan.capacity,
             recovery: plan.bordinhas,

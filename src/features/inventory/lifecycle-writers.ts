@@ -1,4 +1,4 @@
-import { exactCost, addCosts } from '../../lib/exact-cost'
+import { exactCost, addCosts, displayCostMoney } from '../../lib/exact-cost'
 import type { ExactCost } from '../../lib/exact-cost'
 import { requireFirst } from '../../lib/required-value'
 import { createServerFn } from '@tanstack/react-start'
@@ -44,6 +44,10 @@ import {
   quantityToThousandths,
 } from '#/features/production/calculations'
 import { appendOperationalAudit } from '#/features/operations/audit'
+import {
+  readPilotWorkbookCosts,
+  pilotMaterialCost,
+} from '#/features/production/pilot-workbook-costs'
 
 export class FifoLifecycleSchemaUnavailableError extends Error {
   constructor() {
@@ -390,18 +394,62 @@ export async function persistNegativeInventoryEvent(
       const available = quantityToThousandths(balance.quantity)
       if (available === null) throw new Error('Saldo de estoque inválido.')
       const requested = parseQuantity(data.quantity)
-      if (requested > available)
+      if (requested <= 0n) throw new Error('Quantidade de saída inválida.')
+      const pilotCosts = readPilotWorkbookCosts(process.env)
+      if (!pilotCosts && requested > available)
         throw new Error(
           'Estoque insuficiente para registrar a perda ou ajuste negativo.',
         )
-      const plan = planNegativeInventoryEvent({
-        event,
-        reason: data.reason,
-        reference: data.reference,
-        layers: await loadLayers(tx, [data.productId]),
-        productId: data.productId,
-        quantity: requested,
-      })
+      const layers = await loadLayers(tx, [data.productId])
+      const layerQuantity = layers.reduce(
+        (sum, layer) =>
+          sum + (layer.remainingQuantity > 0n ? layer.remainingQuantity : 0n),
+        0n,
+      )
+      const physicallyCovered =
+        available > 0n ? (requested < available ? requested : available) : 0n
+      const covered = pilotCosts
+        ? physicallyCovered < layerQuantity
+          ? physicallyCovered
+          : layerQuantity
+        : requested
+      const plan =
+        covered > 0n
+          ? planNegativeInventoryEvent({
+              event,
+              reason: data.reason,
+              reference: data.reference,
+              layers,
+              productId: data.productId,
+              quantity: covered,
+            })
+          : {
+              layers,
+              allocations: [],
+              allocatedCost: 0n,
+              exactCost: exactCost(0n),
+            }
+      let referenceCost: ExactCost | null = null
+      if (pilotCosts) {
+        const product = requireFirst(
+          await tx
+            .select({ sku: products.sku, unit: products.unit })
+            .from(products)
+            .where(eq(products.id, data.productId)),
+        )
+        referenceCost = pilotMaterialCost(
+          pilotCosts,
+          product.sku,
+          product.unit,
+          requested,
+        )
+      }
+      const recordedCost = referenceCost
+        ? displayCostMoney(referenceCost)
+        : money(plan.allocatedCost)
+      const reason = pilotCosts
+        ? `${data.reason} | Simulação: referência workbook ${pilotCosts.workbookSha256}; quantidade sem camada: ${quantity(requested - covered)}.`
+        : data.reason
       const movement = requireFirst(
         await tx
           .insert(stockMovements)
@@ -409,41 +457,42 @@ export async function persistNegativeInventoryEvent(
             productId: data.productId,
             type: event === 'loss' ? 'loss' : 'adjustment',
             quantityDelta: `-${quantity(requested)}`,
-            allocatedCost: money(plan.allocatedCost),
-            exactCost: plan.exactCost ?? null,
+            allocatedCost: recordedCost,
+            exactCost: referenceCost ?? plan.exactCost ?? null,
             referenceType: event,
             sourceKey: key,
-            notes: data.reason,
+            notes: reason,
           })
           .returning({ id: stockMovements.id }),
       )
-      await tx.insert(inventoryCostAllocations).values(
-        plan.allocations.map(
-          (row) =>
-            ({
-              inventoryCostLayerId: row.layerId,
-              outgoingStockMovementId: movement.id,
-              productId: row.productId,
-              eventType: event === 'loss' ? 'loss' : 'adjustment_negative',
-              eventReferenceType: event,
-              quantity: quantity(row.quantity),
-              allocatedCost: money(row.allocatedCost),
-              exactCost: row.exactCost ?? null,
-            }) satisfies typeof inventoryCostAllocations.$inferInsert,
-        ),
-      )
-      await updateBalances(tx, plan.layers)
+      if (plan.allocations.length)
+        await tx.insert(inventoryCostAllocations).values(
+          plan.allocations.map(
+            (row) =>
+              ({
+                inventoryCostLayerId: row.layerId,
+                outgoingStockMovementId: movement.id,
+                productId: row.productId,
+                eventType: event === 'loss' ? 'loss' : 'adjustment_negative',
+                eventReferenceType: event,
+                quantity: quantity(row.quantity),
+                allocatedCost: money(row.allocatedCost),
+                exactCost: row.exactCost ?? null,
+              }) satisfies typeof inventoryCostAllocations.$inferInsert,
+          ),
+        )
+      if (plan.allocations.length) await updateBalances(tx, plan.layers)
       await appendOperationalAudit(tx, {
         actorAuthUserId: actorAuthUserId ?? null,
         action: `inventory.${event}`,
         entityType: 'stock_movement',
         entityId: movement.id,
         operationReference: key,
-        reason: data.reason,
+        reason,
       })
       return {
         movementId: movement.id,
-        allocatedCost: money(plan.allocatedCost),
+        allocatedCost: recordedCost,
       }
     } catch (error) {
       assertFifoLifecycleSchema(error)

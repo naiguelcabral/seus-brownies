@@ -913,7 +913,11 @@ function Preview({
           role="alert"
           className="mt-5 rounded-xl border border-[#b65624] bg-[#fff7ec] p-3 text-sm"
         >
-          <strong>Insumos insuficientes para concluir o lote</strong>
+          <strong>
+            {preview.pilotSimulation
+              ? 'Simulação do piloto: a conclusão poderá deixar estoque negativo'
+              : 'Insumos insuficientes para concluir o lote'}
+          </strong>
           <ul className="mt-2 list-disc pl-5">
             {shortfalls.map((item) => (
               <li key={item.productId}>
@@ -922,7 +926,9 @@ function Preview({
             ))}
           </ul>
           <p className="mt-2">
-            A conclusão revalida o estoque disponível na transação.
+            {preview.pilotSimulation
+              ? 'Custos calculados pelas referências do workbook. O histórico automático permanece registrado.'
+              : 'A conclusão revalida o estoque disponível na transação.'}
           </p>
         </div>
       ) : null}

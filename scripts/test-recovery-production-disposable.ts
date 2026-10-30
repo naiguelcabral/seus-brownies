@@ -17,6 +17,10 @@ import {
 } from '../src/features/operations/functions'
 import { persistProductionBatchCompletion } from '../src/features/production/functions'
 import {
+  persistNegativeInventoryEvent,
+  persistPositiveInventoryAdjustment,
+} from '../src/features/inventory/lifecycle-writers'
+import {
   decimalCost,
   sumCosts,
   scaleCost,
@@ -534,6 +538,214 @@ try {
     )[0]?.status,
     'confirmed',
   )
+  // Synthetic pilot policy only, after every normal-mode integrity assertion.
+  const pilotEnvironmentKeys = [
+    'PILOT_STOCK_POLICY',
+    'PILOT_WORKBOOK_COSTS',
+    'PASSWORD_RESET_REDIRECT_ORIGIN',
+  ] as const
+  const originalEnvironment = Object.fromEntries(
+    pilotEnvironmentKeys.map((key) => [key, process.env[key]]),
+  )
+  const pilotPolicy = {
+    schemaVersion: 1,
+    workbookSha256: '9'.repeat(64),
+    costs: Object.fromEntries(
+      [
+        ['TEST-BASE', 'g', '1', '100'],
+        ['TEST-COVER', 'g', '3', '100'],
+        ['TEST-PACK', 'unit', '1', '5'],
+        ['TEST-LABEL', 'unit', '1', '10'],
+      ].map(([sku, unit, numerator, denominator]) => [
+        sku,
+        {
+          unit,
+          unitCost: { numerator, denominator },
+          source: 'Synthetic!A1:D4',
+        },
+      ]),
+    ),
+    operationalPerRecipe: {
+      energy: {
+        unit: 'batch',
+        unitCost: { numerator: '1', denominator: '2' },
+        source: 'Synthetic!E1',
+      },
+      labor: {
+        unit: 'batch',
+        unitCost: { numerator: '3', denominator: '1' },
+        source: 'Synthetic!E2',
+      },
+    },
+  }
+  process.env.PILOT_STOCK_POLICY = 'workbook_negative'
+  process.env.PASSWORD_RESET_REDIRECT_ORIGIN =
+    'https://cacau-v1-piloto.naiguelcabral.workers.dev'
+  process.env.PILOT_WORKBOOK_COSTS = JSON.stringify(pilotPolicy)
+  try {
+    for (const pilotBatch of [insufficient, await draft()]) {
+      const result = await persistProductionBatchCompletion(
+        db,
+        { id: pilotBatch.id },
+        'synthetic-pilot-owner',
+      )
+      assert.equal(result.totalCost, '98.70')
+      const saved = requireFirst(
+        await db
+          .select()
+          .from(schema.productionBatches)
+          .where(eq(schema.productionBatches.id, pilotBatch.id)),
+      )
+      assert.deepEqual(saved.exactCost, decimalCost('98.70'))
+      assert.equal(
+        (saved.completionPayload as { costMethod: string }).costMethod,
+        'pilot_workbook_reference',
+      )
+      await assert.rejects(
+        persistProductionBatchCompletion(
+          db,
+          { id: pilotBatch.id },
+          'synthetic-pilot-owner',
+        ),
+        /rascunho/,
+      )
+    }
+    const baseId = get('TEST-BASE').id
+    const baseBalance = async () =>
+      (
+        await pool.query(
+          'select sum(quantity_delta)::text balance from stock_movements where product_id=$1',
+          [baseId],
+        )
+      ).rows[0].balance
+    assert.equal(await baseBalance(), '-1700.000')
+    for (const [index, event] of (
+      ['loss', 'adjustment_negative'] as const
+    ).entries()) {
+      const result = await persistNegativeInventoryEvent(
+        db,
+        {
+          productId: baseId,
+          quantity: '10',
+          reason: 'Synthetic pilot negative quantity',
+          reference: `synthetic-pilot-out-${index}`,
+        },
+        event,
+        'synthetic-pilot-owner',
+      )
+      assert.equal(result.allocatedCost, '0.10')
+      await assert.rejects(
+        persistNegativeInventoryEvent(
+          db,
+          {
+            productId: baseId,
+            quantity: '10',
+            reason: 'Synthetic pilot negative quantity',
+            reference: `synthetic-pilot-out-${index}`,
+          },
+          event,
+          'synthetic-pilot-owner',
+        ),
+        /já registrado/,
+      )
+    }
+    assert.equal(await baseBalance(), '-1720.000')
+    const audit = await pool.query(
+      "select count(*)::int count from operational_audit_events where actor_auth_user_id='synthetic-pilot-owner'",
+    )
+    assert.equal(audit.rows[0].count, 4)
+    const packId = get('TEST-PACK').id
+    const receiptLayer = await persistPositiveInventoryAdjustment(
+      db,
+      {
+        productId: packId,
+        quantity: '100',
+        totalCost: '100.00',
+        reason: 'Synthetic receipt after deficit',
+        reference: 'pilot-receipt-after-deficit',
+        originReference: 'Synthetic fixture',
+      },
+      'synthetic-pilot-owner',
+    )
+    const partial = await persistNegativeInventoryEvent(
+      db,
+      {
+        productId: packId,
+        quantity: '3',
+        reason: 'Synthetic partially covered pilot loss',
+        reference: 'pilot-partial-loss',
+      },
+      'loss',
+      'synthetic-pilot-owner',
+    )
+    assert.equal(partial.allocatedCost, '0.60')
+    assert.equal(
+      (
+        await pool.query(
+          'select sum(quantity_delta)::text balance from stock_movements where product_id=$1',
+          [packId],
+        )
+      ).rows[0].balance,
+      '-1.000',
+    )
+    assert.equal(
+      requireFirst(
+        await db
+          .select()
+          .from(schema.inventoryCostLayers)
+          .where(eq(schema.inventoryCostLayers.id, receiptLayer.layerId)),
+      ).remainingQuantity,
+      '98.000',
+    )
+    assert.equal(
+      (
+        await pool.query(
+          'select sum(quantity)::text quantity from inventory_cost_allocations where outgoing_stock_movement_id=$1',
+          [partial.movementId],
+        )
+      ).rows[0].quantity,
+      '2.000',
+    )
+    const missing = await draft()
+    process.env.PILOT_WORKBOOK_COSTS = JSON.stringify({
+      ...pilotPolicy,
+      costs: {},
+    })
+    const before = (
+      await pool.query('select count(*)::int count from stock_movements')
+    ).rows[0].count
+    await assert.rejects(
+      persistProductionBatchCompletion(
+        db,
+        { id: missing.id },
+        'synthetic-pilot-owner',
+      ),
+      /Custo do workbook ausente/,
+    )
+    assert.equal(
+      (await pool.query('select count(*)::int count from stock_movements'))
+        .rows[0].count,
+      before,
+    )
+    assert.equal(
+      requireFirst(
+        await db
+          .select()
+          .from(schema.productionBatches)
+          .where(eq(schema.productionBatches.id, missing.id)),
+      ).status,
+      'draft',
+    )
+    console.log(
+      'PASS: isolated pilot workbook costing, repeated negative production and stock outflow, automatic audit, replay rejection and missing-cost rollback.',
+    )
+  } finally {
+    for (const key of pilotEnvironmentKeys) {
+      const value = originalEnvironment[key]
+      if (value === undefined) delete process.env[key]
+      else process.env[key] = value
+    }
+  }
   console.log(
     'PASS: full purchase-production-sale-delivery-payment FIFO flow, concurrent payment replay, immutable tariff snapshot, one Pix fee for multiple products, no duplicate stock or double production expense, closed-period rollback.',
   )
