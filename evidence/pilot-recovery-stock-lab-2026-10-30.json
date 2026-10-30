@@ -1,0 +1,107 @@
+{
+  "recordedAt": "2026-10-30T15:01:58.933203+00:00",
+  "scope": "isolated-production-stock-recovery",
+  "script": "scripts/test-pilot-production-stock-disposable.ts",
+  "sourceBeforeExtension": "dd7f0f2c5c5bcbdbbf01440aa5a0626e5ddc7c1b",
+  "database": "local disposable PostgreSQL 17, empty instance per run",
+  "runs": [
+    {
+      "passed": true,
+      "scope": "isolated-production-stock-only",
+      "reference": "synthetic",
+      "workbookSha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "completedBatches": 3,
+      "baselineUnitsPerBatch": 24,
+      "finishedStock": "70.000",
+      "recovery": {
+        "primaryGood": 22,
+        "primaryLoss": 2,
+        "measuredGrams": 250,
+        "bordinhasPacks": 2,
+        "unpackagedGrams": 50
+      },
+      "sales": 0,
+      "financialEvents": 0,
+      "remoteWrites": 0,
+      "checks": [
+        "concurrent completion once",
+        "nine inputs and two operational costs",
+        "negative stock twice",
+        "loss and adjustments",
+        "partial layer coverage without fictitious receipt",
+        "exact thousandth quantity",
+        "duplicate references rejected",
+        "missing cost rollback",
+        "late audit rollback",
+        "normal origin blocked",
+        "declared loss and capacity validation",
+        "measured bordinhas and separate packaging",
+        "shared mass cost and direct finishing preserved",
+        "missing bordinhas bag cost rollback"
+      ]
+    },
+    {
+      "passed": true,
+      "scope": "isolated-production-stock-only",
+      "reference": "private-workbook",
+      "workbookSha256": "add0174b9d8f7224e03f88f71d7f92c599fc998e502e2174e68f8d49854ebbeb",
+      "completedBatches": 3,
+      "baselineUnitsPerBatch": 24,
+      "finishedStock": "70.000",
+      "recovery": {
+        "primaryGood": 22,
+        "primaryLoss": 2,
+        "measuredGrams": 250,
+        "bordinhasPacks": 2,
+        "unpackagedGrams": 50
+      },
+      "sales": 0,
+      "financialEvents": 0,
+      "remoteWrites": 0,
+      "checks": [
+        "concurrent completion once",
+        "nine inputs and two operational costs",
+        "negative stock twice",
+        "loss and adjustments",
+        "partial layer coverage without fictitious receipt",
+        "exact thousandth quantity",
+        "duplicate references rejected",
+        "missing cost rollback",
+        "late audit rollback",
+        "normal origin blocked",
+        "declared loss and capacity validation",
+        "measured bordinhas and separate packaging",
+        "shared mass cost and direct finishing preserved",
+        "missing bordinhas bag cost rollback"
+      ]
+    }
+  ],
+  "oracle": {
+    "primaryCapacity": 24,
+    "primaryGood": 22,
+    "declaredLoss": 2,
+    "recoveredGrams": 250,
+    "packGrams": 100,
+    "packs": 2,
+    "unpackagedGrams": 50,
+    "primarySharedCostFraction": "13/17",
+    "coProductSharedCostFraction": "4/17",
+    "directFinishing": "Assigned to the consuming product, including separate bordinhas bags and labels"
+  },
+  "limits": [
+    "Local fixtures only; no shared pilot writes or physical production",
+    "No sales or financial events",
+    "No runtime, schema or deployment changes",
+    "Private manifest and commercial values excluded from Git",
+    "Synthetic run remains in the existing isolated CI step"
+  ],
+  "localValidation": {
+    "nodeTests": 664,
+    "failures": 0,
+    "typecheck": "passed",
+    "lint": "passed",
+    "format": "passed",
+    "knipNewFindings": 0,
+    "diffCheck": "passed"
+  }
+}
