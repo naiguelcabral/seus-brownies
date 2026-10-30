@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useId, useRef, useState } from 'react'
 import {
   createFileRoute,
   useHydrated,
@@ -529,6 +529,7 @@ function LifecycleActions({
 }) {
   const router = useRouter()
   const recordReturn = useServerFn(returnSaleLifecycle)
+  const titleId = useId()
   const recordLoss = useServerFn(recordLossLifecycle)
   const recordNegative = useServerFn(recordNegativeAdjustmentLifecycle)
   const recordPositive = useServerFn(recordPositiveAdjustmentLifecycle)
@@ -693,8 +694,13 @@ function LifecycleActions({
     </p>
   ) : null
   return (
-    <section className="mt-6 rounded-2xl border border-[#ecdfd4] bg-white p-5">
-      <h2 className="font-bold">Ciclo de vida e ajustes</h2>
+    <section
+      aria-labelledby={titleId}
+      className="mt-6 rounded-2xl border border-[#ecdfd4] bg-white p-5"
+    >
+      <h2 id={titleId} className="font-bold">
+        Ciclo de vida e ajustes
+      </h2>
       <p className="mt-2 text-sm font-bold text-[#75411f]">
         Perfil atual: {role ? inventoryRoleLabels[role] : 'Sem acesso'}
       </p>

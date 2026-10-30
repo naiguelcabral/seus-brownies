@@ -39,13 +39,7 @@ test('inventory actions reflect each role before a user can fill a forbidden for
     if (role === 'owner') {
       await page.setViewportSize({ width: 375, height: 812 })
       await page
-        .locator('section')
-        .filter({
-          has: page.getByRole('heading', {
-            name: 'Ciclo de vida e ajustes',
-            exact: true,
-          }),
-        })
+        .getByRole('region', { name: 'Ciclo de vida e ajustes', exact: true })
         .screenshot({
           path: testInfo.outputPath('inventory-lifecycle-actions-mobile.png'),
         })
