@@ -1,5 +1,11 @@
 # Roadmap único — Cacau v1
 
+## I05: simulação do lote e proteção do saldo em preparação — 30/10/2026
+
+Usuário aceitou o padrão visual e confirmou a próxima etapa como “Simulação no piloto, sem produção física”. Conservar o rascunho #1 de 24 unidades, compras e quatro complementos já registrados; nenhum fato de venda/pagamento autorizado. Prévia privada por leitura confirmou estoque suficiente e custos de referência, sem escrita operacional.
+
+Regressões locais identificaram que perda/ajuste negativo confiavam somente nas camadas, embora o consumo de insumos pela produção use o ledger e possa deixar camadas de entrada residuais. Candidata revalida a soma de stock_movements sob o lock de produto já existente, antes da alocação FIFO e de qualquer escrita. Preserva custo/plano FIFO, autoria, referência, transação e regras de produção. Testes, revisão e publicação em andamento; não concluir o rascunho antes desses gates. Não reconcilia camadas legadas de insumos nem amplia a cobertura FIFO parcial; I05 parcial/I04 mantidos.
+
 ## I05: fonte e ícones padronizados e publicados — 30/10/2026
 
 Pedido de manter o padrão das abas superiores aplicado em estoque.tsx e PositiveAdjustmentBatchImporter.tsx: fonte sans de 14px/negrito, cores/espaçamento da navegação e ícones Lucide de 16px nas quatro ações e no atalho de conferência. Ícones decorativos ocultos da árvore acessível; rótulos, comportamento, formulários e permissões preservados. PR #103 integrada em 5bfde91, árvore igual ao HEAD aprovado e6c0410. Doze checks finais e três workflows da main aprovados, com três análises CodeQL reais zeradas. Qualidade local, Knip sem novos achados, 17 ensaios conectados existentes e conferência visual em 375px aprovados; nenhum teste novo para espelhar estilos. Audit zero e build/deploy isolado aprovados.

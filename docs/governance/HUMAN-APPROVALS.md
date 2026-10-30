@@ -1,5 +1,9 @@
 # Ações que exigem aprovação humana — Cacau v1
 
+## Simulação do lote #1 — 30/10/2026
+
+Após aceitar o padrão visual e pedir a próxima etapa, usuário confirmou “Simulação no piloto, sem produção física”. Abrange a conclusão simulada do rascunho #1 dos 24 brigadeiros pelo fluxo autenticado, com revalidação de estoque/custo e trilha de auditoria. Preservar referências consumidas; não repetir compras/complementos nem criar outro lote. Sem venda, pagamento ou produção física inferida. Correções de integridade e publicação no piloto seguem revisão/checks normais dentro da continuidade autorizada. A sessão do tablet não é compartilhada; não fabricar principal ou escrever por SQL.
+
 ## Fonte e ícones das ações — 30/10/2026
 
 Usuário pediu o padrão das abas superiores nos botões recém-criados. Ajuste visual integrado pela PR #103 após checks/revisão e publicado somente no piloto, versão ab3d9fa2 a 100%, dentro da continuidade já autorizada. Sem alteração de permissões, dados ou regras operacionais. [Recibo](../../evidence/pilot-inventory-navigation-style-publication-2026-10-30.json).

@@ -377,13 +377,30 @@ export async function persistNegativeInventoryEvent(
       await lockProductAndLayers(tx, [data.productId])
       const key = sourceKey(event, data.productId, data.reference)
       await assertUnused(tx, key)
+      // Input receipt layers can outlive production consumption. The ledger is
+      // authoritative; read it under the same product lock before allocating FIFO.
+      const balance = requireFirst(
+        await tx
+          .select({
+            quantity: sql<string>`coalesce(sum(${stockMovements.quantityDelta}), 0)::text`,
+          })
+          .from(stockMovements)
+          .where(eq(stockMovements.productId, data.productId)),
+      )
+      const available = quantityToThousandths(balance.quantity)
+      if (available === null) throw new Error('Saldo de estoque inválido.')
+      const requested = parseQuantity(data.quantity)
+      if (requested > available)
+        throw new Error(
+          'Estoque insuficiente para registrar a perda ou ajuste negativo.',
+        )
       const plan = planNegativeInventoryEvent({
         event,
         reason: data.reason,
         reference: data.reference,
         layers: await loadLayers(tx, [data.productId]),
         productId: data.productId,
-        quantity: parseQuantity(data.quantity),
+        quantity: requested,
       })
       const movement = requireFirst(
         await tx
@@ -391,7 +408,7 @@ export async function persistNegativeInventoryEvent(
           .values({
             productId: data.productId,
             type: event === 'loss' ? 'loss' : 'adjustment',
-            quantityDelta: `-${quantity(parseQuantity(data.quantity))}`,
+            quantityDelta: `-${quantity(requested)}`,
             allocatedCost: money(plan.allocatedCost),
             exactCost: plan.exactCost ?? null,
             referenceType: event,
