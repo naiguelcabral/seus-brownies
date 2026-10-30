@@ -1,5 +1,9 @@
 # Ações que exigem aprovação humana — Cacau v1
 
+## Proteção do saldo publicada antes da simulação — 30/10/2026
+
+Continuidade autorizada aplicada à PR #105, integrada após revisão/checks e publicada somente no piloto, versão b3f972f2 a 100%. Sem escrita operacional pelo agente ou mudança de acesso/custo/schema. Conclusão simulada do rascunho #1 ainda depende da sessão do tablet; não representa produção física ou aceite integral I05/I04. [Recibo](../../evidence/pilot-production-ledger-guard-publication-2026-10-30.json).
+
 ## Simulação do lote #1 — 30/10/2026
 
 Após aceitar o padrão visual e pedir a próxima etapa, usuário confirmou “Simulação no piloto, sem produção física”. Abrange a conclusão simulada do rascunho #1 dos 24 brigadeiros pelo fluxo autenticado, com revalidação de estoque/custo e trilha de auditoria. Preservar referências consumidas; não repetir compras/complementos nem criar outro lote. Sem venda, pagamento ou produção física inferida. Correções de integridade e publicação no piloto seguem revisão/checks normais dentro da continuidade autorizada. A sessão do tablet não é compartilhada; não fabricar principal ou escrever por SQL.

@@ -1,0 +1,138 @@
+{
+  "schemaVersion": 1,
+  "scope": "pilot-production-ledger-outflow-guard",
+  "source": {
+    "pullRequest": 105,
+    "commit": "2fb5613abbca713a911319ad08b02b9e07c8536f",
+    "approvedHead": "dc4a19ac76966c696e847a496828ac5d5b385aa1",
+    "approvedTreeMatchesMerge": true
+  },
+  "deployment": {
+    "before": {
+      "id": "b4859f8b-c98a-4ed7-b075-e9f45d4c5868",
+      "created_on": "2026-10-30T09:17:04.430967Z",
+      "versions": [
+        {
+          "version_id": "ab3d9fa2-be43-44b8-a2fd-b4a4f74e80d2",
+          "percentage": 100
+        }
+      ]
+    },
+    "after": {
+      "id": "cb42911d-3456-4613-b763-abe79848ccfc",
+      "created_on": "2026-10-30T10:14:50.861325Z",
+      "versions": [
+        {
+          "version_id": "b3f972f2-bc71-436c-9c30-fb654570bd9c",
+          "percentage": 100
+        }
+      ]
+    },
+    "isolatedBuild": true
+  },
+  "configuration": {
+    "unchanged": true,
+    "secretBindingCount": 6,
+    "secretValuesRead": false
+  },
+  "verification": {
+    "nodeTests": 661,
+    "connectedBrowserTests": 18,
+    "localQualityPassed": true,
+    "knipNewFindings": 0,
+    "isolatedBuildPassed": true,
+    "mainWorkflows": [
+      {
+        "databaseId": 41038195093,
+        "name": "CI",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "databaseId": 41038194803,
+        "name": "CodeQL",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "databaseId": 41038194929,
+        "name": "Isolated business and browser validation",
+        "status": "completed",
+        "conclusion": "success"
+      }
+    ],
+    "mainCodeql": [
+      {
+        "id": 2061340135,
+        "category": "/language:javascript-typescript",
+        "commit_sha": "2fb5613abbca713a911319ad08b02b9e07c8536f",
+        "error": "",
+        "warning": "",
+        "results_count": 0
+      },
+      {
+        "id": 2061338080,
+        "category": "/language:python",
+        "commit_sha": "2fb5613abbca713a911319ad08b02b9e07c8536f",
+        "error": "",
+        "warning": "",
+        "results_count": 0
+      },
+      {
+        "id": 2061336817,
+        "category": "/language:actions",
+        "commit_sha": "2fb5613abbca713a911319ad08b02b9e07c8536f",
+        "error": "",
+        "warning": "",
+        "results_count": 0
+      }
+    ],
+    "regression": {
+      "unfixedCommit": "489ce68",
+      "inputQuantityBeforeForbiddenOutflow": "0.000",
+      "inputQuantityAfterForbiddenOutflow": "-1.000",
+      "fixedLossRejected": true,
+      "fixedNegativeAdjustmentRejected": true,
+      "localDisposableOnly": true
+    },
+    "publicHttpSmoke": "pilot-production-ledger-guard-http-smoke-2026-10-30.json"
+  },
+  "pilot": {
+    "before": {
+      "checked_at": "2026-10-30T10:05:50.987Z",
+      "purchases": "3",
+      "purchase_items": "7",
+      "stock_movements": "11",
+      "batches": "1",
+      "completed_batches": "0",
+      "sales": "0",
+      "financial_events": "0",
+      "draft_status": "draft",
+      "planned_quantity": "24.000",
+      "actual_quantity": null
+    },
+    "after": {
+      "checked_at": "2026-10-30T10:15:18.266Z",
+      "purchases": "3",
+      "purchase_items": "7",
+      "stock_movements": "11",
+      "batches": "1",
+      "completed_batches": "0",
+      "sales": "0",
+      "financial_events": "0",
+      "draft_status": "draft",
+      "planned_quantity": "24.000",
+      "actual_quantity": null
+    },
+    "agentOperationalWrites": 0,
+    "physicalProductionDeclared": false,
+    "simulationAuthorized": true,
+    "tabletCompletionPending": true
+  },
+  "limits": [
+    "Preserva o custo médio dos insumos e a alocação FIFO existente.",
+    "Não reconcilia camadas residuais de insumos nem amplia sua cobertura parcial.",
+    "Conclusão do rascunho depende da sessão autenticada do usuário; navegador controlável permanece em login.",
+    "I05 permanece parcial e I04 sem aceite."
+  ]
+}
