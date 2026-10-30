@@ -1,5 +1,9 @@
 # Ações que exigem aprovação humana — Cacau v1
 
+## Publicação da exceção do piloto — 30/10/2026
+
+Decisão de custos do workbook e saldo negativo aplicada à PR #107 após checks/revisão, com publicação somente no piloto, versão 5c132f2e a 100%. Histórico automático mantido, conferência manual dispensada. Nenhuma escrita operacional remota ou alteração de outros ambientes. [Recibo](../../evidence/pilot-workbook-costs-publication-2026-10-30.json).
+
 ## Fonte de custo definida pelo usuário — 30/10/2026
 
 Usuário anexou novamente o workbook e orientou usar seu custo para todos os insumos, embalagens e demais situações nele listadas, resolvendo a pergunta anterior. Continuidade da exceção do piloto: custo de referência identificado, histórico automático preservado e conferência manual dispensada. Cadastro mestre e quantidades da ficha orientam a preparação; não reprecificar fatos anteriores, inventar custo para item ausente ou aplicar a outros ambientes. Implementação/revisão/publicação em andamento, sem nova escrita operacional. [ADR-0003](../ADR-0003-CUSTOS-WORKBOOK-NO-PILOTO.md).

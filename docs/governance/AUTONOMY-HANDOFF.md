@@ -1,5 +1,29 @@
 # Handoff de autonomia — Cacau v1
 
+## Retomada do fechamento documental — 30/10/2026
+
+Usuário pediu “Vamos retomar”. Às 14:04:42 UTC (11:04:42 Brasília), após o reset anterior, a fonte oficial confirmou nova janela com **99% restante** e 41% semanal. A pausa por reserva abaixo está superada. LIGARTUDO --prepare-only concluído, dependências disponíveis, árvore limpa e branch documental sincronizada por fast-forward.
+
+Esta retomada fecha exclusivamente o recibo da publicação na PR #108, com revisão dos documentos/JSON e dos checks/análises reais do HEAD exato antes da integração normal. O registro de integração é o da própria [PR #108](https://github.com/naiguelcabral/seus-brownies/pull/108). Piloto já publicado em 5c132f2e, com custos do workbook e exceção de saldo, conforme recibo abaixo; não repetir deploy, compras, complementos ou ensaio operacional por causa deste fechamento. Conferência manual continua dispensada, histórico automático preservado. Vendas/cancelamentos permanecem FIFO e I05 parcial/I04 sem aceite. Registros de reserva e pendências abaixo são checkpoints históricos.
+
+## Fechamento na reserva após publicar custos do workbook — 30/10/2026
+
+Uso oficial: **5% restante** na janela, 41% semanal; reset exibido **30/10/2026 11:00:42 Brasília** (1793368842). Aplicar a reserva obrigatória e DESLIGARTUDO nesta branch documental; não iniciar implementação ou novo deploy.
+
+Entrega operacional de código concluída: PR #107 integrada em dc847998; todos os checks/main e CodeQL real zerados. Piloto publicado e conferido: versão 5c132f2e-8e57-4f96-97c0-68773ba96329, 100%, manifesto privado com 40 custos, mesma fonte SHA add0174b..., configuração anterior/seis secrets preservados, dez GETs sem escrita aprovados. Produção, perdas e ajustes negativos no piloto aceitam saldo negativo e usam referência do workbook. Histórico automático mantido; usuário dispensou conferência manual. Sem escrita operacional remota pelo agente. Não pedir novamente prova de conclusão do lote, repetir compras/complementos ou concluir física/venda por inferência.
+
+Recibos e atualização canônica salvos/push em 1de0d4f, branch codex/pilot-workbook-publication-receipt-20261030, worktree /tmp/cacau-security-alert-review-20261028. Tentativa inicial de abrir PR documental falhou na conexão do sandbox; repetição durante fechamento criou a PR #108 (https://github.com/naiguelcabral/seus-brownies/pull/108), anexada à tarefa. Revisão/integração do PR do recibo permanece pendente; nenhum novo deploy é necessário para documentos. Próxima retomada: confirmar renovação, LIGARTUDO conforme política, conferir branch/status, localizar PR pelo head e revisar seus checks/CodeQL antes do merge normal. Publicação do piloto já está ativa e não deve ser repetida.
+
+Manifesto privado preservado em /tmp/cacau-workbook-costs-20261030/manifest.private.json (4687 bytes), original de endereços completos em manifest-full.private.json. Não versionar valores comerciais; fonte original anexada não foi alterada. Endereços abreviados 02/03 mapeados no recibo. Vendas/cancelamentos mantêm FIFO, cobertura sem camada permanece explicitamente incompleta e I05 parcial/I04 abertos. Não promover simulações como operação real.
+
+## I05: custos do workbook publicados no piloto — 30/10/2026
+
+PR #107 integrada em dc847998, árvore igual ao HEAD aprovado 79017a8. Doze checks e três workflows da main aprovados; três análises CodeQL reais sem resultados/erros/avisos. O alerta de corrida na leitura do manifesto foi corrigido usando o mesmo descritor para validar e ler. 664 testes Node, qualidade, Knip sem novos achados, build isolado, laboratório PostgreSQL normal/piloto e 18 cenários HTTP/navegador aprovados.
+
+Publicado somente no piloto às 12:07:56 UTC (09:07:56 Brasília), versão 5c132f2e-8e57-4f96-97c0-68773ba96329 a 100%. Manifesto privado com 40 referências do workbook carregado; validação e nomes dos seis secrets preservados. A primeira tentativa foi recusada pelo limite de tamanho de binding; abreviados somente os endereços de fonte para 02/03, com legenda no recibo, reduzindo o manifesto a 4687 bytes sem alterar valores/unidades. Dez GETs públicos aprovados.
+
+Produção simulada usa custos do workbook, inclusive energia/MO sem entrada manual; produção, perdas e ajustes negativos permitem saldo negativo somente com política válida no servidor do piloto. Posição de estoque do relatório inclui negativos por referência. Histórico automático, autoria, idempotência e transações mantidos; conferência manual após cada etapa dispensada pelo usuário. Não reprecificar fatos anteriores, repetir compras/complementos ou criar outro lote por inferência. Vendas/cancelamentos conservam FIFO e não recebem disponibilidade fictícia. Sem escrita operacional remota pelo agente, nem nova conferência manual do lote. I05 parcial/I04 mantidos. [Recibo](../../evidence/pilot-workbook-costs-publication-2026-10-30.json) e [ADR-0003](../ADR-0003-CUSTOS-WORKBOOK-NO-PILOTO.md).
+
 ## I05: custos do workbook e saldo negativo no piloto em validação — 30/10/2026
 
 Usuário dispensou a conferência manual após cada etapa, mantendo histórico automático, e autorizou saldo negativo no teste. Depois definiu o workbook anexado como fonte de todos os insumos, embalagens e demais situações nele listadas. Essa resposta resolve a escolha de custo pendente abaixo. Não pedir novamente auditoria manual nem substituir ausência de referência por zero.
