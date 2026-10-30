@@ -1,0 +1,132 @@
+{
+  "schemaVersion": 1,
+  "scope": "pilot-inventory-lifecycle-dialogs",
+  "source": {
+    "pullRequest": 101,
+    "commit": "ed0b060f253ff190fa28b4d0ddc2d22d67e5d677",
+    "approvedHead": "945ba749c557473e19f49ddd7d5a1278d99ba9f1",
+    "mergeCandidate": "9fa35e9662df418eaba07f46ed9a74cf19d1894b",
+    "approvedTreeMatchesMerge": true
+  },
+  "deployment": {
+    "before": {
+      "id": "a4113950-a5e7-41c7-aeee-e3413a58e3d9",
+      "created_on": "2026-10-29T21:10:41.280193Z",
+      "versions": [
+        {
+          "version_id": "b3688e0d-d389-4cac-821a-2a3d5cdc2e13",
+          "percentage": 100
+        }
+      ]
+    },
+    "after": {
+      "id": "b14ad2a3-ce27-4869-8f68-a373f2a2bb02",
+      "created_on": "2026-10-30T00:46:17.972382Z",
+      "versions": [
+        {
+          "version_id": "05356941-6c4a-4a42-a8f0-5b1ac5be5ad3",
+          "percentage": 100
+        }
+      ]
+    },
+    "isolatedBuild": true
+  },
+  "configuration": {
+    "unchanged": true,
+    "secretBindingCount": 6,
+    "secretValuesRead": false
+  },
+  "verification": {
+    "nodeTests": 651,
+    "connectedBrowserTests": 17,
+    "mainWorkflows": [
+      {
+        "conclusion": "success",
+        "databaseId": 40980982212,
+        "name": "CodeQL",
+        "status": "completed"
+      },
+      {
+        "conclusion": "success",
+        "databaseId": 40980982203,
+        "name": "CI",
+        "status": "completed"
+      },
+      {
+        "conclusion": "success",
+        "databaseId": 40980982207,
+        "name": "Isolated business and browser validation",
+        "status": "completed"
+      }
+    ],
+    "codeql": {
+      "analyses": 3,
+      "results": 0,
+      "errors": 0,
+      "warnings": 0
+    },
+    "auditVulnerabilities": 0,
+    "publicHttpSmokePassed": true,
+    "publicGetRequests": 10,
+    "mutatingRequests": 0
+  },
+  "businessCounts": {
+    "before": {
+      "checked_at": "2026-10-30T00:39:25.348Z",
+      "purchases": 3,
+      "purchase_items": 7,
+      "movements": 11,
+      "batches": 1,
+      "completed_batches": 0,
+      "sales": 0,
+      "financial_events": 0
+    },
+    "after": {
+      "checked_at": "2026-10-30T00:46:53.074Z",
+      "purchases": 3,
+      "purchase_items": 7,
+      "movements": 11,
+      "batches": 1,
+      "completed_batches": 0,
+      "sales": 0,
+      "financial_events": 0,
+      "original_draft": {
+        "id": 1,
+        "actual": null,
+        "status": "draft",
+        "planned": 24
+      }
+    },
+    "unchanged": true,
+    "limitation": "Counts do not attest identity of every field."
+  },
+  "adjustmentAcceptance": {
+    "checked_at": "2026-10-30T00:25:54.515Z",
+    "joined_receipts": 4,
+    "movements": 4,
+    "layers": 4,
+    "audit_events": 4,
+    "values_match": true,
+    "authorized_actor": true
+  },
+  "behavior": {
+    "modalActions": [
+      "Compensação pós-entrega",
+      "Perda de estoque",
+      "Ajuste positivo",
+      "Ajuste negativo"
+    ],
+    "draftFieldsPreserved": true,
+    "confirmationResetOnClose": true,
+    "pendingClosesAndResubmitsBlocked": true,
+    "serverPermissionsChanged": false
+  },
+  "limits": {
+    "operationalWritesByAgent": false,
+    "accountsOrSecretsChanged": false,
+    "originalHmlOrProductionChanged": false,
+    "productionCompleted": false,
+    "tabletAuthenticatedAcceptance": false,
+    "fullPilotAcceptance": false
+  }
+}
