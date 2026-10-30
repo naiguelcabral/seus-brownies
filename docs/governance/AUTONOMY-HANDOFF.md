@@ -1,5 +1,11 @@
 # Handoff de autonomia — Cacau v1
 
+## I05: testes de produção e estoque com referências do workbook — 30/10/2026
+
+Usuário escolheu “Continuar somente os testes de produção e estoque”. Dois ensaios em PostgreSQL 17 local descartável, cada qual iniciado vazio, passaram: referência sintética e manifesto privado do workbook já preparado. Cada ensaio concluiu dois lotes de 24 unidades, com nove insumos/embalagens e dois custos operacionais. Conferidos conclusão concorrente uma única vez, saldo negativo, perda/ajustes, cobertura parcial por camada, quantidade fracionária, referências repetidas recusadas, rollback por custo ausente e falha tardia de auditoria, além dos bloqueios fora da origem do piloto.
+
+Cenário sintético incluído na CI isolada; execução privada registra somente hash e resultados sem valores comerciais. Suíte local: 664 testes Node, tipos, lint, formato e Knip sem novos achados aprovados. Não houve alteração de runtime/schema, deploy, operação no piloto compartilhado, venda ou evento financeiro. Os 48 produtos são fixtures locais, não novo saldo do piloto ou produção física. Conferência manual continua dispensada e histórico automático mantido. I05 parcial/I04 sem aceite integral. [Evidência](../../evidence/pilot-production-stock-lab-2026-10-30.json). Checks e revisão da candidata registrados na PR correspondente.
+
 ## Retomada do fechamento documental — 30/10/2026
 
 Usuário pediu “Vamos retomar”. Às 14:04:42 UTC (11:04:42 Brasília), após o reset anterior, a fonte oficial confirmou nova janela com **99% restante** e 41% semanal. A pausa por reserva abaixo está superada. LIGARTUDO --prepare-only concluído, dependências disponíveis, árvore limpa e branch documental sincronizada por fast-forward.
