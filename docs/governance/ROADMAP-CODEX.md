@@ -1,8 +1,10 @@
 # Roadmap único — Cacau v1
 
-## I05: fonte e ícones das ações alinhados à navegação — 30/10/2026
+## I05: fonte e ícones padronizados e publicados — 30/10/2026
 
-Usuário pediu o mesmo padrão das abas superiores nos botões recém-criados. Candidata adota fonte sans de 14px/negrito, cores/espaçamento da navegação e ícones Lucide de 16px para compensação, perda e ajustes positivo/negativo. O atalho de conferência em lote recebe o mesmo padrão. Ícones decorativos ficam ocultos da árvore acessível; rótulos e comportamento mantidos. Mudança somente visual, sem alterar formulários, permissões, escritores ou dados. Qualidade, ensaio visual e publicação em andamento. I05 parcial e I04 mantidos.
+Pedido de manter o padrão das abas superiores aplicado em estoque.tsx e PositiveAdjustmentBatchImporter.tsx: fonte sans de 14px/negrito, cores/espaçamento da navegação e ícones Lucide de 16px nas quatro ações e no atalho de conferência. Ícones decorativos ocultos da árvore acessível; rótulos, comportamento, formulários e permissões preservados. PR #103 integrada em 5bfde91, árvore igual ao HEAD aprovado e6c0410. Doze checks finais e três workflows da main aprovados, com três análises CodeQL reais zeradas. Qualidade local, Knip sem novos achados, 17 ensaios conectados existentes e conferência visual em 375px aprovados; nenhum teste novo para espelhar estilos. Audit zero e build/deploy isolado aprovados.
+
+Publicado somente no piloto às 09:17:04 UTC (06:17:04 Brasília): versão ab3d9fa2-be43-44b8-a2fd-b4a4f74e80d2, 100%. Configuração e seis nomes de secrets preservados; dez GETs de smoke aprovados. Leitura independente antes/depois mantém onze movimentos, um rascunho e zero conclusão/venda/eventos financeiros. Sem escrita operacional pelo agente. Aceite visual no tablet ainda separado; I05 parcial e I04 mantidos. [Recibo](../../evidence/pilot-inventory-navigation-style-publication-2026-10-30.json).
 
 ## I05: ações em janelas publicadas — 29/10/2026
 
