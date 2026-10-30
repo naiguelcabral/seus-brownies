@@ -1,5 +1,9 @@
 # Ações que exigem aprovação humana — Cacau v1
 
+## Continuidade limitada a produção e estoque — 30/10/2026
+
+Usuário escolheu “Continuar somente os testes de produção e estoque”. Rodada automatizada em base local descartável autorizada nesse escopo, com referências do workbook, saldo negativo restrito à política de piloto e histórico automático preservado. Não registrar venda/pagamento, produção física, novo lote remoto ou repetir compras/complementos por inferência. A sessão controlável permanece em login; sessão do tablet não é compartilhada. Não fabricar autoria nem substituir a sessão por escrita SQL no piloto. Conferência manual após cada etapa continua dispensada. [Ensaio isolado](../../evidence/pilot-production-stock-lab-2026-10-30.json).
+
 ## Publicação da exceção do piloto — 30/10/2026
 
 Decisão de custos do workbook e saldo negativo aplicada à PR #107 após checks/revisão, com publicação somente no piloto, versão 5c132f2e a 100%. Histórico automático mantido, conferência manual dispensada. Nenhuma escrita operacional remota ou alteração de outros ambientes. [Recibo](../../evidence/pilot-workbook-costs-publication-2026-10-30.json).

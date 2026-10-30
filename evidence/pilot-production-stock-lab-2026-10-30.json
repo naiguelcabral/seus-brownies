@@ -1,0 +1,74 @@
+{
+  "recordedAt": "2026-10-30T14:45:28.443632+00:00",
+  "scope": "isolated-production-stock-only",
+  "script": "scripts/test-pilot-production-stock-disposable.ts",
+  "database": "local disposable PostgreSQL 17; fresh empty instance per run",
+  "applicationSource": "c505aa2a53c19df3af73cdcbab7e167ce201509a",
+  "runs": [
+    {
+      "passed": true,
+      "scope": "isolated-production-stock-only",
+      "reference": "synthetic",
+      "workbookSha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "completedBatches": 2,
+      "unitsPerBatch": 24,
+      "finishedStock": "48.000",
+      "sales": 0,
+      "financialEvents": 0,
+      "remoteWrites": 0,
+      "checks": [
+        "concurrent completion once",
+        "nine inputs and two operational costs",
+        "negative stock twice",
+        "loss and adjustments",
+        "partial layer coverage without fictitious receipt",
+        "exact thousandth quantity",
+        "duplicate references rejected",
+        "missing cost rollback",
+        "late audit rollback",
+        "normal origin blocked"
+      ]
+    },
+    {
+      "passed": true,
+      "scope": "isolated-production-stock-only",
+      "reference": "private-workbook",
+      "workbookSha256": "add0174b9d8f7224e03f88f71d7f92c599fc998e502e2174e68f8d49854ebbeb",
+      "completedBatches": 2,
+      "unitsPerBatch": 24,
+      "finishedStock": "48.000",
+      "sales": 0,
+      "financialEvents": 0,
+      "remoteWrites": 0,
+      "checks": [
+        "concurrent completion once",
+        "nine inputs and two operational costs",
+        "negative stock twice",
+        "loss and adjustments",
+        "partial layer coverage without fictitious receipt",
+        "exact thousandth quantity",
+        "duplicate references rejected",
+        "missing cost rollback",
+        "late audit rollback",
+        "normal origin blocked"
+      ]
+    }
+  ],
+  "limits": [
+    "No shared pilot operation or physical production recorded",
+    "No sales or financial events",
+    "No changes to runtime, schema or deployed version",
+    "Commercial values and private manifest excluded from Git",
+    "Local fixture actor is not a remote authenticated user"
+  ],
+  "ci": "Synthetic run added to isolated business validation; exact-head result belongs to the PR checks",
+  "localValidation": {
+    "nodeTests": 664,
+    "failures": 0,
+    "typecheck": "passed",
+    "lint": "passed",
+    "format": "passed",
+    "knipNewFindings": 0,
+    "diffCheck": "passed"
+  }
+}
