@@ -1319,3 +1319,86 @@ test('owner reviews four adjustments on tablet, confirms audited FIFO once and s
   expect(result.message).toContain('dados diferentes')
   expect(await counters()).toEqual(after)
 })
+
+test('an input consumed by production cannot be lost or adjusted out again through a remaining receipt layer', async ({
+  page,
+}) => {
+  // Disposable fixture only: isolate the input and recipe from all earlier cases.
+  const input = (
+    await pool.query(
+      "insert into products(sku,name,product_type,measurement_unit) values ('QA-CONSUMED-INPUT','Entrada sintética consumida','ingredient','g') returning id",
+    )
+  ).rows[0]
+  const output = (
+    await pool.query(
+      "insert into products(sku,name,product_type,measurement_unit,sale_price) values ('QA-CONSUMED-OUTPUT','Saída sintética isolada','finished_product','unit','2.00') returning id",
+    )
+  ).rows[0]
+  const recipe = (
+    await pool.query(
+      "insert into recipe_versions(source_id,source_hash,name,version,status,source_payload) values ('QA-CONSUMED-RECIPE','QA-CONSUMED-RECIPE-HASH','Receita isolada de consumo',1,'active','{}') returning id",
+    )
+  ).rows[0]
+  await pool.query(
+    "insert into recipe_items(source_key,source_hash,recipe_version_id,product_id,source_name,quantity,unit,source_payload) values ('QA-CONSUMED-ITEM','QA-CONSUMED-ITEM-HASH',$1,$2,'Entrada sintética consumida','1','g','{}')",
+    [recipe.id, input.id],
+  )
+  await pool.query(
+    "insert into production_profiles(source_id,source_hash,recipe_version_id,product_id,expected_yield,source_payload) values ('QA-CONSUMED-PROFILE','QA-CONSUMED-PROFILE-HASH',$1,$2,'1','{}'),('QA-CONSUMED-EDGE','QA-CONSUMED-EDGE-HASH',$1,3,'1','{}')",
+    [recipe.id, output.id],
+  )
+  await pool.query(
+    "insert into recipe_operational_requirements(source_key,source_hash,recipe_version_id,type,quantity,unit,source_payload) values ('QA-CONSUMED-ENERGY','QA-CONSUMED-ENERGY-HASH',$1,'energy','1','kwh','{}'),('QA-CONSUMED-LABOR','QA-CONSUMED-LABOR-HASH',$1,'labor','1','hour','{}')",
+    [recipe.id],
+  )
+  await identity(page, 'owner')
+  const incoming = await rpc(page, 'recordPositiveAdjustmentLifecycle', {
+    productId: input.id,
+    quantity: '1',
+    totalCost: '1.00',
+    reason: 'Entrada sintética descartável',
+    reference: 'QA-CONSUMED-IN',
+    originReference: 'Fixture local',
+  })
+  expect(incoming.ok, incoming.message).toBe(true)
+  const draft = await rpc(page, 'createProductionBatch', {
+    recipeVersionId: recipe.id,
+    productionDate: '2026-10-30',
+    recipeMultiplier: '1',
+    outputs: [{ productId: output.id, quantity: '1' }],
+    bordinhasQuantity: '0',
+    losses: [],
+    notes: 'Fixture de integridade local',
+  })
+  expect(draft.ok, draft.message).toBe(true)
+  const completion = await rpc(page, 'completeProductionBatch', {
+    id: draft.value.id,
+  })
+  expect(completion.ok, completion.message).toBe(true)
+  const balance = async () =>
+    (
+      await pool.query(
+        'select sum(quantity_delta)::text quantity from stock_movements where product_id=$1',
+        [input.id],
+      )
+    ).rows[0].quantity
+  expect(await balance()).toBe('0.000')
+  const before = await counters()
+  for (const [index, name] of [
+    'recordLossLifecycle',
+    'recordNegativeAdjustmentLifecycle',
+  ].entries()) {
+    const result = await rpc(page, name, {
+      productId: input.id,
+      quantity: '1',
+      reason: 'Não consumir de novo',
+      reference: `QA-CONSUMED-OUT-${index}`,
+    })
+    expect(result.ok, `${name}: must respect the actual stock ledger`).toBe(
+      false,
+    )
+    expect(result.message).toMatch(/Estoque insuficiente/)
+    expect(await balance()).toBe('0.000')
+    expect(await counters()).toEqual(before)
+  }
+})
