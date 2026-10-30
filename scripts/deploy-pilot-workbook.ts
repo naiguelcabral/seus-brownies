@@ -45,17 +45,25 @@ console.log(
     validationOnly,
   }),
 )
-if (!validationOnly)
-  execFileSync(
-    process.execPath,
-    [
-      'node_modules/wrangler/bin/wrangler.js',
-      'deploy',
-      '--env',
-      'pilot',
-      '--keep-vars',
-      '--var',
-      `PILOT_WORKBOOK_COSTS:${JSON.stringify(policy)}`,
-    ],
-    { stdio: 'inherit' },
-  )
+if (!validationOnly) {
+  try {
+    execFileSync(
+      process.execPath,
+      [
+        'node_modules/wrangler/bin/wrangler.js',
+        'deploy',
+        '--env',
+        'pilot',
+        '--keep-vars',
+        '--var',
+        `PILOT_WORKBOOK_COSTS:${JSON.stringify(policy)}`,
+      ],
+      { stdio: 'inherit' },
+    )
+  } catch {
+    // execFileSync errors include argv; never echo the private cost manifest.
+    throw new Error(
+      'Falha na publicação do piloto. Consulte o retorno do Wrangler.',
+    )
+  }
+}
