@@ -1,5 +1,9 @@
 # Ações que exigem aprovação humana — Cacau v1
 
+## Correção da apresentação de 24 unidades — 29/10/2026
+
+Usuário relatou 24 mil na tela e confirmou a intenção de somente 24 unidades. O banco já conservava 24; corrigida apenas a apresentação, testada e integrada normalmente pela PR #97. Continuidade da publicação autorizada do piloto aplicada à versão b3688e0d, sem escrita operacional, mudança de contas ou novo lote. [Recibo](../../evidence/pilot-production-quantity-publication-2026-10-29.json).
+
 ## Conferência única publicada no piloto — 29/10/2026
 
 Autorização de conferência/publicação aplicada à PR #95 após revisão e checks normais. Piloto f27304c7, 100%, fonte 24c9dc1. Nenhuma inclusão operacional; usuário deve confirmar o manifesto privado na própria sessão do tablet. Compras e rascunho #1 preservados. [Recibo](../../evidence/pilot-adjustment-batch-publication-2026-10-29.json).

@@ -1,5 +1,11 @@
 # Handoff de autonomia — Cacau v1
 
+## I05: rendimento corrigido e publicado — 29/10/2026
+
+PR #97 integrada em fb314fd, árvore igual ao HEAD aprovado dc2a9a6. Doze checks finais e os três workflows da main aprovados; análises CodeQL reais com zero achados/erros/avisos. 651 testes Node, 43 ensaios locais de navegador, qualidade, Knip sem novos achados, build isolado e auditoria zero aprovados. Publicado somente no piloto às 21:10:41 UTC: versão b3688e0d-d389-4cac-821a-2a3d5cdc2e13, 100%. Configuração e seis bindings de secrets preservados; dez GETs públicos aprovados.
+
+A auditoria agora apresenta `24 un.` em vez de interpolar `24.000 unit`. Leitura independente pós-publicação às 21:11:17 UTC mantém lote #1 em rascunho, planejado 24 unidades, realizado/conclusão nulos e zero complementos do workbook. Nenhuma quantidade, cálculo, estoque ou fato de produção alterado. Usuário pode atualizar a página e reabrir o mesmo lote; aceite visual autenticado no tablet ainda separado. Depois confirmar os quatro complementos pelo fluxo já preparado e retomar a preparação. Não recriar lote/referências nem inferir produção física. I05 parcial e I04 mantidos. [Recibo](../../evidence/pilot-production-quantity-publication-2026-10-29.json).
+
 ## I05: apresentação do rendimento no rascunho — 29/10/2026
 
 Usuário relatou que o rascunho #1 parecia indicar 24 mil unidades. Leitura independente às 16:27:03 UTC confirmou saída planejada `24.000` no decimal canônico do PostgreSQL (24 unidades), realizado nulo e status draft. A auditoria da interface interpolava o decimal sem formatação brasileira. Candidata apresenta `24 un.` e conserva frações com vírgula, milhares, diferenças negativas e ausência de realizado. Nenhuma alteração do lote, banco ou cálculos.
