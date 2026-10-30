@@ -1,5 +1,11 @@
 # Handoff de autonomia — Cacau v1
 
+## Retomada do fechamento documental — 30/10/2026
+
+Usuário pediu “Vamos retomar”. Às 14:04:42 UTC (11:04:42 Brasília), após o reset anterior, a fonte oficial confirmou nova janela com **99% restante** e 41% semanal. A pausa por reserva abaixo está superada. LIGARTUDO --prepare-only concluído, dependências disponíveis, árvore limpa e branch documental sincronizada por fast-forward.
+
+Esta retomada fecha exclusivamente o recibo da publicação na PR #108, com revisão dos documentos/JSON e dos checks/análises reais do HEAD exato antes da integração normal. O registro de integração é o da própria [PR #108](https://github.com/naiguelcabral/seus-brownies/pull/108). Piloto já publicado em 5c132f2e, com custos do workbook e exceção de saldo, conforme recibo abaixo; não repetir deploy, compras, complementos ou ensaio operacional por causa deste fechamento. Conferência manual continua dispensada, histórico automático preservado. Vendas/cancelamentos permanecem FIFO e I05 parcial/I04 sem aceite. Registros de reserva e pendências abaixo são checkpoints históricos.
+
 ## Fechamento na reserva após publicar custos do workbook — 30/10/2026
 
 Uso oficial: **5% restante** na janela, 41% semanal; reset exibido **30/10/2026 11:00:42 Brasília** (1793368842). Aplicar a reserva obrigatória e DESLIGARTUDO nesta branch documental; não iniciar implementação ou novo deploy.
