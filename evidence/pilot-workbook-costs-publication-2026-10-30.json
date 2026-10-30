@@ -8,7 +8,6 @@
     "prChecksPassed": 12,
     "nodeTests": 664,
     "connectedTests": 18,
-    "browserTests": 43,
     "prCodeql": [
       {
         "id": 2061954971,
