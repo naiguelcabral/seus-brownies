@@ -141,9 +141,10 @@ function ProductionPage() {
       bordinhasWeightGrams: measuredRecovery
         ? bordinhasQuantity || '0'
         : undefined,
-      operationalAmounts: measuredRecovery
-        ? { energy: energyAmount, labor: laborAmount }
-        : undefined,
+      operationalAmounts:
+        measuredRecovery && !workspace.pilotSimulation
+          ? { energy: energyAmount, labor: laborAmount }
+          : undefined,
       losses: losses.map((loss) => ({
         productId: Number(loss.productId),
         quantity: loss.quantity,
@@ -677,7 +678,7 @@ function ProductionPage() {
                     : 'O valor sugerido é calculado pela capacidade livre. Se informar menos, registre a diferença como perda manual de Bordinhas com motivo.'}
                 </p>
               </details>
-              {measuredRecovery ? (
+              {measuredRecovery && !workspace.pilotSimulation ? (
                 <fieldset className="rounded-xl border border-[#ecdfd4] p-3">
                   <legend className="text-sm font-bold">
                     Custos reais deste lote
