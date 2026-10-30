@@ -1,5 +1,9 @@
 # Ações que exigem aprovação humana — Cacau v1
 
+## Exceção de estoque no piloto e dispensa da conferência manual — 30/10/2026
+
+Usuário autorizou “podendo negativar o estoque” no ambiente de teste e esclareceu que “sem auditoria” significa “Pular a conferência manual; manter o histórico”. Autoriza preparar a exceção isolada do piloto, com histórico automático, autoria e idempotência preservados. Não autoriza apagar histórico, afrouxar autenticação ou mudar produção/HML anterior. Escolha do custo da quantidade faltante perguntada e ainda pendente; implementação/publicação não executadas neste checkpoint.
+
 ## Proteção do saldo publicada antes da simulação — 30/10/2026
 
 Continuidade autorizada aplicada à PR #105, integrada após revisão/checks e publicada somente no piloto, versão b3f972f2 a 100%. Sem escrita operacional pelo agente ou mudança de acesso/custo/schema. Conclusão simulada do rascunho #1 ainda depende da sessão do tablet; não representa produção física ou aceite integral I05/I04. [Recibo](../../evidence/pilot-production-ledger-guard-publication-2026-10-30.json).

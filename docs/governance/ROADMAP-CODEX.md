@@ -1,5 +1,13 @@
 # Roadmap único — Cacau v1
 
+## I05: conferência manual dispensada e estoque negativo autorizado no piloto — 30/10/2026
+
+Usuário pediu continuar os testes podendo negativar estoque e esclareceu “Pular a conferência manual; manter o histórico”. Essa decisão dispensa a conferência manual após cada etapa, não o histórico automático, autoria, transações ou idempotência. Autoriza uma exceção restrita ao piloto para saldo negativo; a regra normal permanece nos demais ambientes.
+
+A implementação ainda não foi alterada ou publicada. Permitir a saída sem saldo também exige custo para a parte faltante: perguntado se deve usar o último custo de entrada (zero provisório somente quando não existir) ou sempre zero provisório. Aguardar essa decisão antes de alterar o custo, os escritores e seus testes; não desativar a auditoria nem remover apenas a checagem física deixando a alocação FIFO/custo inconsistente. Nenhuma escrita operacional nesta preparação, nenhum lote adicional ou repetição de referências. Piloto continua b3f972f2; a conclusão antes relatada não foi confirmada no último checkpoint. A investigação dessa conclusão não deve virar nova rodada obrigatória de conferência manual para o usuário.
+
+Uso oficial nesta retomada: 48% restante na janela e 48% semanal; reserva de 5% não atingida. Próximo passo: incorporar a escolha de custo, isolar a exceção no servidor do piloto, cobrir saldo insuficiente, repetição, restauração e ambientes normais, revisar/integrar/publicar pelo fluxo habitual. Não declarar a exceção já ativa.
+
 ## I05: proteção do saldo publicada; conclusão simulada no tablet pendente — 30/10/2026
 
 Usuário aceitou o padrão visual e confirmou “Simulação no piloto, sem produção física” para o rascunho #1 dos 24 brigadeiros. Prévia privada confirmou insumos suficientes e custos de referência, preservando compras e quatro complementos já registrados.
