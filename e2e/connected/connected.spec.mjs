@@ -1109,11 +1109,13 @@ test('owner sees a focused stock result and duplicate adjustment error without e
   })
   let blockedPosts = 0
   const holdPost = async (route) => {
+    if (new URL(route.request().url()).origin !== origin)
+      return route.abort('blockedbyclient')
     if (route.request().method() === 'POST') {
       blockedPosts++
       await gate
     }
-    await route.fallback()
+    await route.continue()
   }
   await page.route('**/*', holdPost)
   try {
@@ -1133,7 +1135,6 @@ test('owner sees a focused stock result and duplicate adjustment error without e
     expect(await counters()).toEqual(before)
   } finally {
     releasePost()
-    await page.unroute('**/*', holdPost)
   }
   const success = page
     .getByRole('status')
