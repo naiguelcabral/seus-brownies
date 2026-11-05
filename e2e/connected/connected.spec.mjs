@@ -17,7 +17,7 @@ test.afterAll(async () => {
 
 test('inventory actions reflect each role before a user can fill a forbidden form', async ({
   page,
-}) => {
+}, testInfo) => {
   for (const [role, label, canAdjust, canCompensate] of [
     ['manager', 'Gerente', false, true],
     ['production', 'Produção', false, false],
@@ -36,27 +36,71 @@ test('inventory actions reflect each role before a user can fill a forbidden for
         exact: true,
       }),
     ).toHaveCount(canAdjust ? 1 : 0)
-    await expect(
-      page.getByRole('button', {
-        name: 'Registrar ajuste positivo',
+    if (role === 'owner') {
+      await page.setViewportSize({ width: 375, height: 812 })
+      await page
+        .getByRole('region', { name: 'Ciclo de vida e ajustes', exact: true })
+        .screenshot({
+          path: testInfo.outputPath('inventory-lifecycle-actions-mobile.png'),
+        })
+    }
+    for (const [index, [title, submit, permitted]] of [
+      ['Compensação pós-entrega', 'Registrar compensação', canCompensate],
+      ['Perda de estoque', 'Registrar perda de estoque', canAdjust],
+      ['Ajuste positivo', 'Registrar ajuste positivo', canAdjust],
+      ['Ajuste negativo', 'Registrar ajuste negativo', canAdjust],
+    ].entries()) {
+      const launcher = page.getByRole('button', { name: title, exact: true })
+      await expect(launcher).toHaveCount(permitted ? 1 : 0)
+      await expect(
+        page.getByRole('button', { name: submit, exact: true }),
+      ).toHaveCount(0)
+      if (!permitted) continue
+      await launcher.click()
+      const dialog = page.getByRole('dialog', { name: title, exact: true })
+      await expect(dialog).toBeVisible()
+      await expect(dialog.locator('form')).toHaveCount(1)
+      await expect(
+        dialog.getByRole('button', { name: submit, exact: true }),
+      ).toBeVisible()
+      expect(
+        await dialog.evaluate(
+          (element) => element.scrollWidth <= element.clientWidth,
+        ),
+      ).toBe(true)
+      const quantity = dialog.getByRole('textbox', {
+        name: 'Quantidade',
         exact: true,
-      }),
-    ).toHaveCount(canAdjust ? 1 : 0)
-    await expect(
-      page.getByRole('button', {
-        name: 'Registrar ajuste negativo',
-        exact: true,
-      }),
-    ).toHaveCount(canAdjust ? 1 : 0)
-    await expect(
-      page.getByRole('button', {
-        name: 'Registrar perda de estoque',
-        exact: true,
-      }),
-    ).toHaveCount(canAdjust ? 1 : 0)
-    await expect(
-      page.getByRole('button', { name: 'Registrar compensação', exact: true }),
-    ).toHaveCount(canCompensate ? 1 : 0)
+      })
+      await quantity.fill(String(index + 1))
+      if (title === 'Compensação pós-entrega') {
+        await dialog.getByRole('button', { name: submit, exact: true }).click()
+        await expect(dialog.getByRole('alert')).toBeFocused()
+        await expect(dialog.getByRole('alert')).toBeInViewport()
+        await expect(quantity).toHaveValue(String(index + 1))
+      }
+      if (title !== 'Compensação pós-entrega') {
+        await expect(
+          dialog.getByRole('button', { name: submit, exact: true }),
+        ).toBeDisabled()
+        await dialog.getByRole('checkbox').check()
+      }
+      await page.keyboard.press('Escape')
+      await expect(dialog).toHaveCount(0)
+      await expect(launcher).toBeFocused()
+      await launcher.click()
+      await expect(quantity).toHaveValue(String(index + 1))
+      if (title !== 'Compensação pós-entrega')
+        await expect(dialog.getByRole('checkbox')).not.toBeChecked()
+      if (role === 'owner')
+        await page.screenshot({
+          path: testInfo.outputPath(`inventory-lifecycle-${index}-mobile.png`),
+        })
+      await dialog.getByRole('button', { name: 'Fechar', exact: true }).click()
+      await expect(dialog).toHaveCount(0)
+      await expect(launcher).toBeFocused()
+      expect(await counters()).toEqual(before)
+    }
     if (!canAdjust)
       await expect(
         page.getByText(
@@ -1031,6 +1075,13 @@ test('owner sees a focused stock result and duplicate adjustment error without e
   await page.setViewportSize({ width: 375, height: 812 })
   await page.goto('/estoque')
   await expect(page.getByTestId('fifo-lifecycle-client-ready')).toBeVisible()
+  await page
+    .getByRole('button', { name: 'Ajuste positivo', exact: true })
+    .click()
+  const dialog = page.getByRole('dialog', {
+    name: 'Ajuste positivo',
+    exact: true,
+  })
   const form = page.locator('form').filter({ hasText: 'Ajuste positivo' })
   await form
     .getByRole('combobox', { name: 'Produto', exact: true })
@@ -1052,9 +1103,39 @@ test('owner sees a focused stock result and duplicate adjustment error without e
     .fill('QA-FEEDBACK-001')
   await form.getByRole('checkbox').check()
   const before = await counters()
-  await form
-    .getByRole('button', { name: 'Registrar ajuste positivo', exact: true })
-    .click()
+  let releasePost = () => {}
+  const gate = new Promise((resolve) => {
+    releasePost = resolve
+  })
+  let blockedPosts = 0
+  const holdPost = async (route) => {
+    if (new URL(route.request().url()).origin !== origin)
+      return route.abort('blockedbyclient')
+    if (route.request().method() === 'POST') {
+      blockedPosts++
+      await gate
+    }
+    await route.continue()
+  }
+  await page.route('**/*', holdPost)
+  try {
+    await form
+      .getByRole('button', { name: 'Registrar ajuste positivo', exact: true })
+      .click()
+    await expect(
+      dialog.getByRole('button', { name: 'Fechar', exact: true }),
+    ).toBeDisabled()
+    await expect(
+      form.getByRole('textbox', { name: 'Quantidade', exact: true }),
+    ).toBeDisabled()
+    await page.keyboard.press('Escape')
+    await expect(dialog).toBeVisible()
+    await form.evaluate((element) => element.requestSubmit())
+    await expect.poll(() => blockedPosts).toBe(1)
+    expect(await counters()).toEqual(before)
+  } finally {
+    releasePost()
+  }
   const success = page
     .getByRole('status')
     .filter({ hasText: 'Evento FIFO registrado.' })
@@ -1237,4 +1318,87 @@ test('owner reviews four adjustments on tablet, confirms audited FIFO once and s
   expect(result.ok).toBe(false)
   expect(result.message).toContain('dados diferentes')
   expect(await counters()).toEqual(after)
+})
+
+test('an input consumed by production cannot be lost or adjusted out again through a remaining receipt layer', async ({
+  page,
+}) => {
+  // Disposable fixture only: isolate the input and recipe from all earlier cases.
+  const input = (
+    await pool.query(
+      "insert into products(sku,name,product_type,measurement_unit) values ('QA-CONSUMED-INPUT','Entrada sintética consumida','ingredient','g') returning id",
+    )
+  ).rows[0]
+  const output = (
+    await pool.query(
+      "insert into products(sku,name,product_type,measurement_unit,sale_price) values ('QA-CONSUMED-OUTPUT','Saída sintética isolada','finished_product','unit','2.00') returning id",
+    )
+  ).rows[0]
+  const recipe = (
+    await pool.query(
+      "insert into recipe_versions(source_id,source_hash,name,version,status,source_payload) values ('QA-CONSUMED-RECIPE','QA-CONSUMED-RECIPE-HASH','Receita isolada de consumo',1,'active','{}') returning id",
+    )
+  ).rows[0]
+  await pool.query(
+    "insert into recipe_items(source_key,source_hash,recipe_version_id,product_id,source_name,quantity,unit,source_payload) values ('QA-CONSUMED-ITEM','QA-CONSUMED-ITEM-HASH',$1,$2,'Entrada sintética consumida','1','g','{}')",
+    [recipe.id, input.id],
+  )
+  await pool.query(
+    "insert into production_profiles(source_id,source_hash,recipe_version_id,product_id,expected_yield,source_payload) values ('QA-CONSUMED-PROFILE','QA-CONSUMED-PROFILE-HASH',$1,$2,'1','{}'),('QA-CONSUMED-EDGE','QA-CONSUMED-EDGE-HASH',$1,3,'1','{}')",
+    [recipe.id, output.id],
+  )
+  await pool.query(
+    "insert into recipe_operational_requirements(source_key,source_hash,recipe_version_id,type,quantity,unit,source_payload) values ('QA-CONSUMED-ENERGY','QA-CONSUMED-ENERGY-HASH',$1,'energy','1','kwh','{}'),('QA-CONSUMED-LABOR','QA-CONSUMED-LABOR-HASH',$1,'labor','1','hour','{}')",
+    [recipe.id],
+  )
+  await identity(page, 'owner')
+  const incoming = await rpc(page, 'recordPositiveAdjustmentLifecycle', {
+    productId: input.id,
+    quantity: '1',
+    totalCost: '1.00',
+    reason: 'Entrada sintética descartável',
+    reference: 'QA-CONSUMED-IN',
+    originReference: 'Fixture local',
+  })
+  expect(incoming.ok, incoming.message).toBe(true)
+  const draft = await rpc(page, 'createProductionBatch', {
+    recipeVersionId: recipe.id,
+    productionDate: '2026-10-30',
+    recipeMultiplier: '1',
+    outputs: [{ productId: output.id, quantity: '1' }],
+    bordinhasQuantity: '0',
+    losses: [],
+    notes: 'Fixture de integridade local',
+  })
+  expect(draft.ok, draft.message).toBe(true)
+  const completion = await rpc(page, 'completeProductionBatch', {
+    id: draft.value.id,
+  })
+  expect(completion.ok, completion.message).toBe(true)
+  const balance = async () =>
+    (
+      await pool.query(
+        'select sum(quantity_delta)::text quantity from stock_movements where product_id=$1',
+        [input.id],
+      )
+    ).rows[0].quantity
+  expect(await balance()).toBe('0.000')
+  const before = await counters()
+  for (const [index, name] of [
+    'recordLossLifecycle',
+    'recordNegativeAdjustmentLifecycle',
+  ].entries()) {
+    const result = await rpc(page, name, {
+      productId: input.id,
+      quantity: '1',
+      reason: 'Não consumir de novo',
+      reference: `QA-CONSUMED-OUT-${index}`,
+    })
+    expect(result.ok, `${name}: must respect the actual stock ledger`).toBe(
+      false,
+    )
+    expect(result.message).toMatch(/Estoque insuficiente/)
+    expect(await balance()).toBe('0.000')
+    expect(await counters()).toEqual(before)
+  }
 })

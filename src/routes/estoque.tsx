@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useId, useRef, useState } from 'react'
 import {
   createFileRoute,
   useHydrated,
@@ -7,10 +7,12 @@ import {
 } from '@tanstack/react-router'
 import { useServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
+import { CircleMinus, CirclePlus, HandCoins, PackageX } from 'lucide-react'
 
 import { hasPermission } from '#/features/auth/authorization'
 import type { AppRole } from '#/features/auth/authorization'
 import { ManagementLayout } from '#/components/ManagementLayout'
+import { OperationDialog } from '#/components/OperationDialog'
 import { PositiveAdjustmentBatchImporter } from '#/components/PositiveAdjustmentBatchImporter'
 import { listInventory } from '#/features/operations/functions'
 import {
@@ -506,6 +508,21 @@ const inventoryRoleLabels: Record<AppRole, string> = {
   viewer: 'Consulta',
 }
 
+const lifecycleActionTitles = {
+  return: 'Compensação pós-entrega',
+  loss: 'Perda de estoque',
+  positive: 'Ajuste positivo',
+  negative: 'Ajuste negativo',
+} as const
+type LifecycleAction = keyof typeof lifecycleActionTitles
+const lifecycleActionKinds = ['return', 'loss', 'positive', 'negative'] as const
+const lifecycleActionIcons = {
+  return: HandCoins,
+  loss: PackageX,
+  positive: CirclePlus,
+  negative: CircleMinus,
+} as const
+
 function LifecycleActions({
   products,
   role,
@@ -519,10 +536,13 @@ function LifecycleActions({
 }) {
   const router = useRouter()
   const recordReturn = useServerFn(returnSaleLifecycle)
+  const titleId = useId()
   const recordLoss = useServerFn(recordLossLifecycle)
   const recordNegative = useServerFn(recordNegativeAdjustmentLifecycle)
   const recordPositive = useServerFn(recordPositiveAdjustmentLifecycle)
   const [pending, setPending] = useState(false)
+  const busy = useRef(false)
+  const [activeAction, setActiveAction] = useState<LifecycleAction | null>(null)
   const [message, setMessage] = useState<{
     kind: 'success' | 'error'
     text: string
@@ -556,11 +576,23 @@ function LifecycleActions({
     originReference: '',
   })
   const [positiveConfirmed, setPositiveConfirmed] = useState(false)
+  function openAction(kind: LifecycleAction) {
+    if (busy.current) return
+    setMessage(null)
+    setPositiveConfirmed(false)
+    setActiveAction(kind)
+  }
+  function closeAction() {
+    if (busy.current) return
+    setActiveAction(null)
+    setPositiveConfirmed(false)
+  }
   async function run(
-    kind: 'return' | 'loss' | 'negative' | 'positive',
+    kind: LifecycleAction,
     values: Record<string, string>,
     confirmed = false,
   ) {
+    if (busy.current) return
     const numeric = {
       ...values,
       ...(kind === 'return'
@@ -581,6 +613,7 @@ function LifecycleActions({
       })
       return
     }
+    busy.current = true
     setPending(true)
     setMessage(null)
     try {
@@ -604,17 +637,23 @@ function LifecycleActions({
         if (!validation.ok) throw new Error(validation.message)
         await recordPositive({ data: validation.data })
       }
-      setMessage({
-        kind: 'success',
-        text:
-          kind === 'return'
-            ? 'Compensação registrada sem retorno ao estoque vendável.'
-            : 'Evento FIFO registrado.',
-      })
-      await router.invalidate()
+      const successText =
+        kind === 'return'
+          ? 'Compensação registrada sem retorno ao estoque vendável.'
+          : 'Evento FIFO registrado.'
+      setMessage({ kind: 'success', text: successText })
+      try {
+        await router.invalidate({ sync: true })
+      } catch {
+        setMessage({
+          kind: 'success',
+          text: `${successText} Recarregue a página para atualizar o histórico.`,
+        })
+      }
     } catch (error) {
       setMessage({ kind: 'error', text: lifecycleErrorMessage(error) })
     } finally {
+      busy.current = false
       setPending(false)
     }
   }
@@ -651,9 +690,24 @@ function LifecycleActions({
       />
     </label>
   )
+  const feedback = message ? (
+    <p
+      ref={messageRef}
+      tabIndex={-1}
+      role={message.kind === 'error' ? 'alert' : 'status'}
+      className={`${activeAction ? 'top-20' : 'top-4'} sticky z-10 mt-3 rounded-lg bg-[#fff5e7] p-3 text-sm text-[#75411f]`}
+    >
+      {message.text}
+    </p>
+  ) : null
   return (
-    <section className="mt-6 rounded-2xl border border-[#ecdfd4] bg-white p-5">
-      <h2 className="font-bold">Ciclo de vida e ajustes</h2>
+    <section
+      aria-labelledby={titleId}
+      className="mt-6 rounded-2xl border border-[#ecdfd4] bg-white p-5"
+    >
+      <h2 id={titleId} className="font-bold">
+        Ciclo de vida e ajustes
+      </h2>
       <p className="mt-2 text-sm font-bold text-[#75411f]">
         Perfil atual: {role ? inventoryRoleLabels[role] : 'Sem acesso'}
       </p>
@@ -672,112 +726,138 @@ function LifecycleActions({
           Compensações pós-entrega exigem perfil Dono, Administrador ou Gerente.
         </p>
       ) : null}
-      {message ? (
-        <p
-          ref={messageRef}
-          tabIndex={-1}
-          role={message.kind === 'error' ? 'alert' : 'status'}
-          className="sticky top-4 z-10 mt-3 rounded-lg bg-[#fff5e7] p-3 text-sm text-[#75411f]"
-        >
-          {message.text}
-        </p>
-      ) : null}
-      <div className="mt-4 grid gap-4 lg:grid-cols-2">
-        {canCompensate ? (
-          <form
-            className="rounded-xl border border-[#ead9ca] p-3 space-y-2"
-            onSubmit={(event) => {
-              event.preventDefault()
-              void run('return', returnValues)
-            }}
-          >
-            <strong>Compensação pós-entrega</strong>
-            {field('ID do item da venda', returnValues.saleItemId, (value) =>
-              setReturnValues({ ...returnValues, saleItemId: value }),
-            )}
-            {field(
-              'Quantidade',
-              returnValues.quantity,
-              (value) => setReturnValues({ ...returnValues, quantity: value }),
-              '1,000',
-            )}
-            <label className="block text-xs font-bold">
-              Decisão
-              <select
-                className="field mt-1"
-                value={returnValues.settlement}
-                onChange={(event) =>
-                  setReturnValues({
-                    ...returnValues,
-                    settlement: event.target.value,
-                  })
-                }
+      {!activeAction ? feedback : null}
+      <div className="mt-4 grid gap-3 sm:grid-cols-2">
+        {lifecycleActionKinds
+          .filter((kind) => (kind === 'return' ? canCompensate : canAdjust))
+          .map((kind) => {
+            const Icon = lifecycleActionIcons[kind]
+            return (
+              <button
+                key={kind}
+                type="button"
+                aria-haspopup="dialog"
+                disabled={pending}
+                onClick={() => openAction(kind)}
+                className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-[#d9c3b4] bg-white px-3 py-2 text-left font-sans text-sm font-bold text-[#725443] transition hover:bg-[#f5e9df] disabled:opacity-60"
               >
-                <option value="refund">Reembolso</option>
-                <option value="store_credit">Crédito futuro</option>
-              </select>
-            </label>
-            <label className="block text-xs font-bold">
-              Data do evento
-              <input
-                className="field mt-1"
-                type="date"
-                value={returnValues.occurredOn}
-                onChange={(event) =>
-                  setReturnValues({
-                    ...returnValues,
-                    occurredOn: event.target.value,
-                  })
+                <Icon size={16} aria-hidden="true" className="shrink-0" />
+                {lifecycleActionTitles[kind]}
+              </button>
+            )
+          })}
+      </div>
+      {activeAction ? (
+        <OperationDialog
+          title={lifecycleActionTitles[activeAction]}
+          pending={pending}
+          onClose={closeAction}
+        >
+          <div className="space-y-3 p-4">
+            {feedback}
+            {activeAction === 'return' && canCompensate ? (
+              <form
+                className="rounded-xl border border-[#ead9ca] p-3 space-y-2"
+                onSubmit={(event) => {
+                  event.preventDefault()
+                  void run('return', returnValues)
+                }}
+              >
+                <strong>Compensação pós-entrega</strong>
+                {field(
+                  'ID do item da venda',
+                  returnValues.saleItemId,
+                  (value) =>
+                    setReturnValues({ ...returnValues, saleItemId: value }),
+                )}
+                {field(
+                  'Quantidade',
+                  returnValues.quantity,
+                  (value) =>
+                    setReturnValues({ ...returnValues, quantity: value }),
+                  '1,000',
+                )}
+                <label className="block text-xs font-bold">
+                  Decisão
+                  <select
+                    className="field mt-1"
+                    value={returnValues.settlement}
+                    onChange={(event) =>
+                      setReturnValues({
+                        ...returnValues,
+                        settlement: event.target.value,
+                      })
+                    }
+                  >
+                    <option value="refund">Reembolso</option>
+                    <option value="store_credit">Crédito futuro</option>
+                  </select>
+                </label>
+                <label className="block text-xs font-bold">
+                  Data do evento
+                  <input
+                    className="field mt-1"
+                    type="date"
+                    value={returnValues.occurredOn}
+                    onChange={(event) =>
+                      setReturnValues({
+                        ...returnValues,
+                        occurredOn: event.target.value,
+                      })
+                    }
+                  />
+                </label>
+                {field('Motivo', returnValues.reason, (value) =>
+                  setReturnValues({ ...returnValues, reason: value }),
+                )}
+                {field('Referência', returnValues.reference, (value) =>
+                  setReturnValues({ ...returnValues, reference: value }),
+                )}
+                <button disabled={pending} className="action-button">
+                  Registrar compensação
+                </button>
+              </form>
+            ) : null}
+            {activeAction === 'loss' && canAdjust ? (
+              <NegativeForm
+                title="Perda de estoque"
+                values={lossValues}
+                setValues={setLossValues}
+                product={product}
+                field={field}
+                pending={pending}
+                onSubmit={(confirmed) => run('loss', lossValues, confirmed)}
+              />
+            ) : null}
+            {activeAction === 'negative' && canAdjust ? (
+              <NegativeForm
+                title="Ajuste negativo"
+                values={negativeAdjustmentValues}
+                setValues={setNegativeAdjustmentValues}
+                product={product}
+                field={field}
+                pending={pending}
+                onSubmit={(confirmed) =>
+                  run('negative', negativeAdjustmentValues, confirmed)
                 }
               />
-            </label>
-            {field('Motivo', returnValues.reason, (value) =>
-              setReturnValues({ ...returnValues, reason: value }),
-            )}
-            {field('Referência', returnValues.reference, (value) =>
-              setReturnValues({ ...returnValues, reference: value }),
-            )}
-            <button disabled={pending} className="action-button">
-              Registrar compensação
-            </button>
-          </form>
-        ) : null}
-        {canAdjust ? (
-          <>
-            <NegativeForm
-              title="Perda de estoque"
-              values={lossValues}
-              setValues={setLossValues}
-              product={product}
-              field={field}
-              pending={pending}
-              onSubmit={(confirmed) => run('loss', lossValues, confirmed)}
-            />
-            <NegativeForm
-              title="Ajuste negativo"
-              values={negativeAdjustmentValues}
-              setValues={setNegativeAdjustmentValues}
-              product={product}
-              field={field}
-              pending={pending}
-              onSubmit={(confirmed) =>
-                run('negative', negativeAdjustmentValues, confirmed)
-              }
-            />
-            <PositiveAdjustmentForm
-              products={products}
-              values={positiveValues}
-              setValues={setPositiveValues}
-              pending={pending}
-              confirmed={positiveConfirmed}
-              setConfirmed={setPositiveConfirmed}
-              onSubmit={() => {
-                void run('positive', positiveValues, positiveConfirmed)
-              }}
-            />
-          </>
-        ) : null}
-      </div>
+            ) : null}
+            {activeAction === 'positive' && canAdjust ? (
+              <PositiveAdjustmentForm
+                products={products}
+                values={positiveValues}
+                setValues={setPositiveValues}
+                pending={pending}
+                confirmed={positiveConfirmed}
+                setConfirmed={setPositiveConfirmed}
+                onSubmit={() => {
+                  void run('positive', positiveValues, positiveConfirmed)
+                }}
+              />
+            ) : null}
+          </div>
+        </OperationDialog>
+      ) : null}
     </section>
   )
 }
