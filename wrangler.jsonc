@@ -72,6 +72,7 @@
     },
     "pilot": {
       "name": "cacau-v1-piloto",
+      "keep_vars": true,
       "workers_dev": true,
       "observability": {
         "enabled": false,
@@ -94,7 +95,8 @@
       },
       "vars": {
         "AUTH_RATE_LIMITER_REQUIRED": "true",
-        "PASSWORD_RESET_REDIRECT_ORIGIN": "https://cacau-v1-piloto.naiguelcabral.workers.dev"
+        "PASSWORD_RESET_REDIRECT_ORIGIN": "https://cacau-v1-piloto.naiguelcabral.workers.dev",
+        "PILOT_STOCK_POLICY": "workbook_negative"
       },
       "ratelimits": [
         {

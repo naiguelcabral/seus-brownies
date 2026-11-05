@@ -1,0 +1,76 @@
+{
+  "schemaVersion": 1,
+  "scope": "pilot-production-output-quantity-presentation",
+  "source": {
+    "pullRequest": 97,
+    "commit": "fb314fd8a77e84d4879e96b310e35061db8ee95b",
+    "approvedHead": "dc2a9a67388c9d5f3a7e6a0b97cc2f8842cc16ca",
+    "approvedTreeMatchesMerge": true
+  },
+  "deployment": {
+    "before": {
+      "id": "b5653424-7ff7-4a3d-9cb8-2ba6e68c37f7",
+      "created_on": "2026-10-29T15:08:40.181769Z",
+      "versions": [
+        {
+          "version_id": "f27304c7-aa80-4619-b549-3072be85c512",
+          "percentage": 100
+        }
+      ]
+    },
+    "after": {
+      "id": "a4113950-a5e7-41c7-aeee-e3413a58e3d9",
+      "created_on": "2026-10-29T21:10:41.280193Z",
+      "versions": [
+        {
+          "version_id": "b3688e0d-d389-4cac-821a-2a3d5cdc2e13",
+          "percentage": 100
+        }
+      ]
+    },
+    "isolatedBuild": true
+  },
+  "configuration": {
+    "unchanged": true,
+    "secretBindingCount": 6,
+    "secretValuesRead": false
+  },
+  "verification": {
+    "nodeTests": 651,
+    "isolatedBrowserTests": 43,
+    "mainWorkflows": {
+      "ci": 40914125216,
+      "codeql": 40914125212,
+      "businessAndBrowser": 40914125377,
+      "allPassed": true
+    },
+    "codeql": {
+      "analyses": 3,
+      "results": 0,
+      "errors": 0,
+      "warnings": 0
+    },
+    "auditVulnerabilities": 0,
+    "publicGetRequests": 10,
+    "publicHttpSmokePassed": true,
+    "mutatingRequests": 0
+  },
+  "draft": {
+    "checked_at": "2026-10-29T21:11:17.916Z",
+    "id": 1,
+    "status": "draft",
+    "completed_at": null,
+    "product_id": 16,
+    "output_planned": "24.000",
+    "output_actual": null,
+    "unit": "unit",
+    "workbook_adjustments": 0
+  },
+  "limits": {
+    "onlyPresentationChanged": true,
+    "operationalWrites": false,
+    "productionCompleted": false,
+    "tabletAuthenticatedAcceptance": false,
+    "fullPilotAcceptance": false
+  }
+}

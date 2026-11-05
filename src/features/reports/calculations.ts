@@ -8,6 +8,8 @@ import {
 } from '../../lib/exact-cost'
 import type { ExactCost } from '../../lib/exact-cost'
 import { requireDefined } from '../../lib/required-value'
+import { pilotInventoryValue } from '#/features/production/pilot-workbook-costs'
+import type { PilotWorkbookCosts } from '#/features/production/pilot-workbook-costs'
 import {
   calculateInventoryState,
   calculateExactInventoryState,
@@ -378,6 +380,7 @@ export function summarizeLifecycleFinancials(input: {
 
 export function valueInventory(
   rows: Array<{
+    sku?: string
     productId: number
     productName: string
     unit: string
@@ -386,6 +389,7 @@ export function valueInventory(
     allocatedCost?: string | null
     exactCost?: ExactCost | null
   }>,
+  pilotCosts: PilotWorkbookCosts | null = null,
 ) {
   const byProduct = new Map<number, typeof rows>()
   for (const row of rows) {
@@ -399,19 +403,34 @@ export function valueInventory(
       const state = calculateInventoryState(movements)
       const balance = state.quantity
       const unitCost = calculateWeightedAverageCost(movements)
-      const exactState = movements.some(
-        (movement) => movement.exactCost != null,
-      )
-        ? calculateExactInventoryState(movements)
-        : null
+      const exactState = pilotCosts
+        ? {
+            value: pilotInventoryValue(
+              pilotCosts,
+              first.sku ?? '',
+              first.unit,
+              balance,
+            ),
+          }
+        : movements.some((movement) => movement.exactCost != null)
+          ? calculateExactInventoryState(movements)
+          : null
       const valueCents = state.valueCents
       return {
         productId: first.productId,
         productName: first.productName,
         unit: first.unit,
         balance: thousandthsToQuantity(balance),
-        unitCost:
-          exactState && balance > 0n
+        unitCost: pilotCosts
+          ? displayCostMoney(
+              pilotInventoryValue(
+                pilotCosts,
+                first.sku ?? '',
+                first.unit,
+                1_000n,
+              ),
+            )
+          : exactState && balance > 0n
             ? displayCostMoney(scaleCost(exactState.value, 1_000n, balance))
             : millisToUnitCost(unitCost),
         ...(exactState ? { exactValue: exactState.value } : {}),
@@ -420,7 +439,11 @@ export function valueInventory(
           : centsToMoney(valueCents),
       }
     })
-    .filter((item) => (quantityToThousandths(item.balance) ?? 0n) > 0n)
+    .filter((item) =>
+      pilotCosts
+        ? (quantityToThousandths(item.balance) ?? 0n) !== 0n
+        : (quantityToThousandths(item.balance) ?? 0n) > 0n,
+    )
     .sort(
       (left, right) =>
         compareMoneyDescending(left.value, right.value) ||

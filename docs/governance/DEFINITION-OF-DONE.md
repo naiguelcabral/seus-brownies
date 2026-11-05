@@ -57,7 +57,7 @@ Quando aplicável:
 
 - operação transacional;
 - idempotência preservada;
-- estoque não fica negativo;
+- estoque não fica negativo na operação normal; a exceção de simulação expressamente autorizada deve permanecer restrita ao piloto, identificada e testada conforme [ADR-0003](../ADR-0003-CUSTOS-WORKBOOK-NO-PILOTO.md);
 - dinheiro e quantidades preservam precisão;
 - histórico e auditoria não são apagados.
 

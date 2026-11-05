@@ -1,0 +1,59 @@
+{
+  "collectedAt": "2026-10-30T10:15:11.024Z",
+  "origin": "https://cacau-v1-piloto.naiguelcabral.workers.dev",
+  "passed": true,
+  "results": [
+    {
+      "path": "/",
+      "status": 307,
+      "headersPassed": true
+    },
+    {
+      "path": "/login",
+      "status": 200,
+      "headersPassed": true
+    },
+    {
+      "path": "/login/redefinir-senha",
+      "status": 200,
+      "headersPassed": true
+    },
+    {
+      "path": "/compras",
+      "status": 307,
+      "headersPassed": true
+    },
+    {
+      "path": "/compras?page=1",
+      "status": 307,
+      "headersPassed": true
+    },
+    {
+      "path": "/producao",
+      "status": 307,
+      "headersPassed": true
+    },
+    {
+      "path": "/producao?page=1",
+      "status": 307,
+      "headersPassed": true
+    },
+    {
+      "path": "/acessos",
+      "status": 307,
+      "headersPassed": true
+    },
+    {
+      "path": "/estoque",
+      "status": 307,
+      "headersPassed": true
+    },
+    {
+      "path": "/estoque?page=1&movementPage=1",
+      "status": 307,
+      "headersPassed": true
+    }
+  ],
+  "credentialsUsed": false,
+  "mutatingRequests": 0
+}

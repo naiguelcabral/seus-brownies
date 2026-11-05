@@ -66,6 +66,8 @@ const base = (
   )
 
 const database = (mock: ReturnType<typeof base>) => mock.db
+const stockBackedBase = (balance = '13.000') =>
+  base({ movements: [[], [{ quantity: balance }]] })
 const mutations = (mock: ReturnType<typeof base>) =>
   mock.journal.filter(
     (entry) => entry.kind === 'insert' || entry.kind === 'update',
@@ -288,7 +290,7 @@ test('devolução pós-entrega registra compensação sem restaurar alimento ou 
 })
 
 test('perda multicamada cria um movimento e alocações por camada na ordem FIFO', async () => {
-  const mock = base()
+  const mock = stockBackedBase()
   requireDefined(mock.rows.layers).push({
     id: 6,
     productId: 3,
@@ -498,7 +500,9 @@ const rollbackCases = [
 for (const scenario of rollbackCases) {
   for (const stage of scenario.stages) {
     test(`${scenario.name}: falha em ${stage} desfaz todas as mutations pendentes`, async () => {
-      const mock = base()
+      const mock = ['perda', 'ajuste negativo'].includes(scenario.name)
+        ? stockBackedBase()
+        : base()
       const originalAllocation = structuredClone(
         requireDefined(mock.rows.allocations),
       )
@@ -521,7 +525,9 @@ for (const scenario of rollbackCases) {
 for (const scenario of rollbackCases) {
   if (scenario.name === 'devolução') continue
   test(`${scenario.name}: movimento não retornado aborta a transação`, async () => {
-    const mock = base()
+    const mock = ['perda', 'ajuste negativo'].includes(scenario.name)
+      ? stockBackedBase()
+      : base()
     mock.fail('returning:movements')
     await assert.rejects(scenario.write(mock), /Resultado obrigatório ausente/)
     assertRolledBack(mock)
@@ -574,6 +580,50 @@ test('cancelamento repetido falha sem criar novo fato', async () => {
 })
 
 for (const event of ['loss', 'adjustment_negative'] as const) {
+  for (const balance of ['0.000', '0.999', '-1.000', 'invalid']) {
+    test(`${event}: saldo real ${balance} impede consumir camada residual`, async () => {
+      const mock = stockBackedBase(balance)
+      await assert.rejects(
+        persistNegativeInventoryEvent(
+          database(mock),
+          {
+            productId: 3,
+            quantity: '1.000',
+            reason: 'Não consumir insumo já utilizado',
+            reference: 'OUT-REMAINING-LAYER',
+          },
+          event,
+        ),
+        balance === 'invalid'
+          ? /Saldo de estoque inválido/
+          : /Estoque insuficiente/,
+      )
+      assert.equal(mutations(mock).length, 0)
+      assertRolledBack(mock)
+    })
+  }
+  test(`${event}: saldo exato em milésimos permite baixa sem arredondamento`, async () => {
+    const mock = stockBackedBase('0.001')
+    await persistNegativeInventoryEvent(
+      database(mock),
+      {
+        productId: 3,
+        quantity: '0.001',
+        reason: 'Baixa fracionária conferida',
+        reference: 'OUT-EXACT-BALANCE',
+      },
+      event,
+    )
+    const movement = mutations(mock).find(
+      (entry) => entry.table === 'movements',
+    )
+    assert.equal(
+      (requireDefined(movement).values as { quantityDelta: string })
+        .quantityDelta,
+      '-0.001',
+    )
+    assert.equal(mock.journal.at(-1)?.kind, 'commit')
+  })
   test(`${event} repetido com sourceKey falha sem mutation`, async () => {
     const mock = base()
     requireDefined(mock.rows.movements).push({ id: 93 })

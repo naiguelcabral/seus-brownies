@@ -1,0 +1,136 @@
+{
+  "schemaVersion": 1,
+  "scope": "pilot-inventory-action-navigation-style",
+  "source": {
+    "pullRequest": 103,
+    "commit": "5bfde910d77202c53c7a35de7a0a7675bfa98220",
+    "approvedHead": "e6c0410690ccb5062948e4762992ba29c9d7b6eb",
+    "approvedTreeMatchesMerge": true
+  },
+  "deployment": {
+    "before": {
+      "id": "b14ad2a3-ce27-4869-8f68-a373f2a2bb02",
+      "created_on": "2026-10-30T00:46:17.972382Z",
+      "versions": [
+        {
+          "version_id": "05356941-6c4a-4a42-a8f0-5b1ac5be5ad3",
+          "percentage": 100
+        }
+      ]
+    },
+    "after": {
+      "id": "b4859f8b-c98a-4ed7-b075-e9f45d4c5868",
+      "created_on": "2026-10-30T09:17:04.430967Z",
+      "versions": [
+        {
+          "version_id": "ab3d9fa2-be43-44b8-a2fd-b4a4f74e80d2",
+          "percentage": 100
+        }
+      ]
+    },
+    "isolatedBuild": true
+  },
+  "configuration": {
+    "unchanged": true,
+    "secretBindingCount": 6,
+    "secretValuesRead": false
+  },
+  "verification": {
+    "localQualityPassed": true,
+    "knipNewFindings": 0,
+    "connectedBrowserTests": 17,
+    "visualViewportWidth": 375,
+    "mainWorkflows": [
+      {
+        "conclusion": "success",
+        "databaseId": 41031516246,
+        "name": "CI",
+        "status": "completed"
+      },
+      {
+        "conclusion": "success",
+        "databaseId": 41031516199,
+        "name": "CodeQL",
+        "status": "completed"
+      },
+      {
+        "conclusion": "success",
+        "databaseId": 41031516194,
+        "name": "Isolated business and browser validation",
+        "status": "completed"
+      }
+    ],
+    "mainCodeql": [
+      {
+        "category": "/language:javascript-typescript",
+        "commit_sha": "5bfde910d77202c53c7a35de7a0a7675bfa98220",
+        "error": "",
+        "id": 2061036809,
+        "results_count": 0,
+        "warning": ""
+      },
+      {
+        "category": "/language:python",
+        "commit_sha": "5bfde910d77202c53c7a35de7a0a7675bfa98220",
+        "error": "",
+        "id": 2061034068,
+        "results_count": 0,
+        "warning": ""
+      },
+      {
+        "category": "/language:actions",
+        "commit_sha": "5bfde910d77202c53c7a35de7a0a7675bfa98220",
+        "error": "",
+        "id": 2061033278,
+        "results_count": 0,
+        "warning": ""
+      }
+    ],
+    "auditVulnerabilities": 0,
+    "publicGetRequests": 10,
+    "publicHttpSmokePassed": true,
+    "mutatingRequests": 0
+  },
+  "presentation": {
+    "reference": "ManagementLayout.tsx navigation",
+    "fontSizePx": 14,
+    "fontWeight": 700,
+    "iconSizePx": 16,
+    "decorativeIconsHiddenFromAccessibility": true,
+    "actions": [
+      "Compensação pós-entrega",
+      "Perda de estoque",
+      "Ajuste positivo",
+      "Ajuste negativo",
+      "Conferir lote de ajustes positivos"
+    ]
+  },
+  "businessCounts": {
+    "before": {
+      "checked_at": "2026-10-30T09:09:39.016Z",
+      "movements": 11,
+      "batches": 1,
+      "completed_batches": 0,
+      "sales": 0,
+      "financial_events": 0
+    },
+    "after": {
+      "checked_at": "2026-10-30T09:17:44.280Z",
+      "movements": 11,
+      "batches": 1,
+      "completed_batches": 0,
+      "sales": 0,
+      "financial_events": 0
+    },
+    "unchanged": true,
+    "limitation": "Counts do not attest every field."
+  },
+  "limits": {
+    "onlyPresentationChanged": true,
+    "operationalWrites": false,
+    "permissionsOrAccountsChanged": false,
+    "originalHmlOrProductionChanged": false,
+    "tabletAuthenticatedAcceptance": false,
+    "fullPilotAcceptance": false
+  }
+}
