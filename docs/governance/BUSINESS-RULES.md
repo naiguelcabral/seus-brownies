@@ -13,6 +13,7 @@
 - Não existe saldo editável como fonte de verdade.
 - Entradas e saídas devem registrar origem/referência quando possível.
 - Operação normal não pode produzir saldo negativo.
+- Exceção de simulação autorizada em 30/10/2026: somente no piloto configurado, produção, perdas e ajustes negativos podem gerar saldo negativo com custos de referência do workbook e histórico automático. Não é regra de operação real; condições e limites no [ADR-0003](../ADR-0003-CUSTOS-WORKBOOK-NO-PILOTO.md).
 - Ajustes manuais exigem motivo e devem permanecer auditáveis.
 
 ## Compras

@@ -1,0 +1,185 @@
+{
+  "schemaVersion": 1,
+  "scope": "pilot-positive-adjustment-batch-publication",
+  "source": {
+    "commit": "24c9dc1a0ab0a1a438349ead56a8a968f3ca8164",
+    "pullRequest": 95,
+    "approvedHead": "242d2f66ab33740eff2a5a3da88938307fd7ab16",
+    "mergeCandidate": "107163185517f6f6c2c64612e030e0e959cadf09",
+    "approvedTreeMatchesMerge": true
+  },
+  "deployment": {
+    "before": {
+      "id": "dc9aaf8a-d236-4f24-88b6-37d88d30bb31",
+      "source": "wrangler",
+      "strategy": "percentage",
+      "annotations": {
+        "workers/triggered_by": "deployment"
+      },
+      "versions": [
+        {
+          "version_id": "48b34e2d-bf1b-40a4-b2d3-9a15c392bc90",
+          "percentage": 100
+        }
+      ],
+      "created_on": "2026-10-29T12:55:24.837236Z"
+    },
+    "after": {
+      "id": "b5653424-7ff7-4a3d-9cb8-2ba6e68c37f7",
+      "created_on": "2026-10-29T15:08:40.181769Z",
+      "versions": [
+        {
+          "version_id": "f27304c7-aa80-4619-b549-3072be85c512",
+          "percentage": 100
+        }
+      ]
+    },
+    "isolatedBuild": true
+  },
+  "configuration": {
+    "bindings": [
+      {
+        "name": "AUTH_AGGREGATE_RATE_LIMITER",
+        "namespace_id": "2026102603",
+        "simple": {
+          "limit": 600,
+          "period": 60
+        },
+        "type": "ratelimit"
+      },
+      {
+        "name": "AUTH_DIRECTORY_DATABASE_URL",
+        "type": "secret_text"
+      },
+      {
+        "name": "AUTH_LOGIN_HASH_PEPPER",
+        "type": "secret_text"
+      },
+      {
+        "name": "AUTH_ORIGIN_RATE_LIMITER",
+        "namespace_id": "2026102602",
+        "simple": {
+          "limit": 60,
+          "period": 60
+        },
+        "type": "ratelimit"
+      },
+      {
+        "name": "AUTH_RATE_LIMITER",
+        "namespace_id": "2026102601",
+        "simple": {
+          "limit": 20,
+          "period": 60
+        },
+        "type": "ratelimit"
+      },
+      {
+        "name": "AUTH_RATE_LIMITER_REQUIRED",
+        "text": "true",
+        "type": "plain_text"
+      },
+      {
+        "name": "DATABASE_URL",
+        "type": "secret_text"
+      },
+      {
+        "name": "NEON_AUTH_BASE_URL",
+        "type": "secret_text"
+      },
+      {
+        "name": "NEON_AUTH_COOKIE_SECRET",
+        "type": "secret_text"
+      },
+      {
+        "name": "PASSWORD_RESET_REDIRECT_ORIGIN",
+        "text": "https://cacau-v1-piloto.naiguelcabral.workers.dev",
+        "type": "plain_text"
+      },
+      {
+        "name": "TURNSTILE_SECRET_KEY",
+        "type": "secret_text"
+      }
+    ],
+    "compatibility_date": "2025-09-02",
+    "compatibility_flags": [
+      "nodejs_compat"
+    ],
+    "observability": {
+      "enabled": false,
+      "head_sampling_rate": 1,
+      "redact_query_string": true,
+      "logs": {
+        "enabled": true,
+        "head_sampling_rate": 1,
+        "persist": true,
+        "invocation_logs": true
+      },
+      "traces": {
+        "enabled": false,
+        "persist": true,
+        "head_sampling_rate": 1
+      },
+      "issues": {
+        "enabled": false
+      }
+    },
+    "unchanged": true,
+    "secretValuesRead": false
+  },
+  "verification": {
+    "nodeTests": 649,
+    "connectedTests": 17,
+    "mainWorkflows": {
+      "ci": 40897464886,
+      "codeql": 40897464854,
+      "businessAndBrowser": 40897464943,
+      "allPassed": true
+    },
+    "codeql": {
+      "analyses": 3,
+      "results": 0,
+      "errors": 0,
+      "warnings": 0,
+      "openAlerts": 0
+    },
+    "auditVulnerabilities": 0,
+    "publicSmokePassed": true,
+    "publicGetRequests": 10,
+    "mutatingRequests": 0
+  },
+  "businessCounts": {
+    "before": {
+      "checked_at": "2026-10-29T14:23:20.150Z",
+      "purchases": 3,
+      "purchase_items": 7,
+      "movements": 7,
+      "batches": 1,
+      "completed_batches": 0,
+      "matching_adjustments": 0,
+      "sales": 0,
+      "financial_events": 0
+    },
+    "after": {
+      "checked_at": "2026-10-29T16:11:54.875Z",
+      "purchases": 3,
+      "purchase_items": 7,
+      "movements": 7,
+      "batches": 1,
+      "completed_batches": 0,
+      "matching_adjustments": 0,
+      "sales": 0,
+      "financial_events": 0
+    },
+    "unchanged": true,
+    "limitation": "Counts do not attest every field."
+  },
+  "limits": {
+    "tabletConfirmationPending": true,
+    "serverPermissionsChanged": false,
+    "accountsChanged": false,
+    "sqlMutationsUsed": false,
+    "originalHmlOrProductionChanged": false,
+    "fullPilotAcceptance": false,
+    "auth429PermanentFixAttested": false
+  }
+}

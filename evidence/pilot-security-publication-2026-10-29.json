@@ -1,0 +1,207 @@
+{
+  "schemaVersion": 1,
+  "scope": "pilot-only-security-publication",
+  "authorization": {
+    "publication": "Pode publicar a versão atualizada no piloto",
+    "resume": "Vamos seguir",
+    "date": "2026-10-29"
+  },
+  "source": {
+    "commit": "91299ef04e45663f36f8ce203a2949407a2fadfb",
+    "pullRequest": 91,
+    "security": {
+      "betterAuth": "1.7.10",
+      "renderer": "2.2.0",
+      "seroval": "1.6.11"
+    },
+    "mergedAt": "2026-10-29T08:23:51Z"
+  },
+  "target": {
+    "worker": "cacau-v1-piloto",
+    "origin": "https://cacau-v1-piloto.naiguelcabral.workers.dev"
+  },
+  "deployment": {
+    "before": {
+      "id": "ce3253c6-915f-4f5a-afdd-aa12506eb139",
+      "created_on": "2026-10-27T15:08:35.625252Z",
+      "versions": [
+        {
+          "version_id": "0cdcdb1d-3d89-4b0b-972c-51f79806c76f",
+          "percentage": 100
+        }
+      ]
+    },
+    "after": {
+      "id": "adb8bdfb-354c-4d0a-9adb-b36147e43d4c",
+      "created_on": "2026-10-29T08:28:02.647744Z",
+      "versions": [
+        {
+          "version_id": "16a49edf-073c-4613-a995-d07a8542040f",
+          "percentage": 100
+        }
+      ]
+    },
+    "isolatedBuild": true
+  },
+  "configuration": {
+    "metadataUnchanged": true,
+    "secretValuesRead": false,
+    "bindings": [
+      {
+        "name": "AUTH_AGGREGATE_RATE_LIMITER",
+        "type": "ratelimit",
+        "namespace_id": "2026102603",
+        "simple": {
+          "limit": 600,
+          "period": 60
+        }
+      },
+      {
+        "name": "AUTH_DIRECTORY_DATABASE_URL",
+        "type": "secret_text"
+      },
+      {
+        "name": "AUTH_LOGIN_HASH_PEPPER",
+        "type": "secret_text"
+      },
+      {
+        "name": "AUTH_ORIGIN_RATE_LIMITER",
+        "type": "ratelimit",
+        "namespace_id": "2026102602",
+        "simple": {
+          "limit": 60,
+          "period": 60
+        }
+      },
+      {
+        "name": "AUTH_RATE_LIMITER",
+        "type": "ratelimit",
+        "namespace_id": "2026102601",
+        "simple": {
+          "limit": 20,
+          "period": 60
+        }
+      },
+      {
+        "name": "AUTH_RATE_LIMITER_REQUIRED",
+        "type": "plain_text",
+        "text": "true"
+      },
+      {
+        "name": "DATABASE_URL",
+        "type": "secret_text"
+      },
+      {
+        "name": "NEON_AUTH_BASE_URL",
+        "type": "secret_text"
+      },
+      {
+        "name": "NEON_AUTH_COOKIE_SECRET",
+        "type": "secret_text"
+      },
+      {
+        "name": "PASSWORD_RESET_REDIRECT_ORIGIN",
+        "type": "plain_text",
+        "text": "https://cacau-v1-piloto.naiguelcabral.workers.dev"
+      },
+      {
+        "name": "TURNSTILE_SECRET_KEY",
+        "type": "secret_text"
+      }
+    ],
+    "compatibility_date": "2025-09-02",
+    "compatibility_flags": [
+      "nodejs_compat"
+    ],
+    "observability": {
+      "enabled": false,
+      "head_sampling_rate": 1,
+      "redact_query_string": true,
+      "logs": {
+        "enabled": true,
+        "head_sampling_rate": 1,
+        "persist": true,
+        "invocation_logs": true
+      },
+      "traces": {
+        "enabled": false,
+        "persist": true,
+        "head_sampling_rate": 1
+      },
+      "issues": {
+        "enabled": false
+      }
+    },
+    "widgets": [
+      {
+        "sitekey": "0x4AAAAAAFm9r4Dfh7tXmljE",
+        "domains": [
+          "cacau-v1-piloto.naiguelcabral.workers.dev"
+        ],
+        "mode": "managed"
+      }
+    ]
+  },
+  "verification": {
+    "nodeTests": 642,
+    "dependencyTests": 8,
+    "auditVulnerabilities": 0,
+    "mainWorkflows": {
+      "ci": 40841832422,
+      "businessAndBrowser": 40841832400,
+      "codeql": 40841832545,
+      "status": "success"
+    },
+    "codeql": {
+      "analyses": 3,
+      "results": 0,
+      "errors": 0,
+      "warnings": 0,
+      "openAlerts": 0
+    },
+    "publicHttpSmoke": {
+      "report": "pilot-security-http-smoke-2026-10-29.json",
+      "passed": true,
+      "requests": 8,
+      "mutatingRequests": 0,
+      "credentialsUsed": false
+    },
+    "browser": {
+      "dashboardOpened": true,
+      "authenticatedSessionObserved": true,
+      "loginPerformedByAgent": false,
+      "errorConsoleEntries": 0,
+      "operationalWrites": 0
+    }
+  },
+  "businessCounts": {
+    "before": {
+      "collected_at": "2026-10-29T08:24:56.550467+00:00",
+      "purchases": 3,
+      "purchase_items": 7,
+      "stock_movements": 7,
+      "production_batches": 0,
+      "sales": 0,
+      "financial_events": 0
+    },
+    "after": {
+      "collected_at": "2026-10-29T08:30:05.370369+00:00",
+      "purchases": 3,
+      "purchase_items": 7,
+      "stock_movements": 7,
+      "production_batches": 0,
+      "sales": 0,
+      "financial_events": 0
+    },
+    "unchanged": true,
+    "limitation": "Contagens preservadas não comprovam identidade de todos os campos."
+  },
+  "limits": {
+    "managedAuthVersionAttested": false,
+    "inheritedUiPeerConflictResolved": false,
+    "dependabotAlertsEnabled": false,
+    "fullPilotAcceptance": false,
+    "productionOrSalesRecorded": false,
+    "previousHmlOrProductionChanged": false
+  }
+}

@@ -1,5 +1,91 @@
 # Ações que exigem aprovação humana — Cacau v1
 
+## Continuidade limitada a produção e estoque — 30/10/2026
+
+Usuário escolheu “Continuar somente os testes de produção e estoque”. Rodada automatizada em base local descartável autorizada nesse escopo, com referências do workbook, saldo negativo restrito à política de piloto e histórico automático preservado. Não registrar venda/pagamento, produção física, novo lote remoto ou repetir compras/complementos por inferência. A sessão controlável permanece em login; sessão do tablet não é compartilhada. Não fabricar autoria nem substituir a sessão por escrita SQL no piloto. Conferência manual após cada etapa continua dispensada. [Ensaio isolado](../../evidence/pilot-production-stock-lab-2026-10-30.json).
+
+## Publicação da exceção do piloto — 30/10/2026
+
+Decisão de custos do workbook e saldo negativo aplicada à PR #107 após checks/revisão, com publicação somente no piloto, versão 5c132f2e a 100%. Histórico automático mantido, conferência manual dispensada. Nenhuma escrita operacional remota ou alteração de outros ambientes. [Recibo](../../evidence/pilot-workbook-costs-publication-2026-10-30.json).
+
+## Fonte de custo definida pelo usuário — 30/10/2026
+
+Usuário anexou novamente o workbook e orientou usar seu custo para todos os insumos, embalagens e demais situações nele listadas, resolvendo a pergunta anterior. Continuidade da exceção do piloto: custo de referência identificado, histórico automático preservado e conferência manual dispensada. Cadastro mestre e quantidades da ficha orientam a preparação; não reprecificar fatos anteriores, inventar custo para item ausente ou aplicar a outros ambientes. Implementação/revisão/publicação em andamento, sem nova escrita operacional. [ADR-0003](../ADR-0003-CUSTOS-WORKBOOK-NO-PILOTO.md).
+
+## Exceção de estoque no piloto e dispensa da conferência manual — 30/10/2026
+
+Usuário autorizou “podendo negativar o estoque” no ambiente de teste e esclareceu que “sem auditoria” significa “Pular a conferência manual; manter o histórico”. Autoriza preparar a exceção isolada do piloto, com histórico automático, autoria e idempotência preservados. Não autoriza apagar histórico, afrouxar autenticação ou mudar produção/HML anterior. Escolha do custo da quantidade faltante perguntada e ainda pendente; implementação/publicação não executadas neste checkpoint.
+
+## Proteção do saldo publicada antes da simulação — 30/10/2026
+
+Continuidade autorizada aplicada à PR #105, integrada após revisão/checks e publicada somente no piloto, versão b3f972f2 a 100%. Sem escrita operacional pelo agente ou mudança de acesso/custo/schema. Conclusão simulada do rascunho #1 ainda depende da sessão do tablet; não representa produção física ou aceite integral I05/I04. [Recibo](../../evidence/pilot-production-ledger-guard-publication-2026-10-30.json).
+
+## Simulação do lote #1 — 30/10/2026
+
+Após aceitar o padrão visual e pedir a próxima etapa, usuário confirmou “Simulação no piloto, sem produção física”. Abrange a conclusão simulada do rascunho #1 dos 24 brigadeiros pelo fluxo autenticado, com revalidação de estoque/custo e trilha de auditoria. Preservar referências consumidas; não repetir compras/complementos nem criar outro lote. Sem venda, pagamento ou produção física inferida. Correções de integridade e publicação no piloto seguem revisão/checks normais dentro da continuidade autorizada. A sessão do tablet não é compartilhada; não fabricar principal ou escrever por SQL.
+
+## Fonte e ícones das ações — 30/10/2026
+
+Usuário pediu o padrão das abas superiores nos botões recém-criados. Ajuste visual integrado pela PR #103 após checks/revisão e publicado somente no piloto, versão ab3d9fa2 a 100%, dentro da continuidade já autorizada. Sem alteração de permissões, dados ou regras operacionais. [Recibo](../../evidence/pilot-inventory-navigation-style-publication-2026-10-30.json).
+
+## Janelas das ações publicadas e complementos conferidos — 29/10/2026
+
+Pedido de quatro botões/janelas aplicado à PR #101, integrada após checks/revisão e publicada somente no piloto, versão 05356941 a 100%. Sem mudança de permissões ou escrita operacional pelo agente. Usuário informou conferência dos complementos; leitura independente confirmou quatro movimentos/camadas/auditorias com valores esperados e ator autorizado. Rascunho #1 permanece sem produção realizada. [Recibo](../../evidence/pilot-inventory-dialogs-publication-2026-10-29.json).
+
+## Organização das ações de estoque em janelas — 29/10/2026
+
+Usuário pediu quatro botões dentro de Ciclo de vida e ajustes, cada um abrindo janela flutuante para preencher e registrar: compensação pós-entrega, perda, ajuste positivo e negativo. Alteração de UX dentro da continuidade de atualização/publicação do piloto; manter perfis, validações, autoria, referências e escritores atuais. Não autoriza registrar novos fatos, concluir produção por inferência ou alterar permissões.
+
+## Correção da apresentação de 24 unidades — 29/10/2026
+
+Usuário relatou 24 mil na tela e confirmou a intenção de somente 24 unidades. O banco já conservava 24; corrigida apenas a apresentação, testada e integrada normalmente pela PR #97. Continuidade da publicação autorizada do piloto aplicada à versão b3688e0d, sem escrita operacional, mudança de contas ou novo lote. [Recibo](../../evidence/pilot-production-quantity-publication-2026-10-29.json).
+
+## Conferência única publicada no piloto — 29/10/2026
+
+Autorização de conferência/publicação aplicada à PR #95 após revisão e checks normais. Piloto f27304c7, 100%, fonte 24c9dc1. Nenhuma inclusão operacional; usuário deve confirmar o manifesto privado na própria sessão do tablet. Compras e rascunho #1 preservados. [Recibo](../../evidence/pilot-adjustment-batch-publication-2026-10-29.json).
+
+## Conferência única dos complementos no tablet — 29/10/2026
+
+Usuário confirmou “O painel abriu” e escolheu “Preparar uma conferência única no piloto, como fizemos com as compras”. Continuidade da autorização de atualizar/publicar o piloto; preparar, validar, revisar e integrar normalmente o fluxo de conferência para confirmação na sessão do próprio usuário. Sem novas permissões ou autoria fabricada. As quatro referências existentes e o rascunho #1 devem ser preservados. Publicar a interface não constitui inclusão operacional nem aceite I05/I04. [Contrato](POSITIVE-ADJUSTMENT-BATCH.md).
+
+## Correção do fluxo do piloto publicada — 29/10/2026
+
+Continuidade do pedido de atualização/publicação do piloto e do relato do
+botão: PR #93 revisada e integrada normalmente em `844f425`, com os checks e
+as análises reais aprovados. Build/deploy isolado somente no piloto: versão
+`48b34e2d`, 100%. Sem concessões, mudança de matriz ou SQL de escrita.
+
+Usuário indicou contas para conferir o Dono e informou novo login. A sessão
+controlável ainda recebeu recusa; o agente encerrou essa sessão pela UI e
+deixou a aba em login para entrada na identidade correta, sem receber senha
+ou código. Complementos continuam pendentes. Rascunho #1 já salvo sob a
+autorização de preparação; nenhuma conclusão/venda/pagamento.
+[Recibo](PILOT-INVENTORY-PERMISSION-FEEDBACK-2026-10-29.md).
+
+## Continuidade do lote e correção de feedback — 29/10/2026
+
+Usuário confirmou que o botão também não respondia e indicou a sessão e
+três contas para conferir o perfil Dono. Consulta privada apenas de leitura
+identificou o vínculo correto; nenhuma concessão/alteração de acesso.
+A regra FIFO permanece restrita; corrigida somente a apresentação das ações
+e mensagens. O rascunho #1 dos 24 brigadeiros foi salvo pela aplicação sob a
+autorização anterior de preparar a produção. Sem conclusão/venda/pagamento;
+ajustes pendentes da sessão com permissão. [Recibo](PILOT-INVENTORY-PERMISSION-FEEDBACK-2026-10-29.md).
+
+## Publicação da atualização de segurança no piloto — 29/10/2026
+
+Usuário autorizou “Pode publicar a versão atualizada no piloto” e depois
+“Vamos seguir”. Aplicado ao pacote revisado: integração normal da PR #91 em
+`91299ef`, checks da main aprovados, build/deploy isolado somente em
+`cacau-v1-piloto` e fechamento documental. Versão `16a49edf`, 100%, com
+configuração preservada. Nenhuma mudança em contas, secrets, Auth gerenciado,
+HML anterior ou produção; nenhuma escrita operacional nesta publicação.
+
+Sessão autenticada já existente observada no navegador controlável. Usuário
+escolheu preparar somente a produção; não há venda autorizada para registro
+por inferência. Aceite completo I05/I04 permanece separado.
+[Recibo](PILOT-SECURITY-PUBLICATION-2026-10-29.md).
+
 ## Integração da correção de segurança — 28/10/2026
 
 Após apresentação da PR #89 validada, usuário respondeu “Pode seguir a

@@ -5,7 +5,7 @@ import test from 'node:test'
 import { serverFunctionPolicies } from '../src/features/auth/server-function-policy'
 
 test('toda Server Function operacional mapeada recebe uma permissão explícita', () => {
-  assert.equal(Object.keys(serverFunctionPolicies).length, 57)
+  assert.equal(Object.keys(serverFunctionPolicies).length, 58)
   assert.equal(
     serverFunctionPolicies.findRegistrationCandidate,
     'access:approve',
@@ -19,6 +19,10 @@ test('toda Server Function operacional mapeada recebe uma permissão explícita'
   )
   assert.equal(
     serverFunctionPolicies.recordPositiveAdjustmentLifecycle,
+    'fifo:lifecycle:write',
+  )
+  assert.equal(
+    serverFunctionPolicies.checkPositiveAdjustmentBatch,
     'fifo:lifecycle:write',
   )
   assert.equal(serverFunctionPolicies.getFifoMigrationAudit, 'fifo:audit:read')
@@ -50,7 +54,7 @@ test('toda Server Function operacional mapeada recebe uma permissão explícita'
   assert.equal(serverFunctionPolicies.activateScenario, 'scenarios:write')
 })
 
-test('as 57 Server Functions inventariadas aplicam o middleware no servidor', async () => {
+test('as 58 Server Functions inventariadas aplicam o middleware no servidor', async () => {
   const source = await Promise.all(
     [
       'src/features/diagnostics/functions.ts',
@@ -63,6 +67,7 @@ test('as 57 Server Functions inventariadas aplicam o middleware no servidor', as
       'src/features/reports/functions.ts',
       'src/features/inventory/fifo-migration-audit.ts',
       'src/features/inventory/lifecycle-writers.ts',
+      'src/features/inventory/positive-adjustment-batch.functions.ts',
       'src/features/finance/functions.ts',
       'src/features/scenarios/functions.ts',
       'src/features/auth/registration-approval.functions.ts',

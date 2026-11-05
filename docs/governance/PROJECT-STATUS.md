@@ -1,5 +1,170 @@
 # Estado canônico do projeto — Cacau v1
 
+## I05: perdas e recuperação de bordinhas no laboratório — 30/10/2026
+
+Continuidade limitada a produção e estoque aplicada ao cenário de perda declarada e recuperação medida. Ensaio PostgreSQL local passou com referências sintéticas e com o manifesto privado do workbook: capacidade de 24, 22 brownies disponíveis e duas perdas com motivo; 250 g de bordas resultam em dois pacotes de 100 g e 50 g sem embalagem. Saquinhos próprios e adesivos consumidos; custo comum dividido por massa e acabamento atribuído ao consumidor, com soma exata entre as duas saídas/camadas. Perda sem motivo, excesso de capacidade, peso inválido e custo do saquinho ausente recusados sem movimentos/custos/auditoria; repetição da conclusão não duplica perdas.
+
+Ampliação do teste isolado criado na PR #109, sem mudança de regra/runtime/schema ou deploy. As quantidades são fixtures locais; nenhum novo lote no piloto compartilhado, venda, evento financeiro ou produção física. Histórico automático mantido e conferência manual dispensada. I05 parcial/I04 permanecem separados. [Evidência sem valores comerciais](../../evidence/pilot-recovery-stock-lab-2026-10-30.json). 664 testes Node, tipos, lint, formato e Knip sem novos achados aprovados localmente. CI e revisão da candidata registradas na PR correspondente.
+
+## I05: testes de produção e estoque com referências do workbook — 30/10/2026
+
+Usuário escolheu “Continuar somente os testes de produção e estoque”. Dois ensaios em PostgreSQL 17 local descartável, cada qual iniciado vazio, passaram: referência sintética e manifesto privado do workbook já preparado. Cada ensaio concluiu dois lotes de 24 unidades, com nove insumos/embalagens e dois custos operacionais. Conferidos conclusão concorrente uma única vez, saldo negativo, perda/ajustes, cobertura parcial por camada, quantidade fracionária, referências repetidas recusadas, rollback por custo ausente e falha tardia de auditoria, além dos bloqueios fora da origem do piloto.
+
+Cenário sintético incluído na CI isolada; execução privada registra somente hash e resultados sem valores comerciais. Suíte local: 664 testes Node, tipos, lint, formato e Knip sem novos achados aprovados. Não houve alteração de runtime/schema, deploy, operação no piloto compartilhado, venda ou evento financeiro. Os 48 produtos são fixtures locais, não novo saldo do piloto ou produção física. Conferência manual continua dispensada e histórico automático mantido. I05 parcial/I04 sem aceite integral. [Evidência](../../evidence/pilot-production-stock-lab-2026-10-30.json). Checks e revisão da candidata registrados na PR correspondente.
+
+## I05: custos do workbook publicados no piloto — 30/10/2026
+
+PR #107 integrada em dc847998, árvore igual ao HEAD aprovado 79017a8. Doze checks e três workflows da main aprovados; três análises CodeQL reais sem resultados/erros/avisos. O alerta de corrida na leitura do manifesto foi corrigido usando o mesmo descritor para validar e ler. 664 testes Node, qualidade, Knip sem novos achados, build isolado, laboratório PostgreSQL normal/piloto e 18 cenários HTTP/navegador aprovados.
+
+Publicado somente no piloto às 12:07:56 UTC (09:07:56 Brasília), versão 5c132f2e-8e57-4f96-97c0-68773ba96329 a 100%. Manifesto privado com 40 referências do workbook carregado; validação e nomes dos seis secrets preservados. A primeira tentativa foi recusada pelo limite de tamanho de binding; abreviados somente os endereços de fonte para 02/03, com legenda no recibo, reduzindo o manifesto a 4687 bytes sem alterar valores/unidades. Dez GETs públicos aprovados.
+
+Produção simulada usa custos do workbook, inclusive energia/MO sem entrada manual; produção, perdas e ajustes negativos permitem saldo negativo somente com política válida no servidor do piloto. Posição de estoque do relatório inclui negativos por referência. Histórico automático, autoria, idempotência e transações mantidos; conferência manual após cada etapa dispensada pelo usuário. Não reprecificar fatos anteriores, repetir compras/complementos ou criar outro lote por inferência. Vendas/cancelamentos conservam FIFO e não recebem disponibilidade fictícia. Sem escrita operacional remota pelo agente, nem nova conferência manual do lote. I05 parcial/I04 mantidos. [Recibo](../../evidence/pilot-workbook-costs-publication-2026-10-30.json) e [ADR-0003](../ADR-0003-CUSTOS-WORKBOOK-NO-PILOTO.md).
+
+## I05: custos do workbook e saldo negativo no piloto em validação — 30/10/2026
+
+Usuário dispensou a conferência manual após cada etapa, mantendo histórico automático, e autorizou saldo negativo no teste. Depois definiu o workbook anexado como fonte de todos os insumos, embalagens e demais situações nele listadas. Essa resposta resolve a escolha de custo pendente abaixo. Não pedir novamente auditoria manual nem substituir ausência de referência por zero.
+
+Fonte reconferida: SHA add0174b9d8f7224e03f88f71d7f92c599fc998e502e2174e68f8d49854ebbeb. Leitura com ferramenta de planilhas e extração exata prepararam manifesto privado com 40 referências e energia/MO por receita. Cadastro mestre define tarifas; ficha define consumos e ovos; custos históricos dos produtos acabados e identidade própria do saquinho mantêm origem explícita. Valores comerciais permanecem fora do Git público. Compras e fatos anteriores não são reprecificados, nem despesas históricas viram novos lançamentos.
+
+Candidata usa manifesto privado e flag no servidor, somente com origem exata do piloto. Produção calcula material/energia/MO por referência e permite saldo negativo; perdas/ajustes negativos registram custo de referência e quantidade sem camada, sem criar estoque ou origem FIFO fictícia. A posição de estoque do relatório inclui negativos pelo mesmo custo de referência. Modo normal conserva seus bloqueios; vendas/cancelamentos conservam FIFO existente. Histórico, autoria, referências e transações mantidos. [Decisão e limites](../ADR-0003-CUSTOS-WORKBOOK-NO-PILOTO.md).
+
+664 testes Node passaram, além de laboratório PostgreSQL 17 com produção repetida em saldo negativo, perdas/ajustes, auditoria, repetição recusada e rollback por custo ausente; cobertura parcial de camada acrescentada ao mesmo ensaio. Qualidade, build, CI/revisão e publicação ainda em andamento. Nenhuma escrita operacional remota. Piloto continua b3f972f2 até a publicação validada; não declarar exceção ativa. I05 parcial/I04 mantidos. Uso oficial durante implementação: 31% da janela e 45% semanal restantes, reserva 5%.
+
+## I05: conferência manual dispensada e estoque negativo autorizado no piloto — 30/10/2026
+
+Usuário pediu continuar os testes podendo negativar estoque e esclareceu “Pular a conferência manual; manter o histórico”. Essa decisão dispensa a conferência manual após cada etapa, não o histórico automático, autoria, transações ou idempotência. Autoriza uma exceção restrita ao piloto para saldo negativo; a regra normal permanece nos demais ambientes.
+
+A implementação ainda não foi alterada ou publicada. Permitir a saída sem saldo também exige custo para a parte faltante: perguntado se deve usar o último custo de entrada (zero provisório somente quando não existir) ou sempre zero provisório. Aguardar essa decisão antes de alterar o custo, os escritores e seus testes; não desativar a auditoria nem remover apenas a checagem física deixando a alocação FIFO/custo inconsistente. Nenhuma escrita operacional nesta preparação, nenhum lote adicional ou repetição de referências. Piloto continua b3f972f2; a conclusão antes relatada não foi confirmada no último checkpoint. A investigação dessa conclusão não deve virar nova rodada obrigatória de conferência manual para o usuário.
+
+Uso oficial nesta retomada: 48% restante na janela e 48% semanal; reserva de 5% não atingida. Próximo passo: incorporar a escolha de custo, isolar a exceção no servidor do piloto, cobrir saldo insuficiente, repetição, restauração e ambientes normais, revisar/integrar/publicar pelo fluxo habitual. Não declarar a exceção já ativa.
+
+## I05: proteção do saldo publicada; conclusão simulada no tablet pendente — 30/10/2026
+
+Usuário aceitou o padrão visual e confirmou “Simulação no piloto, sem produção física” para o rascunho #1 dos 24 brigadeiros. Prévia privada confirmou insumos suficientes e custos de referência, preservando compras e quatro complementos já registrados.
+
+Regressão em PostgreSQL/HTTP local reproduziu uma perda após produção levando o insumo a −1, pois uma camada de ajuste positivo residual ainda permitia alocação. PR #105 revalida a soma de stock_movements sob o lock de produto existente, antes do plano FIFO e de qualquer escrita. Bloqueia saldo insuficiente/inválido; mantém custos, autoria, referências, transação e regras de produção. Não reconcilia camadas residuais de insumos nem amplia sua cobertura FIFO parcial.
+
+661 testes Node, 18 ensaios conectados, lint/tipos/formato, Knip sem novos achados e build isolado aprovados. Doze checks finais e três workflows da main aprovados; três análises CodeQL reais sem achados/erros/avisos. Integração normal em 2fb5613, árvore igual ao HEAD aprovado dc4a19a. Publicado somente no piloto às 10:14:50 UTC (07:14:50 Brasília), versão b3f972f2-bc71-436c-9c30-fb654570bd9c a 100%. Configuração e seis nomes de secrets preservados; dez GETs públicos aprovados.
+
+Leitura pós-publicação às 10:15:18 UTC mantém três compras/sete itens/onze movimentos, um rascunho com 24 unidades planejadas e realizado nulo, zero conclusão/venda/eventos financeiros. Nenhuma escrita operacional pelo agente. Aba controlável permanece em login; sessão do tablet não é compartilhada. Usuário orientado a atualizar a página e usar Produção → Ver lote #1 → Concluir lote e atualizar estoque na própria sessão. Usuário informou “Lote concluído”, mas duas leituras independentes, a última às 10:18:27 UTC, ainda mostram draft, onze movimentos e zero auditoria de conclusão. Solicitado status após atualizar a página e texto exato de eventual mensagem; aguardar esse retorno e investigar a divergência antes de repetir. Se houver conclusão confirmada, conferir saída 24, nove consumos/uma entrada, dois custos, custo exato e autoria/auditoria. Não repetir compras/complementos, criar outro lote, inventar produção física ou registrar venda/pagamento. I05 parcial/I04 mantidos. [Recibo](../../evidence/pilot-production-ledger-guard-publication-2026-10-30.json).
+
+## I05: fonte e ícones padronizados e publicados — 30/10/2026
+
+Pedido de manter o padrão das abas superiores aplicado em estoque.tsx e PositiveAdjustmentBatchImporter.tsx: fonte sans de 14px/negrito, cores/espaçamento da navegação e ícones Lucide de 16px nas quatro ações e no atalho de conferência. Ícones decorativos ocultos da árvore acessível; rótulos, comportamento, formulários e permissões preservados. PR #103 integrada em 5bfde91, árvore igual ao HEAD aprovado e6c0410. Doze checks finais e três workflows da main aprovados, com três análises CodeQL reais zeradas. Qualidade local, Knip sem novos achados, 17 ensaios conectados existentes e conferência visual em 375px aprovados; nenhum teste novo para espelhar estilos. Audit zero e build/deploy isolado aprovados.
+
+Publicado somente no piloto às 09:17:04 UTC (06:17:04 Brasília): versão ab3d9fa2-be43-44b8-a2fd-b4a4f74e80d2, 100%. Configuração e seis nomes de secrets preservados; dez GETs de smoke aprovados. Leitura independente antes/depois mantém onze movimentos, um rascunho e zero conclusão/venda/eventos financeiros. Sem escrita operacional pelo agente. Aceite visual no tablet ainda separado; I05 parcial e I04 mantidos. [Recibo](../../evidence/pilot-inventory-navigation-style-publication-2026-10-30.json).
+
+## I05: ações em janelas publicadas — 29/10/2026
+
+PR #101 integrada normalmente em ed0b060, árvore igual ao HEAD aprovado 945ba74. Doze checks finais e os três workflows da main aprovados; CodeQL real com três análises sem achados/erros/avisos. 651 testes Node, 17 casos conectados, qualidade, Knip sem novos achados, audit zero e build/deploy isolado aprovados. Publicado somente no piloto às 00:46:17 UTC de 30/10 (21:46:17 Brasília de 29/10): versão 05356941-6c4a-4a42-a8f0-5b1ac5be5ad3, 100%. Configuração e seis bindings de secrets preservados; dez GETs públicos aprovados.
+
+Compensação pós-entrega, perda de estoque e ajustes positivo/negativo agora são botões em Ciclo de vida e ajustes; cada ação abre somente seu formulário em janela. Campos preservados ao reabrir, confirmação renovada, foco/retorno visíveis e edição/fechamento/reenvio bloqueados enquanto registra. Perfis, escritores, payloads e auditoria preservados. A seleção ambígua da captura foi resolvida com região acessível nomeada; o ensaio de rede lenta foi corrigido para encaminhar uma vez cada requisição, sem retirar as asserções ou a restrição de origem local.
+
+Complementos do workbook aceitos pelo usuário e conferidos independentemente: quatro movimentos/camadas/auditorias, valores esperados e ator autorizado. Contagens antes/depois da publicação: três compras, sete itens, onze movimentos, um rascunho, zero conclusão/venda/eventos financeiros. Lote #1 conserva 24 unidades planejadas, realizado nulo. Nenhuma escrita operacional pelo agente nesta entrega. Aceite visual no tablet ainda separado; retomar somente a preparação do mesmo lote, sem inferir produção física. I05 parcial e I04 mantidos. [Recibo](../../evidence/pilot-inventory-dialogs-publication-2026-10-29.json).
+
+## I05: ações de estoque em janelas — 29/10/2026
+
+Usuário pediu botões para compensação pós-entrega, perda de estoque, ajuste positivo e ajuste negativo dentro de Ciclo de vida e ajustes. Candidata abre somente o formulário escolhido em OperationDialog, com foco/fechamento, campos preservados ao reabrir e confirmação renovada. Bloqueia edição/fechamento/reenvio durante a gravação e mantém retorno dentro da janela; falha de atualização do histórico não transforma uma gravação confirmada em falha. Permissões, validações e escritores existentes preservados, sem schema ou API novos.
+
+651 testes Node, lint/tipos/formato e Knip sem novos achados aprovados; laboratório conectado, build e publicação pendentes neste checkpoint. Leitura independente dos complementos confirmou quatro movimentos/camadas/auditorias com quantidades e custos exatos esperados e ator autorizado. Lote #1 permanece rascunho; I05 parcial/I04 mantidos, sem conclusão física presumida.
+
+## I05: rendimento corrigido e publicado — 29/10/2026
+
+PR #97 integrada em fb314fd, árvore igual ao HEAD aprovado dc2a9a6. Doze checks finais e os três workflows da main aprovados; análises CodeQL reais com zero achados/erros/avisos. 651 testes Node, 43 ensaios locais de navegador, qualidade, Knip sem novos achados, build isolado e auditoria zero aprovados. Publicado somente no piloto às 21:10:41 UTC: versão b3688e0d-d389-4cac-821a-2a3d5cdc2e13, 100%. Configuração e seis bindings de secrets preservados; dez GETs públicos aprovados.
+
+A auditoria agora apresenta `24 un.` em vez de interpolar `24.000 unit`. Leitura independente pós-publicação às 21:11:17 UTC mantém lote #1 em rascunho, planejado 24 unidades, realizado/conclusão nulos e zero complementos do workbook. Nenhuma quantidade, cálculo, estoque ou fato de produção alterado. Usuário pode atualizar a página e reabrir o mesmo lote; aceite visual autenticado no tablet ainda separado. Depois confirmar os quatro complementos pelo fluxo já preparado e retomar a preparação. Não recriar lote/referências nem inferir produção física. I05 parcial e I04 mantidos. [Recibo](../../evidence/pilot-production-quantity-publication-2026-10-29.json).
+
+## I05: apresentação do rendimento no rascunho — 29/10/2026
+
+Usuário relatou que o rascunho #1 parecia indicar 24 mil unidades. Leitura independente às 16:27:03 UTC confirmou saída planejada `24.000` no decimal canônico do PostgreSQL (24 unidades), realizado nulo e status draft. A auditoria da interface interpolava o decimal sem formatação brasileira. Candidata apresenta `24 un.` e conserva frações com vírgula, milhares, diferenças negativas e ausência de realizado. Nenhuma alteração do lote, banco ou cálculos.
+
+Regressões cobrem 24 versus 24 mil, frações, valores acima da precisão Number, rascunho sem produção e tela em 375/768px sem chamadas de escrita. Validação, integração e publicação em andamento. I05 parcial e I04 mantidos; conservar compras, referências dos complementos e rascunho #1.
+
+## I05: conferência única publicada; confirmação no tablet pendente — 29/10/2026
+
+PR #95 integrada em 24c9dc1, árvore igual ao HEAD aprovado 242d2f6. Doze checks finais passaram; três workflows da main e suas análises CodeQL reais sem achados, erros ou avisos. 649 testes Node, 17 casos conectados, qualidade, Knip sem novos achados, audit zero e build isolado aprovados. O ensaio de push encontrou espera indevida por networkidle na abertura de login; trocada por prontidão do documento, conservando as asserções de UI/RPC e segurança. Versão final de push/PR e main aprovadas.
+
+Publicado somente no piloto às 15:08:40 UTC: versão f27304c7-aa80-4619-b549-3072be85c512, 100%, fonte 24c9dc1. Configuração, seis nomes de secrets e limites preservados; dez GETs de smoke público aprovados. Leitura independente às 16:11:54 UTC: três compras, sete itens/movimentos, um rascunho e zero ajustes/conclusão/venda/eventos financeiros.
+
+Manifesto privado dos quatro complementos preparado com cadastro e referências originais conferidos; confirmação deve ocorrer na sessão Dono/Administrador do tablet. Publicação não inclui ajustes operacionais. Depois conferir movimentos, camadas, custo e autoria por leitura independente e retomar o rascunho #1 dos 24 brigadeiros. Não repetir compras, criar outro rascunho ou inferir produção física. I05 parcial e I04 mantidos. Recuperação de sessão relatada pelo usuário não atesta solução permanente dos 429. [Contrato](POSITIVE-ADJUSTMENT-BATCH.md) e [recibo](../../evidence/pilot-adjustment-batch-publication-2026-10-29.json).
+
+## I05: conferência única de complementos em preparação — 29/10/2026
+
+Usuário confirmou que o painel abriu no tablet e escolheu “Preparar uma conferência única no piloto, como fizemos com as compras”. A recuperação relatada supera a espera pendente do checkpoint anterior; não comprova solução permanente dos 429. Sessão do tablet permanece separada do navegador controlável.
+
+Candidata acrescenta conferência sem escrita e confirmação dos ajustes na sessão do próprio usuário. Usa o escritor transacional existente e referências estáveis; recibos coincidentes são preservados na retomada e divergências bloqueiam o fluxo. Não altera permissões, contas, secrets, Auth ou schema. 649 testes Node, lint/tipos/formato, Knip sem novos achados e build isolado aprovados. Laboratório conectado passou em 17/17 casos; a consulta de auditoria do próprio teste recebeu correção de tipo. Revisão visual acrescenta atualização dos cartões após confirmação; repetir laboratório e conferir CI/CodeQL no HEAD final antes da publicação.
+
+Rascunho #1 preservado; três compras, sete movimentos e nenhum dos quatro complementos na última leitura independente. Nenhuma nova escrita operacional. I05 parcial e I04 mantidos. [Contrato e retomada](POSITIVE-ADJUSTMENT-BATCH.md).
+
+## Sessão do Dono: login aceito e consulta limitada pelo provedor — 29/10/2026
+
+Usuário tentou a conta Dono pelo tablet e informou a mensagem exata
+“Não foi possível verificar a sessão”. Leitura restrita da auditoria do piloto
+confirmou login aceito da identidade Dono às 13:06:48.591 UTC. Consulta seca
+à observabilidade encontrou `auth.session.provider`, stage `http_error`,
+status 429 e code nulo no piloto; campos desse evento vistos às
+13:06:49.337 UTC. Associação temporal compatível com a falha relatada,
+sem correlação por Ray/request ID. Não inferir senha incorreta nem alterar
+perfil, secrets ou limites de proteção. Pedido para aguardar dois minutos e
+reabrir o piloto uma vez foi orientação de recuperação, sem sucesso ainda
+confirmado pelo usuário.
+
+Nenhuma alteração de código/configuração/contas ou escrita operacional nesta
+investigação. Piloto continua 48b34e2d (fonte 844f425), com recibo #94 já
+integrado na main de38496. Rascunho #1 preservado, quatro complementos ainda
+pendentes; não criar outro lote, repetir compras ou trocar referências.
+[Recibo sanitizado](../../evidence/pilot-owner-session-429-2026-10-29.json).
+
+## Feedback de estoque publicado; lote #1 em rascunho — 29/10/2026
+
+PR #93 integrada em `844f425`, árvore aprovada intacta; CI/build,
+negócio/navegador e CodeQL da main aprovados, três análises reais zeradas.
+Candidata final também passou localmente em 16 testes conectados; 642 testes
+Node e audit zero preservados. Correção publicada somente no piloto às
+12:55:24 UTC: versão `48b34e2d`, 100%. Configuração e seis bindings de secrets
+preservados; smoke público aprovado. Mostra perfil/permissões existentes e
+mantém retorno visível após atualizar histórico, sem mudar RBAC.
+
+Rascunho #1 de 24 brigadeiros permanece salvo; sete movimentos preservados,
+nenhum complemento/conclusão/venda/pagamento. Sessão anterior encerrada na
+interface para entrada com a conta Dono já identificada privadamente;
+confirmação dessa sessão e aceite autenticado da nova UI pendentes. Não
+recriar lote, repetir compras ou trocar referências. I05/I04 continuam abertos.
+[Recibo e retomada](PILOT-INVENTORY-PERMISSION-FEEDBACK-2026-10-29.md).
+
+## Correção da interface de estoque e rascunho #1 — 29/10/2026
+
+O botão de ajuste respondia com recusa de permissão, fora da área visível:
+Gerente não tem `fifo:lifecycle:write`. Candidata respeita a matriz existente
+na exibição dos formulários e dá foco ao resultado, sem mudar permissões.
+642 testes Node, qualidade, Knip sem novos achados e build isolado aprovados;
+integração/publicação do ajuste de interface ainda pendentes.
+
+Lote #1 salvo uma vez como rascunho pela aplicação: receita versão 2, saída
+planejada de 24 brownies de brigadeiro. Ator autenticado Gerente corresponde
+às compras anteriores. Estoque segue com sete movimentos; quatro ajustes
+pendentes, zero conclusão/venda/pagamento. Conta Dono identificada em consulta
+privada para entrada na aba; nenhum acesso alterado. Não criar outro lote.
+[Validação e retomada](PILOT-INVENTORY-PERMISSION-FEEDBACK-2026-10-29.md).
+
+## Atualização de segurança publicada no piloto — 29/10/2026
+
+Retomada após renovação confirmada (99% restante) e LIGARTUDO. PR #91
+integrada normalmente em `91299ef`; CI/build, negócio/navegador e três
+análises CodeQL da main aprovados, zero resultados/erros/avisos/alertas.
+Auditoria online repetida com zero vulnerabilidades. Validação da candidata:
+642 testes, qualidade e build isolado aprovados.
+
+Build/deploy isolado da main concluído somente em `cacau-v1-piloto` às
+08:28:02 UTC: versão `16a49edf-073c-4613-a995-d07a8542040f`, 100%.
+Seis nomes de secrets, limites e configuração preservados; smoke público
+passou. Painel abriu na sessão autenticada já existente, sem erros de console.
+Contagens antes/depois: 3 compras/7 itens/7 movimentos, zero produção/vendas/
+eventos financeiros. Sem escrita operacional, migration ou mudança no HML
+anterior/produção. I05/I04 e limites do Auth gerenciado continuam pendentes.
+Este checkpoint supera a suspensão e a pendência de deploy registradas abaixo.
+[Recibo e continuidade](PILOT-SECURITY-PUBLICATION-2026-10-29.md).
+
 ## Reserva de capacidade antes da publicação — 28/10/2026
 
 Franquia oficial chegou a 5% restante; fechamento obrigatório aplicado antes

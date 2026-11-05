@@ -7,7 +7,7 @@ import { useServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
 
 import { ManagementLayout } from '#/components/ManagementLayout'
-import { compareOutputYield } from '#/features/production/output-yield'
+import { formatOutputYield } from '#/features/production/output-yield'
 import { formatBrlMoney } from '#/lib/format-money'
 import { ingredientShortfalls } from '#/features/production/ingredient-shortfalls'
 import { productionCostDivergenceMessages } from '#/features/production/cost-reconciliation'
@@ -141,9 +141,10 @@ function ProductionPage() {
       bordinhasWeightGrams: measuredRecovery
         ? bordinhasQuantity || '0'
         : undefined,
-      operationalAmounts: measuredRecovery
-        ? { energy: energyAmount, labor: laborAmount }
-        : undefined,
+      operationalAmounts:
+        measuredRecovery && !workspace.pilotSimulation
+          ? { energy: energyAmount, labor: laborAmount }
+          : undefined,
       losses: losses.map((loss) => ({
         productId: Number(loss.productId),
         quantity: loss.quantity,
@@ -294,7 +295,11 @@ function ProductionPage() {
   return (
     <ManagementLayout
       title="Produção"
-      description="Crie rascunhos, confira a capacidade e conclua lotes reais. Os planejamentos históricos permanecem apenas como referência e nunca movimentam estoque."
+      description={
+        workspace.pilotSimulation
+          ? 'Simulação do piloto: custos de referência do workbook, estoque negativo permitido e histórico automático.'
+          : 'Crie rascunhos, confira a capacidade e conclua lotes reais. Os planejamentos históricos permanecem apenas como referência e nunca movimentam estoque.'
+      }
     >
       <button
         type="button"
@@ -673,7 +678,7 @@ function ProductionPage() {
                     : 'O valor sugerido é calculado pela capacidade livre. Se informar menos, registre a diferença como perda manual de Bordinhas com motivo.'}
                 </p>
               </details>
-              {measuredRecovery ? (
+              {measuredRecovery && !workspace.pilotSimulation ? (
                 <fieldset className="rounded-xl border border-[#ecdfd4] p-3">
                   <legend className="text-sm font-bold">
                     Custos reais deste lote
@@ -913,7 +918,11 @@ function Preview({
           role="alert"
           className="mt-5 rounded-xl border border-[#b65624] bg-[#fff7ec] p-3 text-sm"
         >
-          <strong>Insumos insuficientes para concluir o lote</strong>
+          <strong>
+            {preview.pilotSimulation
+              ? 'Simulação do piloto: a conclusão poderá deixar estoque negativo'
+              : 'Insumos insuficientes para concluir o lote'}
+          </strong>
           <ul className="mt-2 list-disc pl-5">
             {shortfalls.map((item) => (
               <li key={item.productId}>
@@ -922,7 +931,9 @@ function Preview({
             ))}
           </ul>
           <p className="mt-2">
-            A conclusão revalida o estoque disponível na transação.
+            {preview.pilotSimulation
+              ? 'Custos calculados pelas referências do workbook. O histórico automático permanece registrado.'
+              : 'A conclusão revalida o estoque disponível na transação.'}
           </p>
         </div>
       ) : null}
@@ -1061,12 +1072,12 @@ function Details({
         <AuditList
           title="Rendimento e custo alocado por saída"
           rows={details.outputs.map((item) => {
-            const yieldFacts = compareOutputYield(
+            const yieldFacts = formatOutputYield(
               item.plannedQuantity,
               item.actualQuantity,
+              item.unit ?? 'unit',
             )
-            const unit = item.unit ?? 'unit'
-            return `${item.productName}${item.role === 'co_product' ? ' · coproduto' : ''} · planejado: ${yieldFacts.planned ?? 'não informado'} ${unit} · realizado: ${yieldFacts.actual ?? 'não informado'} ${unit} · diferença: ${yieldFacts.difference ?? 'não informada'} ${unit} · custo alocado: ${item.allocatedCost === null ? 'não informado' : formatBrlMoney(item.allocatedCost)}`
+            return `${item.productName}${item.role === 'co_product' ? ' · coproduto' : ''} · planejado: ${yieldFacts.planned ?? 'não informado'} · realizado: ${yieldFacts.actual ?? 'não informado'} · diferença: ${yieldFacts.difference ?? 'não informada'} · custo alocado: ${item.allocatedCost === null ? 'não informado' : formatBrlMoney(item.allocatedCost)}`
           })}
         />
         <AuditList

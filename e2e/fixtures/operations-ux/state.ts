@@ -115,7 +115,16 @@ export async function getProductionBatch() {
     },
     plannedLosses: [],
     losses: [],
-    outputs: [],
+    outputs: [
+      {
+        productName: 'Brownie sintético',
+        role: 'primary',
+        unit: 'unit',
+        plannedQuantity: '24.000',
+        actualQuantity: completed ? '24.000' : null,
+        allocatedCost: completed ? '31.50' : null,
+      },
+    ],
     consumptions: [],
     costs: [],
     costReconciliation: [],
