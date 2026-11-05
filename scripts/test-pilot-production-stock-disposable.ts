@@ -20,7 +20,12 @@ import {
   persistNegativeInventoryEvent,
 } from '../src/features/inventory/lifecycle-writers'
 import { readPilotWorkbookCosts } from '../src/features/production/pilot-workbook-costs'
-import { addCosts, scaleCost, displayCostMoney } from '../src/lib/exact-cost'
+import {
+  addCosts,
+  subtractCosts,
+  scaleCost,
+  displayCostMoney,
+} from '../src/lib/exact-cost'
 import { requireFirst, requireDefined } from '../src/lib/required-value'
 import { quantityToThousandths } from '../src/features/production/calculations'
 
@@ -46,12 +51,23 @@ const specifications = [
 const synthetic = {
   schemaVersion: 1,
   workbookSha256: 'b'.repeat(64),
-  costs: Object.fromEntries(
-    specifications.map(([sku, unit, , numerator, denominator]) => [
-      sku,
-      { unit, unitCost: { numerator, denominator }, source: 'Synthetic!A1:E9' },
-    ]),
-  ),
+  costs: {
+    ...Object.fromEntries(
+      specifications.map(([sku, unit, , numerator, denominator]) => [
+        sku,
+        {
+          unit,
+          unitCost: { numerator, denominator },
+          source: 'Synthetic!A1:E9',
+        },
+      ]),
+    ),
+    'EMB-BORDINHAS-100G': {
+      unit: 'unit',
+      unitCost: { numerator: '7', denominator: '100' },
+      source: 'Synthetic!G1',
+    },
+  },
   operationalPerRecipe: {
     energy: {
       unit: 'batch',
@@ -569,6 +585,223 @@ try {
     /Estoque insuficiente|Valor do estoque inconsistente/,
   )
   assert.deepEqual(await counts(), stable)
+  // Measured recovery: 22 good brownies + 2 declared losses occupy 24;
+  // 250 g recovered makes only two 100 g packs, with 50 g left unpackaged.
+  process.env.PASSWORD_RESET_REDIRECT_ORIGIN =
+    'https://cacau-v1-piloto.naiguelcabral.workers.dev'
+  const bag = requireFirst(
+    await db
+      .insert(schema.products)
+      .values({
+        sku: 'EMB-BORDINHAS-100G',
+        name: 'Fixture separate bordinhas bag',
+        type: 'packaging',
+        unit: 'unit',
+      })
+      .returning(),
+  )
+  const edgeProfile = requireFirst(
+    await db
+      .select()
+      .from(schema.productionProfiles)
+      .where(eq(schema.productionProfiles.productId, edge.id)),
+  )
+  await db
+    .update(schema.productionProfiles)
+    .set({
+      packagingProductId: bag.id,
+      packagingQuantity: '1.000',
+    })
+    .where(eq(schema.productionProfiles.id, edgeProfile.id))
+  await db.insert(schema.productionProfileComponents).values({
+    sourceId: 'QA-PILOT-STOCK-EDGE-LABEL',
+    sourceHash: '6'.repeat(64),
+    productionProfileId: edgeProfile.id,
+    productId: product('INS006').id,
+    role: 'packaging',
+    quantity: '1.000',
+    unit: 'unit',
+    sourcePayload: {},
+  })
+  const recovered = await draft()
+  const payload = {
+    bordinhasWeightGrams: '250',
+    losses: [
+      {
+        productId: finished.id,
+        quantity: '2',
+        reason: 'Synthetic declared production loss',
+      },
+    ],
+  }
+  await db
+    .update(schema.productionBatchOutputs)
+    .set({ plannedQuantity: '22.000' })
+    .where(eq(schema.productionBatchOutputs.productionBatchId, recovered.id))
+  await db.insert(schema.productionBatchOutputs).values({
+    productionBatchId: recovered.id,
+    productId: edge.id,
+    role: 'co_product',
+    unit: 'unit',
+    plannedQuantity: '2.000',
+  })
+  const recoveryStable = await counts()
+  for (const [invalidPayload, message] of [
+    [
+      {
+        ...payload,
+        losses: [{ productId: finished.id, quantity: '2', reason: '' }],
+      },
+      /As perdas registradas no rascunho são inválidas/,
+    ],
+    [
+      {
+        ...payload,
+        losses: [
+          {
+            productId: finished.id,
+            quantity: '3',
+            reason: 'Synthetic over capacity',
+          },
+        ],
+      },
+      /acima do multiplicador/,
+    ],
+    [
+      { ...payload, bordinhasWeightGrams: '850' },
+      /Informe o peso das bordas aproveitáveis/,
+    ],
+  ] as const) {
+    await db
+      .update(schema.productionBatches)
+      .set({ sourcePayload: invalidPayload })
+      .where(eq(schema.productionBatches.id, recovered.id))
+    await assert.rejects(
+      persistProductionBatchCompletion(db, { id: recovered.id }, actor),
+      message,
+    )
+    assert.deepEqual(await counts(), recoveryStable)
+  }
+  await db
+    .update(schema.productionBatches)
+    .set({ sourcePayload: payload })
+    .where(eq(schema.productionBatches.id, recovered.id))
+  const { ['EMB-BORDINHAS-100G']: omittedBag, ...withoutBag } = policy.costs
+  assert.ok(omittedBag)
+  process.env.PILOT_WORKBOOK_COSTS = JSON.stringify({
+    ...policy,
+    costs: withoutBag,
+  })
+  await assert.rejects(
+    persistProductionBatchCompletion(db, { id: recovered.id }, actor),
+    /Custo do workbook ausente.*EMB-BORDINHAS-100G/,
+  )
+  assert.deepEqual(await counts(), recoveryStable)
+  process.env.PILOT_WORKBOOK_COSTS = policyText
+  await persistProductionBatchCompletion(db, { id: recovered.id }, actor)
+  const mainDirect = specifications
+    .filter(([sku]) => ['INS006', 'INS009', 'INS013'].includes(sku))
+    .map(([sku, , quantity]) =>
+      scaleCost(
+        requireDefined(policy.costs[sku]).unitCost,
+        mustQuantity(quantity),
+        1_000n,
+      ),
+    )
+    .reduce(addCosts)
+  const shared = subtractCosts(expected, mainDirect)
+  const edgeDirect = addCosts(
+    scaleCost(omittedBag.unitCost, 2n),
+    scaleCost(requireDefined(policy.costs.INS006).unitCost, 2n),
+  )
+  const recoveryExpected = addCosts(expected, edgeDirect)
+  const mainExpected = addCosts(scaleCost(shared, 13n, 17n), mainDirect)
+  const edgeExpected = addCosts(scaleCost(shared, 4n, 17n), edgeDirect)
+  assert.deepEqual(addCosts(mainExpected, edgeExpected), recoveryExpected)
+  const recoveredBatch = requireFirst(
+    await db
+      .select()
+      .from(schema.productionBatches)
+      .where(eq(schema.productionBatches.id, recovered.id)),
+  )
+  assert.equal(recoveredBatch.status, 'completed')
+  assert.deepEqual(recoveredBatch.exactCost, recoveryExpected)
+  const completion = recoveredBatch.completionPayload
+  assert.ok(
+    completion && typeof completion === 'object' && 'recovery' in completion,
+  )
+  const recovery = completion.recovery
+  assert.ok(
+    recovery &&
+      typeof recovery === 'object' &&
+      'measuredGrams' in recovery &&
+      'unpackagedGrams' in recovery,
+  )
+  assert.equal(recovery.measuredGrams, '250.000')
+  assert.equal(recovery.unpackagedGrams, '50.000')
+  const recoveredOutputs = await db
+    .select()
+    .from(schema.productionBatchOutputs)
+    .where(eq(schema.productionBatchOutputs.productionBatchId, recovered.id))
+  assert.equal(recoveredOutputs.length, 2)
+  for (const [id, quantity, cost] of [
+    [finished.id, '22.000', mainExpected],
+    [edge.id, '2.000', edgeExpected],
+  ] as const) {
+    const output = requireDefined(
+      recoveredOutputs.find((row) => row.productId === id),
+    )
+    assert.equal(output.actualQuantity, quantity)
+    assert.deepEqual(output.exactCost, cost)
+    const layer = requireFirst(
+      await db
+        .select()
+        .from(schema.inventoryCostLayers)
+        .where(
+          eq(schema.inventoryCostLayers.productionBatchOutputId, output.id),
+        ),
+    )
+    assert.equal(layer.originalQuantity, quantity)
+    assert.equal(layer.remainingQuantity, quantity)
+    assert.deepEqual(layer.exactOriginalCost, cost)
+    assert.deepEqual(layer.exactRemainingCost, cost)
+  }
+  const recordedLosses = await db
+    .select()
+    .from(schema.productionBatchLosses)
+    .where(eq(schema.productionBatchLosses.productionBatchId, recovered.id))
+  assert.equal(recordedLosses.length, 1)
+  assert.equal(requireFirst(recordedLosses).quantity, '2.000')
+  assert.equal(
+    requireFirst(recordedLosses).reason,
+    requireFirst(payload.losses).reason,
+  )
+  assert.equal(await balance(finished.id), 70_000n)
+  assert.equal(await balance(edge.id), 2_000n)
+  assert.equal(await balance(bag.id), -2_000n)
+  assert.equal(await balance(product('INS006').id), -74_000n)
+  const recoveredCounts = await counts()
+  assert.deepEqual(recoveredCounts, {
+    movements: recoveryStable.movements + 12,
+    consumptions: recoveryStable.consumptions + 10,
+    layers: recoveryStable.layers + 2,
+    costs: recoveryStable.costs + 2,
+    audit: recoveryStable.audit + 1,
+  })
+  await assert.rejects(
+    persistProductionBatchCompletion(db, { id: recovered.id }, actor),
+    /rascunho/,
+  )
+  assert.deepEqual(await counts(), recoveredCounts)
+  assert.equal(
+    (
+      await db
+        .select()
+        .from(schema.productionBatchLosses)
+        .where(eq(schema.productionBatchLosses.productionBatchId, recovered.id))
+    ).length,
+    1,
+  )
   assert.equal(
     (await pool.query('select count(*)::int count from sales')).rows[0].count,
     0,
@@ -593,9 +826,16 @@ try {
       scope: 'isolated-production-stock-only',
       reference: referenceFile ? 'private-workbook' : 'synthetic',
       workbookSha256: policy.workbookSha256,
-      completedBatches: 2,
-      unitsPerBatch: 24,
-      finishedStock: '48.000',
+      completedBatches: 3,
+      baselineUnitsPerBatch: 24,
+      finishedStock: '70.000',
+      recovery: {
+        primaryGood: 22,
+        primaryLoss: 2,
+        measuredGrams: 250,
+        bordinhasPacks: 2,
+        unpackagedGrams: 50,
+      },
       sales: 0,
       financialEvents: 0,
       remoteWrites: 0,
@@ -610,6 +850,10 @@ try {
         'missing cost rollback',
         'late audit rollback',
         'normal origin blocked',
+        'declared loss and capacity validation',
+        'measured bordinhas and separate packaging',
+        'shared mass cost and direct finishing preserved',
+        'missing bordinhas bag cost rollback',
       ],
     }),
   )

@@ -1,5 +1,11 @@
 # Roadmap único — Cacau v1
 
+## I05: perdas e recuperação de bordinhas no laboratório — 30/10/2026
+
+Continuidade limitada a produção e estoque aplicada ao cenário de perda declarada e recuperação medida. Ensaio PostgreSQL local passou com referências sintéticas e com o manifesto privado do workbook: capacidade de 24, 22 brownies disponíveis e duas perdas com motivo; 250 g de bordas resultam em dois pacotes de 100 g e 50 g sem embalagem. Saquinhos próprios e adesivos consumidos; custo comum dividido por massa e acabamento atribuído ao consumidor, com soma exata entre as duas saídas/camadas. Perda sem motivo, excesso de capacidade, peso inválido e custo do saquinho ausente recusados sem movimentos/custos/auditoria; repetição da conclusão não duplica perdas.
+
+Ampliação do teste isolado criado na PR #109, sem mudança de regra/runtime/schema ou deploy. As quantidades são fixtures locais; nenhum novo lote no piloto compartilhado, venda, evento financeiro ou produção física. Histórico automático mantido e conferência manual dispensada. I05 parcial/I04 permanecem separados. [Evidência sem valores comerciais](../../evidence/pilot-recovery-stock-lab-2026-10-30.json). 664 testes Node, tipos, lint, formato e Knip sem novos achados aprovados localmente. CI e revisão da candidata registradas na PR correspondente.
+
 ## I05: testes de produção e estoque com referências do workbook — 30/10/2026
 
 Usuário escolheu “Continuar somente os testes de produção e estoque”. Dois ensaios em PostgreSQL 17 local descartável, cada qual iniciado vazio, passaram: referência sintética e manifesto privado do workbook já preparado. Cada ensaio concluiu dois lotes de 24 unidades, com nove insumos/embalagens e dois custos operacionais. Conferidos conclusão concorrente uma única vez, saldo negativo, perda/ajustes, cobertura parcial por camada, quantidade fracionária, referências repetidas recusadas, rollback por custo ausente e falha tardia de auditoria, além dos bloqueios fora da origem do piloto.
