@@ -1,5 +1,15 @@
 # Handoff de autonomia — Cacau v1
 
+## Reserva: webhook WAHA — 13/11/2026
+
+Usuário pediu criar webhook com usuários do Cacau. Uso oficial: **5% restante**, reset exibido **13/11/2026 13:54 Brasília**; fechar checkpoint e executar `./DESLIGARTUDO` na branch `codex/whatsapp-pilot-foundation-20261113`. Retomar somente após confirmar renovação, seguindo CODEX-USAGE-POLICY.md.
+
+PR rascunho [#115](https://github.com/naiguelcabral/seus-brownies/pull/115): rota `POST /api/whatsapp/waha` desativada por padrão, limitada à origem de piloto/sessão configurada; verifica HMAC dos bytes e mapeia dois telefones para usuários Cacau ativos. Persiste texto/identidade/fingerprint em message_processing_records com unicidade e detecção de conflito. Sem executar comandos, enviar mensagens, migração ou deploy. WAHA local não detectado; os dois telefones e vínculos reais não foram configurados. Mensagens próprias, grupos, LID e mídia são recusados. Retenção, proteção de abuso e RBAC devem ser revisados antes de ativar.
+
+669 testes Node, tipagem/lint/formato/Knip aprovados com npm ci exato; build CI isolado passou após executar fora do sandbox que impediu acesso ao diretório de dependências. PostgreSQL 17 descartável comprovou seis pedidos concorrentes com um registro, conflito e usuário inativo. Testes sintéticos na CI incluídos. A suíte inicial com dependências de outra worktree falhou em dois testes Seroval; sanada a instalação e repetição completa passou. CI/CodeQL do último HEAD ainda precisam ser conferidos e revisados; não integrar ou publicar antes da revisão. Há risco de taxa/DoS e armazenamento do texto: rever limites, retenção e identidade com prova de origem antes de liberar. Caminhos centrais: `src/features/whatsapp/`, `src/routes/api.whatsapp.waha.ts`, `scripts/test-waha-webhook-disposable.ts` e `WHATSAPP-N8N-PILOTO.md`.
+
+Próximo passo: conferir PR #115 e checks do HEAD sincronizado, revisar as proteções citadas e terminar a integração n8n. Solicitar localização do WAHA/número da sessão e vínculo privado dos dois números aos usuários existentes antes de ativação. Não reutilizar referências, registrar operações ou inventar autoria. Não há retomada automática configurada.
+
 ## I05: perdas e recuperação de bordinhas no laboratório — 30/10/2026
 
 Continuidade limitada a produção e estoque aplicada ao cenário de perda declarada e recuperação medida. Ensaio PostgreSQL local passou com referências sintéticas e com o manifesto privado do workbook: capacidade de 24, 22 brownies disponíveis e duas perdas com motivo; 250 g de bordas resultam em dois pacotes de 100 g e 50 g sem embalagem. Saquinhos próprios e adesivos consumidos; custo comum dividido por massa e acabamento atribuído ao consumidor, com soma exata entre as duas saídas/camadas. Perda sem motivo, excesso de capacidade, peso inválido e custo do saquinho ausente recusados sem movimentos/custos/auditoria; repetição da conclusão não duplica perdas.
