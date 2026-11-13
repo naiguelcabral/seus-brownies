@@ -2,10 +2,29 @@ import assert from 'node:assert/strict'
 import test from 'node:test'
 import { maxRequestBodyBytes } from '../src/lib/input-limits'
 import {
+  isWahaWebhookRequest,
   rejectExcessiveRequestBody,
   requestSecurityHeaders,
   secureResponse,
 } from '../src/lib/request-security'
+
+test('only the exact webhook POST receives the machine-request exception and a smaller body limit', async () => {
+  const url = 'https://app.example.test/api/whatsapp/waha'
+  assert.equal(isWahaWebhookRequest(new Request(url, { method: 'POST' })), true)
+  for (const [path, method] of [
+    ['/api/whatsapp/waha/', 'POST'],
+    ['/api/whatsapp/waha-extra', 'POST'],
+    ['/api/whatsapp/waha', 'PUT'],
+  ] as const)
+    assert.equal(
+      isWahaWebhookRequest(
+        new Request(`https://app.example.test${path}`, { method }),
+      ),
+      false,
+    )
+  const request = new Request(url, { method: 'POST', body: 'x'.repeat(16_385) })
+  assert.equal((await rejectExcessiveRequestBody(request, 16_384))?.status, 413)
+})
 
 test('body budget accepts its exact boundary without consuming the original request', async () => {
   const body = 'x'.repeat(maxRequestBodyBytes)
