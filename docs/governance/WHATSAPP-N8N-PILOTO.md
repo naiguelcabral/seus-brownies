@@ -2,6 +2,10 @@
 
 Estado em 13/11/2026: preparação local. O piloto de WhatsApp ainda não está ligado. O usuário autorizou estruturar e implementar a integração n8n + WAHA para apenas dois telefones, inicialmente produção e estoque, com custos de referência do workbook e histórico automático. Não inferir vendas nem produção física.
 
+Implementação local de entrada em andamento: `POST /api/whatsapp/waha` fica desativado por padrão e só responde no piloto quando explicitamente configurado. Autentica os bytes originais por HMAC, aceita apenas evento individual de texto da sessão configurada e exige vínculo explícito com usuário Cacau ativo. Registra a mensagem com identidade e fingerprint em `message_processing_records`, usando unicidade para rejeitar conflitos e impedir duplicatas concorrentes. O retorno `received` confirma apenas o registro; não processa comandos nem envia mensagens. Uma mensagem da própria sessão, grupos, LID não resolvido e mídia são recusados. O teste PostgreSQL 17 descartável cobre concorrência, conflito e usuário desativado. Esta política deve ser reavaliada se o número da sessão for um dos dois usuários.
+
+Configuração futura no servidor, sem valores no Git: `WAHA_PILOT_ENABLED=1`, `WAHA_WEBHOOK_HMAC_KEY` (segredo forte), `WAHA_PILOT_SESSION` e `WAHA_PILOT_PARTICIPANTS` (dois objetos privados com `phone`, `authUserId`, `active: true`). É necessário `PASSWORD_RESET_REDIRECT_ORIGIN` apontar para o piloto. Assinatura e flag são independentes do mapeamento; perfil/RBAC deve ser novamente verificado antes de qualquer ação futura. O payload persiste texto da mensagem para processamento posterior: definir retenção e acesso antes da ativação. Sem segredo, mapeamento ou flag, a rota recusa. Não alterar configurações remotas antes de validar revisão, proteção de abuso, retenção e vínculo dos participantes.
+
 ## O que existe
 
 - n8n local acessível e quatro laboratórios Ollama inativos. LAB-004 responde em chat de teste usando preços estáticos; não consulta o catálogo ou estoque e não é a integração WhatsApp.

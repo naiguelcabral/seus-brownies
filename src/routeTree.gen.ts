@@ -28,6 +28,7 @@ import { Route as ProdutosRouteImport } from './routes/produtos'
 import { Route as RelatoriosRouteImport } from './routes/relatorios'
 import { Route as VendasRouteImport } from './routes/vendas'
 import { Route as LoginRedefinirSenhaRouteImport } from './routes/login/redefinir-senha'
+import { Route as ApiWhatsappWahaRouteImport } from './routes/api.whatsapp.waha'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -124,6 +125,11 @@ const LoginRedefinirSenhaRoute = LoginRedefinirSenhaRouteImport.update({
   path: '/redefinir-senha',
   getParentRoute: () => LoginRoute,
 } as any)
+const ApiWhatsappWahaRoute = ApiWhatsappWahaRouteImport.update({
+  id: '/api/whatsapp/waha',
+  path: '/api/whatsapp/waha',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -145,6 +151,7 @@ export interface FileRoutesByFullPath {
   '/relatorios': typeof RelatoriosRoute
   '/vendas': typeof VendasRoute
   '/login/redefinir-senha': typeof LoginRedefinirSenhaRoute
+  '/api/whatsapp/waha': typeof ApiWhatsappWahaRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -166,6 +173,7 @@ export interface FileRoutesByTo {
   '/relatorios': typeof RelatoriosRoute
   '/vendas': typeof VendasRoute
   '/login/redefinir-senha': typeof LoginRedefinirSenhaRoute
+  '/api/whatsapp/waha': typeof ApiWhatsappWahaRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -188,6 +196,7 @@ export interface FileRoutesById {
   '/relatorios': typeof RelatoriosRoute
   '/vendas': typeof VendasRoute
   '/login/redefinir-senha': typeof LoginRedefinirSenhaRoute
+  '/api/whatsapp/waha': typeof ApiWhatsappWahaRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -211,6 +220,7 @@ export interface FileRouteTypes {
     | '/relatorios'
     | '/vendas'
     | '/login/redefinir-senha'
+    | '/api/whatsapp/waha'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -232,6 +242,7 @@ export interface FileRouteTypes {
     | '/relatorios'
     | '/vendas'
     | '/login/redefinir-senha'
+    | '/api/whatsapp/waha'
   id:
     | '__root__'
     | '/'
@@ -253,6 +264,7 @@ export interface FileRouteTypes {
     | '/relatorios'
     | '/vendas'
     | '/login/redefinir-senha'
+    | '/api/whatsapp/waha'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -274,6 +286,7 @@ export interface RootRouteChildren {
   ProdutosRoute: typeof ProdutosRoute
   RelatoriosRoute: typeof RelatoriosRoute
   VendasRoute: typeof VendasRoute
+  ApiWhatsappWahaRoute: typeof ApiWhatsappWahaRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -411,6 +424,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRedefinirSenhaRouteImport
       parentRoute: typeof LoginRoute
     }
+    '/api/whatsapp/waha': {
+      id: '/api/whatsapp/waha'
+      path: '/api/whatsapp/waha'
+      fullPath: '/api/whatsapp/waha'
+      preLoaderRoute: typeof ApiWhatsappWahaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -443,6 +463,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProdutosRoute: ProdutosRoute,
   RelatoriosRoute: RelatoriosRoute,
   VendasRoute: VendasRoute,
+  ApiWhatsappWahaRoute: ApiWhatsappWahaRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -1,5 +1,9 @@
 # Estado canônico do projeto — Cacau v1
 
+## R01: webhook do piloto em desenvolvimento — 13/11/2026
+
+Usuário pediu webhook com usuários do Cacau. Candidata local implementa entrada WAHA desativada por padrão, assinatura, dois vínculos configuráveis, usuário ativo e registro idempotente. Laboratório PostgreSQL descartável comprovou seis requisições simultâneas com um registro, conflito de conteúdo e bloqueio de usuário desativado. A entrada só recebe mensagens; não processa comandos ou envia resposta WhatsApp. Configuração, limites de abuso, retenção, revisão de segurança, CI e teste autenticado real continuam pendentes. Nenhum deploy ou configuração remota. [Plano e limites](WHATSAPP-N8N-PILOTO.md).
+
 ## R01: preparação WhatsApp/n8n — 13/11/2026
 
 Usuário pediu estruturar e realizar integração n8n/WAHA para dois celulares, no escopo de produção e estoque. n8n local contém quatro laboratórios inativos; nenhum contêiner WAHA local foi encontrado. Preparados plano, política isolada de dois participantes e verificador de assinatura WAHA, com testes sintéticos; ainda não há webhook, integração, configuração dos participantes ou teste real de celular. A política não substitui autenticação, RBAC, idempotência e histórico. Nenhum fluxo ativado nem operação remota executada. [Plano e pendências](WHATSAPP-N8N-PILOTO.md).

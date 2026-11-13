@@ -1,5 +1,9 @@
 # Roadmap único — Cacau v1
 
+## R01: entrada WAHA em desenvolvimento — 13/11/2026
+
+Rota local candidata autentica assinatura, limita sessão/origem, resolve remetente para vínculo configurado e usuário ativo, registra idempotentemente e não executa comandos. Teste PostgreSQL descartável passou para concorrência, conflito e desativação. Falta revisão de segurança/limites e retenção, CI, configuração real de WAHA e dois usuários, ativação no piloto, fluxo n8n e teste ponta a ponta. [Plano](WHATSAPP-N8N-PILOTO.md).
+
 ## R01: preparação WhatsApp/n8n — 13/11/2026
 
 Preparada política local de dois participantes e verificação isolada da assinatura WAHA; não constituem integração ativa. Falta completar entrada autenticada, identidade/RBAC, idempotência, workflow n8n, sessão WAHA e testes ponta a ponta. Escopo inicial de produção e estoque. [Plano executável e dependências](WHATSAPP-N8N-PILOTO.md).

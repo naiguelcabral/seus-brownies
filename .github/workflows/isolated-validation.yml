@@ -44,6 +44,16 @@ jobs:
         options: >-
           --health-cmd "pg_isready -U pilot_stock_fixture -d cacau_pilot_stock_fixture"
           --health-interval 5s --health-timeout 5s --health-retries 12
+      waha-webhook:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: waha_fixture
+          POSTGRES_PASSWORD: synthetic-waha-test
+          POSTGRES_DB: cacau_waha_fixture
+        ports: ['127.0.0.1:5444:5432']
+        options: >-
+          --health-cmd "pg_isready -U waha_fixture -d cacau_waha_fixture"
+          --health-interval 5s --health-timeout 5s --health-retries 12
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
@@ -59,6 +69,8 @@ jobs:
         run: env -i PATH="$PATH" node --throw-deprecation --import tsx scripts/test-registration-approval-disposable.ts --ack-disposable-postgres17
       - name: Pilot production and stock without sales or remote writes
         run: env -i PATH="$PATH" node --throw-deprecation --import tsx scripts/test-pilot-production-stock-disposable.ts --ack-disposable-postgres17
+      - name: WAHA webhook, active identities and concurrent idempotency
+        run: env -i PATH="$PATH" node --throw-deprecation --import tsx scripts/test-waha-webhook-disposable.ts --ack-disposable-postgres17
 
   browser-fixtures:
     runs-on: ubuntu-24.04
