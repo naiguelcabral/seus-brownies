@@ -1,5 +1,11 @@
 # Handoff de autonomia — Cacau v1
 
+## Retomada do webhook WAHA — 13/11/2026
+
+Às 17:11 UTC, após o reset, a fonte oficial informou janela renovada com 100% disponível e 77% semanal; `LIGARTUDO --prepare-only` concluído. Branch sincronizada com três atualizações de dependências da main. PR #115 anterior passou os checks e apresentou zero resultados/erros/avisos nas três análises CodeQL da candidata correspondente.
+
+Revisão identificou que CSRF global bloqueava chamadas WAHA e que faltava limitação de abuso. Candidata isenta exclusivamente o POST exato do webhook do CSRF de navegador, preserva HMAC obrigatório, aplica limite de corpo de 16 KiB antes do handler e exige limitadores por origem/agregado com chaves próprias, falhando fechado. A gravação revalida e bloqueia a linha do usuário em transação. Testes unitários/diretamente no PostgreSQL 17 descartável aprovados; 19 cenários conectados HTTP/navegador passaram, incluindo a exceção restrita de CSRF. Suíte Node 671/671 e tipos, lint, formato e Knip aprovados. Revisão remota da nova candidata continua pendente. Rota permanece desativada; não executa comandos ou envia mensagens. Ainda falta determinar retenção, validar bindings no piloto e configurar WAHA e vínculos privados dos dois usuários.
+
 ## Reserva: webhook WAHA — 13/11/2026
 
 Usuário pediu criar webhook com usuários do Cacau. Uso oficial: **5% restante**, reset exibido **13/11/2026 13:54 Brasília**; fechar checkpoint e executar `./DESLIGARTUDO` na branch `codex/whatsapp-pilot-foundation-20261113`. Retomar somente após confirmar renovação, seguindo CODEX-USAGE-POLICY.md.
