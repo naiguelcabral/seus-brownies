@@ -1,5 +1,9 @@
 # Estado canônico do projeto — Cacau v1
 
+## R01: preparação WhatsApp/n8n — 13/11/2026
+
+Usuário pediu estruturar e realizar integração n8n/WAHA para dois celulares, no escopo de produção e estoque. n8n local contém quatro laboratórios inativos; nenhum contêiner WAHA local foi encontrado. Preparados plano, política isolada de dois participantes e verificador de assinatura WAHA, com testes sintéticos; ainda não há webhook, integração, configuração dos participantes ou teste real de celular. A política não substitui autenticação, RBAC, idempotência e histórico. Nenhum fluxo ativado nem operação remota executada. [Plano e pendências](WHATSAPP-N8N-PILOTO.md).
+
 ## I05: perdas e recuperação de bordinhas no laboratório — 30/10/2026
 
 Continuidade limitada a produção e estoque aplicada ao cenário de perda declarada e recuperação medida. Ensaio PostgreSQL local passou com referências sintéticas e com o manifesto privado do workbook: capacidade de 24, 22 brownies disponíveis e duas perdas com motivo; 250 g de bordas resultam em dois pacotes de 100 g e 50 g sem embalagem. Saquinhos próprios e adesivos consumidos; custo comum dividido por massa e acabamento atribuído ao consumidor, com soma exata entre as duas saídas/camadas. Perda sem motivo, excesso de capacidade, peso inválido e custo do saquinho ausente recusados sem movimentos/custos/auditoria; repetição da conclusão não duplica perdas.
