@@ -76,14 +76,17 @@ try {
     })
   }
   const responses = await Promise.all(
-    Array.from({ length: 6 }, () => receiveWahaWebhook(request('consulta'))),
+    Array.from({ length: 6 }, () =>
+      receiveWahaWebhook(request('consulta'), async () => true),
+    ),
   )
   assert.ok(responses.every((r) => r.status === 202))
   const states = await Promise.all(responses.map((r) => r.json()))
   assert.equal(states.filter((s) => s.state === 'received').length, 1)
   assert.equal(states.filter((s) => s.state === 'duplicate').length, 5)
   assert.equal(
-    (await receiveWahaWebhook(request('outra consulta'))).status,
+    (await receiveWahaWebhook(request('outra consulta'), async () => true))
+      .status,
     409,
   )
   const rows = (
@@ -95,7 +98,10 @@ try {
   await pool.query(
     "update app_user_access set is_active=false where auth_user_id='fixture-owner'",
   )
-  assert.equal((await receiveWahaWebhook(request('consulta'))).status, 403)
+  assert.equal(
+    (await receiveWahaWebhook(request('consulta'), async () => true)).status,
+    403,
+  )
   assert.equal(
     Number(
       (await pool.query('select count(*) from message_processing_records'))

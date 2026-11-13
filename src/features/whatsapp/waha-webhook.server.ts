@@ -32,10 +32,11 @@ export type AcceptedWahaMessage = {
   fingerprint: string
 }
 export type WahaDependencies = {
+  allowRequest: () => Promise<boolean>
   isActiveUser: (id: string) => Promise<boolean>
   record: (
     message: AcceptedWahaMessage,
-  ) => Promise<'new' | 'duplicate' | 'conflict'>
+  ) => Promise<'new' | 'duplicate' | 'conflict' | 'denied'>
 }
 
 async function readBounded(request: Request): Promise<Uint8Array | null> {
@@ -101,6 +102,7 @@ export async function handleWahaWebhook(
   } catch {
     return reply(503, 'unavailable')
   }
+  if (!(await deps.allowRequest())) return reply(429, 'unavailable')
   const body = await readBounded(request)
   if (!body) return reply(413, 'invalid')
   if (
@@ -139,6 +141,7 @@ export async function handleWahaWebhook(
     text: event.body,
     fingerprint,
   })
+  if (result === 'denied') return reply(403, 'denied')
   return result === 'conflict'
     ? reply(409, 'conflict')
     : reply(202, result === 'new' ? 'received' : 'duplicate')

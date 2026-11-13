@@ -42,18 +42,22 @@ export function secureResponse(
 }
 
 /** Bound bytes before TanStack deserializes input, even without Content-Length. */
+export function isWahaWebhookRequest(request: Request) {
+  return (
+    request.method === 'POST' &&
+    new URL(request.url).pathname === '/api/whatsapp/waha'
+  )
+}
+
 export async function rejectExcessiveRequestBody(
   request: Request,
+  limit = maxRequestBodyBytes,
 ): Promise<Response | null> {
   if (!request.body) return null
   const tooLarge = () =>
     Response.json({ error: 'payload_too_large' }, { status: 413 })
   const declared = request.headers.get('content-length')
-  if (
-    declared &&
-    /^\d+$/.test(declared) &&
-    Number(declared) > maxRequestBodyBytes
-  ) {
+  if (declared && /^\d+$/.test(declared) && Number(declared) > limit) {
     void request.body.cancel().catch(() => undefined)
     return tooLarge()
   }
@@ -65,7 +69,7 @@ export async function rejectExcessiveRequestBody(
       const chunk = await reader.read()
       if (chunk.done) return null
       size += chunk.value.byteLength
-      if (size > maxRequestBodyBytes) {
+      if (size > limit) {
         // Cancel both tee branches; awaiting only one would deadlock on its peer.
         void reader.cancel().catch(() => undefined)
         void request.body.cancel().catch(() => undefined)

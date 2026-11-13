@@ -3,6 +3,7 @@ import {
   createMiddleware,
   createStart,
 } from '@tanstack/react-start'
+import { isWahaWebhookRequest } from './lib/request-security'
 
 const securityHeadersMiddleware = createMiddleware().server(
   async ({ request, next }) => {
@@ -20,7 +21,10 @@ const requestBodyLimitMiddleware = createMiddleware().server(
   async ({ request, next }) => {
     const { rejectExcessiveRequestBody } =
       await import('./lib/request-security')
-    const rejected = await rejectExcessiveRequestBody(request)
+    const rejected = await rejectExcessiveRequestBody(
+      request,
+      isWahaWebhookRequest(request) ? 16_384 : undefined,
+    )
     return rejected ?? next()
   },
 )
@@ -39,7 +43,8 @@ export const startInstance = createStart(() => ({
     securityHeadersMiddleware,
     createCsrfMiddleware({
       filter: ({ request }) =>
-        ['POST', 'PUT', 'PATCH', 'DELETE'].includes(request.method),
+        ['POST', 'PUT', 'PATCH', 'DELETE'].includes(request.method) &&
+        !isWahaWebhookRequest(request),
     }),
     requestBodyLimitMiddleware,
   ],

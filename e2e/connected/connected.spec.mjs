@@ -15,6 +15,31 @@ test.afterAll(async () => {
   await pool.end()
 })
 
+test('only the webhook POST passes global CSRF and remains unavailable without pilot configuration', async ({
+  request,
+}) => {
+  const headers = {
+    'sec-fetch-site': 'cross-site',
+    'content-type': 'application/json',
+  }
+  const endpoint = await request.post('/api/whatsapp/waha', {
+    data: '{}',
+    headers,
+  })
+  expect(endpoint.status()).toBe(404)
+  expect(await endpoint.json()).toEqual({ state: 'unavailable' })
+  const unrelated = await request.post('/api/whatsapp/unrelated', {
+    data: '{}',
+    headers,
+  })
+  expect(unrelated.status()).toBe(403)
+  const wrongMethod = await request.put('/api/whatsapp/waha', {
+    data: '{}',
+    headers,
+  })
+  expect(wrongMethod.status()).toBe(403)
+})
+
 test('inventory actions reflect each role before a user can fill a forbidden form', async ({
   page,
 }, testInfo) => {

@@ -3,6 +3,7 @@ import { z } from 'zod'
 import { getDb, withDatabaseScope } from '#/db/index'
 import { appUserAccess, messageProcessingRecords } from '#/db/schema'
 import { handleWahaWebhook } from './waha-webhook.server'
+import { allowWahaRequest } from './waha-budget.server'
 import type { WahaDependencies } from './waha-webhook.server'
 
 const storedSchema = z.object({
@@ -11,9 +12,13 @@ const storedSchema = z.object({
   text: z.string(),
 })
 
-export async function receiveWahaWebhook(request: Request): Promise<Response> {
+export async function receiveWahaWebhook(
+  request: Request,
+  allowRequest = allowWahaRequest,
+): Promise<Response> {
   return withDatabaseScope(async () => {
     const deps: WahaDependencies = {
+      allowRequest: () => allowRequest(request, process.env),
       async isActiveUser(id) {
         const [row] = await getDb()
           .select({ active: appUserAccess.isActive })
@@ -28,29 +33,38 @@ export async function receiveWahaWebhook(request: Request): Promise<Response> {
           fingerprint: message.fingerprint,
           text: message.text,
         }
-        const inserted = await getDb()
-          .insert(messageProcessingRecords)
-          .values({
-            providerMessageId: message.id,
-            status: 'received',
-            payload,
-          })
-          .onConflictDoNothing({
-            target: messageProcessingRecords.providerMessageId,
-          })
-          .returning({ id: messageProcessingRecords.id })
-        if (inserted.length === 1) return 'new'
-        const [prior] = await getDb()
-          .select({ payload: messageProcessingRecords.payload })
-          .from(messageProcessingRecords)
-          .where(eq(messageProcessingRecords.providerMessageId, message.id))
-          .limit(1)
-        const parsed = storedSchema.safeParse(prior?.payload)
-        return parsed.success &&
-          parsed.data.fingerprint === message.fingerprint &&
-          parsed.data.actor === message.actor
-          ? 'duplicate'
-          : 'conflict'
+        return getDb().transaction(async (tx) => {
+          // Serialize the acceptance with deactivation of the linked Cacau user.
+          const [access] = await tx
+            .select({ active: appUserAccess.isActive })
+            .from(appUserAccess)
+            .where(eq(appUserAccess.authUserId, message.actor))
+            .for('update')
+          if (access?.active !== true) return 'denied'
+          const inserted = await tx
+            .insert(messageProcessingRecords)
+            .values({
+              providerMessageId: message.id,
+              status: 'received',
+              payload,
+            })
+            .onConflictDoNothing({
+              target: messageProcessingRecords.providerMessageId,
+            })
+            .returning({ id: messageProcessingRecords.id })
+          if (inserted.length === 1) return 'new'
+          const [prior] = await tx
+            .select({ payload: messageProcessingRecords.payload })
+            .from(messageProcessingRecords)
+            .where(eq(messageProcessingRecords.providerMessageId, message.id))
+            .limit(1)
+          const parsed = storedSchema.safeParse(prior?.payload)
+          return parsed.success &&
+            parsed.data.fingerprint === message.fingerprint &&
+            parsed.data.actor === message.actor
+            ? 'duplicate'
+            : 'conflict'
+        })
       },
     }
     try {

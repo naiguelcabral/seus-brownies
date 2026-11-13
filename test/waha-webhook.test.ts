@@ -46,6 +46,7 @@ function request(
 test('authenticated message uses existing active identity and is idempotent', async () => {
   const records = new Map<string, AcceptedWahaMessage>()
   const deps = {
+    allowRequest: async () => true,
     isActiveUser: async (id: string) => id === 'person-a',
     record: async (item: AcceptedWahaMessage) => {
       const old = records.get(item.id)
@@ -77,10 +78,20 @@ test('authenticated message uses existing active identity and is idempotent', as
     409,
   )
   assert.equal(records.size, 1)
+  const revokedDuringAcceptance = await handleWahaWebhook(
+    request(payload),
+    env,
+    {
+      ...deps,
+      record: async () => 'denied',
+    },
+  )
+  assert.equal(revokedDuringAcceptance.status, 403)
 })
 test('rejects unauthenticated, unknown, inactive, group and unavailable configurations', async () => {
   let writes = 0
   const deps = {
+    allowRequest: async () => true,
     isActiveUser: async () => false,
     record: async () => {
       writes++
@@ -130,6 +141,15 @@ test('rejects unauthenticated, unknown, inactive, group and unavailable configur
   assert.equal(
     (await handleWahaWebhook(request(payload), env, deps)).status,
     403,
+  )
+  assert.equal(
+    (
+      await handleWahaWebhook(request(payload), env, {
+        ...deps,
+        allowRequest: async () => false,
+      })
+    ).status,
+    429,
   )
   assert.equal(
     (
